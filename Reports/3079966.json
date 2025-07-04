@@ -1,0 +1,159 @@
+{
+  "id": 3079966,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMDc5OTY2",
+  "url": "https://hackerone.com/reports/3079966",
+  "title": "HTML Injection in LinkedIn Premium Support Chat",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2025-04-06T17:28:07.276Z",
+  "submitted_at": "2025-04-06T17:28:07.539Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "nagu123",
+    "url": "/nagu123",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/3sjnhs63zme1ozate96fn6s8qkmg/36bca6668139d77be42208d896968344ae7a76c55ee0f8b0f28281ccd492ff02"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 58,
+    "url": "https://hackerone.com/linkedin",
+    "handle": "linkedin",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/058/3aaa858b18e9807c5c1fea0c559156568a6647cc_original.png/36bca6668139d77be42208d896968344ae7a76c55ee0f8b0f28281ccd492ff02",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/058/3aaa858b18e9807c5c1fea0c559156568a6647cc_original.png/19c85a12ac35f466af1ea2b0ae853bfe5e8f057fb1d6fb62db131707bb67b30d"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "LinkedIn",
+      "twitter_handle": "",
+      "website": "https://www.linkedin.com",
+      "about": "The world's largest professional network."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2025-05-07T07:53:59.481Z",
+  "bug_reporter_agreed_on_going_public_at": "2025-04-30T18:57:55.341Z",
+  "team_member_agreed_on_going_public_at": "2025-05-07T07:53:58.797Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "**Summary:**  \nA vulnerability exists in the LinkedIn Premium support chat interface where unsanitized HTML input is rendered directly in the chat window. An attacker can exploit this by injecting malicious HTML such as clickable links, potentially leading to phishing or redirection attacks on LinkedIn support staff.\n\n**Steps to Reproduce:**\n\n1. Go to [https://www.linkedin.com/feed](https://www.linkedin.com/feed) and log in to your LinkedIn account.\n\n2. On the left sidebar, under **\"Job search smarter with Premium\"**, click **\"Try for ₹0\"**.\n\n3. You will be redirected to this URL:  \n   `https://www.linkedin.com/premium/survey/?destRedirectURL=https%3A%2F%2Fwww.linkedin.com%2Fsearch%2Fresults%2Fall%2F%3Fkeywords%3Dtest%2520card%2520bugbounty%26origin%3DGLOBAL_SEARCH_HEADER%26sid%3Dn%253Bl`\n\n4. Once the page loads, wait for the support chat widget to appear in the **bottom-right corner**.\n\n5. Open the chat window and send the following input:  \n   ```html\n   <a href=\"https://evil.com\">CLICK</a>\n   ```\n\n6. The input is rendered as an **actual clickable link** in the chat interface.\n\n7. If a LinkedIn support employee views the message and clicks the link, they are redirected to an external site, which could be used for phishing or other malicious purposes.\n\n{F4223329}\n\n**Impact:**  \n- HTML injection in a support chat poses risks of phishing, social engineering, or redirection attacks.\n- It breaks the assumption of trust in support systems.\n- If used cleverly, attackers could mimic internal LinkedIn UI elements to trick employees into further interaction.\n\n**Security Risk:**  \n- **HTML Injection**\n- **Phishing/Social Engineering Risk**\n- **Potential for Clickjacking or Further Exploits**\n\n**Expected Behavior:**  \nUser input in chat should be sanitized and rendered as plain text. No HTML or tags should be interpreted.\n\n**Observed Behavior:**  \nHTML, such as `<a>` tags, is rendered in the chat and appears clickable to support agents.\n\n**Severity:**  \n**Medium** (may be increased based on internal LinkedIn threat models)\n\n**Recommendation:**  \n- Sanitize user input using libraries like DOMPurify.\n- Encode all user-generated content before rendering.\n- Review all chat-related components for similar injection points.\n\n## Impact\n\n### 🔸 1. **Phishing Attacks Against LinkedIn Employees**  \nBy injecting a crafted HTML link (e.g., `<a href=\"https://malicious-site.com\">CLICK HERE</a>`), the attacker can:\n- Trick LinkedIn support staff into visiting malicious websites\n- Lead them to phishing pages mimicking LinkedIn internal portals\n- Attempt to harvest credentials or trigger malware downloads\n\n---\n\n### 🔸 2. **Social Engineering and Internal Trust Exploitation**  \nSince the injected content appears in the official LinkedIn chat interface:\n- It can be used to impersonate UI elements or instructions (e.g., \"Click here to fix the issue\")\n- Employees may trust and act on malicious instructions\n\n---\n\n### 🔸 3. **Reputation and Legal Risk for LinkedIn**  \nIf an employee clicks on a malicious link and gets compromised, this could:\n- Lead to unauthorized access to internal tools or user data\n- Trigger compliance or data protection issues\n\n---\n\n### 🔸 4. **Potential Pathway to Escalation**  \nAlthough currently limited to HTML injection:\n- If any future misconfiguration allows JavaScript execution, it could escalate to stored/reflected XSS\n- This could lead to full session hijacking or internal system compromise\n\n---",
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 4223329,
+      "file_name": "Screencast_From_2025-04-06_22-30-15.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/hyc7vrposdmg6r12hhon68248bfw?response-content-disposition=attachment%3B%20filename%3D%22Screencast_From_2025-04-06_22-30-15.mp4%22%3B%20filename%2A%3DUTF-8%27%27Screencast_From_2025-04-06_22-30-15.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWBQCKX3A%2F20250704%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250704T195531Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECoaCXVzLXdlc3QtMiJHMEUCIQC7I8Nba11VsaBeWshIeKt9iklj%2Fef%2FSlDvh6S5zJ1HCgIgNf2DKi%2FAQLysF80g%2BqaKjNmh16X2mOkRnkyWGmvm2J8qsQUIMhADGgwwMTM2MTkyNzQ4NDkiDHg8EQbH5Y%2FBNxpEhCqOBfyZI8ZuRfdMxkh6X4nc7e09LmzqkWHQgkvrWnUq0kgrYmFHnxctsbxX1Nen1e7H6duB%2Fa7RAGqQZUq4kA2pu8F5WW6YgYhkNwkmChwdSoKgxgl9rvzzglNbrhZ6%2BOXJrgRQy11yfXNY6Vclg2gfD%2BrZTkdMFr4nvhER7e4Kr%2BWpbmCKN4Sz3PPmANcewHUzTCDyFCuoIQXTCFjD1rsU6D6i2ajMIez6KXkn3DpwCbvPmU8GTy%2FZVdgdRrfWzzzAw1RtJ6vTCd92q8RkcRt0R%2BOQzs5WTPANmPJCVTBgaY38GGG5v2ej5Rhz9vKH2DAjsMs5Fwr5LZpqj2P3S6YEHytjCJN1203y7io3Pfixtl1ZLJ4ZY%2FgPsKfpXA92sqCE0MTFDuaO%2Fg8hpZqemFa%2FfzZ6e2Q7iEFI4PUVr7WRaPojSrpB7BhDngyPQGSFmmVnOEQ7m19%2BaW1VidG7CA9EEO3aEHw6hl8LL2JUojMl8aATzzGuppnD0w97NwP29IJVTyCkxQgRvl9cDXtApDJoozaHUUvl7lhXzo%2B%2F%2FAXp20SpzWIKrSs7V6MCiv9ZJUy7TU8XO485Gj1xqqvayq34xmjAMWUi22lMIvlpJh9cknSP5LnJcZvKe%2B0YFUunrMjo0Jxz6qDcRJJR3%2FkUIOLW1EAWs9UXb%2FsQ%2BeywP0tFcvU9PmmNIOz8IhyHrvpRhxgmeev9IzDX%2FU09Tn8m1ao4CnpXHr7E6LouZIPwBdv5zw5OtNmlRuuU0joHf5tai%2BvyxrMsKieNFDlS5DBmvmcdyTw%2FXG9yWy3LAOBsIQU8bUZM7fpywAZIKMwxQkfN%2BGAzHwNzxoCJAbqQj4QjKXFVokgfiPcT%2B7CSgngPhbiO%2FDCRm6DDBjqxAepbNWiTRSSaeAzVGUlnK8WWA1jVQ2NcR%2BZNZmMfwLBj92p%2BQwR3TMCWZHQa%2BMzfuK%2FZf6DdFo2acc5IuBazrViIXBbPaKqn8cRnhfrBfZZC0ouG%2B9IEAqZT5zT0XxQFXCbv9%2Bg%2FQvIPfCp6utDtRXbMe6tKQJUw%2FwfA2MclGTHn4gjdNt9YZQ8S4QmrOByR3JyM%2BSdxa%2FmV0Com%2BD%2Bk1K1lWq8uWitTClfDbNFkfA6uyg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=6ae65f080ab047899ddf0e7cc2ea39a61fbaef3a31f5a7f1f6effaf24928ba16",
+      "file_size": 526766,
+      "type": "video/mp4",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 92,
+  "voters": [
+    "bugbountyfull",
+    "amr_id",
+    "orange303",
+    "loaymorad",
+    "ganeshbagaria",
+    "almuntadhar",
+    "rocky1696",
+    "zy9ard3",
+    "starlox",
+    "berjimk",
+    "and 82 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "score": 3.1,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "high",
+      "privileges_required": "none",
+      "user_interaction": "required",
+      "scope": "unchanged",
+      "confidentiality": "low",
+      "integrity": "none",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 61408,
+    "asset_type": "URL",
+    "asset_identifier": "www.linkedin.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "id": 688132,
+      "category": "researcher",
+      "content": "This bug took me only 30 seconds to find 😂📈",
+      "updated_at": "2025-05-07T08:06:49.131Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 3262395,
+        "username": "nagu123",
+        "name": "atul nagaraj",
+        "bio": "",
+        "cleared": false,
+        "verified": true,
+        "website": null,
+        "location": "india",
+        "created_at": "2024-06-12T19:22:56.701Z",
+        "url": "https://hackerone.com/nagu123",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "hacker",
+        "profile_picture_urls": {
+          "small": "https://profile-photos.hackerone-user-content.com/variants/3sjnhs63zme1ozate96fn6s8qkmg/36bca6668139d77be42208d896968344ae7a76c55ee0f8b0f28281ccd492ff02",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/3sjnhs63zme1ozate96fn6s8qkmg/19c85a12ac35f466af1ea2b0ae853bfe5e8f057fb1d6fb62db131707bb67b30d",
+          "xtralarge": "https://profile-photos.hackerone-user-content.com/variants/3sjnhs63zme1ozate96fn6s8qkmg/41e80259f0e9503ef154e10f39296dbefc2217dd885433e52a9107ef82fe7535"
+        }
+      }
+    }
+  ]
+}
