@@ -1,0 +1,171 @@
+{
+  "id": 3099816,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMDk5ODE2",
+  "url": "https://hackerone.com/reports/3099816",
+  "title": "Open Redirect Vulnerability in OAuth Flow Leading to Potential Phishing Attack",
+  "state": "Closed",
+  "substate": "duplicate",
+  "severity_rating": "low",
+  "readable_substate": "Duplicate",
+  "created_at": "2025-04-18T13:04:24.285Z",
+  "submitted_at": "2025-04-18T13:04:24.630Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "delsec_",
+    "url": "/delsec_",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 48242,
+    "url": "https://hackerone.com/lichess",
+    "handle": "lichess",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/CbR2hQEVmv82Z9L1cfqd9SFQ/36bca6668139d77be42208d896968344ae7a76c55ee0f8b0f28281ccd492ff02",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/CbR2hQEVmv82Z9L1cfqd9SFQ/19c85a12ac35f466af1ea2b0ae853bfe5e8f057fb1d6fb62db131707bb67b30d"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Lichess",
+      "twitter_handle": "",
+      "website": "https://lichess.org",
+      "about": "The free chess server. No paywall, no tracking, no ads. Just the good stuff. Source code: https://lichess.org/source"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2025-05-15T11:10:40.719Z",
+  "bug_reporter_agreed_on_going_public_at": "2025-05-06T03:22:48.939Z",
+  "team_member_agreed_on_going_public_at": "2025-05-15T11:10:40.384Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\n\nAn open redirect vulnerability exists in the OAuth flow on lichess4545.com. By manipulating the redirect_uri parameter during the OAuth authorization process with Lichess, an attacker can redirect users to an arbitrary external domain (e.g., example.com) after login. This could be exploited for phishing or other malicious purposes.\n\n## Steps To Reproduce:\n\n  1. Navigate to `https://www.lichess4545.com/blitzbattle/` and log into your test account\n  2. Notice that you are redirected to `https://lichess.com`, and you're requested to complete OAuth after logging in.\n  3. In the OAuth URL, there is a redirect_uri parameter. Change this from`redirect_uri=https://www.lichess4545.com/auth/lichess/` to `redirect_uri=https://example.com/auth/lichess/`\n  4. Now Click \"Authorize\". This will redirect you to `https://example.com/`\n\n## Supporting Material/References:\n\nThe steps with pictures are provided down below.\n\n  1. Navigate to https://www.lichess4545.com/blitzbattle/` and log into your test account\n{F4264346}\n\n  2. Notice that you are redirected to `https://lichess.com`, and you're requested to complete OAuth after logging in.\n{F4264361}\n\n  3. In the OAuth URL, there is a redirect_uri parameter. Change this from`redirect_uri=https://www.lichess4545.com/auth/lichess/` to `redirect_uri=https://example.com/auth/lichess/`\n{F4264353}\n\nChanged to the redirect below\n{F4264355}\n\n  4. Now Click \"Authorize\". This will redirect you to `https://example.com/`\n{F4264362}\n\n  * attachments / references\n\nOpen Redirect reference from OWASP top 10:\nhttps://owasp.org/Top10/A01_2021-Broken_Access_Control/\n\nCWE-MITRE\nhttps://cwe.mitre.org/data/definitions/601.html\n\nWe understand that this program does not offer monetary rewards for vulnerability submissions. However, we would greatly appreciate it if a Letter of Recommendation or a brief confirmation of responsible disclosure could be provided, if possible. This would be incredibly helpful as I continue to build experience in security research. Thank you for your time and consideration.\n\nI have also seen this program does not have an option to involve a collaborator, Can you please add \nhttps://hackerone.com/lict101 to this report as a collaborator please? Thank you.\n\n## Impact\n\nAn attacker can exploit the open redirect in the OAuth `redirect_uri` parameter to redirect users to a malicious domain after authentication. This can be used for phishing, stealing OAuth tokens (if combined with other attacks), or tricking users into thinking they’re interacting with a trusted site. Since the redirect occurs after a legitimate login process, it significantly increases the credibility of the phishing attempt.",
+  "weakness": {
+    "id": 53,
+    "name": "Open Redirect"
+  },
+  "original_report_id": 3061600,
+  "original_report_url": "https://hackerone.com/reports/3061600",
+  "attachments": [
+    {
+      "id": 4264346,
+      "file_name": "2025-04-18_05_39_14-Window.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/kbt7vn7e06wohbub7rgqktr3fsp0?response-content-disposition=attachment%3B%20filename%3D%222025-04-18_05_39_14-Window.png%22%3B%20filename%2A%3DUTF-8%27%272025-04-18_05_39_14-Window.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXFIWBIHS%2F20250704%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250704T195305Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECoaCXVzLXdlc3QtMiJGMEQCIDEJIae%2B9%2FetCxnax38G0rRS1FvTS0xQQyEHW3aE8LsXAiBtjqFd34ZMQvfTQ9NgGvCQF0csdEJ2yfjm1pqqUL%2B%2BrCqyBQgzEAMaDDAxMzYxOTI3NDg0OSIMZsc9EKXfkV4upQwBKo8Fv8GLrALjw%2BqJvCLuhTAGEpr%2BYg5oiYjLlZtwyNv3PWCKGQMSWQSaem%2B1wxWGedHMldmDNxXei2HI3k5ARC2WPYcoqPM5UF6vrRPQxW1ujdTzy5XQs3cmH1thmEldH69zPvsR9UO6yN1sgX%2FEMNwLtKmIkh9lysTfPki9P2Foplvx334aeTsdTPITOOdQJliAPTkbUxfBT%2Bgkb%2B2C%2FbWA1HtjZmdig3l3RQRNDj9YRWElg%2FfIdnaoQ4A8ZPUQKxJVeiIsZzhlGFRHdRyyTtKHnUBP5Yp3h1iHEDzZFwa%2FIzHG1y96CcTNUTlCTcdueW%2FlbroYrGE2y0CALQaWyd0Ds45vIkfOma8AUZwnflFW%2FCIEcChUdUZnEEcvjiLaZJNCNZovwv3OmvCtleMd7nAIguSTmiO0hrfeboVTUUGyi5WId6RzBgXi%2BsI8cuf8aFzaNvQL9niDBgLJSRYSCzdg%2Fmt%2FbyZugzwMPivJE26cV3Adm3JJ2T1XxrTs5MkTYX6mOyopC086QxYITSx28Yfo5g68iPYxKYIouU86pC%2FzG4bBeNwwh7jpHLjlSX5fOVEaon%2FlA3OzE10RNaGAad7P%2B0hO7wqvl6IikWNFzCgVyOR84ZEkBONlWPC495LDnWVlyzbRJo8Z6NfWNtXzki8wf%2Fvj77A0keur%2FbJWu19uOixIdR6jGb%2Bmgs%2BN9eCHU%2FaxTLoMhSUuARUGsdSKjqOGOY5hFOOmrCUzKTP2QOu8knTy0lT5891q7tWzqPOEdiaTTGxCxWcwwW9dUKyvEEkaLG0lv3dWHYP1pVoCcYxBqpdJ2U4aVag355uhYENNdyFQ4NuB%2BGCHFNhgoVc%2Bx56CaQIdqP0Kk6kkD9nicgQYGjDxnqDDBjqyASGkDS%2FAot%2BTQxPiX%2BsnKaFg0KgJxJXMHSgkXRo9AWTGO35jOk0sCwomYh%2FzriRV7vfzWbGj0ABxBdHOyuHxOlkyWcDYlzbsP54hFJXFiTDMhRzyFkF7znmvEZuadhUP34VYQaRTQhf757x0TxmIEcTnVQGbn4wSKhcxf88ECGT1Bl%2FrWGjav6da0Dt75dfo%2B3X2dMZHpHvt5VLxCfqSeFjhWol%2BhmS%2Bs5A4nkHgKDb0Akg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=037eafb4b863d16550a0f92cacb3b9d9f557c539169235d708dee81868b7633a",
+      "file_size": 71661,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 4264353,
+      "file_name": "2025-04-18_05_37_13-Window.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/et9kq248gz4oaaz3i9p72fq1d5n9?response-content-disposition=attachment%3B%20filename%3D%222025-04-18_05_37_13-Window.png%22%3B%20filename%2A%3DUTF-8%27%272025-04-18_05_37_13-Window.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXFIWBIHS%2F20250704%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250704T195305Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECoaCXVzLXdlc3QtMiJGMEQCIDEJIae%2B9%2FetCxnax38G0rRS1FvTS0xQQyEHW3aE8LsXAiBtjqFd34ZMQvfTQ9NgGvCQF0csdEJ2yfjm1pqqUL%2B%2BrCqyBQgzEAMaDDAxMzYxOTI3NDg0OSIMZsc9EKXfkV4upQwBKo8Fv8GLrALjw%2BqJvCLuhTAGEpr%2BYg5oiYjLlZtwyNv3PWCKGQMSWQSaem%2B1wxWGedHMldmDNxXei2HI3k5ARC2WPYcoqPM5UF6vrRPQxW1ujdTzy5XQs3cmH1thmEldH69zPvsR9UO6yN1sgX%2FEMNwLtKmIkh9lysTfPki9P2Foplvx334aeTsdTPITOOdQJliAPTkbUxfBT%2Bgkb%2B2C%2FbWA1HtjZmdig3l3RQRNDj9YRWElg%2FfIdnaoQ4A8ZPUQKxJVeiIsZzhlGFRHdRyyTtKHnUBP5Yp3h1iHEDzZFwa%2FIzHG1y96CcTNUTlCTcdueW%2FlbroYrGE2y0CALQaWyd0Ds45vIkfOma8AUZwnflFW%2FCIEcChUdUZnEEcvjiLaZJNCNZovwv3OmvCtleMd7nAIguSTmiO0hrfeboVTUUGyi5WId6RzBgXi%2BsI8cuf8aFzaNvQL9niDBgLJSRYSCzdg%2Fmt%2FbyZugzwMPivJE26cV3Adm3JJ2T1XxrTs5MkTYX6mOyopC086QxYITSx28Yfo5g68iPYxKYIouU86pC%2FzG4bBeNwwh7jpHLjlSX5fOVEaon%2FlA3OzE10RNaGAad7P%2B0hO7wqvl6IikWNFzCgVyOR84ZEkBONlWPC495LDnWVlyzbRJo8Z6NfWNtXzki8wf%2Fvj77A0keur%2FbJWu19uOixIdR6jGb%2Bmgs%2BN9eCHU%2FaxTLoMhSUuARUGsdSKjqOGOY5hFOOmrCUzKTP2QOu8knTy0lT5891q7tWzqPOEdiaTTGxCxWcwwW9dUKyvEEkaLG0lv3dWHYP1pVoCcYxBqpdJ2U4aVag355uhYENNdyFQ4NuB%2BGCHFNhgoVc%2Bx56CaQIdqP0Kk6kkD9nicgQYGjDxnqDDBjqyASGkDS%2FAot%2BTQxPiX%2BsnKaFg0KgJxJXMHSgkXRo9AWTGO35jOk0sCwomYh%2FzriRV7vfzWbGj0ABxBdHOyuHxOlkyWcDYlzbsP54hFJXFiTDMhRzyFkF7znmvEZuadhUP34VYQaRTQhf757x0TxmIEcTnVQGbn4wSKhcxf88ECGT1Bl%2FrWGjav6da0Dt75dfo%2B3X2dMZHpHvt5VLxCfqSeFjhWol%2BhmS%2Bs5A4nkHgKDb0Akg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=8b89c8b0a46ee6269705d970c3b65528ee3d2ade341ae9ed0a65c5f3bbf67cac",
+      "file_size": 9027,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 4264355,
+      "file_name": "2025-04-18_05_13_39-Window.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/pxjj8zna5xi1ozvnzcqk8p8k6whn?response-content-disposition=attachment%3B%20filename%3D%222025-04-18_05_13_39-Window.png%22%3B%20filename%2A%3DUTF-8%27%272025-04-18_05_13_39-Window.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXFIWBIHS%2F20250704%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250704T195305Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECoaCXVzLXdlc3QtMiJGMEQCIDEJIae%2B9%2FetCxnax38G0rRS1FvTS0xQQyEHW3aE8LsXAiBtjqFd34ZMQvfTQ9NgGvCQF0csdEJ2yfjm1pqqUL%2B%2BrCqyBQgzEAMaDDAxMzYxOTI3NDg0OSIMZsc9EKXfkV4upQwBKo8Fv8GLrALjw%2BqJvCLuhTAGEpr%2BYg5oiYjLlZtwyNv3PWCKGQMSWQSaem%2B1wxWGedHMldmDNxXei2HI3k5ARC2WPYcoqPM5UF6vrRPQxW1ujdTzy5XQs3cmH1thmEldH69zPvsR9UO6yN1sgX%2FEMNwLtKmIkh9lysTfPki9P2Foplvx334aeTsdTPITOOdQJliAPTkbUxfBT%2Bgkb%2B2C%2FbWA1HtjZmdig3l3RQRNDj9YRWElg%2FfIdnaoQ4A8ZPUQKxJVeiIsZzhlGFRHdRyyTtKHnUBP5Yp3h1iHEDzZFwa%2FIzHG1y96CcTNUTlCTcdueW%2FlbroYrGE2y0CALQaWyd0Ds45vIkfOma8AUZwnflFW%2FCIEcChUdUZnEEcvjiLaZJNCNZovwv3OmvCtleMd7nAIguSTmiO0hrfeboVTUUGyi5WId6RzBgXi%2BsI8cuf8aFzaNvQL9niDBgLJSRYSCzdg%2Fmt%2FbyZugzwMPivJE26cV3Adm3JJ2T1XxrTs5MkTYX6mOyopC086QxYITSx28Yfo5g68iPYxKYIouU86pC%2FzG4bBeNwwh7jpHLjlSX5fOVEaon%2FlA3OzE10RNaGAad7P%2B0hO7wqvl6IikWNFzCgVyOR84ZEkBONlWPC495LDnWVlyzbRJo8Z6NfWNtXzki8wf%2Fvj77A0keur%2FbJWu19uOixIdR6jGb%2Bmgs%2BN9eCHU%2FaxTLoMhSUuARUGsdSKjqOGOY5hFOOmrCUzKTP2QOu8knTy0lT5891q7tWzqPOEdiaTTGxCxWcwwW9dUKyvEEkaLG0lv3dWHYP1pVoCcYxBqpdJ2U4aVag355uhYENNdyFQ4NuB%2BGCHFNhgoVc%2Bx56CaQIdqP0Kk6kkD9nicgQYGjDxnqDDBjqyASGkDS%2FAot%2BTQxPiX%2BsnKaFg0KgJxJXMHSgkXRo9AWTGO35jOk0sCwomYh%2FzriRV7vfzWbGj0ABxBdHOyuHxOlkyWcDYlzbsP54hFJXFiTDMhRzyFkF7znmvEZuadhUP34VYQaRTQhf757x0TxmIEcTnVQGbn4wSKhcxf88ECGT1Bl%2FrWGjav6da0Dt75dfo%2B3X2dMZHpHvt5VLxCfqSeFjhWol%2BhmS%2Bs5A4nkHgKDb0Akg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=b38b48f2821e819de2643dc74a953e9c692ae660d45afc3ad8d895f9e6a09e16",
+      "file_size": 8306,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 4264361,
+      "file_name": "2025-04-18_05_47_28-Window.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/2vofbqd17ckkyeyykyr99xsueape?response-content-disposition=attachment%3B%20filename%3D%222025-04-18_05_47_28-Window.png%22%3B%20filename%2A%3DUTF-8%27%272025-04-18_05_47_28-Window.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXFIWBIHS%2F20250704%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250704T195305Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECoaCXVzLXdlc3QtMiJGMEQCIDEJIae%2B9%2FetCxnax38G0rRS1FvTS0xQQyEHW3aE8LsXAiBtjqFd34ZMQvfTQ9NgGvCQF0csdEJ2yfjm1pqqUL%2B%2BrCqyBQgzEAMaDDAxMzYxOTI3NDg0OSIMZsc9EKXfkV4upQwBKo8Fv8GLrALjw%2BqJvCLuhTAGEpr%2BYg5oiYjLlZtwyNv3PWCKGQMSWQSaem%2B1wxWGedHMldmDNxXei2HI3k5ARC2WPYcoqPM5UF6vrRPQxW1ujdTzy5XQs3cmH1thmEldH69zPvsR9UO6yN1sgX%2FEMNwLtKmIkh9lysTfPki9P2Foplvx334aeTsdTPITOOdQJliAPTkbUxfBT%2Bgkb%2B2C%2FbWA1HtjZmdig3l3RQRNDj9YRWElg%2FfIdnaoQ4A8ZPUQKxJVeiIsZzhlGFRHdRyyTtKHnUBP5Yp3h1iHEDzZFwa%2FIzHG1y96CcTNUTlCTcdueW%2FlbroYrGE2y0CALQaWyd0Ds45vIkfOma8AUZwnflFW%2FCIEcChUdUZnEEcvjiLaZJNCNZovwv3OmvCtleMd7nAIguSTmiO0hrfeboVTUUGyi5WId6RzBgXi%2BsI8cuf8aFzaNvQL9niDBgLJSRYSCzdg%2Fmt%2FbyZugzwMPivJE26cV3Adm3JJ2T1XxrTs5MkTYX6mOyopC086QxYITSx28Yfo5g68iPYxKYIouU86pC%2FzG4bBeNwwh7jpHLjlSX5fOVEaon%2FlA3OzE10RNaGAad7P%2B0hO7wqvl6IikWNFzCgVyOR84ZEkBONlWPC495LDnWVlyzbRJo8Z6NfWNtXzki8wf%2Fvj77A0keur%2FbJWu19uOixIdR6jGb%2Bmgs%2BN9eCHU%2FaxTLoMhSUuARUGsdSKjqOGOY5hFOOmrCUzKTP2QOu8knTy0lT5891q7tWzqPOEdiaTTGxCxWcwwW9dUKyvEEkaLG0lv3dWHYP1pVoCcYxBqpdJ2U4aVag355uhYENNdyFQ4NuB%2BGCHFNhgoVc%2Bx56CaQIdqP0Kk6kkD9nicgQYGjDxnqDDBjqyASGkDS%2FAot%2BTQxPiX%2BsnKaFg0KgJxJXMHSgkXRo9AWTGO35jOk0sCwomYh%2FzriRV7vfzWbGj0ABxBdHOyuHxOlkyWcDYlzbsP54hFJXFiTDMhRzyFkF7znmvEZuadhUP34VYQaRTQhf757x0TxmIEcTnVQGbn4wSKhcxf88ECGT1Bl%2FrWGjav6da0Dt75dfo%2B3X2dMZHpHvt5VLxCfqSeFjhWol%2BhmS%2Bs5A4nkHgKDb0Akg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=c879472026193d92d06b0bbf3baabf74feaca840ebc6c2d1f311fa63fa7cd9c5",
+      "file_size": 49336,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 4264362,
+      "file_name": "2025-04-18_05_46_48-Window.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/m3ij6mkw1a8u3s73xqgo72vh7j48?response-content-disposition=attachment%3B%20filename%3D%222025-04-18_05_46_48-Window.png%22%3B%20filename%2A%3DUTF-8%27%272025-04-18_05_46_48-Window.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXFIWBIHS%2F20250704%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250704T195305Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECoaCXVzLXdlc3QtMiJGMEQCIDEJIae%2B9%2FetCxnax38G0rRS1FvTS0xQQyEHW3aE8LsXAiBtjqFd34ZMQvfTQ9NgGvCQF0csdEJ2yfjm1pqqUL%2B%2BrCqyBQgzEAMaDDAxMzYxOTI3NDg0OSIMZsc9EKXfkV4upQwBKo8Fv8GLrALjw%2BqJvCLuhTAGEpr%2BYg5oiYjLlZtwyNv3PWCKGQMSWQSaem%2B1wxWGedHMldmDNxXei2HI3k5ARC2WPYcoqPM5UF6vrRPQxW1ujdTzy5XQs3cmH1thmEldH69zPvsR9UO6yN1sgX%2FEMNwLtKmIkh9lysTfPki9P2Foplvx334aeTsdTPITOOdQJliAPTkbUxfBT%2Bgkb%2B2C%2FbWA1HtjZmdig3l3RQRNDj9YRWElg%2FfIdnaoQ4A8ZPUQKxJVeiIsZzhlGFRHdRyyTtKHnUBP5Yp3h1iHEDzZFwa%2FIzHG1y96CcTNUTlCTcdueW%2FlbroYrGE2y0CALQaWyd0Ds45vIkfOma8AUZwnflFW%2FCIEcChUdUZnEEcvjiLaZJNCNZovwv3OmvCtleMd7nAIguSTmiO0hrfeboVTUUGyi5WId6RzBgXi%2BsI8cuf8aFzaNvQL9niDBgLJSRYSCzdg%2Fmt%2FbyZugzwMPivJE26cV3Adm3JJ2T1XxrTs5MkTYX6mOyopC086QxYITSx28Yfo5g68iPYxKYIouU86pC%2FzG4bBeNwwh7jpHLjlSX5fOVEaon%2FlA3OzE10RNaGAad7P%2B0hO7wqvl6IikWNFzCgVyOR84ZEkBONlWPC495LDnWVlyzbRJo8Z6NfWNtXzki8wf%2Fvj77A0keur%2FbJWu19uOixIdR6jGb%2Bmgs%2BN9eCHU%2FaxTLoMhSUuARUGsdSKjqOGOY5hFOOmrCUzKTP2QOu8knTy0lT5891q7tWzqPOEdiaTTGxCxWcwwW9dUKyvEEkaLG0lv3dWHYP1pVoCcYxBqpdJ2U4aVag355uhYENNdyFQ4NuB%2BGCHFNhgoVc%2Bx56CaQIdqP0Kk6kkD9nicgQYGjDxnqDDBjqyASGkDS%2FAot%2BTQxPiX%2BsnKaFg0KgJxJXMHSgkXRo9AWTGO35jOk0sCwomYh%2FzriRV7vfzWbGj0ABxBdHOyuHxOlkyWcDYlzbsP54hFJXFiTDMhRzyFkF7znmvEZuadhUP34VYQaRTQhf757x0TxmIEcTnVQGbn4wSKhcxf88ECGT1Bl%2FrWGjav6da0Dt75dfo%2B3X2dMZHpHvt5VLxCfqSeFjhWol%2BhmS%2Bs5A4nkHgKDb0Akg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=f6c65f3e913ebc654fcbe928eed40350dae6786e02148d45c963db2bc5b82cba",
+      "file_size": 32741,
+      "type": "image/png",
+      "moderated": false
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 63,
+  "voters": [
+    "orange303",
+    "kinyongiwatum",
+    "loaymorad",
+    "2026",
+    "spaghettisec",
+    "mohaned0101",
+    "thalaivar304",
+    "idealphaseth",
+    "inputwhisperer",
+    "timfreitag07",
+    "and 53 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "score": 3.6,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "required",
+      "scope": "unchanged",
+      "confidentiality": "low",
+      "integrity": "none",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 93169,
+    "asset_type": "URL",
+    "asset_identifier": "lichess4545.com",
+    "max_severity": "medium"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
