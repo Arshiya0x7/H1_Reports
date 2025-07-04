@@ -1,0 +1,147 @@
+{
+  "id": 3104355,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMTA0MzU1",
+  "url": "https://hackerone.com/reports/3104355",
+  "title": "Race Condition in Folder Creation Allows Bypassing Folder Limit",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2025-04-22T15:17:48.108Z",
+  "submitted_at": "2025-04-22T15:17:48.612Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "0xsom3a",
+    "url": "/0xsom3a",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/ivo65tc82z431fq66znypq5rfbmd/34d66f102c221f04bff0dfecc4e57bf028bf0d8d950d3eb3c1bfe49fe4301d41"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 96398,
+    "url": "https://hackerone.com/dust",
+    "handle": "dust",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/g9pcp90s23rz0kq1duus45xaaov9/36bca6668139d77be42208d896968344ae7a76c55ee0f8b0f28281ccd492ff02",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/g9pcp90s23rz0kq1duus45xaaov9/19c85a12ac35f466af1ea2b0ae853bfe5e8f057fb1d6fb62db131707bb67b30d"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Dust",
+      "twitter_handle": "dust4ai",
+      "website": "http://dust.tt",
+      "about": "Dust is building an enterprise agent operating system, allowing teams to augment internal workflows with easy-to-customise and context-aware AI."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2025-04-29T10:17:40.701Z",
+  "bug_reporter_agreed_on_going_public_at": "2025-04-28T12:20:11.898Z",
+  "team_member_agreed_on_going_public_at": "2025-04-29T10:17:40.371Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nThe application enforces a hard limit of **10 folders** per user under a specific space (`Knowledge -> Space -> Folder`). However, due to a **Race Condition**, it is possible to bypass this limit by sending multiple folder creation requests simultaneously after deleting one folder. This leads to creating **more than 10 folders**, breaking the intended restriction.\n\n\n## Steps to Reproduce\n\n1. Navigate to the **Knowledge** section and enter a specific **Space**.\n2. Create folders until you reach the maximum limit of 10.\n3. Attempt to create an additional folder — you will receive an error indicating the limit has been reached.\n\n{F4275950}\n\n4. Delete one folder so the total becomes 9.\n5. Immediately after deletion, send a large number of simultaneous folder creation requests (e.g., using Burp Suite Intruder or a custom script).\n6. Observe that more than 10 folders are created — the limit is bypassed successfully.\n\n{F4275962}\n\n---\n#POC VIDEO:\n\n███████\n\n---\n\n## Impact\n\nThis vulnerability allows users to bypass the folder creation limit by sending multiple requests at the same time. As a result, they can create more folders than allowed.\n\nThis breaks the platform's rules and can lead to:\n\n- Unfair use of resources.\n- Slower performance for other users.\n- Abuse of system limits that are meant to keep things stable.\n\nIf someone uses this in a large workspace, it could cause serious problems for the whole team.",
+  "weakness": {
+    "id": 65,
+    "name": "Business Logic Errors"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 4275950,
+      "file_name": "22.04.2025_16.47.11_REC.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/ehwvh06pps71c3hh907160u874v4?response-content-disposition=attachment%3B%20filename%3D%2222.04.2025_16.47.11_REC.png%22%3B%20filename%2A%3DUTF-8%27%2722.04.2025_16.47.11_REC.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6G65MFJS%2F20250704%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250704T195750Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECoaCXVzLXdlc3QtMiJIMEYCIQDPuxwsJDjHTxjH%2FqNRsDAmPHPdFiUeImrXoxwNaA%2FwkwIhAI%2BQdOMW1wIULIb6uWuoH5ctJ5dsZX5hl0qljtaB3m75KrEFCDMQAxoMMDEzNjE5Mjc0ODQ5Igz81WDmB4v8tHAjwMMqjgVSt5fjXfHwugJgQcPRAe2NMGtv2BKO5rpFyrQlAEz7oRlSq6YXGoSr7%2BBGu%2B%2Bqr7b6RwK1a75tcWwZ2stNkOCfiJRd3bhD7Cb4mxmKNtGLblienBlUM2tH52yuCi2SyZIThCaV967jwI0Mw2cUcyJQ6e32XzBqvdj8vB%2F095LCPd9Y6YSqjb1CWqAtoUZK9h5q37EVikXZehhp%2BVd2EjpnJfdmZ28ENSrmyBkPQsF5sfyZaTk6QI1Rfq0lH1YeDpdLPR%2BDk6aY3URBMehapeM%2FqvRZwi3mXhZaU52SIniJiMRAcPHlHnxoiWXTG8wPOy20rDUnRhOSQuXc%2FL30hkMmdgkHTX16W3%2BBftzcAJhUp8wKHpquSkZLyLd1g92IEZb6Ojtab%2FpCaJebjgo1fG7oSX5b5C%2BcsYstguz%2FtBh%2BRq1OhupdFCOIStIRaDBKnkh7P642BEW5%2FhVZs9r1uXuYLucgVYI2ceNCUL0wIbnFNW23z7lSNDotWN3YM86jAddDuC7yoTVaFg3oACLlMrxxGLBpB4qKln96x3wl2NWHOzOLtFC%2FiGFvLeNjxZrLiXvutWjdll%2FDZgxJPqDv7qrbLgGkwaARXgGcQNfbPMYVPdlbxCDwk%2BSQdpRQH74M6%2BF7xSdYWBgCfvOoff23IgSklGVp3fTm46DzypxrlJ8vRf4j8dj1mutEUtSCswMDgolANUjOD88YLhfuiucmi0SfaTiEoFC0fq4mjD7CmMvGl2znOCoQopfgulX%2B8vYbKM1VcSyiFf9DO3XkRyoksQYvjVWHp3pKRmLsutyDkVNugIkCUmm2RIrCc6m1hjPf32k%2BUV3vhZNsgEP1g9FyCxyYao7OzYO1W8bY1e3M6q4w56%2BgwwY6sAH5Zn%2BpdCoCGmUXocyvy8LyLLYOePbPQGqb1ow%2FYwAwDZ3rKKH5VijKY8Py0RYA5WmxO4WCDb7H63OIseNJlj26HxMdqFE61TXsXXWHjZ2p4rP2iXfyeNTzWfWpForgpMLSqURh5cQWwhDZ%2BXey%2FKSn1ViJT0h4xTZymDJhL%2FNmHQdPQsoXr%2FM%2BIFfRjS96QCiXtgsFJlPUSynecAznw1Y2hTDZwtUFG0tXRFBJiAuk1w%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=bacfc92654ebd2b5e6f565b59009c0702ca528a7ae7284145e3ad90e7be8f009",
+      "file_size": 137605,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 4275962,
+      "file_name": "22.04.2025_17.06.16_REC.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/v0i6ydx6oq64k3psn99kd9zehqo2?response-content-disposition=attachment%3B%20filename%3D%2222.04.2025_17.06.16_REC.png%22%3B%20filename%2A%3DUTF-8%27%2722.04.2025_17.06.16_REC.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6G65MFJS%2F20250704%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250704T195750Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECoaCXVzLXdlc3QtMiJIMEYCIQDPuxwsJDjHTxjH%2FqNRsDAmPHPdFiUeImrXoxwNaA%2FwkwIhAI%2BQdOMW1wIULIb6uWuoH5ctJ5dsZX5hl0qljtaB3m75KrEFCDMQAxoMMDEzNjE5Mjc0ODQ5Igz81WDmB4v8tHAjwMMqjgVSt5fjXfHwugJgQcPRAe2NMGtv2BKO5rpFyrQlAEz7oRlSq6YXGoSr7%2BBGu%2B%2Bqr7b6RwK1a75tcWwZ2stNkOCfiJRd3bhD7Cb4mxmKNtGLblienBlUM2tH52yuCi2SyZIThCaV967jwI0Mw2cUcyJQ6e32XzBqvdj8vB%2F095LCPd9Y6YSqjb1CWqAtoUZK9h5q37EVikXZehhp%2BVd2EjpnJfdmZ28ENSrmyBkPQsF5sfyZaTk6QI1Rfq0lH1YeDpdLPR%2BDk6aY3URBMehapeM%2FqvRZwi3mXhZaU52SIniJiMRAcPHlHnxoiWXTG8wPOy20rDUnRhOSQuXc%2FL30hkMmdgkHTX16W3%2BBftzcAJhUp8wKHpquSkZLyLd1g92IEZb6Ojtab%2FpCaJebjgo1fG7oSX5b5C%2BcsYstguz%2FtBh%2BRq1OhupdFCOIStIRaDBKnkh7P642BEW5%2FhVZs9r1uXuYLucgVYI2ceNCUL0wIbnFNW23z7lSNDotWN3YM86jAddDuC7yoTVaFg3oACLlMrxxGLBpB4qKln96x3wl2NWHOzOLtFC%2FiGFvLeNjxZrLiXvutWjdll%2FDZgxJPqDv7qrbLgGkwaARXgGcQNfbPMYVPdlbxCDwk%2BSQdpRQH74M6%2BF7xSdYWBgCfvOoff23IgSklGVp3fTm46DzypxrlJ8vRf4j8dj1mutEUtSCswMDgolANUjOD88YLhfuiucmi0SfaTiEoFC0fq4mjD7CmMvGl2znOCoQopfgulX%2B8vYbKM1VcSyiFf9DO3XkRyoksQYvjVWHp3pKRmLsutyDkVNugIkCUmm2RIrCc6m1hjPf32k%2BUV3vhZNsgEP1g9FyCxyYao7OzYO1W8bY1e3M6q4w56%2BgwwY6sAH5Zn%2BpdCoCGmUXocyvy8LyLLYOePbPQGqb1ow%2FYwAwDZ3rKKH5VijKY8Py0RYA5WmxO4WCDb7H63OIseNJlj26HxMdqFE61TXsXXWHjZ2p4rP2iXfyeNTzWfWpForgpMLSqURh5cQWwhDZ%2BXey%2FKSn1ViJT0h4xTZymDJhL%2FNmHQdPQsoXr%2FM%2BIFfRjS96QCiXtgsFJlPUSynecAznw1Y2hTDZwtUFG0tXRFBJiAuk1w%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=03feb1f972e9200a13c5eecc446f6991d8e7d3a46cc04b6b654e81913fddb178",
+      "file_size": 113762,
+      "type": "image/png",
+      "moderated": false
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 45,
+  "voters": [
+    "loaymorad",
+    "orange303",
+    "starlox",
+    "raslanco",
+    "0xsom3a",
+    "2026",
+    "shubham_srt",
+    "mohaned0101",
+    "mozaaaaa",
+    "khoof",
+    "and 35 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 6.5,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "low",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "none",
+      "integrity": "none",
+      "availability": "high"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 839746,
+    "asset_type": "URL",
+    "asset_identifier": "https://dust.tt",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
