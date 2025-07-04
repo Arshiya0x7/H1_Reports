@@ -1,0 +1,124 @@
+{
+  "id": 2693786,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yNjkzNzg2",
+  "url": "https://hackerone.com/reports/2693786",
+  "title": "A peer can remotely fill the pending block queue to an extremely high size, with blocks that will never leave the queue.",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2024-09-01T23:01:32.478Z",
+  "submitted_at": "2024-09-01T23:01:32.582Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "boog900",
+    "url": "/boog900",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 7731,
+    "url": "https://hackerone.com/monero",
+    "handle": "monero",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/007/731/55634f7fcd917725c7a5771cc6e7c9b4d5fe0c22_original.png/36bca6668139d77be42208d896968344ae7a76c55ee0f8b0f28281ccd492ff02",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/007/731/55634f7fcd917725c7a5771cc6e7c9b4d5fe0c22_original.png/19c85a12ac35f466af1ea2b0ae853bfe5e8f057fb1d6fb62db131707bb67b30d"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Monero",
+      "twitter_handle": "monero",
+      "website": "https://getmonero.org",
+      "about": " Monero: the secure, private, untraceable cryptocurrency"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2025-04-23T15:05:22.003Z",
+  "bug_reporter_agreed_on_going_public_at": "2025-04-23T15:05:21.864Z",
+  "team_member_agreed_on_going_public_at": "2025-04-23T14:24:36.554Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\n\nThe pending block queue holds the blocks that we have downloaded but have yet to verify, because of a few lax rules in the synchronization code it's possible to fill this queue past the limit. My PoC could get the queue to ~54 GB, slightly larger would be possible with slight modifications. I _think_ you could fill the queue to an arbitrary size but it would require an extra step that I haven't tested yet. I think 54 GBs is enough to kill almost all nodes though.\n\n# Issues \n\nSome parts of this section are not directly issues on their own, but they are part of the wider problem.\n\n## The block queue can grow past its limit under certain circumstances\n\nHere is where we decide whether to proceed and download blocks or wait: https://github.com/monero-project/monero/blob/a1dc85c5373a30f14aaf7dcfdd95f5a7375d3623/src/cryptonote_protocol/cryptonote_protocol_handler.inl#L2130\n\nAs you can see if `stripe_proceed_main` is `true` the limit is ignored. The `stripe_proceed_main` condition is pretty ugly so here is some helping comments:\n\n```\nbool stripe_proceed_main =\n    (\n        (m_sync_pruned_blocks && local_stripe && add_stripe != local_stripe) // True if we should sync pruned blocks, we are pruned and the peer has the next blocks pruned.\n        || add_stripe == 0 // True if the next block is within the tip-blocks which won't be pruned.\n        || peer_stripe == 0 // True if the peer does no pruning.\n        || add_stripe == peer_stripe // True if the peer is pruned and has the next block un-pruned.\n    )\n    && \n    (\n        next_block_height < bc_height + BLOCK_QUEUE_FORCE_DOWNLOAD_NEAR_BLOCKS // True if next_block_height is less than 1000 blocks above our blockchain\n        || next_needed_height < bc_height + BLOCK_QUEUE_FORCE_DOWNLOAD_NEAR_BLOCKS // True if next_needed_heightis less than 1000 blocks above our blockchain\n    );\n```\n\nThe first part before the `&&` is just checking that the peer has the blocks unpruned or that we are syncing pruned blocks.\n\nThe problem is the next part, which allows the queue to grow past its allowed size if  `next_needed_height` or `next_block_height`  is less than 1000 above our chain.\n\n`next_block_height` is the height of the next block we expect from the peer.\n\n`next_needed_height` is got from https://github.com/monero-project/monero/blob/a1dc85c5373a30f14aaf7dcfdd95f5a7375d3623/src/cryptonote_protocol/block_queue.cpp#L160\n\nAs a side note `get_next_needed_height` seems to be incorrect, but I don't know what it was originally meant to do to confirm that. It's called `get_next_needed_height` and under normal circumstances in gets one more than the highest requested block, however under some conditions it will return a block way under that. Although this function being incorrect is not relied on for this issue.\n\n## You can send blocks in a `GetObjectsResponse` that are not directly related\n\nWhen receiving a  `GetObjectsResponse` monerod does not check that blocks are directly related to each other before adding the blocks to the queue.\n\nIt is possible to request blocks not in chronological order  but monerod wont do this, so it seems like we should be checking the blocks actually follow each other.\n\n## Blocks currently downloaded, pending in the block queue, are in the `requested_hashes` list.\n\nThis may be intended behavior, but it does seem we should probably keep a separate list for actually downloaded blocks in the queue. \n\n## When trying to add blocks to the blockchain we check if the block parent is in the `requested_hashes` and skip\n\nhere: https://github.com/monero-project/monero/blob/a1dc85c5373a30f14aaf7dcfdd95f5a7375d3623/src/cryptonote_protocol/cryptonote_protocol_handler.inl#L1471\n\n # The attack\n\nThe attack now may be pretty obvious but the rough steps are to choose a height below the target peers to split the chain, create a dummy block a small number of blocks above the split point, this block is then the \"anchor\", set the first block in your split chain's `prev_id` to the hash of the anchor block and now just fill the rest of the blocks in with any `prev_id`.\n\nNow because we are below the peers blockchain the size limit of the queue is ignored (?!?) and when the peer goes to add the blocks to the blockchain it would see the block's parent as still being \"downloaded\" and wait for it.\n\n## Steps To Reproduce:\n\nI have made a PoC, it is very rough, only works on a synced mainnet node and only makes a single connection so is pretty slow.\n\nTo run download the attached files, move the `.rs` files to a `src` directory and run:\n\n```bash\ncargo run -- --addr <NODE_ADDRESS>\n```\n\nFor example to target a node at `127.0.0.1:18080`:\n\n```bash\ncargo run -- --addr 127.0.0.1:18080\n```\n\nYou can run `sync_info` in monerod to see the size of the block queue.\n\n---- \n\nThis issue was found while helping  0xFFFC0000 with an issue ofrnxmr had, while testing their dynamic block sync size PR.\n\n## Impact\n\nKilling a node over a P2P connection.",
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 3567196,
+      "file_name": "main.rs",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/abf468im7b2t2lgxnifbv0pi70ub?response-content-disposition=attachment%3B%20filename%3D%22main.rs%22%3B%20filename%2A%3DUTF-8%27%27main.rs&response-content-type=text%2Frust&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQT6UIEBFW%2F20250704%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250704T200016Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECkaCXVzLXdlc3QtMiJFMEMCIEao864s9YhvBEcSAZ6%2Fq5YGGVyb2N0AX1DFQnUn1jQkAh9W8Ur2eEu3SJZhFpMswFBpY%2BLJLGtT7px%2BgEimTU9iKrIFCDIQAxoMMDEzNjE5Mjc0ODQ5IgyqcDZTyRlZ3mI3ZEYqjwVWg07cJNqqXGRLyH%2FtpxBRTMt6edjFzcv36b%2FJ3GZBTELFXZzmnnGU8QYvgUkHsus0alzgKj1ut3WgwPug%2F0CxIPqT%2FeDsBfMyMlKukQs8u6Sw9r%2FmFiraLsTRRhF%2FHXu3C47H%2BtPgGXe8y3RJhK5iaiJJugf51DZgCzrYPHkA9WAD7Z30umNd7Z4GuCAukabYVT0AgqMRQUnuBKWgoEUKLSFLvIeW74%2F3SVuAn9hlEKP6qOaGiRf8O8UN%2FJ%2F9Yw37XPbFhOSIe8MLFKc26FqZJLyeaCplJPTDLQU%2BTW1bkIIpud3SGd7KCx%2BFff9UoFryEHyUx8zNR3z9x%2BgzWsyDryX0%2FBh1XilDm6oxiNeBUxwFV7KDivYCbH029K7cBIQa6Wtf0wNCXnfeUDKsFhrwHFE8iuPOr7KzleYG0lJRjau%2Bp%2Bi8j5YEqjoJlnsy7HP%2FtMpTnDpqQMzI5evQ815SBAWaKykVrU0cyAD6StM7hBCWYre8GKubyYQFlwFyKv%2Bim8hSwAt%2By%2B%2FP8iklN7B%2FOyJWcg2BKLRqaskcwzMmEgCmAR%2FqircSbJp5O9jeffrCnL8ZoOC2paZlhgC1VdkdVwieUY5yvPFDVNxSYujQaOvti8dkioDDa5KpTt2WiEBqpfSnNH%2F973X8aRgGXBHjFH89R%2BnAMdUWUAGru%2FHsE%2F7ghkL%2FEaS%2B8NOH%2Fb%2BE9QB3V3coSWQDa9FMeD894K5K6N4IET8MFhF9GjsRouxNoCgZZ%2BZ3LfOTtFQyVVxTiQAjbFGo%2B0Vmp1tm0axb7V2E2Srb5guRYaFr9joFtM2%2BQhGoMkfafcPD%2BvlNanp5kRdgt5OPjPUx%2F30qa%2B6mxOYxc45tBJu2exCQmzi6P1dqMImRoMMGOrMByRaZ4C7KUwg%2BBRWQpPkSkDJ0l5oO0D03Pb%2Ba5xnC2oRRFXspjYZy%2FonLgq4VKq%2Bfnl2eprUvCyuwEG1anXqZH70IMg%2Bl4dFiY%2B6Q3fwJwjDQCAAwU4s0P97VetTCkPtVydADOI4kqPyWGw3N3rhIq9k1OrtW4mdT8dim%2FrMmbSiPVYXmuXIW4%2Fc8J3AnrWW2%2Fk4V6PrzrQEwnJ1iV890HMo2yZ9pE6Kjf%2FWtGErjyafMVGA%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=41534c9b672c9957a456511fc1c70a07d5279f9e0a1fd539548b1c37a02972f5",
+      "file_size": 5607,
+      "type": "text/rust",
+      "moderated": null
+    },
+    {
+      "id": 3567197,
+      "file_name": "Cargo.toml",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/ixey6j7sadv7bpozthg7rqeulvxt?response-content-disposition=attachment%3B%20filename%3D%22Cargo.toml%22%3B%20filename%2A%3DUTF-8%27%27Cargo.toml&response-content-type=application%2Ftoml&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQT6UIEBFW%2F20250704%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250704T200016Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECkaCXVzLXdlc3QtMiJFMEMCIEao864s9YhvBEcSAZ6%2Fq5YGGVyb2N0AX1DFQnUn1jQkAh9W8Ur2eEu3SJZhFpMswFBpY%2BLJLGtT7px%2BgEimTU9iKrIFCDIQAxoMMDEzNjE5Mjc0ODQ5IgyqcDZTyRlZ3mI3ZEYqjwVWg07cJNqqXGRLyH%2FtpxBRTMt6edjFzcv36b%2FJ3GZBTELFXZzmnnGU8QYvgUkHsus0alzgKj1ut3WgwPug%2F0CxIPqT%2FeDsBfMyMlKukQs8u6Sw9r%2FmFiraLsTRRhF%2FHXu3C47H%2BtPgGXe8y3RJhK5iaiJJugf51DZgCzrYPHkA9WAD7Z30umNd7Z4GuCAukabYVT0AgqMRQUnuBKWgoEUKLSFLvIeW74%2F3SVuAn9hlEKP6qOaGiRf8O8UN%2FJ%2F9Yw37XPbFhOSIe8MLFKc26FqZJLyeaCplJPTDLQU%2BTW1bkIIpud3SGd7KCx%2BFff9UoFryEHyUx8zNR3z9x%2BgzWsyDryX0%2FBh1XilDm6oxiNeBUxwFV7KDivYCbH029K7cBIQa6Wtf0wNCXnfeUDKsFhrwHFE8iuPOr7KzleYG0lJRjau%2Bp%2Bi8j5YEqjoJlnsy7HP%2FtMpTnDpqQMzI5evQ815SBAWaKykVrU0cyAD6StM7hBCWYre8GKubyYQFlwFyKv%2Bim8hSwAt%2By%2B%2FP8iklN7B%2FOyJWcg2BKLRqaskcwzMmEgCmAR%2FqircSbJp5O9jeffrCnL8ZoOC2paZlhgC1VdkdVwieUY5yvPFDVNxSYujQaOvti8dkioDDa5KpTt2WiEBqpfSnNH%2F973X8aRgGXBHjFH89R%2BnAMdUWUAGru%2FHsE%2F7ghkL%2FEaS%2B8NOH%2Fb%2BE9QB3V3coSWQDa9FMeD894K5K6N4IET8MFhF9GjsRouxNoCgZZ%2BZ3LfOTtFQyVVxTiQAjbFGo%2B0Vmp1tm0axb7V2E2Srb5guRYaFr9joFtM2%2BQhGoMkfafcPD%2BvlNanp5kRdgt5OPjPUx%2F30qa%2B6mxOYxc45tBJu2exCQmzi6P1dqMImRoMMGOrMByRaZ4C7KUwg%2BBRWQpPkSkDJ0l5oO0D03Pb%2Ba5xnC2oRRFXspjYZy%2FonLgq4VKq%2Bfnl2eprUvCyuwEG1anXqZH70IMg%2Bl4dFiY%2B6Q3fwJwjDQCAAwU4s0P97VetTCkPtVydADOI4kqPyWGw3N3rhIq9k1OrtW4mdT8dim%2FrMmbSiPVYXmuXIW4%2Fc8J3AnrWW2%2Fk4V6PrzrQEwnJ1iV890HMo2yZ9pE6Kjf%2FWtGErjyafMVGA%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=9b5f400f45a83120b06a68f1ccd8747411e22a10d5c0ef093318defc581ced21",
+      "file_size": 746,
+      "type": "application/toml",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2025-05-23T14:24:36.687Z",
+  "allow_singular_disclosure_after": -3648940.01964483,
+  "singular_disclosure_allowed": true,
+  "vote_count": 22,
+  "voters": [
+    "2026",
+    "mohaned0101",
+    "mr-alienx-kurd",
+    "thalaivar304",
+    "sottam",
+    "0011000",
+    "s1ycsi",
+    "amapapa",
+    "isco24",
+    "threatexploiter",
+    "and 12 more..."
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
