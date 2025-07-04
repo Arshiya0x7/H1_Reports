@@ -1,0 +1,128 @@
+{
+  "id": 3101207,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMTAxMjA3",
+  "url": "https://hackerone.com/reports/3101207",
+  "title": "Improper Session Invalidation – Auto Sign-In Without Credentials After Logout (Affects Chrome & Firefox)",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2025-04-19T23:18:28.470Z",
+  "submitted_at": "2025-04-19T23:18:32.094Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "pent0ss",
+    "url": "/pent0ss",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/dxd3adnkx5sk51195wnnxsllluw7/727634197f209244e4307a490cdcd36c76d6e37fef1b0c164bd35ac010105f99"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 96398,
+    "url": "https://hackerone.com/dust",
+    "handle": "dust",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/g9pcp90s23rz0kq1duus45xaaov9/36bca6668139d77be42208d896968344ae7a76c55ee0f8b0f28281ccd492ff02",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/g9pcp90s23rz0kq1duus45xaaov9/19c85a12ac35f466af1ea2b0ae853bfe5e8f057fb1d6fb62db131707bb67b30d"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Dust",
+      "twitter_handle": "dust4ai",
+      "website": "http://dust.tt",
+      "about": "Dust is building an enterprise agent operating system, allowing teams to augment internal workflows with easy-to-customise and context-aware AI."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2025-04-29T14:09:13.683Z",
+  "bug_reporter_agreed_on_going_public_at": "2025-04-23T22:47:57.554Z",
+  "team_member_agreed_on_going_public_at": "2025-04-29T14:09:13.224Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nWhen a user logs out, the session is not invalidated properly. Revisiting the login page allows automatic re-authentication without any user input. This means the session remains active or is being improperly restored.\n\nTested on:\n- Google Chrome \n- Mozilla Firefox\n\nBehavior is consistent across multiple browsers\n\n## Steps To Reproduce:\n\n1. Log in to the web application with a valid account.\n2. Click on the \"Logout\" button.\n3. Stay in the same browser, or open a new tab with the site.\n4. Click on “Sign In” or visit the login page.\n\n### Observe: User is automatically signed back in without entering email/password\n\n## Expected Behavior:\n\n- On logout, all session tokens should be invalidated both client and server-side.\n\n- Revisiting the login page must not restore access without re-authentication\n\n## Recommendation:\n\n- Properly invalidate the session on the server.\n- Remove all tokens/cookies from the browser.\n- Set cache-control headers to prevent session restoration via back/forward navigation.\n- Consider revoking refresh tokens where applicable\n\n## Impact\n\n- Logout becomes meaningless, giving a false sense of security.\n- If someone else gains temporary or physical access to the browser, they can easily regain access to the account without credentials.\n- Risk is amplified in environments like internet cafés, libraries, or if a device is lost/stolen.",
+  "weakness": {
+    "id": 90,
+    "name": "Insufficient Session Expiration"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 4267925,
+      "file_name": "Insufficient_Session_Expiration.mkv",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/dxw72hcudatc4jxhqr5iutkbyd4y?response-content-disposition=attachment%3B%20filename%3D%22Insufficient_Session_Expiration.mkv%22%3B%20filename%2A%3DUTF-8%27%27Insufficient_Session_Expiration.mkv&response-content-type=video%2Fx-matroska&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQVBOGHLCM%2F20250704%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250704T195717Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECkaCXVzLXdlc3QtMiJHMEUCIBN4%2FmjclAXh6%2BgJEx%2FKjclxaDQLwR21O3i1mi12LIrjAiEAhfm8saPKBWupv3G8WW7GYJE0fo6qbyigCtA%2BfyeMoSgqsQUIMhADGgwwMTM2MTkyNzQ4NDkiDKqjel8N8bzv3PcNKiqOBTr1jk0t26VDA4%2Bv7bRs4HWjd2OBOBYxYgGnHOVd4uZs3lhcv8EJwT3XL1Du3yJk296GcCDt6UORmMx5esmnwDvmeu6AZ3gRCCmkE%2F%2FQSCcRyZQqrFH8EneHnGfHX9OYV%2Fe3kZC3F6bxnsehdnT2U7cXXhgh754rvlOKuXhq%2FV7%2FJeO3wPOfiYKK4GvoOw%2FkQMTg27EazH9YJcqSfcVLfMmTEIWAWyqYxhI9wzucySxZ%2BRFrisZgab11F8ioOoVOVNAeLjahwXVVVQwR2Mvb01l77leOnfSjoAwtl%2FJK1UD3gdFHjERL8%2BxMHuqSlrUz3e%2BFAJwZZ3TJlvIdg5R9mZf2wMXOeTA6Ubg8bQGf1seNNdu0aZJnVHtFkrdn4KO2eDk0hk3%2FW69H6D9eWD08QLAvZBClgQnUzfPoH5U5qQWMAXIGu2xJsX3kS%2BpFWGahjLdabTKBtmYN16I68bljIuAJyQMX4qP1ujp8BamCJE8yTWNKaBcTHIdUkX1a8b%2B%2Fv3pN6rTSxorFeKfnUbeLEeJIvWnPJiZn8Cuo4eixgXS9qOXKWpNYvL6dcPNxqKBCtVZlnyFmRVP06aUPE%2BA5l5737EkC8zjgkxLiVT%2B%2FMQIRTvUeCdyeFN34uF9HVhBdxTe1akwzX4ArEvtSvLfS5w0yZN12z%2BRYVfBjLppEAys9vAS6wK1pMbnVMN88CKbUtQoTO1vKL90u46b8Uupvw8wtUL7Gqq%2BRQlY%2BfnaCm67HKisqvYShXBoDpz%2BI6G6sQHlbjTSmcyH3gU6BYlO4qtnZCrvIKAxfwy%2FpuFwKbUq3YXpGnSnXkrwSa0Al33AaVzc5F8gKAhvnhCnKvoY%2F7BFPSlVJ%2BOYC57ilW64MvjDxhqDDBjqxARJAVFoZOR%2FeZ34yrXbAmd1NYuo8We97IOpsHr0lWcL0dc7Q4YBKLwQWJKEkO0r%2Fldv8j8yIVmyN5vkFQOL8ZWr8Os1Mav2YgEKcR6tpGvzdidvX6Jj1wjQ2bfnH%2BGdaZteMZpQ3dcBSisRG1YK%2BpYNXxaNbA8PquBcmKqQEUPpsxnGNGDJUm90ocyTIQrV2oYSbHX42MoB0Twmv4XU5zUzAccKS2GTkwjgR7gLKaS7GpA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=d04198825f91303cf3f9247cec714d11e56aea2199c6c832049b490af40574f8",
+      "file_size": 22538720,
+      "type": "video/x-matroska",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 50,
+  "voters": [
+    "orange303",
+    "loaymorad",
+    "2026",
+    "shubham_srt",
+    "q11x",
+    "mohaned0101",
+    "thalaivar304",
+    "0xzyo",
+    "idealphaseth",
+    "sentinel__",
+    "and 40 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 842488,
+    "asset_type": "URL",
+    "asset_identifier": "https://eu.dust.tt/",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
