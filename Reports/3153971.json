@@ -1,0 +1,127 @@
+{
+  "id": 3153971,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMTUzOTcx",
+  "url": "https://hackerone.com/reports/3153971",
+  "title": "Stack Buffer Overflow in curl's OpenSSL Provider Handling",
+  "state": "Closed",
+  "substate": "not-applicable",
+  "severity_rating": "medium",
+  "readable_substate": "N/A",
+  "created_at": "2025-05-20T00:07:25.715Z",
+  "submitted_at": "2025-05-20T00:07:26.367Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "oblivionsage",
+    "url": "/oblivionsage",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/x2lozwzz6o4gdnb66zxqxjvzza3i/36bca6668139d77be42208d896968344ae7a76c55ee0f8b0f28281ccd492ff02"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 35663,
+    "url": "https://hackerone.com/curl",
+    "handle": "curl",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/035/663/2faf4c279d437d64bfda6d23d62ce1833813a4d9_original.png/36bca6668139d77be42208d896968344ae7a76c55ee0f8b0f28281ccd492ff02",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/035/663/2faf4c279d437d64bfda6d23d62ce1833813a4d9_original.png/19c85a12ac35f466af1ea2b0ae853bfe5e8f057fb1d6fb62db131707bb67b30d"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "curl",
+      "twitter_handle": "",
+      "website": "https://curl.se",
+      "about": "cURL is an Open Source project providing a library and command-line tool doing internet transfers"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2025-06-28T12:40:36.741Z",
+  "bug_reporter_agreed_on_going_public_at": "2025-06-28T12:40:36.598Z",
+  "team_member_agreed_on_going_public_at": "2025-06-28T12:21:53.087Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "# Summary\n\nHello curl Team,\n\nI found a stack buffer overflow in curl's OpenSSL provider handling code. The bug is in `ossl_set_provider()` function located in `lib/vtls/openssl.c`. When a provider name longer than `MAX_PROVIDER_LEN` is passed, the function copies it to a fixed-size buffer without proper length checking, causing stack overflow\n\n# Vulnerability Location\n\n\n\nThe buffer overflow happens in `lib/vtls/openssl.c` at line 2003-2004:\n\n\n```c\nmemcpy(name, curlx_str(&prov), curlx_strlen(&prov));\nname[curlx_strlen(&prov)] = 0;\n```\n\n# Code Analysis\n\nI was looking at curl's SSL engine handling and noticed something strange in the provider setup. Here is what happens:\n\n1.  The `ossl_set_provider()` function defines a fixed buffer:\n\n```c\nchar name[MAX_PROVIDER_LEN + 1];  // line 1986\n```\n\nwhere `MAX_PROVIDER_LEN` is defined as 128 (line 1974 in the same file)\n\n\n2. Later in the function (line 2003-2004), it copies data from the provider string:\n\n```c\nmemcpy(name, curlx_str(&prov), curlx_strlen(&prov));\nname[curlx_strlen(&prov)] = 0;\n```\n\nThe problem is there's no check if `curlx_strlen(&prov)` is less than or equal to `MAX_PROVIDER_LEN`. This lets us overflow the stack-based buffer if we provide a string longer than 128 bytes\n\n\n\nAlso notice `name[curlx_strlen(&prov)] = 0;`  this writes a null byte past the end of the buffer when overflow happens\n\n\n\n# Reproducing the Bug\n\n\nI tried to find ways to trigger this issue. The code path is:\n\n1) `ossl_set_engine()` in `lib/vtls/openssl.c` calls `ossl_set_provider()`\n2) `ossl_set_engine()` is called by `Curl_ssl_set_engine()`\n3) `Curl_ssl_set_engine()` is triggered by `CURLOPT_SSLENGINE` option\n\nI couldn't trigger a crash directly with curl command line because it stops with **\"SSL Engine not found\"**error before hitting the vulnerable code\n\n\n# Proof of Concept\n\n\nI created a minimal PoC that reproduces the exact vulnerable code pattern:\n\n```c\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n// Same as in curl code\n#define MAX_PROVIDER_LEN 128\n\ntypedef struct {\n    char *data;\n    size_t len;\n} Curl_str;\n\n// Mimicking curl's functions\nchar *curlx_str(Curl_str *s) {\n    return s->data;\n}\n\nsize_t curlx_strlen(Curl_str *s) {\n    return s->len;\n}\n\n// Recreating the vulnerable function\nvoid simulate_curl_provider_vulnerability(const char *iname) {\n    char name[MAX_PROVIDER_LEN + 1];  // Same buffer size as curl\n    Curl_str prov;\n    \n    printf(\"[+] Input: %s\\n\", iname);\n    \n    // Set up provider string\n    prov.data = (char *)iname;\n    prov.len = strlen(iname);\n    \n    printf(\"[+] Provider length: %zu\\n\", prov.len);\n    printf(\"[+] Buffer size: %zu\\n\", sizeof(name));\n    \n    // VULNERABLE PART - exactly as in curl source\n    memcpy(name, curlx_str(&prov), curlx_strlen(&prov));\n    name[curlx_strlen(&prov)] = 0;\n    \n    printf(\"[+] Done\\n\");\n}\n\nint main(void) {\n    char *overflow_string = malloc(300);\n    \n    // Creating long provider name to trigger overflow\n    strcpy(overflow_string, \"pkcs11:\");\n    for(int i = 0; i < 200; i++) {\n        strcat(overflow_string, \"A\");\n    }\n    \n    // Call the vulnerable function\n    simulate_curl_provider_vulnerability(overflow_string);\n    \n    free(overflow_string);\n    return 0;\n}\n```\n\n\n\nWhen compiled with AddressSanitizer and run:\n\n```bash\ngcc -g -fsanitize=address -o poc poc.c\n./poc\n```\n\n\n\n\nIt clearly shows stack buffer overflow:\n\n\n\n{F4365560}\n\nAdditional Notes\n\n+ I tried to trigger this vulnerability directly using the curl command line tool but wasn't successful as curl returns an \"SSL Engine not found\" error before reaching the vulnerable code. However, the vulnerable code is clearly present in the curl source and confirmed with my PoC\n\n+ I can provide more detailed analysis with GDB if needed\n\n## Impact\n\nThis bug allows overwriting stack memory with controlled content. In specific contexts, it could cause to:\n\n+ Remote code execution\n+ Denial of service\n+ Information disclosure\n\nThe severity depends on how this code is used in applications. It is most dangerous if an attacker can control provider name input\n\nThank you for reviewing also I can provide more detailed analysis with GDB if needed I didnt want to make the report very long",
+  "weakness": {
+    "id": 4,
+    "name": "Stack Overflow"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 4365560,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/jpjjpzxyz1g7o6etz9mgkjccis8b?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXTGCOIKU%2F20250704%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250704T194305Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECoaCXVzLXdlc3QtMiJHMEUCIQD0CRsPTdYzjI1a3kPu7WQK3E5MzKCFqrq0KOy7hhyfPQIgb%2F78%2BGh5yzrietwNb%2FBqkTNbyR3TOMzW1FrdZHNTvisqsgUIMxADGgwwMTM2MTkyNzQ4NDkiDGzFFVqhuLiR8DY4HiqPBV%2BXHK2%2B%2BMZaZCr2tM0UWMLjVPHgKcZ38ODr02JZoGySN8EFLVMOJoXjnXc5vCIpiVZUKV4%2B5irtNps6JkyRthqVxU%2FRGg3Xy2kYBOPsfWri8SZKocLuDjoLfjl1TUNcX%2Fu0hiTcXx7Nzxpj5%2F5SVFvnrYhIV5t91FopbNEEHzlpgisCpU5%2FGxpvNFFjHJ0S4MIqY3fsnK8najdOU1YB33OgXgAxKq56blqEu63SrR94Hm8YxejiCxPkiEIKDOI%2BQFZp4i%2BtwcRdZiwo9dOw%2B%2FHVZBmkqlTlfgv4KpRljBBEX%2B4jRwVRoQECKe5vJ60BhkeSMGJUzLiLEaJx9ksEte7adrZRw8FcuGQsj4IlN8vnli7ZNKKsZKpIWTvX25CeA4lB8rwr7N89cJ9C3g09VI9%2BfbPOZhnooibfSv%2Bz0fgTY0dAVLE2InO56cqgbyS2t3mJkkyidzOLaTL7wZc5ak8KqekSbNQt87Fs1fw%2B74VSB%2F%2F0PysPOyE8V7vHL74Y3ekquKns%2BgV2wR%2BZa2fVHmDOUfoA6U%2BhJckRY4LbFTzmyppQ68IMaVaEWzsMG0aMW0nOhKRmKR4k68e9ST8Gme905IKXaWM5kD5A%2FwL5AjN1kIYPaam2OBFEbAMjJ2cWFnR3%2BHTFjsn2fZgu0v3JbpS5fu06QJj53tCgsAxMBN%2BmyMqLr7ECAO%2F2RNXu6V40OjY1A4dSvFKryK3VBqMWextpxtLpzvrgFsEEEPy%2Fku4BmAh%2FNt1ouIlTsQgmlG4QP7su%2BKQwk6DCssxB8iwILab7zonU7wQFZBKqGRyWq5kpW8O%2FDjwBKzr2eVoWtY5ADLyU%2FUlrhetr%2F8JWSn9LJ6nrpjcqaY9NJOmtdG3yLB0wrZygwwY6sQE0dPokvXob6NhqQSwrKyZB3x%2BGVnss25et0PMrpBc67U3Sws7GWz%2B7nmDi8iblRb0fiFC2dz4Lxfd2b%2B5e7WUtvGaeqH5V31vZl%2Bl3kJ7C1p3Mw3Eh0kvSMEu70fT7FH6UUqY0BStPlMzSrXK48pc4u9DmViRTrauUdCQVys2LYJNaylXiNwokaVF99Y671EzW0CJtGRuUgdQQ0ArbEpwbjwZgNQ%2FxhzxozpyrhwpyA2o%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=5e0ad268d16259635d6f4de1f4031b5ae1c1561ef107ab5b6a83c7b33082ca23",
+      "file_size": 235508,
+      "type": "image/png",
+      "moderated": false
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 10,
+  "voters": [
+    "2026",
+    "oblivionsage",
+    "turki-66",
+    "thalaivar304",
+    "0xouasmih",
+    "isecuresites",
+    "redhack1",
+    "mehmetsemerci",
+    "trolodk",
+    "sumonkhan36"
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 18844,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/curl/curl",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
