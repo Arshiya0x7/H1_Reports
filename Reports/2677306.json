@@ -1,0 +1,144 @@
+{
+  "id": 2677306,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yNjc3MzA2",
+  "url": "https://hackerone.com/reports/2677306",
+  "title": "Spamming highly nested JSON RPC requests cause node to disconnect from p2p network",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2024-08-22T15:54:53.970Z",
+  "submitted_at": "2024-08-22T15:54:54.102Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "asurar0",
+    "url": "/asurar0",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/jmzjryv57hk5d8ua2ih023qb4t9z/727634197f209244e4307a490cdcd36c76d6e37fef1b0c164bd35ac010105f99"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 7731,
+    "url": "https://hackerone.com/monero",
+    "handle": "monero",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/007/731/55634f7fcd917725c7a5771cc6e7c9b4d5fe0c22_original.png/36bca6668139d77be42208d896968344ae7a76c55ee0f8b0f28281ccd492ff02",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/007/731/55634f7fcd917725c7a5771cc6e7c9b4d5fe0c22_original.png/19c85a12ac35f466af1ea2b0ae853bfe5e8f057fb1d6fb62db131707bb67b30d"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Monero",
+      "twitter_handle": "monero",
+      "website": "https://getmonero.org",
+      "about": " Monero: the secure, private, untraceable cryptocurrency"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2025-04-23T12:05:28.755Z",
+  "bug_reporter_agreed_on_going_public_at": "2025-04-23T12:05:28.632Z",
+  "team_member_agreed_on_going_public_at": "2025-04-22T18:12:51.561Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nBy forging a highly nested JSON payload, and spamming it through a restricted RPC interface, an adversary can remotely lock monerod from syncing with the rest of the p2p network. This vulnerability apply to syncing node as well synced one (which then become outdated)\nEpee JSON parser allow duplicated fields and set a recursion limit reasonably too high (100). By appending 1747 Json object of depth 98, an attacker can forge a JSON RPC payload that will cause CPU intensive parsing operations, locking the rest of the node from syncing with the P2P network.\n\nThis apply to monerod (master branch a1dc85c)\n\n## Proof of Concept:\n\nA rust written proof of concept is shared at the bottom of this document. You can compile it using the latest stable rust toolchain and importing the corresponding crate in your Cargo.toml file\n\n## Additional information:\n\nThe proof of concept has been only tested against 18089 restricted rpc port and using the `get_info` method. I was able to effectively lock a synced node from syncing during a period of 3 hour. monerod was running on an AMD Ryzen 7 5800X. Another test has been performed with a single and empty `params` field, which concluded in no overhead for the Monero daemon.\n\nOther I/O requesting methods could be exploited as well (`get_blocks`). if multiple `params` fields are set, only the last one being parsed will be used. You can therefore replace the last `params` field with genuine arguments and still trigger the execution of the routine. Combined with a low vulnerability (that will be submitted soon after this report), this could lead to I/O overhead by both writing and reading at high bandwith.\n\n## Potential mitigation:\n\n- Lower the 1MB limit set by `m_net_server.get_config_object().m_max_content_length = MAX_RPC_CONTENT_LENGTH` in `src/rpc/core_rpc_server.cpp`\n- Disable duplicated fields (as recommended by RFC 8259).\n- Reduce `EPEE_JSON_RECURSION_LIMIT_INTERNAL` (`contrib/epee/include/storages/portable_storage_from_json.h`) to a reasonable amount: 10~20.\n- Enable an iteration limit to objects and arrays. Potentially 1000 as it is the maximum number of blocks a restricted `get_blocks` call can process.\n- Move JSON RPC parsing to another thread.\n- Implement API throttling for the HTTP RPC Server. At my understanding, an API throttling already exist for P2P, maybe could it be reused ?\n\nXMR Address: ███\n\n## Impact\n\nAt individual scale, it enable remote and temporary (or definitive) disconnection of nodes from the p2p network.\nUsed at higher scale, it can be used against mining pool nodes to prohibit them from syncing and enable easier 51% attack.",
+  "weakness": {
+    "id": 48,
+    "name": "Uncontrolled Resource Consumption"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 3541932,
+      "file_name": "disconnection.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/cjvney85bjv069h28g0r7s0yyxc4?response-content-disposition=attachment%3B%20filename%3D%22disconnection.png%22%3B%20filename%2A%3DUTF-8%27%27disconnection.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWBQCKX3A%2F20250704%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250704T200033Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECoaCXVzLXdlc3QtMiJHMEUCIQC7I8Nba11VsaBeWshIeKt9iklj%2Fef%2FSlDvh6S5zJ1HCgIgNf2DKi%2FAQLysF80g%2BqaKjNmh16X2mOkRnkyWGmvm2J8qsQUIMhADGgwwMTM2MTkyNzQ4NDkiDHg8EQbH5Y%2FBNxpEhCqOBfyZI8ZuRfdMxkh6X4nc7e09LmzqkWHQgkvrWnUq0kgrYmFHnxctsbxX1Nen1e7H6duB%2Fa7RAGqQZUq4kA2pu8F5WW6YgYhkNwkmChwdSoKgxgl9rvzzglNbrhZ6%2BOXJrgRQy11yfXNY6Vclg2gfD%2BrZTkdMFr4nvhER7e4Kr%2BWpbmCKN4Sz3PPmANcewHUzTCDyFCuoIQXTCFjD1rsU6D6i2ajMIez6KXkn3DpwCbvPmU8GTy%2FZVdgdRrfWzzzAw1RtJ6vTCd92q8RkcRt0R%2BOQzs5WTPANmPJCVTBgaY38GGG5v2ej5Rhz9vKH2DAjsMs5Fwr5LZpqj2P3S6YEHytjCJN1203y7io3Pfixtl1ZLJ4ZY%2FgPsKfpXA92sqCE0MTFDuaO%2Fg8hpZqemFa%2FfzZ6e2Q7iEFI4PUVr7WRaPojSrpB7BhDngyPQGSFmmVnOEQ7m19%2BaW1VidG7CA9EEO3aEHw6hl8LL2JUojMl8aATzzGuppnD0w97NwP29IJVTyCkxQgRvl9cDXtApDJoozaHUUvl7lhXzo%2B%2F%2FAXp20SpzWIKrSs7V6MCiv9ZJUy7TU8XO485Gj1xqqvayq34xmjAMWUi22lMIvlpJh9cknSP5LnJcZvKe%2B0YFUunrMjo0Jxz6qDcRJJR3%2FkUIOLW1EAWs9UXb%2FsQ%2BeywP0tFcvU9PmmNIOz8IhyHrvpRhxgmeev9IzDX%2FU09Tn8m1ao4CnpXHr7E6LouZIPwBdv5zw5OtNmlRuuU0joHf5tai%2BvyxrMsKieNFDlS5DBmvmcdyTw%2FXG9yWy3LAOBsIQU8bUZM7fpywAZIKMwxQkfN%2BGAzHwNzxoCJAbqQj4QjKXFVokgfiPcT%2B7CSgngPhbiO%2FDCRm6DDBjqxAepbNWiTRSSaeAzVGUlnK8WWA1jVQ2NcR%2BZNZmMfwLBj92p%2BQwR3TMCWZHQa%2BMzfuK%2FZf6DdFo2acc5IuBazrViIXBbPaKqn8cRnhfrBfZZC0ouG%2B9IEAqZT5zT0XxQFXCbv9%2Bg%2FQvIPfCp6utDtRXbMe6tKQJUw%2FwfA2MclGTHn4gjdNt9YZQ8S4QmrOByR3JyM%2BSdxa%2FmV0Com%2BD%2Bk1K1lWq8uWitTClfDbNFkfA6uyg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=a51ada301d47782940fa61140c0c07dd4f715e584aff486d910284329431da5f",
+      "file_size": 20909,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 3541933,
+      "file_name": "15mintest.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/9m8b9h2u1c5e7wfhqii55mbp56aa?response-content-disposition=attachment%3B%20filename%3D%2215mintest.png%22%3B%20filename%2A%3DUTF-8%27%2715mintest.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWBQCKX3A%2F20250704%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250704T200033Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECoaCXVzLXdlc3QtMiJHMEUCIQC7I8Nba11VsaBeWshIeKt9iklj%2Fef%2FSlDvh6S5zJ1HCgIgNf2DKi%2FAQLysF80g%2BqaKjNmh16X2mOkRnkyWGmvm2J8qsQUIMhADGgwwMTM2MTkyNzQ4NDkiDHg8EQbH5Y%2FBNxpEhCqOBfyZI8ZuRfdMxkh6X4nc7e09LmzqkWHQgkvrWnUq0kgrYmFHnxctsbxX1Nen1e7H6duB%2Fa7RAGqQZUq4kA2pu8F5WW6YgYhkNwkmChwdSoKgxgl9rvzzglNbrhZ6%2BOXJrgRQy11yfXNY6Vclg2gfD%2BrZTkdMFr4nvhER7e4Kr%2BWpbmCKN4Sz3PPmANcewHUzTCDyFCuoIQXTCFjD1rsU6D6i2ajMIez6KXkn3DpwCbvPmU8GTy%2FZVdgdRrfWzzzAw1RtJ6vTCd92q8RkcRt0R%2BOQzs5WTPANmPJCVTBgaY38GGG5v2ej5Rhz9vKH2DAjsMs5Fwr5LZpqj2P3S6YEHytjCJN1203y7io3Pfixtl1ZLJ4ZY%2FgPsKfpXA92sqCE0MTFDuaO%2Fg8hpZqemFa%2FfzZ6e2Q7iEFI4PUVr7WRaPojSrpB7BhDngyPQGSFmmVnOEQ7m19%2BaW1VidG7CA9EEO3aEHw6hl8LL2JUojMl8aATzzGuppnD0w97NwP29IJVTyCkxQgRvl9cDXtApDJoozaHUUvl7lhXzo%2B%2F%2FAXp20SpzWIKrSs7V6MCiv9ZJUy7TU8XO485Gj1xqqvayq34xmjAMWUi22lMIvlpJh9cknSP5LnJcZvKe%2B0YFUunrMjo0Jxz6qDcRJJR3%2FkUIOLW1EAWs9UXb%2FsQ%2BeywP0tFcvU9PmmNIOz8IhyHrvpRhxgmeev9IzDX%2FU09Tn8m1ao4CnpXHr7E6LouZIPwBdv5zw5OtNmlRuuU0joHf5tai%2BvyxrMsKieNFDlS5DBmvmcdyTw%2FXG9yWy3LAOBsIQU8bUZM7fpywAZIKMwxQkfN%2BGAzHwNzxoCJAbqQj4QjKXFVokgfiPcT%2B7CSgngPhbiO%2FDCRm6DDBjqxAepbNWiTRSSaeAzVGUlnK8WWA1jVQ2NcR%2BZNZmMfwLBj92p%2BQwR3TMCWZHQa%2BMzfuK%2FZf6DdFo2acc5IuBazrViIXBbPaKqn8cRnhfrBfZZC0ouG%2B9IEAqZT5zT0XxQFXCbv9%2Bg%2FQvIPfCp6utDtRXbMe6tKQJUw%2FwfA2MclGTHn4gjdNt9YZQ8S4QmrOByR3JyM%2BSdxa%2FmV0Com%2BD%2Bk1K1lWq8uWitTClfDbNFkfA6uyg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=8e8c0fb1b7189473e3d77c2747545fa2d39f36fa09583884d41205c45eeb2e79",
+      "file_size": 61402,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 3541935,
+      "file_name": "main.rs",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/9pg5hulidv00n8zkv4qr1wlve4s0?response-content-disposition=attachment%3B%20filename%3D%22main.rs%22%3B%20filename%2A%3DUTF-8%27%27main.rs&response-content-type=text%2Frust&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWBQCKX3A%2F20250704%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250704T200033Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECoaCXVzLXdlc3QtMiJHMEUCIQC7I8Nba11VsaBeWshIeKt9iklj%2Fef%2FSlDvh6S5zJ1HCgIgNf2DKi%2FAQLysF80g%2BqaKjNmh16X2mOkRnkyWGmvm2J8qsQUIMhADGgwwMTM2MTkyNzQ4NDkiDHg8EQbH5Y%2FBNxpEhCqOBfyZI8ZuRfdMxkh6X4nc7e09LmzqkWHQgkvrWnUq0kgrYmFHnxctsbxX1Nen1e7H6duB%2Fa7RAGqQZUq4kA2pu8F5WW6YgYhkNwkmChwdSoKgxgl9rvzzglNbrhZ6%2BOXJrgRQy11yfXNY6Vclg2gfD%2BrZTkdMFr4nvhER7e4Kr%2BWpbmCKN4Sz3PPmANcewHUzTCDyFCuoIQXTCFjD1rsU6D6i2ajMIez6KXkn3DpwCbvPmU8GTy%2FZVdgdRrfWzzzAw1RtJ6vTCd92q8RkcRt0R%2BOQzs5WTPANmPJCVTBgaY38GGG5v2ej5Rhz9vKH2DAjsMs5Fwr5LZpqj2P3S6YEHytjCJN1203y7io3Pfixtl1ZLJ4ZY%2FgPsKfpXA92sqCE0MTFDuaO%2Fg8hpZqemFa%2FfzZ6e2Q7iEFI4PUVr7WRaPojSrpB7BhDngyPQGSFmmVnOEQ7m19%2BaW1VidG7CA9EEO3aEHw6hl8LL2JUojMl8aATzzGuppnD0w97NwP29IJVTyCkxQgRvl9cDXtApDJoozaHUUvl7lhXzo%2B%2F%2FAXp20SpzWIKrSs7V6MCiv9ZJUy7TU8XO485Gj1xqqvayq34xmjAMWUi22lMIvlpJh9cknSP5LnJcZvKe%2B0YFUunrMjo0Jxz6qDcRJJR3%2FkUIOLW1EAWs9UXb%2FsQ%2BeywP0tFcvU9PmmNIOz8IhyHrvpRhxgmeev9IzDX%2FU09Tn8m1ao4CnpXHr7E6LouZIPwBdv5zw5OtNmlRuuU0joHf5tai%2BvyxrMsKieNFDlS5DBmvmcdyTw%2FXG9yWy3LAOBsIQU8bUZM7fpywAZIKMwxQkfN%2BGAzHwNzxoCJAbqQj4QjKXFVokgfiPcT%2B7CSgngPhbiO%2FDCRm6DDBjqxAepbNWiTRSSaeAzVGUlnK8WWA1jVQ2NcR%2BZNZmMfwLBj92p%2BQwR3TMCWZHQa%2BMzfuK%2FZf6DdFo2acc5IuBazrViIXBbPaKqn8cRnhfrBfZZC0ouG%2B9IEAqZT5zT0XxQFXCbv9%2Bg%2FQvIPfCp6utDtRXbMe6tKQJUw%2FwfA2MclGTHn4gjdNt9YZQ8S4QmrOByR3JyM%2BSdxa%2FmV0Com%2BD%2Bk1K1lWq8uWitTClfDbNFkfA6uyg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=0028a4121785d8f6bad13e7774c9f5f42de5674bbce1cc7ea74a4488c191f6f2",
+      "file_size": 2540,
+      "type": "text/rust",
+      "moderated": null
+    },
+    {
+      "id": 3541938,
+      "file_name": "Cargo.toml",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/kp5wwdsge8wirrklkk5t3ley6sw6?response-content-disposition=attachment%3B%20filename%3D%22Cargo.toml%22%3B%20filename%2A%3DUTF-8%27%27Cargo.toml&response-content-type=application%2Ftoml&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWBQCKX3A%2F20250704%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250704T200033Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECoaCXVzLXdlc3QtMiJHMEUCIQC7I8Nba11VsaBeWshIeKt9iklj%2Fef%2FSlDvh6S5zJ1HCgIgNf2DKi%2FAQLysF80g%2BqaKjNmh16X2mOkRnkyWGmvm2J8qsQUIMhADGgwwMTM2MTkyNzQ4NDkiDHg8EQbH5Y%2FBNxpEhCqOBfyZI8ZuRfdMxkh6X4nc7e09LmzqkWHQgkvrWnUq0kgrYmFHnxctsbxX1Nen1e7H6duB%2Fa7RAGqQZUq4kA2pu8F5WW6YgYhkNwkmChwdSoKgxgl9rvzzglNbrhZ6%2BOXJrgRQy11yfXNY6Vclg2gfD%2BrZTkdMFr4nvhER7e4Kr%2BWpbmCKN4Sz3PPmANcewHUzTCDyFCuoIQXTCFjD1rsU6D6i2ajMIez6KXkn3DpwCbvPmU8GTy%2FZVdgdRrfWzzzAw1RtJ6vTCd92q8RkcRt0R%2BOQzs5WTPANmPJCVTBgaY38GGG5v2ej5Rhz9vKH2DAjsMs5Fwr5LZpqj2P3S6YEHytjCJN1203y7io3Pfixtl1ZLJ4ZY%2FgPsKfpXA92sqCE0MTFDuaO%2Fg8hpZqemFa%2FfzZ6e2Q7iEFI4PUVr7WRaPojSrpB7BhDngyPQGSFmmVnOEQ7m19%2BaW1VidG7CA9EEO3aEHw6hl8LL2JUojMl8aATzzGuppnD0w97NwP29IJVTyCkxQgRvl9cDXtApDJoozaHUUvl7lhXzo%2B%2F%2FAXp20SpzWIKrSs7V6MCiv9ZJUy7TU8XO485Gj1xqqvayq34xmjAMWUi22lMIvlpJh9cknSP5LnJcZvKe%2B0YFUunrMjo0Jxz6qDcRJJR3%2FkUIOLW1EAWs9UXb%2FsQ%2BeywP0tFcvU9PmmNIOz8IhyHrvpRhxgmeev9IzDX%2FU09Tn8m1ao4CnpXHr7E6LouZIPwBdv5zw5OtNmlRuuU0joHf5tai%2BvyxrMsKieNFDlS5DBmvmcdyTw%2FXG9yWy3LAOBsIQU8bUZM7fpywAZIKMwxQkfN%2BGAzHwNzxoCJAbqQj4QjKXFVokgfiPcT%2B7CSgngPhbiO%2FDCRm6DDBjqxAepbNWiTRSSaeAzVGUlnK8WWA1jVQ2NcR%2BZNZmMfwLBj92p%2BQwR3TMCWZHQa%2BMzfuK%2FZf6DdFo2acc5IuBazrViIXBbPaKqn8cRnhfrBfZZC0ouG%2B9IEAqZT5zT0XxQFXCbv9%2Bg%2FQvIPfCp6utDtRXbMe6tKQJUw%2FwfA2MclGTHn4gjdNt9YZQ8S4QmrOByR3JyM%2BSdxa%2FmV0Com%2BD%2Bk1K1lWq8uWitTClfDbNFkfA6uyg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=a01f29e71af4670379135a5e0331c5a6ce0307351eb73a3a49aa3ec1361f3065",
+      "file_size": 207,
+      "type": "application/toml",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2025-05-22T18:12:51.689Z",
+  "allow_singular_disclosure_after": -3721661.518315313,
+  "singular_disclosure_allowed": true,
+  "vote_count": 22,
+  "voters": [
+    "t4r1k-b41",
+    "2026",
+    "mohaned0101",
+    "mr-alienx-kurd",
+    "thalaivar304",
+    "sottam",
+    "isco24",
+    "beyondaperson",
+    "labupump",
+    "0011000",
+    "and 12 more..."
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
