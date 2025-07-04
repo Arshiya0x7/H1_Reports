@@ -1,0 +1,138 @@
+{
+  "id": 3114132,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMTE0MTMy",
+  "url": "https://hackerone.com/reports/3114132",
+  "title": "Broken Access Control Exposes Email Verification Status and Privacy Settings via API Endpoint",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2025-04-26T22:54:16.748Z",
+  "submitted_at": "2025-04-26T22:54:16.984Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "ctrl_cipher",
+    "url": "/ctrl_cipher",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/461iai2ff9jznylfgim6gfeus6ct/727634197f209244e4307a490cdcd36c76d6e37fef1b0c164bd35ac010105f99"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 21801,
+    "url": "https://hackerone.com/wakatime",
+    "handle": "wakatime",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/6t1wy3jbq9kayjwvqbnymavxizfx/36bca6668139d77be42208d896968344ae7a76c55ee0f8b0f28281ccd492ff02",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/6t1wy3jbq9kayjwvqbnymavxizfx/19c85a12ac35f466af1ea2b0ae853bfe5e8f057fb1d6fb62db131707bb67b30d"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "WakaTime",
+      "twitter_handle": "wakatime",
+      "website": "https://wakatime.com",
+      "about": "Automated metrics about your programming from text editor plugins."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2025-04-29T12:45:03.155Z",
+  "bug_reporter_agreed_on_going_public_at": "2025-04-27T16:29:41.808Z",
+  "team_member_agreed_on_going_public_at": "2025-04-29T12:45:02.730Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "The /api/v1/users/{username} endpoint leaks sensitive email-related metadata (e.g., is_email_confirmed, is_email_public) without proper authorization checks. Attackers can abuse this to:\nIdentify verified/active accounts for targeted attacks.\nDetermine users’ email privacy preferences (even if the email itself is hidden).\nThis behavior allows me to distinguish whether an account's email address is confirmed or not.\n\n#Steps to Reproduce\n1. Authenticate as a valid user (e.g. user/current).\n2. Intercept a request to your own profile:\n>GET /api/v1/users/attacker_user HTTP/2  \nHost: wakatime.com  \nCookie: \n3. Modify the username in the URL to access another user’s data:\n>GET /api/v1/users/<any name> HTTP/2  \nHost: wakatime.com  \nCookie: \n4. Observe the response:\n>{\n  \"is_email_confirmed\": true,\n  \"is_email_public\": false,\n  \"public_email\": null,\n  // ... other sensitive fields\n}\n\n## Impact\n\nAccount Enumeration:\nAttackers can confirm valid/verified accounts (is_email_confirmed: true), enabling targeted credential stuffing or phishing.\n\nPrivacy Violations:\nKnowing a user’s email privacy preference (is_email_public: false) leaks their intent to keep their email private.\n\nAttack Surface Expansion:\nCombined with other vulnerabilities (e.g., password reset flaws), attackers can prioritize high-value accounts.",
+  "weakness": {
+    "id": 26,
+    "name": "Improper Access Control - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 4290369,
+      "file_name": "poc1.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/thv45n9nr940bjrn1w3hfx7pm9ly?response-content-disposition=attachment%3B%20filename%3D%22poc1.jpg%22%3B%20filename%2A%3DUTF-8%27%27poc1.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXFIWBIHS%2F20250704%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250704T195725Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECoaCXVzLXdlc3QtMiJGMEQCIDEJIae%2B9%2FetCxnax38G0rRS1FvTS0xQQyEHW3aE8LsXAiBtjqFd34ZMQvfTQ9NgGvCQF0csdEJ2yfjm1pqqUL%2B%2BrCqyBQgzEAMaDDAxMzYxOTI3NDg0OSIMZsc9EKXfkV4upQwBKo8Fv8GLrALjw%2BqJvCLuhTAGEpr%2BYg5oiYjLlZtwyNv3PWCKGQMSWQSaem%2B1wxWGedHMldmDNxXei2HI3k5ARC2WPYcoqPM5UF6vrRPQxW1ujdTzy5XQs3cmH1thmEldH69zPvsR9UO6yN1sgX%2FEMNwLtKmIkh9lysTfPki9P2Foplvx334aeTsdTPITOOdQJliAPTkbUxfBT%2Bgkb%2B2C%2FbWA1HtjZmdig3l3RQRNDj9YRWElg%2FfIdnaoQ4A8ZPUQKxJVeiIsZzhlGFRHdRyyTtKHnUBP5Yp3h1iHEDzZFwa%2FIzHG1y96CcTNUTlCTcdueW%2FlbroYrGE2y0CALQaWyd0Ds45vIkfOma8AUZwnflFW%2FCIEcChUdUZnEEcvjiLaZJNCNZovwv3OmvCtleMd7nAIguSTmiO0hrfeboVTUUGyi5WId6RzBgXi%2BsI8cuf8aFzaNvQL9niDBgLJSRYSCzdg%2Fmt%2FbyZugzwMPivJE26cV3Adm3JJ2T1XxrTs5MkTYX6mOyopC086QxYITSx28Yfo5g68iPYxKYIouU86pC%2FzG4bBeNwwh7jpHLjlSX5fOVEaon%2FlA3OzE10RNaGAad7P%2B0hO7wqvl6IikWNFzCgVyOR84ZEkBONlWPC495LDnWVlyzbRJo8Z6NfWNtXzki8wf%2Fvj77A0keur%2FbJWu19uOixIdR6jGb%2Bmgs%2BN9eCHU%2FaxTLoMhSUuARUGsdSKjqOGOY5hFOOmrCUzKTP2QOu8knTy0lT5891q7tWzqPOEdiaTTGxCxWcwwW9dUKyvEEkaLG0lv3dWHYP1pVoCcYxBqpdJ2U4aVag355uhYENNdyFQ4NuB%2BGCHFNhgoVc%2Bx56CaQIdqP0Kk6kkD9nicgQYGjDxnqDDBjqyASGkDS%2FAot%2BTQxPiX%2BsnKaFg0KgJxJXMHSgkXRo9AWTGO35jOk0sCwomYh%2FzriRV7vfzWbGj0ABxBdHOyuHxOlkyWcDYlzbsP54hFJXFiTDMhRzyFkF7znmvEZuadhUP34VYQaRTQhf757x0TxmIEcTnVQGbn4wSKhcxf88ECGT1Bl%2FrWGjav6da0Dt75dfo%2B3X2dMZHpHvt5VLxCfqSeFjhWol%2BhmS%2Bs5A4nkHgKDb0Akg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=748d3364682d86f81155a4fc73a9b758cfae4a1308321adcc23aa45639c4fe0a",
+      "file_size": 222779,
+      "type": "image/jpeg",
+      "moderated": false
+    },
+    {
+      "id": 4290370,
+      "file_name": "poc2.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/2g8mj9lx3zst9ypejzd0de0tpftx?response-content-disposition=attachment%3B%20filename%3D%22poc2.jpg%22%3B%20filename%2A%3DUTF-8%27%27poc2.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXFIWBIHS%2F20250704%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250704T195725Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECoaCXVzLXdlc3QtMiJGMEQCIDEJIae%2B9%2FetCxnax38G0rRS1FvTS0xQQyEHW3aE8LsXAiBtjqFd34ZMQvfTQ9NgGvCQF0csdEJ2yfjm1pqqUL%2B%2BrCqyBQgzEAMaDDAxMzYxOTI3NDg0OSIMZsc9EKXfkV4upQwBKo8Fv8GLrALjw%2BqJvCLuhTAGEpr%2BYg5oiYjLlZtwyNv3PWCKGQMSWQSaem%2B1wxWGedHMldmDNxXei2HI3k5ARC2WPYcoqPM5UF6vrRPQxW1ujdTzy5XQs3cmH1thmEldH69zPvsR9UO6yN1sgX%2FEMNwLtKmIkh9lysTfPki9P2Foplvx334aeTsdTPITOOdQJliAPTkbUxfBT%2Bgkb%2B2C%2FbWA1HtjZmdig3l3RQRNDj9YRWElg%2FfIdnaoQ4A8ZPUQKxJVeiIsZzhlGFRHdRyyTtKHnUBP5Yp3h1iHEDzZFwa%2FIzHG1y96CcTNUTlCTcdueW%2FlbroYrGE2y0CALQaWyd0Ds45vIkfOma8AUZwnflFW%2FCIEcChUdUZnEEcvjiLaZJNCNZovwv3OmvCtleMd7nAIguSTmiO0hrfeboVTUUGyi5WId6RzBgXi%2BsI8cuf8aFzaNvQL9niDBgLJSRYSCzdg%2Fmt%2FbyZugzwMPivJE26cV3Adm3JJ2T1XxrTs5MkTYX6mOyopC086QxYITSx28Yfo5g68iPYxKYIouU86pC%2FzG4bBeNwwh7jpHLjlSX5fOVEaon%2FlA3OzE10RNaGAad7P%2B0hO7wqvl6IikWNFzCgVyOR84ZEkBONlWPC495LDnWVlyzbRJo8Z6NfWNtXzki8wf%2Fvj77A0keur%2FbJWu19uOixIdR6jGb%2Bmgs%2BN9eCHU%2FaxTLoMhSUuARUGsdSKjqOGOY5hFOOmrCUzKTP2QOu8knTy0lT5891q7tWzqPOEdiaTTGxCxWcwwW9dUKyvEEkaLG0lv3dWHYP1pVoCcYxBqpdJ2U4aVag355uhYENNdyFQ4NuB%2BGCHFNhgoVc%2Bx56CaQIdqP0Kk6kkD9nicgQYGjDxnqDDBjqyASGkDS%2FAot%2BTQxPiX%2BsnKaFg0KgJxJXMHSgkXRo9AWTGO35jOk0sCwomYh%2FzriRV7vfzWbGj0ABxBdHOyuHxOlkyWcDYlzbsP54hFJXFiTDMhRzyFkF7znmvEZuadhUP34VYQaRTQhf757x0TxmIEcTnVQGbn4wSKhcxf88ECGT1Bl%2FrWGjav6da0Dt75dfo%2B3X2dMZHpHvt5VLxCfqSeFjhWol%2BhmS%2Bs5A4nkHgKDb0Akg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=354e11a75ae688478cb6e80b94f4b06b2891bb78ceb08d1ae9f5d56504dd218c",
+      "file_size": 221737,
+      "type": "image/jpeg",
+      "moderated": false
+    }
+  ],
+  "allow_singular_disclosure_at": "2025-05-27T16:29:41.935Z",
+  "allow_singular_disclosure_after": -3295663.98723716,
+  "singular_disclosure_allowed": true,
+  "vote_count": 45,
+  "voters": [
+    "orange303",
+    "loaymorad",
+    "almuntadhar",
+    "raslanco",
+    "2026",
+    "shubham_srt",
+    "mohaned0101",
+    "thalaivar304",
+    "idealphaseth",
+    "ctrl_cipher",
+    "and 35 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "Team"
+  },
+  "structured_scope": {
+    "databaseId": 614470,
+    "asset_type": "URL",
+    "asset_identifier": "wakatime.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
