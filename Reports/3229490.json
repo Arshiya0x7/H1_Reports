@@ -1,0 +1,155 @@
+{
+  "id": 3229490,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMjI5NDkw",
+  "url": "https://hackerone.com/reports/3229490",
+  "title": "Heap Buffer Overflow in libcurl curl_slist_append via Unterminated String",
+  "state": "Closed",
+  "substate": "not-applicable",
+  "severity_rating": "high",
+  "readable_substate": "N/A",
+  "created_at": "2025-06-29T17:33:41.507Z",
+  "submitted_at": "2025-06-29T17:33:41.745Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "geeknik",
+    "url": "/geeknik",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/7xfGZCKCxUuGLYGfuUZM3XyY/36bca6668139d77be42208d896968344ae7a76c55ee0f8b0f28281ccd492ff02"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 35663,
+    "url": "https://hackerone.com/curl",
+    "handle": "curl",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/035/663/2faf4c279d437d64bfda6d23d62ce1833813a4d9_original.png/36bca6668139d77be42208d896968344ae7a76c55ee0f8b0f28281ccd492ff02",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/035/663/2faf4c279d437d64bfda6d23d62ce1833813a4d9_original.png/19c85a12ac35f466af1ea2b0ae853bfe5e8f057fb1d6fb62db131707bb67b30d"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "curl",
+      "twitter_handle": "",
+      "website": "https://curl.se",
+      "about": "cURL is an Open Source project providing a library and command-line tool doing internet transfers"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2025-06-30T07:23:15.767Z",
+  "bug_reporter_agreed_on_going_public_at": "2025-06-30T07:23:13.638Z",
+  "team_member_agreed_on_going_public_at": "2025-06-30T06:25:46.694Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "#Summary\nA heap buffer overflow vulnerability exists in libcurl's `curl_slist_append()` function in `lib/slist.c:94`. When the function is called with a non-null-terminated string, the internal `strdup()` call triggers `strlen()` to read beyond allocated buffer boundaries, leading to a heap buffer overflow. This vulnerability can be triggered through various libcurl APIs that process user-controlled string data without proper null termination validation.\n\n\n#Steps to Reproduce (STR/POC):\n  1. Allocate a buffer of any size (e.g., 256 bytes)\n  2. Fill the buffer completely with non-null bytes (no null terminator)\n  3. Call curl_slist_append(NULL, buffer)\n  4. The strlen() call within strdup() will read past the buffer boundary\n  5. AddressSanitizer detects heap buffer overflow\n\n  Minimal reproducer:\n```c\n  char *buffer = malloc(256);\n  memset(buffer, 'A', 256); // No null termination\n  curl_slist_append(NULL, buffer); // Triggers overflow\n```\n\n{F4507009}\n\nBuilt and tested with libcurl, git commit `a487a4e4bddb301e44360c09a8167adc52c31e71`.\n\n## Impact\n\nImpact:\n  - Confidentiality: High - Out-of-bounds read can leak sensitive heap memory contents\n  - Integrity: Low - Limited write capability\n  - Availability: Medium - Potential denial of service via crash\n\n  The vulnerability allows attackers to:\n  1. Read arbitrary heap memory beyond allocated boundaries\n  2. Potentially crash applications using libcurl\n  3. In some scenarios, may lead to information disclosure of sensitive data from adjacent heap allocations\n\n  Attack Vectors:\n  - HTTP header processing\n  - URL parsing with malformed components\n  - Cookie handling\n  - Custom request methods\n  - Any libcurl API accepting string parameters\n\n  CVSS Score: 7.3 (High)\n\n  CVSS Vector: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:L/A:L",
+  "weakness": {
+    "id": 5,
+    "name": "Heap Overflow"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 4507009,
+      "file_name": "CleanShot_2025-06-29_at_12.27.55_2x.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/55iruqu2zmysdo7am8ugq0lsq41k?response-content-disposition=attachment%3B%20filename%3D%22CleanShot_2025-06-29_at_12.27.55_2x.png%22%3B%20filename%2A%3DUTF-8%27%27CleanShot_2025-06-29_at_12.27.55_2x.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXTGCOIKU%2F20250704%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250704T194200Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECoaCXVzLXdlc3QtMiJHMEUCIQD0CRsPTdYzjI1a3kPu7WQK3E5MzKCFqrq0KOy7hhyfPQIgb%2F78%2BGh5yzrietwNb%2FBqkTNbyR3TOMzW1FrdZHNTvisqsgUIMxADGgwwMTM2MTkyNzQ4NDkiDGzFFVqhuLiR8DY4HiqPBV%2BXHK2%2B%2BMZaZCr2tM0UWMLjVPHgKcZ38ODr02JZoGySN8EFLVMOJoXjnXc5vCIpiVZUKV4%2B5irtNps6JkyRthqVxU%2FRGg3Xy2kYBOPsfWri8SZKocLuDjoLfjl1TUNcX%2Fu0hiTcXx7Nzxpj5%2F5SVFvnrYhIV5t91FopbNEEHzlpgisCpU5%2FGxpvNFFjHJ0S4MIqY3fsnK8najdOU1YB33OgXgAxKq56blqEu63SrR94Hm8YxejiCxPkiEIKDOI%2BQFZp4i%2BtwcRdZiwo9dOw%2B%2FHVZBmkqlTlfgv4KpRljBBEX%2B4jRwVRoQECKe5vJ60BhkeSMGJUzLiLEaJx9ksEte7adrZRw8FcuGQsj4IlN8vnli7ZNKKsZKpIWTvX25CeA4lB8rwr7N89cJ9C3g09VI9%2BfbPOZhnooibfSv%2Bz0fgTY0dAVLE2InO56cqgbyS2t3mJkkyidzOLaTL7wZc5ak8KqekSbNQt87Fs1fw%2B74VSB%2F%2F0PysPOyE8V7vHL74Y3ekquKns%2BgV2wR%2BZa2fVHmDOUfoA6U%2BhJckRY4LbFTzmyppQ68IMaVaEWzsMG0aMW0nOhKRmKR4k68e9ST8Gme905IKXaWM5kD5A%2FwL5AjN1kIYPaam2OBFEbAMjJ2cWFnR3%2BHTFjsn2fZgu0v3JbpS5fu06QJj53tCgsAxMBN%2BmyMqLr7ECAO%2F2RNXu6V40OjY1A4dSvFKryK3VBqMWextpxtLpzvrgFsEEEPy%2Fku4BmAh%2FNt1ouIlTsQgmlG4QP7su%2BKQwk6DCssxB8iwILab7zonU7wQFZBKqGRyWq5kpW8O%2FDjwBKzr2eVoWtY5ADLyU%2FUlrhetr%2F8JWSn9LJ6nrpjcqaY9NJOmtdG3yLB0wrZygwwY6sQE0dPokvXob6NhqQSwrKyZB3x%2BGVnss25et0PMrpBc67U3Sws7GWz%2B7nmDi8iblRb0fiFC2dz4Lxfd2b%2B5e7WUtvGaeqH5V31vZl%2Bl3kJ7C1p3Mw3Eh0kvSMEu70fT7FH6UUqY0BStPlMzSrXK48pc4u9DmViRTrauUdCQVys2LYJNaylXiNwokaVF99Y671EzW0CJtGRuUgdQQ0ArbEpwbjwZgNQ%2FxhzxozpyrhwpyA2o%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=0c378dc6512e40e2dd8ab7290e690f2606f33f45d5962eaaacbbc060a81ce736",
+      "file_size": 3745256,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 4507026,
+      "file_name": "crash_reproducer.c",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/bbx0wuhdjmdvvhizdm5n8oopxgkw?response-content-disposition=attachment%3B%20filename%3D%22crash_reproducer.c%22%3B%20filename%2A%3DUTF-8%27%27crash_reproducer.c&response-content-type=text%2Fx-c%2B%2Bsrc&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXTGCOIKU%2F20250704%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250704T194200Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECoaCXVzLXdlc3QtMiJHMEUCIQD0CRsPTdYzjI1a3kPu7WQK3E5MzKCFqrq0KOy7hhyfPQIgb%2F78%2BGh5yzrietwNb%2FBqkTNbyR3TOMzW1FrdZHNTvisqsgUIMxADGgwwMTM2MTkyNzQ4NDkiDGzFFVqhuLiR8DY4HiqPBV%2BXHK2%2B%2BMZaZCr2tM0UWMLjVPHgKcZ38ODr02JZoGySN8EFLVMOJoXjnXc5vCIpiVZUKV4%2B5irtNps6JkyRthqVxU%2FRGg3Xy2kYBOPsfWri8SZKocLuDjoLfjl1TUNcX%2Fu0hiTcXx7Nzxpj5%2F5SVFvnrYhIV5t91FopbNEEHzlpgisCpU5%2FGxpvNFFjHJ0S4MIqY3fsnK8najdOU1YB33OgXgAxKq56blqEu63SrR94Hm8YxejiCxPkiEIKDOI%2BQFZp4i%2BtwcRdZiwo9dOw%2B%2FHVZBmkqlTlfgv4KpRljBBEX%2B4jRwVRoQECKe5vJ60BhkeSMGJUzLiLEaJx9ksEte7adrZRw8FcuGQsj4IlN8vnli7ZNKKsZKpIWTvX25CeA4lB8rwr7N89cJ9C3g09VI9%2BfbPOZhnooibfSv%2Bz0fgTY0dAVLE2InO56cqgbyS2t3mJkkyidzOLaTL7wZc5ak8KqekSbNQt87Fs1fw%2B74VSB%2F%2F0PysPOyE8V7vHL74Y3ekquKns%2BgV2wR%2BZa2fVHmDOUfoA6U%2BhJckRY4LbFTzmyppQ68IMaVaEWzsMG0aMW0nOhKRmKR4k68e9ST8Gme905IKXaWM5kD5A%2FwL5AjN1kIYPaam2OBFEbAMjJ2cWFnR3%2BHTFjsn2fZgu0v3JbpS5fu06QJj53tCgsAxMBN%2BmyMqLr7ECAO%2F2RNXu6V40OjY1A4dSvFKryK3VBqMWextpxtLpzvrgFsEEEPy%2Fku4BmAh%2FNt1ouIlTsQgmlG4QP7su%2BKQwk6DCssxB8iwILab7zonU7wQFZBKqGRyWq5kpW8O%2FDjwBKzr2eVoWtY5ADLyU%2FUlrhetr%2F8JWSn9LJ6nrpjcqaY9NJOmtdG3yLB0wrZygwwY6sQE0dPokvXob6NhqQSwrKyZB3x%2BGVnss25et0PMrpBc67U3Sws7GWz%2B7nmDi8iblRb0fiFC2dz4Lxfd2b%2B5e7WUtvGaeqH5V31vZl%2Bl3kJ7C1p3Mw3Eh0kvSMEu70fT7FH6UUqY0BStPlMzSrXK48pc4u9DmViRTrauUdCQVys2LYJNaylXiNwokaVF99Y671EzW0CJtGRuUgdQQ0ArbEpwbjwZgNQ%2FxhzxozpyrhwpyA2o%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=a34025edd86940dbc7cd7337646420de2d76b68d8cd999deb1be748c660f2752",
+      "file_size": 1839,
+      "type": "text/x-c++src",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 6,
+  "voters": [
+    "2026",
+    "geeknik",
+    "thalaivar304",
+    "bilalhacker302",
+    "sumonkhan36",
+    "redhack1"
+  ],
+  "severity": {
+    "rating": "high",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 18844,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/curl/curl",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "id": 718158,
+      "category": "researcher",
+      "content": "# libcurl heap-buffer-overflow: API contract vs. memory safety — you decide.\n\nAn easily reproducible heap buffer overflow exists in libcurl’s `curl_slist_append()` function, triggered by passing a non-NUL-terminated string. The function internally calls `strdup()`, which in turn invokes `strlen()` with no bounds check—leading to out-of-bounds heap reads if the input isn’t NUL-terminated.\n\n## Steps to Reproduce:\n\t•\tAllocate a buffer, e.g. 256 bytes.\n\t•\tFill it with non-zero bytes; don’t NUL-terminate.\n\t•\tCall curl_slist_append(NULL, buffer);\n\t•\tObserve AddressSanitizer reporting a heap-buffer-overflow.\n\n## Minimal PoC:\n```\n#include <curl/curl.h>\n#include <stdlib.h>\n#include <string.h>\nint main() {\n  char *buf = malloc(4);\n  memcpy(buf, \"\\xbc\\x07\\x7a\\x02\", 4); // No NUL\n  curl_slist_append(NULL, buf); // 💥 Heap overflow\n  free(buf);\n}\n```\n\nCommand:\n```bash\nclang -fsanitize=address -g poc.c -lcurl -o curl_poc\n./curl_poc\n```\n## Impact:\n> Confidentiality: High — arbitrary heap memory can be leaked.\n> Availability: Medium — easy DoS/crash on malformed input.\n> Integrity: Low — limited to reading, not writing.\n\nAttack surface: Any code, binding, or fuzz harness using libcurl and `not strictly validating NUL-termination on user input` (think FFI in Rust, Go, Python, etc.)\n\n## Why This Still Matters:\n> C contracts ≠ modern memory safety.\n> Hardened builds, fuzzing, and language bindings can all hit this crash in the real world.\n> Just because the spec says “don’t do that” doesn’t mean you should ship APIs that crash on malformed input.\n\n### Takeaway:\nIf you want to break (or secure) memory in 2025, don’t trust legacy API contracts.\nTrust code that enforces bounds, even when nobody’s watching.\n\n> “We don’t blame the maintainers for upholding a legacy view of C.\n> But we also don’t stop at ‘Not Applicable.’\n> Because memory doesn’t care about intent. It cares about bounds.”\n\nStay glitchy,\n@geeknik ",
+      "updated_at": "2025-06-30T07:22:49.548Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 12276,
+        "username": "geeknik",
+        "name": "Brian Carpenter",
+        "bio": "Arcane bug finding braggart trying to make the Internet a safer place for everyone around the world.",
+        "cleared": false,
+        "verified": true,
+        "website": "https://linktr.ee/geeknik",
+        "location": "USA",
+        "created_at": "2014-09-21T04:15:33.476Z",
+        "url": "https://hackerone.com/geeknik",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "hacker",
+        "profile_picture_urls": {
+          "small": "https://profile-photos.hackerone-user-content.com/variants/7xfGZCKCxUuGLYGfuUZM3XyY/36bca6668139d77be42208d896968344ae7a76c55ee0f8b0f28281ccd492ff02",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/7xfGZCKCxUuGLYGfuUZM3XyY/19c85a12ac35f466af1ea2b0ae853bfe5e8f057fb1d6fb62db131707bb67b30d",
+          "xtralarge": "https://profile-photos.hackerone-user-content.com/variants/7xfGZCKCxUuGLYGfuUZM3XyY/41e80259f0e9503ef154e10f39296dbefc2217dd885433e52a9107ef82fe7535"
+        }
+      }
+    }
+  ]
+}
