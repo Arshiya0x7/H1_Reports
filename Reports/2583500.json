@@ -1,0 +1,149 @@
+{
+  "id": 2583500,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yNTgzNTAw",
+  "url": "https://hackerone.com/reports/2583500",
+  "title": "No rate limiting on form[register]",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "none",
+  "readable_substate": "Resolved",
+  "created_at": "2024-07-01T04:40:13.850Z",
+  "submitted_at": "2024-07-01T04:40:14.180Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "growler09",
+    "url": "/growler09",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/jttmzro6o9xgm7x45r73e8xjogd0/d86f3034cedc97192c6e25b49fb25d458f11529df403793678d43ead36f13cc4"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 453,
+    "url": "https://hackerone.com/informatica",
+    "handle": "informatica",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/6yxveqohTKjQLQyJm5Xv7Eye/36bca6668139d77be42208d896968344ae7a76c55ee0f8b0f28281ccd492ff02",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/6yxveqohTKjQLQyJm5Xv7Eye/19c85a12ac35f466af1ea2b0ae853bfe5e8f057fb1d6fb62db131707bb67b30d"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Informatica",
+      "twitter_handle": "informatica",
+      "website": "https://www.informatica.com/",
+      "about": "Informatica Corporation is the world’s number one independent provider of data integration software."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2025-03-28T12:43:52.532Z",
+  "bug_reporter_agreed_on_going_public_at": "2025-02-26T12:43:49.816Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Overview of the Vulnerability:-\nRate limiting is a strategy to limit the frequency of a repeat action within a particular time frame. This ensures that a service doesn’t become unresponsive or unavailable due to too many requests exhausting the application's resources. A lack of rate limiting on this endpoint allows an attacker to send a large number of requests to the server and potentially cause accelerated service usage for the business or exhaust the application resources or for targeted customer it may create annoyance by frequent mail sent by anonymous attacker.\n\nSteps to Reproduce:-\nEnable a HTTP intercept proxy, such as Burp Suite or OWASP ZAP, to record and intercept web traffic from your browser\nUsing a browser, navigate to \"Sign Up\" while login.\nsubmit the Register request while using the HTTP intercept proxy to intercept the request.\nUsing the HTTP intercept proxy, re-issue the captured request 200 times respectively in rapid succession.\nObserve within the HTTP intercept proxy that all 200 of these requests generate a ‘HTTP 200 OK’ response, showing that there is \"no rate-limiting\" on the interface.\nPerform another, manual form submission in the browser\nObserve that the form is submitted successfully which shows that there is no silent lockout implemented, and the email will be bombed with register OTP mails.\n\nProof of Concept(POC):-\nThe following screenshots demonstrate a lack of rate limiting on \"Sign Up\" interface followed by a successful form submission:\nperformed attack for 200 times twice in Sign Up/register!\n\nPrevention:\nMonitor API activity against rate limits.\nReduce the number of requests.\nImplement proper validation for query parameters and request bodies.\nNotify clients when rate limits are exceeded.\nRemember, rate limiting is crucial for protecting web applications from abuse and ensuring security. 🛡\n\n\"Note:- Disposable Mail used for clear proof of concept.\"\n\n## Impact\n\nNo rate limiting on a form can result in reputational damage to the organization if the rate limiting prevents legitimate form submissions and responses. It also has the potential to cause accelerated service usage, which can incur a direct financial cost in environments with SaaS services or pay on demand systems. attacker may create annoyance to user(even non-related peoples) by bombing their Emails vanishing reputation of brand.",
+  "weakness": {
+    "id": 26,
+    "name": "Improper Access Control - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 3401288,
+      "file_name": "Recording_2024-07-01_095819.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/cx2ckchel7cef9y4sac2j8t6iaio?response-content-disposition=attachment%3B%20filename%3D%22Recording_2024-07-01_095819.mp4%22%3B%20filename%2A%3DUTF-8%27%27Recording_2024-07-01_095819.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ2TTOZCD5%2F20250704%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250704T200228Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECkaCXVzLXdlc3QtMiJIMEYCIQDoXOc6FduVQH5t1JeUO%2Bskvn84hIkzIQwnDqVZo4THigIhAJTmN1EH0r9nKBJU4%2BNIMNEKSQCewkyNncqOXeHS%2FI%2BxKrIFCDIQAxoMMDEzNjE5Mjc0ODQ5Igzmsw2Xat3bgXNHnlAqjwXGynSiBNaye0AJ%2FEyZaTwRoX64ULn3l9ErnEoWaruxBViEkJPrnzQ5G%2FlA8FPhpJ76sWZz%2B7VSa2gJLUYvNZJHEslY5Cm%2BoW1ofLrzxNdK27qbbE%2F4fEOScA6dDYPu7JPlgMLECS9aBJzwwZUuUhvS77HZvu53dU7pR6Y6Fsu2X991ZLgXDmSiPVVOoGynVN6FX6ZIBTDB4Cw%2BaHPKKQoYIVhZmeq79GWem8UppMxeXlYmZ9eEPxL4Ez4FRoSUskBo3sIpmpx1myplRG9FOF2dv2q32j12K8kDWcQhiTsfXJYXPiMh1VC2xT55gkNjeTHLeohUc6FzsiPLu438hDAMVL5tYl1R4e5Et8iRnagsUDAEBvfF0Y8tI6fpRK7bJ6bS6f5Xeihjanx4BR6dFzzYMHCrBB7%2BrJLTRJl%2BgLTPsSFZO4lakPVJ4C32Fr%2FeqjQFpW%2F5GfDFcalV82GMLzqLD3IW3%2FtHgMTYFRHLxEjLQA6UXsBAwiQypwaz2uDV42V74Cdaj%2FM5CaiZUnxGx5BijL3ksx253GBMVGCc5%2FUEtmUHzKuWXsCZoahSGssUVDRJe0joDXtVCGlRAn4RXu4fk6rp7lrfjaTzO1CxJrU5oPbOq8BEeaZeJsMwAe5NfHQFJzXCzSV4CQUD8RfHlPgeFA43oSqzhWgoVLERmSFv814KzGRRTEj%2BRSX66rEdNrRWI9sHamLwJ%2BcVvlSdw0qXBVPHpiFDSYHuRNEf3BgenU8SeJ1zQ8I4JNMULccmmAdm16FgLMpxm1cF0gF43LekzxxdUUsr9THvoar5odzPvWSG0JbLm7qAUl8s%2FE5PKFoomMUszXk20W0WNLoYc31szbvcM3lx9DQswuqKs1xeMLiSoMMGOrABGO8Lz%2BKujCRSbMrKy8T6WFqhVjA19Z8MgGtNfSk4sZLpYiTYWCCl3%2FkIHcfsJ%2Bo2hplmuD%2Bw6WNLOk%2FXrJjXtImfGzYPcYLiIPGrXWn6luO08N9LjKyoEhGaL0o9D%2FAr8sfdapp5esCKzno28zOripaPD3I7OQIpCydS%2BVXBMw5cAgIz9900ub31uZJIEph0G6DcikGN3RAqe1nrZ5%2FSYM9BsTAZLm5T7PdDxp1uScA%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=f95cc67cd310088e06022af490cae6846f4b99649addd2e1a64104c458347f18",
+      "file_size": 10054893,
+      "type": "video/mp4",
+      "moderated": null
+    },
+    {
+      "id": 3401289,
+      "file_name": "Recording_2024-06-27_220843.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/zvkhwes5yssdqwquzuyi8tjjivvl?response-content-disposition=attachment%3B%20filename%3D%22Recording_2024-06-27_220843.mp4%22%3B%20filename%2A%3DUTF-8%27%27Recording_2024-06-27_220843.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ2TTOZCD5%2F20250704%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250704T200228Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECkaCXVzLXdlc3QtMiJIMEYCIQDoXOc6FduVQH5t1JeUO%2Bskvn84hIkzIQwnDqVZo4THigIhAJTmN1EH0r9nKBJU4%2BNIMNEKSQCewkyNncqOXeHS%2FI%2BxKrIFCDIQAxoMMDEzNjE5Mjc0ODQ5Igzmsw2Xat3bgXNHnlAqjwXGynSiBNaye0AJ%2FEyZaTwRoX64ULn3l9ErnEoWaruxBViEkJPrnzQ5G%2FlA8FPhpJ76sWZz%2B7VSa2gJLUYvNZJHEslY5Cm%2BoW1ofLrzxNdK27qbbE%2F4fEOScA6dDYPu7JPlgMLECS9aBJzwwZUuUhvS77HZvu53dU7pR6Y6Fsu2X991ZLgXDmSiPVVOoGynVN6FX6ZIBTDB4Cw%2BaHPKKQoYIVhZmeq79GWem8UppMxeXlYmZ9eEPxL4Ez4FRoSUskBo3sIpmpx1myplRG9FOF2dv2q32j12K8kDWcQhiTsfXJYXPiMh1VC2xT55gkNjeTHLeohUc6FzsiPLu438hDAMVL5tYl1R4e5Et8iRnagsUDAEBvfF0Y8tI6fpRK7bJ6bS6f5Xeihjanx4BR6dFzzYMHCrBB7%2BrJLTRJl%2BgLTPsSFZO4lakPVJ4C32Fr%2FeqjQFpW%2F5GfDFcalV82GMLzqLD3IW3%2FtHgMTYFRHLxEjLQA6UXsBAwiQypwaz2uDV42V74Cdaj%2FM5CaiZUnxGx5BijL3ksx253GBMVGCc5%2FUEtmUHzKuWXsCZoahSGssUVDRJe0joDXtVCGlRAn4RXu4fk6rp7lrfjaTzO1CxJrU5oPbOq8BEeaZeJsMwAe5NfHQFJzXCzSV4CQUD8RfHlPgeFA43oSqzhWgoVLERmSFv814KzGRRTEj%2BRSX66rEdNrRWI9sHamLwJ%2BcVvlSdw0qXBVPHpiFDSYHuRNEf3BgenU8SeJ1zQ8I4JNMULccmmAdm16FgLMpxm1cF0gF43LekzxxdUUsr9THvoar5odzPvWSG0JbLm7qAUl8s%2FE5PKFoomMUszXk20W0WNLoYc31szbvcM3lx9DQswuqKs1xeMLiSoMMGOrABGO8Lz%2BKujCRSbMrKy8T6WFqhVjA19Z8MgGtNfSk4sZLpYiTYWCCl3%2FkIHcfsJ%2Bo2hplmuD%2Bw6WNLOk%2FXrJjXtImfGzYPcYLiIPGrXWn6luO08N9LjKyoEhGaL0o9D%2FAr8sfdapp5esCKzno28zOripaPD3I7OQIpCydS%2BVXBMw5cAgIz9900ub31uZJIEph0G6DcikGN3RAqe1nrZ5%2FSYM9BsTAZLm5T7PdDxp1uScA%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=41c129a0990f47b7ac32cb072e87a85bdf6b98d307e9c0da6cbd676c28e264ac",
+      "file_size": 14544606,
+      "type": "video/mp4",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2025-03-28T12:43:50.229Z",
+  "allow_singular_disclosure_after": -8493518.339564854,
+  "singular_disclosure_allowed": true,
+  "vote_count": 109,
+  "voters": [
+    "aboalezz",
+    "almuntadhar",
+    "roland_hack",
+    "r3dw4n",
+    "starlox",
+    "jonasdiasrebelo",
+    "xgoon",
+    "raslanco",
+    "2026",
+    "ronak_9889",
+    "and 99 more..."
+  ],
+  "severity": {
+    "rating": "none",
+    "score": 0.0,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "none",
+      "integrity": "none",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 90553,
+    "asset_type": "WILDCARD",
+    "asset_identifier": "*.informatica.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
