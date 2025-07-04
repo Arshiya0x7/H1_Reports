@@ -1,0 +1,158 @@
+{
+  "id": 3083428,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMDgzNDI4",
+  "url": "https://hackerone.com/reports/3083428",
+  "title": "Corrupted pointer in node::fs::ReadFileUtf8(const FunctionCallbackInfo<Value>& args) when args[0] is a string.",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2025-04-08T20:42:15.518Z",
+  "submitted_at": "2025-04-08T20:42:15.790Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "justinnietzel",
+    "url": "/justinnietzel",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 22984,
+    "url": "https://hackerone.com/nodejs",
+    "handle": "nodejs",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/022/984/e600648ace4a8553247bce967d461a030aa81d49_original.png/36bca6668139d77be42208d896968344ae7a76c55ee0f8b0f28281ccd492ff02",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/022/984/e600648ace4a8553247bce967d461a030aa81d49_original.png/19c85a12ac35f466af1ea2b0ae853bfe5e8f057fb1d6fb62db131707bb67b30d"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Node.js",
+      "twitter_handle": "nodejs",
+      "website": "https://nodejs.org",
+      "about": "The Node.js JavaScript Runtime"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "no-content",
+  "cve_ids": [
+    "CVE-2025-23165"
+  ],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2025-05-15T13:30:55.511Z",
+  "bug_reporter_agreed_on_going_public_at": "2025-05-15T13:30:55.288Z",
+  "team_member_agreed_on_going_public_at": "2025-05-14T21:36:55.438Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "",
+  "weakness": {
+    "id": 2,
+    "name": "Memory Corruption - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [],
+  "allow_singular_disclosure_at": "2025-06-13T21:36:55.748Z",
+  "allow_singular_disclosure_after": -1807903.341510133,
+  "singular_disclosure_allowed": true,
+  "vote_count": 58,
+  "voters": [
+    "zy9ard3",
+    "2026",
+    "mohaned0101",
+    "bigshaq",
+    "thalaivar304",
+    "idealphaseth",
+    "inputwhisperer",
+    "timfreitag07",
+    "nia-veri-vidi",
+    "ryel",
+    "and 48 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "score": 3.7,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "high",
+      "privileges_required": "none",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "none",
+      "integrity": "none",
+      "availability": "low"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 666,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/nodejs/node",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "id": 686313,
+      "category": "team",
+      "content": "In Node.js, the `ReadFileUtf8` internal binding leaks memory due to a corrupted pointer in `uv_fs_s.file`: a UTF-16 path buffer is allocated but subsequently overwritten when the file descriptor is set. This results in an unrecoverable memory leak on every call. Repeated use can cause unbounded memory growth, leading to a denial of service.\n\nImpact:\n* This vulnerability affects APIs relying on `ReadFileUtf8` on Node.js release lines: v20 and v22.",
+      "updated_at": "2025-05-05T19:09:01.015Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 2195374,
+        "username": "rafaelgss",
+        "name": "Rafael Gonzaga",
+        "bio": "",
+        "cleared": false,
+        "verified": false,
+        "website": "https://rafaelgss.dev",
+        "location": "",
+        "created_at": "2022-01-27T23:52:59.861Z",
+        "url": "https://hackerone.com/rafaelgss",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "hacker",
+        "profile_picture_urls": {
+          "small": "https://profile-photos.hackerone-user-content.com/variants/03cmza9kg8sgdwaepi579m4hvctl/d86f3034cedc97192c6e25b49fb25d458f11529df403793678d43ead36f13cc4",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/03cmza9kg8sgdwaepi579m4hvctl/22ce0c13a0181b021d03e7d8973c841abb269272ed34bd29007fa249561efbfa",
+          "xtralarge": "https://profile-photos.hackerone-user-content.com/variants/03cmza9kg8sgdwaepi579m4hvctl/a14d002632d92a5ef555d6a6376e46174877bd6d5b28e82d36414115136df430"
+        }
+      }
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
