@@ -1,0 +1,140 @@
+{
+  "id": 2315026,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yMzE1MDI2",
+  "url": "https://hackerone.com/reports/2315026",
+  "title": "Transactions in invalid blocks are kept in tx-pool without undergoing certain checks.",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2024-01-13T23:44:14.533Z",
+  "submitted_at": "2024-01-13T23:44:14.629Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "boog900",
+    "url": "/boog900",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 7731,
+    "url": "https://hackerone.com/monero",
+    "handle": "monero",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/007/731/55634f7fcd917725c7a5771cc6e7c9b4d5fe0c22_original.png/36bca6668139d77be42208d896968344ae7a76c55ee0f8b0f28281ccd492ff02",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/007/731/55634f7fcd917725c7a5771cc6e7c9b4d5fe0c22_original.png/19c85a12ac35f466af1ea2b0ae853bfe5e8f057fb1d6fb62db131707bb67b30d"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Monero",
+      "twitter_handle": "monero",
+      "website": "https://getmonero.org",
+      "about": " Monero: the secure, private, untraceable cryptocurrency"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2025-04-23T18:26:38.708Z",
+  "bug_reporter_agreed_on_going_public_at": "2025-04-23T18:26:38.620Z",
+  "team_member_agreed_on_going_public_at": "2025-04-23T14:24:46.707Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nWhen adding blocks to the blockchain monerod first adds the transaction(s) to the tx pool with `relay_method::block`, this means the tx-pool skips certain checks like fee and extra field size, this is expected though. However if the block turns out to be invalid the transactions are kept in the pool and do not undergo the relay checks, this wouldn't be too bad if one of the checks ignored wasn't that the inputs are valid.\n\nBecause monerod [ignores the input validity check](https://github.com/monero-project/monero/blob/ac02af92867590ca80b2779a7bbeafa99ff94dcb/src/cryptonote_core/tx_pool.cpp#L274) for `relay_method::block` txs it is possible for someone to craft a block full of completely invalid txs and fill a nodes tx-pool with junk.\n\n## Steps To Reproduce:\n\nI have created a PoC, it is very rough and may need a couple runs, what it does is repeatedly send blocks full of invalid txs to the node address provided. \n\nTo run you need a synced node, the node must also think it is synced, how I did it was first allowing the node to connect to the network and the disconnecting it with `out_peers 0` when it reports it's synchronized just to be safe. The top block in the blockchain must also have at least one tx (not including the miner tx) as the PoC will use this tx to create more invalid txs.\n\nI have uploaded the code here I don't know if that's the best way to share it, if not I'm happy to share it another way. As it seems folders aren't supported here you will need to create a `src` folder and move `utils.rs` and `main.rs` inside keeping `Cargo.toml` and `Cargo.lock` on the outside.\n\nIt uses Cuprate's p2p code so you will need Rust installed to run it. \n\nwith Rust installed to run you would do this from the root of the files:\n\n```\ncargo run -r  [network] [node]\n```\nso to target a node at `127.0.0.1:18080` on mainnet you would do:\n\n```\ncargo run -r  mainnet 127.0.0.1:18080\n```\n## Potential Fix\n\nA way to fix this is keeping track of what txs we didn't already know about when a new block comes in and then if the block turns out to be invalid checking the txs again with a different relay method (not block).\n\n## Impact\n\nThe most obvious issue this causes is stopping the flow of txs around the network as if a tx is `relay_method::block` then when pruning the tx pool [it will never be removed](https://github.com/monero-project/monero/blob/ac02af92867590ca80b2779a7bbeafa99ff94dcb/src/cryptonote_core/tx_pool.cpp#L465), leaving other, valid, txs to be removed, the `prune` function is called after every tx is added to the pool so you could empty a nodes pool of valid txs and stop it accepting more txs.\n\nHowever when I ran my PoC on my node it completely broke it, it froze it and then I could not start it again the logs just repeated this:\n\n```\n2024-01-13 20:43:59.190\t[P2P6]\tTRACE\tblockchain.db.lmdb\tsrc/blockchain_db/lmdb/db_lmdb.cpp:1887\tBlockchainLMDB::get_txpool_tx_meta\n2024-01-13 20:43:59.190\t[P2P6]\tTRACE\tblockchain.db.lmdb\tsrc/blockchain_db/lmdb/db_lmdb.cpp:1887\tBlockchainLMDB::get_txpool_tx_meta\n2024-01-13 20:43:59.190\t[P2P6]\tTRACE\tblockchain.db.lmdb\tsrc/blockchain_db/lmdb/db_lmdb.cpp:1887\tBlockchainLMDB::get_txpool_tx_meta\n2024-01-13 20:43:59.190\t[P2P6]\tTRACE\tblockchain.db.lmdb\tsrc/blockchain_db/lmdb/db_lmdb.cpp:1887\tBlockchainLMDB::get_txpool_tx_meta\n2024-01-13 20:43:59.190\t[P2P6]\tTRACE\tblockchain.db.lmdb\tsrc/blockchain_db/lmdb/db_lmdb.cpp:1887\tBlockchainLMDB::get_txpool_tx_meta\n``` \nI couldn't see anywhere where it could be stuck in a loop (I didn't look much though) and I couldn't manually flush the txpool.\n\n\nAnother issue I can think of is sending \"valid\" transactions with no fee, although other nodes wont be able to broadcast this around the network if the attacker manages to send it to a miner the miner might include it in the block template if there is enough room (it should be lowest priority though as no fee) then this can be repeated to spam the chain to bloat it or to try de-anonymize txs for cheap (free?).",
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 2980007,
+      "file_name": "Cargo.lock",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/wucv93ax73r83kc87p67gdjsyoit?response-content-disposition=attachment%3B%20filename%3D%22Cargo.lock%22%3B%20filename%2A%3DUTF-8%27%27Cargo.lock&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZFNC6OHO%2F20250704%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250704T200008Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECwaCXVzLXdlc3QtMiJGMEQCIEOvmi0%2FoSuxmhTaVvivp08N%2FQdr2a%2FiJFfskZfwC962AiAn89l1pmt9qrOrhVQXiBQjytpURFeS81eRDiXYhyA8ASqyBQg1EAMaDDAxMzYxOTI3NDg0OSIMvLupUb6ojEPxsnz%2FKo8FvSyPpoARNrT2qOocESSey38I3cOvBpWK6JjzHFvAAFc6dJJgSomuAZ1h9frgD62%2B5G7VU5wteWNZfSHLurosVlZCQYBHyr5fbrKaXyqAudBsH0kTh1htx03Oi47%2FYgtUQ7f%2B4un1tmrxK2pwq049oPjusn%2Ba%2FVuqNlbD33uwsVO8V5PJoZmLSMQU2LcMJxv31gKm00%2F09ZiCoLdN6yDWWP3ND8i%2B%2BdQponFzr0mOE5zaYzcv0KcWwtf9rUjm5ux%2BrEVl8HBZrerSpxFtI%2BcuvTANRPi%2Bp%2F2hfXs77f8y4lbw0yIA9wmn32Rhxt0mj%2BkxsuFy8wpoLBfSMcpmK0jVLu8guFWZ5mVjrKrBXyaS72nU5AB2WpKDJmTkZsJV8EV9KhZYoePibh%2FjcBoaOPtzBwcUa490FiZ6%2FZFWJMgYOySNI6DpC7jfkwEbSIBgMBxd9P%2FvcFXBRpyUvi15eLjjQZoebDf%2B3qbf5qB6Rr0hAiKnbI0IsYaqZmxzw%2FOJec1himGcCyLxHAOAHTIPgVUT5SRIqkMyoswrZmo75nIRO02kvelWOWRbwls%2Biy0LPoGNpwMYt9d%2F%2FKKsrFgZLmRS7NAB1Yu7e7VDniEOQOb2b%2BiRNTzqCI0fP1qIu9ksz1AxX4hKJ7YufUAlTkQ7AHlmJsYnQDhvCN0TL9MgV5NOCmDHGT4nVEUb9lbTgJQl0K8XGIyAPQjr52cU0w21aYQ4T8AM%2FTMvhFYHFzrPO91ds8G9YCdB07Z6fkzTVLeTPEt9%2FkN0uZrIKoz4aIOm7e17Ut6gpNGr7rWcAzFK%2BZoIf%2BdWTigQQaoN%2FQrlAbVRct3o3jC0tRYlZnC8aRM9fMQap0CGWUgGMeuOn5sc7pqxoTDq1aDDBjqyASKfbdJ54xeWsecK2A4vfqqKm8vDTdpGlIHQK99aoDiuvqAOJypGm%2B4i6ypvs21HAt%2BKPTUuDJfXlGOL1AK7pbir62zrknGY9jHwcE1nJfFutcJTQP%2F3z8ctArJ49UFfMyFy%2BAERKR0Ytn%2BRe0PnjWMubNi%2BrV2%2BI%2FKsEirMH6n5d6aPrIjuBbkBFnKilwvPura86%2BQ5h0TiVpBND6%2Fgyh208s39PzHbFipfBoprOFodE28%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=ba7d0ca0725d6840a535591ec125b36b0d6fdf9aaffdf1a9eab92e6e25feae31",
+      "file_size": 47850,
+      "type": "application/octet-stream",
+      "moderated": null
+    },
+    {
+      "id": 2980008,
+      "file_name": "Cargo.toml",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/qy0an70f63arts4zmhweo8by9mtw?response-content-disposition=attachment%3B%20filename%3D%22Cargo.toml%22%3B%20filename%2A%3DUTF-8%27%27Cargo.toml&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZFNC6OHO%2F20250704%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250704T200008Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECwaCXVzLXdlc3QtMiJGMEQCIEOvmi0%2FoSuxmhTaVvivp08N%2FQdr2a%2FiJFfskZfwC962AiAn89l1pmt9qrOrhVQXiBQjytpURFeS81eRDiXYhyA8ASqyBQg1EAMaDDAxMzYxOTI3NDg0OSIMvLupUb6ojEPxsnz%2FKo8FvSyPpoARNrT2qOocESSey38I3cOvBpWK6JjzHFvAAFc6dJJgSomuAZ1h9frgD62%2B5G7VU5wteWNZfSHLurosVlZCQYBHyr5fbrKaXyqAudBsH0kTh1htx03Oi47%2FYgtUQ7f%2B4un1tmrxK2pwq049oPjusn%2Ba%2FVuqNlbD33uwsVO8V5PJoZmLSMQU2LcMJxv31gKm00%2F09ZiCoLdN6yDWWP3ND8i%2B%2BdQponFzr0mOE5zaYzcv0KcWwtf9rUjm5ux%2BrEVl8HBZrerSpxFtI%2BcuvTANRPi%2Bp%2F2hfXs77f8y4lbw0yIA9wmn32Rhxt0mj%2BkxsuFy8wpoLBfSMcpmK0jVLu8guFWZ5mVjrKrBXyaS72nU5AB2WpKDJmTkZsJV8EV9KhZYoePibh%2FjcBoaOPtzBwcUa490FiZ6%2FZFWJMgYOySNI6DpC7jfkwEbSIBgMBxd9P%2FvcFXBRpyUvi15eLjjQZoebDf%2B3qbf5qB6Rr0hAiKnbI0IsYaqZmxzw%2FOJec1himGcCyLxHAOAHTIPgVUT5SRIqkMyoswrZmo75nIRO02kvelWOWRbwls%2Biy0LPoGNpwMYt9d%2F%2FKKsrFgZLmRS7NAB1Yu7e7VDniEOQOb2b%2BiRNTzqCI0fP1qIu9ksz1AxX4hKJ7YufUAlTkQ7AHlmJsYnQDhvCN0TL9MgV5NOCmDHGT4nVEUb9lbTgJQl0K8XGIyAPQjr52cU0w21aYQ4T8AM%2FTMvhFYHFzrPO91ds8G9YCdB07Z6fkzTVLeTPEt9%2FkN0uZrIKoz4aIOm7e17Ut6gpNGr7rWcAzFK%2BZoIf%2BdWTigQQaoN%2FQrlAbVRct3o3jC0tRYlZnC8aRM9fMQap0CGWUgGMeuOn5sc7pqxoTDq1aDDBjqyASKfbdJ54xeWsecK2A4vfqqKm8vDTdpGlIHQK99aoDiuvqAOJypGm%2B4i6ypvs21HAt%2BKPTUuDJfXlGOL1AK7pbir62zrknGY9jHwcE1nJfFutcJTQP%2F3z8ctArJ49UFfMyFy%2BAERKR0Ytn%2BRe0PnjWMubNi%2BrV2%2BI%2FKsEirMH6n5d6aPrIjuBbkBFnKilwvPura86%2BQ5h0TiVpBND6%2Fgyh208s39PzHbFipfBoprOFodE28%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=91a114a37c2b46d25a907d86bb0936899ce1480f285fda3a8c0adae6d1f70560",
+      "file_size": 744,
+      "type": "application/octet-stream",
+      "moderated": null
+    },
+    {
+      "id": 2980009,
+      "file_name": "utils.rs",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/isu9g4w3sx69xecz9h5vzwjp9iw4?response-content-disposition=attachment%3B%20filename%3D%22utils.rs%22%3B%20filename%2A%3DUTF-8%27%27utils.rs&response-content-type=application%2Frls-services%2Bxml&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZFNC6OHO%2F20250704%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250704T200008Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECwaCXVzLXdlc3QtMiJGMEQCIEOvmi0%2FoSuxmhTaVvivp08N%2FQdr2a%2FiJFfskZfwC962AiAn89l1pmt9qrOrhVQXiBQjytpURFeS81eRDiXYhyA8ASqyBQg1EAMaDDAxMzYxOTI3NDg0OSIMvLupUb6ojEPxsnz%2FKo8FvSyPpoARNrT2qOocESSey38I3cOvBpWK6JjzHFvAAFc6dJJgSomuAZ1h9frgD62%2B5G7VU5wteWNZfSHLurosVlZCQYBHyr5fbrKaXyqAudBsH0kTh1htx03Oi47%2FYgtUQ7f%2B4un1tmrxK2pwq049oPjusn%2Ba%2FVuqNlbD33uwsVO8V5PJoZmLSMQU2LcMJxv31gKm00%2F09ZiCoLdN6yDWWP3ND8i%2B%2BdQponFzr0mOE5zaYzcv0KcWwtf9rUjm5ux%2BrEVl8HBZrerSpxFtI%2BcuvTANRPi%2Bp%2F2hfXs77f8y4lbw0yIA9wmn32Rhxt0mj%2BkxsuFy8wpoLBfSMcpmK0jVLu8guFWZ5mVjrKrBXyaS72nU5AB2WpKDJmTkZsJV8EV9KhZYoePibh%2FjcBoaOPtzBwcUa490FiZ6%2FZFWJMgYOySNI6DpC7jfkwEbSIBgMBxd9P%2FvcFXBRpyUvi15eLjjQZoebDf%2B3qbf5qB6Rr0hAiKnbI0IsYaqZmxzw%2FOJec1himGcCyLxHAOAHTIPgVUT5SRIqkMyoswrZmo75nIRO02kvelWOWRbwls%2Biy0LPoGNpwMYt9d%2F%2FKKsrFgZLmRS7NAB1Yu7e7VDniEOQOb2b%2BiRNTzqCI0fP1qIu9ksz1AxX4hKJ7YufUAlTkQ7AHlmJsYnQDhvCN0TL9MgV5NOCmDHGT4nVEUb9lbTgJQl0K8XGIyAPQjr52cU0w21aYQ4T8AM%2FTMvhFYHFzrPO91ds8G9YCdB07Z6fkzTVLeTPEt9%2FkN0uZrIKoz4aIOm7e17Ut6gpNGr7rWcAzFK%2BZoIf%2BdWTigQQaoN%2FQrlAbVRct3o3jC0tRYlZnC8aRM9fMQap0CGWUgGMeuOn5sc7pqxoTDq1aDDBjqyASKfbdJ54xeWsecK2A4vfqqKm8vDTdpGlIHQK99aoDiuvqAOJypGm%2B4i6ypvs21HAt%2BKPTUuDJfXlGOL1AK7pbir62zrknGY9jHwcE1nJfFutcJTQP%2F3z8ctArJ49UFfMyFy%2BAERKR0Ytn%2BRe0PnjWMubNi%2BrV2%2BI%2FKsEirMH6n5d6aPrIjuBbkBFnKilwvPura86%2BQ5h0TiVpBND6%2Fgyh208s39PzHbFipfBoprOFodE28%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=369b0fbd50b2c224f8f72856ac7a9041e12642c0df18219e226a57f8a89f8edd",
+      "file_size": 3484,
+      "type": "application/rls-services+xml",
+      "moderated": null
+    },
+    {
+      "id": 2980010,
+      "file_name": "main.rs",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/yl54cd895iaggb80xyec49eg651g?response-content-disposition=attachment%3B%20filename%3D%22main.rs%22%3B%20filename%2A%3DUTF-8%27%27main.rs&response-content-type=application%2Frls-services%2Bxml&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZFNC6OHO%2F20250704%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250704T200008Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECwaCXVzLXdlc3QtMiJGMEQCIEOvmi0%2FoSuxmhTaVvivp08N%2FQdr2a%2FiJFfskZfwC962AiAn89l1pmt9qrOrhVQXiBQjytpURFeS81eRDiXYhyA8ASqyBQg1EAMaDDAxMzYxOTI3NDg0OSIMvLupUb6ojEPxsnz%2FKo8FvSyPpoARNrT2qOocESSey38I3cOvBpWK6JjzHFvAAFc6dJJgSomuAZ1h9frgD62%2B5G7VU5wteWNZfSHLurosVlZCQYBHyr5fbrKaXyqAudBsH0kTh1htx03Oi47%2FYgtUQ7f%2B4un1tmrxK2pwq049oPjusn%2Ba%2FVuqNlbD33uwsVO8V5PJoZmLSMQU2LcMJxv31gKm00%2F09ZiCoLdN6yDWWP3ND8i%2B%2BdQponFzr0mOE5zaYzcv0KcWwtf9rUjm5ux%2BrEVl8HBZrerSpxFtI%2BcuvTANRPi%2Bp%2F2hfXs77f8y4lbw0yIA9wmn32Rhxt0mj%2BkxsuFy8wpoLBfSMcpmK0jVLu8guFWZ5mVjrKrBXyaS72nU5AB2WpKDJmTkZsJV8EV9KhZYoePibh%2FjcBoaOPtzBwcUa490FiZ6%2FZFWJMgYOySNI6DpC7jfkwEbSIBgMBxd9P%2FvcFXBRpyUvi15eLjjQZoebDf%2B3qbf5qB6Rr0hAiKnbI0IsYaqZmxzw%2FOJec1himGcCyLxHAOAHTIPgVUT5SRIqkMyoswrZmo75nIRO02kvelWOWRbwls%2Biy0LPoGNpwMYt9d%2F%2FKKsrFgZLmRS7NAB1Yu7e7VDniEOQOb2b%2BiRNTzqCI0fP1qIu9ksz1AxX4hKJ7YufUAlTkQ7AHlmJsYnQDhvCN0TL9MgV5NOCmDHGT4nVEUb9lbTgJQl0K8XGIyAPQjr52cU0w21aYQ4T8AM%2FTMvhFYHFzrPO91ds8G9YCdB07Z6fkzTVLeTPEt9%2FkN0uZrIKoz4aIOm7e17Ut6gpNGr7rWcAzFK%2BZoIf%2BdWTigQQaoN%2FQrlAbVRct3o3jC0tRYlZnC8aRM9fMQap0CGWUgGMeuOn5sc7pqxoTDq1aDDBjqyASKfbdJ54xeWsecK2A4vfqqKm8vDTdpGlIHQK99aoDiuvqAOJypGm%2B4i6ypvs21HAt%2BKPTUuDJfXlGOL1AK7pbir62zrknGY9jHwcE1nJfFutcJTQP%2F3z8ctArJ49UFfMyFy%2BAERKR0Ytn%2BRe0PnjWMubNi%2BrV2%2BI%2FKsEirMH6n5d6aPrIjuBbkBFnKilwvPura86%2BQ5h0TiVpBND6%2Fgyh208s39PzHbFipfBoprOFodE28%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=387b8f01c174fbe3b07d3d6a869c52f53add5689e556b6ada574f8c3847a197e",
+      "file_size": 6700,
+      "type": "application/rls-services+xml",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2025-05-23T14:24:46.834Z",
+  "allow_singular_disclosure_after": -3648921.657661882,
+  "singular_disclosure_allowed": true,
+  "vote_count": 22,
+  "voters": [
+    "2026",
+    "mohaned0101",
+    "mr-alienx-kurd",
+    "thalaivar304",
+    "amapapa",
+    "s1ycsi",
+    "beftomcomes",
+    "beyondaperson",
+    "isco24",
+    "0011000",
+    "and 12 more..."
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
