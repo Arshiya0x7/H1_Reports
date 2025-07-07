@@ -1,4 +1,4 @@
-# description 
+# Hackerone Reports Archive on Github
 
 In this repository, reports submitted by hackers on HackerOne are stored in JSON format.
 
