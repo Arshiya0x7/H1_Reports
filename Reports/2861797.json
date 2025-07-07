@@ -1,0 +1,129 @@
+{
+  "id": 2861797,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yODYxNzk3",
+  "url": "https://hackerone.com/reports/2861797",
+  "title": "curl mishandles `%0c%0b` sequences in HTTP responses leading to CRLF confusions, Headers and Cookies Injection",
+  "state": "Closed",
+  "substate": "not-applicable",
+  "readable_substate": "N/A",
+  "created_at": "2024-11-23T01:41:23.019Z",
+  "submitted_at": "2024-11-23T01:41:23.141Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "mdakh404",
+    "url": "/mdakh404",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/osbbkb7ffi6qzh5meknb19eipi6u/d86f3034cedc97192c6e25b49fb25d458f11529df403793678d43ead36f13cc4"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 35663,
+    "url": "https://hackerone.com/curl",
+    "handle": "curl",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/035/663/2faf4c279d437d64bfda6d23d62ce1833813a4d9_original.png/36bca6668139d77be42208d896968344ae7a76c55ee0f8b0f28281ccd492ff02",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/035/663/2faf4c279d437d64bfda6d23d62ce1833813a4d9_original.png/19c85a12ac35f466af1ea2b0ae853bfe5e8f057fb1d6fb62db131707bb67b30d"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "curl",
+      "twitter_handle": "",
+      "website": "https://curl.se",
+      "about": "cURL is an Open Source project providing a library and command-line tool doing internet transfers"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": true,
+  "submitted_by_team_member": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2012-0036"
+  ],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2025-07-07T10:17:41.913Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2025-07-06T21:18:40.299Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nHello, \n\nActually, this bug was found unexpectedly during some security audits on a private asset, we found some differences on how burp proxy/python's requests library handles the asset's HTTP responses on a certain endpoint and how curl handles the same HTTP responses, the bug arises when curl treats `%0c and %0b sequences` literally regardless how web servers respond to these characters, the mentioned asset was well-protected against CRLF injections as we didn't had success to inject headers/cookies using the known `%0a%0b` sequence, curl also didn't respond to our payloads as we hope, however, we tried using other non-printable characters, curl unexpectedly responded to our request using `%0c` with the following response:\n\n```\ngk@GKs-MacBook-Air ~ % curl \"https://private.asset:8100/sap/public/bc/icf/logoff?redirecturl=//google.com/%0cX-Injected-Header:%20test\" -I\n\nHTTP/1.1 302 Moved temporarily\ncontent-type: text/html; charset=utf-8\ncontent-length: 17\nlocation: //google.com/\n                       X-Injected-Header: test\n```\n\nusing `%0c%0b` sequences:\n\n```\ngk@GKs-MacBook-Air ~ %  curl \"https://private.asset:8100/sap/public/bc/icf/logoff?redirecturl=//google.com/%08%08%08%08%08%08%08%08%08%08%08%08%08%08%08%08%08%08%08%08%08%08%08%0cX-Header-Injection:%20test\" -I\n\nHTTP/1.1 302 Moved temporarily\ncontent-type: text/html; charset=utf-8\ncontent-length: 17\nlocation: //google.com/\nX-Header-Injection: test\n```\n\nWhile Burp responded differently:\n\n{F3784008}\n \nPython's requests library responded also differently:\n\n{F3784007}\n\nEven a random HTTP response viewer service on the public internet responded differently:\n\n{F3784006}\n\nWe found that you resolved the main CRLF issue (with %0a%0d) since 2012 with assigning [CVE-2012-0036](https://curl.se/docs/CVE-2012-0036.html) to the security advisory published on your docs, **but** we think that our report describes a bug that makes CRLF indirectly possible again, with the high support for curl implementations in the most commonly used programming languages; the mentioned behavior could make some confusion when receiving HTTP responses from curl leading to unsafe CRLF treatment and thus allowing Headers/Cookies Injection.\n\n## Impact\n\nCRLF confusions, Header Injection, Cookie Injection.\n\nRegards,\n\nMoaad (@mdakh404), Abdelkarim (@mchklt)",
+  "weakness": {
+    "id": 69,
+    "name": "CRLF Injection"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 3784006,
+      "file_name": "http_service_response.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/q5goiymnx46etjezjeocde7hdcq6?response-content-disposition=attachment%3B%20filename%3D%22http_service_response.png%22%3B%20filename%2A%3DUTF-8%27%27http_service_response.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQVFJVPPOJ%2F20250707%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250707T111605Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEGgaCXVzLXdlc3QtMiJIMEYCIQCMrgD1y2vDIcqpG1YWDKMc3hXyAvOCPh9QXG0VMck5CwIhAJGJ1G%2BYsMK7Rs6Y8rgvhryWEFqHkAeZAWxjCd2oKgsCKrIFCHEQAxoMMDEzNjE5Mjc0ODQ5IgwSn%2By6rZ3pGEWVuu8qjwUwAopwyInHcoY3aiUGm8Rf%2B8YLieOLhgXnNBIIKFzaqp%2BqjJlshfbpQWN9YTwoVJ9wPYfzAEZXoEJNBUp1ushjtCHSLaE%2BAIZv0aeKw9Zm%2BdGqCJRkhlMK2ylbEaUnG%2F5hpqy3Gkb0AmaZysaIiYM2xWmHQTd%2FymM5evWqWW%2FAykbL1Q9ovyBwnBbPzTLQ4n6f6pAQTJHY0mGKDZiAY7QlsMh5w6IxdihydoizPzsaLyj5XSOwabTnGX2wxM8axzTg3IaWe5sOaGVc%2FrK0CsxvwwAepJdaBNt38hWtpbiv33PjQyvKJbto4xevpffNxcdzyUUHVE2BsxKPbvqmvpeO2D6Qs%2Bu%2BAj8oWlJ2iu%2F8HLnNEuQ14FWOhXridzbBfIA6%2BPr0witZgNO%2FNu3gdyp6MUbXp3HN2KHCe7Aqepk6mKsR28x6Pz33Pvm5aqZpBIhfS9f7quotnrm6X%2BqByTUNN%2BWF3lnQpKEwFHrAk8inp5CZFPE790Zmp%2BvduXjsSz5Tqdps5mXpyrl93Tf46gKn57DfsA6BZYVKF9Ysxtp%2FUEwSp57x5jskx0t68FUQ17N%2FjECLJU%2FdYtlTxzT%2FH%2F9t4X4vt%2BXVuedwT9hKjczlXKJP9EU%2FoNkbql8VMeUTDRk4IC1VYqs7EFoesPLp%2FMZAT%2FiZBKXzpw%2FSVtfsrMKg2DQ9v3POr6ARo1eTp3tS%2FoMnhlhaN7EmdgnllRdM77g4J%2BoUSFlxOfYZPkMbo0BDEdPst2n9aQ%2FtW324dVAC6CQeB%2FYCxSxTAnniAAOitbL1ShL0VVrJs4FGrB2%2FL0T3sD%2FLwDJ5KEtQj%2FVRnluXFq%2FRtttNoKO4OzXCz1oH6Bj2OQPn%2Bx9wmfKZ7oMisJUUMOqBrsMGOrABI7NpixtrAs1zPLup%2FkoUOC2%2BuLog03GkRFomZBTDyv9dhKECJEQFHNgNZGowO1L2jiSID4Zmkd2hMQ2NWFrWHDG5Cs74zM10rs1%2FKVhURIf1xKXZ2QQY00QhqAmY21B%2BabMSES2M9Z%2FP6809ZCTGHLiC0chi%2FW4I5nAbwUdbEpc6x3ozcHq3MDBUEnLgLstJ6Yb2U%2FfnI2MJ57SPrGf7hSZa9Oc5KoCAAdrIiIPRTmk%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=7a0be631f00cf48df0f27c34a56cb1c9a2ad82325bbde4d3667faa8a5829ac7a",
+      "file_size": 264996,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 3784007,
+      "file_name": "requests_response.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/b7y36bp9sdy57c6bh88890sa004m?response-content-disposition=attachment%3B%20filename%3D%22requests_response.png%22%3B%20filename%2A%3DUTF-8%27%27requests_response.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQVFJVPPOJ%2F20250707%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250707T111605Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEGgaCXVzLXdlc3QtMiJIMEYCIQCMrgD1y2vDIcqpG1YWDKMc3hXyAvOCPh9QXG0VMck5CwIhAJGJ1G%2BYsMK7Rs6Y8rgvhryWEFqHkAeZAWxjCd2oKgsCKrIFCHEQAxoMMDEzNjE5Mjc0ODQ5IgwSn%2By6rZ3pGEWVuu8qjwUwAopwyInHcoY3aiUGm8Rf%2B8YLieOLhgXnNBIIKFzaqp%2BqjJlshfbpQWN9YTwoVJ9wPYfzAEZXoEJNBUp1ushjtCHSLaE%2BAIZv0aeKw9Zm%2BdGqCJRkhlMK2ylbEaUnG%2F5hpqy3Gkb0AmaZysaIiYM2xWmHQTd%2FymM5evWqWW%2FAykbL1Q9ovyBwnBbPzTLQ4n6f6pAQTJHY0mGKDZiAY7QlsMh5w6IxdihydoizPzsaLyj5XSOwabTnGX2wxM8axzTg3IaWe5sOaGVc%2FrK0CsxvwwAepJdaBNt38hWtpbiv33PjQyvKJbto4xevpffNxcdzyUUHVE2BsxKPbvqmvpeO2D6Qs%2Bu%2BAj8oWlJ2iu%2F8HLnNEuQ14FWOhXridzbBfIA6%2BPr0witZgNO%2FNu3gdyp6MUbXp3HN2KHCe7Aqepk6mKsR28x6Pz33Pvm5aqZpBIhfS9f7quotnrm6X%2BqByTUNN%2BWF3lnQpKEwFHrAk8inp5CZFPE790Zmp%2BvduXjsSz5Tqdps5mXpyrl93Tf46gKn57DfsA6BZYVKF9Ysxtp%2FUEwSp57x5jskx0t68FUQ17N%2FjECLJU%2FdYtlTxzT%2FH%2F9t4X4vt%2BXVuedwT9hKjczlXKJP9EU%2FoNkbql8VMeUTDRk4IC1VYqs7EFoesPLp%2FMZAT%2FiZBKXzpw%2FSVtfsrMKg2DQ9v3POr6ARo1eTp3tS%2FoMnhlhaN7EmdgnllRdM77g4J%2BoUSFlxOfYZPkMbo0BDEdPst2n9aQ%2FtW324dVAC6CQeB%2FYCxSxTAnniAAOitbL1ShL0VVrJs4FGrB2%2FL0T3sD%2FLwDJ5KEtQj%2FVRnluXFq%2FRtttNoKO4OzXCz1oH6Bj2OQPn%2Bx9wmfKZ7oMisJUUMOqBrsMGOrABI7NpixtrAs1zPLup%2FkoUOC2%2BuLog03GkRFomZBTDyv9dhKECJEQFHNgNZGowO1L2jiSID4Zmkd2hMQ2NWFrWHDG5Cs74zM10rs1%2FKVhURIf1xKXZ2QQY00QhqAmY21B%2BabMSES2M9Z%2FP6809ZCTGHLiC0chi%2FW4I5nAbwUdbEpc6x3ozcHq3MDBUEnLgLstJ6Yb2U%2FfnI2MJ57SPrGf7hSZa9Oc5KoCAAdrIiIPRTmk%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=edd9b82d1807b0ef15038622d0b57c83eec01cb1b0c1f4565c5cd9dbaa4a9152",
+      "file_size": 176446,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 3784008,
+      "file_name": "burp_response.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/knvfgjxo34tg2xu96k4t0x3yyiqo?response-content-disposition=attachment%3B%20filename%3D%22burp_response.png%22%3B%20filename%2A%3DUTF-8%27%27burp_response.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQVFJVPPOJ%2F20250707%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250707T111605Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEGgaCXVzLXdlc3QtMiJIMEYCIQCMrgD1y2vDIcqpG1YWDKMc3hXyAvOCPh9QXG0VMck5CwIhAJGJ1G%2BYsMK7Rs6Y8rgvhryWEFqHkAeZAWxjCd2oKgsCKrIFCHEQAxoMMDEzNjE5Mjc0ODQ5IgwSn%2By6rZ3pGEWVuu8qjwUwAopwyInHcoY3aiUGm8Rf%2B8YLieOLhgXnNBIIKFzaqp%2BqjJlshfbpQWN9YTwoVJ9wPYfzAEZXoEJNBUp1ushjtCHSLaE%2BAIZv0aeKw9Zm%2BdGqCJRkhlMK2ylbEaUnG%2F5hpqy3Gkb0AmaZysaIiYM2xWmHQTd%2FymM5evWqWW%2FAykbL1Q9ovyBwnBbPzTLQ4n6f6pAQTJHY0mGKDZiAY7QlsMh5w6IxdihydoizPzsaLyj5XSOwabTnGX2wxM8axzTg3IaWe5sOaGVc%2FrK0CsxvwwAepJdaBNt38hWtpbiv33PjQyvKJbto4xevpffNxcdzyUUHVE2BsxKPbvqmvpeO2D6Qs%2Bu%2BAj8oWlJ2iu%2F8HLnNEuQ14FWOhXridzbBfIA6%2BPr0witZgNO%2FNu3gdyp6MUbXp3HN2KHCe7Aqepk6mKsR28x6Pz33Pvm5aqZpBIhfS9f7quotnrm6X%2BqByTUNN%2BWF3lnQpKEwFHrAk8inp5CZFPE790Zmp%2BvduXjsSz5Tqdps5mXpyrl93Tf46gKn57DfsA6BZYVKF9Ysxtp%2FUEwSp57x5jskx0t68FUQ17N%2FjECLJU%2FdYtlTxzT%2FH%2F9t4X4vt%2BXVuedwT9hKjczlXKJP9EU%2FoNkbql8VMeUTDRk4IC1VYqs7EFoesPLp%2FMZAT%2FiZBKXzpw%2FSVtfsrMKg2DQ9v3POr6ARo1eTp3tS%2FoMnhlhaN7EmdgnllRdM77g4J%2BoUSFlxOfYZPkMbo0BDEdPst2n9aQ%2FtW324dVAC6CQeB%2FYCxSxTAnniAAOitbL1ShL0VVrJs4FGrB2%2FL0T3sD%2FLwDJ5KEtQj%2FVRnluXFq%2FRtttNoKO4OzXCz1oH6Bj2OQPn%2Bx9wmfKZ7oMisJUUMOqBrsMGOrABI7NpixtrAs1zPLup%2FkoUOC2%2BuLog03GkRFomZBTDyv9dhKECJEQFHNgNZGowO1L2jiSID4Zmkd2hMQ2NWFrWHDG5Cs74zM10rs1%2FKVhURIf1xKXZ2QQY00QhqAmY21B%2BabMSES2M9Z%2FP6809ZCTGHLiC0chi%2FW4I5nAbwUdbEpc6x3ozcHq3MDBUEnLgLstJ6Yb2U%2FfnI2MJ57SPrGf7hSZa9Oc5KoCAAdrIiIPRTmk%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=0e7a0adcbe00a5e555854709fe648bdfa5430cac57a19ea6b00477c4e158f764",
+      "file_size": 637876,
+      "type": "image/png",
+      "moderated": false
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 0,
+  "voters": [],
+  "structured_scope": {
+    "databaseId": 18844,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/curl/curl",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
