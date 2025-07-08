@@ -16,7 +16,7 @@ Additionally, the following two Telegram channels provide real-time summaries of
 
 https://t.me/hackeronereports
 
-![image](https://github.com/user-attachments/assets/0b87c13b-72c0-4bc8-9978-a60f557415a4)
+![image](https://github.com/user-attachments/assets/61a93c05-e2ae-4253-a6c4-28a0c4b22cc9)
 
 
 ### The second channel for reports that have been closed but not disclosed:
