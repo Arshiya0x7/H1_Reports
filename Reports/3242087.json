@@ -1,0 +1,118 @@
+{
+  "id": 3242087,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMjQyMDg3",
+  "url": "https://hackerone.com/reports/3242087",
+  "title": "Arbitrary File Read via file:// Protocol in cURL",
+  "state": "Closed",
+  "substate": "not-applicable",
+  "severity_rating": "critical",
+  "readable_substate": "N/A",
+  "created_at": "2025-07-09T05:36:47.370Z",
+  "submitted_at": "2025-07-09T05:36:47.571Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "mr_tufan",
+    "url": "/mr_tufan",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/emswlrq09xnbtkrsqt3yvaswp5ja/d86f3034cedc97192c6e25b49fb25d458f11529df403793678d43ead36f13cc4"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 35663,
+    "url": "https://hackerone.com/curl",
+    "handle": "curl",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/035/663/2faf4c279d437d64bfda6d23d62ce1833813a4d9_original.png/36bca6668139d77be42208d896968344ae7a76c55ee0f8b0f28281ccd492ff02",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/035/663/2faf4c279d437d64bfda6d23d62ce1833813a4d9_original.png/19c85a12ac35f466af1ea2b0ae853bfe5e8f057fb1d6fb62db131707bb67b30d"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "curl",
+      "twitter_handle": "",
+      "website": "https://curl.se",
+      "about": "cURL is an Open Source project providing a library and command-line tool doing internet transfers"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2025-07-09T07:23:25.059Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2025-07-09T06:57:52.078Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "cURL’s file:// protocol handler is enabled by default, allowing access to local files on the system. This behavior enables an attacker with the ability to run cURL commands to read arbitrary files on the host by specifying file paths or using directory traversal techniques.\n\nSteps to reproduce:\n\n1. Build cURL with default configuration (e.g., ./configure --with-ssl and make).\n\n\n2. Run ./src/curl \"file:///etc/passwd\" to read the contents of the passwd file.\n\n\n3. Run ./src/curl \"file:///tmp/../../etc/passwd\" to demonstrate path traversal access to the same file.\n\n\n4. Run ./src/curl -s \"file:///etc/shadow\" | head -c20 to read partial sensitive data from the shadow file.\n\n\n\nThis confirms that arbitrary local files can be accessed via the file:// protocol, which poses a critical security risk.\n\n## Impact\n\nAn attacker who can run cURL commands on the system can read any local file that the user running cURL has permission to access, including highly sensitive files such as /etc/shadow. This can lead to:\n\nTheft of password hashes and credentials.\n\nPotential privilege escalation by cracking stolen hashes.\n\nFull system compromise through lateral movement or further exploitation.\n\nExposure of confidential configuration or secret files.\n\n\nOverall, this vulnerability compromises system confidentiality and can lead to complete takeover of the affected host.",
+  "weakness": {
+    "id": 19,
+    "name": "Path Traversal"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 4540520,
+      "file_name": "proof.txt",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/p7bsa4e71jh3hskt9cjokxz76dho?response-content-disposition=attachment%3B%20filename%3D%22proof.txt%22%3B%20filename%2A%3DUTF-8%27%27proof.txt&response-content-type=text%2Fplain&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXGWVPH4J%2F20250709%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250709T081508Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCHk2Xgw2gkmM3HfwnU7L5Cvysipsm44mJ9s1NoW%2BAcTgIhAIqsCk%2BiUljZ%2BqFeNC6n4umBa40p6PHH32xMG1RgJIepKroFCJ%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5IgzJgp2HYplT3Z9ZvTAqjgXzWCalINoAxCeV%2BmoWSHRDMAuLHXvVyNqjEHcYztmhUAHQAEqLqgjObaTfS9s8eFns5Xb6lQrypD2cVKtd%2B%2BQipqou%2B975nYkJuUKUMwvOnhua9qXm26FuXaZSwMY3IeuaGiTnqXRioIkwNlM66r6NsEaAnCLQV%2Brxe9HsTkFRaVoVcDJlK3Z1p1e19t%2B7cu9ZIgUbZfvrDcvFa5RcKkXh3hArN3Fk%2BXDwGsJ1fKwDVg326GAtRjzdIxlcSzSSpUuNptR8XNP8UjZkSzii9UxWEbz0sAVKL%2BT6K8Ap5yI9SuVl5KImQAfJd8UEw%2Fqt93UzW9KR98TcqnLEGPegqisJrj4r74vi69cQibetB8PG%2FaBaSBVtKnM%2FdKtL2vXnYl1Z7sYpzQ8t1gF2k%2Fla%2B%2B8EAPsipG15Z3sS1z7SgVEiwv29lfq4NfS1w4sVvrx4Lln%2BADvll0qZcg1BK9%2F0oq89S7bmm7DOydjMCqaFlTi%2FgSbJHF8UOMc06pG9XTDg7O%2BSMvr4x54tahP15%2BWLzEineIWC8m5k7XHjcnfp8Wl55gRyvA4u4n6wuWhdJIBLxLm0ngvgwdyTKXHX9M5PGMMhnZo%2B7hANFiHNIGfVjcgBNnI29JEuOf21%2FQ%2Bvvo8fx8C5yfemfck2hiX0sp1c0fU5QaAwGJWAoaqgXe7LzSafZ4I3Y3hNB0ZrRPi26pFuXVolOX819fsDjtbwumSbggNZ%2BSrRdM2IWIpfu0IVPwhuw%2FYK094T4NbsUpohVKpGFb6Ik%2Bs36KRQP06aBUFl1QFfVPGNppEcY86YU30fygFRQm1Gl38zAAIqdV8JJGAvKQb0JQzYW%2FRTe7CSHrmqEilmZJ3tODLPQzziRNq8z5MwvZS4wwY6sAHY5R%2FyTUcQ8Q88Mu34Dgn45ZXZj%2F%2BdX70YR4Xv6YAubQu2D0wI%2FLimZdd69hrP%2Boadsk6f1gDOoRYGL9XCPdPRzYWY5bZQJVRQzEBBhsdAJTnwebje8qdHQSho0q3l2yopYpZjJQaxC5l7kxUKUYnuTs0WyGfjKZDx%2FyoepeFa0Dbdir%2BpNuwjx%2BbZZfFkRywFJ%2BA%2F18Y%2BPwi1PH3z3S5NoTSjQHEXfHlqVBXWpuBcbQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=6e7961a5399f02fc56d2a5274e0c4406f220609cb933677d9c57099998a431f6",
+      "file_size": 993,
+      "type": "text/plain",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 1,
+  "voters": [
+    "2026"
+  ],
+  "severity": {
+    "rating": "critical",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 18844,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/curl/curl",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
