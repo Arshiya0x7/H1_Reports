@@ -1,0 +1,115 @@
+{
+  "id": 3179850,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMTc5ODUw",
+  "url": "https://hackerone.com/reports/3179850",
+  "title": "exposure of personal IP address via email.",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2025-06-05T20:02:39.172Z",
+  "submitted_at": "2025-06-05T20:02:39.410Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "micael1",
+    "url": "/micael1",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/qhy60ju91p1ci3o5uitxdfa4jxmg/727634197f209244e4307a490cdcd36c76d6e37fef1b0c164bd35ac010105f99"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 19468,
+    "url": "https://hackerone.com/weblate",
+    "handle": "weblate",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/019/468/71eb3827ae9f2a388f27bd4b7eefd20bc3ac813c_original.png/36bca6668139d77be42208d896968344ae7a76c55ee0f8b0f28281ccd492ff02",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/019/468/71eb3827ae9f2a388f27bd4b7eefd20bc3ac813c_original.png/19c85a12ac35f466af1ea2b0ae853bfe5e8f057fb1d6fb62db131707bb67b30d"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Weblate",
+      "twitter_handle": "WeblateOrg",
+      "website": "https://weblate.org/",
+      "about": "Weblate is a libre software web-based continuous localization system"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2025-07-16T12:37:20.096Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2025-06-16T12:37:17.992Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "hi team \nWhen an email is sent, it passes through several email servers (SMTP relays, spam filters, logs, backups).\n\nThese servers can store or record everything, including the content of the message (such as your IP address).\n\nEven if the email uses TLS (encryption in transit), the content is decrypted on each server that processes the message.\n\nThe IP address can be classified as personally identifiable information (PII) under regulations such as GDPR, and can expose:\n\nApproximate user location\n\nInternet service provider\n\nHostname that can reveal machine name, organization, or geolocation\n\nPossible correlation with other user activities\n\n## Recommendation\nAvoid including raw IP addresses in outbound email messages. Instead:\n\nProvide approximate location (city/country) or\n\nPrompt users to log in to a secure dashboard to review login activity.\n\nThis ensures adherence to the Principle of Least Privilege, Data Minimization, and Zero Trust security models.\n\n##Regulatory Reference:\nhttps://gdpr-info.eu/recitals/no-30/\nhttps://cwe.mitre.org/data/definitions/200.html\nhttps://cwe.mitre.org/data/definitions/359.html\n\n## Impact\n\nAttackers can leverage the exposed IP for network reconnaissance, which may lead to:\n\nFingerprinting the user’s device or ISP.\n\nPort scanning, service discovery, or OS detection.\n\nTracking or correlating with other data leaks (OSINT aggregation).\n\nTargeting with malware campaigns or phishing attacks based on ISP/geolocation.",
+  "weakness": {
+    "id": 46,
+    "name": "Privacy Violation"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 4418379,
+      "file_name": "0.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/fl7m10a3y2fyxeea4okjjyilalfd?response-content-disposition=attachment%3B%20filename%3D%220.PNG%22%3B%20filename%2A%3DUTF-8%27%270.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQIKITCHR%2F20250716%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250716T131509Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEEQaCXVzLXdlc3QtMiJHMEUCIBpwKpcUEtMwzas36WwXVFB8wpkbCe0POZ3VLHn5FssEAiEAhQFLp1NDMjv8n%2BHk%2FaIthfHGu2AB2%2BT9rTHDCMgTqW8qsQUIXRADGgwwMTM2MTkyNzQ4NDkiDNcmvSN3jpxBbY5zYSqOBf94Qm1ZZ%2FtS6fUSMBgbHDCTrah7uQRCWc70kb9gJ9odthGuO0IEic%2BQ0qusNF%2B27uuZKHG2hljsJH8YqhOapDIcjj0OGHILMyISJPIKIhl%2BXoVKkL%2BsWxp0GFWYOP8lCsFWIDHKNUvFMpf3ukThcj7B1FpSYyvLGr%2Bwk2xf0z8sREoFpfwPkLHSxCUC%2BQA2XIEkfyVJFe6nbHV7M1MNkGYpjU1QXTLMnDdCHuUDVYtEdRw03N%2BZUx3qEhQDO2oPQ9jlR6R7VOSQCsDylFyp7p3ogaMS3X2LpmL0zpfy41pqwKF5B%2F66kvqzoNxHXjONV%2B%2FWmlbG9iCvG6wOzdT6Qgmml5iUnU3iErMX881xV3v2sGVPKOvEtGSYScufntGKqxbytRiew7UcyrTOL88RlXZK4tJ2PV62lSXtvdrifVg4zakl1QETa8FdfOppDkqYxgGdKCSkgq9HkrgTuIpKoLw65mK41n3LlR0NSIiDPVxq5TKgBm%2Fare%2B01BPvjocier2r2L18pjkqQjmCktvkSgAJanNfz8ZjhJjmNSJlIsr%2BW6Wc08gMTlyuQeAonunIr22BW8o4erkWSYCdzcizNzQYOO995knap%2FLCoBllx%2FGgiZBS6FzNKKhTI%2BAi8QGhfsVHFQrwPAEllBvtO%2Bay0uJzIRA8FHeYdXCQJomJKJ4iu%2B%2Fx6%2BhYyN%2BUv%2F3cS5Z4ab1loqkirsDhLY4JA5iX7uJ7U1UPZN1GxndEckQzYR9DWzk6slpmZRw7Tz9Vw7ym4aMwsUql1D17k8rYIi6%2FJVw3A8eilSOStsujx8pzoMKkeapxGGEPP3QD0pEPAbksMgq7Yzjyx54f6REnCgP0EwGD2UgMwG31QfhJnS3%2FijD%2Fn97DBjqxAfm9XarSkPTdaLUcWiVw8Npu5UPXNRiCrq37jPPEHRZAhqsLe7h7HDzwNReLYYJvQgnCvQ4YMGH9MCZCifACezENZTDOC34yA0xSd%2BvXJbcGUbBBP13YXZDVPgEfrqrc%2FBC6X5wvTa6FXnLYvWhRq%2BE4yOsM%2FMG5B%2BHRSD0DTrF8FefKFwr2tRWG1TGpLmB8O%2FKjCWoHUJcWq5usAQoG9bksueteJ%2F3uVOn2YslIoV8Low%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=5bf5ecb9a3567ac0988e2a0891913771ec8fbcc210cb1d53df6dd28e0d206f6a",
+      "file_size": 60638,
+      "type": "image/png",
+      "moderated": false
+    }
+  ],
+  "allow_singular_disclosure_at": "2025-07-16T12:37:18.225Z",
+  "allow_singular_disclosure_after": -2270.911243428,
+  "singular_disclosure_allowed": true,
+  "vote_count": 1,
+  "voters": [
+    "micael1"
+  ],
+  "structured_scope": {
+    "databaseId": 171,
+    "asset_type": "URL",
+    "asset_identifier": "hosted.weblate.org",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
