@@ -1,0 +1,133 @@
+{
+  "id": 3185205,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMTg1MjA1",
+  "url": "https://hackerone.com/reports/3185205",
+  "title": "Reflected XSS in \"Cost Tracker\" Notes Field",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2025-06-10T06:39:02.380Z",
+  "submitted_at": "2025-06-10T06:39:02.981Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "rishail01",
+    "url": "/rishail01",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/ho9qv7ko8jn7qarcwpahtntcpeun/d86f3034cedc97192c6e25b49fb25d458f11529df403793678d43ead36f13cc4"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 8855,
+    "url": "https://hackerone.com/mainwp",
+    "handle": "mainwp",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/d0tb3i1gp56okpxtv8va6csd70q1/36bca6668139d77be42208d896968344ae7a76c55ee0f8b0f28281ccd492ff02",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/d0tb3i1gp56okpxtv8va6csd70q1/19c85a12ac35f466af1ea2b0ae853bfe5e8f057fb1d6fb62db131707bb67b30d"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "MainWP",
+      "twitter_handle": "",
+      "website": "https://mainwp.com",
+      "about": "WordPress Manager for multiple WordPress sites. Testing includes two plugins that need to be connected."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2025-07-17T09:08:50.623Z",
+  "bug_reporter_agreed_on_going_public_at": "2025-06-17T09:08:48.046Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Another reflected Cross-Site Scripting (XSS) vulnerability exists in the \"Notes\" input field under the Cost Tracker section of MainWP (Version 5.4.0.11).\nWhen adding or editing a Cost from the \"Cost Tracker\" module in the client management panel, a user can enter arbitrary input into the Notes field. If this input includes malicious JavaScript (e.g., an XSS payload), it is reflected back and executed immediately upon saving, due to the lack of proper input sanitization and output encoding.\nThe script is not stored permanently in the system, which confirms it as a reflected XSS, triggered right after submission in the current session.\n\n## Impact\n\nThe presence of such a vulnerability indicates that user input is not properly sanitized or encoded before being reflected back into the HTML response.\nWhile not directly exploitable by other users, this flaw can have the following implications:\n- It highlights a potential entry point for more severe XSS vulnerabilities if similar input handling exists elsewhere in the application.\n- It poses a client-side security risk, especially in environments with browser extensions, debugging tools, or when integrating third-party scripts.\n- It reduces trust in the platform’s secure coding practices, especially in an admin interface that manages multiple WordPress sites.\n- It can be used by attackers with access to the dashboard (e.g., insider threat or compromised low-privilege user) to test or explore further payload injection points. Addressing such vulnerabilities improves the overall resilience of the application and helps prevent future, more impactful exploits.",
+  "bounty_amount": "50.0",
+  "formatted_bounty": "$50",
+  "weakness": {
+    "id": 61,
+    "name": "Cross-site Scripting (XSS) - Reflected"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 4433587,
+      "file_name": "Cost_Tracker_Notes_XSS.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/hxovegifbx8r9frvn1hexu64q4q6?response-content-disposition=attachment%3B%20filename%3D%22Cost_Tracker_Notes_XSS.mp4%22%3B%20filename%2A%3DUTF-8%27%27Cost_Tracker_Notes_XSS.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQRIYOSVYO%2F20250717%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250717T091509Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEFkaCXVzLXdlc3QtMiJHMEUCIEhdLqYeMXQeAxPRGZKf%2B93UwCBH9PUulOoLfqtpqJk6AiEAvJn0NQiJVsy8CzMrUk6GwldUvIRN09MJK3rpTJdlsw8qsgUIchADGgwwMTM2MTkyNzQ4NDkiDLYQOmBP9blEypXZgyqPBWlkzgTnjpnzeeSlCOYuKBT2mrGMVw0ro12kkkygD%2FJ8qcKLWsnYgcieNpTqq6izlijt9iv2oWwCvbq027gtnHHmUh1mKVU9MapmQsMoQJf4HF9dAZbTr7M6NvGu0xkTdxKYCRKFNQwos8PLtV1jeRVQqRITZRzkRluedbh01BM%2F3CiHP1h18FHgSRbnQtSIiQWR9qYNAMP0%2B8w%2FsZFY%2BVpVphcZlwHVGqFmTYIwtylnlnCKaw5wu%2BVY40HCcLCQrKU45u7kxfzkoHsn9o71lWScNGQU%2BgFHChlnFIfMxgXxGh8Qaapsfz5otyCnZEeNcpjgY%2FAtNq7UxzQBuGdNG6bNm7wOwgwS8Ftmmnk9OtNR6TpPbOayZMOsQIF83vFE%2BphFphWdstHzDz97TxaBYjLJptFCl%2B7wkP9lcammSBNEoTSeynl%2Fc%2BrM9jAfd0zqhZ%2BTJ6jr9Oawu4Y80ECJHnqt%2F9pAiO%2BRzeEKj08%2BCJHJqly5UDmwvSljUAkwvYVdLtRoQkv2CGdLaD5S0oV4%2FqIfyKGPvud6TFVnP0XiGkAl5Ak2Bc3H1QkvqXL6uNHuomdofeRoAUiUGCywXZb3heNvorE2JV6%2Bfz5z0vC%2Fcnah9KHb4hxz%2FVDwCUccpkP5%2Fha9kgmmeLK3VhkaWS2raktkH524UhBd30rG6vlmKnTH%2BiC0kxxpdFOu%2BQB11LwLvN4LgedL8kfnURld%2FTi8m5KfWo38lxiGZLga5EIXNseE8PUUTYMqx0Nio%2Fn4HRDqMFt08Wacy582U60qy4NsVdYnqpOsJm5ZRSZ9YNgSC1pUTaDvw2U8Q6PJ8apJAjSTtm6MmiPzryFA8cOY4cG8XcmwAQfMeSM%2FeLYovUtZRD8w1u%2FiwwY6sQEq2md6eliUCjcAM8LE3TSjbHWgIxfsnGK3F1gdTd4u3dQWXQiZnBmgdFGvMablJck%2BChK%2Fts3J8NW7K11qkFQUh3bJq%2BBtGuxlyPjR%2BV8HJFRyBP0YL5IT5HShp5nXrRCxqGBGgleBZG%2BP4SOpIAVcbh0yqDluYWuaJSYv1sTUT3tWDt8DqeLsxmakyHqlGq2IdyeZoRvveTls1ZRKXmodvnisLC2t9dvQ4EzPoI1CQco%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=8a4ae68e0cb894c5ff6a42406653d10d94e318456d5c8ba5f906e5b41bd2934f",
+      "file_size": 3656903,
+      "type": "video/mp4",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2025-07-17T09:08:48.222Z",
+  "allow_singular_disclosure_after": -380.890720065,
+  "singular_disclosure_allowed": true,
+  "vote_count": 1,
+  "voters": [
+    "rishail01"
+  ],
+  "severity": {
+    "rating": "low",
+    "score": 2.2,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "high",
+      "privileges_required": "high",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "low",
+      "integrity": "none",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 53179,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/mainwp/mainwp",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
