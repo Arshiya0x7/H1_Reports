@@ -1,0 +1,178 @@
+{
+  "id": 3175695,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMTc1Njk1",
+  "url": "https://hackerone.com/reports/3175695",
+  "title": "Bypass \"No Links\" Restriction in Biography via Protocol-Relative URL (//)",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2025-06-03T10:50:11.996Z",
+  "submitted_at": "2025-06-03T10:50:12.427Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "yoyomiski",
+    "url": "/yoyomiski",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/hnmq9upaqa1loib6vzs1mub7s5al/36bca6668139d77be42208d896968344ae7a76c55ee0f8b0f28281ccd492ff02"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 61236,
+    "url": "https://hackerone.com/mozilla",
+    "handle": "mozilla",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/0p8e6gg8xoy45dhjxs5wh4iti6k8/36bca6668139d77be42208d896968344ae7a76c55ee0f8b0f28281ccd492ff02",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/0p8e6gg8xoy45dhjxs5wh4iti6k8/19c85a12ac35f466af1ea2b0ae853bfe5e8f057fb1d6fb62db131707bb67b30d"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Mozilla",
+      "twitter_handle": "",
+      "website": "https://www.mozilla.org",
+      "about": "Mozilla web bug bounty program specific to encouraging security research in Mozilla's products and web services."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2025-07-29T14:43:32.078Z",
+  "bug_reporter_agreed_on_going_public_at": "2025-07-29T13:06:08.457Z",
+  "team_member_agreed_on_going_public_at": "2025-07-29T14:43:31.589Z",
+  "comments_closed?": true,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nThe application claims to disallow hyperlinks in the Biography field with the notice:\n`Links are forbidden.`\nHowever, it is possible to bypass this restriction using a protocol-relative URL (//evil.com) in an <a> tag. This allows an attacker to embed external links despite the stated limitation, violating trust and posing security risks.\n\n\n## Steps To Reproduce:\n1. Log in to the website `https://addons.allizom.org`\n2. Click on `edit profile`\n\n{F4409242}\n\n3. In the `Biography` field, there will be a warning that\n`Some HTML supported: <abbr title> <acronym title> <b> <blockquote> <code> <em> <i> <li> <ol> <strong> <ul>. Links are forbidden.`\n\n{F4409247}\n\n4. Now, we add the <a> tag\n\n##payload: `<a href=\"//evil.com\">click</a>`\n\n{F4409262}\n\n5. Check that this <a> tag is executed. and when clicking on `click` will redirect to the page `http://evil.com/`\n{F4409264}\n\n{F4409267}\n\n## Impact\n\n- Violates declared application policy: users trust that links are not allowed.\n- Enables attackers to embed links to:\n- Phishing sites.\n- Malware downloads.\n- Social engineering payloads.",
+  "weakness": {
+    "id": 107,
+    "name": "Improper Input Validation"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 4409242,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/1rnnx1o6q5hv7m0yscm2z5br4cmd?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUUTJAZGB%2F20250729%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250729T151508Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH0aCXVzLXdlc3QtMiJIMEYCIQDuDYdiJfrX4PV4NZx9WmAf7%2BokkkBvjf8JcCeqhGn5UAIhAIJ15n3kXvSxe%2FuJWuKgcGG%2BaK9GekdXaT0fwFraGwR7KrsFCKb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5Igwq2iAXuIAdMNG5mcIqjwWcjQvd8fqTFxf9RJrq1H8k5IU8WKc9UcmjIIpCT9KPYX56TgoHSbIT8TMsmSiWmTPhYRAYmZQiwPj%2BpPjAxwew8qdU9WtZHHwfGnsFS9eHXscYwJKF%2BHEWolJG3IdGkUb8oJx2JK3lwZZUk27rUFFrDaUg3E84wqgDA2kTTE2q1MimHZWmofbBVBsY0sNQHzZGBdUOORUP2X8TIPHPTOzqZTtB3silJ%2BnZTBtFop9pIxtAfJLY9IAv0tkP57m%2F3gSU2KyBetiyz39DX6ebO7EufwxYJndZRrKdN%2Bdyv4nN9OSxn6bhBJuv43BB862Ih5N30k0y3CIwPkTTTLhNALbLrxx6agqAw0HN%2FnEwUYvpfNXai0wCixJc%2FhA%2FstglFR9355Kk2SXQLqmnKMNXYTG1s2HUBfRBMrzl4r9mgtF%2BV1eDqeJqeu0kw7gUDoZqDQVcbNijmf7DlBQ5ileu0dv%2FuF8SJ3TVv17mgR5H4%2FrDBtIuA8Dn6Q5ebPS5mvxjNBxfTXKYhMV0mdCjkqJdyK0i0n7NnhcHIzm5LIk75oawoYEBQrbio%2BlSks8WsUMoWrjJdf7PQyn5%2FgXSR7sslpv%2FaKZHVjP0MlbWzQk4IGUdOxWBmd%2FvzY1OheTz8Ztl%2F9EIsIKX2SmUq9Ry1Qraa2pWZD8l%2FkjN%2Bsd6O07w9wRSj%2BoZDfS0AvXAg9Gz4cpHZhQtmgJQmI8Zk7W9yH5OFT%2BI%2F6pExzUiz5N%2FB7e6nmH8AwSHlVnl90QtmNQCNgswVp5Q0MKm9pGRJ7qZjsEeUCuz4FX3tqHmLmUd%2FKlGhN7Hb87U6DL6QRcbKBUnGblomMBkoHg4aUMICr9rScoa9Q9ukBHInoscls3C8TUniCJUMOGRo8QGOrABW9FzsPNzGv2FFqtCj1OaVjsUsCvd4set%2Ff31k1YQoam97Zs%2B15bO6hJm%2B7DRBtiIb8N77PY85q9Fm578kujy91zQ3Di5Dzz%2FTjAYQwFU6bRHRW2QjAZ823CGgaBPNsPcMk40hDBrcGGP%2Fh8pg6kT%2BgpZii%2BIAe%2FoZi1u0YYidNnWq7Vm7ATREZqvXhwDe1hPoXwwEkwMBcuvHUDdjzsCbNyO3TOKrBFDUiOiZ6p%2B3EI%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=a502c699418371a90a1800e7100535a8f92a75c0f9bb6b864a540d8c4123ac1f",
+      "file_size": 101823,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 4409247,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/fpkjb5s6eaym88zc880gvi18q6ew?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUUTJAZGB%2F20250729%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250729T151508Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH0aCXVzLXdlc3QtMiJIMEYCIQDuDYdiJfrX4PV4NZx9WmAf7%2BokkkBvjf8JcCeqhGn5UAIhAIJ15n3kXvSxe%2FuJWuKgcGG%2BaK9GekdXaT0fwFraGwR7KrsFCKb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5Igwq2iAXuIAdMNG5mcIqjwWcjQvd8fqTFxf9RJrq1H8k5IU8WKc9UcmjIIpCT9KPYX56TgoHSbIT8TMsmSiWmTPhYRAYmZQiwPj%2BpPjAxwew8qdU9WtZHHwfGnsFS9eHXscYwJKF%2BHEWolJG3IdGkUb8oJx2JK3lwZZUk27rUFFrDaUg3E84wqgDA2kTTE2q1MimHZWmofbBVBsY0sNQHzZGBdUOORUP2X8TIPHPTOzqZTtB3silJ%2BnZTBtFop9pIxtAfJLY9IAv0tkP57m%2F3gSU2KyBetiyz39DX6ebO7EufwxYJndZRrKdN%2Bdyv4nN9OSxn6bhBJuv43BB862Ih5N30k0y3CIwPkTTTLhNALbLrxx6agqAw0HN%2FnEwUYvpfNXai0wCixJc%2FhA%2FstglFR9355Kk2SXQLqmnKMNXYTG1s2HUBfRBMrzl4r9mgtF%2BV1eDqeJqeu0kw7gUDoZqDQVcbNijmf7DlBQ5ileu0dv%2FuF8SJ3TVv17mgR5H4%2FrDBtIuA8Dn6Q5ebPS5mvxjNBxfTXKYhMV0mdCjkqJdyK0i0n7NnhcHIzm5LIk75oawoYEBQrbio%2BlSks8WsUMoWrjJdf7PQyn5%2FgXSR7sslpv%2FaKZHVjP0MlbWzQk4IGUdOxWBmd%2FvzY1OheTz8Ztl%2F9EIsIKX2SmUq9Ry1Qraa2pWZD8l%2FkjN%2Bsd6O07w9wRSj%2BoZDfS0AvXAg9Gz4cpHZhQtmgJQmI8Zk7W9yH5OFT%2BI%2F6pExzUiz5N%2FB7e6nmH8AwSHlVnl90QtmNQCNgswVp5Q0MKm9pGRJ7qZjsEeUCuz4FX3tqHmLmUd%2FKlGhN7Hb87U6DL6QRcbKBUnGblomMBkoHg4aUMICr9rScoa9Q9ukBHInoscls3C8TUniCJUMOGRo8QGOrABW9FzsPNzGv2FFqtCj1OaVjsUsCvd4set%2Ff31k1YQoam97Zs%2B15bO6hJm%2B7DRBtiIb8N77PY85q9Fm578kujy91zQ3Di5Dzz%2FTjAYQwFU6bRHRW2QjAZ823CGgaBPNsPcMk40hDBrcGGP%2Fh8pg6kT%2BgpZii%2BIAe%2FoZi1u0YYidNnWq7Vm7ATREZqvXhwDe1hPoXwwEkwMBcuvHUDdjzsCbNyO3TOKrBFDUiOiZ6p%2B3EI%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=e268ebd998429a510de296c153f1e5a32c0daca0621d9aca1888c6760cc44286",
+      "file_size": 14953,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 4409262,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/tyowo4kgf7sd9znd7kal0qud80fg?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUUTJAZGB%2F20250729%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250729T151508Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH0aCXVzLXdlc3QtMiJIMEYCIQDuDYdiJfrX4PV4NZx9WmAf7%2BokkkBvjf8JcCeqhGn5UAIhAIJ15n3kXvSxe%2FuJWuKgcGG%2BaK9GekdXaT0fwFraGwR7KrsFCKb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5Igwq2iAXuIAdMNG5mcIqjwWcjQvd8fqTFxf9RJrq1H8k5IU8WKc9UcmjIIpCT9KPYX56TgoHSbIT8TMsmSiWmTPhYRAYmZQiwPj%2BpPjAxwew8qdU9WtZHHwfGnsFS9eHXscYwJKF%2BHEWolJG3IdGkUb8oJx2JK3lwZZUk27rUFFrDaUg3E84wqgDA2kTTE2q1MimHZWmofbBVBsY0sNQHzZGBdUOORUP2X8TIPHPTOzqZTtB3silJ%2BnZTBtFop9pIxtAfJLY9IAv0tkP57m%2F3gSU2KyBetiyz39DX6ebO7EufwxYJndZRrKdN%2Bdyv4nN9OSxn6bhBJuv43BB862Ih5N30k0y3CIwPkTTTLhNALbLrxx6agqAw0HN%2FnEwUYvpfNXai0wCixJc%2FhA%2FstglFR9355Kk2SXQLqmnKMNXYTG1s2HUBfRBMrzl4r9mgtF%2BV1eDqeJqeu0kw7gUDoZqDQVcbNijmf7DlBQ5ileu0dv%2FuF8SJ3TVv17mgR5H4%2FrDBtIuA8Dn6Q5ebPS5mvxjNBxfTXKYhMV0mdCjkqJdyK0i0n7NnhcHIzm5LIk75oawoYEBQrbio%2BlSks8WsUMoWrjJdf7PQyn5%2FgXSR7sslpv%2FaKZHVjP0MlbWzQk4IGUdOxWBmd%2FvzY1OheTz8Ztl%2F9EIsIKX2SmUq9Ry1Qraa2pWZD8l%2FkjN%2Bsd6O07w9wRSj%2BoZDfS0AvXAg9Gz4cpHZhQtmgJQmI8Zk7W9yH5OFT%2BI%2F6pExzUiz5N%2FB7e6nmH8AwSHlVnl90QtmNQCNgswVp5Q0MKm9pGRJ7qZjsEeUCuz4FX3tqHmLmUd%2FKlGhN7Hb87U6DL6QRcbKBUnGblomMBkoHg4aUMICr9rScoa9Q9ukBHInoscls3C8TUniCJUMOGRo8QGOrABW9FzsPNzGv2FFqtCj1OaVjsUsCvd4set%2Ff31k1YQoam97Zs%2B15bO6hJm%2B7DRBtiIb8N77PY85q9Fm578kujy91zQ3Di5Dzz%2FTjAYQwFU6bRHRW2QjAZ823CGgaBPNsPcMk40hDBrcGGP%2Fh8pg6kT%2BgpZii%2BIAe%2FoZi1u0YYidNnWq7Vm7ATREZqvXhwDe1hPoXwwEkwMBcuvHUDdjzsCbNyO3TOKrBFDUiOiZ6p%2B3EI%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=c9bd6c80e7f90b48a22b4c579cdc3a81cce498ae5b14bffd86b0f2ef7484bf9f",
+      "file_size": 87576,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 4409264,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/e3yrdf57yelq8zcq6wt2scdwvqcr?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUUTJAZGB%2F20250729%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250729T151508Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH0aCXVzLXdlc3QtMiJIMEYCIQDuDYdiJfrX4PV4NZx9WmAf7%2BokkkBvjf8JcCeqhGn5UAIhAIJ15n3kXvSxe%2FuJWuKgcGG%2BaK9GekdXaT0fwFraGwR7KrsFCKb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5Igwq2iAXuIAdMNG5mcIqjwWcjQvd8fqTFxf9RJrq1H8k5IU8WKc9UcmjIIpCT9KPYX56TgoHSbIT8TMsmSiWmTPhYRAYmZQiwPj%2BpPjAxwew8qdU9WtZHHwfGnsFS9eHXscYwJKF%2BHEWolJG3IdGkUb8oJx2JK3lwZZUk27rUFFrDaUg3E84wqgDA2kTTE2q1MimHZWmofbBVBsY0sNQHzZGBdUOORUP2X8TIPHPTOzqZTtB3silJ%2BnZTBtFop9pIxtAfJLY9IAv0tkP57m%2F3gSU2KyBetiyz39DX6ebO7EufwxYJndZRrKdN%2Bdyv4nN9OSxn6bhBJuv43BB862Ih5N30k0y3CIwPkTTTLhNALbLrxx6agqAw0HN%2FnEwUYvpfNXai0wCixJc%2FhA%2FstglFR9355Kk2SXQLqmnKMNXYTG1s2HUBfRBMrzl4r9mgtF%2BV1eDqeJqeu0kw7gUDoZqDQVcbNijmf7DlBQ5ileu0dv%2FuF8SJ3TVv17mgR5H4%2FrDBtIuA8Dn6Q5ebPS5mvxjNBxfTXKYhMV0mdCjkqJdyK0i0n7NnhcHIzm5LIk75oawoYEBQrbio%2BlSks8WsUMoWrjJdf7PQyn5%2FgXSR7sslpv%2FaKZHVjP0MlbWzQk4IGUdOxWBmd%2FvzY1OheTz8Ztl%2F9EIsIKX2SmUq9Ry1Qraa2pWZD8l%2FkjN%2Bsd6O07w9wRSj%2BoZDfS0AvXAg9Gz4cpHZhQtmgJQmI8Zk7W9yH5OFT%2BI%2F6pExzUiz5N%2FB7e6nmH8AwSHlVnl90QtmNQCNgswVp5Q0MKm9pGRJ7qZjsEeUCuz4FX3tqHmLmUd%2FKlGhN7Hb87U6DL6QRcbKBUnGblomMBkoHg4aUMICr9rScoa9Q9ukBHInoscls3C8TUniCJUMOGRo8QGOrABW9FzsPNzGv2FFqtCj1OaVjsUsCvd4set%2Ff31k1YQoam97Zs%2B15bO6hJm%2B7DRBtiIb8N77PY85q9Fm578kujy91zQ3Di5Dzz%2FTjAYQwFU6bRHRW2QjAZ823CGgaBPNsPcMk40hDBrcGGP%2Fh8pg6kT%2BgpZii%2BIAe%2FoZi1u0YYidNnWq7Vm7ATREZqvXhwDe1hPoXwwEkwMBcuvHUDdjzsCbNyO3TOKrBFDUiOiZ6p%2B3EI%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=3afab07ba3909845710585195962f3a9d69ffd21b6e9714f9b6b7649e90e4ce7",
+      "file_size": 121429,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 4409267,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/x7nhk3tfydr3eqs0mdrl77wyx42o?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUUTJAZGB%2F20250729%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250729T151508Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH0aCXVzLXdlc3QtMiJIMEYCIQDuDYdiJfrX4PV4NZx9WmAf7%2BokkkBvjf8JcCeqhGn5UAIhAIJ15n3kXvSxe%2FuJWuKgcGG%2BaK9GekdXaT0fwFraGwR7KrsFCKb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5Igwq2iAXuIAdMNG5mcIqjwWcjQvd8fqTFxf9RJrq1H8k5IU8WKc9UcmjIIpCT9KPYX56TgoHSbIT8TMsmSiWmTPhYRAYmZQiwPj%2BpPjAxwew8qdU9WtZHHwfGnsFS9eHXscYwJKF%2BHEWolJG3IdGkUb8oJx2JK3lwZZUk27rUFFrDaUg3E84wqgDA2kTTE2q1MimHZWmofbBVBsY0sNQHzZGBdUOORUP2X8TIPHPTOzqZTtB3silJ%2BnZTBtFop9pIxtAfJLY9IAv0tkP57m%2F3gSU2KyBetiyz39DX6ebO7EufwxYJndZRrKdN%2Bdyv4nN9OSxn6bhBJuv43BB862Ih5N30k0y3CIwPkTTTLhNALbLrxx6agqAw0HN%2FnEwUYvpfNXai0wCixJc%2FhA%2FstglFR9355Kk2SXQLqmnKMNXYTG1s2HUBfRBMrzl4r9mgtF%2BV1eDqeJqeu0kw7gUDoZqDQVcbNijmf7DlBQ5ileu0dv%2FuF8SJ3TVv17mgR5H4%2FrDBtIuA8Dn6Q5ebPS5mvxjNBxfTXKYhMV0mdCjkqJdyK0i0n7NnhcHIzm5LIk75oawoYEBQrbio%2BlSks8WsUMoWrjJdf7PQyn5%2FgXSR7sslpv%2FaKZHVjP0MlbWzQk4IGUdOxWBmd%2FvzY1OheTz8Ztl%2F9EIsIKX2SmUq9Ry1Qraa2pWZD8l%2FkjN%2Bsd6O07w9wRSj%2BoZDfS0AvXAg9Gz4cpHZhQtmgJQmI8Zk7W9yH5OFT%2BI%2F6pExzUiz5N%2FB7e6nmH8AwSHlVnl90QtmNQCNgswVp5Q0MKm9pGRJ7qZjsEeUCuz4FX3tqHmLmUd%2FKlGhN7Hb87U6DL6QRcbKBUnGblomMBkoHg4aUMICr9rScoa9Q9ukBHInoscls3C8TUniCJUMOGRo8QGOrABW9FzsPNzGv2FFqtCj1OaVjsUsCvd4set%2Ff31k1YQoam97Zs%2B15bO6hJm%2B7DRBtiIb8N77PY85q9Fm578kujy91zQ3Di5Dzz%2FTjAYQwFU6bRHRW2QjAZ823CGgaBPNsPcMk40hDBrcGGP%2Fh8pg6kT%2BgpZii%2BIAe%2FoZi1u0YYidNnWq7Vm7ATREZqvXhwDe1hPoXwwEkwMBcuvHUDdjzsCbNyO3TOKrBFDUiOiZ6p%2B3EI%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=e9dde968e9165ee336315afeecb3a627cf5c03fbb5f60929c392107091dfa33c",
+      "file_size": 74435,
+      "type": "image/png",
+      "moderated": false
+    }
+  ],
+  "allow_singular_disclosure_at": "2025-08-28T13:06:08.749Z",
+  "allow_singular_disclosure_after": 2584260.126516479,
+  "singular_disclosure_allowed": false,
+  "vote_count": 3,
+  "voters": [
+    "yoyomiski",
+    "0xkenzo",
+    "zahid-sec"
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "Team"
+  },
+  "structured_scope": {
+    "databaseId": 297504,
+    "asset_type": "URL",
+    "asset_identifier": "addons.allizom.org",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "id": 733638,
+      "category": "team",
+      "content": "The report identifies an issue in the biography field on addons.allizom.org where the application's restriction on using links can be bypassed using protocol-relative URLs. Despite the explicit policy against links, users can embed functional hyperlinks using the syntax <a href=\"//evil.com\">click</a>, which successfully creates clickable links that redirect to external websites.\n\nThe restriction on using links is mainly to avoid spam and not necessarily a security control, therefore, the severity of bypassing the restriction is low.",
+      "updated_at": "2025-07-29T14:43:13.384Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 2465541,
+        "username": "frida-k",
+        "name": "Frida",
+        "bio": "Out April 16-21. Expect delayed response.",
+        "cleared": false,
+        "verified": false,
+        "website": null,
+        "location": "",
+        "created_at": "2022-09-21T23:39:33.826Z",
+        "url": "https://hackerone.com/frida-k",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "company",
+        "profile_picture_urls": {
+          "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png",
+          "medium": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png",
+          "xtralarge": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+        }
+      }
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
