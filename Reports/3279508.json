@@ -1,0 +1,157 @@
+{
+  "id": 3279508,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMjc5NTA4",
+  "url": "https://hackerone.com/reports/3279508",
+  "title": "Unauthorized Disclosure of Private Emails via WakaTime Private Leaderboards",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2025-07-31T14:04:17.550Z",
+  "submitted_at": "2025-07-31T14:04:18.001Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "ctrl_cipher",
+    "url": "/ctrl_cipher",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/461iai2ff9jznylfgim6gfeus6ct/727634197f209244e4307a490cdcd36c76d6e37fef1b0c164bd35ac010105f99"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 21801,
+    "url": "https://hackerone.com/wakatime",
+    "handle": "wakatime",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/6t1wy3jbq9kayjwvqbnymavxizfx/36bca6668139d77be42208d896968344ae7a76c55ee0f8b0f28281ccd492ff02",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/6t1wy3jbq9kayjwvqbnymavxizfx/19c85a12ac35f466af1ea2b0ae853bfe5e8f057fb1d6fb62db131707bb67b30d"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "WakaTime",
+      "twitter_handle": "wakatime",
+      "website": "https://wakatime.com",
+      "about": "Automated metrics about your programming from text editor plugins."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2025-08-03T03:23:03.121Z",
+  "bug_reporter_agreed_on_going_public_at": "2025-08-01T14:08:36.436Z",
+  "team_member_agreed_on_going_public_at": "2025-08-03T03:23:02.895Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nWakaTime allows users to create private leaderboards and invite others to join. However, once a user accepts the invite and joins the leaderboard, their private email address becomes visible to the leaderboard creator or other members, even if the user has not chosen to make their email public.\nThis bypasses intended privacy controls and could be exploited to harvest emails of unsuspecting WakaTime users.\n\n## Steps to Reproduce:\n1. Sign in to WakaTime.com and create a new private leaderboard.\n\n{F4630919}\n\n{F4630942}\n\n2. Invite another WakaTime user to join the leaderboard using their WakaTime username or public profile link:\n\n{F4630944}\n\n3. Have the invited user accept the invite and join the leaderboard.\n4. Once joined, visit the leaderboard page and observe that it contains their emails despite of them setting it as private:\n\n{F4630953}\n\n## Observed Result:\nYou can view the email address of the invited user in the leaderboard data or UI, even if their email was never made public in their settings.\n\n## Impact\n\n- Violation of user privacy expectations and configurations.\n- Could be used for email harvesting or targeted phishing.\n- Low barrier to exploitation: any user with an account can create a leaderboard and bait others to join.\n- GDPR/CCPA risk due to unconsented exposure of personally identifiable information (PII).\n\n## Expected Behavior:\n- Users' email addresses must remain hidden unless they have explicitly chosen to display them publicly.\n- Leaderboards should only display public data, not private or sensitive identifiers like email addresses.\n\n## Recommendations:\n- Ensure that private fields (like email) are never included in leaderboard-related responses unless the user has opted in to show them.\n- Perform a privacy filter before returning leaderboard member data to clients.\n- Add a notice or confirmation prompt when joining leaderboards about what information will be visible to other members.",
+  "weakness": {
+    "id": 18,
+    "name": "Information Disclosure"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 4630919,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/vluajeyo58snc4n6psaq7vckaau2?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ46BR6NEP%2F20250803%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250803T041508Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEOz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCO8dLahlCCTHLYoqfBpgcGXU0jRhLsflI0AIJTSv8cfQIgOBBXAlemc3aekLF2DTjAbpavUKdScG5ZzmbU%2F%2FLtDxkqsgUIJRADGgwwMTM2MTkyNzQ4NDkiDLao4L830p38Yq2hMSqPBTO7X1vB4%2BwkGAhgLIOPBhkCOsTs4Qospre2JwOxr08Jv1InvaeUu%2BMOevooKDtSZAA4mDyhHA%2BUDCYT62vbgssKVJMcTd7QmDXLH1EYAWKJhut7Tx7EllwZZNsRVceAz0fTN4zyVIO%2BRGT5yPh7Q7Rccs1sCU60qdr3o1Kw1Qj2RrIKYksShR8Tz9r4eWbBhJUITDICCbMBDkYX6rsuCoJ49u2YdknvpmFNzhSHFqmWHjJlty8h9XWAIYXR7dD0I0ZCMKMm5LarKt%2Bmia%2Bkrsyan%2FPYmm%2F10WvjN7k2Z%2FxreOrhYDya3grrR4k%2Beusdc%2F4UVJXs3Ul%2B53io0Nvpo9SYg3Q6sBwAdrq%2FJgs8TihV8VWA1zsiPrv5zm%2BtaboQDVJJ3UECjcq7P0vLddLnJmxGYqe5pcbb9Bj9hNMEMQ6nhkg%2FDeqHvfFEizhg6FlbfD5nC4K8L4rVhnqK3NytbkWoYpe6yVHwOujgOnmpwL1F30qS2Xhq%2BKFTzcxO8a%2FQPLQhMW8aReYYMkPB9Ol7Cp3GLhgnV%2BjtgDjs3tjoWIuuE7uxMqzlsb1gHLYZg2KZ3dWkF%2B7zn5om65yGNWJx%2Flz7lrkJq1%2Bff2Ti20IdqdccGs1JtZKhUMZqo5b5vC717lX%2Bs75q6%2FXnNMMVHiNkptADqhwggUQ2oeN9o%2BvLYWZZS0M3Oe6nvPhhCnuWMtjWFabVKEJAgA8o%2FUQJKoYzxKwOCrSrwz5aoO0titHNX6vw5OyZCbKjG%2BODHJ0j%2B5mURi%2BAzPfIVj8shuh%2B30ogPcoKQmcK8OPPf%2B3k7qhLpaGIxcbouOsfnOQBlVM83lEhK6LL4GJM0r6YsZXpmam3dHMAW%2FbPP5Qc8uyq6zXD86wwwbi7xAY6sQH7NGLGI%2FsFw4%2FnjOMMtyTm934G76%2FvcmQYv45aH3poLM%2Fewfg3j6GCI97%2FNru3J%2BFJkW5BIPCJdcBsHsTEaLv9I36GRpL7bR%2BkcjXrIbLDj70EFrgxsg5oSm7vvskTdbvcliBRlltS55JY5o4SqzLyyyZQPsRs8pZlztEJAjByyk3eHd9cVnb%2BITmiySrO%2F%2F668JMrEe5CkSgkq1MMrvI2p4lSgj2j3FHfrSNQuAbHx24%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=af00a26789f9651f935fd32b8d36f55c55c3290c416db306c2d76e9d45944b2b",
+      "file_size": 109202,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 4630942,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/5qwb6kbiglejrmyddldpiklgu9v9?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ46BR6NEP%2F20250803%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250803T041508Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEOz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCO8dLahlCCTHLYoqfBpgcGXU0jRhLsflI0AIJTSv8cfQIgOBBXAlemc3aekLF2DTjAbpavUKdScG5ZzmbU%2F%2FLtDxkqsgUIJRADGgwwMTM2MTkyNzQ4NDkiDLao4L830p38Yq2hMSqPBTO7X1vB4%2BwkGAhgLIOPBhkCOsTs4Qospre2JwOxr08Jv1InvaeUu%2BMOevooKDtSZAA4mDyhHA%2BUDCYT62vbgssKVJMcTd7QmDXLH1EYAWKJhut7Tx7EllwZZNsRVceAz0fTN4zyVIO%2BRGT5yPh7Q7Rccs1sCU60qdr3o1Kw1Qj2RrIKYksShR8Tz9r4eWbBhJUITDICCbMBDkYX6rsuCoJ49u2YdknvpmFNzhSHFqmWHjJlty8h9XWAIYXR7dD0I0ZCMKMm5LarKt%2Bmia%2Bkrsyan%2FPYmm%2F10WvjN7k2Z%2FxreOrhYDya3grrR4k%2Beusdc%2F4UVJXs3Ul%2B53io0Nvpo9SYg3Q6sBwAdrq%2FJgs8TihV8VWA1zsiPrv5zm%2BtaboQDVJJ3UECjcq7P0vLddLnJmxGYqe5pcbb9Bj9hNMEMQ6nhkg%2FDeqHvfFEizhg6FlbfD5nC4K8L4rVhnqK3NytbkWoYpe6yVHwOujgOnmpwL1F30qS2Xhq%2BKFTzcxO8a%2FQPLQhMW8aReYYMkPB9Ol7Cp3GLhgnV%2BjtgDjs3tjoWIuuE7uxMqzlsb1gHLYZg2KZ3dWkF%2B7zn5om65yGNWJx%2Flz7lrkJq1%2Bff2Ti20IdqdccGs1JtZKhUMZqo5b5vC717lX%2Bs75q6%2FXnNMMVHiNkptADqhwggUQ2oeN9o%2BvLYWZZS0M3Oe6nvPhhCnuWMtjWFabVKEJAgA8o%2FUQJKoYzxKwOCrSrwz5aoO0titHNX6vw5OyZCbKjG%2BODHJ0j%2B5mURi%2BAzPfIVj8shuh%2B30ogPcoKQmcK8OPPf%2B3k7qhLpaGIxcbouOsfnOQBlVM83lEhK6LL4GJM0r6YsZXpmam3dHMAW%2FbPP5Qc8uyq6zXD86wwwbi7xAY6sQH7NGLGI%2FsFw4%2FnjOMMtyTm934G76%2FvcmQYv45aH3poLM%2Fewfg3j6GCI97%2FNru3J%2BFJkW5BIPCJdcBsHsTEaLv9I36GRpL7bR%2BkcjXrIbLDj70EFrgxsg5oSm7vvskTdbvcliBRlltS55JY5o4SqzLyyyZQPsRs8pZlztEJAjByyk3eHd9cVnb%2BITmiySrO%2F%2F668JMrEe5CkSgkq1MMrvI2p4lSgj2j3FHfrSNQuAbHx24%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=3bdc081e0c552b58e3f4a4673c61c7a95bedd9144a84eb0d8cff00662bf4be65",
+      "file_size": 124873,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 4630944,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/1zavcfmadnomvsxmnnz3c5rmqkvk?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ46BR6NEP%2F20250803%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250803T041508Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEOz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCO8dLahlCCTHLYoqfBpgcGXU0jRhLsflI0AIJTSv8cfQIgOBBXAlemc3aekLF2DTjAbpavUKdScG5ZzmbU%2F%2FLtDxkqsgUIJRADGgwwMTM2MTkyNzQ4NDkiDLao4L830p38Yq2hMSqPBTO7X1vB4%2BwkGAhgLIOPBhkCOsTs4Qospre2JwOxr08Jv1InvaeUu%2BMOevooKDtSZAA4mDyhHA%2BUDCYT62vbgssKVJMcTd7QmDXLH1EYAWKJhut7Tx7EllwZZNsRVceAz0fTN4zyVIO%2BRGT5yPh7Q7Rccs1sCU60qdr3o1Kw1Qj2RrIKYksShR8Tz9r4eWbBhJUITDICCbMBDkYX6rsuCoJ49u2YdknvpmFNzhSHFqmWHjJlty8h9XWAIYXR7dD0I0ZCMKMm5LarKt%2Bmia%2Bkrsyan%2FPYmm%2F10WvjN7k2Z%2FxreOrhYDya3grrR4k%2Beusdc%2F4UVJXs3Ul%2B53io0Nvpo9SYg3Q6sBwAdrq%2FJgs8TihV8VWA1zsiPrv5zm%2BtaboQDVJJ3UECjcq7P0vLddLnJmxGYqe5pcbb9Bj9hNMEMQ6nhkg%2FDeqHvfFEizhg6FlbfD5nC4K8L4rVhnqK3NytbkWoYpe6yVHwOujgOnmpwL1F30qS2Xhq%2BKFTzcxO8a%2FQPLQhMW8aReYYMkPB9Ol7Cp3GLhgnV%2BjtgDjs3tjoWIuuE7uxMqzlsb1gHLYZg2KZ3dWkF%2B7zn5om65yGNWJx%2Flz7lrkJq1%2Bff2Ti20IdqdccGs1JtZKhUMZqo5b5vC717lX%2Bs75q6%2FXnNMMVHiNkptADqhwggUQ2oeN9o%2BvLYWZZS0M3Oe6nvPhhCnuWMtjWFabVKEJAgA8o%2FUQJKoYzxKwOCrSrwz5aoO0titHNX6vw5OyZCbKjG%2BODHJ0j%2B5mURi%2BAzPfIVj8shuh%2B30ogPcoKQmcK8OPPf%2B3k7qhLpaGIxcbouOsfnOQBlVM83lEhK6LL4GJM0r6YsZXpmam3dHMAW%2FbPP5Qc8uyq6zXD86wwwbi7xAY6sQH7NGLGI%2FsFw4%2FnjOMMtyTm934G76%2FvcmQYv45aH3poLM%2Fewfg3j6GCI97%2FNru3J%2BFJkW5BIPCJdcBsHsTEaLv9I36GRpL7bR%2BkcjXrIbLDj70EFrgxsg5oSm7vvskTdbvcliBRlltS55JY5o4SqzLyyyZQPsRs8pZlztEJAjByyk3eHd9cVnb%2BITmiySrO%2F%2F668JMrEe5CkSgkq1MMrvI2p4lSgj2j3FHfrSNQuAbHx24%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=0071890cdf1ccdfbf3c3a9d1ba7493e2b5a363f2ad726351ef2ff57e96a155aa",
+      "file_size": 157467,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 4630953,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/hceq7b2d5gygx4cepvf9abqgx7d0?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ46BR6NEP%2F20250803%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250803T041508Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEOz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCO8dLahlCCTHLYoqfBpgcGXU0jRhLsflI0AIJTSv8cfQIgOBBXAlemc3aekLF2DTjAbpavUKdScG5ZzmbU%2F%2FLtDxkqsgUIJRADGgwwMTM2MTkyNzQ4NDkiDLao4L830p38Yq2hMSqPBTO7X1vB4%2BwkGAhgLIOPBhkCOsTs4Qospre2JwOxr08Jv1InvaeUu%2BMOevooKDtSZAA4mDyhHA%2BUDCYT62vbgssKVJMcTd7QmDXLH1EYAWKJhut7Tx7EllwZZNsRVceAz0fTN4zyVIO%2BRGT5yPh7Q7Rccs1sCU60qdr3o1Kw1Qj2RrIKYksShR8Tz9r4eWbBhJUITDICCbMBDkYX6rsuCoJ49u2YdknvpmFNzhSHFqmWHjJlty8h9XWAIYXR7dD0I0ZCMKMm5LarKt%2Bmia%2Bkrsyan%2FPYmm%2F10WvjN7k2Z%2FxreOrhYDya3grrR4k%2Beusdc%2F4UVJXs3Ul%2B53io0Nvpo9SYg3Q6sBwAdrq%2FJgs8TihV8VWA1zsiPrv5zm%2BtaboQDVJJ3UECjcq7P0vLddLnJmxGYqe5pcbb9Bj9hNMEMQ6nhkg%2FDeqHvfFEizhg6FlbfD5nC4K8L4rVhnqK3NytbkWoYpe6yVHwOujgOnmpwL1F30qS2Xhq%2BKFTzcxO8a%2FQPLQhMW8aReYYMkPB9Ol7Cp3GLhgnV%2BjtgDjs3tjoWIuuE7uxMqzlsb1gHLYZg2KZ3dWkF%2B7zn5om65yGNWJx%2Flz7lrkJq1%2Bff2Ti20IdqdccGs1JtZKhUMZqo5b5vC717lX%2Bs75q6%2FXnNMMVHiNkptADqhwggUQ2oeN9o%2BvLYWZZS0M3Oe6nvPhhCnuWMtjWFabVKEJAgA8o%2FUQJKoYzxKwOCrSrwz5aoO0titHNX6vw5OyZCbKjG%2BODHJ0j%2B5mURi%2BAzPfIVj8shuh%2B30ogPcoKQmcK8OPPf%2B3k7qhLpaGIxcbouOsfnOQBlVM83lEhK6LL4GJM0r6YsZXpmam3dHMAW%2FbPP5Qc8uyq6zXD86wwwbi7xAY6sQH7NGLGI%2FsFw4%2FnjOMMtyTm934G76%2FvcmQYv45aH3poLM%2Fewfg3j6GCI97%2FNru3J%2BFJkW5BIPCJdcBsHsTEaLv9I36GRpL7bR%2BkcjXrIbLDj70EFrgxsg5oSm7vvskTdbvcliBRlltS55JY5o4SqzLyyyZQPsRs8pZlztEJAjByyk3eHd9cVnb%2BITmiySrO%2F%2F668JMrEe5CkSgkq1MMrvI2p4lSgj2j3FHfrSNQuAbHx24%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=669c2f9aaaa106ee2f740a8b165ed3181fea5800b57cd2bec3f879560a668ebb",
+      "file_size": 159830,
+      "type": "image/png",
+      "moderated": false
+    }
+  ],
+  "allow_singular_disclosure_at": "2025-08-31T14:08:36.830Z",
+  "allow_singular_disclosure_after": 2454808.354206294,
+  "singular_disclosure_allowed": false,
+  "vote_count": 3,
+  "voters": [
+    "zeesozee",
+    "0x0days",
+    "ctrl_cipher"
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 4.3,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "required",
+      "scope": "unchanged",
+      "confidentiality": "low",
+      "integrity": "none",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 614470,
+    "asset_type": "URL",
+    "asset_identifier": "wakatime.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
