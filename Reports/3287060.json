@@ -1,0 +1,150 @@
+{
+  "id": 3287060,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMjg3MDYw",
+  "url": "https://hackerone.com/reports/3287060",
+  "title": "Double Clickjacking Attack on WakaTime OAuth Authorization Flow at https://wakatime.com/oauth/authorize",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2025-08-05T14:08:05.256Z",
+  "submitted_at": "2025-08-05T14:08:05.792Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "zeesozee",
+    "url": "/zeesozee",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/9xrjk71dn6mvwnuixir7l3oq8zbr/36bca6668139d77be42208d896968344ae7a76c55ee0f8b0f28281ccd492ff02"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 21801,
+    "url": "https://hackerone.com/wakatime",
+    "handle": "wakatime",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/6t1wy3jbq9kayjwvqbnymavxizfx/36bca6668139d77be42208d896968344ae7a76c55ee0f8b0f28281ccd492ff02",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/6t1wy3jbq9kayjwvqbnymavxizfx/19c85a12ac35f466af1ea2b0ae853bfe5e8f057fb1d6fb62db131707bb67b30d"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "WakaTime",
+      "twitter_handle": "wakatime",
+      "website": "https://wakatime.com",
+      "about": "Automated metrics about your programming from text editor plugins."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2025-08-05T23:25:44.233Z",
+  "bug_reporter_agreed_on_going_public_at": "2025-08-05T15:34:43.937Z",
+  "team_member_agreed_on_going_public_at": "2025-08-05T23:25:43.961Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nAn attacker can trick users into unknowingly clicking the \"Connect my WakaTime account\" button in the WakaTime App consent dialog using a double-clickjacking attack. This allows an attacker to register a WakaTime  OAuth App, host a phishing page, and make the victim accidentally click the Authorize button. \n\nThe attacker can then capture the authorization code and exchange it for an access token, allowing them to perform actions on behalf of the victim. This is similar to a clickjacking attack, but traditional protections like X-Frame-Options do not prevent it. The impact is the attacker application has full access to defined [permissions](https://wakatime.com/developers).\n\n## PoC Video:\n{F4647670}\n\n## Attack Flow:\n1. The attacker creates an initial webpage with a button that opens a new window (or just opens a new window without user interaction), let's say it's https://attacker.com\n2. Current tab is redirected to WakaTime OAuth Authorization URL, for example: \nhttps://wakatime.com/oauth/authorize?client_id=joUNHCTnWqQ9hsmrWS5CTokR&response_type=code&redirect_uri=https://webhook.site/15495620-7c98-4643-a6df-9e7864c0dead&scope=read_orgs,write_orgs, which looks like this:\n\n{F4647671}\n\n3. At the same time, a new tab opened to https://attacker.com/attack, which looks like this:\n\n{F4647672}\n\n4. Notice that the \"Double Click\" button is aligned to be the same as the \"Connect my WakaTime account\" button. If it's not aligned perfectly, just play with the positions variable in the source code. The first click will close the /attack tab, then the second click will click the \"Authorize\" button.\n5. The URL gets redirected to `https://webhook.site/15495620-7c98-4643-a6df-9e7864c0dead?code=CODE`. At this point, it's up to the attacker to store the code and exchange it for access token. Now the attacker can hit the API endpoint with defined permissions. To make the victim not realize an attack happens, the attacker page can be redirected to another website after getting the code.\n\n## Steps To Reproduce:\n1. You can download the source code from the attached file: {F4647674}.\n2. Create a new WakaTime app at https://wakatime.com/apps/new.\n3. Fill the details like this:\n\n{F4647682}\n\n7. In the source code in `index.html` on `const url=...`, simply change with your `client ID` and `redirect_uri`.\n8. Run the flask app with **python main.py**.\n9. Try to simulate the attack as victim account.\n\n## Notes:\n- The victim needs to be already logged in to WakaTime .\n- The double-click button may not align perfectly, but there are ways to make the button flexible. You can adjust the position of button in `attack.html`. In the simple PoC, I only demonstrated the technique.\n- Browser, OS and/or app version used during testing: Firefox Browser 140.0.2 (64-bit), Windows.\n\n## Fix Suggestion:\nEliminate the risk of DoubleClickjacking by disabling critical buttons by default unless a gesture is detected (e.g., moving the mouse or using the keyboard).\n\n## Supporting Material/References:\n- https://jorianwoltjer.com/blog/p/hacking/pressing-buttons-with-popups\n- https://www.evil.blog/2024/12/doubleclickjacking-what.html\n- https://www.evil.blog/2024/02/cross-window-forgery-web-attack-vector.html?m=1\n\n## Impact\n\nThis vulnerability allows an attacker to trick a logged-in WakaTime user into unknowingly authorizing a third-party application created by an attacker which an attacker can obtain access token to get resources from WakaTime API depending on the scopes and permissions. The maximum permission attacker can get is all scopes as explained at https://wakatime.com/developers.",
+  "weakness": {
+    "id": 57,
+    "name": "Violation of Secure Design Principles"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 4647670,
+      "file_name": "250805_wakatime_doubleclickjacking.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/cwzsc8d2zsmtdolsv5p8gumwlxi5?response-content-disposition=attachment%3B%20filename%3D%22250805_wakatime_doubleclickjacking.mp4%22%3B%20filename%2A%3DUTF-8%27%27250805_wakatime_doubleclickjacking.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQTE5JA7QE%2F20250806%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250806T001509Z&X-Amz-Expires=3329&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECsaCXVzLXdlc3QtMiJGMEQCIGf2vNURwNhXqIrCTuGD0V55TSdOyBdoHs8dtvWgDIstAiBvfpeLTLsccmoimlgxFZ0Yf8EO%2BG%2Bjs5hmDP836Q%2BmHyqyBQhkEAMaDDAxMzYxOTI3NDg0OSIMCEVw%2BbxkcwCsKd4%2FKo8FF4G4vsss6hrsnYA9XkYzlTcqUZtV5Ww9S0j4zRWLhhpXbqXMZexaI%2BiBljVjbrOX45T%2FX53OqN9kRwbTRBUEV%2F8XN2XPvmyZb3EhGbSUv1L87TLMeOC52u%2Bg68goK%2Bp1nwPhd%2FJWJwJZJfGow2pyH3ta9Qc6gnu%2BUrsIo2Lqz6M3Bd41Ordo53m9%2F1b%2FzxvRMKnMoCrd5NRrnAM2MCaloC%2FqBYI20jau6tePsRwh%2F96Sk72RDb%2B4IxdkqLON5xY4nDuoIF%2FE94i3C6FVviAgosBwISoif6gbCFbTdEU8WhY1dEwRs8RKhb%2BHImWsj%2BlJkt4LjQrb2%2FkE16L%2FuC1TBZEbMR0Mo63uad6rE1%2FoVUHYUuPtIQU619hw%2BXjHfkMXEtOy9mfRiekWeKLsCkjkdWvXOIjtsScS7%2Bt4nbE3Kcc06%2Bn6XLzCAZVI1QapKYvxz%2FmOrJnR0dPi8cTePP5FULXpcMx5VNXlraVULwOX1c8jy5ps07hAUsblNQAI7ECtTp%2FMgAPmVvIi%2Bch1DDEHBbmglBkGJFPt%2FZ0YoUtRMpDzpobr5inJfeyfwk74PQErjfyqJdRJsi2EXZzKbXuq1m7exvrLus8OXT91uKp8%2B5X%2FevP1EdGVi62LC%2BaxgWIaH6HfHnfI0GzSC6evv7nng7W090ibOQiu2vlCj0uix9fUMo7kWslhlLilIsCatTs6jPuq9cTUda7QB9GNIqTFNvJtXruNPUeSdkKGpT7cIp9EJi0uZCzf2A1vsIq8c7bcp%2Bd84hnrjKK74CHNvIHtur5TquKDTfcjYAvIDo0%2B1dFkfrYFIHL0LYdn5FV6bRnyRfQHHt%2Bv7FzeKS20gGEJqYLx5S3oxHU2eIrzLrv1sDCKq8nEBjqyARx25a7pGWOP39PhndMdcNsUP2y8hgbS%2F%2BmCZM5KqcJJRLX8lru3UKOy2gpdf7g8kjkqbXVeWSVlO1qiDiSKOiQsbtUoQZocinH5cWlUg5HupZsz%2BM4Tvcgt5DN5uVMzCx4GB3qecKZgm4xBcKELj4dYpqgckaoouqpBxcKiYrFly2zsud7n%2F4Bp10YBrT%2BLsWq47glLK3fN5jsJnBDSbwWZjl44pzSrDXJQHr%2BAFPgkChs%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=e967fc64193b51365caa312ec9a96820c7f5e5b8df250ce6187298d22716fd20",
+      "file_size": 2653589,
+      "type": "video/mp4",
+      "moderated": null
+    },
+    {
+      "id": 4647671,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/adxcfndqe6485b304xrstu0xnxzb?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQTE5JA7QE%2F20250806%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250806T001509Z&X-Amz-Expires=3329&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECsaCXVzLXdlc3QtMiJGMEQCIGf2vNURwNhXqIrCTuGD0V55TSdOyBdoHs8dtvWgDIstAiBvfpeLTLsccmoimlgxFZ0Yf8EO%2BG%2Bjs5hmDP836Q%2BmHyqyBQhkEAMaDDAxMzYxOTI3NDg0OSIMCEVw%2BbxkcwCsKd4%2FKo8FF4G4vsss6hrsnYA9XkYzlTcqUZtV5Ww9S0j4zRWLhhpXbqXMZexaI%2BiBljVjbrOX45T%2FX53OqN9kRwbTRBUEV%2F8XN2XPvmyZb3EhGbSUv1L87TLMeOC52u%2Bg68goK%2Bp1nwPhd%2FJWJwJZJfGow2pyH3ta9Qc6gnu%2BUrsIo2Lqz6M3Bd41Ordo53m9%2F1b%2FzxvRMKnMoCrd5NRrnAM2MCaloC%2FqBYI20jau6tePsRwh%2F96Sk72RDb%2B4IxdkqLON5xY4nDuoIF%2FE94i3C6FVviAgosBwISoif6gbCFbTdEU8WhY1dEwRs8RKhb%2BHImWsj%2BlJkt4LjQrb2%2FkE16L%2FuC1TBZEbMR0Mo63uad6rE1%2FoVUHYUuPtIQU619hw%2BXjHfkMXEtOy9mfRiekWeKLsCkjkdWvXOIjtsScS7%2Bt4nbE3Kcc06%2Bn6XLzCAZVI1QapKYvxz%2FmOrJnR0dPi8cTePP5FULXpcMx5VNXlraVULwOX1c8jy5ps07hAUsblNQAI7ECtTp%2FMgAPmVvIi%2Bch1DDEHBbmglBkGJFPt%2FZ0YoUtRMpDzpobr5inJfeyfwk74PQErjfyqJdRJsi2EXZzKbXuq1m7exvrLus8OXT91uKp8%2B5X%2FevP1EdGVi62LC%2BaxgWIaH6HfHnfI0GzSC6evv7nng7W090ibOQiu2vlCj0uix9fUMo7kWslhlLilIsCatTs6jPuq9cTUda7QB9GNIqTFNvJtXruNPUeSdkKGpT7cIp9EJi0uZCzf2A1vsIq8c7bcp%2Bd84hnrjKK74CHNvIHtur5TquKDTfcjYAvIDo0%2B1dFkfrYFIHL0LYdn5FV6bRnyRfQHHt%2Bv7FzeKS20gGEJqYLx5S3oxHU2eIrzLrv1sDCKq8nEBjqyARx25a7pGWOP39PhndMdcNsUP2y8hgbS%2F%2BmCZM5KqcJJRLX8lru3UKOy2gpdf7g8kjkqbXVeWSVlO1qiDiSKOiQsbtUoQZocinH5cWlUg5HupZsz%2BM4Tvcgt5DN5uVMzCx4GB3qecKZgm4xBcKELj4dYpqgckaoouqpBxcKiYrFly2zsud7n%2F4Bp10YBrT%2BLsWq47glLK3fN5jsJnBDSbwWZjl44pzSrDXJQHr%2BAFPgkChs%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=6d046145f0f12c227c4a7b6e65aa4d57a60e84b24c785d6041ad436a5ab83f3f",
+      "file_size": 56698,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 4647672,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/8vfgr571ij0kmomkox1qvdq9uy7h?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQTE5JA7QE%2F20250806%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250806T001509Z&X-Amz-Expires=3329&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECsaCXVzLXdlc3QtMiJGMEQCIGf2vNURwNhXqIrCTuGD0V55TSdOyBdoHs8dtvWgDIstAiBvfpeLTLsccmoimlgxFZ0Yf8EO%2BG%2Bjs5hmDP836Q%2BmHyqyBQhkEAMaDDAxMzYxOTI3NDg0OSIMCEVw%2BbxkcwCsKd4%2FKo8FF4G4vsss6hrsnYA9XkYzlTcqUZtV5Ww9S0j4zRWLhhpXbqXMZexaI%2BiBljVjbrOX45T%2FX53OqN9kRwbTRBUEV%2F8XN2XPvmyZb3EhGbSUv1L87TLMeOC52u%2Bg68goK%2Bp1nwPhd%2FJWJwJZJfGow2pyH3ta9Qc6gnu%2BUrsIo2Lqz6M3Bd41Ordo53m9%2F1b%2FzxvRMKnMoCrd5NRrnAM2MCaloC%2FqBYI20jau6tePsRwh%2F96Sk72RDb%2B4IxdkqLON5xY4nDuoIF%2FE94i3C6FVviAgosBwISoif6gbCFbTdEU8WhY1dEwRs8RKhb%2BHImWsj%2BlJkt4LjQrb2%2FkE16L%2FuC1TBZEbMR0Mo63uad6rE1%2FoVUHYUuPtIQU619hw%2BXjHfkMXEtOy9mfRiekWeKLsCkjkdWvXOIjtsScS7%2Bt4nbE3Kcc06%2Bn6XLzCAZVI1QapKYvxz%2FmOrJnR0dPi8cTePP5FULXpcMx5VNXlraVULwOX1c8jy5ps07hAUsblNQAI7ECtTp%2FMgAPmVvIi%2Bch1DDEHBbmglBkGJFPt%2FZ0YoUtRMpDzpobr5inJfeyfwk74PQErjfyqJdRJsi2EXZzKbXuq1m7exvrLus8OXT91uKp8%2B5X%2FevP1EdGVi62LC%2BaxgWIaH6HfHnfI0GzSC6evv7nng7W090ibOQiu2vlCj0uix9fUMo7kWslhlLilIsCatTs6jPuq9cTUda7QB9GNIqTFNvJtXruNPUeSdkKGpT7cIp9EJi0uZCzf2A1vsIq8c7bcp%2Bd84hnrjKK74CHNvIHtur5TquKDTfcjYAvIDo0%2B1dFkfrYFIHL0LYdn5FV6bRnyRfQHHt%2Bv7FzeKS20gGEJqYLx5S3oxHU2eIrzLrv1sDCKq8nEBjqyARx25a7pGWOP39PhndMdcNsUP2y8hgbS%2F%2BmCZM5KqcJJRLX8lru3UKOy2gpdf7g8kjkqbXVeWSVlO1qiDiSKOiQsbtUoQZocinH5cWlUg5HupZsz%2BM4Tvcgt5DN5uVMzCx4GB3qecKZgm4xBcKELj4dYpqgckaoouqpBxcKiYrFly2zsud7n%2F4Bp10YBrT%2BLsWq47glLK3fN5jsJnBDSbwWZjl44pzSrDXJQHr%2BAFPgkChs%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=47ff3068d9f124e0deb233a8aea332d95358beda702e8b562ac146cb7af1a4ab",
+      "file_size": 5941,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 4647674,
+      "file_name": "250805_wakatime_double_clickjacking.zip",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/jilge5lv175jkjdkeh7vk3mmtjnt?response-content-disposition=attachment%3B%20filename%3D%22250805_wakatime_double_clickjacking.zip%22%3B%20filename%2A%3DUTF-8%27%27250805_wakatime_double_clickjacking.zip&response-content-type=application%2Fzip&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQTE5JA7QE%2F20250806%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250806T001509Z&X-Amz-Expires=3329&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECsaCXVzLXdlc3QtMiJGMEQCIGf2vNURwNhXqIrCTuGD0V55TSdOyBdoHs8dtvWgDIstAiBvfpeLTLsccmoimlgxFZ0Yf8EO%2BG%2Bjs5hmDP836Q%2BmHyqyBQhkEAMaDDAxMzYxOTI3NDg0OSIMCEVw%2BbxkcwCsKd4%2FKo8FF4G4vsss6hrsnYA9XkYzlTcqUZtV5Ww9S0j4zRWLhhpXbqXMZexaI%2BiBljVjbrOX45T%2FX53OqN9kRwbTRBUEV%2F8XN2XPvmyZb3EhGbSUv1L87TLMeOC52u%2Bg68goK%2Bp1nwPhd%2FJWJwJZJfGow2pyH3ta9Qc6gnu%2BUrsIo2Lqz6M3Bd41Ordo53m9%2F1b%2FzxvRMKnMoCrd5NRrnAM2MCaloC%2FqBYI20jau6tePsRwh%2F96Sk72RDb%2B4IxdkqLON5xY4nDuoIF%2FE94i3C6FVviAgosBwISoif6gbCFbTdEU8WhY1dEwRs8RKhb%2BHImWsj%2BlJkt4LjQrb2%2FkE16L%2FuC1TBZEbMR0Mo63uad6rE1%2FoVUHYUuPtIQU619hw%2BXjHfkMXEtOy9mfRiekWeKLsCkjkdWvXOIjtsScS7%2Bt4nbE3Kcc06%2Bn6XLzCAZVI1QapKYvxz%2FmOrJnR0dPi8cTePP5FULXpcMx5VNXlraVULwOX1c8jy5ps07hAUsblNQAI7ECtTp%2FMgAPmVvIi%2Bch1DDEHBbmglBkGJFPt%2FZ0YoUtRMpDzpobr5inJfeyfwk74PQErjfyqJdRJsi2EXZzKbXuq1m7exvrLus8OXT91uKp8%2B5X%2FevP1EdGVi62LC%2BaxgWIaH6HfHnfI0GzSC6evv7nng7W090ibOQiu2vlCj0uix9fUMo7kWslhlLilIsCatTs6jPuq9cTUda7QB9GNIqTFNvJtXruNPUeSdkKGpT7cIp9EJi0uZCzf2A1vsIq8c7bcp%2Bd84hnrjKK74CHNvIHtur5TquKDTfcjYAvIDo0%2B1dFkfrYFIHL0LYdn5FV6bRnyRfQHHt%2Bv7FzeKS20gGEJqYLx5S3oxHU2eIrzLrv1sDCKq8nEBjqyARx25a7pGWOP39PhndMdcNsUP2y8hgbS%2F%2BmCZM5KqcJJRLX8lru3UKOy2gpdf7g8kjkqbXVeWSVlO1qiDiSKOiQsbtUoQZocinH5cWlUg5HupZsz%2BM4Tvcgt5DN5uVMzCx4GB3qecKZgm4xBcKELj4dYpqgckaoouqpBxcKiYrFly2zsud7n%2F4Bp10YBrT%2BLsWq47glLK3fN5jsJnBDSbwWZjl44pzSrDXJQHr%2BAFPgkChs%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=8dc1225b5bb39adb2e1142d8e6bcab4fa416f4601e6b998e06a46aca42244fcf",
+      "file_size": 2476,
+      "type": "application/zip",
+      "moderated": null
+    },
+    {
+      "id": 4647682,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/6fo4jxgfzyoh1w22cxxlju01lw0b?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQTE5JA7QE%2F20250806%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250806T001509Z&X-Amz-Expires=3329&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECsaCXVzLXdlc3QtMiJGMEQCIGf2vNURwNhXqIrCTuGD0V55TSdOyBdoHs8dtvWgDIstAiBvfpeLTLsccmoimlgxFZ0Yf8EO%2BG%2Bjs5hmDP836Q%2BmHyqyBQhkEAMaDDAxMzYxOTI3NDg0OSIMCEVw%2BbxkcwCsKd4%2FKo8FF4G4vsss6hrsnYA9XkYzlTcqUZtV5Ww9S0j4zRWLhhpXbqXMZexaI%2BiBljVjbrOX45T%2FX53OqN9kRwbTRBUEV%2F8XN2XPvmyZb3EhGbSUv1L87TLMeOC52u%2Bg68goK%2Bp1nwPhd%2FJWJwJZJfGow2pyH3ta9Qc6gnu%2BUrsIo2Lqz6M3Bd41Ordo53m9%2F1b%2FzxvRMKnMoCrd5NRrnAM2MCaloC%2FqBYI20jau6tePsRwh%2F96Sk72RDb%2B4IxdkqLON5xY4nDuoIF%2FE94i3C6FVviAgosBwISoif6gbCFbTdEU8WhY1dEwRs8RKhb%2BHImWsj%2BlJkt4LjQrb2%2FkE16L%2FuC1TBZEbMR0Mo63uad6rE1%2FoVUHYUuPtIQU619hw%2BXjHfkMXEtOy9mfRiekWeKLsCkjkdWvXOIjtsScS7%2Bt4nbE3Kcc06%2Bn6XLzCAZVI1QapKYvxz%2FmOrJnR0dPi8cTePP5FULXpcMx5VNXlraVULwOX1c8jy5ps07hAUsblNQAI7ECtTp%2FMgAPmVvIi%2Bch1DDEHBbmglBkGJFPt%2FZ0YoUtRMpDzpobr5inJfeyfwk74PQErjfyqJdRJsi2EXZzKbXuq1m7exvrLus8OXT91uKp8%2B5X%2FevP1EdGVi62LC%2BaxgWIaH6HfHnfI0GzSC6evv7nng7W090ibOQiu2vlCj0uix9fUMo7kWslhlLilIsCatTs6jPuq9cTUda7QB9GNIqTFNvJtXruNPUeSdkKGpT7cIp9EJi0uZCzf2A1vsIq8c7bcp%2Bd84hnrjKK74CHNvIHtur5TquKDTfcjYAvIDo0%2B1dFkfrYFIHL0LYdn5FV6bRnyRfQHHt%2Bv7FzeKS20gGEJqYLx5S3oxHU2eIrzLrv1sDCKq8nEBjqyARx25a7pGWOP39PhndMdcNsUP2y8hgbS%2F%2BmCZM5KqcJJRLX8lru3UKOy2gpdf7g8kjkqbXVeWSVlO1qiDiSKOiQsbtUoQZocinH5cWlUg5HupZsz%2BM4Tvcgt5DN5uVMzCx4GB3qecKZgm4xBcKELj4dYpqgckaoouqpBxcKiYrFly2zsud7n%2F4Bp10YBrT%2BLsWq47glLK3fN5jsJnBDSbwWZjl44pzSrDXJQHr%2BAFPgkChs%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=c3d2a5033629a963a1aaa6088e85724188d3c74e7150ba4f97bf92b47c920db9",
+      "file_size": 99325,
+      "type": "image/png",
+      "moderated": false
+    }
+  ],
+  "allow_singular_disclosure_at": "2025-09-04T15:34:44.099Z",
+  "allow_singular_disclosure_after": 2560774.6279828,
+  "singular_disclosure_allowed": false,
+  "vote_count": 0,
+  "voters": [],
+  "severity": {
+    "rating": "medium",
+    "author_type": "Team"
+  },
+  "structured_scope": {
+    "databaseId": 614470,
+    "asset_type": "URL",
+    "asset_identifier": "wakatime.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
