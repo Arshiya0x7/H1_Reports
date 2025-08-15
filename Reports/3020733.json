@@ -1,0 +1,127 @@
+{
+  "id": 3020733,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMDIwNzMz",
+  "url": "https://hackerone.com/reports/3020733",
+  "title": "Email Verification Bypass via Race Condition",
+  "state": "Closed",
+  "substate": "informative",
+  "severity_rating": "none",
+  "readable_substate": "Informative",
+  "created_at": "2025-03-02T19:09:41.862Z",
+  "submitted_at": "2025-03-02T19:09:42.548Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "sijojohnson",
+    "url": "/sijojohnson",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/smy7xv0kcl8qrjc04veou3kfu8r3/727634197f209244e4307a490cdcd36c76d6e37fef1b0c164bd35ac010105f99"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 21978,
+    "url": "https://hackerone.com/malwarebytes",
+    "handle": "malwarebytes",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/021/978/0dcc3e9ef18f8a58c5ef2d9778195550b46cfcf3_original.png/36bca6668139d77be42208d896968344ae7a76c55ee0f8b0f28281ccd492ff02",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/021/978/0dcc3e9ef18f8a58c5ef2d9778195550b46cfcf3_original.png/19c85a12ac35f466af1ea2b0ae853bfe5e8f057fb1d6fb62db131707bb67b30d"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Malwarebytes",
+      "twitter_handle": "Malwarebytes",
+      "website": "https://www.malwarebytes.com",
+      "about": "Cyberprotection for every one."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2025-08-15T14:55:42.085Z",
+  "bug_reporter_agreed_on_going_public_at": "2025-04-05T08:29:35.513Z",
+  "team_member_agreed_on_going_public_at": "2025-08-15T14:55:41.240Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "An email verification bypass vulnerability was discovered in the my.malwarebytes.com.\n\n##Steps to Reproduce\n\n- Create an account using an attacker email: sijojohnson+attacker@wearehackerone.com.\n- Verify the account.\n- Go to account settings and update the email address to sijojohnson+attacker2@wearehackerone.com.\n- Capture the request using a tool like Burp Suite.\n- Send the request to Repeater twice and  forward the request.\n- In Repeater, modify Request 1 by changing the email to the victim's email (e.g., sijojohnson+victim@wearehackerone.com).\n- In Request 2, use the attacker's email (sijojohnson+attacker2@wearehackerone.com).\n- Group both requests, select Send Group in Parallel, and send the requests.\n- Observe the email inbox—both the victim's and attacker's email addresses will receive the same OTP.\n- Go to confirmation page displayed,  Enter the  OTP (both OTP's are same),\n- Capture the request, and replace the email with the victim’s email.\n- Send the modified request and observe the response.\n- The victim’s email address is now successfully verified.\n\n##PoC\n\n{F4105917}\n\n## Impact\n\n- This vulnerability allows an attacker to take control of an account associated with a victim's email by changing the registered email address.\n- It presents a risk of data theft, unauthorized transactions, and further exploitation of linked accounts.\n- Users' personal and sensitive data may be compromised.",
+  "weakness": {
+    "id": 27,
+    "name": "Improper Authentication - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 4105917,
+      "file_name": "email-verification-bypass-via-race-condition.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/0np7gey2choj1txmtnoohbzjaquw?response-content-disposition=attachment%3B%20filename%3D%22email-verification-bypass-via-race-condition.mp4%22%3B%20filename%2A%3DUTF-8%27%27email-verification-bypass-via-race-condition.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQT2LBOVQ4%2F20250815%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250815T151508Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEBUaCXVzLXdlc3QtMiJHMEUCIG0oAKEikN%2FspbjQkOG0bV0%2BpebFxh4nIbfePy6HYeOaAiEAqo3%2BxjbdfHuJZvZkbTQlpev16JdblVkTtDBgZRzRSaMqsQUIXhADGgwwMTM2MTkyNzQ4NDkiDMfqrGBjRRX7uLFq9SqOBUJn92FgSpbHV2MJXdlm4YmDze%2BJTr3tdCYlgRDT68zCHExYSl7P2o8ovypjH4jVNjIdLVfQu2u4w0RQY9WfCMFV10i3O4nUAC%2BljSFLKZuSFd2hO4diHB00HQ6Dpfx8qKZ2IG4e1GgF393ECOmE892pGFTNshVnKOyV0%2FgSyP1dPdgrFJg30WVVaSS4vCTe%2Ba1KuK1lzOKlnl5e2T2ynbHiBiqi4jJOBnGTbQP%2BAaXzgsjkJ0ZXEoPmdA7luXmEVlUCbiUQwDmAlCP%2BKuxjcd0dy1UH8BBFc%2BKhRu4DWBzOrwrkUWNP3vZw5pzqzW%2FQLcpqRg4TQGpW4xsdL%2F0zwBqv0rqY4kQhAosRm1HXK%2B%2BUKX3IZHf%2F6QxnoYWOsLjMVAUgXlFj8qjCd6o86YCaubkI3p%2FDrVuz2ykOAZc%2FcrAi9oWof9hGbM108KpyWoV%2FQcE5b7TS8KTheJr0BlmDrDqkwmVujeIuZ2cJSRxNvIW1bs3bLJMPZQFgKZ7cIZZOop63Xm927J45jJUC%2Fo5xtLPqOEOPJcbDVblAJodbuq5fEQO1fwqBXnAtrLaRcZ8eDqNeMPksUw2oV3UBLqiLvWc8gR2DTnOhTU%2FImjC9aq%2B52Wi6CA5fh8XCfVPK64KeAOFDp4MK8gjxuyut9ZnNfGlHpD6g0LLoFdi9Bucs4d%2Fpy4ZM5WezuoGEpIF%2BoD0%2F5pScBpujmaW8KiJPS6wKDO%2FdBQTWo3YYMgmlR32HwrIUdZwslD7mOBfdKtFvs5U%2B0X5IDmtByisq0OBsvMUZYHPKEZkiwr49rHZ9nlhPda1qOW5FeAE3G79SZOI8NC7eL3%2B6Mfs0wwz9jDoEsUIXaIx%2FfM5hrasB%2FMNdL6K12TD5z%2FzEBjqxAZZkZfhuYbF4c%2BbrDD3%2F8UdwO5YXomgAedWWZi4rZ8G%2Byuzt%2BuygQca7Qx4vhkq4Kc%2BKEFyCSAqfsTcGKs%2FaqZY7MuReuSzAXR4GA3XEMMXvPVHu4opOc4iYtljEj7S0dcVWC%2FvJSUmxOzDj3zgAMEATKkQUnMuFRpBfsS9G8M7dNWhPBnzW923inHNzWBQJbk6hSBXz2JToC1uRhhUhSW6zpt2Ckof5OhqoE1fiBXo%2F2w%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=d894ba894b634e7510dbf666cb6bcc6fa501dc69a6535eafec1989129faef943",
+      "file_size": 18562829,
+      "type": "video/mp4",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 0,
+  "voters": [],
+  "severity": {
+    "rating": "none",
+    "score": 0.0,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "none",
+      "integrity": "none",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 97244,
+    "asset_type": "WILDCARD",
+    "asset_identifier": "*.malwarebytes.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
