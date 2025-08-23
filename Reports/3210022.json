@@ -1,0 +1,131 @@
+{
+  "id": 3210022,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMjEwMDIy",
+  "url": "https://hackerone.com/reports/3210022",
+  "title": "PII Exposure via Email Confirmation Link – Email Embedded in Token & Leaked via Wayback Machine",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2025-06-19T09:13:15.037Z",
+  "submitted_at": "2025-06-19T09:13:15.550Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "mantu1738",
+    "url": "/mantu1738",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/wvobl0sk2a5iiw51b2k6n6efu31y/727634197f209244e4307a490cdcd36c76d6e37fef1b0c164bd35ac010105f99"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 21045,
+    "url": "https://hackerone.com/omise",
+    "handle": "omise",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/nm9gwmg377pece9jzkjw5k1o7tm7/36bca6668139d77be42208d896968344ae7a76c55ee0f8b0f28281ccd492ff02",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/nm9gwmg377pece9jzkjw5k1o7tm7/19c85a12ac35f466af1ea2b0ae853bfe5e8f057fb1d6fb62db131707bb67b30d"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Omise",
+      "twitter_handle": "omise",
+      "website": "https://www.opn.ooo",
+      "about": "Next generation of payment Platform"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2025-08-23T05:29:10.693Z",
+  "bug_reporter_agreed_on_going_public_at": "2025-07-24T05:29:02.639Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "An email confirmation link used by Omise (dashboard.omise.co) includes the user's email address directly embedded in a token that is visible in the URL. This token has been archived publicly by the Wayback Machine (archive.org), resulting in public exposure of personally identifiable information (PII). \n\n## Steps To Reproduce:\n  1. Visit an archived page on Wayback Machine containing a confirmation URL:\n  ```\nhttps://dashboard.omise.co/users/confirm_email/BAhbCGkD5+gCVTogQWN0aXZlU3VwcG9ydDo6VGltZVdpdGhab25lWwhJdToJVGltZQ1qVh%2FA51yK3Ak6DW5hbm9fbnVtaQH7Og1uYW5vX2RlbmkGOg1zdWJtaWNybyIHJRA6CXpvbmVJIghVVEMGOgZFRkkiCFVUQwY7C1RJdTsGDWpWH8DnXIrcCTsHaQH7OwhpBjsJIgclEDsKQAlJIiFtYW50dWhhY2tlcm9uZTE3MzhAZ21haWwuY29tBjsLVA==--5d75e1da7fbede4b6285f61f758e5dbed8d62604\n    ```\n  2. Extract the token from the URL. Base64-decode it:\n```\nimport base64\nfrom urllib.parse import unquote\nimport re\n\ntoken = \"<Base64_part>\"\ndecoded_token = base64.b64decode(unquote(token))\nprint(re.findall(rb\"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\", decoded_token))\n```\n  3. Observe that the token contains a full email address, e.g.,: ***big.dogs1979@gmail.com***\n\n## Recommendations\n-  Do not embed PII (email addresses) in tokens\n- Disallow crawling of sensitive URLs with robots.txt\n```\nUser-agent: *\nDisallow: /users/confirm_email/\n```\n\nNote: I also tired sending by creating my own account and the url contains the email address in confirmation email.\n```\nhttps://dashboard.omise.co/users/confirm_email/BAhbCGkD5+gCVTogQWN0aXZlU3VwcG9ydDo6VGltZVdpdGhab25lWwhJdToJVGltZQ1qVh%2FA51yK3Ak6DW5hbm9fbnVtaQH7Og1uYW5vX2RlbmkGOg1zdWJtaWNybyIHJRA6CXpvbmVJIghVVEMGOgZFRkkiCFVUQwY7C1RJdTsGDWpWH8DnXIrcCTsHaQH7OwhpBjsJIgclEDsKQAlJIiFtYW50dWhhY2tlcm9uZTE3MzhAZ21haWwuY29tBjsLVA==--5d75e1da7fbede4b6285f61f758e5dbed8d62604\n\nmantuhackerone1738@gmail.com\n```\n\n  #POC\n{F4471309}\n\nThanks \n@mantu1738\n\n## Impact\n\n- Leaks **PII (email address)** in URL\n- Publicly archived link on Wayback Machine exposes user identity\n- Token is easily **Base64-decoded**\n- Potential **email confirmation abuse** if token is replayable\n- Risk of **user enumeration** or phishing",
+  "weakness": {
+    "id": 18,
+    "name": "Information Disclosure"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 4471309,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/cuguy0r1ax29jlein37uu9zujum5?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ3ZFE4XA7%2F20250823%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250823T061507Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEM3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDvQ2lOLG7AuWLuOrx5hlqCv%2Fdz3WAD5FhU2K84jaw5jAIhAKdfhc37VQjQKwKc9jmiunTyjyTWIW0kBONSyz%2BGL0L2KrIFCCYQAxoMMDEzNjE5Mjc0ODQ5IgwwLNbiRxSUfmhbziYqjwXRR6295MeYxhnj6E6MAxCjwKJA1b6%2FP6YMFyOQZ7dkkKnjCh%2FhjVdiuO2vwZoYvQDu9CaB9bfLsAjSUPf0rm7tWk5OHiXJEHBfJ5zg6vYst3F0BCioW7jXlQvXHk4Rbd2VB2gCDC9%2Bw%2FShovSxTu0Sez12%2BYXSTlYZFwwiIozxvc9XeThhIdHZq5j84y%2F9WNvhj5IDVdry1grfLHJ9t47Af%2FLBwo7dAJojrCtLbOJOj3sTLr%2BIwnKX41%2BWRrKaiZbNTgmwk08C7OgGiaFmT1JAzQFbKqYD1Bp0N%2B4nFtnDpxFskbae%2FGKG6A3kNgZJUt5RmBiRUFkdDKIwpB0Y54hX3osNAvz89nFEK3pbwh51d1fe7XkKdgOPftNBnUpQAWygv0Gb%2Fnmjy7v3qllnC3HgJIYZeBX2nUKz2TfKIXR6GFTw6lHbQ%2BwraKGXU8ClABbPTOn0iNarfHAEkg0Bt0N0juZ5rxvDJTp4nwgq9%2BrB%2Fy1NYhODlmk1HXNesPYn5U0X9OngILImObK6bQxK7H8jbhoeUCUdGKw%2Bb%2FebKrRfAs7Z4ERdlDDLT8NGH%2FwcZeTYcUntuwS%2BMtZ1PJcyMXl1WzPJrBP4mscvseQbkKUD5TanaaS5Yfq8WdR76S1BmxotfhWpFDAjRt6iYUyJzLLIqt1mYIYIAUGWAhWaXb25ACvwAOudzFHPs9h1mLC36iVuUdhSVkMzstbSuHlE7jidOjFdV0UeN4WO9t0QsKt%2BNHnyIF5FK5LJKkO6MMzlJMDVHFPgTyV0JCwTRn%2FIbcgCau5ma1Ks5Od%2F%2Fl3U68hxdCRfiO9NX0XMg8VpcEdUCORZtQUot4zveb0b5vG4TyXVDqNkJvUxGSlfxYPpVT11MJCGpcUGOrABE2Vr8%2BUc7AbpDNY3y3n17JznbDAt9IKN5CeST5lS2iq9foD6m7wKMZnYcD4fHjshHmDjsHW0GBAjQF7gi%2BFcI0yUk8r7VbFaBEbbNvkckNVF%2B2ZiLqT9nN6Mlee0IjrK9auIwCbJXge6DySv2UVCaCDbsXLqzZTFRzi5rXdmOFACUg%2BPTpUzHyLDvWLWIKs85ezUn%2BIfe334q28HHXr3MKDzUIgBebUGvZB2COn27wg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=7a1be9ae6ac8223b49f0611153b082cda7229a70b7499cec7000bc71986f1eef",
+      "file_size": 107986,
+      "type": "image/png",
+      "moderated": false
+    }
+  ],
+  "allow_singular_disclosure_at": "2025-08-23T05:29:02.925Z",
+  "allow_singular_disclosure_after": -2765.029788916,
+  "singular_disclosure_allowed": true,
+  "vote_count": 1,
+  "voters": [
+    "lontano"
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 6.1,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "low",
+      "integrity": "none",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 16435,
+    "asset_type": "URL",
+    "asset_identifier": "dashboard.omise.co",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
