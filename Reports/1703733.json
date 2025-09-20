@@ -1,0 +1,139 @@
+{
+  "id": 1703733,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNzAzNzMz",
+  "url": "https://hackerone.com/reports/1703733",
+  "title": "Exposure Of Admin Username & Password",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "critical",
+  "readable_substate": "Resolved",
+  "created_at": "2022-09-18T10:24:40.453Z",
+  "submitted_at": "2022-09-18T10:24:40.552Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": true,
+    "username": "coyemerald",
+    "url": "/coyemerald",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 41919,
+    "url": "https://hackerone.com/mtn_group",
+    "handle": "mtn_group",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/4e6ikuxrt34g8b14w2bk53c6vyry/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/4e6ikuxrt34g8b14w2bk53c6vyry/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "MTN Group",
+      "twitter_handle": "",
+      "website": "https://www.mtn.com/",
+      "about": ""
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2022-12-25T10:48:00.481Z",
+  "bug_reporter_agreed_on_going_public_at": "2022-11-25T10:47:58.166Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello Team, \nTher an exposure of your username and password on this    subdomain https://engage2.mtnonline.com/nc/\n\n\nExposed Credentials\n\n    uid: \"mtnng\",\n        passwd: \"bd31568138edbfc0552a1ecc6886ea5c\",\n\n\n\nSteps To Reproduce:\n\nVisit https://engage2.mtnonline.com/nc/ \n\nNow, press CTRL+U to view the source code of this page,\n\n\nLook for this code\n\n\n\n\n       console.log(message);\n    }\n}\n\n    (function (){\n    const plid = 73;\n\n    const mtnContainer = document.getElementById(\"mtn20238\");\n    const mtnUri = mtnContainer.childNodes[0].getAttribute(\"href\");\n    mtnContainer.addEventListener(\"click\", ()=>fetch(mtnUri).catch(()=>{}));\n\n    window.mobucksApi.placeAd({\n        containerElementId: \"mtn20238\",\n        uid: \"mtnng\",\n        passwd: \"bd31568138edbfc0552a1ecc6886ea5c\",\n        plid:plid,\n        }, () => { \n            typeof mtnNoBanner == \"function\" && mtnNoBanner(plid,mtnContainer);\n\n## Impact\n\nThe exposed password is in md5 which I was able to decrypt easily\n\nuid: mtnng\nhash = bd31568138edbfc0552a1ecc6886ea\nplain password: v0d@c0mS@\n\nAnd as an attacker, this can be abused in lots of ways such as exposing some client's info\n\nhttps://adsmobucks.mtnbusiness.com.ng/feed?uid=mtnng&passwd=bd31568138edbfc0552a1ecc6886ea5c&plid=8",
+  "weakness": {
+    "id": 101,
+    "name": "Insecure Storage of Sensitive Information"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1939692,
+      "file_name": "mtnb.JPG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/4egkowlfjf8kh5pvs3d8xfsks6zb?response-content-disposition=attachment%3B%20filename%3D%22mtnb.JPG%22%3B%20filename%2A%3DUTF-8%27%27mtnb.JPG&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4K2CTKX4%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T215715Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHoaCXVzLXdlc3QtMiJHMEUCIQDeQfAk13PfnXGTrLrNb%2BnQBEdewbgIKZLgskhg6jVaawIgZrSMJY2LycFNmtdcmYb1340F3PyGDZv9zZudgmACFIkquwUI8%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDETzFOKjTpQNCFmNUyqPBUfL9UVIdrBHb0bo7yEvgbOgD7vwo%2FHg0%2FuXUUmAsqikodX7mgYEFWxsSSIQYNB9ofuPbTF3pj13urMVfzLl0Vr2dBW526n0c0RxQmkr6ajjyNRKCTaoxXzuavEtlUIXnA5JMaogfhxKIlx1GemGNkFZyW3uH4%2Bd2%2BIdVCr6eYT%2Bo2YqP%2FxickHcud0ImRxxd6Seo8vW3Q7Zb7LDLn6ejheKLodtBd9fDnvBF1JCi0XVMpokGTGGBU2cFz5jAauymMr3Ya4zS0rBW7M4%2FN%2Flpgo62QO9wcSIN5YTwW%2BQC51n1qWr3R06kcis1g2RScNz7cCoNanRyCMy4qtooZeJ0RjhBlsYncLKosaNbgIi4Zj2GRyx1OTQr%2F3YWlBAhjwJhH7N6vcsbzG3I821UD2DRiN%2F0lqfg%2B5bWATREiSF1mI6Z48LnWBSpCaOTZrI%2FsOQMwS2a%2BsuhjKxZnw5vdGyEg6GTFTFe6SKCpZ3aMsKqiH1IpyDlroIFr07E4aZMa7r2q%2BVXIWF1clAAt%2Fp8nt48%2BW%2Bvpu3tREes%2FiPJ6MSyEIKbNO1CvFvtKG%2Fl6DtCm%2BVjikyIIG1V2RGhhAi33CuMpklAHXug%2BQuZ6g7dhjXf8FWiAH8vC%2B4p3rILPK2m20xm2aDN5wPpgyiogb9zGYgzxIoSg4TtfiDZzSGdi4TCRg5R3wU0v64nIAvb6F8RWihHISYpOk%2Fr0NgMamVdpGj9Lys%2BViiQCMCMSZVFxg7OQd9i7mZWqdSaA1xo3owfdseo2nl8VUogD6EW82H%2FXw8OwQbFMRjXgfjtudneWc2%2BSOiBmFpMGB5O0O87L%2BGlThKXJa9cj4vaAAjDbMJLmve9pYjatijnpJU5XmNQcwdlokwrd%2B7xgY6sQGQY44oSkFl53JgGThuuwmVbrheY4sXWtckBc0qM6DpgTpNg4Y0BqKSJZg0LCBovEIQYId1WR38xiM4%2BuBV%2FpLzZBOOeLr1%2BTl2M4WnjV88vQYljYYL4U2Ha20nIFK52tXx%2BcNvBTZY7geWGDXueD2HhTDD3HuHlia0vwZc7zVLMj5wFk0yhHCNhXYDTl0HwqN9PwhPNoRUaNdre42kL73EIb8QDJDckkwd%2F0dGaSIfmNc%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=45052ddbe37d43927944b6325f57f4017e91bc182152123887216dd823baef8c",
+      "file_size": 84290,
+      "type": "image/jpeg",
+      "moderated": null
+    },
+    {
+      "id": 1939693,
+      "file_name": "mtnb2.JPG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/j33cwsg8mdr1n4f9wzwll84n8dtf?response-content-disposition=attachment%3B%20filename%3D%22mtnb2.JPG%22%3B%20filename%2A%3DUTF-8%27%27mtnb2.JPG&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4K2CTKX4%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T215715Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHoaCXVzLXdlc3QtMiJHMEUCIQDeQfAk13PfnXGTrLrNb%2BnQBEdewbgIKZLgskhg6jVaawIgZrSMJY2LycFNmtdcmYb1340F3PyGDZv9zZudgmACFIkquwUI8%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDETzFOKjTpQNCFmNUyqPBUfL9UVIdrBHb0bo7yEvgbOgD7vwo%2FHg0%2FuXUUmAsqikodX7mgYEFWxsSSIQYNB9ofuPbTF3pj13urMVfzLl0Vr2dBW526n0c0RxQmkr6ajjyNRKCTaoxXzuavEtlUIXnA5JMaogfhxKIlx1GemGNkFZyW3uH4%2Bd2%2BIdVCr6eYT%2Bo2YqP%2FxickHcud0ImRxxd6Seo8vW3Q7Zb7LDLn6ejheKLodtBd9fDnvBF1JCi0XVMpokGTGGBU2cFz5jAauymMr3Ya4zS0rBW7M4%2FN%2Flpgo62QO9wcSIN5YTwW%2BQC51n1qWr3R06kcis1g2RScNz7cCoNanRyCMy4qtooZeJ0RjhBlsYncLKosaNbgIi4Zj2GRyx1OTQr%2F3YWlBAhjwJhH7N6vcsbzG3I821UD2DRiN%2F0lqfg%2B5bWATREiSF1mI6Z48LnWBSpCaOTZrI%2FsOQMwS2a%2BsuhjKxZnw5vdGyEg6GTFTFe6SKCpZ3aMsKqiH1IpyDlroIFr07E4aZMa7r2q%2BVXIWF1clAAt%2Fp8nt48%2BW%2Bvpu3tREes%2FiPJ6MSyEIKbNO1CvFvtKG%2Fl6DtCm%2BVjikyIIG1V2RGhhAi33CuMpklAHXug%2BQuZ6g7dhjXf8FWiAH8vC%2B4p3rILPK2m20xm2aDN5wPpgyiogb9zGYgzxIoSg4TtfiDZzSGdi4TCRg5R3wU0v64nIAvb6F8RWihHISYpOk%2Fr0NgMamVdpGj9Lys%2BViiQCMCMSZVFxg7OQd9i7mZWqdSaA1xo3owfdseo2nl8VUogD6EW82H%2FXw8OwQbFMRjXgfjtudneWc2%2BSOiBmFpMGB5O0O87L%2BGlThKXJa9cj4vaAAjDbMJLmve9pYjatijnpJU5XmNQcwdlokwrd%2B7xgY6sQGQY44oSkFl53JgGThuuwmVbrheY4sXWtckBc0qM6DpgTpNg4Y0BqKSJZg0LCBovEIQYId1WR38xiM4%2BuBV%2FpLzZBOOeLr1%2BTl2M4WnjV88vQYljYYL4U2Ha20nIFK52tXx%2BcNvBTZY7geWGDXueD2HhTDD3HuHlia0vwZc7zVLMj5wFk0yhHCNhXYDTl0HwqN9PwhPNoRUaNdre42kL73EIb8QDJDckkwd%2F0dGaSIfmNc%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=949a9cb17fbd23785f6eefaa5b8f276b799b89a073561d92020215573ad4f03c",
+      "file_size": 60439,
+      "type": "image/jpeg",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2022-12-25T10:47:58.234Z",
+  "allow_singular_disclosure_after": -86440156.96038927,
+  "singular_disclosure_allowed": true,
+  "vote_count": 46,
+  "voters": [
+    "jumpydata",
+    "zy9ard3",
+    "winteri3coming",
+    "shreyaschavhan",
+    "n0v3d",
+    "shubham_srt",
+    "pacmanx",
+    "spaghettisec",
+    "f_m",
+    "mbi3s",
+    "and 36 more..."
+  ],
+  "severity": {
+    "rating": "critical",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 34320,
+    "asset_type": "URL",
+    "asset_identifier": "mtnonline.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
