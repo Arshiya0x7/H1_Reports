@@ -1,0 +1,152 @@
+{
+  "id": 1206004,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMjA2MDA0",
+  "url": "https://hackerone.com/reports/1206004",
+  "title": "No rate limit leads to spaming post",
+  "state": "Closed",
+  "substate": "duplicate",
+  "severity_rating": "medium",
+  "readable_substate": "Duplicate",
+  "created_at": "2021-05-22T19:42:14.142Z",
+  "submitted_at": "2021-05-22T19:42:14.308Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "nshcys3c",
+    "url": "/nshcys3c",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MzE2MTE4OSwicHVyIjoiYmxvYl9pZCJ9fQ==--5b7d50b6ab49168e89e0629e85a236f733d795ec/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--2de8067d228529d65848a4eeed0bed0bb2531bc3/116644284_166579495086620_6692877747838897114_n.jpg"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 35710,
+    "url": "https://hackerone.com/reddit",
+    "handle": "reddit",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/osci5oey0q0wkiom39bk5onv8p7q/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/osci5oey0q0wkiom39bk5onv8p7q/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Reddit",
+      "twitter_handle": "reddit",
+      "website": "https://www.reddit.com",
+      "about": ""
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2023-05-18T13:45:24.096Z",
+  "bug_reporter_agreed_on_going_public_at": "2023-05-11T22:03:51.691Z",
+  "team_member_agreed_on_going_public_at": "2023-05-18T13:45:23.896Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hey team,\nI found there is no rate limitng in your post which leads to extreme violation of posting like 100 post in one go and no spam bot working to stop \n\n\n#Description of Vulnerability\n\n No rate limit means their is no mechanism to protect against the requests you made in a short frame of time. ... If the repetition doesn't give any error after 50, 100, 1000 repetitions then their will be no rate limit set\n\n#To reproduce\n- Intercept post  using burp\n- see for post which include your title and information it would look like \n   \n{F1311439}\n-Send it to intruder and set position to content lenght only \n- use numberic type with steps of 1 you will get to expolit it \n\n#Poc\n{F1311433}\n{F1311434}\n{F1311435}\n\n\nFor proof - https://www.reddit.com/user/testnsh\n\nRef - #751604 #838572 #297359\n\nSolution use rate limiting which gave a error like 429\n\nAnd its not  like bruteforcing yes it lead to ddos but also messs up with any community\n\nRegards\n@nsh_cysec\n\n## Impact\n\nA attacker can use to spam any community with extreme number of post as he want and no hold back he can use malicious post to encourage more to get more publicity it can be exploited .even your network and Internet connection by taking up a large amount of bandwidth and, sometimes, requiring large amounts of storage space\n\n#How to prevent\n-Define proper rate limiting.\n-Limit payload sizes.\n-Tailor the rate limiting to be match what API methods, clients, or addresses need or should be allowed to get.\n-Add checks on compression ratios.\n-Define limits for container resources.",
+  "weakness": {
+    "id": 27,
+    "name": "Improper Authentication - Generic"
+  },
+  "original_report_id": 1175778,
+  "original_report_url": "https://hackerone.com/reports/1175778",
+  "attachments": [
+    {
+      "id": 1311433,
+      "file_name": "reddit_rate.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/9mcaljyuxqhcaeegn363j9iebxfu?response-content-disposition=attachment%3B%20filename%3D%22reddit_rate.mp4%22%3B%20filename%2A%3DUTF-8%27%27reddit_rate.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZIT4IKNN%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T205744Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHkaCXVzLXdlc3QtMiJGMEQCIH5S6fYKetpuazFUkaO2jdTENAlJFAEAksVwV6ok0UqoAiBpP%2F9zQRjMN0kBNrdXAtFNCe60y%2B6O%2FVwlXiU8NCMFvyq6BQjy%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMiw6yZQO2gOSkPmi4Ko4FQ1RVd7qu%2FsJ9CtqhsEnVEHrd2f%2BG4UzNDTuTKmpWc%2BZ%2BZXaL6DMei6%2F8FwNAlnFk66Sl7zkaVbrUhgvfqSb9GPSg7BrwakPZmKFRBl1G5RvJR0%2FaTgOAmBP5mQLYW3DEvvWRjboVSCIAXjXh5whPp0DRl%2F%2BTS5eM9kmICHghM1GmUH2KruL1ygmg%2FYxuQ33QjwooMHJDMGbeux67Yl%2FZIfkejSzcBenjHXE%2BvNhSdz56xDzcVHRG7OfXRQrVqBEAB%2BEus%2F3NXXy%2FktaCmyWt2%2BAuW9ST6rgikedOI79vlIKfmKKDzJLwa3aBriDsSYB%2BT5nyLIvpE6hgqxSjeXXdrDcsk8l3Iyorx%2FyR5X1wgZYg9Cp1nB9Z6yRJsa%2BBV96w%2FQC9A%2BY8Lyadfl9fGr2oJv%2BEkROQnKPysa4McSYvqac3OAxKoEZ6fAUPDdPWNIe3AcDv8BasOF0OyRIPpgxU4KKxSuNT5CSWFS1ZF8XVtr5mJoarB9kPPXGmDL%2BgEAiMmymMOMwvzwdziPeK9I3jTY7KrYnyFsTG%2Fnhm3YN9kmneV506%2BN%2BKhep%2BfJpXozK%2BqtaBRfbDCHQ2REwFnYrPEhhGVSQ8M0KNDwb4q4t%2BuWnYmZRF%2BHI%2Fe%2BK%2BEIUvaK1MaQdTpOWyIgFtbtTMxUtaHxE2n6jl83bH1dKQtracHkYcfAr0xYLWjMRZZ4BG5O%2Fvb1Gkvj2VmdOjfaX%2BqJocYV6Y%2FACUioWff5Osbxqs5bDTOK3YaYr9ICgmRGT8%2BBJWzWRmk7El%2BFVXy4ix%2F6FI65kEUqxGie8e3ydyMfgnWy1nt8n6xPXYwfDtGlJ1jknOoTALL0setbTHJOkSVfIMuO%2FVaActMtCnSBdysZc2MIO%2Fu8YGOrIBo0yp15frtEwEkShpqgPEzow4wLy8Bls1kfuUSOdCDpV%2BPsQVrODh8dgBRqTAwAhZ5C%2FdXu0n%2FiyL8ND0wJ82%2Fr1jc%2BC%2FxX5oOaDo%2FrVikhBg5YDdOHcm9LbIiSCCE9Ziwx6ESXbvvOh0F7HEZaViMKOa3%2BS7jVH716lcbcfgaKkziQff9%2BkaL2ku2HQK05vi%2BWOOY3XPoXGdGcz%2BC0anKDkdQvKf2DFEvzrxACT6PgTvtw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=a38c50ca28ed3a2ef8f7bb1d143e238bee01eb613d460cdc0aeb8482621173b6",
+      "file_size": 21961632,
+      "type": "video/mp4",
+      "moderated": null
+    },
+    {
+      "id": 1311434,
+      "file_name": "Screenshot_(123).png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/r233licx1iclpj38f95svntou4y0?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_%2528123%2529.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_%2528123%2529.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZIT4IKNN%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T205744Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHkaCXVzLXdlc3QtMiJGMEQCIH5S6fYKetpuazFUkaO2jdTENAlJFAEAksVwV6ok0UqoAiBpP%2F9zQRjMN0kBNrdXAtFNCe60y%2B6O%2FVwlXiU8NCMFvyq6BQjy%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMiw6yZQO2gOSkPmi4Ko4FQ1RVd7qu%2FsJ9CtqhsEnVEHrd2f%2BG4UzNDTuTKmpWc%2BZ%2BZXaL6DMei6%2F8FwNAlnFk66Sl7zkaVbrUhgvfqSb9GPSg7BrwakPZmKFRBl1G5RvJR0%2FaTgOAmBP5mQLYW3DEvvWRjboVSCIAXjXh5whPp0DRl%2F%2BTS5eM9kmICHghM1GmUH2KruL1ygmg%2FYxuQ33QjwooMHJDMGbeux67Yl%2FZIfkejSzcBenjHXE%2BvNhSdz56xDzcVHRG7OfXRQrVqBEAB%2BEus%2F3NXXy%2FktaCmyWt2%2BAuW9ST6rgikedOI79vlIKfmKKDzJLwa3aBriDsSYB%2BT5nyLIvpE6hgqxSjeXXdrDcsk8l3Iyorx%2FyR5X1wgZYg9Cp1nB9Z6yRJsa%2BBV96w%2FQC9A%2BY8Lyadfl9fGr2oJv%2BEkROQnKPysa4McSYvqac3OAxKoEZ6fAUPDdPWNIe3AcDv8BasOF0OyRIPpgxU4KKxSuNT5CSWFS1ZF8XVtr5mJoarB9kPPXGmDL%2BgEAiMmymMOMwvzwdziPeK9I3jTY7KrYnyFsTG%2Fnhm3YN9kmneV506%2BN%2BKhep%2BfJpXozK%2BqtaBRfbDCHQ2REwFnYrPEhhGVSQ8M0KNDwb4q4t%2BuWnYmZRF%2BHI%2Fe%2BK%2BEIUvaK1MaQdTpOWyIgFtbtTMxUtaHxE2n6jl83bH1dKQtracHkYcfAr0xYLWjMRZZ4BG5O%2Fvb1Gkvj2VmdOjfaX%2BqJocYV6Y%2FACUioWff5Osbxqs5bDTOK3YaYr9ICgmRGT8%2BBJWzWRmk7El%2BFVXy4ix%2F6FI65kEUqxGie8e3ydyMfgnWy1nt8n6xPXYwfDtGlJ1jknOoTALL0setbTHJOkSVfIMuO%2FVaActMtCnSBdysZc2MIO%2Fu8YGOrIBo0yp15frtEwEkShpqgPEzow4wLy8Bls1kfuUSOdCDpV%2BPsQVrODh8dgBRqTAwAhZ5C%2FdXu0n%2FiyL8ND0wJ82%2Fr1jc%2BC%2FxX5oOaDo%2FrVikhBg5YDdOHcm9LbIiSCCE9Ziwx6ESXbvvOh0F7HEZaViMKOa3%2BS7jVH716lcbcfgaKkziQff9%2BkaL2ku2HQK05vi%2BWOOY3XPoXGdGcz%2BC0anKDkdQvKf2DFEvzrxACT6PgTvtw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=b6f0320638a30bfa31032a877867572dd9b6e5f403448c114941b6734a04eba6",
+      "file_size": 205568,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1311435,
+      "file_name": "Screenshot_(122).png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/cb2ilal563bxs9nss65ov0s17da6?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_%2528122%2529.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_%2528122%2529.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZIT4IKNN%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T205744Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHkaCXVzLXdlc3QtMiJGMEQCIH5S6fYKetpuazFUkaO2jdTENAlJFAEAksVwV6ok0UqoAiBpP%2F9zQRjMN0kBNrdXAtFNCe60y%2B6O%2FVwlXiU8NCMFvyq6BQjy%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMiw6yZQO2gOSkPmi4Ko4FQ1RVd7qu%2FsJ9CtqhsEnVEHrd2f%2BG4UzNDTuTKmpWc%2BZ%2BZXaL6DMei6%2F8FwNAlnFk66Sl7zkaVbrUhgvfqSb9GPSg7BrwakPZmKFRBl1G5RvJR0%2FaTgOAmBP5mQLYW3DEvvWRjboVSCIAXjXh5whPp0DRl%2F%2BTS5eM9kmICHghM1GmUH2KruL1ygmg%2FYxuQ33QjwooMHJDMGbeux67Yl%2FZIfkejSzcBenjHXE%2BvNhSdz56xDzcVHRG7OfXRQrVqBEAB%2BEus%2F3NXXy%2FktaCmyWt2%2BAuW9ST6rgikedOI79vlIKfmKKDzJLwa3aBriDsSYB%2BT5nyLIvpE6hgqxSjeXXdrDcsk8l3Iyorx%2FyR5X1wgZYg9Cp1nB9Z6yRJsa%2BBV96w%2FQC9A%2BY8Lyadfl9fGr2oJv%2BEkROQnKPysa4McSYvqac3OAxKoEZ6fAUPDdPWNIe3AcDv8BasOF0OyRIPpgxU4KKxSuNT5CSWFS1ZF8XVtr5mJoarB9kPPXGmDL%2BgEAiMmymMOMwvzwdziPeK9I3jTY7KrYnyFsTG%2Fnhm3YN9kmneV506%2BN%2BKhep%2BfJpXozK%2BqtaBRfbDCHQ2REwFnYrPEhhGVSQ8M0KNDwb4q4t%2BuWnYmZRF%2BHI%2Fe%2BK%2BEIUvaK1MaQdTpOWyIgFtbtTMxUtaHxE2n6jl83bH1dKQtracHkYcfAr0xYLWjMRZZ4BG5O%2Fvb1Gkvj2VmdOjfaX%2BqJocYV6Y%2FACUioWff5Osbxqs5bDTOK3YaYr9ICgmRGT8%2BBJWzWRmk7El%2BFVXy4ix%2F6FI65kEUqxGie8e3ydyMfgnWy1nt8n6xPXYwfDtGlJ1jknOoTALL0setbTHJOkSVfIMuO%2FVaActMtCnSBdysZc2MIO%2Fu8YGOrIBo0yp15frtEwEkShpqgPEzow4wLy8Bls1kfuUSOdCDpV%2BPsQVrODh8dgBRqTAwAhZ5C%2FdXu0n%2FiyL8ND0wJ82%2Fr1jc%2BC%2FxX5oOaDo%2FrVikhBg5YDdOHcm9LbIiSCCE9Ziwx6ESXbvvOh0F7HEZaViMKOa3%2BS7jVH716lcbcfgaKkziQff9%2BkaL2ku2HQK05vi%2BWOOY3XPoXGdGcz%2BC0anKDkdQvKf2DFEvzrxACT6PgTvtw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=b47ef6e504e46c73f2235f4ef261b37d85247671b01ca20bdde3be6fa32144c6",
+      "file_size": 199668,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1311439,
+      "file_name": "Screenshot_(124).png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/5kafjbc8nekyyomjjol6a1hzgind?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_%2528124%2529.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_%2528124%2529.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZIT4IKNN%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T205744Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHkaCXVzLXdlc3QtMiJGMEQCIH5S6fYKetpuazFUkaO2jdTENAlJFAEAksVwV6ok0UqoAiBpP%2F9zQRjMN0kBNrdXAtFNCe60y%2B6O%2FVwlXiU8NCMFvyq6BQjy%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMiw6yZQO2gOSkPmi4Ko4FQ1RVd7qu%2FsJ9CtqhsEnVEHrd2f%2BG4UzNDTuTKmpWc%2BZ%2BZXaL6DMei6%2F8FwNAlnFk66Sl7zkaVbrUhgvfqSb9GPSg7BrwakPZmKFRBl1G5RvJR0%2FaTgOAmBP5mQLYW3DEvvWRjboVSCIAXjXh5whPp0DRl%2F%2BTS5eM9kmICHghM1GmUH2KruL1ygmg%2FYxuQ33QjwooMHJDMGbeux67Yl%2FZIfkejSzcBenjHXE%2BvNhSdz56xDzcVHRG7OfXRQrVqBEAB%2BEus%2F3NXXy%2FktaCmyWt2%2BAuW9ST6rgikedOI79vlIKfmKKDzJLwa3aBriDsSYB%2BT5nyLIvpE6hgqxSjeXXdrDcsk8l3Iyorx%2FyR5X1wgZYg9Cp1nB9Z6yRJsa%2BBV96w%2FQC9A%2BY8Lyadfl9fGr2oJv%2BEkROQnKPysa4McSYvqac3OAxKoEZ6fAUPDdPWNIe3AcDv8BasOF0OyRIPpgxU4KKxSuNT5CSWFS1ZF8XVtr5mJoarB9kPPXGmDL%2BgEAiMmymMOMwvzwdziPeK9I3jTY7KrYnyFsTG%2Fnhm3YN9kmneV506%2BN%2BKhep%2BfJpXozK%2BqtaBRfbDCHQ2REwFnYrPEhhGVSQ8M0KNDwb4q4t%2BuWnYmZRF%2BHI%2Fe%2BK%2BEIUvaK1MaQdTpOWyIgFtbtTMxUtaHxE2n6jl83bH1dKQtracHkYcfAr0xYLWjMRZZ4BG5O%2Fvb1Gkvj2VmdOjfaX%2BqJocYV6Y%2FACUioWff5Osbxqs5bDTOK3YaYr9ICgmRGT8%2BBJWzWRmk7El%2BFVXy4ix%2F6FI65kEUqxGie8e3ydyMfgnWy1nt8n6xPXYwfDtGlJ1jknOoTALL0setbTHJOkSVfIMuO%2FVaActMtCnSBdysZc2MIO%2Fu8YGOrIBo0yp15frtEwEkShpqgPEzow4wLy8Bls1kfuUSOdCDpV%2BPsQVrODh8dgBRqTAwAhZ5C%2FdXu0n%2FiyL8ND0wJ82%2Fr1jc%2BC%2FxX5oOaDo%2FrVikhBg5YDdOHcm9LbIiSCCE9Ziwx6ESXbvvOh0F7HEZaViMKOa3%2BS7jVH716lcbcfgaKkziQff9%2BkaL2ku2HQK05vi%2BWOOY3XPoXGdGcz%2BC0anKDkdQvKf2DFEvzrxACT6PgTvtw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=096d886944a0f2eb85f258411931aa0f35e155fe714de1f2e941d147c2ef2e29",
+      "file_size": 159165,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 10,
+  "voters": [
+    "he4am",
+    "tinmo",
+    "shubham_srt",
+    "nshcys3c",
+    "izsank0x01",
+    "naltab",
+    "soohongkim123",
+    "boudi0x",
+    "destinedtohack",
+    "amr4l44"
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 18825,
+    "asset_type": "URL",
+    "asset_identifier": "www.reddit.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
