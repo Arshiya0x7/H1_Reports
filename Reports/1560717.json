@@ -1,0 +1,139 @@
+{
+  "id": 1560717,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNTYwNzE3",
+  "url": "https://hackerone.com/reports/1560717",
+  "title": "Possible to make restricted files public on Phabricator via Diffusion",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2022-05-05T23:54:40.958Z",
+  "submitted_at": "2022-05-05T23:54:40.993Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "dyls",
+    "url": "/dyls",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 18,
+    "url": "https://hackerone.com/phabricator",
+    "handle": "phabricator",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/018/61446f7e6f0684c8c9f7c36c918b7ecd58183588_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/018/61446f7e6f0684c8c9f7c36c918b7ecd58183588_original.jpg/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Phabricator",
+      "twitter_handle": "phabricator",
+      "website": "http://phacility.com/phabricator/",
+      "about": "Phabricator is a collection of open source web applications that help software companies build better software."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2022-07-29T22:37:58.052Z",
+  "bug_reporter_agreed_on_going_public_at": "2022-07-29T22:01:18.122Z",
+  "team_member_agreed_on_going_public_at": "2022-07-29T22:37:57.928Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Files on Phabricator are always viewable to a user if they are attached to an object that they can view. It seems Phabricator does check if you can view a file before allowing you to a attach it. If you don't have access to the file, it will just look like this {F99999999999} in plaintext. It seems Phabricator does not do this check when creating commits in Differential repositories. This means you make a restricted file public simply by including the syntax to attach the file in the commit message which will then by synced to Phabricator, causing the file to be made public regardless of whether you had access in the first place. It is possible to find a restricted file simply by enumeration.\n\nFile \"Can View\" is set to Administrator:\nF1718695\nHowever the file is in the commit and viewable:\nF1718696\nUser is not an Administrator:\nF1718697\n\n## Impact\n\nGain access to restricted file objects.",
+  "bounty_amount": "2000.0",
+  "formatted_bounty": "$2,000",
+  "weakness": {
+    "id": 26,
+    "name": "Improper Access Control - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1718695,
+      "file_name": "Screenshot_(283).png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/923upsxryhpw1bln75yc9qklvill?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_%2528283%2529.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_%2528283%2529.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYEN6ZMX6%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T230617Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJIMEYCIQDaPeTSLue%2BnrEQPFz%2BGFlOGBetmNIsUt4npGAtXrfntwIhAJQjhaKlYHqET5ebauD%2F36ivbCgvomtYsJw7jjns6wfxKroFCPX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5IgxATwEa%2Bklbzl1pOOIqjgWLiQYO1cLoMkYQ%2FM7yAqTtHBJPPMqU0kuJzwgknHMNizUjfFdnqf6%2F4%2BTnQnOKC%2Fg89XTHcDgjdpJ9MPoIUAHnmevlDSZ4v1PVq1z8b9OVPf1sabxVIJiNQn56qXcUrTfrXoxd97irBxCyfBrC6MiLJ8igFe3JyYHxdQnk%2BU0D8TTm6mOqNiOXFiDgwuSKAaBOuk3Ht5IJ3D%2B8kUFzgbGzhH4WUrPlS1bT%2FoHmfCEL%2FSD4J2UIakTNj%2FGh6SukadXYwvKp5wMfIkr%2FkpHTQ8zP8%2BBaig1ZBvZaRPguK2yNI1HV3hhx38Yh%2BfZp566I29M%2BFUGwCtXKOR6kdZlO75PfRNIcqGhASKKMFdqtT1KjpUg3%2BcvL0lZBTareGY85d34T5lfpgPgGddFv2SJcQvnar0ul1EizwSlqXvT9JVICE1PPs%2FD4DuPWN4dLIa23vyAgeiSmw5%2FLCaxzRc%2FI%2BdQx%2BVcT9sVN677w0I4iT6el8ejQwWsJOrYz4Yh5v5TURo4plIdAy%2BRHfLRg2gbiXGY25B7U8tqCaQ3Vw%2B6R%2BTcJYxS5qAoCPA6eNyhL%2F5ZOzO%2FB7K496u%2BNuulOEYIiNVZ29O2P4C5WENOYsIKZxQqJDwxrHFisMFXINDpZ1EsG%2FN9hz0vwxKj85imB8E8B1zMnY17p%2FvGWwXbIJ0fPND366nUU58FbsKBV68TN0weGkx2i7JW63jZrGDiBs%2B4boCPabrmUiXBgz3cm7CwlyzbIPAL61EsMoTlyc7R3uX4OcgnfziYAixio5ri4gepsLVRRA5bZ2fDgP72H3%2F0UFEbFmSbAWhftwPREqG9nRllckcJ6lxthBf667gza3ccj7YhcoamHFkmucZQWECgMskIwppS8xgY6sAHlIt3gAKrLVe%2B05z%2BrpCfEkWuJtsnsxqBFyPzPzkxEQMemcqp6TN3o6cr7J2KXWl2IO8lymLjoBaLimIW%2B4%2BZrocmXBGDlfHqYyxPCt926V5mmtaUJc2pRkg5hKPHAGa6JbP141KGENaG0dHy0g484U9%2F2%2Fb6FjxlONWFi0bhQEl%2Bw8ks8tpUSG%2FN8HTdx4JQufV9sQC1IP9nwkAjGUetG9LbIf8u5wx1DfNF53NgrlA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=df7510a921328c7b62f0ccdea508fa6f69627b4b5768436199d3059a3191f3a7",
+      "file_size": 69049,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1718696,
+      "file_name": "Screenshot_(282).png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/rzzj1w8rubonun3rvssb2383g3a6?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_%2528282%2529.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_%2528282%2529.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYEN6ZMX6%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T230617Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJIMEYCIQDaPeTSLue%2BnrEQPFz%2BGFlOGBetmNIsUt4npGAtXrfntwIhAJQjhaKlYHqET5ebauD%2F36ivbCgvomtYsJw7jjns6wfxKroFCPX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5IgxATwEa%2Bklbzl1pOOIqjgWLiQYO1cLoMkYQ%2FM7yAqTtHBJPPMqU0kuJzwgknHMNizUjfFdnqf6%2F4%2BTnQnOKC%2Fg89XTHcDgjdpJ9MPoIUAHnmevlDSZ4v1PVq1z8b9OVPf1sabxVIJiNQn56qXcUrTfrXoxd97irBxCyfBrC6MiLJ8igFe3JyYHxdQnk%2BU0D8TTm6mOqNiOXFiDgwuSKAaBOuk3Ht5IJ3D%2B8kUFzgbGzhH4WUrPlS1bT%2FoHmfCEL%2FSD4J2UIakTNj%2FGh6SukadXYwvKp5wMfIkr%2FkpHTQ8zP8%2BBaig1ZBvZaRPguK2yNI1HV3hhx38Yh%2BfZp566I29M%2BFUGwCtXKOR6kdZlO75PfRNIcqGhASKKMFdqtT1KjpUg3%2BcvL0lZBTareGY85d34T5lfpgPgGddFv2SJcQvnar0ul1EizwSlqXvT9JVICE1PPs%2FD4DuPWN4dLIa23vyAgeiSmw5%2FLCaxzRc%2FI%2BdQx%2BVcT9sVN677w0I4iT6el8ejQwWsJOrYz4Yh5v5TURo4plIdAy%2BRHfLRg2gbiXGY25B7U8tqCaQ3Vw%2B6R%2BTcJYxS5qAoCPA6eNyhL%2F5ZOzO%2FB7K496u%2BNuulOEYIiNVZ29O2P4C5WENOYsIKZxQqJDwxrHFisMFXINDpZ1EsG%2FN9hz0vwxKj85imB8E8B1zMnY17p%2FvGWwXbIJ0fPND366nUU58FbsKBV68TN0weGkx2i7JW63jZrGDiBs%2B4boCPabrmUiXBgz3cm7CwlyzbIPAL61EsMoTlyc7R3uX4OcgnfziYAixio5ri4gepsLVRRA5bZ2fDgP72H3%2F0UFEbFmSbAWhftwPREqG9nRllckcJ6lxthBf667gza3ccj7YhcoamHFkmucZQWECgMskIwppS8xgY6sAHlIt3gAKrLVe%2B05z%2BrpCfEkWuJtsnsxqBFyPzPzkxEQMemcqp6TN3o6cr7J2KXWl2IO8lymLjoBaLimIW%2B4%2BZrocmXBGDlfHqYyxPCt926V5mmtaUJc2pRkg5hKPHAGa6JbP141KGENaG0dHy0g484U9%2F2%2Fb6FjxlONWFi0bhQEl%2Bw8ks8tpUSG%2FN8HTdx4JQufV9sQC1IP9nwkAjGUetG9LbIf8u5wx1DfNF53NgrlA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=2f240f68f7e61d9de9115faf07fb971c8f92cda2cb78c6fbc6c3d5a50b049ef6",
+      "file_size": 97995,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1718697,
+      "file_name": "Screenshot_(281).png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/d2fw3u83qcs1qimkxobii6cyhwm3?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_%2528281%2529.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_%2528281%2529.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYEN6ZMX6%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T230617Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJIMEYCIQDaPeTSLue%2BnrEQPFz%2BGFlOGBetmNIsUt4npGAtXrfntwIhAJQjhaKlYHqET5ebauD%2F36ivbCgvomtYsJw7jjns6wfxKroFCPX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5IgxATwEa%2Bklbzl1pOOIqjgWLiQYO1cLoMkYQ%2FM7yAqTtHBJPPMqU0kuJzwgknHMNizUjfFdnqf6%2F4%2BTnQnOKC%2Fg89XTHcDgjdpJ9MPoIUAHnmevlDSZ4v1PVq1z8b9OVPf1sabxVIJiNQn56qXcUrTfrXoxd97irBxCyfBrC6MiLJ8igFe3JyYHxdQnk%2BU0D8TTm6mOqNiOXFiDgwuSKAaBOuk3Ht5IJ3D%2B8kUFzgbGzhH4WUrPlS1bT%2FoHmfCEL%2FSD4J2UIakTNj%2FGh6SukadXYwvKp5wMfIkr%2FkpHTQ8zP8%2BBaig1ZBvZaRPguK2yNI1HV3hhx38Yh%2BfZp566I29M%2BFUGwCtXKOR6kdZlO75PfRNIcqGhASKKMFdqtT1KjpUg3%2BcvL0lZBTareGY85d34T5lfpgPgGddFv2SJcQvnar0ul1EizwSlqXvT9JVICE1PPs%2FD4DuPWN4dLIa23vyAgeiSmw5%2FLCaxzRc%2FI%2BdQx%2BVcT9sVN677w0I4iT6el8ejQwWsJOrYz4Yh5v5TURo4plIdAy%2BRHfLRg2gbiXGY25B7U8tqCaQ3Vw%2B6R%2BTcJYxS5qAoCPA6eNyhL%2F5ZOzO%2FB7K496u%2BNuulOEYIiNVZ29O2P4C5WENOYsIKZxQqJDwxrHFisMFXINDpZ1EsG%2FN9hz0vwxKj85imB8E8B1zMnY17p%2FvGWwXbIJ0fPND366nUU58FbsKBV68TN0weGkx2i7JW63jZrGDiBs%2B4boCPabrmUiXBgz3cm7CwlyzbIPAL61EsMoTlyc7R3uX4OcgnfziYAixio5ri4gepsLVRRA5bZ2fDgP72H3%2F0UFEbFmSbAWhftwPREqG9nRllckcJ6lxthBf667gza3ccj7YhcoamHFkmucZQWECgMskIwppS8xgY6sAHlIt3gAKrLVe%2B05z%2BrpCfEkWuJtsnsxqBFyPzPzkxEQMemcqp6TN3o6cr7J2KXWl2IO8lymLjoBaLimIW%2B4%2BZrocmXBGDlfHqYyxPCt926V5mmtaUJc2pRkg5hKPHAGa6JbP141KGENaG0dHy0g484U9%2F2%2Fb6FjxlONWFi0bhQEl%2Bw8ks8tpUSG%2FN8HTdx4JQufV9sQC1IP9nwkAjGUetG9LbIf8u5wx1DfNF53NgrlA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=bed772583bf00e132bdeae2cc87c727d05f1d5df3cdf73b6f9db51c88099eae6",
+      "file_size": 69658,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2022-08-28T22:01:18.202Z",
+  "allow_singular_disclosure_after": -96685499.16561398,
+  "singular_disclosure_allowed": true,
+  "vote_count": 16,
+  "voters": [
+    "n1m0",
+    "marvelmaniac",
+    "zy9ard3",
+    "yassinek3ch",
+    "sirwinxwims",
+    "h4x0r_dz",
+    "kmxx",
+    "someonealt-86",
+    "r4hul_indian",
+    "shivammusic",
+    "and 6 more..."
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
