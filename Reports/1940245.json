@@ -1,0 +1,166 @@
+{
+  "id": 1940245,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xOTQwMjQ1",
+  "url": "https://hackerone.com/reports/1940245",
+  "title": "Reflected XSS on help.shopify.com",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2023-04-09T23:51:14.863Z",
+  "submitted_at": "2023-04-09T23:51:15.057Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": true,
+    "username": "becfe31193676118ae5073d",
+    "url": "/becfe31193676118ae5073d",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 1382,
+    "url": "https://hackerone.com/shopify",
+    "handle": "shopify",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Shopify",
+      "twitter_handle": "",
+      "website": "https://www.shopify.com",
+      "about": "Shopify is a multi-channel commerce platform that helps people sell online, in-store, and everywhere in between."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2024-01-25T15:01:57.497Z",
+  "bug_reporter_agreed_on_going_public_at": "2023-06-20T23:31:22.100Z",
+  "team_member_agreed_on_going_public_at": "2024-01-25T15:01:57.399Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nReflected Cross Site Scripting  (XSS) on https://help.shopify.com/en/support/confirm-account-details?returnTo=\n\n## Platform(s) affected:\nAll platforms in other languages, exp:\n* https://help.shopify.com/es/\n\n## Steps To Reproduce:\n\n  1. Open the URL https://help.shopify.com/en/support/confirm-account-details?returnTo=javascript:alert(document.cookie)\n  2. Make login\n  3. Back again to https://help.shopify.com/en/support/confirm-account-details?returnTo=javascript:alert(document.cookie)\n  4. Click on button \"Continue\"\n  5. The JS will execute.\n\nNotes: \n* If the user already logged, just access the url and click on the button that the js will be executed.\n* Also possible make a \"Open redirect\" when the user click on the button.\n   EXP:  \nhttps://help.shopify.com/en/support/confirm-account-details?returnTo=https://evil.com\n\n## Supporting Material:\n\n## Impact\n\nThe attacker can execute javascript code and redirect targets for others pages.",
+  "bounty_amount": "500.0",
+  "formatted_bounty": "$500",
+  "weakness": {
+    "id": 61,
+    "name": "Cross-site Scripting (XSS) - Reflected"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 2283387,
+      "file_name": "poc_shopify.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/dtgjk0nreuhwm8majx0agp60e30r?response-content-disposition=attachment%3B%20filename%3D%22poc_shopify.png%22%3B%20filename%2A%3DUTF-8%27%27poc_shopify.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQTM7DGII7%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T192934Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHoaCXVzLXdlc3QtMiJHMEUCIGmefIwb1GJfoHyImVdMrXDihb6wuQw6sXHyGVJnXK0dAiEA8iue%2FW20EwZNfbCAXWcHMiNxaKM64IA4vBsVk1ftZX8qugUI8%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDOpmNafo%2Bp%2Buw2q3MCqOBXmnfaeT1msowoH8%2BLpa%2Bdh78RbCqKKo5pm6netUtZgdS%2Fn5D%2Fpgz4wIJx%2Fowhh4G0pR31Rbq4ev12UADRp%2Bj08CLSf9r85HL2SEio3ccpqm5BilGR%2FtUYyDhs6SLgaSPfG9ggSpZj6eHM6wSdCrfM7wHDBxcvSSnC5Df1n2WiKFg%2FbaO8jtwGjNQrX%2BxX7%2Fv97r%2FS17TcfafwYjUJ66j7ROlHh9%2FL0rbvU73RdUCWpcYG%2BZwIZEUDMuPZNG88J1CLt4WgqDUrcVX1181ng17c7YCvhFsnQFe6jrMbWNfloXz8jR7ESFd7BxdWl815%2FgUcmxwxMk4d8qLJyPT6JWjdfzJ0zqqntnVhvXU8YgUWD%2BJrpz3vWfnW%2FhMVLfQCVGefySLPmucDXs7SKivvbU3rdUHUaHQR%2FGzQvu%2FcOKkcx9t8q7z%2FLulDcMrb6TJUIQel82ACdlqv5eDGBGy%2F3lN94Xv8hKrk%2BUPBuz%2BmviCfu0kcEVrb8IT3bj6%2F7xYX8KnjApwU8b6eMOLJUF1JXG4jKOtsG3pPLlPMb8an2aHxOjWkhIkvUoCAzDwYxHQPHn4%2B9nT%2BoDCtnX2GiE%2F%2BfbNmHgILsVHYK%2By1pg1tYOAlZu3zaxqxpJm7HvI74Sj8E5VePNQ6YFxwPVoYejIA%2F2bGWRDShun1BMNFNJAybMVa8eel9sNKDpnG9dUwXgNR%2B7wT4IfFcFbbHZdqgJAf3a%2FLIo3KORM3ivvSIo0lybf%2FVgp79dums2D7JALiY0ZVmZhIqSM7nJo59WS1Q1Ne0%2F0vuBn7V4%2FMP2ACtZpEX3IJ%2FjgebAr3DtvLQaqKzw6N%2FTcSJTEivZOtWdCpK2UASQh2z0KYGM8QeeZLJRQ70gzTCR0rvGBjqxAaJbL%2Fk7p0ZnVbiF2BPJA%2BFuxyvLyC04mn0xRcxflt8jVEVizpTcIUVH7vOdnL%2FvxxPAhekQR358bBU7wMg8%2FMjTDnuo0jGZbCEn3M%2F9t5gHmQzBUQSYtW6oCFPIKNwXW9aMO9FQmvp%2FXr7UjYpwFRGJUDcJXMMlYnQHaa6Ey0bVMx8Rs%2Fz%2Fyd4cvVGnjI0VA46A72J4RwqOFJj2ru6NrearPejgKyd6NZr81QR6IkwCtw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=6b578946b7ca5d09ca876f03183712e550d5f454432de519787f125260732b63",
+      "file_size": 86559,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 102,
+  "voters": [
+    "deidar3",
+    "k0ns0l",
+    "immahdisv",
+    "sah1dx",
+    "mr-medi",
+    "prathap_ilango",
+    "orange303",
+    "loaymorad",
+    "faav",
+    "aziz0x48",
+    "and 92 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "score": 2.4,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "high",
+      "privileges_required": "none",
+      "user_interaction": "required",
+      "scope": "unchanged",
+      "confidentiality": "none",
+      "integrity": "low",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 10202,
+    "asset_type": "WILDCARD",
+    "asset_identifier": "*.shopify.com",
+    "max_severity": "medium"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "id": 396189,
+      "category": "team",
+      "content": "The `returnTo` parameter on `help.shopify.com/en/support/confirm-account-details` was vulnerable to XSS by using the `javascript:` protocol for the URL. In this case, the exploit relies on:\n\n1. an account being in an incomplete state\n2. the account holder clicking on the exploit URL\n3. the account holder logging into help.shopify.com\n4. the account holder clicking the continue button",
+      "updated_at": "2024-01-24T15:09:54.568Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 2464566,
+        "username": "dkma_shopify",
+        "name": "dkma_shopify",
+        "bio": "",
+        "cleared": false,
+        "verified": false,
+        "website": null,
+        "location": "",
+        "created_at": "2022-09-20T18:28:31.660Z",
+        "url": "https://hackerone.com/dkma_shopify",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "company",
+        "profile_picture_urls": {
+          "small": "https://profile-photos.hackerone-user-content.com/variants/q06tzvw4s6zqutji40badnbrhc31/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/q06tzvw4s6zqutji40badnbrhc31/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c",
+          "xtralarge": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NTU3NzU5OCwicHVyIjoiYmxvYl9pZCJ9fQ==--ef74f726d9e7c567a0288eb02c332f19a8158661/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJyZXNpemUiOiIyNjB4MjYwXHUwMDNlIn0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--c155082ce6f9751dcb29cd6ea061a7e4d7329577/Screenshot%202024-02-02%20at%2012.29.02%E2%80%AFPM.png"
+        }
+      }
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
