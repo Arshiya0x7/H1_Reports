@@ -1,0 +1,157 @@
+{
+  "id": 2293343,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yMjkzMzQz",
+  "url": "https://hackerone.com/reports/2293343",
+  "title": "Account Takeover via Password Reset without user interactions",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "critical",
+  "readable_substate": "Resolved",
+  "created_at": "2023-12-20T18:41:13.220Z",
+  "submitted_at": "2023-12-20T18:41:13.482Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "asterion04",
+    "url": "/asterion04",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/yu79ufr0u8k3erjmh6b3d5u38tll/c8a1698ff707a5e3e8a91a3484838363845daac68cb82c86d55c9e2d44d67b67"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 264,
+    "url": "https://hackerone.com/gitlab",
+    "handle": "gitlab",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/f0hovtq73f9ap815a0r1w42bocp4/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/f0hovtq73f9ap815a0r1w42bocp4/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "GitLab",
+      "twitter_handle": "gitlab",
+      "website": "https://about.gitlab.com",
+      "about": "A single application for the entire software development lifecycle."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "no-content",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2025-02-26T06:29:57.904Z",
+  "bug_reporter_agreed_on_going_public_at": "2025-02-26T06:29:57.337Z",
+  "team_member_agreed_on_going_public_at": "2024-06-06T06:45:50.545Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "",
+  "bounty_amount": "35000.0",
+  "formatted_bounty": "$35,000",
+  "weakness": {
+    "id": 26,
+    "name": "Improper Access Control - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 758,
+  "voters": [
+    "achabi7",
+    "cr4ntz",
+    "npctrue",
+    "l0da",
+    "all4n",
+    "orange303",
+    "pesmund",
+    "undef1ned",
+    "wi11",
+    "nihj",
+    "and 748 more..."
+  ],
+  "severity": {
+    "rating": "critical",
+    "score": 10.0,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "none",
+      "scope": "changed",
+      "confidentiality": "high",
+      "integrity": "high",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 18138,
+    "asset_type": "URL",
+    "asset_identifier": "gitlab.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "id": 459199,
+      "category": "team",
+      "content": "@asterion04 submitted a report to GitLab.\n\nSummary\n\nI found a way to change the password of a GitLab account via the password reset form and successfully retrieve the final reset link without user interactions, using just its email address.\nSteps to reproduce\n\nGo to \"Forgot Your Password?\" link\nEnter the victim's email and intercept the submit request via Burp Suite .\nThen right-click on the HTTP Editor inside Burp Suite and select Extensions -> Content-Type Converter -> Convert to JSON (make sure to have the Content-Type Converter plugin installed from the BApp Store)\nNow replace this converted JSON line `` \"user[email]\":\"victim@gmail.com\"``, to\n\n```\n \"user\" {\n     \"email\" [\n              \"victim@gmail.com\",\n              \"attacker@gmail.com\"\n       ]\n },\n```\n\nForward the requests and you should get an email containing the reset link that was send to both emails (``victim@gmail.com`` and ``attacker@gmail.com``) .\nClick on the reset link, change the password and done, you can now login as the victim using the new password.\n\nImpact\n\nBy just knowing the victim email address used on GitLab, you can takeover his account by changing his password without user interaction since the attacker get the same email as the victim.\n",
+      "updated_at": "2024-06-06T06:45:25.166Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 634213,
+        "username": "gitlab_cmaxim",
+        "name": "Costel Maxim",
+        "bio": "",
+        "cleared": false,
+        "verified": false,
+        "website": null,
+        "location": "",
+        "created_at": "2019-06-03T14:32:34.388Z",
+        "url": "https://hackerone.com/gitlab_cmaxim",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "company",
+        "profile_picture_urls": {
+          "small": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/variants/vmc7q2peqzpyt965jezuwkm4ravx/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1?response-content-disposition=inline%3B%20filename%3D%22cyber.png%22%3B%20filename%2A%3DUTF-8%27%27cyber.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQSM6EO2MH%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T172641Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHYaCXVzLXdlc3QtMiJIMEYCIQD8nrwaO7FAjf7fhoOVnCcvAsimtxi2Pd%2BxsKU4sLXr0QIhAOTCiOM6y06yEnLf0%2Fjf6zSB%2B583CJKp7vux3CMr%2Boe9KrsFCO%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5IgyG6oYQKIT5Dzu3TmcqjwWD%2BRtrkeeDV8F3iWV9tOgFfZFru9ETAbKv%2BI%2FMxcQ2OrTZSebkMzXYA2vE7gl1hKtKqDKcwbZTMTZN%2FJcgpCZCsLzVuBIfybktxv2bL9qn9oiBGPIk%2B1WuaprYoiLPQr%2FfipxuksHlQNSh7mm%2BOUdecA1pmx6TGfnlr5ojoQ9LQ9H5E77Uc%2BefNmADyTQBSLOsF7t1eK%2FBAOVROoGIfy%2FbWQKAkFIZbRw4OOWHa9V5j%2B6FnE1WvARQYLAdThC4IQLf5JleqxBEnvKnkTFgir5n9UWXjrODYXJBfKrYyd7o2KouXfiJC0yEdibKP5%2BG8gU04QAsAw8whAAY2OmB8zCVjREm4iuhfP0QhQXMJa2brcGkeMNP4V4%2FCpgkgCxWnk89bsPM1dEl8aUIXVyTnA8RYNFpwpL6XE2f%2B4sf%2BJ%2FO3nG29aAZYlmsP0bgweCCq9gjEMfXwaejKEnQdzg%2BhP8P80n2s4%2BbiRpW5YDkcE7doxGr1u%2BGwymES9ERO90GA0wRMudlcMpE5rH3%2FEpcpl6pS3GRehmbmdmGN2Hz48oB6scuLP7xvHZtK04A%2FXb5xLAERlTp5WbUdXPtqu8Ygugi%2BSypnmszVdpWqmLJNvIMbPc6NQn%2B%2FTXeKAnnytYly2k%2FEIWrJqgk3HrysePyt1hGAfOiKyQ0tTi5K8pAc2rHXHjJIjR0HautHUUSruqPjzvbCRU1ckazh55%2Bae1jzdt%2B%2BPsoVxJQKbfR6nH8zAc0dV9YwT5Opx2GOqIMZkZTvpLpjKehWQmdHtjg7Zshi2SDbly3JvcZBJfqm33YjEclbM%2BeWur%2F0PHbkmbZtgkkZM4WxHfi8%2BszTnUGpGtc4JXAg4EIcs8kxScuU2irho7TMKPrusYGOrABeAw8CbPPyJqHPGOttKccPJgb14PO9HVAhfPkE8vdtixFEcGCTI0aYeAwxVt3Kc6rY7%2B3MtRVFBd%2FFUgbcK%2FnHp6pgiX8nqLsILABwCZwVMOe3Bm%2FEphuV%2Fj%2BFVxJ%2F1Wl9zW94zYYtUa3lkZS83Hv6Qf3UtQlIsSn%2BKGBmgV7oArLbc92B8fUW93hWUxJgIjUb4BUR5ImR1U1nBbVHjuXCNQ4U1XfEkvu8Fk2h4Lri1I%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=51ec551dcff89f774fcfc3d38e1ab71f577ef662021c1e67f7c66e3f3a6027b5",
+          "medium": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/variants/vmc7q2peqzpyt965jezuwkm4ravx/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c?response-content-disposition=inline%3B%20filename%3D%22cyber.png%22%3B%20filename%2A%3DUTF-8%27%27cyber.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQSM6EO2MH%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T172641Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHYaCXVzLXdlc3QtMiJIMEYCIQD8nrwaO7FAjf7fhoOVnCcvAsimtxi2Pd%2BxsKU4sLXr0QIhAOTCiOM6y06yEnLf0%2Fjf6zSB%2B583CJKp7vux3CMr%2Boe9KrsFCO%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5IgyG6oYQKIT5Dzu3TmcqjwWD%2BRtrkeeDV8F3iWV9tOgFfZFru9ETAbKv%2BI%2FMxcQ2OrTZSebkMzXYA2vE7gl1hKtKqDKcwbZTMTZN%2FJcgpCZCsLzVuBIfybktxv2bL9qn9oiBGPIk%2B1WuaprYoiLPQr%2FfipxuksHlQNSh7mm%2BOUdecA1pmx6TGfnlr5ojoQ9LQ9H5E77Uc%2BefNmADyTQBSLOsF7t1eK%2FBAOVROoGIfy%2FbWQKAkFIZbRw4OOWHa9V5j%2B6FnE1WvARQYLAdThC4IQLf5JleqxBEnvKnkTFgir5n9UWXjrODYXJBfKrYyd7o2KouXfiJC0yEdibKP5%2BG8gU04QAsAw8whAAY2OmB8zCVjREm4iuhfP0QhQXMJa2brcGkeMNP4V4%2FCpgkgCxWnk89bsPM1dEl8aUIXVyTnA8RYNFpwpL6XE2f%2B4sf%2BJ%2FO3nG29aAZYlmsP0bgweCCq9gjEMfXwaejKEnQdzg%2BhP8P80n2s4%2BbiRpW5YDkcE7doxGr1u%2BGwymES9ERO90GA0wRMudlcMpE5rH3%2FEpcpl6pS3GRehmbmdmGN2Hz48oB6scuLP7xvHZtK04A%2FXb5xLAERlTp5WbUdXPtqu8Ygugi%2BSypnmszVdpWqmLJNvIMbPc6NQn%2B%2FTXeKAnnytYly2k%2FEIWrJqgk3HrysePyt1hGAfOiKyQ0tTi5K8pAc2rHXHjJIjR0HautHUUSruqPjzvbCRU1ckazh55%2Bae1jzdt%2B%2BPsoVxJQKbfR6nH8zAc0dV9YwT5Opx2GOqIMZkZTvpLpjKehWQmdHtjg7Zshi2SDbly3JvcZBJfqm33YjEclbM%2BeWur%2F0PHbkmbZtgkkZM4WxHfi8%2BszTnUGpGtc4JXAg4EIcs8kxScuU2irho7TMKPrusYGOrABeAw8CbPPyJqHPGOttKccPJgb14PO9HVAhfPkE8vdtixFEcGCTI0aYeAwxVt3Kc6rY7%2B3MtRVFBd%2FFUgbcK%2FnHp6pgiX8nqLsILABwCZwVMOe3Bm%2FEphuV%2Fj%2BFVxJ%2F1Wl9zW94zYYtUa3lkZS83Hv6Qf3UtQlIsSn%2BKGBmgV7oArLbc92B8fUW93hWUxJgIjUb4BUR5ImR1U1nBbVHjuXCNQ4U1XfEkvu8Fk2h4Lri1I%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=e66289ce52f58a09dc4d825b35cb497bbcce7e0b7b7dcc49d53c1be3fa863afd",
+          "xtralarge": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTI1NzEwNywicHVyIjoiYmxvYl9pZCJ9fQ==--47d25493a795a7f92a01b57b550011a0bd16c5e3/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJyZXNpemUiOiIyNjB4MjYwXHUwMDNlIn0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--c155082ce6f9751dcb29cd6ea061a7e4d7329577/cyber.png"
+        }
+      }
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
