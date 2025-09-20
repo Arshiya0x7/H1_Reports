@@ -1,0 +1,172 @@
+{
+  "id": 1574017,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNTc0MDE3",
+  "url": "https://hackerone.com/reports/1574017",
+  "title": "Clickjacking at  app.lemlist.com",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2022-05-18T01:43:11.747Z",
+  "submitted_at": "2022-05-18T01:43:11.809Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "scriptsavvy",
+    "url": "/scriptsavvy",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/rs2094p31fm99xrzyk08zejb61o8/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 44045,
+    "url": "https://hackerone.com/lemlist",
+    "handle": "lemlist",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/mnjvbzddg4cv6q2aeiugho7ozkth/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/mnjvbzddg4cv6q2aeiugho7ozkth/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "lemlist",
+      "twitter_handle": "",
+      "website": "https://lemlist.com",
+      "about": "lempire is a tech company that specializes in developing solutions for email outreach and productivity, aimed at enhancing growth for businesses"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2022-05-20T15:04:22.692Z",
+  "bug_reporter_agreed_on_going_public_at": "2022-05-20T14:55:01.660Z",
+  "team_member_agreed_on_going_public_at": "2022-05-20T15:04:22.583Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi team,\n\nWhile performing security testing of your website i have found the vulnerability called Clickjacking.\nMany URLS are in scope and vulnerable to Clickjacking.\n\nWhat is Clickjacking ?\n\nClickjacking (User Interface redress attack, UI redress attack, UI redressing) is a malicious technique of tricking a Web user into clicking on something different from what the user perceives they are clicking on, thus potentially revealing confidential information or taking control of their computer while clicking on seemingly innocuous web pages.\n\nThe server didn't return an X-Frame-Options header which means that this website could be at risk of a clickjacking attack. The X-Frame-Options HTTP response header can be used to indicate whether or not a browser should be allowed to render a page in a <frame> or <iframe>. Sites can use this to avoid clickjacking attacks, by ensuring that their content is not embedded into other sites.\nThis vulnerability affects Web Server.\n\n\nVulnerable Urls:\n=============\n\nhttps://app.lemlist.com\n\nPut every above url one by one in the code of iframe, which is given below\n```javascript\n<html lang=\"tr-TR\">\n<kafa>\n<meta karakter kümesi=\"UTF-8\">\n<title>Çerçeve Yapıyorum</title>\n</head>\n<body>\n<h3>clickjacking güvenlik açığı</h3>\n<iframe src=\"https://app.lemlist.com/teams/tea_sgYr5dZr478x4FQ9K/settings/user/usr_Z3GZ4DDHLLyLyZHj5/users\" height=\"550px\" width=\"700px\"></iframe>\n</body>\n</html>\n```\n\n## Impact\n\nUsing a similar technique, keystrokes can also be hijacked. With a carefully crafted combination of stylesheets, iframes, and text boxes, a user can be led to believe they are typing in the password to their email or bank account, but are instead typing into an invisible frame controlled by the attacker.",
+  "weakness": {
+    "id": 74,
+    "name": "UI Redressing (Clickjacking)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1733915,
+      "file_name": "Ekran_g_r_nt_s__2022-05-18_044120.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/kjv8dilcit9qq7hmk1i9mrt4zkjs?response-content-disposition=attachment%3B%20filename%3D%22Ekran_g_r_nt_s__2022-05-18_044120.png%22%3B%20filename%2A%3DUTF-8%27%27Ekran_g_r_nt_s__2022-05-18_044120.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYTQGV5GZ%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T233818Z&X-Amz-Expires=3407&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHoaCXVzLXdlc3QtMiJHMEUCIQCwhbkIxveZhOodpF28kRDeSDSp7T4u0QK6qKiMsYgYEAIgFr2Er4x9BdPmePuEEnJ5%2F1Z%2FsNeE7caNJn3gt%2B5oeC8qugUI8%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDGfZU4nXJ%2FjIkTUqtCqOBR5SpTy2Ed5z%2FTTcmsioC%2FY2rr2eMAFnoXEzJb9ViTG12PeoN8nhQmWCENUB9o3pxoAOhinaXjzfLkz0h%2ByuYNJdSIgBuerrJqMpE5xI9C2yiynVCclpd67yafef2uTvlodj3twP%2F1dVqwBVhr57yreQltd0DHD5QeGeRcV5CuCcuW12fCeUeH%2Fl3lqnE83WhNqo94nX1OoIFLjVgOQOlR8KG5cwmzU0D0q5KaKASXmE4VwMe52ssI6VsiODNg1%2F6yRro5xr1MczuqXGoOKe36N%2BvXhortdrmw1KmtRfS%2FvlGTXwgCtSvwv7GsC8c2PDNcXtm%2F%2Flbl4ag9tsNP2%2BAH9UN6aMx%2BTIk2whw%2FQekzmnV1U5rZe8Tlb76mBBypa1rHmWVCtXFXbtpgIUiZ5v3OYS4J6XcUnf4iNabXkPzx2jncKK6W%2FSTaMaBntHWYdIg44dAxtQ59xfgAzul46%2BdMFzB%2BsP5LNeAdQgIA15obtVS6XDnQY1Dm3ndhwt7PuGWVnHEtaV45R%2F4slMTgXSjNYYg0iEiVWN1F1P5yVHezV3KGequURouwOVGv9CYvSFaoM1r3mHVmnXE9PWuACoeXGHg5Mds7D8oLWZeNyxY%2BT49sNV6WORFKs8stnTgIlseRXnWcBSHNMfq7bY1lyB70sk7Ke6gc3W65y11VW1grDXvRmv5PlIJ3%2Fo6eItpE1%2BnMvq6oiqEWU6rvk3jYQN9F62AfHhQKzIqSJMmTRjei%2FmnxMQh3TJE4HI4U%2FCmXwHDFEYS8DEFM%2BSEJjN3F1ty8N3VD1zngeApKjGKd6znomPiATuMYxZBNbeEPGMkLU2eu4sR%2FgPwoXZgjZi%2BR5jH5AV0dq3WnLjNmL66YzQ%2FjDi2bvGBjqxAU%2Bn5zezATvkSNlA%2FRUoYoBKV%2FI2pruQggAivYHJg01BCZOBn4zWyxtaQD4CEt9vazegPTcK9H%2BN2HcnmQz%2FnDvaYxB1YCrcYM%2BvCic6rxNJulpkGsdMi46do3pTNKFZyRc3%2Be5JT3iFm5GQ7EBxtnY4FTF2%2FkulJwodURjvqhFv4YwjGcG3q87cTyf2SvQyKirv3lBNoITYdFdV%2BSaKOQDHH8DgLZ6%2B%2Fiao1jZFKa%2Fpiw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=502d660c60ba8933d16b37b59b8f0ee0c8ff7fcb1664a7f24e62f3e2dfae5553",
+      "file_size": 144204,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1733916,
+      "file_name": "index.html",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/eztghvskvyfjyrlraruuw5b6x9lb?response-content-disposition=attachment%3B%20filename%3D%22index.html%22%3B%20filename%2A%3DUTF-8%27%27index.html&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYTQGV5GZ%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T233818Z&X-Amz-Expires=3407&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHoaCXVzLXdlc3QtMiJHMEUCIQCwhbkIxveZhOodpF28kRDeSDSp7T4u0QK6qKiMsYgYEAIgFr2Er4x9BdPmePuEEnJ5%2F1Z%2FsNeE7caNJn3gt%2B5oeC8qugUI8%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDGfZU4nXJ%2FjIkTUqtCqOBR5SpTy2Ed5z%2FTTcmsioC%2FY2rr2eMAFnoXEzJb9ViTG12PeoN8nhQmWCENUB9o3pxoAOhinaXjzfLkz0h%2ByuYNJdSIgBuerrJqMpE5xI9C2yiynVCclpd67yafef2uTvlodj3twP%2F1dVqwBVhr57yreQltd0DHD5QeGeRcV5CuCcuW12fCeUeH%2Fl3lqnE83WhNqo94nX1OoIFLjVgOQOlR8KG5cwmzU0D0q5KaKASXmE4VwMe52ssI6VsiODNg1%2F6yRro5xr1MczuqXGoOKe36N%2BvXhortdrmw1KmtRfS%2FvlGTXwgCtSvwv7GsC8c2PDNcXtm%2F%2Flbl4ag9tsNP2%2BAH9UN6aMx%2BTIk2whw%2FQekzmnV1U5rZe8Tlb76mBBypa1rHmWVCtXFXbtpgIUiZ5v3OYS4J6XcUnf4iNabXkPzx2jncKK6W%2FSTaMaBntHWYdIg44dAxtQ59xfgAzul46%2BdMFzB%2BsP5LNeAdQgIA15obtVS6XDnQY1Dm3ndhwt7PuGWVnHEtaV45R%2F4slMTgXSjNYYg0iEiVWN1F1P5yVHezV3KGequURouwOVGv9CYvSFaoM1r3mHVmnXE9PWuACoeXGHg5Mds7D8oLWZeNyxY%2BT49sNV6WORFKs8stnTgIlseRXnWcBSHNMfq7bY1lyB70sk7Ke6gc3W65y11VW1grDXvRmv5PlIJ3%2Fo6eItpE1%2BnMvq6oiqEWU6rvk3jYQN9F62AfHhQKzIqSJMmTRjei%2FmnxMQh3TJE4HI4U%2FCmXwHDFEYS8DEFM%2BSEJjN3F1ty8N3VD1zngeApKjGKd6znomPiATuMYxZBNbeEPGMkLU2eu4sR%2FgPwoXZgjZi%2BR5jH5AV0dq3WnLjNmL66YzQ%2FjDi2bvGBjqxAU%2Bn5zezATvkSNlA%2FRUoYoBKV%2FI2pruQggAivYHJg01BCZOBn4zWyxtaQD4CEt9vazegPTcK9H%2BN2HcnmQz%2FnDvaYxB1YCrcYM%2BvCic6rxNJulpkGsdMi46do3pTNKFZyRc3%2Be5JT3iFm5GQ7EBxtnY4FTF2%2FkulJwodURjvqhFv4YwjGcG3q87cTyf2SvQyKirv3lBNoITYdFdV%2BSaKOQDHH8DgLZ6%2B%2Fiao1jZFKa%2Fpiw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=a0443501bb165d8f72ddbbead012585e43451fd46dcef3c49c77d2cefeb50585",
+      "file_size": 323,
+      "type": "text/html",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 11,
+  "voters": [
+    "omarelfarsaoui",
+    "zy9ard3",
+    "sisi0x",
+    "thalaivar304",
+    "h4x0r_dz",
+    "trib0rg",
+    "fazalur",
+    "shivammusic",
+    "smilekilerguy",
+    "scriptsavvy",
+    "and 1 more..."
+  ],
+  "severity": {
+    "rating": "high",
+    "score": 7.3,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "local",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "required",
+      "scope": "unchanged",
+      "confidentiality": "high",
+      "integrity": "none",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 37907,
+    "asset_type": "URL",
+    "asset_identifier": "app.lemlist.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "id": 154873,
+      "category": "researcher",
+      "content": "Clickjacking at app.lemlist.com\nAccount Takeover, Account Deletion and Password Change",
+      "updated_at": "2022-05-20T15:08:27.026Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 1351445,
+        "username": "scriptsavvy",
+        "name": "AlertHunter",
+        "bio": "A rookie trying to find a vulnerability in his own way",
+        "cleared": false,
+        "verified": true,
+        "website": null,
+        "location": "",
+        "created_at": "2020-10-09T20:14:41.022Z",
+        "url": "https://hackerone.com/scriptsavvy",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "hacker",
+        "profile_picture_urls": {
+          "small": "https://profile-photos.hackerone-user-content.com/variants/rs2094p31fm99xrzyk08zejb61o8/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/rs2094p31fm99xrzyk08zejb61o8/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a",
+          "xtralarge": "https://profile-photos.hackerone-user-content.com/variants/rs2094p31fm99xrzyk08zejb61o8/4ac84fbe897190579a137d0cf55152b233cdd4f9984435bd80ef67e5e51a0586"
+        }
+      }
+    }
+  ]
+}
