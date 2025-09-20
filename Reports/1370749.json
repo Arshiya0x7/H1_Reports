@@ -1,0 +1,148 @@
+{
+  "id": 1370749,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMzcwNzQ5",
+  "url": "https://hackerone.com/reports/1370749",
+  "title": "After changing the storefront password, the preview link is still valid",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2021-10-15T06:20:01.690Z",
+  "submitted_at": "2021-10-15T06:20:01.831Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "tomorrow_future",
+    "url": "/tomorrow_future",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 1382,
+    "url": "https://hackerone.com/shopify",
+    "handle": "shopify",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Shopify",
+      "twitter_handle": "",
+      "website": "https://www.shopify.com",
+      "about": "Shopify is a multi-channel commerce platform that helps people sell online, in-store, and everywhere in between."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2022-04-21T22:38:45.570Z",
+  "bug_reporter_agreed_on_going_public_at": "2022-04-21T22:38:45.505Z",
+  "team_member_agreed_on_going_public_at": "2022-04-21T18:19:21.556Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "##Description:\n\n1. The user needs to know the storefront password to generate the preview link.\n2. After the administrator changes the storefront password, users can still access the storefront through the preview link. \n\n3.reason:\n（1）User can generate preview link.\n（2）Simply changing the password will not invalidate the preview link. Only after closing and restarting the storefront password, the previous preview link will become invalid.\n\n##Step：\n\n1. Visit the storefront and enter the password.\n\n2.Search ```shopify.theme``` in the web development tool of the browser to get the theme ID value.\n{F1482354}\n\n3.Replace the value of the ```preview_theme_id parameter```.\n```\nhttps://your-store.myshopify.com.myshopify.com/?_ab=0&_fd=0&_sc=1&preview_theme_id=xxxxxxxx\n```\n\n4. Access the preview link, when the storefront password is changed, the preview link is still valid.\n\n5.Video:\n{F1482355}\n\n## Impact\n\nAfter changing the storefront password, the preview link is still valid",
+  "weakness": {
+    "id": 26,
+    "name": "Improper Access Control - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1482354,
+      "file_name": "theme_id.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/e9m4fs8qboa7su4dia0svputda9h?response-content-disposition=attachment%3B%20filename%3D%22theme_id.png%22%3B%20filename%2A%3DUTF-8%27%27theme_id.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQVV6OTGUW%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T235454Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH0aCXVzLXdlc3QtMiJGMEQCIHsU66A61q%2FlujKx%2F7DiN0ngi%2B2MokXzllqmyQF%2BmMOnAiAl7mwCDfNkLpWtv204DlKZDZIA%2B4f0p5slV%2BPxbK3ediq7BQj2%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMg%2FheMSFTyewVlFN4Ko8FFvmXVeKHNwpyioHpa46JoNm1Qi6Q%2F4l8T1nIxBWDihFpNi8h4xdUP9yZQU69usZVfuWbxbxGx%2FVG%2FwMlDgRN0Cct7qcUjjUSW6XtvjNfV%2F1NGPuB3X5cL9Z9kX2OCn2dgkpejawPQOIDfaGOfvYxS7e6Fqb2ecWyBNamEo0WUc%2FcrJC%2BNMUnYqJ7742%2FgSvjZsb7kLF25vXDVza5uMgM61FCh5EYpY3SLayywz%2BXwt7tM0QyLg%2ByAGhRmicMgvkF6sCtdWGPQfh7yeMAy0W5f8CEhEnwlTCJd6Z6Xt1A467SPd7bv%2BHfGYXWVStRndPUpM7yLo%2FIE%2BR4XINeWXkDAn%2B9EEbydCUgjbCNfzGY9lbbq0sdjDstXD0c3rnyvn67kDdqs6Rxv3oxD4vnFTNOZ3a2e10joWiP5ZjnKGNlPrAjJihoSGdZCnWK%2F3vQ6TFxnR2JH53XAY6wMZZifj8SsrM%2F%2FZIQPVNYxDt3QCMJXPfdQljUxY3z%2BUdJmPDHW4oWyOeKVFYj%2F0gaiIlRJR%2Fnx3J23RwoCCDZSUl%2BFIgr68%2BIDT7VHvrKKkp0vtrCXFOeM2LWT%2F2d5XUrjjKakk6tkY32%2FFzf7n%2BintuS3pB1QNTHnFXtrsx%2BHj6sL%2FSWLjMgKAHGNloOioIMkvoT0yGt9s4ShX6bg8tgcfVbEDvyMovK4CbT1NkRRCdGAEtYEcPwkBy0mRuCTQUkBiBw3umL%2FbDt0REGi3Yt%2BNPgvbI5aPxRNXMiJiKOklGT%2FJNYejYt2ySpAQA5fF8svbAg1O3%2BsedyPgyijTLwf2YGm7U9DP4EFMS1V%2FFLkEuF8IIgaRqdIhg3KOjLkc1NzvBsq5tJ8mONNKnOM5EElN7ESIkNfzDErbzGBjqyAWWwRFq4G0%2Bkb9AUUeHtqBLDbzZUXWVuVHzaimtKnjbZ5TEUzHQpporq%2F06suF3leronSzbI9DRpsg05k2vwuXpkhTob7JYkxsh1bYw4yQNd4GRUJfFVviVjcWM6lHb9hWmPYINjGTA8JaI%2BTzGY6bwa8exRiv1HNnzv9GKGd6GS6z1FCvu%2Fu3A6iesh37pcUXkZXGjD4ASdXWyGt%2BLEKNIPbdHhJ7ubuiJgc4GutEgvQIw%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=9eda65d23f5437d1999b669a848398227de36d25ae4efd3aafd5987541b64274",
+      "file_size": 173025,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1482355,
+      "file_name": "video.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/4z86x8hmh9xa28yrccxsq8d7hkgl?response-content-disposition=attachment%3B%20filename%3D%22video.mp4%22%3B%20filename%2A%3DUTF-8%27%27video.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQVV6OTGUW%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T235454Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH0aCXVzLXdlc3QtMiJGMEQCIHsU66A61q%2FlujKx%2F7DiN0ngi%2B2MokXzllqmyQF%2BmMOnAiAl7mwCDfNkLpWtv204DlKZDZIA%2B4f0p5slV%2BPxbK3ediq7BQj2%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMg%2FheMSFTyewVlFN4Ko8FFvmXVeKHNwpyioHpa46JoNm1Qi6Q%2F4l8T1nIxBWDihFpNi8h4xdUP9yZQU69usZVfuWbxbxGx%2FVG%2FwMlDgRN0Cct7qcUjjUSW6XtvjNfV%2F1NGPuB3X5cL9Z9kX2OCn2dgkpejawPQOIDfaGOfvYxS7e6Fqb2ecWyBNamEo0WUc%2FcrJC%2BNMUnYqJ7742%2FgSvjZsb7kLF25vXDVza5uMgM61FCh5EYpY3SLayywz%2BXwt7tM0QyLg%2ByAGhRmicMgvkF6sCtdWGPQfh7yeMAy0W5f8CEhEnwlTCJd6Z6Xt1A467SPd7bv%2BHfGYXWVStRndPUpM7yLo%2FIE%2BR4XINeWXkDAn%2B9EEbydCUgjbCNfzGY9lbbq0sdjDstXD0c3rnyvn67kDdqs6Rxv3oxD4vnFTNOZ3a2e10joWiP5ZjnKGNlPrAjJihoSGdZCnWK%2F3vQ6TFxnR2JH53XAY6wMZZifj8SsrM%2F%2FZIQPVNYxDt3QCMJXPfdQljUxY3z%2BUdJmPDHW4oWyOeKVFYj%2F0gaiIlRJR%2Fnx3J23RwoCCDZSUl%2BFIgr68%2BIDT7VHvrKKkp0vtrCXFOeM2LWT%2F2d5XUrjjKakk6tkY32%2FFzf7n%2BintuS3pB1QNTHnFXtrsx%2BHj6sL%2FSWLjMgKAHGNloOioIMkvoT0yGt9s4ShX6bg8tgcfVbEDvyMovK4CbT1NkRRCdGAEtYEcPwkBy0mRuCTQUkBiBw3umL%2FbDt0REGi3Yt%2BNPgvbI5aPxRNXMiJiKOklGT%2FJNYejYt2ySpAQA5fF8svbAg1O3%2BsedyPgyijTLwf2YGm7U9DP4EFMS1V%2FFLkEuF8IIgaRqdIhg3KOjLkc1NzvBsq5tJ8mONNKnOM5EElN7ESIkNfzDErbzGBjqyAWWwRFq4G0%2Bkb9AUUeHtqBLDbzZUXWVuVHzaimtKnjbZ5TEUzHQpporq%2F06suF3leronSzbI9DRpsg05k2vwuXpkhTob7JYkxsh1bYw4yQNd4GRUJfFVviVjcWM6lHb9hWmPYINjGTA8JaI%2BTzGY6bwa8exRiv1HNnzv9GKGd6GS6z1FCvu%2Fu3A6iesh37pcUXkZXGjD4ASdXWyGt%2BLEKNIPbdHhJ7ubuiJgc4GutEgvQIw%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=35db7b225ac7f2e5f2b62b9a94efb37658d83d97fc11a5ac8af38efa794509be",
+      "file_size": 11360267,
+      "type": "video/mp4",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 13,
+  "voters": [
+    "drsniper",
+    "zy9ard3",
+    "shreyaschavhan",
+    "h4x0r_dz",
+    "mohaned0101",
+    "f_m",
+    "wragg-s",
+    "shivammusic",
+    "fenix7fenix",
+    "destinedtohack",
+    "and 3 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "score": 3.7,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "high",
+      "privileges_required": "none",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "low",
+      "integrity": "none",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 413,
+    "asset_type": "URL",
+    "asset_identifier": "your-store.myshopify.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
