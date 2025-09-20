@@ -1,0 +1,141 @@
+{
+  "id": 1410357,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNDEwMzU3",
+  "url": "https://hackerone.com/reports/1410357",
+  "title": "getUsersOfRoom discloses users in private channels",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2021-11-25T17:35:52.416Z",
+  "submitted_at": "2021-11-25T17:35:52.474Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "gronke",
+    "url": "/gronke",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 19858,
+    "url": "https://hackerone.com/rocket_chat",
+    "handle": "rocket_chat",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/019/858/ada6c92a338715afad123af214dd6e22fd8dc6ff_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/019/858/ada6c92a338715afad123af214dd6e22fd8dc6ff_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Rocket.Chat",
+      "twitter_handle": "RocketChat",
+      "website": "https://rocket.chat",
+      "about": "Rocket.Chat is a company built on open source values and a love for efficiency. The company is driven by our amazing community of contributors."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": true,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "no-content",
+  "cve_ids": [
+    "CVE-2022-32226"
+  ],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2022-09-22T16:04:20.186Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2022-09-22T12:24:34.894Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "",
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [],
+  "allow_singular_disclosure_at": "2022-10-22T12:24:34.996Z",
+  "allow_singular_disclosure_after": -91966444.58657405,
+  "singular_disclosure_allowed": true,
+  "vote_count": 2,
+  "voters": [
+    "shreyaschavhan",
+    "shivammusic"
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 6.5,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "low",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "high",
+      "integrity": "none",
+      "availability": "none"
+    }
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "id": 194890,
+      "category": "team",
+      "content": "## Summary\n\nImproper input data validation in the `getUsersOfRoom` Meteor server method allows authenticated users to enumerate existing rooms and subscribed users.\n\n## Description\n\nInput data in the `getUsersOfRoom` Meteor server method is not type validated, so that MongoDB query operator objects are accepted by the server, so that instead of a matching rid String a`$regex` query can be executed, bypassing the room access permssion check for every but the first matching room.\n\nWhen the user-provided `rid` method argument is a MongoDB query operator object, the first match will be used to check the requesting users access permissions against ([server/methods/getUsersOfRoom.js#L18-L21](https://github.com/RocketChat/Rocket.Chat/blob/194a600f31a1037716ac4de297cfff0b8a4f9942/server/methods/getUsersOfRoom.js#L18-L21)):\n\n```javascript\nconst room = Rooms.findOneById(rid, { fields: { broadcast: 1 } });\nif (!room) {\n\tthrow new Meteor.Error('error-not-allowed', 'Not allowed', { method: 'getUsersOfRoom' });\n}\n\nif (!canAccessRoom(room, { _id: userId })) {\n\tthrow new Meteor.Error('not-authorized', 'Not Authorized', { method: 'getUsersOfRoom' });\n}\n```\n\nThe original `rid`is later lassed to the `findUsersOfRoom` method ([server/methods/getUsersOfRoom.js#L33-L38](https://github.com/RocketChat/Rocket.Chat/blob/194a600f31a1037716ac4de297cfff0b8a4f9942/server/methods/getUsersOfRoom.js#L33-L38):\n\n```javascript\nconst users = findUsersOfRoom({ rid, status: !showAll ? { $ne: 'offline' } : undefined, limit, skip, filter }).fetch();\n\nreturn {\n\ttotal,\n\trecords: users,\n};\n```\n\nThe `rid` parameter is then passed unchanged in [](https://github.com/RocketChat/Rocket.Chat/blob/194a600f31a1037716ac4de297cfff0b8a4f9942/server/lib/findUsersOfRoom.ts#L34-L37) to [Users.findByActiveUsersExcept](https://github.com/RocketChat/Rocket.Chat/blob/194a600f31a1037716ac4de297cfff0b8a4f9942/app/models/server/models/Users.js#L797)\n\n```javascript\nreturn Users.findByActiveUsersExcept(filter, undefined, options, undefined, [{\n\t__rooms: rid,\n\t...status && { status },\n}]);\n```\n\nIn the `Users.findByActiveUsersExcept` function the `extraQuery` object (containing the user-provided `rid` argument ) queries directly from MongoDB ([app/models/server/models/Users.js#L828-L840](https://github.com/RocketChat/Rocket.Chat/blob/194a600f31a1037716ac4de297cfff0b8a4f9942/app/models/server/models/Users.js#L828-L840])):\n\n```javascript\nfindByActiveUsersExcept(searchTerm, exceptions, options, forcedSearchFields, extraQuery = [], { startsWith = false, endsWith = false } = {}) {\n// ...\n\t\tconst query = {\n\t\t\t$and: [\n\t\t\t\t{\n\t\t\t\t\tactive: true,\n\t\t\t\t\tusername: { $exists: true, $nin: exceptions },\n\t\t\t\t\t$or: orStmt,\n\t\t\t\t},\n\t\t\t\t...extraQuery,\n\t\t\t],\n\t\t};\n\n\t\t// do not use cache\n\t\treturn this._db.find(query, options);\n}\n```\n\nBecause the MongoDB `find()` query can return matches for multiple rooms but the `Rooms.findOneById` lookup only matches the first, all but the first matching rooms will be accepted without further permission check.\n\n```javascript\nconst ACCESSIBLE_CHANEL=\"<ROOM_ID>\";\nconst TARGET_CHANNEL=\"<ROOM_ID_REGEX>\"; // .* to get all users in any room\nMeteor.call(\n  \"getUsersOfRoom\",\n  { $regex: `(${OWN_CHANNEL}|${TARGET_CHANNEL)\" }, // rid\n  true , // showAll\n  console.log\n);\n```\n\n## Releases Affected:\n\n  * [develop](https://github.com/RocketChat/Rocket.Chat/tree/194a600f31a1037716ac4de297cfff0b8a4f9942)\n  * 4.1.1 [672fe95d7e8afbd7d306cf176f54c65dd9be0eea](https://github.com/RocketChat/Rocket.Chat/commit/672fe95d7e8afbd7d306cf176f54c65dd9be0eea)\n  * 4.1.2\n\n## Steps To Reproduce (from initial installation to vulnerability):\n\n  1. Login to Rocket.Chat\n  2. Create empty room and find Room ID\n  3. Call `getUsersOfRoom` Meteor method with `{ $regex: \"(<MY_ROOM_ID>|<TARGET_ROOM_ID>\" }`\n  4. Receive list of all users from both channels\n\n## Suggested mitigation\n\n  * Validate `rid` argument to be a String\n\n## Impact\n\nUsers with access to at least one channel can leak the members of another channel they should not have access to.\n\n## Fix\n\nFixed in 4.7.5, 4.8.2 and 5.0.0\n",
+      "updated_at": "2022-09-22T12:24:13.522Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 1989106,
+        "username": "mrd0d",
+        "name": "Offsec team engineer",
+        "bio": "",
+        "cleared": false,
+        "verified": false,
+        "website": null,
+        "location": "",
+        "created_at": "2021-09-27T20:52:41.370Z",
+        "url": "https://hackerone.com/mrd0d",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "company",
+        "profile_picture_urls": {
+          "small": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/variants/j9d22b8d3wdw2lskn3dviwszwnze/c8a1698ff707a5e3e8a91a3484838363845daac68cb82c86d55c9e2d44d67b67?response-content-disposition=inline%3B%20filename%3D%22Ghost%20Boy.jpeg%22%3B%20filename%2A%3DUTF-8%27%27Ghost%2520Boy.jpeg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQSTQAVQP4%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T223839Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJIMEYCIQCTUONg8rOgt0jJ%2F3TrAqfnw601jJWVPfXifsk%2FW%2BLK7QIhAMGGDYfFDmVKxAob%2BionYCWkghzARXsi80rujTijS1y1KrsFCPX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5Igx94JKvjDXdvmt2Z5YqjwUIZSeIw%2FwdcJm5YM7%2Fzj2Nb7%2BL07VSGrwZcrAFdg553eL0%2BZAQc76fk8Ex7l6Uf%2F3ikVcxL9ziiMsVIXtsj7Ng8u8JV%2ByqYngvufFEBqwmF0v1BH9rqMO7LF6urIIWOASyXaCQ3X%2BY1tUJxe37UXfc17QXjdbJGxNuVHVgClJYS7PV2V%2B%2FsJFxLRAeN%2BR%2FJSwGltigg5dYzBvuce3MqykGzHR%2FsIRYBwuyQ5faPmbZQT96kayjFLZs%2B7NNWtW9VgHP%2B%2FX5nGFQg%2BEyAPH4ocZ%2BHEQesKz1xFaKagmxSdiKW2TWlS7j3BmjeA4GLFHGXPYvGuSHZXkIlnlynUpViNaMRooYDcZ469KjIMZ52msg5uTSTqZH8RN71i75ZXUowtuEG6lCR225YRPUH7aNh%2B6SYx%2B%2Fiq9rI%2BWz2tWEni9GPcBiEYCHY4vvOwSVSEeYnlKMBV9ePkwk4EuvYdcDMllyXcvrVxpLuB%2BqKQ3pPl4CZ5Q361PbRVYMPJUY%2Bgtwj7wGQlO6lyO5Lt6ALg2g0LYqYKYvbB6qZ0KCguD4y%2Bk%2FLBW0oYXNn4jN5D6C7o8AshcXjt7U1s6RnEx%2F0g373zMFJ37i%2BmWwhX4bGvnjWdwLQw03OtJhLCC4NqXrJhFxybk5wTHwa%2FzSSrB%2FHW8uAIvBzBI4UAYwtMklIHgi3gTQKQ%2FdhUNRAZlbxyZHNTeR4XWsNTXmsBAuW%2FyUHWgxsWzvy5BY%2B%2FrTdU1qqyaIheuZkpahjVk4NFY6nuc3pITKxMyqi98hhRiVAhgRebro9ayUQc1ph9hfQlK%2FYtHa3IDyEacxkXteXUJY6SNCmAkTWRQy18FEIU%2Fwcj0iPZEL8TXqsOZcfO8h7JQheRzqIHIKMPWJvMYGOrAB%2FG5iWehhltchMJFe0uyAuUiK5LT9GEHYkAXnr89MJSI5Cbs4afjg0tB9hGrwm5w61IusnmMYEWeN6kzojlt7qZ6MLbqHlPnVfWq78NdihXFuDtuVoSz8jxC%2FA79MlEjp%2Bcne1ic8SOAztDSoLuVM6FQuc8AKWiQbievmOjsXXNF3Goxsgkv4tPjXu52e2zlnyfoMEzgXb40sGah%2FuFrbe%2FCgc%2F3oFfp11VPwBr33XYo%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=c2e378e5a84f5a58f1bbc50dfeb7c204a5363c5fa682896f88fec2fdacc82f91",
+          "medium": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/variants/j9d22b8d3wdw2lskn3dviwszwnze/74790fe75ac5dbe8a5140a122388d59ebac913dcfa941f0b3a45e6cad161f9ea?response-content-disposition=inline%3B%20filename%3D%22Ghost%20Boy.jpeg%22%3B%20filename%2A%3DUTF-8%27%27Ghost%2520Boy.jpeg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQSTQAVQP4%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T223839Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJIMEYCIQCTUONg8rOgt0jJ%2F3TrAqfnw601jJWVPfXifsk%2FW%2BLK7QIhAMGGDYfFDmVKxAob%2BionYCWkghzARXsi80rujTijS1y1KrsFCPX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5Igx94JKvjDXdvmt2Z5YqjwUIZSeIw%2FwdcJm5YM7%2Fzj2Nb7%2BL07VSGrwZcrAFdg553eL0%2BZAQc76fk8Ex7l6Uf%2F3ikVcxL9ziiMsVIXtsj7Ng8u8JV%2ByqYngvufFEBqwmF0v1BH9rqMO7LF6urIIWOASyXaCQ3X%2BY1tUJxe37UXfc17QXjdbJGxNuVHVgClJYS7PV2V%2B%2FsJFxLRAeN%2BR%2FJSwGltigg5dYzBvuce3MqykGzHR%2FsIRYBwuyQ5faPmbZQT96kayjFLZs%2B7NNWtW9VgHP%2B%2FX5nGFQg%2BEyAPH4ocZ%2BHEQesKz1xFaKagmxSdiKW2TWlS7j3BmjeA4GLFHGXPYvGuSHZXkIlnlynUpViNaMRooYDcZ469KjIMZ52msg5uTSTqZH8RN71i75ZXUowtuEG6lCR225YRPUH7aNh%2B6SYx%2B%2Fiq9rI%2BWz2tWEni9GPcBiEYCHY4vvOwSVSEeYnlKMBV9ePkwk4EuvYdcDMllyXcvrVxpLuB%2BqKQ3pPl4CZ5Q361PbRVYMPJUY%2Bgtwj7wGQlO6lyO5Lt6ALg2g0LYqYKYvbB6qZ0KCguD4y%2Bk%2FLBW0oYXNn4jN5D6C7o8AshcXjt7U1s6RnEx%2F0g373zMFJ37i%2BmWwhX4bGvnjWdwLQw03OtJhLCC4NqXrJhFxybk5wTHwa%2FzSSrB%2FHW8uAIvBzBI4UAYwtMklIHgi3gTQKQ%2FdhUNRAZlbxyZHNTeR4XWsNTXmsBAuW%2FyUHWgxsWzvy5BY%2B%2FrTdU1qqyaIheuZkpahjVk4NFY6nuc3pITKxMyqi98hhRiVAhgRebro9ayUQc1ph9hfQlK%2FYtHa3IDyEacxkXteXUJY6SNCmAkTWRQy18FEIU%2Fwcj0iPZEL8TXqsOZcfO8h7JQheRzqIHIKMPWJvMYGOrAB%2FG5iWehhltchMJFe0uyAuUiK5LT9GEHYkAXnr89MJSI5Cbs4afjg0tB9hGrwm5w61IusnmMYEWeN6kzojlt7qZ6MLbqHlPnVfWq78NdihXFuDtuVoSz8jxC%2FA79MlEjp%2Bcne1ic8SOAztDSoLuVM6FQuc8AKWiQbievmOjsXXNF3Goxsgkv4tPjXu52e2zlnyfoMEzgXb40sGah%2FuFrbe%2FCgc%2F3oFfp11VPwBr33XYo%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=04e4ec72315e6541d1bd432975501bdacd446b7b9dc8ea75c7fcc4d587cc9e4d",
+          "xtralarge": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTcwOTk1NSwicHVyIjoiYmxvYl9pZCJ9fQ==--be5e56ef7524606adf37a742155f3190b1c2c329/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGVnIiwicmVzaXplIjoiMjYweDI2MFx1MDAzZSJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--cea846659d6dfdc215f3c0fb14f7ed8ebc9f95ef/Ghost%20Boy.jpeg"
+        }
+      }
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
