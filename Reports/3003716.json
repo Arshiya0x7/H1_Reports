@@ -1,0 +1,131 @@
+{
+  "id": 3003716,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMDAzNzE2",
+  "url": "https://hackerone.com/reports/3003716",
+  "title": "User Email Disclosure via ID-Based Invitation",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2025-02-20T16:14:53.396Z",
+  "submitted_at": "2025-02-20T16:14:54.781Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "m_kamal1",
+    "url": "/m_kamal1",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/fqvfoxnbpek2nbzym8yo0om10ysx/c8a1698ff707a5e3e8a91a3484838363845daac68cb82c86d55c9e2d44d67b67"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 21801,
+    "url": "https://hackerone.com/wakatime",
+    "handle": "wakatime",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/6t1wy3jbq9kayjwvqbnymavxizfx/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/6t1wy3jbq9kayjwvqbnymavxizfx/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "WakaTime",
+      "twitter_handle": "wakatime",
+      "website": "https://wakatime.com",
+      "about": "Automated metrics about your programming from text editor plugins."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2025-02-22T02:13:05.210Z",
+  "bug_reporter_agreed_on_going_public_at": "2025-02-22T02:12:27.626Z",
+  "team_member_agreed_on_going_public_at": "2025-02-22T02:13:03.039Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "###Summary:\nThe issue occurs when inviting a user by their WakaTime ID. If a user has set their email to private, their email address still appears when they are invited using their ID. This contradicts the privacy settings and could lead to unintended email exposure.\n\n###Steps to Reproduce:\n1- When a user sets their email to private, anyone attempting to view it will see a page like this:\n{F4074476}\n\n2- An attacker can use the user’s ID to invite them to their organization by either pasting the ID in the invitation section or send the invite request it looks like this:\n```\nPOST /api/v1/users/current/orgs/59a5809f-2ba1-43de-b6d7-3ca104b79d80/people.bulk HTTP/2\nHost: wakatime.com\nCookie: \nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.2651.74\nAccept: application/json, text/javascript, */*; q=0.01\nAccept-Language: en-US,en;q=0.5\nAccept-Encoding: gzip, deflate, br\nReferer: https://wakatime.com/settings/orgs/59a5809f-2ba1-43de-b6d7-3ca104b79d80/people\nContent-Type: application/json\nX-Csrftoken: 9d881d42b2b05abc4b1e057b6f6dd058d394be28554afb508fcf988ed24ff283\nX-Requested-With: XMLHttpRequest\nContent-Length: 58\nOrigin: https://wakatime.com\nSec-Fetch-Dest: empty\nSec-Fetch-Mode: cors\nSec-Fetch-Site: same-origin\nX-Pwnfox-Color: red\nPriority: u=0\nTe: trailers\n\n{\"people\":[{\"id\":\"<victim_id>\"}]}\n```\n3- After that, the victim's email will be disclosed.\n\n###Suggested Fix:\n- Ensure that email addresses remain hidden in all cases where a user has opted to keep them private.\n- If inviting by ID, display only the username or a masked identifier rather than exposing the email.\n\n## Impact\n\n- Email Address Disclosure: Users who believe their email is hidden may have it exposed to others.\n- Privacy Violation",
+  "weakness": {
+    "id": 18,
+    "name": "Information Disclosure"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 4074476,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/ed1nt862ihuz9q7xnxzs2kujk22c?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ7CQXQ6NU%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T172754Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHYaCXVzLXdlc3QtMiJIMEYCIQC624xVbAAAOlcZ71NSvO25LHVErNdztWWirOtThqSw%2BgIhANUCHBJUi%2FYXon4r5OpbCFUqrBrwm6H3k6qQqiAHcPdlKrsFCO%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5IgwFnrltZBcZkdsonQIqjwWbk6MWlCkA8UVjjI6%2Fm2%2Fo%2Bm7DRuyC25b%2FX9Dbrb%2BgGkZ6RcL4dVbPBgar5Sux5SRXuttgUphGaNWHlzPJjyPgdpuIcTcz4xWD1Lbe2kSrTpdpZR9wDlv7lYz%2F6iabpDZgl7cLYpa%2Fu8kFganodSDksD8CjA6o4R03%2B%2BolcleU1qGBQ4HsznYYWz2SkKNu05TZvGq%2FkD6L7dzO31TlgkjR0E6VGTF9NdWsA4WaVMjdN%2FzbvBvuiWHNvQHtO8Nn0rTXo7AjVXFDSiLjYplZvU8L4d4hTDQoxs9N3sxMM%2FJKhC9ClOUjWw2zHxugm3GJpGbiz1SKhL7vr8jF%2BUoV1omX59z8resFLFBfk3PwrmU%2BKn3%2B6u24I0NYpVWi90BtfafPYoOf4z%2F8lJhm4sVb9grA2CxPsnhoCeDQdfjxU6B8fHfnRVZ%2BaxNM1OXYB1mWvbtLON485d7Pr0N0bpi59PhXYJked3b1Sxgm3%2FuMh5drymM9LS7Qfl%2BFkeZ%2F%2BX3aTAAQez69LRMdC%2FxlkUJipxfzuALL6eIs%2FyNbwm4hS2ZVodqCFLsciEZXPVM0BxMRhaBX4pu4JhbA0%2B1RExSPXc9z1IVezFagFwzdzgR6qEKGBa%2BCDhd1XqkpGIEUx5F6Xx7X5DJo1nnpouvJ0J28%2F8jWuq6pre%2BCZngRT6DwH65spWHAC63DTDs6TRi6eczXJdsqr%2FyZrjUEau6FitcDnn79Qk4WThms%2FmEEivMWoDniPMrE%2FBOu1dWUubm7DQdK4uwlvLkEZLyfFXPGlThvYj2KLQXz%2FRnqx7QTmRaFx61ETIKgDZ%2Fa%2BL3SwybD%2Bco8laCJPMjN73reVbIjxLiwf1GXE9WDAA9V8GAfwyLz6DgPMP7husYGOrAB5ie9U8HmzgaXYeK4qb538dfeqFQDqiqW4ayzeTUcprPJogjmeHaai58cBSzx4q%2B1SR4iklRqwXgVej9hDphKsWuABqkoDyiSuCNk6q80L2gh86PNOJWj3xi8ho4wdTMUBhUSB19YZmZbJWUSe0SJL1UETQZQjfXC90y%2FJm1ZBEAScgKYFnhS%2BXOH2UeZY7uKalUeaQxrcqxl3K6TpJWQbE1YnzDgpkZppVRdXKVCO4U%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=d34db3be3c5581fa731fd62425bfaf001fead7499bb7800861d5b6af80113bf2",
+      "file_size": 99530,
+      "type": "image/png",
+      "moderated": false
+    }
+  ],
+  "allow_singular_disclosure_at": "2025-03-24T02:12:29.515Z",
+  "allow_singular_disclosure_after": -15606924.679787751,
+  "singular_disclosure_allowed": true,
+  "vote_count": 70,
+  "voters": [
+    "aboalezz",
+    "0xcyborg",
+    "time1337",
+    "loaymorad",
+    "k0ns0l",
+    "hossam13",
+    "zsir",
+    "starlox",
+    "alejandroar",
+    "mikelly",
+    "and 60 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 614470,
+    "asset_type": "URL",
+    "asset_identifier": "wakatime.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
