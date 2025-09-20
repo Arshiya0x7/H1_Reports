@@ -1,0 +1,165 @@
+{
+  "id": 2076786,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yMDc2Nzg2",
+  "url": "https://hackerone.com/reports/2076786",
+  "title": "Host Header Injection - internal.qa.delivery.indrive.com",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2023-07-20T06:49:15.758Z",
+  "submitted_at": "2023-07-20T06:49:15.880Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "sid_x95",
+    "url": "/sid_x95",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/vfrqqxwitgp0m574kr2uq2yjlg1b/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 58857,
+    "url": "https://hackerone.com/indrive",
+    "handle": "indrive",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/765s9sszvp9zyt9qwkeaa52vvkf3/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/765s9sszvp9zyt9qwkeaa52vvkf3/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "inDrive",
+      "twitter_handle": "indrive",
+      "website": "https://indrive.com/",
+      "about": "inDrive is a global mobility and urban services platform with over 150 million downloads  in more than 700 cities across 47 countries."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2024-02-12T10:42:44.308Z",
+  "bug_reporter_agreed_on_going_public_at": "2024-02-12T09:34:24.538Z",
+  "team_member_agreed_on_going_public_at": "2024-02-12T10:42:44.206Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "HTTP Host header attacks exploit vulnerable websites that handle the value of the Host header in an unsafe way. If the server implicitly trusts the Host header, and fails to validate or escape it properly, an attacker may be able to use this input to inject harmful payloads that manipulate server-side behavior.\n\nFound the host header injection of given URLs:\nhttps://internal.qa.delivery.indrive.com/\nhttps://internal.sandbox.delivery.indrive.com/\n\n## Steps To Reproduce:\n1. Intercept the request in burp\n3. Change the host name to bing.com\n\nRequest:\nGET / HTTP/1.1\nHost: bing.com\nUpgrade-Insecure-Requests: 1\nAccept-Encoding: gzip, deflate\nAccept: */*\nAccept-Language: en-US,en-GB;q=0.9,en;q=0.8\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36\nConnection: close\nCache-Control: max-age=0\n\n\nResponse:\nHTTP/1.1 301 Moved Permanently\nlocation: https://bing.com/\ndate: Thu, 20 Jul 2023 06:24:26 GMT\nserver: istio-envoy\nconnection: close\ncontent-length: 0\n\n## Impact\n\nAn attacker can redirect users to malicious websites, which can lead to phishing attacks.\n\nAn attacker can create a valid webpage with malicious recommendations and the user believes the recommendation as it was from the valid website.",
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 2521580,
+      "file_name": "bandicam_2023-07-20_11-54-12-264.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/kmw0wlblqie9kgf21venbidh1zwa?response-content-disposition=attachment%3B%20filename%3D%22bandicam_2023-07-20_11-54-12-264.mp4%22%3B%20filename%2A%3DUTF-8%27%27bandicam_2023-07-20_11-54-12-264.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ5LKL5SDK%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T192251Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHcaCXVzLXdlc3QtMiJGMEQCIC3x4ev%2F4d%2FXoFjmvmNATa4LygsbPYMXhkLh%2BC5KUmKMAiBlLQeGtJ2g077vt4H%2Bb6hn%2FUnvpUa5KRcTySOJrerz6Cq7BQjw%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMWOOb1ERhaEC%2FNRWhKo8F8A4C0xEsvKoNSWWMqhuN9TZKer61XB22tJa5ob9tcWI4N89uoyU3sM4X70gznMhVFE3e343jtqA%2FeZijXCass4vAmBXokvAxOpGEPI1x9kzSeKJTNtRV%2BSaUsaKEYMFEIewI%2Fp0SirupWwTqxG83NsPZIFyB54XHpnFDzrzPcn2QmaRS5jHF0wejvRzScHNIkvcCh88%2BCp%2B4NPWFXgI%2F4w9JvFhcrlyPMM%2F1geHjm9Z78XaOXJ6ymXeZGXtNu3IE2WnvMZZeM%2B38geGbS%2BdzXN6MI%2Fupq%2FuQfjyEZvluK%2BePY7FLMJSMuY5SEXW8FxgSs5zNPOqV4DMONV4WRS5GFUNfUK7LLf90jHDMqoub2WriKoFFH7RH3R0StdakThnPwvUE7qVHymkGR9E0JAhyliT1QNoT2fYiURStGjy78ZgoVLXFfgJ64p%2B9ccA%2FBPs97AmyPS5tBahDarwob7mrMlbrZN6zidCDV4kWjKp%2FGzKV06Nkv5rpKkl4TrHjn8fPrDzmjn8ZwEafdwYomyjJzOgHSPCYorcp6E%2FocA4UiysF0ihkmBClogEFRNe7LWAF5KwlMC7KqllFgmQvWawxTGiqByYcrOjYCHHnzsvXsQ5vOYxf8pIcRXUePUV1WZr%2B7itUxKjsklqCUalfqmacDVfVEm8U7%2F4by%2FTn1BNlcOxusvJ7naoSNCWhakRj4Nw8bX5KkQkL23ljNfWSN3Pffx9A86giNAb2jML1q6KDrsaCEyZrmEGxBOzmdnagomrAh34XBnYryF9FFq2dWkhHpMyWTUL6%2BoguR417j%2FgUpYT%2FRl2bvPhgn0z7bmAQiufI4u5LVfvOydhRjFb%2BG%2BfvzDjHng%2BjUscp%2BdIpef8caTD8h7vGBjqyAa%2FKd7ScxvKOpiqfpoBn9E3J0V8HRoWTbVzO3BEaAiKuurfs25EGQBYHXu6jetJXPUNWed6TatTq18Snkj5PFEFC9WShhYh8FYwyasGOag9PAdr2BluVRt2KpYiK9DQetN3%2FG4baCuLwX%2Fx4nyA2Z95oIVdPBvUzLV5n0uAcd5zaxkN19OFHVk1v41liyIcf%2B8piLq0%2FhRPVawTxseEu1rx6u85SM3W0smxA4qaJu9tqgek%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=55f01148e1f2bf8539790d0b04bc603433e1bc8fd5c2b313b1b714a4527da2a3",
+      "file_size": 4441126,
+      "type": "video/mp4",
+      "moderated": null
+    },
+    {
+      "id": 2521583,
+      "file_name": "internal.qa.delivery.indrive.com_host-header-redirect.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/ab3yzszcp34r472i427xk19duvkb?response-content-disposition=attachment%3B%20filename%3D%22internal.qa.delivery.indrive.com_host-header-redirect.png%22%3B%20filename%2A%3DUTF-8%27%27internal.qa.delivery.indrive.com_host-header-redirect.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ5LKL5SDK%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T192251Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHcaCXVzLXdlc3QtMiJGMEQCIC3x4ev%2F4d%2FXoFjmvmNATa4LygsbPYMXhkLh%2BC5KUmKMAiBlLQeGtJ2g077vt4H%2Bb6hn%2FUnvpUa5KRcTySOJrerz6Cq7BQjw%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMWOOb1ERhaEC%2FNRWhKo8F8A4C0xEsvKoNSWWMqhuN9TZKer61XB22tJa5ob9tcWI4N89uoyU3sM4X70gznMhVFE3e343jtqA%2FeZijXCass4vAmBXokvAxOpGEPI1x9kzSeKJTNtRV%2BSaUsaKEYMFEIewI%2Fp0SirupWwTqxG83NsPZIFyB54XHpnFDzrzPcn2QmaRS5jHF0wejvRzScHNIkvcCh88%2BCp%2B4NPWFXgI%2F4w9JvFhcrlyPMM%2F1geHjm9Z78XaOXJ6ymXeZGXtNu3IE2WnvMZZeM%2B38geGbS%2BdzXN6MI%2Fupq%2FuQfjyEZvluK%2BePY7FLMJSMuY5SEXW8FxgSs5zNPOqV4DMONV4WRS5GFUNfUK7LLf90jHDMqoub2WriKoFFH7RH3R0StdakThnPwvUE7qVHymkGR9E0JAhyliT1QNoT2fYiURStGjy78ZgoVLXFfgJ64p%2B9ccA%2FBPs97AmyPS5tBahDarwob7mrMlbrZN6zidCDV4kWjKp%2FGzKV06Nkv5rpKkl4TrHjn8fPrDzmjn8ZwEafdwYomyjJzOgHSPCYorcp6E%2FocA4UiysF0ihkmBClogEFRNe7LWAF5KwlMC7KqllFgmQvWawxTGiqByYcrOjYCHHnzsvXsQ5vOYxf8pIcRXUePUV1WZr%2B7itUxKjsklqCUalfqmacDVfVEm8U7%2F4by%2FTn1BNlcOxusvJ7naoSNCWhakRj4Nw8bX5KkQkL23ljNfWSN3Pffx9A86giNAb2jML1q6KDrsaCEyZrmEGxBOzmdnagomrAh34XBnYryF9FFq2dWkhHpMyWTUL6%2BoguR417j%2FgUpYT%2FRl2bvPhgn0z7bmAQiufI4u5LVfvOydhRjFb%2BG%2BfvzDjHng%2BjUscp%2BdIpef8caTD8h7vGBjqyAa%2FKd7ScxvKOpiqfpoBn9E3J0V8HRoWTbVzO3BEaAiKuurfs25EGQBYHXu6jetJXPUNWed6TatTq18Snkj5PFEFC9WShhYh8FYwyasGOag9PAdr2BluVRt2KpYiK9DQetN3%2FG4baCuLwX%2Fx4nyA2Z95oIVdPBvUzLV5n0uAcd5zaxkN19OFHVk1v41liyIcf%2B8piLq0%2FhRPVawTxseEu1rx6u85SM3W0smxA4qaJu9tqgek%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=3ef56ed8a7ad11e84638e93a7620e14db01ed2b8c0f6700d6104a8027dc37116",
+      "file_size": 104694,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 2521628,
+      "file_name": "POC2.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/4wjawhixcnrbk0unofe12s9xoy62?response-content-disposition=attachment%3B%20filename%3D%22POC2.png%22%3B%20filename%2A%3DUTF-8%27%27POC2.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ5LKL5SDK%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T192251Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHcaCXVzLXdlc3QtMiJGMEQCIC3x4ev%2F4d%2FXoFjmvmNATa4LygsbPYMXhkLh%2BC5KUmKMAiBlLQeGtJ2g077vt4H%2Bb6hn%2FUnvpUa5KRcTySOJrerz6Cq7BQjw%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMWOOb1ERhaEC%2FNRWhKo8F8A4C0xEsvKoNSWWMqhuN9TZKer61XB22tJa5ob9tcWI4N89uoyU3sM4X70gznMhVFE3e343jtqA%2FeZijXCass4vAmBXokvAxOpGEPI1x9kzSeKJTNtRV%2BSaUsaKEYMFEIewI%2Fp0SirupWwTqxG83NsPZIFyB54XHpnFDzrzPcn2QmaRS5jHF0wejvRzScHNIkvcCh88%2BCp%2B4NPWFXgI%2F4w9JvFhcrlyPMM%2F1geHjm9Z78XaOXJ6ymXeZGXtNu3IE2WnvMZZeM%2B38geGbS%2BdzXN6MI%2Fupq%2FuQfjyEZvluK%2BePY7FLMJSMuY5SEXW8FxgSs5zNPOqV4DMONV4WRS5GFUNfUK7LLf90jHDMqoub2WriKoFFH7RH3R0StdakThnPwvUE7qVHymkGR9E0JAhyliT1QNoT2fYiURStGjy78ZgoVLXFfgJ64p%2B9ccA%2FBPs97AmyPS5tBahDarwob7mrMlbrZN6zidCDV4kWjKp%2FGzKV06Nkv5rpKkl4TrHjn8fPrDzmjn8ZwEafdwYomyjJzOgHSPCYorcp6E%2FocA4UiysF0ihkmBClogEFRNe7LWAF5KwlMC7KqllFgmQvWawxTGiqByYcrOjYCHHnzsvXsQ5vOYxf8pIcRXUePUV1WZr%2B7itUxKjsklqCUalfqmacDVfVEm8U7%2F4by%2FTn1BNlcOxusvJ7naoSNCWhakRj4Nw8bX5KkQkL23ljNfWSN3Pffx9A86giNAb2jML1q6KDrsaCEyZrmEGxBOzmdnagomrAh34XBnYryF9FFq2dWkhHpMyWTUL6%2BoguR417j%2FgUpYT%2FRl2bvPhgn0z7bmAQiufI4u5LVfvOydhRjFb%2BG%2BfvzDjHng%2BjUscp%2BdIpef8caTD8h7vGBjqyAa%2FKd7ScxvKOpiqfpoBn9E3J0V8HRoWTbVzO3BEaAiKuurfs25EGQBYHXu6jetJXPUNWed6TatTq18Snkj5PFEFC9WShhYh8FYwyasGOag9PAdr2BluVRt2KpYiK9DQetN3%2FG4baCuLwX%2Fx4nyA2Z95oIVdPBvUzLV5n0uAcd5zaxkN19OFHVk1v41liyIcf%2B8piLq0%2FhRPVawTxseEu1rx6u85SM3W0smxA4qaJu9tqgek%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=7717c57624a86561219d78a73cdab890b7041d6e90529797fc916b77fa0525e4",
+      "file_size": 104846,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 63,
+  "voters": [
+    "rzizah",
+    "orange303",
+    "exec_iq",
+    "roland_hack",
+    "berjimk",
+    "shubham_srt",
+    "2026",
+    "pacmanx",
+    "theycallme_mufasa",
+    "neilx",
+    "and 53 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 362641,
+    "asset_type": "WILDCARD",
+    "asset_identifier": "*.indrive.com",
+    "max_severity": "high"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "id": 400983,
+      "category": "team",
+      "content": "Subscribe to our telegram channel with updates https://t.me/indrive_bbp",
+      "updated_at": "2024-02-12T10:41:12.985Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 2435873,
+        "username": "majesttic",
+        "name": "Kirill Egorov",
+        "bio": null,
+        "cleared": false,
+        "verified": false,
+        "website": null,
+        "location": null,
+        "created_at": "2022-08-16T07:58:13.212Z",
+        "url": "https://hackerone.com/majesttic",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "company",
+        "profile_picture_urls": {
+          "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png",
+          "medium": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png",
+          "xtralarge": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+        }
+      }
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
