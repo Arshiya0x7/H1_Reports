@@ -1,0 +1,145 @@
+{
+  "id": 1406953,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNDA2OTUz",
+  "url": "https://hackerone.com/reports/1406953",
+  "title": "Message ID Enumeration with Action Link Handler",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2021-11-22T10:33:05.806Z",
+  "submitted_at": "2021-11-22T10:33:05.859Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "gronke",
+    "url": "/gronke",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 19858,
+    "url": "https://hackerone.com/rocket_chat",
+    "handle": "rocket_chat",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/019/858/ada6c92a338715afad123af214dd6e22fd8dc6ff_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/019/858/ada6c92a338715afad123af214dd6e22fd8dc6ff_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Rocket.Chat",
+      "twitter_handle": "RocketChat",
+      "website": "https://rocket.chat",
+      "about": "Rocket.Chat is a company built on open source values and a love for efficiency. The company is driven by our amazing community of contributors."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": true,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "no-content",
+  "cve_ids": [
+    "CVE-2022-32218"
+  ],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2022-09-22T16:02:39.077Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2022-09-22T12:15:47.724Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "",
+  "weakness": {
+    "id": 18,
+    "name": "Information Disclosure"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [],
+  "allow_singular_disclosure_at": "2022-10-22T12:15:47.818Z",
+  "allow_singular_disclosure_after": -91967044.7134502,
+  "singular_disclosure_allowed": true,
+  "vote_count": 2,
+  "voters": [
+    "shreyaschavhan",
+    "shivammusic"
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 4.3,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "low",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "low",
+      "integrity": "none",
+      "availability": "none"
+    }
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "id": 194880,
+      "category": "team",
+      "content": "## Summary\n\nThe `actionLinkHandler` method was found to allow Message ID Enumeration with Regex MongoDB queries.\n\n## Releases Affected:\n\nThe Meteor method [actionLinkHandler](https://github.com/RocketChat/Rocket.Chat/blob/f1ce17dd71060a6faecde14e73f047aaad72afd0/app/action-links/server/actionLinkHandler.js#L12)  calls an actionLinks wrapper `getMessage` to find affected messages:\n\n```javascript\nMeteor.methods({\n\tactionLinkHandler(name, messageId) {\n\t\tif (!Meteor.userId()) {\n\t\t\tthrow new Meteor.Error('error-invalid-user', 'Invalid user', { method: 'actionLinkHandler' });\n\t\t}\n\n\t\tconst message = actionLinks.getMessage(name, messageId);\n\t\tconst actionLink = message.actionLinks[name];\n\n\t\tactionLinks.actions[actionLink.method_id](message, actionLink.params);\n\t},\n});\n```\n\nThe [actionLinks.getMessage](https://github.com/RocketChat/Rocket.Chat/blob/develop/app/action-links/server/lib/actionLinks.js#L17) method does not validate the input data, so that a `{ $regex: \".*\" }` pattern can be used to enumerate for the existence of Messages with MongoDB Injection.\n\n```javascript\ngetMessage(name, messageId) {\n\tconst userId = Meteor.userId();\n\tif (!userId) {\n\t\tthrow new Meteor.Error('error-invalid-user', 'Invalid user', { function: 'actionLinks.getMessage' });\n\t}\n\n\tconst message = Messages.findOne({ _id: messageId });\n\tif (!message) {\n\t\tthrow new Meteor.Error('error-invalid-message', 'Invalid message', { function: 'actionLinks.getMessage' });\n\t}\n\t// ...\n}\n```\n\nWhenever a Message ID does not match any existing message, the server will respond with `invalid-message` error. When it does exist, a different response (or error) is returned, so that the guess can be evaluated.\n\n```javascript\nMeteor.call(\n  \"actionLinkHandler\",\n  \"joinJitsiCall\",\n  { $regex: \".*\" },\n  console.log\n);\n```\n\nAlthough only Message IDs (and not their content) can be enumerated, mitigating this issue becomes relevant to prevent adversaries from stacking it with other information disclosure vulnerabilities that would leak a message content for known Message IDs.\n\n## Steps To Reproduce (from initial installation to vulnerability):\n\n  1. Login to Rocket.Chat\n  2. Query actionLinkHelper to check if a message matches\n  3. Extend static part of the regex\n  4. Repeat step 2\n\n## Suggested mitigation\n\n  * Check `messageId` for String type\n\n## Impact\n\nAuthenticated adversaries can enumerate the server for existing Message IDs.\n\n## Fix\n\nFixed in 4.7.5, 4.8.2 and 5.0> ",
+      "updated_at": "2022-09-22T12:15:28.826Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 1989106,
+        "username": "mrd0d",
+        "name": "Offsec team engineer",
+        "bio": "",
+        "cleared": false,
+        "verified": false,
+        "website": null,
+        "location": "",
+        "created_at": "2021-09-27T20:52:41.370Z",
+        "url": "https://hackerone.com/mrd0d",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "company",
+        "profile_picture_urls": {
+          "small": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/variants/j9d22b8d3wdw2lskn3dviwszwnze/c8a1698ff707a5e3e8a91a3484838363845daac68cb82c86d55c9e2d44d67b67?response-content-disposition=inline%3B%20filename%3D%22Ghost%20Boy.jpeg%22%3B%20filename%2A%3DUTF-8%27%27Ghost%2520Boy.jpeg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZ44KYFFS%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T223952Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJHMEUCIFPYrndZA%2BqYr1%2BDi6FtjPsUS8S3i6VJZYKkaRtMuEf9AiEA2RrDiVnmvdDtJneFfnDv03YTVWlLTpnuMdItluUuEsEqugUI9f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDEC7SH%2BwB4dOi8f9syqOBQgLlBttN6pXp4ikIVfXUPqECOK%2FSOw%2BFs5Vj90cPp3mAtPyLAUWOWxDAEFDX05nJ2lQyEshBmehJs3ELxTuTCk2DfRnJQhPl9agZsPEfWwFKijPBawKzTni6sAq3kuOPcvGm9dUE8xw6THK5N0B9sBCBizbEvWDbbQK6EKfLjwwknOAzwhA7W4C9dn%2BL%2FUhvWLIkhMNCWWv4NuFr3KcWG6lre5NgB%2F5FOqcRi%2Bf87T2AB6jwHEA9He9ocaS8C6FtOIMjxP1CRVb9J0Qvw0hPism97C%2BLfuctbm%2FAhSg0Kcg8yv5ah7QNvDT90OrVs%2FV7xkUFuHA%2BYCfetUY8bPQEnxPb04DgbXOdR%2FPC5kFuJMKciG%2BzWLkXk5ZpwPErfOoKOhAV1IQmUuJF7Cqb%2FdkMj3PvtnwfTXocH6yDtfqqMPaV5a7G%2BkOiVsgRfe4nf9KWYsbWtKyvZJo0n4ckieINH45QNK%2F%2FlCYLGgdHVKOv%2FeNjO%2FQlM5CvK4FCC3JQKmZKx4RRgDffkY1z021Rf52lIwX9TPnDStjltSRAlXA7eGcViWAm8sKWH8nlfx9xg%2Fn1FKrv2qf4Ci9KTML%2FZiyCZ2WClHyKl7xxQ%2ByNfcV4NdAwH08dze3S7%2F9wI8tIqxsh%2FQBNGhnQLZagEEKhhbiZkkJS7flrw6HZiraf0ZimTx7jiIAnGHYNDKhCkkf4dNjR3D5PsXmjWID7O6TZObu6v3ichBwR%2BsW%2BITcmhj8CrHW%2BaHBxUu4ZWucWMwemmGicDJhLy%2FiEdfjYRa5BLIiPzAZ3l3gdVvQpRhGb0dh%2F6zHNvbINKvc8SlN2Iv0HwehbYOLF7nDaAFheMe7rrIE9ll%2FbGuQ9zlqs8LVo39ukjC5i7zGBjqxAQpJ6SIfI1ouri2FWq2q5jl1Yiu%2FnFIZL4ru7hE7ALfTVMGS6etyHXy%2FoLq5HFEsasrnuWRga7ZnnAZyasNoqaXEqv67Y%2Bq8KD1ifc8pWOrXGxioBYkveNvgssonhlYbv0gBFowkhiusr7F52VPbxEVER5IoFqDLlBz5HcDUkhDXr32QqTAr9d7g9JRnuIVK9%2B6avvjq19Cp5p6WYf%2BGz7xOriKXb6dpGefpH%2FJxEUa8%2Bw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=a858e3fd31272fbf24a33bde8900d48305804879bcb4c99db51783b3cd69d2f3",
+          "medium": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/variants/j9d22b8d3wdw2lskn3dviwszwnze/74790fe75ac5dbe8a5140a122388d59ebac913dcfa941f0b3a45e6cad161f9ea?response-content-disposition=inline%3B%20filename%3D%22Ghost%20Boy.jpeg%22%3B%20filename%2A%3DUTF-8%27%27Ghost%2520Boy.jpeg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZ44KYFFS%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T223952Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJHMEUCIFPYrndZA%2BqYr1%2BDi6FtjPsUS8S3i6VJZYKkaRtMuEf9AiEA2RrDiVnmvdDtJneFfnDv03YTVWlLTpnuMdItluUuEsEqugUI9f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDEC7SH%2BwB4dOi8f9syqOBQgLlBttN6pXp4ikIVfXUPqECOK%2FSOw%2BFs5Vj90cPp3mAtPyLAUWOWxDAEFDX05nJ2lQyEshBmehJs3ELxTuTCk2DfRnJQhPl9agZsPEfWwFKijPBawKzTni6sAq3kuOPcvGm9dUE8xw6THK5N0B9sBCBizbEvWDbbQK6EKfLjwwknOAzwhA7W4C9dn%2BL%2FUhvWLIkhMNCWWv4NuFr3KcWG6lre5NgB%2F5FOqcRi%2Bf87T2AB6jwHEA9He9ocaS8C6FtOIMjxP1CRVb9J0Qvw0hPism97C%2BLfuctbm%2FAhSg0Kcg8yv5ah7QNvDT90OrVs%2FV7xkUFuHA%2BYCfetUY8bPQEnxPb04DgbXOdR%2FPC5kFuJMKciG%2BzWLkXk5ZpwPErfOoKOhAV1IQmUuJF7Cqb%2FdkMj3PvtnwfTXocH6yDtfqqMPaV5a7G%2BkOiVsgRfe4nf9KWYsbWtKyvZJo0n4ckieINH45QNK%2F%2FlCYLGgdHVKOv%2FeNjO%2FQlM5CvK4FCC3JQKmZKx4RRgDffkY1z021Rf52lIwX9TPnDStjltSRAlXA7eGcViWAm8sKWH8nlfx9xg%2Fn1FKrv2qf4Ci9KTML%2FZiyCZ2WClHyKl7xxQ%2ByNfcV4NdAwH08dze3S7%2F9wI8tIqxsh%2FQBNGhnQLZagEEKhhbiZkkJS7flrw6HZiraf0ZimTx7jiIAnGHYNDKhCkkf4dNjR3D5PsXmjWID7O6TZObu6v3ichBwR%2BsW%2BITcmhj8CrHW%2BaHBxUu4ZWucWMwemmGicDJhLy%2FiEdfjYRa5BLIiPzAZ3l3gdVvQpRhGb0dh%2F6zHNvbINKvc8SlN2Iv0HwehbYOLF7nDaAFheMe7rrIE9ll%2FbGuQ9zlqs8LVo39ukjC5i7zGBjqxAQpJ6SIfI1ouri2FWq2q5jl1Yiu%2FnFIZL4ru7hE7ALfTVMGS6etyHXy%2FoLq5HFEsasrnuWRga7ZnnAZyasNoqaXEqv67Y%2Bq8KD1ifc8pWOrXGxioBYkveNvgssonhlYbv0gBFowkhiusr7F52VPbxEVER5IoFqDLlBz5HcDUkhDXr32QqTAr9d7g9JRnuIVK9%2B6avvjq19Cp5p6WYf%2BGz7xOriKXb6dpGefpH%2FJxEUa8%2Bw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=c87e271283158c2f1e2e8ff0ec35cf4c12ecb8e14385c4ed9a340c27eccb8099",
+          "xtralarge": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTcwOTk1NSwicHVyIjoiYmxvYl9pZCJ9fQ==--be5e56ef7524606adf37a742155f3190b1c2c329/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGVnIiwicmVzaXplIjoiMjYweDI2MFx1MDAzZSJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--cea846659d6dfdc215f3c0fb14f7ed8ebc9f95ef/Ghost%20Boy.jpeg"
+        }
+      }
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
