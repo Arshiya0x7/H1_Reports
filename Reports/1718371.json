@@ -1,0 +1,131 @@
+{
+  "id": 1718371,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNzE4Mzcx",
+  "url": "https://hackerone.com/reports/1718371",
+  "title": "Subdomain takeover at http://test.www.midigator.com",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2022-09-30T16:15:02.256Z",
+  "submitted_at": "2022-09-30T16:15:02.344Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "valluvarsploit_h1",
+    "url": "/valluvarsploit_h1",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/p2jrr2ju5aknhi99ihtv8k2yb6x6/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 5044,
+    "url": "https://hackerone.com/equifax",
+    "handle": "equifax",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/005/044/ba20ca159dad308d753710d2b8ae8dd665a60b80_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/005/044/ba20ca159dad308d753710d2b8ae8dd665a60b80_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Equifax-vdp",
+      "twitter_handle": "",
+      "website": "http://www.equifax.com",
+      "about": "Vulnerability Disclosure Program"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2022-11-12T16:05:05.413Z",
+  "bug_reporter_agreed_on_going_public_at": "2022-10-13T16:05:05.157Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Vulnerability\nSubdomain test.www.midigator.com points to an AWS S3 bucket that no longer exists. I was able to take control of this bucket and serve my own content on it.\n\n## Proof Of Concept\n```code\n$ dig test.www.midigator.com\n[snipped]\n;; ANSWER SECTION:\ntest.www.midigator.com.\t60\tIN\tCNAME\ttest.www.midigator.com.s3-website-us-west-1.amazonaws.com.\ntest.www.midigator.com.s3-website-us-west-1.amazonaws.com. 59 IN CNAME s3-website-us-west-1.amazonaws.com.\ns3-website-us-west-1.amazonaws.com. 4 IN A\t52.219.193.3\n```\n\n{F1963195}\n\n## Remediation\nRemove the CNAME entry for the `test.www.midigator.com`\n\n## Impact\n\nSubdomain Takeover",
+  "weakness": {
+    "id": 75,
+    "name": "Privilege Escalation"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1963195,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/2fb9ytwug342kmhktrzb7qy98iau?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWOFFUOGP%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T221439Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJIMEYCIQCO8e98CG93gx6FI93avcVk93orGMThgwEg%2BxhAiYwrXgIhAMah1DU4HhGxSu5S4LbJ3j6IyULGaP4hFSPFJv2WNr2JKrsFCPT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5Igzev0Pr%2F5UlW%2FL7fPYqjwXWJoLjlkU8GWlAViMQ3u%2FjvH9y3yiMa5dU8xk%2BCsIybMAVwkKy%2FBzn%2FowkGS27NxJfn4Get3qq07Iq%2FfxvVifPXry2iqo0%2BtesEWRNnYEoDy1WXB8NP3nSK1RdZ4C%2BDEjFUfiGdVtbebkEzw1ifv0o%2B6sJRawWSgazfGXh6pEjgcIH%2FComPwS%2BpJweMpmQOzZomMfh4hSjUQcFSMNWjn4RVMFIAwBOLe54KdqfWPrfIQWxngSoN%2Bmsgp55TAiS7yHoghkgQ5ZL8wi5V%2Fj3jOZnpcQs7ceV%2F4JinpFzHxdHrZGqHTTBNuGs2CX%2F6tynSVMQ8lldsKCjREPSVnNx6RB0GF92bYT6wxggCqxCPziGaT3Q8Ch24afG6ztAt%2BxbY3rAeNbBeE4s35EGKSWYA6GrLs8G35CZsg3wblIuvx4JdnAF14owRU27QTNGY869dHq1kTev8mlUwq%2FH6%2BK981EmupY7zkmfxeQtJ9T%2BfpFoOogHERfTb%2FlF0Y3xr5ikBgMkSZoAOHl%2BXIJgEv5DM7p1t9Ml3jLA%2Bp2mc0HOAF0EUmgI6x80Kc0eRN4BpKrb5JMw2XcyTG%2FlADP9Ojq2o2mnHdHhmMQdKo%2BfnD6XyX32lVj0POdfQerAYK1vjIKF1COpZnmyJTy4mlRM1TIhd3LL8%2F5mWZu4hMFbOJ4ZeN4%2FyIOQ1S3Gdw4hHQiyoXQnJqZbqrmQ%2F%2Brg5q94emnWgheoPI5UBfqjKv0HWzSpyLAR6ED%2BQipJTzHhFkDifRCM8f%2FfMKrMQ7xNsAHNf%2FL%2F3ZM1c23%2F3ENsujqGsRLhXc3uGGWBQZkmwiMqXOvn4POKiMpj%2BquxFhFjrppowZ7a0DYCsGBHS4PX5T8Zryd4PbyjMOv7u8YGOrABYECv1ysrusYXz8v1PffKu2oS9%2FWTV3wfmfM994qCLjqBjzayF%2BG46FDMOHWKiyMXvtqUS%2FSnsTAiz5nWitLq1BHR5WmrwcvldH2z%2BI5FyrT9%2B49ixOsFaHdDn%2FwdS2GSJqanubFedGASA6T%2FEoZ78mFlMM4QbCwrlIwr0DtRZMTOJVWMyadjBPUIPVz3rimScaaqXJhy5htKpLL3HXszy1hHTdkrWLjXMtW7vgtkBO0%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=024e43c3e82b21ac4fd7f612f1352e47c711e0809f573695a6e5efc41c9fbc76",
+      "file_size": 30403,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2022-11-12T16:05:05.240Z",
+  "allow_singular_disclosure_after": -90137373.81421371,
+  "singular_disclosure_allowed": true,
+  "vote_count": 32,
+  "voters": [
+    "prathap_ilango",
+    "jumpydata",
+    "jensec",
+    "zy9ard3",
+    "shreyaschavhan",
+    "7odamoo",
+    "address_below0",
+    "h4x0r_dz",
+    "sim4n6",
+    "khizer47",
+    "and 22 more..."
+  ],
+  "severity": {
+    "rating": "high",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 203331,
+    "asset_type": "OTHER",
+    "asset_identifier": "*.midigator.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
