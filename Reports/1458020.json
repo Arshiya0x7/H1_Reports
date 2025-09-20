@@ -1,0 +1,146 @@
+{
+  "id": 1458020,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNDU4MDIw",
+  "url": "https://hackerone.com/reports/1458020",
+  "title": "NoSQL-Injection discloses S3 File Upload URLs",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2022-01-22T13:23:29.491Z",
+  "submitted_at": "2022-01-22T13:23:29.558Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "gronke",
+    "url": "/gronke",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 19858,
+    "url": "https://hackerone.com/rocket_chat",
+    "handle": "rocket_chat",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/019/858/ada6c92a338715afad123af214dd6e22fd8dc6ff_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/019/858/ada6c92a338715afad123af214dd6e22fd8dc6ff_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Rocket.Chat",
+      "twitter_handle": "RocketChat",
+      "website": "https://rocket.chat",
+      "about": "Rocket.Chat is a company built on open source values and a love for efficiency. The company is driven by our amazing community of contributors."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": true,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "no-content",
+  "cve_ids": [
+    "CVE-2022-35246"
+  ],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2022-09-22T16:03:21.096Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2022-09-22T12:19:55.470Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "",
+  "weakness": {
+    "id": 18,
+    "name": "Information Disclosure"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [],
+  "allow_singular_disclosure_at": "2022-10-22T12:19:55.574Z",
+  "allow_singular_disclosure_after": -91966764.45409326,
+  "singular_disclosure_allowed": true,
+  "vote_count": 3,
+  "voters": [
+    "shreyaschavhan",
+    "shivammusic",
+    "moezilla402"
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 6.5,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "low",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "high",
+      "integrity": "none",
+      "availability": "none"
+    }
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "id": 194885,
+      "category": "team",
+      "content": "## Summary\n\nA NoSQL-Injection vulnerability in the `getS3FileUrl` Meteor server method can disclose arbitrary file upload URLs to users that should not be able to access.\n\n## Description\n\nThe  `fileId` argument of the `getS3FileUrl` Meteor  server method is not validated and can contain a regular expression.\n\nThe File Upload lookup result in [app/file-upload/server/methods/getS3FileUrl.js#L18](https://github.com/RocketChat/Rocket.Chat/blob/46c7b7e89fc569bf7acf408dd260f188996fb33a/app/file-upload/server/methods/getS3FileUrl.js#L18) is returned to the requesting user, regardless of the users ability to access the file.\n\n```javascript\nMeteor.methods({\n\tasync getS3FileUrl(fileId) {\n\t\tif (protectedFiles && !Meteor.userId()) {\n\t\t\tthrow new Meteor.Error('error-invalid-user', 'Invalid user', { method: 'sendFileMessage' });\n\t\t}\n\t\tconst file = await Uploads.findOneById(fileId);\n\n\t\treturn UploadFS.getStore('AmazonS3:Uploads').getRedirectURL(file);\n\t},\n});\n```\n\nThe S3 storage URL is secret because no further access checks occur so that disclosure of the URL also discloses the file contents.\n\n## Releases Affected:\n\n  * 3.18.3\n  * 4.3.0\n  * develop\n  * 0.53.0\n\n## Steps To Reproduce (from initial installation to vulnerability):\n\n  1. Login to Rocket.Chat instance with S3 storage enabled\n  2. Run PoC to access the first file matching the Regular Expression pattern\n\n## Supporting Material/References:\n\n### Proof of Concept\n\n```javascript\nconst pattern = \".*\";\nMeteor.call(\n  \"getS3FileUrl\",\n  { $regex: $pattern },\n  (err, url) => { window.location.href=url }\n);\n```\n\n## Suggested mitigation\n\n  * Check access to a files room\n  * Require fileId to be a string\n\n## Impact\n\nAuthenticated users can enumerate and access arbitrary file uploads they should not have access to.\n\n## Fix\n\nFixed in versions 4.7.5, 4.8.2 and 5.0>",
+      "updated_at": "2022-09-22T12:19:41.299Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 1989106,
+        "username": "mrd0d",
+        "name": "Offsec team engineer",
+        "bio": "",
+        "cleared": false,
+        "verified": false,
+        "website": null,
+        "location": "",
+        "created_at": "2021-09-27T20:52:41.370Z",
+        "url": "https://hackerone.com/mrd0d",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "company",
+        "profile_picture_urls": {
+          "small": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/variants/j9d22b8d3wdw2lskn3dviwszwnze/c8a1698ff707a5e3e8a91a3484838363845daac68cb82c86d55c9e2d44d67b67?response-content-disposition=inline%3B%20filename%3D%22Ghost%20Boy.jpeg%22%3B%20filename%2A%3DUTF-8%27%27Ghost%2520Boy.jpeg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWOFFUOGP%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T223920Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJIMEYCIQCO8e98CG93gx6FI93avcVk93orGMThgwEg%2BxhAiYwrXgIhAMah1DU4HhGxSu5S4LbJ3j6IyULGaP4hFSPFJv2WNr2JKrsFCPT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5Igzev0Pr%2F5UlW%2FL7fPYqjwXWJoLjlkU8GWlAViMQ3u%2FjvH9y3yiMa5dU8xk%2BCsIybMAVwkKy%2FBzn%2FowkGS27NxJfn4Get3qq07Iq%2FfxvVifPXry2iqo0%2BtesEWRNnYEoDy1WXB8NP3nSK1RdZ4C%2BDEjFUfiGdVtbebkEzw1ifv0o%2B6sJRawWSgazfGXh6pEjgcIH%2FComPwS%2BpJweMpmQOzZomMfh4hSjUQcFSMNWjn4RVMFIAwBOLe54KdqfWPrfIQWxngSoN%2Bmsgp55TAiS7yHoghkgQ5ZL8wi5V%2Fj3jOZnpcQs7ceV%2F4JinpFzHxdHrZGqHTTBNuGs2CX%2F6tynSVMQ8lldsKCjREPSVnNx6RB0GF92bYT6wxggCqxCPziGaT3Q8Ch24afG6ztAt%2BxbY3rAeNbBeE4s35EGKSWYA6GrLs8G35CZsg3wblIuvx4JdnAF14owRU27QTNGY869dHq1kTev8mlUwq%2FH6%2BK981EmupY7zkmfxeQtJ9T%2BfpFoOogHERfTb%2FlF0Y3xr5ikBgMkSZoAOHl%2BXIJgEv5DM7p1t9Ml3jLA%2Bp2mc0HOAF0EUmgI6x80Kc0eRN4BpKrb5JMw2XcyTG%2FlADP9Ojq2o2mnHdHhmMQdKo%2BfnD6XyX32lVj0POdfQerAYK1vjIKF1COpZnmyJTy4mlRM1TIhd3LL8%2F5mWZu4hMFbOJ4ZeN4%2FyIOQ1S3Gdw4hHQiyoXQnJqZbqrmQ%2F%2Brg5q94emnWgheoPI5UBfqjKv0HWzSpyLAR6ED%2BQipJTzHhFkDifRCM8f%2FfMKrMQ7xNsAHNf%2FL%2F3ZM1c23%2F3ENsujqGsRLhXc3uGGWBQZkmwiMqXOvn4POKiMpj%2BquxFhFjrppowZ7a0DYCsGBHS4PX5T8Zryd4PbyjMOv7u8YGOrABYECv1ysrusYXz8v1PffKu2oS9%2FWTV3wfmfM994qCLjqBjzayF%2BG46FDMOHWKiyMXvtqUS%2FSnsTAiz5nWitLq1BHR5WmrwcvldH2z%2BI5FyrT9%2B49ixOsFaHdDn%2FwdS2GSJqanubFedGASA6T%2FEoZ78mFlMM4QbCwrlIwr0DtRZMTOJVWMyadjBPUIPVz3rimScaaqXJhy5htKpLL3HXszy1hHTdkrWLjXMtW7vgtkBO0%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=ce4cc181f0b6345722f9cdee50c7e6657df27c921361ea793d75c72272165f25",
+          "medium": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/variants/j9d22b8d3wdw2lskn3dviwszwnze/74790fe75ac5dbe8a5140a122388d59ebac913dcfa941f0b3a45e6cad161f9ea?response-content-disposition=inline%3B%20filename%3D%22Ghost%20Boy.jpeg%22%3B%20filename%2A%3DUTF-8%27%27Ghost%2520Boy.jpeg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWOFFUOGP%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T223920Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJIMEYCIQCO8e98CG93gx6FI93avcVk93orGMThgwEg%2BxhAiYwrXgIhAMah1DU4HhGxSu5S4LbJ3j6IyULGaP4hFSPFJv2WNr2JKrsFCPT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5Igzev0Pr%2F5UlW%2FL7fPYqjwXWJoLjlkU8GWlAViMQ3u%2FjvH9y3yiMa5dU8xk%2BCsIybMAVwkKy%2FBzn%2FowkGS27NxJfn4Get3qq07Iq%2FfxvVifPXry2iqo0%2BtesEWRNnYEoDy1WXB8NP3nSK1RdZ4C%2BDEjFUfiGdVtbebkEzw1ifv0o%2B6sJRawWSgazfGXh6pEjgcIH%2FComPwS%2BpJweMpmQOzZomMfh4hSjUQcFSMNWjn4RVMFIAwBOLe54KdqfWPrfIQWxngSoN%2Bmsgp55TAiS7yHoghkgQ5ZL8wi5V%2Fj3jOZnpcQs7ceV%2F4JinpFzHxdHrZGqHTTBNuGs2CX%2F6tynSVMQ8lldsKCjREPSVnNx6RB0GF92bYT6wxggCqxCPziGaT3Q8Ch24afG6ztAt%2BxbY3rAeNbBeE4s35EGKSWYA6GrLs8G35CZsg3wblIuvx4JdnAF14owRU27QTNGY869dHq1kTev8mlUwq%2FH6%2BK981EmupY7zkmfxeQtJ9T%2BfpFoOogHERfTb%2FlF0Y3xr5ikBgMkSZoAOHl%2BXIJgEv5DM7p1t9Ml3jLA%2Bp2mc0HOAF0EUmgI6x80Kc0eRN4BpKrb5JMw2XcyTG%2FlADP9Ojq2o2mnHdHhmMQdKo%2BfnD6XyX32lVj0POdfQerAYK1vjIKF1COpZnmyJTy4mlRM1TIhd3LL8%2F5mWZu4hMFbOJ4ZeN4%2FyIOQ1S3Gdw4hHQiyoXQnJqZbqrmQ%2F%2Brg5q94emnWgheoPI5UBfqjKv0HWzSpyLAR6ED%2BQipJTzHhFkDifRCM8f%2FfMKrMQ7xNsAHNf%2FL%2F3ZM1c23%2F3ENsujqGsRLhXc3uGGWBQZkmwiMqXOvn4POKiMpj%2BquxFhFjrppowZ7a0DYCsGBHS4PX5T8Zryd4PbyjMOv7u8YGOrABYECv1ysrusYXz8v1PffKu2oS9%2FWTV3wfmfM994qCLjqBjzayF%2BG46FDMOHWKiyMXvtqUS%2FSnsTAiz5nWitLq1BHR5WmrwcvldH2z%2BI5FyrT9%2B49ixOsFaHdDn%2FwdS2GSJqanubFedGASA6T%2FEoZ78mFlMM4QbCwrlIwr0DtRZMTOJVWMyadjBPUIPVz3rimScaaqXJhy5htKpLL3HXszy1hHTdkrWLjXMtW7vgtkBO0%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=1507597a85c8cfb3f923ccca6879933346badddf83b92b05622c3fe7ee32af2f",
+          "xtralarge": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTcwOTk1NSwicHVyIjoiYmxvYl9pZCJ9fQ==--be5e56ef7524606adf37a742155f3190b1c2c329/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGVnIiwicmVzaXplIjoiMjYweDI2MFx1MDAzZSJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--cea846659d6dfdc215f3c0fb14f7ed8ebc9f95ef/Ghost%20Boy.jpeg"
+        }
+      }
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
