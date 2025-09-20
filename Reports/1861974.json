@@ -1,0 +1,147 @@
+{
+  "id": 1861974,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xODYxOTc0",
+  "url": "https://hackerone.com/reports/1861974",
+  "title": "Stealing Users OAuth authorization code via redirect_uri",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2023-02-04T07:53:55.652Z",
+  "submitted_at": "2023-02-04T07:53:55.832Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "kuzu7shiki",
+    "url": "/kuzu7shiki",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/xdxbamgmbeect0b2qu7a4ijes5k1/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 29446,
+    "url": "https://hackerone.com/pixiv",
+    "handle": "pixiv",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/zwZW6NWs5m7fkL6SV9jkncqW/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/zwZW6NWs5m7fkL6SV9jkncqW/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "pixiv",
+      "twitter_handle": "pixiv",
+      "website": "https://www.pixiv.net",
+      "about": "Online community platform for creators all over the world."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2023-03-22T08:59:58.038Z",
+  "bug_reporter_agreed_on_going_public_at": "2023-03-10T03:10:06.850Z",
+  "team_member_agreed_on_going_public_at": "2023-03-22T08:59:57.753Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nPath traversal in OAuth `redirect_uri` which can lead to users authorization code being leaked to any malicious user.\n\nThe following authorization code flow request is generated at booth login.\n```\nhttps://oauth.secure.pixiv.net/v2/auth/authorize?client_id=a1Z7w6JssUQkw5Hid0uIDeuesue9&redirect_uri=https%3A%2F%2Fbooth.pm%2Fusers%2Fauth%2Fpixiv%2Fcallback&response_type=code&scope=read-works+read-favorite-users+read-friends+read-profile+read-email+write-profile&state=%3A1a38b53563599621ce25094661b1c4458ddb52d79d771149\n```\n\nPath traversal vulnerability in this `redirect_uri` parameter allows the attacker to direct the user to the product page created by the attacker.\n```\nredirect_uri=https%3A%2F%2Fbooth.pm%2Fusers%2Fauth%2Fpixiv%2Fcallback/../../../../ja/items/4503924\n```\n-> redirected to https://booth.pm/ja/items/4503924\n\nIf the attacker had Google Analytics enabled, the query string could be exposed when the victim is redirected to the product page, so the unused authorization code is leaked.\n\n## Steps To Reproduce:\n\n  1. The attacker makes his shop public. Register his products and set up his Google Analytics tracking ID.\n  2. Have the victim click on the following link; the value of the state parameter can be anything.\n```\nhttps://oauth.secure.pixiv.net/v2/auth/authorize?client_id=a1Z7w6JssUQkw5Hid0uIDeuesue9&redirect_uri=https%3A%2F%2Fbooth.pm%2Fusers%2Fauth%2Fpixiv%2Fcallback/../../../../ja/items/[attacker's product id]&response_type=code&scope=read-works+read-favorite-users+read-friends+read-profile+read-email+write-profile&state=%3A1a38b53563599621ce25094661b1c4458ddb52d79d771149\n```\n\n  3. When the victim clicks on the above link and proceeds with the login process, he is redirected to the attacker's product page.\n\n  4. The attacker can steal victims' authorizaiton code from Google Analytics real-time reports.\n\n## Impact\n\nDue to path traversal in `redirect_uri` parameter in OAuth flow, its possible to redirect authenticated users to attacker's product page with their OAuth credentials from which its possible to takeover their account.",
+  "bounty_amount": "2000.0",
+  "formatted_bounty": "$2,000",
+  "weakness": {
+    "id": 124,
+    "name": "Improper Authorization"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 2153661,
+      "file_name": "recording-1675493976118.webm",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/lpa1fgla7dmrmfvi0wibcsn5qmlw?response-content-disposition=attachment%3B%20filename%3D%22recording-1675493976118.webm%22%3B%20filename%2A%3DUTF-8%27%27recording-1675493976118.webm&response-content-type=video%2Fwebm&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXTXYYN7C%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T212455Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJIMEYCIQDG4Dx8GKa1nWMTeRTTOFjuvONzrZaM8lR3NySFyGyoLgIhAO2ch9HfItItziqcq8UCUva0A1msy8TSDbk1S0YGndHxKroFCPX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5IgyMSJWsJAMFjThhFKMqjgXMa3wC0IXgZJbryWZMgkUI95IoO22GEYU9e2D5gMcggwRLJzptG9%2BRYCEsNHhHg2D2SfIri3OTi5d6KLt4iPWT2a2SZ%2BrR%2B8P0p0Z99hh3P0OWpojsKaoiKQvsGVML9i9hW3jXWpN9CsgzD%2FRLtlNFx6KO72kZbpa62bSsIDisIUpzrOtUl9pp5x5kDP8xiYrSthB8l93w25Qscab%2BWux3FBlbWvzMiwJxGJtoQfpPDdgZZ1uevE%2B03sN4q6xEx5e7C%2B6OuJ1DbQb5%2B%2B%2B2qQlLRZHMdQY1q3IQLTD1DWzUEfLsTUFhQ3T7xXNVdqskE2F08b%2BOhV1SceFOCAabKpWwv7I1fhMjU2dhZAEv%2FQAu6XvFYwwojRGVYKCoN4LnBNzCeWONQ1LE2ddf%2Bs0Uww2JYw1CyftUec6tqaNirKcC0VqdecjRMI9i2z5zljsrPT32rzVhlZ2Vg2D9iNrKSLnMv2GGtHRDVj2KgYzIy%2BS4ZnZ1bbKiKrqCvnGJcefKEY%2Foq%2B2EbAsL0gJFVJ070vCbPxwGdhSz8MJDe1MvSVUBIvdaiDgWzXvin%2BYiGTkyB%2BtnkEKk8j3K99WOztVybBT5%2BN9d9hjzkD5No1PZAC4UDcJDvoQOFsLNhg%2FAFp%2BUykiiYYUzv1ARfZHqnL4Oke7XWut3VRpJOkvoivBO6MOSQ4%2F1w5PP6UAUSbxyS5c9Ng4U8jZu8Hoe1rViP6lOyP5P0Hykc7dMKAZxFRjr%2BHpeba4uTnRqO6x0mb7Ce2vxvQGUJDxozIJQKtFeJMCkKy0cwvYf%2FWe%2FZpOoDcGRnB8%2BxQsntQKAvVwlehf9blYqYwoZFMKbnEDGjmMJISIUdUjdUp4tT3c7Rw1oqxRFFT0wj428xgY6sAGOlKbiRtf8wkAjhQMv73ifRHO5fu8SgUTlHwprc9w01w8TYY12P8uU5Yr0s%2BBwrVkybQDwqo6QSqgrtzqPNFnzpEtE3CCrXxVxlX6Zd2DWMkQU66T%2B8D3la9dYmFIH4tQNXt9%2FdQKUV3YVkls3v6VpdOrtaZb99i%2Fx1pRgjrgqkvAeF9dcbV01vh15EJsN8xg1vitiWbg%2FEpE2q%2FoBEkIIEBeXSvkNQb12UaP7a6CPAw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=4ae8b1bcfdba2bdad9d3524bb6dbd035f3927888744c7ea45e9acaa993549cfa",
+      "file_size": 7274267,
+      "type": "video/webm",
+      "moderated": null
+    },
+    {
+      "id": 2153709,
+      "file_name": "request_response_-_the_victim_clicks_on_the_malicious_link.txt",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/6hdhnin23xswy12q9613pbbwlobq?response-content-disposition=attachment%3B%20filename%3D%22request_response_-_the_victim_clicks_on_the_malicious_link.txt%22%3B%20filename%2A%3DUTF-8%27%27request_response_-_the_victim_clicks_on_the_malicious_link.txt&response-content-type=text%2Fplain&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXTXYYN7C%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T212455Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJIMEYCIQDG4Dx8GKa1nWMTeRTTOFjuvONzrZaM8lR3NySFyGyoLgIhAO2ch9HfItItziqcq8UCUva0A1msy8TSDbk1S0YGndHxKroFCPX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5IgyMSJWsJAMFjThhFKMqjgXMa3wC0IXgZJbryWZMgkUI95IoO22GEYU9e2D5gMcggwRLJzptG9%2BRYCEsNHhHg2D2SfIri3OTi5d6KLt4iPWT2a2SZ%2BrR%2B8P0p0Z99hh3P0OWpojsKaoiKQvsGVML9i9hW3jXWpN9CsgzD%2FRLtlNFx6KO72kZbpa62bSsIDisIUpzrOtUl9pp5x5kDP8xiYrSthB8l93w25Qscab%2BWux3FBlbWvzMiwJxGJtoQfpPDdgZZ1uevE%2B03sN4q6xEx5e7C%2B6OuJ1DbQb5%2B%2B%2B2qQlLRZHMdQY1q3IQLTD1DWzUEfLsTUFhQ3T7xXNVdqskE2F08b%2BOhV1SceFOCAabKpWwv7I1fhMjU2dhZAEv%2FQAu6XvFYwwojRGVYKCoN4LnBNzCeWONQ1LE2ddf%2Bs0Uww2JYw1CyftUec6tqaNirKcC0VqdecjRMI9i2z5zljsrPT32rzVhlZ2Vg2D9iNrKSLnMv2GGtHRDVj2KgYzIy%2BS4ZnZ1bbKiKrqCvnGJcefKEY%2Foq%2B2EbAsL0gJFVJ070vCbPxwGdhSz8MJDe1MvSVUBIvdaiDgWzXvin%2BYiGTkyB%2BtnkEKk8j3K99WOztVybBT5%2BN9d9hjzkD5No1PZAC4UDcJDvoQOFsLNhg%2FAFp%2BUykiiYYUzv1ARfZHqnL4Oke7XWut3VRpJOkvoivBO6MOSQ4%2F1w5PP6UAUSbxyS5c9Ng4U8jZu8Hoe1rViP6lOyP5P0Hykc7dMKAZxFRjr%2BHpeba4uTnRqO6x0mb7Ce2vxvQGUJDxozIJQKtFeJMCkKy0cwvYf%2FWe%2FZpOoDcGRnB8%2BxQsntQKAvVwlehf9blYqYwoZFMKbnEDGjmMJISIUdUjdUp4tT3c7Rw1oqxRFFT0wj428xgY6sAGOlKbiRtf8wkAjhQMv73ifRHO5fu8SgUTlHwprc9w01w8TYY12P8uU5Yr0s%2BBwrVkybQDwqo6QSqgrtzqPNFnzpEtE3CCrXxVxlX6Zd2DWMkQU66T%2B8D3la9dYmFIH4tQNXt9%2FdQKUV3YVkls3v6VpdOrtaZb99i%2Fx1pRgjrgqkvAeF9dcbV01vh15EJsN8xg1vitiWbg%2FEpE2q%2FoBEkIIEBeXSvkNQb12UaP7a6CPAw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=fa22dd3ec8895152a817419d09aef2da07baa7a2148c718f244a470cb063e9f0",
+      "file_size": 3732,
+      "type": "text/plain",
+      "moderated": null
+    },
+    {
+      "id": 2153710,
+      "file_name": "request_-_the_victim_redirected_attacker's_product_page.txt",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/psob4nib2n9pf5ckkb1mvk6bonwc?response-content-disposition=attachment%3B%20filename%3D%22request_-_the_victim_redirected_attacker%2527s_product_page.txt%22%3B%20filename%2A%3DUTF-8%27%27request_-_the_victim_redirected_attacker%2527s_product_page.txt&response-content-type=text%2Fplain&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXTXYYN7C%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T212455Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJIMEYCIQDG4Dx8GKa1nWMTeRTTOFjuvONzrZaM8lR3NySFyGyoLgIhAO2ch9HfItItziqcq8UCUva0A1msy8TSDbk1S0YGndHxKroFCPX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5IgyMSJWsJAMFjThhFKMqjgXMa3wC0IXgZJbryWZMgkUI95IoO22GEYU9e2D5gMcggwRLJzptG9%2BRYCEsNHhHg2D2SfIri3OTi5d6KLt4iPWT2a2SZ%2BrR%2B8P0p0Z99hh3P0OWpojsKaoiKQvsGVML9i9hW3jXWpN9CsgzD%2FRLtlNFx6KO72kZbpa62bSsIDisIUpzrOtUl9pp5x5kDP8xiYrSthB8l93w25Qscab%2BWux3FBlbWvzMiwJxGJtoQfpPDdgZZ1uevE%2B03sN4q6xEx5e7C%2B6OuJ1DbQb5%2B%2B%2B2qQlLRZHMdQY1q3IQLTD1DWzUEfLsTUFhQ3T7xXNVdqskE2F08b%2BOhV1SceFOCAabKpWwv7I1fhMjU2dhZAEv%2FQAu6XvFYwwojRGVYKCoN4LnBNzCeWONQ1LE2ddf%2Bs0Uww2JYw1CyftUec6tqaNirKcC0VqdecjRMI9i2z5zljsrPT32rzVhlZ2Vg2D9iNrKSLnMv2GGtHRDVj2KgYzIy%2BS4ZnZ1bbKiKrqCvnGJcefKEY%2Foq%2B2EbAsL0gJFVJ070vCbPxwGdhSz8MJDe1MvSVUBIvdaiDgWzXvin%2BYiGTkyB%2BtnkEKk8j3K99WOztVybBT5%2BN9d9hjzkD5No1PZAC4UDcJDvoQOFsLNhg%2FAFp%2BUykiiYYUzv1ARfZHqnL4Oke7XWut3VRpJOkvoivBO6MOSQ4%2F1w5PP6UAUSbxyS5c9Ng4U8jZu8Hoe1rViP6lOyP5P0Hykc7dMKAZxFRjr%2BHpeba4uTnRqO6x0mb7Ce2vxvQGUJDxozIJQKtFeJMCkKy0cwvYf%2FWe%2FZpOoDcGRnB8%2BxQsntQKAvVwlehf9blYqYwoZFMKbnEDGjmMJISIUdUjdUp4tT3c7Rw1oqxRFFT0wj428xgY6sAGOlKbiRtf8wkAjhQMv73ifRHO5fu8SgUTlHwprc9w01w8TYY12P8uU5Yr0s%2BBwrVkybQDwqo6QSqgrtzqPNFnzpEtE3CCrXxVxlX6Zd2DWMkQU66T%2B8D3la9dYmFIH4tQNXt9%2FdQKUV3YVkls3v6VpdOrtaZb99i%2Fx1pRgjrgqkvAeF9dcbV01vh15EJsN8xg1vitiWbg%2FEpE2q%2FoBEkIIEBeXSvkNQb12UaP7a6CPAw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=26a9b9f6eafafb2c07ce40d26b7dd5201dfe947b10d42d5a974ada391127ca53",
+      "file_size": 2107,
+      "type": "text/plain",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 228,
+  "voters": [
+    "alienisgrinding",
+    "llorenzo",
+    "m4lc0lmx",
+    "defenderwww",
+    "orange303",
+    "loaymorad",
+    "achabi7",
+    "supermancyber",
+    "njmulsqb",
+    "oub3ll4",
+    "and 218 more..."
+  ],
+  "severity": {
+    "rating": "high",
+    "author_type": "Team"
+  },
+  "structured_scope": {
+    "databaseId": 9997,
+    "asset_type": "URL",
+    "asset_identifier": "booth.pm",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
