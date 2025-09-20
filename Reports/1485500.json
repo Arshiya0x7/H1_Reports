@@ -1,0 +1,128 @@
+{
+  "id": 1485500,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNDg1NTAw",
+  "url": "https://hackerone.com/reports/1485500",
+  "title": "File Read Vulnerability allows Attackers to Compromise S3 buckets using Prow",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2022-02-18T22:18:37.858Z",
+  "submitted_at": "2022-02-18T22:18:37.924Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "stealthy",
+    "url": "/stealthy",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/c0mgzdrl4rsdzvgu9hol4owyfk2x/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": true,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 39386,
+    "url": "https://hackerone.com/kubernetes",
+    "handle": "kubernetes",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/039/386/486f4380e09776d05a912ca9f46be23f72fe8197_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/039/386/486f4380e09776d05a912ca9f46be23f72fe8197_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Kubernetes",
+      "twitter_handle": "kubernetesio",
+      "website": "https://kubernetes.io/",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2023-04-25T15:00:29.657Z",
+  "bug_reporter_agreed_on_going_public_at": "2023-04-25T15:00:29.565Z",
+  "team_member_agreed_on_going_public_at": "2023-04-25T13:35:34.533Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nI found a vulnerability where AWS Prow allows users to sign the base path of S3 buckets that Prow is using. When this happens an attacker views every file in the S3 bucket and then can sign that endpoint to view the file. This vulnerability type allows attackers to dump the contents of the entire S3 production bucket for each company which may have more than just Prow server logs.\n## Component Version:\nLatest\n\n## Steps To Reproduce:\n\n1 - I'm just going to use this public instance of Prow I found as example. I found this vulnerability while conducting a penetration test for a private program so I cannot disclose those details.\n\n```\nhttps://prow.falco.org\n```\n\n2 - So on this site the vulnerable endpoint is here.\n\n```\nhttps://prow.falco.org/job-history/s3/falco-prow-logs/%2e%3f\n```\n\n{F1624608}\n## Supporting Material/References:\n\n\n3 - Prow only expects to load log text files and appends a `/latest.txt` to the end of S3 URLs to be signed. By specifying `/.` we are getting the base URL of the bucket which lists every file and by using an encoded question mark we comment out the `/latest.txt` section. So, the URL to sign looks like this `s3://falco-prow-logs/.?/latest.txt` which signs the base path and dumps the entire private bucket details. Additionally, this technique can be used to read any file in the bucket.\n```\nhttps://prow.falco.org/job-history/s3/falco-prow-logs/any.valid.file%3f\n```\n\n## Impact\n\nDump production data in companies S3 buckets that use Prow. Additionally, find old log files that are no longer specified in the instance GUI.",
+  "bounty_amount": "250.0",
+  "formatted_bounty": "$250",
+  "weakness": {
+    "id": 26,
+    "name": "Improper Access Control - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1624608,
+      "file_name": "Screen_Shot_2022-02-18_at_4.14.47_PM.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/d8nwotdt0xnl14m6ftk49jia3vnh?response-content-disposition=attachment%3B%20filename%3D%22Screen_Shot_2022-02-18_at_4.14.47_PM.png%22%3B%20filename%2A%3DUTF-8%27%27Screen_Shot_2022-02-18_at_4.14.47_PM.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ34II76RN%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T210857Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHoaCXVzLXdlc3QtMiJHMEUCIFMZM2xES7jUDfxitQfk9bOpL1RYwsgXVsARlUgJhm8aAiEAxE2r9JZYPu%2FarHdd4l90ZcxnD7GL5nt6kVTsz615n6YquwUI8%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDK9z4l1n%2BvXUhhPoNyqPBd%2FTGd%2BJzXScdLSUe4Fj63bsll%2FYQwMBK%2Fk9ZQ%2FXVTRATnkTXw5tmurFzlZJy%2Flnod2oUiVZmlC8lW9IKVHAehyMYbzMD7nN0pybt4gGi%2B6QZfCrUTtkFBvc4gcaUPtmjn2me4jlh0eub8HK%2FTOgTf2m5cLStvnSsUkuGvShLKuNiyWlcwvReV0bjZ%2FFrVw1Xr98gnwX9Yn34ACV2kxjiy9gy0OsbZafiJfGU0fzv4JgGzVjQKyt8CqpFzeLonet85hVA0DBeXpMuSCY%2Fv6zhP5qrrV2CTqHgFRRNsgyWm9cGt%2BQ2rmjm2k5d6ycDTwFEL7o8ITElh%2F%2FfR9yGs7UFYk3n01d6H1H8kNgzMD8ZIJ01slAof2a%2FzG4GUfLx%2Bi6dHXKgMNzHUGS8HFli3gbpplghzS%2BSRrW1eFxCaOp2WttAm18Y6DvJW69zxsKLBdJzNJbQDf9wRFUaUm9vF5ndZe31UweI2ZoKcfHVN1%2Fz%2FKtXHyqEnBejQDZ1YfTJn620x5zpJlVTq13qX8M9yM5f7nPNq1NSD8YimlmqzRL9i0C2ga9IFFU3UGE4hhaMhvt9NlhWJGZwz6IkV6s32e%2FfkSD54O85xOkPT6SisYPiHnGye5OHnhuOALdZmWqZTKhFlHvdAaC0c%2BzVHn9AMMnPRLXthRo05eDT%2BM9Iukcms7BDYmncWLjcmWFnEZBcwIov%2FzyHgD0Yh3RYs%2FvWUA%2BYGVK4yPxLOL0makAtlFH2ZMPmmEOJRo7XGAEevAUN5k2Un8SSZaeVplSeQdiKatcOWEWVw%2Faw0JGvYFFe8eLqegNSOpy6eUCokhbZ%2FmI2GCYULZWFi4vPhk7lA%2Bg%2F1uAxox9rVU02Zabav%2Bgg9ttjv8wqtm7xgY6sQHLCp%2BnNoc2EV2i%2FC6dE%2FcALAQxe%2BSC7g1fMlo7wb29HoE%2BVb52jzEWGWBvp2bYbLelBSDOiDXsd16AYmUpzZaoGQAhHUD2HjzV5SjWlS1%2BAVJSLBIHWBMM7tflwI2MiGNyW7pr8cPq%2BlHazFhpYYinl176PJnoLsz9Nw9RjJf0U0s4DvPNfj3QdbnFjEhA2WVFqXnvOQEAfRY%2FKOwzUG%2BafljcyMZb6I5KTVsQlUXBjK0%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=c0679aa63a8bc5a794de79252adab68fd2d8f0411049d69c03cfa6a7365383c0",
+      "file_size": 1587925,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2023-05-25T13:35:34.677Z",
+  "allow_singular_disclosure_after": -73380802.97735088,
+  "singular_disclosure_allowed": true,
+  "vote_count": 26,
+  "voters": [
+    "datsuraku147",
+    "prathap_ilango",
+    "zy9ard3",
+    "shreyaschavhan",
+    "stealthy",
+    "j3rry-1729",
+    "shubham_srt",
+    "h4x0r_dz",
+    "mohaned0101",
+    "mr-alienx-kurd",
+    "and 16 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "Team"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
