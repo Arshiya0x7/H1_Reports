@@ -1,0 +1,142 @@
+{
+  "id": 1072868,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMDcyODY4",
+  "url": "https://hackerone.com/reports/1072868",
+  "title": "Stored XSS in repository file viewer",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2021-01-06T16:53:51.552Z",
+  "submitted_at": "2021-01-06T16:53:51.657Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "kannthu",
+    "url": "/kannthu",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/xfRp7ZaqXYiFaygWh3c7JaB9/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 264,
+    "url": "https://hackerone.com/gitlab",
+    "handle": "gitlab",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/f0hovtq73f9ap815a0r1w42bocp4/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/f0hovtq73f9ap815a0r1w42bocp4/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "GitLab",
+      "twitter_handle": "gitlab",
+      "website": "https://about.gitlab.com",
+      "about": "A single application for the entire software development lifecycle."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2022-05-19T15:19:10.772Z",
+  "bug_reporter_agreed_on_going_public_at": "2022-05-12T18:43:23.552Z",
+  "team_member_agreed_on_going_public_at": "2022-05-19T15:19:10.526Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "### Summary\nThere exists XSS in swagger-ui version used in GitLab open API viewer. The XSS exists due to the old version of DOMpurify used in swagger-ui that allows an attacker can  **inject any HTML elements with any attributes** (except script tag) on the page. \n\nThe XSS in POC requires 1 click anywhere on the page to execute, because of CSP that does not allow to execute events from HTML tags. (f.e. <img src=1 onerror=alert(1)). I will try to find CSP bypass that will allow me to execute the script with no user interaction.\n\nMy script uses the CSP bypass presented in https://gitlab.com/gitlab-org/gitlab/-/issues/213273\n```\n<a   \n  data-remote=\"true\"\n  data-method=\"get\"  \n  data-type=\"script\"\n  href=\"/wbowling/wiki/raw/master/test.js\" \n  class='atwho-view select2-drop-mask pika-select'>\n</a>  \n```\n\n### Steps to reproduce\n\n1. Go to https://gitlab.com/kannthu/asdasdas123/-/blob/master/openapi.yaml (tested on Chrome and Firefox)\n2. Click anywhere on the page\n3. You should see the alert box\n\nThere is another way of executing this XSS. **You can add \"url=https://gitlab.com/kannthu/asdasdas123/-/raw/master/openapi.yaml\" parameter to the URL of any open API file in any repository, and the XSS will still work**. \n\n1. Open https://gitlab.com/gitlab-org/build/omnibus-mirror/alertmanager/blob/master/api/v2/openapi.yaml?url=https://gitlab.com/kannthu/asdasdas123/-/raw/master/openapi.yaml\n2. Click anywhere on the page\n3. You should see the alert box\n\n### Impact\n\nThe stored XSS is triggering for any user that opens the page and clicks anywhere on the page. The PoC can easily be extended to steal the user's CSRF token and to take over the victim's account.\n\n### Examples\n\n- https://gitlab.com/kannthu/asdasdas123/-/blob/master/openapi.yaml\n- https://gitlab.com/gitlab-org/build/omnibus-mirror/alertmanager/blob/master/api/v2/openapi.yaml?url=https://gitlab.com/kannthu/asdasdas123/-/raw/master/openapi.yaml\n\n\n### What is the current *bug* behavior?\nGitlab uses an old version of swagger-ui.\n\n### What is the expected *correct* behavior?\nGitlab should use the newest version of swagger-ui.\n\n### Relevant logs and/or screenshots\nF1146909\n\n### Output of checks\nThis bug happens on GitLab.com\n\n#### Results of GitLab environment info\n-\n\n## Impact\n\nThe stored XSS is triggering for any user that opens the page and clicks anywhere on the page. An attacker can render anything on that page - malicious form to steal the user's login and password, or simply get the user's CSRF token and to take over the victim's account.",
+  "bounty_amount": "2000.0",
+  "formatted_bounty": "$2,000",
+  "weakness": {
+    "id": 62,
+    "name": "Cross-site Scripting (XSS) - Stored"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1146909,
+      "file_name": "Screenshot_2021-01-06_at_17.47.53.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/ftz5s17hdwunwhylcg2fpsvpwtm1?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_2021-01-06_at_17.47.53.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_2021-01-06_at_17.47.53.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYEN6ZMX6%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T233918Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJIMEYCIQDaPeTSLue%2BnrEQPFz%2BGFlOGBetmNIsUt4npGAtXrfntwIhAJQjhaKlYHqET5ebauD%2F36ivbCgvomtYsJw7jjns6wfxKroFCPX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5IgxATwEa%2Bklbzl1pOOIqjgWLiQYO1cLoMkYQ%2FM7yAqTtHBJPPMqU0kuJzwgknHMNizUjfFdnqf6%2F4%2BTnQnOKC%2Fg89XTHcDgjdpJ9MPoIUAHnmevlDSZ4v1PVq1z8b9OVPf1sabxVIJiNQn56qXcUrTfrXoxd97irBxCyfBrC6MiLJ8igFe3JyYHxdQnk%2BU0D8TTm6mOqNiOXFiDgwuSKAaBOuk3Ht5IJ3D%2B8kUFzgbGzhH4WUrPlS1bT%2FoHmfCEL%2FSD4J2UIakTNj%2FGh6SukadXYwvKp5wMfIkr%2FkpHTQ8zP8%2BBaig1ZBvZaRPguK2yNI1HV3hhx38Yh%2BfZp566I29M%2BFUGwCtXKOR6kdZlO75PfRNIcqGhASKKMFdqtT1KjpUg3%2BcvL0lZBTareGY85d34T5lfpgPgGddFv2SJcQvnar0ul1EizwSlqXvT9JVICE1PPs%2FD4DuPWN4dLIa23vyAgeiSmw5%2FLCaxzRc%2FI%2BdQx%2BVcT9sVN677w0I4iT6el8ejQwWsJOrYz4Yh5v5TURo4plIdAy%2BRHfLRg2gbiXGY25B7U8tqCaQ3Vw%2B6R%2BTcJYxS5qAoCPA6eNyhL%2F5ZOzO%2FB7K496u%2BNuulOEYIiNVZ29O2P4C5WENOYsIKZxQqJDwxrHFisMFXINDpZ1EsG%2FN9hz0vwxKj85imB8E8B1zMnY17p%2FvGWwXbIJ0fPND366nUU58FbsKBV68TN0weGkx2i7JW63jZrGDiBs%2B4boCPabrmUiXBgz3cm7CwlyzbIPAL61EsMoTlyc7R3uX4OcgnfziYAixio5ri4gepsLVRRA5bZ2fDgP72H3%2F0UFEbFmSbAWhftwPREqG9nRllckcJ6lxthBf667gza3ccj7YhcoamHFkmucZQWECgMskIwppS8xgY6sAHlIt3gAKrLVe%2B05z%2BrpCfEkWuJtsnsxqBFyPzPzkxEQMemcqp6TN3o6cr7J2KXWl2IO8lymLjoBaLimIW%2B4%2BZrocmXBGDlfHqYyxPCt926V5mmtaUJc2pRkg5hKPHAGa6JbP141KGENaG0dHy0g484U9%2F2%2Fb6FjxlONWFi0bhQEl%2Bw8ks8tpUSG%2FN8HTdx4JQufV9sQC1IP9nwkAjGUetG9LbIf8u5wx1DfNF53NgrlA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=d18adde81724e9038354be2f2ee0b5210e33dbbbf7f4504426ca5a6f76e4d919",
+      "file_size": 150661,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 28,
+  "voters": [
+    "joaxcar",
+    "cxzer0",
+    "n1m0",
+    "haxor31337",
+    "thaivu",
+    "fdeleite",
+    "zy9ard3",
+    "shreyaschavhan",
+    "ali",
+    "imranhudaa",
+    "and 18 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 4.1,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "low",
+      "user_interaction": "required",
+      "scope": "changed",
+      "confidentiality": "none",
+      "integrity": "low",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 18138,
+    "asset_type": "URL",
+    "asset_identifier": "gitlab.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
