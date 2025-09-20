@@ -1,0 +1,142 @@
+{
+  "id": 991713,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC85OTE3MTM=",
+  "url": "https://hackerone.com/reports/991713",
+  "title": "HTML injection in title of reader view",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2020-09-25T23:46:38.995Z",
+  "submitted_at": "2020-09-25T23:46:39.185Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "nishimunea",
+    "url": "/nishimunea",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/JR7WgikKhgk1DcwtUvQfmtpu/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 15688,
+    "url": "https://hackerone.com/brave",
+    "handle": "brave",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/015/688/2aad5641af643ee4f4402896e4747293f6e9c5ca_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/015/688/2aad5641af643ee4f4402896e4747293f6e9c5ca_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Brave Software",
+      "twitter_handle": "brave",
+      "website": "https://brave.com",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2023-06-22T05:52:53.227Z",
+  "bug_reporter_agreed_on_going_public_at": "2023-06-22T05:52:53.157Z",
+  "team_member_agreed_on_going_public_at": "2023-06-22T05:41:10.059Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\n\nReader.html in Brave doesn't escape/trim HTML tags in %READER-TITLE%.\nhttps://github.com/brave/brave-ios/blob/development/Client/Frontend/Reader/Reader.html#L17\nThis allows any page to inject malicious HTML code in reader-mode page through `<title>{html code you want to inject}</title>`.\n\n## Products affected: \n\nBrave iOS Version 1.20 (20.09.11.20), also current Nightly\n\n## Steps To Reproduce:\n\n* Open the following Google docs: https://docs.google.com/document/d/10kPw7PNOujlenF08i3jBgD4zqoG5148u8TRkoHj7io8/edit?usp=sharing\n* Push reader-mode button shown in address bar.\n* Malicious login form is rendered instead of the document\n* Fill the form, then the user/password you filled are stolen to malicious website\n\n## Supporting Material/References:\n\n  * See attached movie file for the demonstration\n\n## Impact\n\nMalicious web contents can inject HTML code and manipulate readerized page (hosted in localhost:65XX).\n\nAlso, if injected HTML code contains a string `%READER-CONTENT%`, it is replaced to the original page contents.\nhttps://github.com/brave/brave-ios/blob/87af4cbf0474bafd13673690aeee0c11059fbba2/Client/Frontend/Reader/ReaderModeUtils.swift#L29\n\nSo, attacker can steal user's sensitive information contained in the original HTML page through `<form><textarea>%READER-CONTENT%</textarea>`.\nWhen you open the following Google search link in reader-mode, you can reproduce the above scenario as well.\nhttps://www.google.com/search?q=%3Cform%3E%3Ctextarea%20name%3D%22dom%22%3E%25READER-CONTENT%25%3C%2Ftextarea%3E%3Cinput%20type%3D%22submit%22%3E%3C%2Fform%3E",
+  "bounty_amount": "300.0",
+  "formatted_bounty": "$300",
+  "weakness": {
+    "id": 63,
+    "name": "Cross-site Scripting (XSS) - DOM"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1003331,
+      "file_name": "reader_injection.mov",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/1PPVK4M6QP1kwKAZzR93FfTG?response-content-disposition=attachment%3B%20filename%3D%22reader_injection.mov%22%3B%20filename%2A%3DUTF-8%27%27reader_injection.mov&response-content-type=video%2Fquicktime&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQRGJFOWM7%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T204555Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHgaCXVzLXdlc3QtMiJIMEYCIQDlivsSGG958dNiFIobfbOO24B3JbcHQtqCF5Yej3cRhAIhAON60ArC%2B2UjtfdlDfch7YJyGzcK%2FlH1IlLYi3RydNjpKrsFCPH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5IgxWG58Hfc4TiceW%2FPQqjwVLeH1FNUBXar2JpOGm46U%2B9PbNtGr475X1b%2BFygc0Fi48ooP0d6iNe490G752hhgJRK0%2F4HDIOO67cxmRIuOlqZRg78EhIR%2Be%2Fdj1LOZ1rJoZJja%2BSjLugi9Dv4SwQxS%2B6Q5pxoaCE%2FbrPp3w9TxsbmF4tW190eBne6WRoUCSfPuvOefX%2Fu%2Bke87YNd%2B%2FGbkWWeXt8os%2BCJdPdE3suM4y3Iod9RhRq%2BUAyPtFT2NnN9BQhODdPUp3PtfJxDpXtjd7NBoudiOdbnHq1QP8P660Z3RMWGXCeENrI6nGkE8Ki3w9wa4qUyDj65%2BnqudVPhY9FtteVxTMJwWjkAcAZCIwp0JLiqLM61e26m6pw%2B6joGCewKWqOkaaCjJqrj4HUjl9IvwlN8F5VPokZjL8OH5Bx19Puwb91elmKUuFWP1%2FN99IEAo3ypl4OEllzAkbWBB2KXs9wOS%2FwjJvILzdVQOJTYsAYJhP5OItEYuRu2E0CwwG9AGdIvRTRshrRmptIP8VftC4iW8Qoo2bHQ6ayUHOrTaAPRSggetfoDj%2FVuEB4CfDLbQKqQovElgN2UemqAiNf5sbwfBp1BocgDLZ%2Bvkx5SLlq6eyY%2BmgUcdmQmbp7URki05BZLczlW4gKxmCqr9PINpE1etXWzLfSgjrrqr%2FiVeyz6NoM2nrK8rZI7xhZiyesL8yzlEa%2BtrbqEZTw%2BakGKhy%2FClaYdwgYpnwV38Xds7oEn2Z5avRgILhSpbse%2BHFKkIJ6KCPc7uHbbF4GVBU4U0Q6fiBo7K4T8DBWLv%2B%2BpJ6DOPLNrqgxbn%2Bg4dNMrjwwHpWljTyrwk03Y9HODr5aB6AByUPmumH0bkTx6y4O7LkjLuCvKZkOeq51%2FoV5MJGRu8YGOrABpKEuBqHDLaRVBUSdrB12CsN7A59C7O5dn4B%2FuOdja2HlBXYj%2FjXoezr4BzGNzlo%2FxgEuNN1DQucqCbqOL5iD%2B%2BzgLJC4sRLkTdSwTeg8vEDoGtzENaFzlatsEoupCYCzxdiUwGPEws5Ll7wNfmCcb0IWCtdET3EJxLSa%2BaP2vgb%2FRI2ZE%2BIMQor3aO1kcIRGesrJ%2FsbbRPMwnqmvBovQXk05Nl6lisEaNhEvXUJ%2FlXc%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=3dc36bd1296c7b769f380462ab4741b2f16725cf6e4cd07e424daaf147c7b910",
+      "file_size": 6124293,
+      "type": "video/quicktime",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 30,
+  "voters": [
+    "zy9ard3",
+    "shreyaschavhan",
+    "ali",
+    "ritsuy",
+    "shubham_srt",
+    "thalaivar304",
+    "neilx",
+    "zagat",
+    "0x0days",
+    "moemam",
+    "and 20 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 6.4,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "required",
+      "scope": "unchanged",
+      "confidentiality": "low",
+      "integrity": "low",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 16463,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/brave/brave-ios",
+    "max_severity": "none"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
