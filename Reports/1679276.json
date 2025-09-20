@@ -1,0 +1,135 @@
+{
+  "id": 1679276,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNjc5Mjc2",
+  "url": "https://hackerone.com/reports/1679276",
+  "title": "IDOR able to buy a plan with lesser fee",
+  "state": "Closed",
+  "substate": "informative",
+  "severity_rating": "medium",
+  "readable_substate": "Informative",
+  "created_at": "2022-08-24T16:12:00.046Z",
+  "submitted_at": "2022-08-24T16:12:00.120Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "ug0x01",
+    "url": "/ug0x01",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/tx46va61kxpoevwva5yst4hiw755/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 111,
+    "url": "https://hackerone.com/automattic",
+    "handle": "automattic",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/111/7f89e1ea233f92916202521a069fdbfe9eced339_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/111/7f89e1ea233f92916202521a069fdbfe9eced339_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Automattic",
+      "twitter_handle": "",
+      "website": "https://automattic.com",
+      "about": "WordPress.com, WooCommerce, WordPress VIP, Jetpack, Beeper, Texts, Akismet, Gravatar, Crowdsignal, Tumblr and more!"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2022-10-19T16:20:26.705Z",
+  "bug_reporter_agreed_on_going_public_at": "2022-08-31T16:36:00.279Z",
+  "team_member_agreed_on_going_public_at": "2022-10-19T16:20:26.524Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary\nIDOR allows you to pay with the same amount but different currency. For example, paying 35000$ instead of 35000€\n\n## Steps To Reproduce\n1. Go to `https://account.mailpoet.com/` and select a plan\n2. For example I have selected this plan; `https://account.mailpoet.com/orders/new?p=214`\n3. Now, as you can see payment currency is euro (33600€)\n\n{F1882065}\n\n4. Add `cur` parameter as `usd` like `{F1882070}https://account.mailpoet.com/orders/new?p=214&cur=usd`\n5. And now, we can buy it as 33600$ instead of 33600€\n\n{F1882070}\n\n##Suggested solutions\nAdd an Dollar/Euro converter to your payment system\n\nCheers,\n@h1ugroon\n\n## Impact\n\nAny user can pay a fee with a different value but the same root number instead of euros. For example, for a €33600 transaction, the fee difference is about $107, but the reason for this is the recent increase in the dollar. The user's profit rate varies according to the value of the money. About 1 month ago, this profit rate is around 630 dollars. Although this is not a critical problem, it is a vulnerability that reduces the profit margin",
+  "weakness": {
+    "id": 55,
+    "name": "Insecure Direct Object Reference (IDOR)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1882065,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/6ly3uw1bduusmyc3esspo5kxvr6e?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXEQVV6I4%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T222549Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJHMEUCIQDBpFxScnFMmnsEMTNrhjqF2BCW%2BM4KKaUfErWaavSmMwIgLABobT2JPmFeQKLLFy7lddzdHS9FBA%2Fd7Bvg6O868fUqugUI9f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDNV9YqjqpYPVDRG3QyqOBTf1a3%2FgYlb6aY5z6yZIrDJFVG9ecEcK3jkfOxPuLtShWQznBXjFn4ziLx0bIrqBwPqLwfjFUIciZG%2BnlSszk7tl2u3vv2eT8Cf%2BEjyUPpCJmZ%2Fr%2BMmoJPiuk7gmnL9XNQ82zRhEI3ajtiU4MGDPZNjRdQdrHV%2FVgtFEQqTu8Y%2BSoCCYvGDgOMPGUGGc7%2FvqvA7zXdyboU3kPrMU9HBgNNEougxYuhd6UDYo9pTvEy0tUZEvIv2gDYAdMzEWH8dSUObNxuISxgVqoowQgASkYUclXF2aNqZi4%2BCLFLpRhmNpJyKl49g%2FIeRKyoET8vgMaPcjYYSYrP8ahJ5O54gjYqUHa1hqEkxnypXvmCNeqYC3rtlEi4KBxU6RNDjwJj3Zhl8ShLJw341Yvi1vXeryey1mdPPa6Up%2FEu8z4qPdrJkJVAhBGRYscgqFj1jJsASvW90fPqn5bwBMArPuAnbey0TblMe53xeiPptfzjSAgN%2FUtUkjVWHJrWZ%2FrC1N04slpF7tvAl6QRL2MdUQobO9ssaALr%2Fzelh0qbqcTParXPDyEJ1NEdEVjn6e8OuWHkm6ltx3R7k148P5s8AGVZYUkCivHBSJD6IqGB%2Fe6oE5LKbA0465Qis48fD5PVfOBZ0l6EOTcn1jmKyWQyFlxeu%2BT%2BhogTf74hWLo0EpGk0QK2V4ycErmX%2B%2BpG8lnZlJ3ZJbenH1%2F9tVTuMte6AOZ4QWgcs9Wr6n4ruKyVnwXQldkPlVIumcXigw4UAalhcOQXM5xyETL0zu5rFKg%2F7MmNz6AO5EL5oCbsSGq2DRm7Hsm5fVH0B%2BH92JIejrEVfHudxUnOkReD0LFO49TRMBqarXs0lGJnVzyKS3vOvY%2FxinBTChlLzGBjqxAZrJtBMHSqdSrARjlb8BJgrweoGJd38DWiVvGZYkG8w8MQvd1WWIwiLGduNyQbYSOwEL45SlUk5i7KcVxJHrVloYSd3180bCUMNRKmu%2Fadmd4vkG2jpaHBgeSfC3124o5qFTboFrq18fIB8pXezJr1xNOKsLyPSF0LjGCsI55SXyvXZzLiPr%2Fcs7Gi0ROY4cAlR8EP7BTi7IMTEQPKsxRzTQUpipcSbtRhPu9GmUOUc1qA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=f6951f4b506e8b34ee6e93842ade7b98f6023e93201fd1df21762746c3c98fb5",
+      "file_size": 129963,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1882070,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/b7m71hyllq27a7q4n3gm6iq4hfta?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXEQVV6I4%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T222549Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJHMEUCIQDBpFxScnFMmnsEMTNrhjqF2BCW%2BM4KKaUfErWaavSmMwIgLABobT2JPmFeQKLLFy7lddzdHS9FBA%2Fd7Bvg6O868fUqugUI9f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDNV9YqjqpYPVDRG3QyqOBTf1a3%2FgYlb6aY5z6yZIrDJFVG9ecEcK3jkfOxPuLtShWQznBXjFn4ziLx0bIrqBwPqLwfjFUIciZG%2BnlSszk7tl2u3vv2eT8Cf%2BEjyUPpCJmZ%2Fr%2BMmoJPiuk7gmnL9XNQ82zRhEI3ajtiU4MGDPZNjRdQdrHV%2FVgtFEQqTu8Y%2BSoCCYvGDgOMPGUGGc7%2FvqvA7zXdyboU3kPrMU9HBgNNEougxYuhd6UDYo9pTvEy0tUZEvIv2gDYAdMzEWH8dSUObNxuISxgVqoowQgASkYUclXF2aNqZi4%2BCLFLpRhmNpJyKl49g%2FIeRKyoET8vgMaPcjYYSYrP8ahJ5O54gjYqUHa1hqEkxnypXvmCNeqYC3rtlEi4KBxU6RNDjwJj3Zhl8ShLJw341Yvi1vXeryey1mdPPa6Up%2FEu8z4qPdrJkJVAhBGRYscgqFj1jJsASvW90fPqn5bwBMArPuAnbey0TblMe53xeiPptfzjSAgN%2FUtUkjVWHJrWZ%2FrC1N04slpF7tvAl6QRL2MdUQobO9ssaALr%2Fzelh0qbqcTParXPDyEJ1NEdEVjn6e8OuWHkm6ltx3R7k148P5s8AGVZYUkCivHBSJD6IqGB%2Fe6oE5LKbA0465Qis48fD5PVfOBZ0l6EOTcn1jmKyWQyFlxeu%2BT%2BhogTf74hWLo0EpGk0QK2V4ycErmX%2B%2BpG8lnZlJ3ZJbenH1%2F9tVTuMte6AOZ4QWgcs9Wr6n4ruKyVnwXQldkPlVIumcXigw4UAalhcOQXM5xyETL0zu5rFKg%2F7MmNz6AO5EL5oCbsSGq2DRm7Hsm5fVH0B%2BH92JIejrEVfHudxUnOkReD0LFO49TRMBqarXs0lGJnVzyKS3vOvY%2FxinBTChlLzGBjqxAZrJtBMHSqdSrARjlb8BJgrweoGJd38DWiVvGZYkG8w8MQvd1WWIwiLGduNyQbYSOwEL45SlUk5i7KcVxJHrVloYSd3180bCUMNRKmu%2Fadmd4vkG2jpaHBgeSfC3124o5qFTboFrq18fIB8pXezJr1xNOKsLyPSF0LjGCsI55SXyvXZzLiPr%2Fcs7Gi0ROY4cAlR8EP7BTi7IMTEQPKsxRzTQUpipcSbtRhPu9GmUOUc1qA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=adaeaaa72496a616cfa6108a973b88f93062dad809a35df89e2d9f7fa9db5f58",
+      "file_size": 125680,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 9,
+  "voters": [
+    "loaymorad",
+    "shreyaschavhan",
+    "pacmanx",
+    "ug0x01",
+    "shivammusic",
+    "destinedtohack",
+    "amr4l44",
+    "m9nx",
+    "4mro"
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 61326,
+    "asset_type": "URL",
+    "asset_identifier": "mailpoet.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
