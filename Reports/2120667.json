@@ -1,0 +1,194 @@
+{
+  "id": 2120667,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yMTIwNjY3",
+  "url": "https://hackerone.com/reports/2120667",
+  "title": " Bypass password confirmation via Context-dependent access control (CDCA)",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2023-08-22T21:46:19.210Z",
+  "submitted_at": "2023-08-22T21:46:19.322Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "st0nzyy",
+    "url": "/st0nzyy",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NjYzODcyNSwicHVyIjoiYmxvYl9pZCJ9fQ==--c37bd8a62ca0796966a82cae4e6d9ffe3a2909c5/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--2de8067d228529d65848a4eeed0bed0bb2531bc3/hunter-x-hunter-killua-dark-blue-desktop-wallpaper-preview.jpg"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13291,
+    "url": "https://hackerone.com/nextcloud",
+    "handle": "nextcloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Nextcloud",
+      "twitter_handle": "nextclouders",
+      "website": "https://nextcloud.com",
+      "about": "Access, share and protect your files, calendars, contacts, communication & more at home and in your enterprise."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2023-49791"
+  ],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2024-01-17T08:26:39.469Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2023-12-18T08:26:35.426Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nHi Team,\nAfter some testing in nextcloud server, i found  Context-dependent access control when i delete workflow at ``` /nextcloud/index.php/settings/user/workflow ``` the server ask for password confirmation but it can be bypassed if i directly request the delete endpoint.\n\nCDCA is a security mechanism that restricts access to resources based on the context of the request. If CDCA is broken, an attacker can exploit this flaw to gain unauthorized access to resources. This can have serious consequences, such as data breaches, theft of credentials, and denial of service attacks.\n\n## Steps To Reproduce:\n[add details for how we can reproduce the issue]\n\n- go to /nextcloud/index.php/settings/user/workflow and create workflow.\n\n{F2626834}\n\n- now click on Delete button, the Password require for confirmation\n\n{F2626842}\n\n- A Broken Context-dependent access control happen when user can bypass password confirmation by send the folowing request \n\n``` DELETE /nextcloud/ocs/v2.php/apps/workflowengine/api/v1/workflows/user/3?format=json```\n\n{F2626845}\n\n- as you can see, user bypass password confirmation and the workflow succssufilly deleted.\n\n{F2626858}\n\n## Supporting Material/References:\n\nhttps://www.geeksforgeeks.org/how-to-prevent-broken-access-control\n\n## Impact\n\nbypass password confirmation\n\ndelete workflow without password confirmation",
+  "bounty_amount": "100.0",
+  "formatted_bounty": "$100",
+  "weakness": {
+    "id": 26,
+    "name": "Improper Access Control - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 2626834,
+      "file_name": "create-workflow.JPG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/pcmx0pdc4h3hdoni5vgxqwbhmrnb?response-content-disposition=attachment%3B%20filename%3D%22create-workflow.JPG%22%3B%20filename%2A%3DUTF-8%27%27create-workflow.JPG&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ25H4ULWX%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T193332Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHkaCXVzLXdlc3QtMiJHMEUCIFvDs22IB59aPXwSBPharbcvAcrEg4dVal5Abjp08PsfAiEAj3niFovMcFMWKywzJUWcVlrap8po0UGtFWFcZOZjL64qugUI8v%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDO3M7zgPYiXi%2FtH%2B%2FSqOBRQLYymVzwS86p0K3NxhOnpeYs%2FgS%2FBAONpTkPfW4UQ5qRX6%2BnAXx9ZVqrxZQVFcMvKegP7E0PNrlAIK9VU3VmVz4ZSkv7NIWmF%2FZvgY%2FR0%2FttsHJY%2F6ku84KsDvlE4hsHL1CYmpikKCrKEiqHw%2BaLcOnZBxvZXoa5P4SF9vUW4KOdnBcVRIlwoEQdARiKBAUqd29sB7Nel4l2p0t07fdj0yjDUhPC9ja6IHt2Fc0JzStvxjxoRlKQWeyH%2FPc0QFYixLKKRr%2B2J9EGahjx0lqKVpVW4hPlNK6BS9aMKzU%2Bc3p1SujUIsU4O8xzSgnLtmz9sLk6FIZIhwYo0NDrME%2BA7ep2i%2B44SdDKi%2B2oyAMZJnm%2FZcctqdyafjpnuLy6MaL9WdeO1yJfJnZdK4EwRxJ84DUvsXrnuQMrUCYN3ui2QFPq60%2F90gwm90hyWyOMVuuJ6mq%2BDpoO8bhUdUur788fC%2FXn0%2B9jXhO%2FdqPaQl1TQ0bZTGJZ72FqChZvlLY44cT%2FrZ2lHWOo9IyXSdQuosF45YDC6kaVL5Iw4PmcxCaaoRlkU7io5%2BjG7Q9KuNZIyd6f5qHhbIH%2BPjTe%2FnPunAkNzDYKxd%2FjsY1y%2Fsk2Z3nnV%2FMh2nuncvM95I4crYdqkBqtrg8zShfz75Nhqz8Ji%2FJI3D9g9Qb%2FWS9CAjMvp2cSD66nOy2%2FWKCFJ6K83s9VylCFQAgT7P4C0IpjcANhcuZYKJ5iMK7EtIR9N6vee9JHxrOchfaHFjAh55GaBR4eFH3RcBBW1TF6pC9A5NT19rjdFJLSE%2Beuw8tWt93mKahTiNF3W5v8tAex8z1VIIGZ15ygxEE8us%2Fx44c%2FEi8x5lVHpnzO4T9%2FNXMu3vM%2FXUpDDHurvGBjqxAQkCQuHZEgZXiVhnH%2FOk1z9Z8Hoy9WONuQZRvPCUqV44pVCw1qaVKXbDIoqYF2OfGJXSRudOdNHbiGj8KIicIjxMQyogloYOVJwHRQ2V6RZqzLxTRVz9yTpkLmqr9Cl0EhirlFJ%2FkrkZb0r4MDhU%2FCP6XQbG%2BDiRinsAW1DrO1ArlQ4m78xdL%2F6%2FRO2c5ENqXv2EWEnHG%2FlpTFKqVD7lc5%2BETPfi7IH4Yg6X0YFUpwU46Q%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=5952a6884bb6d4a3bdf68426eafa2779fbbdf0ab20f2c9a723263ee2f1577db1",
+      "file_size": 108268,
+      "type": "image/jpeg",
+      "moderated": null
+    },
+    {
+      "id": 2626842,
+      "file_name": "require-password.JPG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/9jftmsb022scvdzfigt6tuhhrntn?response-content-disposition=attachment%3B%20filename%3D%22require-password.JPG%22%3B%20filename%2A%3DUTF-8%27%27require-password.JPG&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ25H4ULWX%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T193332Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHkaCXVzLXdlc3QtMiJHMEUCIFvDs22IB59aPXwSBPharbcvAcrEg4dVal5Abjp08PsfAiEAj3niFovMcFMWKywzJUWcVlrap8po0UGtFWFcZOZjL64qugUI8v%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDO3M7zgPYiXi%2FtH%2B%2FSqOBRQLYymVzwS86p0K3NxhOnpeYs%2FgS%2FBAONpTkPfW4UQ5qRX6%2BnAXx9ZVqrxZQVFcMvKegP7E0PNrlAIK9VU3VmVz4ZSkv7NIWmF%2FZvgY%2FR0%2FttsHJY%2F6ku84KsDvlE4hsHL1CYmpikKCrKEiqHw%2BaLcOnZBxvZXoa5P4SF9vUW4KOdnBcVRIlwoEQdARiKBAUqd29sB7Nel4l2p0t07fdj0yjDUhPC9ja6IHt2Fc0JzStvxjxoRlKQWeyH%2FPc0QFYixLKKRr%2B2J9EGahjx0lqKVpVW4hPlNK6BS9aMKzU%2Bc3p1SujUIsU4O8xzSgnLtmz9sLk6FIZIhwYo0NDrME%2BA7ep2i%2B44SdDKi%2B2oyAMZJnm%2FZcctqdyafjpnuLy6MaL9WdeO1yJfJnZdK4EwRxJ84DUvsXrnuQMrUCYN3ui2QFPq60%2F90gwm90hyWyOMVuuJ6mq%2BDpoO8bhUdUur788fC%2FXn0%2B9jXhO%2FdqPaQl1TQ0bZTGJZ72FqChZvlLY44cT%2FrZ2lHWOo9IyXSdQuosF45YDC6kaVL5Iw4PmcxCaaoRlkU7io5%2BjG7Q9KuNZIyd6f5qHhbIH%2BPjTe%2FnPunAkNzDYKxd%2FjsY1y%2Fsk2Z3nnV%2FMh2nuncvM95I4crYdqkBqtrg8zShfz75Nhqz8Ji%2FJI3D9g9Qb%2FWS9CAjMvp2cSD66nOy2%2FWKCFJ6K83s9VylCFQAgT7P4C0IpjcANhcuZYKJ5iMK7EtIR9N6vee9JHxrOchfaHFjAh55GaBR4eFH3RcBBW1TF6pC9A5NT19rjdFJLSE%2Beuw8tWt93mKahTiNF3W5v8tAex8z1VIIGZ15ygxEE8us%2Fx44c%2FEi8x5lVHpnzO4T9%2FNXMu3vM%2FXUpDDHurvGBjqxAQkCQuHZEgZXiVhnH%2FOk1z9Z8Hoy9WONuQZRvPCUqV44pVCw1qaVKXbDIoqYF2OfGJXSRudOdNHbiGj8KIicIjxMQyogloYOVJwHRQ2V6RZqzLxTRVz9yTpkLmqr9Cl0EhirlFJ%2FkrkZb0r4MDhU%2FCP6XQbG%2BDiRinsAW1DrO1ArlQ4m78xdL%2F6%2FRO2c5ENqXv2EWEnHG%2FlpTFKqVD7lc5%2BETPfi7IH4Yg6X0YFUpwU46Q%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=cbe5878b41181c349d4d71077531733af28d5fe68adbc95242e39f84b642bafa",
+      "file_size": 104835,
+      "type": "image/jpeg",
+      "moderated": null
+    },
+    {
+      "id": 2626845,
+      "file_name": "delete-endpoint.JPG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/44otw0612pen9osgvpykm9b0brx4?response-content-disposition=attachment%3B%20filename%3D%22delete-endpoint.JPG%22%3B%20filename%2A%3DUTF-8%27%27delete-endpoint.JPG&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ25H4ULWX%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T193332Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHkaCXVzLXdlc3QtMiJHMEUCIFvDs22IB59aPXwSBPharbcvAcrEg4dVal5Abjp08PsfAiEAj3niFovMcFMWKywzJUWcVlrap8po0UGtFWFcZOZjL64qugUI8v%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDO3M7zgPYiXi%2FtH%2B%2FSqOBRQLYymVzwS86p0K3NxhOnpeYs%2FgS%2FBAONpTkPfW4UQ5qRX6%2BnAXx9ZVqrxZQVFcMvKegP7E0PNrlAIK9VU3VmVz4ZSkv7NIWmF%2FZvgY%2FR0%2FttsHJY%2F6ku84KsDvlE4hsHL1CYmpikKCrKEiqHw%2BaLcOnZBxvZXoa5P4SF9vUW4KOdnBcVRIlwoEQdARiKBAUqd29sB7Nel4l2p0t07fdj0yjDUhPC9ja6IHt2Fc0JzStvxjxoRlKQWeyH%2FPc0QFYixLKKRr%2B2J9EGahjx0lqKVpVW4hPlNK6BS9aMKzU%2Bc3p1SujUIsU4O8xzSgnLtmz9sLk6FIZIhwYo0NDrME%2BA7ep2i%2B44SdDKi%2B2oyAMZJnm%2FZcctqdyafjpnuLy6MaL9WdeO1yJfJnZdK4EwRxJ84DUvsXrnuQMrUCYN3ui2QFPq60%2F90gwm90hyWyOMVuuJ6mq%2BDpoO8bhUdUur788fC%2FXn0%2B9jXhO%2FdqPaQl1TQ0bZTGJZ72FqChZvlLY44cT%2FrZ2lHWOo9IyXSdQuosF45YDC6kaVL5Iw4PmcxCaaoRlkU7io5%2BjG7Q9KuNZIyd6f5qHhbIH%2BPjTe%2FnPunAkNzDYKxd%2FjsY1y%2Fsk2Z3nnV%2FMh2nuncvM95I4crYdqkBqtrg8zShfz75Nhqz8Ji%2FJI3D9g9Qb%2FWS9CAjMvp2cSD66nOy2%2FWKCFJ6K83s9VylCFQAgT7P4C0IpjcANhcuZYKJ5iMK7EtIR9N6vee9JHxrOchfaHFjAh55GaBR4eFH3RcBBW1TF6pC9A5NT19rjdFJLSE%2Beuw8tWt93mKahTiNF3W5v8tAex8z1VIIGZ15ygxEE8us%2Fx44c%2FEi8x5lVHpnzO4T9%2FNXMu3vM%2FXUpDDHurvGBjqxAQkCQuHZEgZXiVhnH%2FOk1z9Z8Hoy9WONuQZRvPCUqV44pVCw1qaVKXbDIoqYF2OfGJXSRudOdNHbiGj8KIicIjxMQyogloYOVJwHRQ2V6RZqzLxTRVz9yTpkLmqr9Cl0EhirlFJ%2FkrkZb0r4MDhU%2FCP6XQbG%2BDiRinsAW1DrO1ArlQ4m78xdL%2F6%2FRO2c5ENqXv2EWEnHG%2FlpTFKqVD7lc5%2BETPfi7IH4Yg6X0YFUpwU46Q%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=0b5be37e4ef344777016e952aaa0a1a485efb5f1253d2133d009236fea0be392",
+      "file_size": 195655,
+      "type": "image/jpeg",
+      "moderated": null
+    },
+    {
+      "id": 2626858,
+      "file_name": "workflow-deleted.JPG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/tgisdgpjdngs66tpfb8mht3qdo69?response-content-disposition=attachment%3B%20filename%3D%22workflow-deleted.JPG%22%3B%20filename%2A%3DUTF-8%27%27workflow-deleted.JPG&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ25H4ULWX%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T193332Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHkaCXVzLXdlc3QtMiJHMEUCIFvDs22IB59aPXwSBPharbcvAcrEg4dVal5Abjp08PsfAiEAj3niFovMcFMWKywzJUWcVlrap8po0UGtFWFcZOZjL64qugUI8v%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDO3M7zgPYiXi%2FtH%2B%2FSqOBRQLYymVzwS86p0K3NxhOnpeYs%2FgS%2FBAONpTkPfW4UQ5qRX6%2BnAXx9ZVqrxZQVFcMvKegP7E0PNrlAIK9VU3VmVz4ZSkv7NIWmF%2FZvgY%2FR0%2FttsHJY%2F6ku84KsDvlE4hsHL1CYmpikKCrKEiqHw%2BaLcOnZBxvZXoa5P4SF9vUW4KOdnBcVRIlwoEQdARiKBAUqd29sB7Nel4l2p0t07fdj0yjDUhPC9ja6IHt2Fc0JzStvxjxoRlKQWeyH%2FPc0QFYixLKKRr%2B2J9EGahjx0lqKVpVW4hPlNK6BS9aMKzU%2Bc3p1SujUIsU4O8xzSgnLtmz9sLk6FIZIhwYo0NDrME%2BA7ep2i%2B44SdDKi%2B2oyAMZJnm%2FZcctqdyafjpnuLy6MaL9WdeO1yJfJnZdK4EwRxJ84DUvsXrnuQMrUCYN3ui2QFPq60%2F90gwm90hyWyOMVuuJ6mq%2BDpoO8bhUdUur788fC%2FXn0%2B9jXhO%2FdqPaQl1TQ0bZTGJZ72FqChZvlLY44cT%2FrZ2lHWOo9IyXSdQuosF45YDC6kaVL5Iw4PmcxCaaoRlkU7io5%2BjG7Q9KuNZIyd6f5qHhbIH%2BPjTe%2FnPunAkNzDYKxd%2FjsY1y%2Fsk2Z3nnV%2FMh2nuncvM95I4crYdqkBqtrg8zShfz75Nhqz8Ji%2FJI3D9g9Qb%2FWS9CAjMvp2cSD66nOy2%2FWKCFJ6K83s9VylCFQAgT7P4C0IpjcANhcuZYKJ5iMK7EtIR9N6vee9JHxrOchfaHFjAh55GaBR4eFH3RcBBW1TF6pC9A5NT19rjdFJLSE%2Beuw8tWt93mKahTiNF3W5v8tAex8z1VIIGZ15ygxEE8us%2Fx44c%2FEi8x5lVHpnzO4T9%2FNXMu3vM%2FXUpDDHurvGBjqxAQkCQuHZEgZXiVhnH%2FOk1z9Z8Hoy9WONuQZRvPCUqV44pVCw1qaVKXbDIoqYF2OfGJXSRudOdNHbiGj8KIicIjxMQyogloYOVJwHRQ2V6RZqzLxTRVz9yTpkLmqr9Cl0EhirlFJ%2FkrkZb0r4MDhU%2FCP6XQbG%2BDiRinsAW1DrO1ArlQ4m78xdL%2F6%2FRO2c5ENqXv2EWEnHG%2FlpTFKqVD7lc5%2BETPfi7IH4Yg6X0YFUpwU46Q%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=7dcf04d1a7bf3b233dc8ea8e5b8c60107f65c57b4da36a6377d0d2588d035bcb",
+      "file_size": 82106,
+      "type": "image/jpeg",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2024-01-17T08:26:35.564Z",
+  "allow_singular_disclosure_after": -52916816.642499425,
+  "singular_disclosure_allowed": true,
+  "vote_count": 29,
+  "voters": [
+    "riodrwn",
+    "8910jq",
+    "immahdisv",
+    "exec_iq",
+    "roland_hack",
+    "zy9ard3",
+    "never_die",
+    "20kilograma",
+    "shubham_srt",
+    "2026",
+    "and 19 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 5.4,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "low",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "none",
+      "integrity": "low",
+      "availability": "low"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 13,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "nextcloud/server",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "id": 381172,
+      "category": "team",
+      "content": "Security advisory at https://github.com/nextcloud/security-advisories/security/advisories/GHSA-3f8p-6qww-2prr",
+      "updated_at": "2023-12-07T08:42:03.862Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 89223,
+        "username": "nickvergessen",
+        "name": "Joas Schilling",
+        "bio": "",
+        "cleared": false,
+        "verified": false,
+        "website": null,
+        "location": "Germany",
+        "created_at": "2016-07-01T08:17:59.061Z",
+        "url": "https://hackerone.com/nickvergessen",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "company",
+        "profile_picture_urls": {
+          "small": "https://profile-photos.hackerone-user-content.com/variants/5DBbeB7om4ZiKgskrEoeTyGH/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/5DBbeB7om4ZiKgskrEoeTyGH/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c",
+          "xtralarge": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6ODQyMTQ5LCJwdXIiOiJibG9iX2lkIn19--7544c99c2f87f134b16d5b20f81dbc06444df8d8/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJyZXNpemUiOiIyNjB4MjYwXHUwMDNlIn0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--c155082ce6f9751dcb29cd6ea061a7e4d7329577/2019_cfhn1.png"
+        }
+      }
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
