@@ -1,0 +1,190 @@
+{
+  "id": 1147433,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMTQ3NDMz",
+  "url": "https://hackerone.com/reports/1147433",
+  "title": "Stored XSS in /admin/product and /admin/collections",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2021-04-03T09:41:30.050Z",
+  "submitted_at": "2021-04-03T09:41:30.138Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "ashketchum",
+    "url": "/ashketchum",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/ll96706yq5u2w1biitkrr2uidqzd/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 1382,
+    "url": "https://hackerone.com/shopify",
+    "handle": "shopify",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Shopify",
+      "twitter_handle": "",
+      "website": "https://www.shopify.com",
+      "about": "Shopify is a multi-channel commerce platform that helps people sell online, in-store, and everywhere in between."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2022-12-01T22:44:01.766Z",
+  "bug_reporter_agreed_on_going_public_at": "2021-05-05T05:52:50.642Z",
+  "team_member_agreed_on_going_public_at": "2022-12-01T22:44:01.647Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "### Hello Security Team,\n\nI was going through previous reports of XSS and I have found this,\nhttps://hackerone.com/reports/978125\n\nAs stated by team on this page even on https://hackerone.com/shopify?type=team under Known issues\n that we can now report XSS under Rich Text Editor on Product description and Collection description. \nI have found XSS on this endpoints /admin/product and /admin/collections\n\n{F1252456}\n\n### Steps to Reproduce:\n#### /admin/product\n\nStep1: Go to https://your-store.myshopify.com/admin/products?selectedView=all\nStep2: Click on Add product \nStep3: Add anything in Title\nStep4: Right side corner in description click on Show HTML\nStep5: Add below Payloads and Click on Save\n\n#### Payload: \n\">\\]<img src=x onerror=alert(document.domain)>  \">\\]<img src=x onerror=alert(document.cookie)>\n      \nXSS will get triggered.\n\n{F1252457}\n\n#### /admin/collections\n\nStep1: Go to https://your-store.myshopify.com/admin/collections\nStep2: Click on Create collection\nStep3: Add anything in Title\nStep4: Right side corner in description click on Show HTML\nStep5: Add below Payloads and Click on Save\n\n#### Payload: \n\">\\]<img src=x onerror=alert(document.domain)>  \">\\]<img src=x onerror=alert(document.cookie)>\n      \nXSS will get triggered.\n\n{F1252455}\n\nI have attached POC Video, Please take a look.\n\n{F1252458}\n\n#### Thank You\nAshish Dhone\n\n## Impact\n\nA malicious user can steal cookies and use them to gain further access even an attacker can use XSS to send requests that appear to be from the victim to the web server.",
+  "bounty_amount": "5300.0",
+  "formatted_bounty": "$5,300",
+  "weakness": {
+    "id": 62,
+    "name": "Cross-site Scripting (XSS) - Stored"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1252455,
+      "file_name": "collection_XSS.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/k3oxvmxvgjbk9cdg6dlxyt44na04?response-content-disposition=attachment%3B%20filename%3D%22collection_XSS.PNG%22%3B%20filename%2A%3DUTF-8%27%27collection_XSS.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZIT4IKNN%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T220550Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHkaCXVzLXdlc3QtMiJGMEQCIH5S6fYKetpuazFUkaO2jdTENAlJFAEAksVwV6ok0UqoAiBpP%2F9zQRjMN0kBNrdXAtFNCe60y%2B6O%2FVwlXiU8NCMFvyq6BQjy%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMiw6yZQO2gOSkPmi4Ko4FQ1RVd7qu%2FsJ9CtqhsEnVEHrd2f%2BG4UzNDTuTKmpWc%2BZ%2BZXaL6DMei6%2F8FwNAlnFk66Sl7zkaVbrUhgvfqSb9GPSg7BrwakPZmKFRBl1G5RvJR0%2FaTgOAmBP5mQLYW3DEvvWRjboVSCIAXjXh5whPp0DRl%2F%2BTS5eM9kmICHghM1GmUH2KruL1ygmg%2FYxuQ33QjwooMHJDMGbeux67Yl%2FZIfkejSzcBenjHXE%2BvNhSdz56xDzcVHRG7OfXRQrVqBEAB%2BEus%2F3NXXy%2FktaCmyWt2%2BAuW9ST6rgikedOI79vlIKfmKKDzJLwa3aBriDsSYB%2BT5nyLIvpE6hgqxSjeXXdrDcsk8l3Iyorx%2FyR5X1wgZYg9Cp1nB9Z6yRJsa%2BBV96w%2FQC9A%2BY8Lyadfl9fGr2oJv%2BEkROQnKPysa4McSYvqac3OAxKoEZ6fAUPDdPWNIe3AcDv8BasOF0OyRIPpgxU4KKxSuNT5CSWFS1ZF8XVtr5mJoarB9kPPXGmDL%2BgEAiMmymMOMwvzwdziPeK9I3jTY7KrYnyFsTG%2Fnhm3YN9kmneV506%2BN%2BKhep%2BfJpXozK%2BqtaBRfbDCHQ2REwFnYrPEhhGVSQ8M0KNDwb4q4t%2BuWnYmZRF%2BHI%2Fe%2BK%2BEIUvaK1MaQdTpOWyIgFtbtTMxUtaHxE2n6jl83bH1dKQtracHkYcfAr0xYLWjMRZZ4BG5O%2Fvb1Gkvj2VmdOjfaX%2BqJocYV6Y%2FACUioWff5Osbxqs5bDTOK3YaYr9ICgmRGT8%2BBJWzWRmk7El%2BFVXy4ix%2F6FI65kEUqxGie8e3ydyMfgnWy1nt8n6xPXYwfDtGlJ1jknOoTALL0setbTHJOkSVfIMuO%2FVaActMtCnSBdysZc2MIO%2Fu8YGOrIBo0yp15frtEwEkShpqgPEzow4wLy8Bls1kfuUSOdCDpV%2BPsQVrODh8dgBRqTAwAhZ5C%2FdXu0n%2FiyL8ND0wJ82%2Fr1jc%2BC%2FxX5oOaDo%2FrVikhBg5YDdOHcm9LbIiSCCE9Ziwx6ESXbvvOh0F7HEZaViMKOa3%2BS7jVH716lcbcfgaKkziQff9%2BkaL2ku2HQK05vi%2BWOOY3XPoXGdGcz%2BC0anKDkdQvKf2DFEvzrxACT6PgTvtw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=aec30942b706197f41f8b4023d774faffb2373f0ef016213d3bc71a2613cbab1",
+      "file_size": 78931,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1252456,
+      "file_name": "policy.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/k22zfmw81e4y3pe8u6zr7drns4ij?response-content-disposition=attachment%3B%20filename%3D%22policy.PNG%22%3B%20filename%2A%3DUTF-8%27%27policy.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZIT4IKNN%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T220550Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHkaCXVzLXdlc3QtMiJGMEQCIH5S6fYKetpuazFUkaO2jdTENAlJFAEAksVwV6ok0UqoAiBpP%2F9zQRjMN0kBNrdXAtFNCe60y%2B6O%2FVwlXiU8NCMFvyq6BQjy%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMiw6yZQO2gOSkPmi4Ko4FQ1RVd7qu%2FsJ9CtqhsEnVEHrd2f%2BG4UzNDTuTKmpWc%2BZ%2BZXaL6DMei6%2F8FwNAlnFk66Sl7zkaVbrUhgvfqSb9GPSg7BrwakPZmKFRBl1G5RvJR0%2FaTgOAmBP5mQLYW3DEvvWRjboVSCIAXjXh5whPp0DRl%2F%2BTS5eM9kmICHghM1GmUH2KruL1ygmg%2FYxuQ33QjwooMHJDMGbeux67Yl%2FZIfkejSzcBenjHXE%2BvNhSdz56xDzcVHRG7OfXRQrVqBEAB%2BEus%2F3NXXy%2FktaCmyWt2%2BAuW9ST6rgikedOI79vlIKfmKKDzJLwa3aBriDsSYB%2BT5nyLIvpE6hgqxSjeXXdrDcsk8l3Iyorx%2FyR5X1wgZYg9Cp1nB9Z6yRJsa%2BBV96w%2FQC9A%2BY8Lyadfl9fGr2oJv%2BEkROQnKPysa4McSYvqac3OAxKoEZ6fAUPDdPWNIe3AcDv8BasOF0OyRIPpgxU4KKxSuNT5CSWFS1ZF8XVtr5mJoarB9kPPXGmDL%2BgEAiMmymMOMwvzwdziPeK9I3jTY7KrYnyFsTG%2Fnhm3YN9kmneV506%2BN%2BKhep%2BfJpXozK%2BqtaBRfbDCHQ2REwFnYrPEhhGVSQ8M0KNDwb4q4t%2BuWnYmZRF%2BHI%2Fe%2BK%2BEIUvaK1MaQdTpOWyIgFtbtTMxUtaHxE2n6jl83bH1dKQtracHkYcfAr0xYLWjMRZZ4BG5O%2Fvb1Gkvj2VmdOjfaX%2BqJocYV6Y%2FACUioWff5Osbxqs5bDTOK3YaYr9ICgmRGT8%2BBJWzWRmk7El%2BFVXy4ix%2F6FI65kEUqxGie8e3ydyMfgnWy1nt8n6xPXYwfDtGlJ1jknOoTALL0setbTHJOkSVfIMuO%2FVaActMtCnSBdysZc2MIO%2Fu8YGOrIBo0yp15frtEwEkShpqgPEzow4wLy8Bls1kfuUSOdCDpV%2BPsQVrODh8dgBRqTAwAhZ5C%2FdXu0n%2FiyL8ND0wJ82%2Fr1jc%2BC%2FxX5oOaDo%2FrVikhBg5YDdOHcm9LbIiSCCE9Ziwx6ESXbvvOh0F7HEZaViMKOa3%2BS7jVH716lcbcfgaKkziQff9%2BkaL2ku2HQK05vi%2BWOOY3XPoXGdGcz%2BC0anKDkdQvKf2DFEvzrxACT6PgTvtw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=26dc7e043f127ae8e824a0caedf513052584259efd2396ba8d1d46566c136a00",
+      "file_size": 58241,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1252457,
+      "file_name": "products_xss.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/7q1t4k4ogao1n9ruuugc83sc0x5b?response-content-disposition=attachment%3B%20filename%3D%22products_xss.PNG%22%3B%20filename%2A%3DUTF-8%27%27products_xss.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZIT4IKNN%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T220550Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHkaCXVzLXdlc3QtMiJGMEQCIH5S6fYKetpuazFUkaO2jdTENAlJFAEAksVwV6ok0UqoAiBpP%2F9zQRjMN0kBNrdXAtFNCe60y%2B6O%2FVwlXiU8NCMFvyq6BQjy%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMiw6yZQO2gOSkPmi4Ko4FQ1RVd7qu%2FsJ9CtqhsEnVEHrd2f%2BG4UzNDTuTKmpWc%2BZ%2BZXaL6DMei6%2F8FwNAlnFk66Sl7zkaVbrUhgvfqSb9GPSg7BrwakPZmKFRBl1G5RvJR0%2FaTgOAmBP5mQLYW3DEvvWRjboVSCIAXjXh5whPp0DRl%2F%2BTS5eM9kmICHghM1GmUH2KruL1ygmg%2FYxuQ33QjwooMHJDMGbeux67Yl%2FZIfkejSzcBenjHXE%2BvNhSdz56xDzcVHRG7OfXRQrVqBEAB%2BEus%2F3NXXy%2FktaCmyWt2%2BAuW9ST6rgikedOI79vlIKfmKKDzJLwa3aBriDsSYB%2BT5nyLIvpE6hgqxSjeXXdrDcsk8l3Iyorx%2FyR5X1wgZYg9Cp1nB9Z6yRJsa%2BBV96w%2FQC9A%2BY8Lyadfl9fGr2oJv%2BEkROQnKPysa4McSYvqac3OAxKoEZ6fAUPDdPWNIe3AcDv8BasOF0OyRIPpgxU4KKxSuNT5CSWFS1ZF8XVtr5mJoarB9kPPXGmDL%2BgEAiMmymMOMwvzwdziPeK9I3jTY7KrYnyFsTG%2Fnhm3YN9kmneV506%2BN%2BKhep%2BfJpXozK%2BqtaBRfbDCHQ2REwFnYrPEhhGVSQ8M0KNDwb4q4t%2BuWnYmZRF%2BHI%2Fe%2BK%2BEIUvaK1MaQdTpOWyIgFtbtTMxUtaHxE2n6jl83bH1dKQtracHkYcfAr0xYLWjMRZZ4BG5O%2Fvb1Gkvj2VmdOjfaX%2BqJocYV6Y%2FACUioWff5Osbxqs5bDTOK3YaYr9ICgmRGT8%2BBJWzWRmk7El%2BFVXy4ix%2F6FI65kEUqxGie8e3ydyMfgnWy1nt8n6xPXYwfDtGlJ1jknOoTALL0setbTHJOkSVfIMuO%2FVaActMtCnSBdysZc2MIO%2Fu8YGOrIBo0yp15frtEwEkShpqgPEzow4wLy8Bls1kfuUSOdCDpV%2BPsQVrODh8dgBRqTAwAhZ5C%2FdXu0n%2FiyL8ND0wJ82%2Fr1jc%2BC%2FxX5oOaDo%2FrVikhBg5YDdOHcm9LbIiSCCE9Ziwx6ESXbvvOh0F7HEZaViMKOa3%2BS7jVH716lcbcfgaKkziQff9%2BkaL2ku2HQK05vi%2BWOOY3XPoXGdGcz%2BC0anKDkdQvKf2DFEvzrxACT6PgTvtw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=63048c12ba5c38a0031f72da3ab0f9405cf3b470e4954e10f65b3c6c36cfccf3",
+      "file_size": 99295,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1252458,
+      "file_name": "XSS_POC.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/8ygnpof0cq3war6t4hd7he7xhu7g?response-content-disposition=attachment%3B%20filename%3D%22XSS_POC.mp4%22%3B%20filename%2A%3DUTF-8%27%27XSS_POC.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZIT4IKNN%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T220550Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHkaCXVzLXdlc3QtMiJGMEQCIH5S6fYKetpuazFUkaO2jdTENAlJFAEAksVwV6ok0UqoAiBpP%2F9zQRjMN0kBNrdXAtFNCe60y%2B6O%2FVwlXiU8NCMFvyq6BQjy%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMiw6yZQO2gOSkPmi4Ko4FQ1RVd7qu%2FsJ9CtqhsEnVEHrd2f%2BG4UzNDTuTKmpWc%2BZ%2BZXaL6DMei6%2F8FwNAlnFk66Sl7zkaVbrUhgvfqSb9GPSg7BrwakPZmKFRBl1G5RvJR0%2FaTgOAmBP5mQLYW3DEvvWRjboVSCIAXjXh5whPp0DRl%2F%2BTS5eM9kmICHghM1GmUH2KruL1ygmg%2FYxuQ33QjwooMHJDMGbeux67Yl%2FZIfkejSzcBenjHXE%2BvNhSdz56xDzcVHRG7OfXRQrVqBEAB%2BEus%2F3NXXy%2FktaCmyWt2%2BAuW9ST6rgikedOI79vlIKfmKKDzJLwa3aBriDsSYB%2BT5nyLIvpE6hgqxSjeXXdrDcsk8l3Iyorx%2FyR5X1wgZYg9Cp1nB9Z6yRJsa%2BBV96w%2FQC9A%2BY8Lyadfl9fGr2oJv%2BEkROQnKPysa4McSYvqac3OAxKoEZ6fAUPDdPWNIe3AcDv8BasOF0OyRIPpgxU4KKxSuNT5CSWFS1ZF8XVtr5mJoarB9kPPXGmDL%2BgEAiMmymMOMwvzwdziPeK9I3jTY7KrYnyFsTG%2Fnhm3YN9kmneV506%2BN%2BKhep%2BfJpXozK%2BqtaBRfbDCHQ2REwFnYrPEhhGVSQ8M0KNDwb4q4t%2BuWnYmZRF%2BHI%2Fe%2BK%2BEIUvaK1MaQdTpOWyIgFtbtTMxUtaHxE2n6jl83bH1dKQtracHkYcfAr0xYLWjMRZZ4BG5O%2Fvb1Gkvj2VmdOjfaX%2BqJocYV6Y%2FACUioWff5Osbxqs5bDTOK3YaYr9ICgmRGT8%2BBJWzWRmk7El%2BFVXy4ix%2F6FI65kEUqxGie8e3ydyMfgnWy1nt8n6xPXYwfDtGlJ1jknOoTALL0setbTHJOkSVfIMuO%2FVaActMtCnSBdysZc2MIO%2Fu8YGOrIBo0yp15frtEwEkShpqgPEzow4wLy8Bls1kfuUSOdCDpV%2BPsQVrODh8dgBRqTAwAhZ5C%2FdXu0n%2FiyL8ND0wJ82%2Fr1jc%2BC%2FxX5oOaDo%2FrVikhBg5YDdOHcm9LbIiSCCE9Ziwx6ESXbvvOh0F7HEZaViMKOa3%2BS7jVH716lcbcfgaKkziQff9%2BkaL2ku2HQK05vi%2BWOOY3XPoXGdGcz%2BC0anKDkdQvKf2DFEvzrxACT6PgTvtw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=56d2dc3e64004a45d9503556cfd2c69d6c9efb9e364f13f5d7de6bb585540575",
+      "file_size": 10683798,
+      "type": "video/mp4",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 72,
+  "voters": [
+    "tikidude",
+    "jumpydata",
+    "n1m0",
+    "drsniper",
+    "zy9ard3",
+    "s1r",
+    "shreyaschavhan",
+    "t4r1k-b41",
+    "tess",
+    "address_below0",
+    "and 62 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 5.4,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "required",
+      "scope": "unchanged",
+      "confidentiality": "low",
+      "integrity": "low",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 413,
+    "asset_type": "URL",
+    "asset_identifier": "your-store.myshopify.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "id": 224295,
+      "category": "team",
+      "content": "@ashketchum noticed that we changed our program policy to accept rich text editor-based XSS vulnerabilities and immediately got to testing. What they found was that an attacker could achieve stored XSS by putting a payload directly into the HTML editor and saving the contents, storing malicious code to be executed on subsequent page loads.",
+      "updated_at": "2022-12-01T22:43:37.322Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 166726,
+        "username": "duke-fleed",
+        "name": "Daisuke",
+        "bio": "",
+        "cleared": false,
+        "verified": false,
+        "website": null,
+        "location": "",
+        "created_at": "2017-05-11T17:57:27.993Z",
+        "url": "https://hackerone.com/duke-fleed",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "company",
+        "profile_picture_urls": {
+          "small": "https://profile-photos.hackerone-user-content.com/variants/80zqkpwugrtpg7z7997pts1k6i8n/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/80zqkpwugrtpg7z7997pts1k6i8n/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a",
+          "xtralarge": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NjEzNjQ1NSwicHVyIjoiYmxvYl9pZCJ9fQ==--aa35465015ae1b3f0450af813c91df770900d4d9/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJyZXNpemUiOiIyNjB4MjYwXHUwMDNlIn0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--cf3aeca803d1baf476958c689ca7b472a4cb54f1/1349129-duke_fleed.jpg"
+        }
+      }
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
