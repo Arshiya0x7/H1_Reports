@@ -1,0 +1,158 @@
+{
+  "id": 2633959,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yNjMzOTU5",
+  "url": "https://hackerone.com/reports/2633959",
+  "title": "SQL injection in URL path leads to Database Access",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "critical",
+  "readable_substate": "Resolved",
+  "created_at": "2024-07-31T22:39:36.358Z",
+  "submitted_at": "2024-07-31T22:39:36.605Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "tinopreter",
+    "url": "/tinopreter",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 41919,
+    "url": "https://hackerone.com/mtn_group",
+    "handle": "mtn_group",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/4e6ikuxrt34g8b14w2bk53c6vyry/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/4e6ikuxrt34g8b14w2bk53c6vyry/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "MTN Group",
+      "twitter_handle": "",
+      "website": "https://www.mtn.com/",
+      "about": ""
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2025-01-08T10:40:53.785Z",
+  "bug_reporter_agreed_on_going_public_at": "2024-12-09T10:40:49.647Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nThe application https://corporate.admyntec.co.za/ application has an SQL injection in the URL paths since it takes the ID numbers in there and insert them directly into the backend SQL query without sanitizing them. In the registration, user ID number(Passport or National ID), Organization number are requested, as well as relevant docs. These are all stored in the backend Database.\n\nhttps://corporate.admyntec.co.za/customerInsurance/newCustomerStep8/userId/868878/customerId/732562'/contactPersonId/0\n\n## Steps To Reproduce:\n\n  1. Using the URL generated when we get displayed the Insurance.   \n\n{F3484515}  \n\n  2. Introduce a single quote next to the customerId number and you realize this breaks the backend query.\n\n```\nhttps://corporate.admyntec.co.za/customerInsurance/newCustomerStep8/userId/868878/customerId/732562'/contactPersonId/0  \n```\n{F3484523}  \n  3. Send this URL to any SQL epxloitation tool like SQLmap, Add an asterisk to the customerId number to tell the tool that's the injection point.  We can dump the database now.\n\n{F3484537}  \n\n##Please Note That This Occurs throughout many URL paths in the application.\n\n#Recommendation\nIf you are taking parameters and inserting them into the backend SQL query, sanitize them to do away with any special characters attached to them.\n\nConsider putting the application behind a WAF to make a potential SQLi vulnerability exploitation a bit tedious for an attacker.\n\n## Impact\n\nAn attacker can exploit this to dump and download the backend database. This will give them access user information.",
+  "weakness": {
+    "id": 67,
+    "name": "SQL Injection"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 3484515,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/z0uy3kcmv58p9ga1ql5z992m1bf5?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQXMS6E3C%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T174056Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHYaCXVzLXdlc3QtMiJHMEUCIQCp%2FBKg%2FuirBlu9bDxgWYctHDOJmz%2FmJZ1pDA%2FoCzPbNgIgOKZC5q1ZkDZNN3Eh6Qmu9bi1ByRV%2BN2XXge4sEGImEgqugUI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDPN%2B0IT4O%2F3Zh2uA5CqOBX39MmfXERoBZ6Z5RNd%2BdA91Ri%2Fq8HjuzIZCzjGVqfcXNtpwFBq7I1vwtmOf%2F0%2FZQx8MPY36mmEFIGSzIXq2Tf0F13gk%2BjDufoXv%2FVwRw%2F1KIiN6VxDUiiPpoRoJ%2BZpASN2OLiNTX1nWsiV490LBcluQ%2Bg7krCUXuvpc%2BD1frF1YazQ3EtvXRbUT%2B%2BrIQZaj0pNFPkXQz1YlkrOOqdkncNOFBSaVp2IV7r7yg6XCnDdT25KtSex3i1JJQeKSbq26iZpmMLFKjuRmkINElegAdH5QLJwyJ6JqULYgqQbgOC9Wdr5jzwN1RKGOj1JPO9aGgY4JgPnCCUcUp9jRm%2FKfrbgOqu9haTlqJ5ZMWNJfgrKbptppwXxT%2FF%2BEqEVSDCB2diGbIWOZylZ4nDsb9uTfXUklpOhQU2e%2FsnFnAox%2BhSdeRz4lkGdCK9547lkwBDh94JQwY7XxTarSHR5ij5HVm3NPtPuhiYYT4jENxTnRYcOSA5CGuUPrGizCVc1j3gJvtgDvvxAUKtgPaya2DhrfZCCqJ99kCLsbj29KpLpg600ZT75vWrsLhR7yWorI2oG%2BEkkp0fdhVBijAglFwEEOCdmQKjkZmrUcIxphONmcSYQr7RkmGD7Vu7CcwGIfPpZ51QmT3A4ehyfGEHUM3rr1g3JHxRVgjmrwxB9xR75GNGkjm9Ko212aVR7nlt45gpnE39Wq2KWRG8AldDtCLgfvKgeX%2BFB3%2BmJ8OMD9WOcFgQ8Hk1Egkif2pzYaVntra2ctQqyN%2FW1xg6YP6Kcfy48vy59nf3F7i9vtWVMbkpB10oi7MVd9Zte5SuPr1TV3otaaCF7xp8nLTzjf8Y12tMqQiN37fvRRUukNutLO0Gm%2FYzC77LrGBjqxAWAFzpbr3CxJg2rfPLGfQOOr0OjplgdV77g9%2BlScSge8MKF%2F51kTcvDmY7jFfsuV7LccQSCIy6Ya6Q4UVuDVl6U%2BSrLBQTDqeTptoGOuojQb66RR0PiLrmFFGOz0Dtw2D6AfrFdaqZywnh4masscTn4%2FLYnfCyzlBKkVlly1Nz9Y3dkAIir4xccQFXuxxxv4NgtSAxLL3p8DkValLd1IWUPG0nQQkDmf7LeyfDjNq0oySg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=222284b91016f6968dc7759f0de7b6d7d816bd6c392c34be181909e4e7b12b0d",
+      "file_size": 33856,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 3484523,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/iuy8z55wv1igbe8i8p5792ta5ij6?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQXMS6E3C%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T174056Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHYaCXVzLXdlc3QtMiJHMEUCIQCp%2FBKg%2FuirBlu9bDxgWYctHDOJmz%2FmJZ1pDA%2FoCzPbNgIgOKZC5q1ZkDZNN3Eh6Qmu9bi1ByRV%2BN2XXge4sEGImEgqugUI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDPN%2B0IT4O%2F3Zh2uA5CqOBX39MmfXERoBZ6Z5RNd%2BdA91Ri%2Fq8HjuzIZCzjGVqfcXNtpwFBq7I1vwtmOf%2F0%2FZQx8MPY36mmEFIGSzIXq2Tf0F13gk%2BjDufoXv%2FVwRw%2F1KIiN6VxDUiiPpoRoJ%2BZpASN2OLiNTX1nWsiV490LBcluQ%2Bg7krCUXuvpc%2BD1frF1YazQ3EtvXRbUT%2B%2BrIQZaj0pNFPkXQz1YlkrOOqdkncNOFBSaVp2IV7r7yg6XCnDdT25KtSex3i1JJQeKSbq26iZpmMLFKjuRmkINElegAdH5QLJwyJ6JqULYgqQbgOC9Wdr5jzwN1RKGOj1JPO9aGgY4JgPnCCUcUp9jRm%2FKfrbgOqu9haTlqJ5ZMWNJfgrKbptppwXxT%2FF%2BEqEVSDCB2diGbIWOZylZ4nDsb9uTfXUklpOhQU2e%2FsnFnAox%2BhSdeRz4lkGdCK9547lkwBDh94JQwY7XxTarSHR5ij5HVm3NPtPuhiYYT4jENxTnRYcOSA5CGuUPrGizCVc1j3gJvtgDvvxAUKtgPaya2DhrfZCCqJ99kCLsbj29KpLpg600ZT75vWrsLhR7yWorI2oG%2BEkkp0fdhVBijAglFwEEOCdmQKjkZmrUcIxphONmcSYQr7RkmGD7Vu7CcwGIfPpZ51QmT3A4ehyfGEHUM3rr1g3JHxRVgjmrwxB9xR75GNGkjm9Ko212aVR7nlt45gpnE39Wq2KWRG8AldDtCLgfvKgeX%2BFB3%2BmJ8OMD9WOcFgQ8Hk1Egkif2pzYaVntra2ctQqyN%2FW1xg6YP6Kcfy48vy59nf3F7i9vtWVMbkpB10oi7MVd9Zte5SuPr1TV3otaaCF7xp8nLTzjf8Y12tMqQiN37fvRRUukNutLO0Gm%2FYzC77LrGBjqxAWAFzpbr3CxJg2rfPLGfQOOr0OjplgdV77g9%2BlScSge8MKF%2F51kTcvDmY7jFfsuV7LccQSCIy6Ya6Q4UVuDVl6U%2BSrLBQTDqeTptoGOuojQb66RR0PiLrmFFGOz0Dtw2D6AfrFdaqZywnh4masscTn4%2FLYnfCyzlBKkVlly1Nz9Y3dkAIir4xccQFXuxxxv4NgtSAxLL3p8DkValLd1IWUPG0nQQkDmf7LeyfDjNq0oySg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=8b3562f66b241cf342c7141e74d67eccb6ad39a76d8b68f106ba88f036b82553",
+      "file_size": 120718,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 3484537,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/ofcnbk5hmcsamp7335fwnj9vc5qa?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQXMS6E3C%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T174056Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHYaCXVzLXdlc3QtMiJHMEUCIQCp%2FBKg%2FuirBlu9bDxgWYctHDOJmz%2FmJZ1pDA%2FoCzPbNgIgOKZC5q1ZkDZNN3Eh6Qmu9bi1ByRV%2BN2XXge4sEGImEgqugUI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDPN%2B0IT4O%2F3Zh2uA5CqOBX39MmfXERoBZ6Z5RNd%2BdA91Ri%2Fq8HjuzIZCzjGVqfcXNtpwFBq7I1vwtmOf%2F0%2FZQx8MPY36mmEFIGSzIXq2Tf0F13gk%2BjDufoXv%2FVwRw%2F1KIiN6VxDUiiPpoRoJ%2BZpASN2OLiNTX1nWsiV490LBcluQ%2Bg7krCUXuvpc%2BD1frF1YazQ3EtvXRbUT%2B%2BrIQZaj0pNFPkXQz1YlkrOOqdkncNOFBSaVp2IV7r7yg6XCnDdT25KtSex3i1JJQeKSbq26iZpmMLFKjuRmkINElegAdH5QLJwyJ6JqULYgqQbgOC9Wdr5jzwN1RKGOj1JPO9aGgY4JgPnCCUcUp9jRm%2FKfrbgOqu9haTlqJ5ZMWNJfgrKbptppwXxT%2FF%2BEqEVSDCB2diGbIWOZylZ4nDsb9uTfXUklpOhQU2e%2FsnFnAox%2BhSdeRz4lkGdCK9547lkwBDh94JQwY7XxTarSHR5ij5HVm3NPtPuhiYYT4jENxTnRYcOSA5CGuUPrGizCVc1j3gJvtgDvvxAUKtgPaya2DhrfZCCqJ99kCLsbj29KpLpg600ZT75vWrsLhR7yWorI2oG%2BEkkp0fdhVBijAglFwEEOCdmQKjkZmrUcIxphONmcSYQr7RkmGD7Vu7CcwGIfPpZ51QmT3A4ehyfGEHUM3rr1g3JHxRVgjmrwxB9xR75GNGkjm9Ko212aVR7nlt45gpnE39Wq2KWRG8AldDtCLgfvKgeX%2BFB3%2BmJ8OMD9WOcFgQ8Hk1Egkif2pzYaVntra2ctQqyN%2FW1xg6YP6Kcfy48vy59nf3F7i9vtWVMbkpB10oi7MVd9Zte5SuPr1TV3otaaCF7xp8nLTzjf8Y12tMqQiN37fvRRUukNutLO0Gm%2FYzC77LrGBjqxAWAFzpbr3CxJg2rfPLGfQOOr0OjplgdV77g9%2BlScSge8MKF%2F51kTcvDmY7jFfsuV7LccQSCIy6Ya6Q4UVuDVl6U%2BSrLBQTDqeTptoGOuojQb66RR0PiLrmFFGOz0Dtw2D6AfrFdaqZywnh4masscTn4%2FLYnfCyzlBKkVlly1Nz9Y3dkAIir4xccQFXuxxxv4NgtSAxLL3p8DkValLd1IWUPG0nQQkDmf7LeyfDjNq0oySg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=7780808df59f8f75176824ccc68b71e37ba51be831b0888bf74afc36dd1e5b4b",
+      "file_size": 121852,
+      "type": "image/png",
+      "moderated": false
+    }
+  ],
+  "allow_singular_disclosure_at": "2025-01-08T10:40:50.007Z",
+  "allow_singular_disclosure_after": -22057206.06889185,
+  "singular_disclosure_allowed": true,
+  "vote_count": 103,
+  "voters": [
+    "loaymorad",
+    "orange303",
+    "alejandroar",
+    "yassinek3ch",
+    "mikelly",
+    "chupa-chups",
+    "never_die",
+    "2026",
+    "spaghettisec",
+    "mohaned0101",
+    "and 93 more..."
+  ],
+  "severity": {
+    "rating": "critical",
+    "score": 9.8,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "high",
+      "integrity": "high",
+      "availability": "high"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 34307,
+    "asset_type": "URL",
+    "asset_identifier": "mtn.co.za",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
