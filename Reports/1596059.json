@@ -1,0 +1,165 @@
+{
+  "id": 1596059,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNTk2MDU5",
+  "url": "https://hackerone.com/reports/1596059",
+  "title": "Missing character limitation allows to put generate a database error",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2022-06-09T16:44:23.306Z",
+  "submitted_at": "2022-06-09T16:44:23.385Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "errorsec_",
+    "url": "/errorsec_",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/eow0ivuox7eppymvc9cwyszjv28v/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13291,
+    "url": "https://hackerone.com/nextcloud",
+    "handle": "nextcloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Nextcloud",
+      "twitter_handle": "nextclouders",
+      "website": "https://nextcloud.com",
+      "about": "Access, share and protect your files, calendars, contacts, communication & more at home and in your enterprise."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2023-22470"
+  ],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2023-01-09T07:11:26.267Z",
+  "bug_reporter_agreed_on_going_public_at": "2023-01-09T07:11:26.172Z",
+  "team_member_agreed_on_going_public_at": "2023-01-09T05:46:05.745Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi Security Team,\nSummary:\n=========\nThere is no limit to the number of characters in the display name, which allows a DoS attack. The DoS attack affects server-side.\nDescription\n=========\nOn the input form of Username in nextcloud.com/settings/user there's no Input validation using this you can send more payload and may cause of Denial of service or error code 500 Internal Server Error/Internal Error\nProof of Concept\n==============\n1.Go and login to your account\n2. Now go to setting and Deck ---> Add Boards section\n3.Insert name and intercept it\n4. Send to repeater replace it with payload the response code on the server side is 500 Internal Server Error\n\n## Impact\n\nImpact\n=======\nRemediation:\n===========\n+Implementing input validation\n+Validating free-form Unicode text\n+Define the allowed set of characters to be accepted.\n+Minimum and maximum value range\nImpact\n======\nAttacker can perform a DOS because of lack of input validation",
+  "weakness": {
+    "id": 48,
+    "name": "Uncontrolled Resource Consumption"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1763496,
+      "file_name": "booard.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/3tvmlp7bvbkgv0kgkktag2x93ui1?response-content-disposition=attachment%3B%20filename%3D%22booard.png%22%3B%20filename%2A%3DUTF-8%27%27booard.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4K2CTKX4%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T214946Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHoaCXVzLXdlc3QtMiJHMEUCIQDeQfAk13PfnXGTrLrNb%2BnQBEdewbgIKZLgskhg6jVaawIgZrSMJY2LycFNmtdcmYb1340F3PyGDZv9zZudgmACFIkquwUI8%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDETzFOKjTpQNCFmNUyqPBUfL9UVIdrBHb0bo7yEvgbOgD7vwo%2FHg0%2FuXUUmAsqikodX7mgYEFWxsSSIQYNB9ofuPbTF3pj13urMVfzLl0Vr2dBW526n0c0RxQmkr6ajjyNRKCTaoxXzuavEtlUIXnA5JMaogfhxKIlx1GemGNkFZyW3uH4%2Bd2%2BIdVCr6eYT%2Bo2YqP%2FxickHcud0ImRxxd6Seo8vW3Q7Zb7LDLn6ejheKLodtBd9fDnvBF1JCi0XVMpokGTGGBU2cFz5jAauymMr3Ya4zS0rBW7M4%2FN%2Flpgo62QO9wcSIN5YTwW%2BQC51n1qWr3R06kcis1g2RScNz7cCoNanRyCMy4qtooZeJ0RjhBlsYncLKosaNbgIi4Zj2GRyx1OTQr%2F3YWlBAhjwJhH7N6vcsbzG3I821UD2DRiN%2F0lqfg%2B5bWATREiSF1mI6Z48LnWBSpCaOTZrI%2FsOQMwS2a%2BsuhjKxZnw5vdGyEg6GTFTFe6SKCpZ3aMsKqiH1IpyDlroIFr07E4aZMa7r2q%2BVXIWF1clAAt%2Fp8nt48%2BW%2Bvpu3tREes%2FiPJ6MSyEIKbNO1CvFvtKG%2Fl6DtCm%2BVjikyIIG1V2RGhhAi33CuMpklAHXug%2BQuZ6g7dhjXf8FWiAH8vC%2B4p3rILPK2m20xm2aDN5wPpgyiogb9zGYgzxIoSg4TtfiDZzSGdi4TCRg5R3wU0v64nIAvb6F8RWihHISYpOk%2Fr0NgMamVdpGj9Lys%2BViiQCMCMSZVFxg7OQd9i7mZWqdSaA1xo3owfdseo2nl8VUogD6EW82H%2FXw8OwQbFMRjXgfjtudneWc2%2BSOiBmFpMGB5O0O87L%2BGlThKXJa9cj4vaAAjDbMJLmve9pYjatijnpJU5XmNQcwdlokwrd%2B7xgY6sQGQY44oSkFl53JgGThuuwmVbrheY4sXWtckBc0qM6DpgTpNg4Y0BqKSJZg0LCBovEIQYId1WR38xiM4%2BuBV%2FpLzZBOOeLr1%2BTl2M4WnjV88vQYljYYL4U2Ha20nIFK52tXx%2BcNvBTZY7geWGDXueD2HhTDD3HuHlia0vwZc7zVLMj5wFk0yhHCNhXYDTl0HwqN9PwhPNoRUaNdre42kL73EIb8QDJDckkwd%2F0dGaSIfmNc%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=1b2705b55c192276e7df764fcca9a87ef7d9db95f504be59b84849e0764ffa46",
+      "file_size": 11904,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1763497,
+      "file_name": "Board_Burp.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/u2kwu0v1lpta79sueq8tdhw1r5tv?response-content-disposition=attachment%3B%20filename%3D%22Board_Burp.png%22%3B%20filename%2A%3DUTF-8%27%27Board_Burp.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4K2CTKX4%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T214946Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHoaCXVzLXdlc3QtMiJHMEUCIQDeQfAk13PfnXGTrLrNb%2BnQBEdewbgIKZLgskhg6jVaawIgZrSMJY2LycFNmtdcmYb1340F3PyGDZv9zZudgmACFIkquwUI8%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDETzFOKjTpQNCFmNUyqPBUfL9UVIdrBHb0bo7yEvgbOgD7vwo%2FHg0%2FuXUUmAsqikodX7mgYEFWxsSSIQYNB9ofuPbTF3pj13urMVfzLl0Vr2dBW526n0c0RxQmkr6ajjyNRKCTaoxXzuavEtlUIXnA5JMaogfhxKIlx1GemGNkFZyW3uH4%2Bd2%2BIdVCr6eYT%2Bo2YqP%2FxickHcud0ImRxxd6Seo8vW3Q7Zb7LDLn6ejheKLodtBd9fDnvBF1JCi0XVMpokGTGGBU2cFz5jAauymMr3Ya4zS0rBW7M4%2FN%2Flpgo62QO9wcSIN5YTwW%2BQC51n1qWr3R06kcis1g2RScNz7cCoNanRyCMy4qtooZeJ0RjhBlsYncLKosaNbgIi4Zj2GRyx1OTQr%2F3YWlBAhjwJhH7N6vcsbzG3I821UD2DRiN%2F0lqfg%2B5bWATREiSF1mI6Z48LnWBSpCaOTZrI%2FsOQMwS2a%2BsuhjKxZnw5vdGyEg6GTFTFe6SKCpZ3aMsKqiH1IpyDlroIFr07E4aZMa7r2q%2BVXIWF1clAAt%2Fp8nt48%2BW%2Bvpu3tREes%2FiPJ6MSyEIKbNO1CvFvtKG%2Fl6DtCm%2BVjikyIIG1V2RGhhAi33CuMpklAHXug%2BQuZ6g7dhjXf8FWiAH8vC%2B4p3rILPK2m20xm2aDN5wPpgyiogb9zGYgzxIoSg4TtfiDZzSGdi4TCRg5R3wU0v64nIAvb6F8RWihHISYpOk%2Fr0NgMamVdpGj9Lys%2BViiQCMCMSZVFxg7OQd9i7mZWqdSaA1xo3owfdseo2nl8VUogD6EW82H%2FXw8OwQbFMRjXgfjtudneWc2%2BSOiBmFpMGB5O0O87L%2BGlThKXJa9cj4vaAAjDbMJLmve9pYjatijnpJU5XmNQcwdlokwrd%2B7xgY6sQGQY44oSkFl53JgGThuuwmVbrheY4sXWtckBc0qM6DpgTpNg4Y0BqKSJZg0LCBovEIQYId1WR38xiM4%2BuBV%2FpLzZBOOeLr1%2BTl2M4WnjV88vQYljYYL4U2Ha20nIFK52tXx%2BcNvBTZY7geWGDXueD2HhTDD3HuHlia0vwZc7zVLMj5wFk0yhHCNhXYDTl0HwqN9PwhPNoRUaNdre42kL73EIb8QDJDckkwd%2F0dGaSIfmNc%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=dc86c9671b07cf8be8ef764ee539dc5521c25015828f35077d6ff1b9a7e7932c",
+      "file_size": 132466,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2023-02-08T05:46:05.892Z",
+  "allow_singular_disclosure_after": -82569820.4782508,
+  "singular_disclosure_allowed": true,
+  "vote_count": 12,
+  "voters": [
+    "unstablepayload",
+    "shreyaschavhan",
+    "7odamoo",
+    "shubham_srt",
+    "5eyavan",
+    "shivammusic",
+    "sz00",
+    "somesay89",
+    "iexpert",
+    "3ndl3ss",
+    "and 2 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 13,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "nextcloud/server",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "id": 235725,
+      "category": "team",
+      "content": "Security advisory at https://github.com/nextcloud/security-advisories/security/advisories/GHSA-93j5-wx4c-6g88",
+      "updated_at": "2023-01-05T11:53:37.749Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 89223,
+        "username": "nickvergessen",
+        "name": "Joas Schilling",
+        "bio": "",
+        "cleared": false,
+        "verified": false,
+        "website": null,
+        "location": "Germany",
+        "created_at": "2016-07-01T08:17:59.061Z",
+        "url": "https://hackerone.com/nickvergessen",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "company",
+        "profile_picture_urls": {
+          "small": "https://profile-photos.hackerone-user-content.com/variants/5DBbeB7om4ZiKgskrEoeTyGH/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/5DBbeB7om4ZiKgskrEoeTyGH/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c",
+          "xtralarge": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6ODQyMTQ5LCJwdXIiOiJibG9iX2lkIn19--7544c99c2f87f134b16d5b20f81dbc06444df8d8/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJyZXNpemUiOiIyNjB4MjYwXHUwMDNlIn0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--c155082ce6f9751dcb29cd6ea061a7e4d7329577/2019_cfhn1.png"
+        }
+      }
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
