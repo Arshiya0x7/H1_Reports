@@ -1,0 +1,158 @@
+{
+  "id": 671406,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC82NzE0MDY=",
+  "url": "https://hackerone.com/reports/671406",
+  "title": "Account takeover via Google OneTap",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2019-08-11T14:34:02.500Z",
+  "submitted_at": "2019-08-11T14:34:02.500Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "badca7",
+    "url": "/badca7",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/c8r1TwpGjyfCcXs9vLfLormF/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 59,
+    "url": "https://hackerone.com/priceline",
+    "handle": "priceline",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/059/ebb250a0326046ab0360a7b35be8cb3f1fe46a2b_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/059/ebb250a0326046ab0360a7b35be8cb3f1fe46a2b_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Priceline",
+      "twitter_handle": "",
+      "website": "http://www.priceline.com/",
+      "about": "Deep Discounts on Hotels, Flights and Rental Cars."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2022-05-11T09:37:14.985Z",
+  "bug_reporter_agreed_on_going_public_at": "2022-04-11T09:37:07.580Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\n\nIt's possible to take over any priceline.com user's account knowing their email. The only requirement is that the victim's email domain is not registered with Google's Gsuite. The root cause of this issue is that the backend does not verify whether the email provided is a confirmed one.\n\n## Steps To Reproduce:\n\n1. Create Account A (in my case `badca7@wearehackerone.com`) with priceline.com, without any SSO, via the \"Create an account\" link (aka \"register with email\").\n2. Once the account has been created, add a dummy phone number to the profile. It will serve as a canary to demonstrate we accessed the same data in the next steps.\n3. In another browser/session (eg, incognito/private mode) sign up for a trial GSuite account at https://gsuite.google.com/signup/basic/welcome  . This will be Account B.\n4. Use any email to register as you won't need to confirm that email. \n5. When the wizard comes to the \"Does your business have a domain?\" confirm and enter `wearehackerone.com` (or any other domain that hosts the victim's email box) as in F552718. You may not use the same domain name at this stage, as I claimed it for the purposes of this PoC however you can do so when my GSuite trial expires. From this comes the requirement that the victim's email domain name must not be registered with Google prior to this attack. \n6. Once you saved the domain record with Google, stop there as there's no need to verify the domain.\n7. At this stage the OneTap/GoogleYOLO popup will be showing on priceline.com when visited in the same browser session. It took me some time to get it to show however signing in and out of Google Account several times with the newly created GSuite credentials and then refreshing the priceline.com page helped. On another occasion a Gmail account, which I signed in in the same browser window helped too. You may need to play around with these until you see the newly created account to show in the list. F552723 \n8. Once you have that, just sign in (`badca7@wearehackerone.com` in my case). You can confirm you accessed Account A by seeing the phone number you added in step (2). In the other browser window/session with Account A you can see that now there are two accounts showing in the top right corner and the profile data is blank.\n9. Account takeover complete. F552724\n\n# Notes\n\n- IP used for this PoC: ███\n\n## Impact\n\nAttackers can take over any priceline.com account given they were able to register a specific domain with GSuite.",
+  "weakness": {
+    "id": 27,
+    "name": "Improper Authentication - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 552718,
+      "file_name": "gsuite.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/WRBUJW9BMYXYFNe6UPXguXki?response-content-disposition=attachment%3B%20filename%3D%22gsuite.png%22%3B%20filename%2A%3DUTF-8%27%27gsuite.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ5NFJOVAF%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T234527Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEID%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCYoKrB%2B5OAtMEvTgI1XSN2%2BKvLv%2FCStZ28UmgWI5ObKwIhALGCZDa0Bq2L38Z%2Fa7dYv4m2VMjCdwsGoNrRzMjVp2KLKrsFCPn%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5IgxKteL6N%2B7t%2BhCTQkMqjwXJeRXjJ4O0ufVhiNeAdWoTAeaS3K9z5%2B%2FSJHMf2WAtLZx4kgetOSeeHRtMugsPWBC%2Bug6jjsy76pybkL1EYFZ%2BHurdTOiA10xtB%2BEu%2Bo0zHXt4s6wJlbTsOBpzJcycP0%2Bj9fSWmQlKTPvdqmHcHAIeH4D6hmNRS%2FyYtefuzRd9jc6xfeHyrsGV8mo4d6uZ2A0fg2hy1%2F1qb1XadZ1paLPyCZfgzQtVXH%2Bvhky1YB1dckNPacNmZA7mSLSZNoy4lgr39%2FuP02mR%2Bx08coW0djJuPXpBNPpQ5GuIsA1ev%2Bg%2FkxzkNFg8Iurb8xrHQlMBno3ZmujhXMO6mQmjclRB7stxh1Exi4ToRyAj9ys2n5n9DI2lu82NXIEx2c8u5M17em7dBXmFeS8XKoIjEq0vX1h%2B2SWji6fyrSN0Y3zSkqVo2SFA7SnmS9bAwBB7VHIslHZoHC7TDp%2BpUyuXMg4WJmQd07kGmm%2Fb9xxb562ODFeVFV%2Bw3uVJ840nT%2BzgJR84a%2F4tGuGqocZ8Cy4E0zkK9MZ3Hsd6x3IXOyrX%2Fh%2F8u%2F2fjtBFTcmxdfiXSNNx2jj%2FZ9iE4xZCEeVw0nyPWvTfkJTjiSjA2LbQgCK9BI0K%2FNrgP5FhiR8VL%2F1JNnDuXT1ae36m90n%2B4kaOygNNiVrLZDXu11ZidM%2B8L0ZnsA53ktL9bcmVTKWElcsa7vHZkwD7vj%2FDoZkQKpgj5fwgbOF2X0LcBNcSHRHyaln9fxl9ibEusC6ISslQ1JW0EAgzGKuPJIk7cemZi6RtrNjcT87VZIttNPNsH45zqIA%2B8njei2FQScCK744SPZQhZNEVgBwTKUMjHeg3OMfzHwRHi%2FGjpyemyKwKX93dJ5FxqEuMhtCeMKXzvMYGOrABS%2F7GpsZUawWuSZ4%2BGnTjwxHQ%2B2HPFUulGEIalHAL2LHhOVp3YYjZj90cWKPb83oDioKgtRsR%2Fn%2BfBauIB8qIbDmxt1s42h5r8Lzd66%2BpoizioEqa8kvLNvzoBvDaNu1Zvp50qJjqpcCfaXUg%2FrcpMV4530V1SIlrwEmkUCmLSOvc8n8%2FBSC5ML1W5ET5l8wee8Q1UP1EVxOOQddUIyli3p6tfFbhXY222hPpGECFxgM%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=f6aa135159461d254f3e7e533b1a3ea219286855429a519bcf7280f2a8b15bf4",
+      "file_size": 452861,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 552723,
+      "file_name": "popup_onetap.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/ZgWnszG6fDSCm1z6JcvedJ2g?response-content-disposition=attachment%3B%20filename%3D%22popup_onetap.png%22%3B%20filename%2A%3DUTF-8%27%27popup_onetap.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ5NFJOVAF%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T234527Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEID%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCYoKrB%2B5OAtMEvTgI1XSN2%2BKvLv%2FCStZ28UmgWI5ObKwIhALGCZDa0Bq2L38Z%2Fa7dYv4m2VMjCdwsGoNrRzMjVp2KLKrsFCPn%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5IgxKteL6N%2B7t%2BhCTQkMqjwXJeRXjJ4O0ufVhiNeAdWoTAeaS3K9z5%2B%2FSJHMf2WAtLZx4kgetOSeeHRtMugsPWBC%2Bug6jjsy76pybkL1EYFZ%2BHurdTOiA10xtB%2BEu%2Bo0zHXt4s6wJlbTsOBpzJcycP0%2Bj9fSWmQlKTPvdqmHcHAIeH4D6hmNRS%2FyYtefuzRd9jc6xfeHyrsGV8mo4d6uZ2A0fg2hy1%2F1qb1XadZ1paLPyCZfgzQtVXH%2Bvhky1YB1dckNPacNmZA7mSLSZNoy4lgr39%2FuP02mR%2Bx08coW0djJuPXpBNPpQ5GuIsA1ev%2Bg%2FkxzkNFg8Iurb8xrHQlMBno3ZmujhXMO6mQmjclRB7stxh1Exi4ToRyAj9ys2n5n9DI2lu82NXIEx2c8u5M17em7dBXmFeS8XKoIjEq0vX1h%2B2SWji6fyrSN0Y3zSkqVo2SFA7SnmS9bAwBB7VHIslHZoHC7TDp%2BpUyuXMg4WJmQd07kGmm%2Fb9xxb562ODFeVFV%2Bw3uVJ840nT%2BzgJR84a%2F4tGuGqocZ8Cy4E0zkK9MZ3Hsd6x3IXOyrX%2Fh%2F8u%2F2fjtBFTcmxdfiXSNNx2jj%2FZ9iE4xZCEeVw0nyPWvTfkJTjiSjA2LbQgCK9BI0K%2FNrgP5FhiR8VL%2F1JNnDuXT1ae36m90n%2B4kaOygNNiVrLZDXu11ZidM%2B8L0ZnsA53ktL9bcmVTKWElcsa7vHZkwD7vj%2FDoZkQKpgj5fwgbOF2X0LcBNcSHRHyaln9fxl9ibEusC6ISslQ1JW0EAgzGKuPJIk7cemZi6RtrNjcT87VZIttNPNsH45zqIA%2B8njei2FQScCK744SPZQhZNEVgBwTKUMjHeg3OMfzHwRHi%2FGjpyemyKwKX93dJ5FxqEuMhtCeMKXzvMYGOrABS%2F7GpsZUawWuSZ4%2BGnTjwxHQ%2B2HPFUulGEIalHAL2LHhOVp3YYjZj90cWKPb83oDioKgtRsR%2Fn%2BfBauIB8qIbDmxt1s42h5r8Lzd66%2BpoizioEqa8kvLNvzoBvDaNu1Zvp50qJjqpcCfaXUg%2FrcpMV4530V1SIlrwEmkUCmLSOvc8n8%2FBSC5ML1W5ET5l8wee8Q1UP1EVxOOQddUIyli3p6tfFbhXY222hPpGECFxgM%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=19308a889f909b546380119c1d19c93771ec080811b18b5fd2ee90cd75a400dc",
+      "file_size": 2078055,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 552724,
+      "file_name": "AccountA_after_takeover.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/D4XrEU18NDB6jxMrfG5p7vxf?response-content-disposition=attachment%3B%20filename%3D%22AccountA_after_takeover.png%22%3B%20filename%2A%3DUTF-8%27%27AccountA_after_takeover.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ5NFJOVAF%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T234527Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEID%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCYoKrB%2B5OAtMEvTgI1XSN2%2BKvLv%2FCStZ28UmgWI5ObKwIhALGCZDa0Bq2L38Z%2Fa7dYv4m2VMjCdwsGoNrRzMjVp2KLKrsFCPn%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5IgxKteL6N%2B7t%2BhCTQkMqjwXJeRXjJ4O0ufVhiNeAdWoTAeaS3K9z5%2B%2FSJHMf2WAtLZx4kgetOSeeHRtMugsPWBC%2Bug6jjsy76pybkL1EYFZ%2BHurdTOiA10xtB%2BEu%2Bo0zHXt4s6wJlbTsOBpzJcycP0%2Bj9fSWmQlKTPvdqmHcHAIeH4D6hmNRS%2FyYtefuzRd9jc6xfeHyrsGV8mo4d6uZ2A0fg2hy1%2F1qb1XadZ1paLPyCZfgzQtVXH%2Bvhky1YB1dckNPacNmZA7mSLSZNoy4lgr39%2FuP02mR%2Bx08coW0djJuPXpBNPpQ5GuIsA1ev%2Bg%2FkxzkNFg8Iurb8xrHQlMBno3ZmujhXMO6mQmjclRB7stxh1Exi4ToRyAj9ys2n5n9DI2lu82NXIEx2c8u5M17em7dBXmFeS8XKoIjEq0vX1h%2B2SWji6fyrSN0Y3zSkqVo2SFA7SnmS9bAwBB7VHIslHZoHC7TDp%2BpUyuXMg4WJmQd07kGmm%2Fb9xxb562ODFeVFV%2Bw3uVJ840nT%2BzgJR84a%2F4tGuGqocZ8Cy4E0zkK9MZ3Hsd6x3IXOyrX%2Fh%2F8u%2F2fjtBFTcmxdfiXSNNx2jj%2FZ9iE4xZCEeVw0nyPWvTfkJTjiSjA2LbQgCK9BI0K%2FNrgP5FhiR8VL%2F1JNnDuXT1ae36m90n%2B4kaOygNNiVrLZDXu11ZidM%2B8L0ZnsA53ktL9bcmVTKWElcsa7vHZkwD7vj%2FDoZkQKpgj5fwgbOF2X0LcBNcSHRHyaln9fxl9ibEusC6ISslQ1JW0EAgzGKuPJIk7cemZi6RtrNjcT87VZIttNPNsH45zqIA%2B8njei2FQScCK744SPZQhZNEVgBwTKUMjHeg3OMfzHwRHi%2FGjpyemyKwKX93dJ5FxqEuMhtCeMKXzvMYGOrABS%2F7GpsZUawWuSZ4%2BGnTjwxHQ%2B2HPFUulGEIalHAL2LHhOVp3YYjZj90cWKPb83oDioKgtRsR%2Fn%2BfBauIB8qIbDmxt1s42h5r8Lzd66%2BpoizioEqa8kvLNvzoBvDaNu1Zvp50qJjqpcCfaXUg%2FrcpMV4530V1SIlrwEmkUCmLSOvc8n8%2FBSC5ML1W5ET5l8wee8Q1UP1EVxOOQddUIyli3p6tfFbhXY222hPpGECFxgM%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=544a6e40b97a17ce288b707c8c14a81c83a097f73c35cfb9be67796c84ff8f5b",
+      "file_size": 437967,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2022-05-11T09:37:07.732Z",
+  "allow_singular_disclosure_after": -106150099.74152613,
+  "singular_disclosure_allowed": true,
+  "vote_count": 76,
+  "voters": [
+    "tinmo",
+    "alp",
+    "yxw21",
+    "aala",
+    "zy9ard3",
+    "shreyaschavhan",
+    "7odamoo",
+    "yuvraj_dighe",
+    "yassinek3ch",
+    "bug_vs_me",
+    "and 66 more..."
+  ],
+  "severity": {
+    "rating": "high",
+    "score": 8.1,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "high",
+      "privileges_required": "none",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "high",
+      "integrity": "high",
+      "availability": "high"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 6651,
+    "asset_type": "URL",
+    "asset_identifier": "www.priceline.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
