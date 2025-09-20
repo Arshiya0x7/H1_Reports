@@ -1,0 +1,131 @@
+{
+  "id": 282518,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yODI1MTg=",
+  "url": "https://hackerone.com/reports/282518",
+  "title": "Memory Corruption via Large Pixels",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2017-10-24T15:04:24.266Z",
+  "submitted_at": "2017-10-24T15:04:24.266Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "mr_r3boot",
+    "url": "/mr_r3boot",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/172/712/da5b2de96cb6ad1bc8fba57f45205e6592514185_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 21745,
+    "url": "https://hackerone.com/infogram",
+    "handle": "infogram",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/021/745/553edf21f45ba8f73faba5d308e0d91fc026fef0_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/021/745/553edf21f45ba8f73faba5d308e0d91fc026fef0_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Infogram",
+      "twitter_handle": "infogram",
+      "website": "http://infogram.com",
+      "about": "Make Infographics and Charts that People Love"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2024-02-01T15:41:38.853Z",
+  "bug_reporter_agreed_on_going_public_at": "2024-01-02T15:41:30.835Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "I would like to report a memory corruption issue.\n\n#PoC:\nThe exploit is really simple. I have an image of 5kb, 260x260 pixels. In the image itself I exchange the 260x260 values with 0xfafa x 0xfafa (so 64250x64250 pixels). Now from what I remember your service tries to convert the image once uploaded. By loading the 'whole image' into memory, it tries to allocate 4128062500 pixels into memory. which may cause some backend processing memory corruption issues.\n\nPlease have a look on attached video.\n\n#Fix:\nProper resolution checks on image uploads.\n\nRegards,\nMr.R3boot.",
+  "weakness": {
+    "id": 3,
+    "name": "Classic Buffer Overflow"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 232360,
+      "file_name": "ResolutionCheck.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/232/360/859e3cdec8b2280b2b03dec16b6584f46bb840eb/ResolutionCheck.mp4?response-content-disposition=attachment%3B%20filename%3D%22ResolutionCheck.mp4%22%3B%20filename%2A%3DUTF-8%27%27ResolutionCheck.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQTM7DGII7%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T192618Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHoaCXVzLXdlc3QtMiJHMEUCIGmefIwb1GJfoHyImVdMrXDihb6wuQw6sXHyGVJnXK0dAiEA8iue%2FW20EwZNfbCAXWcHMiNxaKM64IA4vBsVk1ftZX8qugUI8%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDOpmNafo%2Bp%2Buw2q3MCqOBXmnfaeT1msowoH8%2BLpa%2Bdh78RbCqKKo5pm6netUtZgdS%2Fn5D%2Fpgz4wIJx%2Fowhh4G0pR31Rbq4ev12UADRp%2Bj08CLSf9r85HL2SEio3ccpqm5BilGR%2FtUYyDhs6SLgaSPfG9ggSpZj6eHM6wSdCrfM7wHDBxcvSSnC5Df1n2WiKFg%2FbaO8jtwGjNQrX%2BxX7%2Fv97r%2FS17TcfafwYjUJ66j7ROlHh9%2FL0rbvU73RdUCWpcYG%2BZwIZEUDMuPZNG88J1CLt4WgqDUrcVX1181ng17c7YCvhFsnQFe6jrMbWNfloXz8jR7ESFd7BxdWl815%2FgUcmxwxMk4d8qLJyPT6JWjdfzJ0zqqntnVhvXU8YgUWD%2BJrpz3vWfnW%2FhMVLfQCVGefySLPmucDXs7SKivvbU3rdUHUaHQR%2FGzQvu%2FcOKkcx9t8q7z%2FLulDcMrb6TJUIQel82ACdlqv5eDGBGy%2F3lN94Xv8hKrk%2BUPBuz%2BmviCfu0kcEVrb8IT3bj6%2F7xYX8KnjApwU8b6eMOLJUF1JXG4jKOtsG3pPLlPMb8an2aHxOjWkhIkvUoCAzDwYxHQPHn4%2B9nT%2BoDCtnX2GiE%2F%2BfbNmHgILsVHYK%2By1pg1tYOAlZu3zaxqxpJm7HvI74Sj8E5VePNQ6YFxwPVoYejIA%2F2bGWRDShun1BMNFNJAybMVa8eel9sNKDpnG9dUwXgNR%2B7wT4IfFcFbbHZdqgJAf3a%2FLIo3KORM3ivvSIo0lybf%2FVgp79dums2D7JALiY0ZVmZhIqSM7nJo59WS1Q1Ne0%2F0vuBn7V4%2FMP2ACtZpEX3IJ%2FjgebAr3DtvLQaqKzw6N%2FTcSJTEivZOtWdCpK2UASQh2z0KYGM8QeeZLJRQ70gzTCR0rvGBjqxAaJbL%2Fk7p0ZnVbiF2BPJA%2BFuxyvLyC04mn0xRcxflt8jVEVizpTcIUVH7vOdnL%2FvxxPAhekQR358bBU7wMg8%2FMjTDnuo0jGZbCEn3M%2F9t5gHmQzBUQSYtW6oCFPIKNwXW9aMO9FQmvp%2FXr7UjYpwFRGJUDcJXMMlYnQHaa6Ey0bVMx8Rs%2Fz%2Fyd4cvVGnjI0VA46A72J4RwqOFJj2ru6NrearPejgKyd6NZr81QR6IkwCtw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=23470f115f60b3e2798f80811a1327758037c0d9a35fd57fdcea516101af55f4",
+      "file_size": 3223263,
+      "type": "video/mp4",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2024-02-01T15:41:30.932Z",
+  "allow_singular_disclosure_after": -51594287.9342417,
+  "singular_disclosure_allowed": true,
+  "vote_count": 24,
+  "voters": [
+    "skoll101",
+    "exec_iq",
+    "roland_hack",
+    "zy9ard3",
+    "0d_amrr",
+    "shubham_srt",
+    "neilx",
+    "shivammusic",
+    "yogesh__b",
+    "0x_elbialy2001",
+    "and 14 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 870,
+    "asset_type": "URL",
+    "asset_identifier": "infogram.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
