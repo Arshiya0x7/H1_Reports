@@ -1,0 +1,127 @@
+{
+  "id": 2627062,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yNjI3MDYy",
+  "url": "https://hackerone.com/reports/2627062",
+  "title": "Rate limit bypass on passport.acronis.work using X-Forwarded-For request header",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2024-07-27T00:21:01.932Z",
+  "submitted_at": "2024-07-27T00:21:02.547Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "analyz3r",
+    "url": "/analyz3r",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/p02o26hrgb4i535r83e8lfnyfi4f/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13428,
+    "url": "https://hackerone.com/acronis",
+    "handle": "acronis",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/e54TDdWdgLKsH3h1oFpK26bq/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/e54TDdWdgLKsH3h1oFpK26bq/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Acronis",
+      "twitter_handle": "Acronis",
+      "website": "https://www.acronis.com",
+      "about": "Complete integrated cybersecurity and data protection for MSPs and IT teams"
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2024-11-28T16:07:19.291Z",
+  "bug_reporter_agreed_on_going_public_at": "2024-11-28T16:07:19.142Z",
+  "team_member_agreed_on_going_public_at": "2024-10-31T13:18:21.119Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary\nOn https://passport.acronis.work/ you cannot attempt to login even if you have a valid email address, and theres also a rate limit which can make it impossible to perform brute force attack to find valid emails, and even if you have a valid you still cannot attempt login since you are not from the same location of the victims location.\n\nWhile brute force attacks and user enumeration are both at out of scope, but please remember this vulnerability is actually an access control issue that allows the attackers to bypass the restriction of attempting logins, but it also allows attackers to spoof their ip addresses, spoofing ip addresses may allow attackers to use your employee ip addresses and act as them from un-authenticated endpoints.\n\nSince the malicious header allows attacker to bypass the rate limit, attackers may also be able to bypass the otp when trying to login to a victims account, while the otp is a 12 character otp, but its actually doesn't  mean attackers aren't able to send much requests, and this is can lead to takeover your employee accounts which is actually a critical vulnerability.\n\nSo just in case, if you wanted to close the report or not interested, please remember that this vulnerability is actually an access control vulnerability not only brute forcing or user enumeration.\n\n## Steps To Reproduce\nSteps to bypass the rate limit:\n1. try to attempt 10 failed logins, you must face the rate limit error, 429 status\n2. now simply add `X-Forwarded-For: 12.34.56.78` header which is a malicious header, and you see you are able to submit 10 more requests\n3. if you wanted to brute force the endpoint, you can use burp suites intruder, brute force both the ip address and the email, you see you are still able to submit requests even after 300 requests\n\nSteps to bypass the restriction on login with victims email addresses:\n1. in case you wanted to try to login to a victims account as attacker, such as `ab@acronis.com` which I found on snov.io you can't if you aren't from bulgaria, you will be restricted due to you are not from bulgaria and you see that error `ERR-B258C8`\n2. on burpsuite, visit proxy settings, match and replace settings, replace nothing with `X-Forwarded-For: 109.104.192.0 ` (the ip is from bulgaria)\n3. visit https://passport.acronis.work/login and try to login with the victims email, you see the restriction has been removed\n\nSame bypass can be used to bypass the rate limit on the otp submit endpoint.\n\n## Recommendations\nDisable `X-Forwarded-For` header\n\n# POC\n{F3472107}\n\n## Impact\n\nAttackers able to bypass rate limit, also bypass restriction on attempting to login to employee accounts due to allowing a malicious http header.\n\nPlease let me know if you need more information, Thanks.",
+  "bounty_amount": "250.0",
+  "formatted_bounty": "$250",
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 3472107,
+      "file_name": "Screen_Recording_2024-07-27_at_3.16.42_AM.mov",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/x42fzlt0di1k3wf3f20ql7wmcmrj?response-content-disposition=attachment%3B%20filename%3D%22Screen_Recording_2024-07-27_at_3.16.42_AM.mov%22%3B%20filename%2A%3DUTF-8%27%27Screen_Recording_2024-07-27_at_3.16.42_AM.mov&response-content-type=video%2Fquicktime&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQTDJKYIVP%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T174829Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHcaCXVzLXdlc3QtMiJGMEQCIAqFikk26hB2QyeOklRckf6ess9cu7CUTrf4AevdZhvWAiA5kf%2BNzQ3OvQFUTadq71MDhYKp9jZOncJsNdq2Z%2FvuzSq7BQjw%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMwfBuCv7wDU%2BVtwZPKo8FAbHtGoNsXYde3toZEqP5MHPyWvQsuxqlTRFhTGsYDGtpDXHy8Kv38tktRm0UggaUh0EEbNEACcyZC8aWjD2beYidbjqV%2FmbH%2Fjhoe%2B9IOpYQoiFtqiEEBZauFGBm0VNaRYBg4nMGd19H%2FpiQTLc%2BN6Nr3uDuDqFwmni2H4F17zKrvG9bTveFjD%2BdkokMFVpIf552gWu%2BbS9noCjvTo0BlKSM9oNSh4GCpW36IuhzBwLyVjPFnpcBrl5cb98L6OXkcXt8JVxT3x%2F0168tpMjm2dME%2FNcoctiYBi1Cb5cEE6wGlBrf9Tf8GwXSXyNb5dXJApLyEj0puMrVnpRAh1uSbnYWbOsHLFnmOht4vyeFEGSrZC1fkOatDxiBiKDmPkR8TyiDLwpbcD0W8rAcoGFreyVkXLvSQygN7GjxKxFT60MD%2Fa5fdtOcvd4VdLinCPXrOjE7fzlTBlVU24JpMpZT1bSWXdkG1BRMv1IajMrIoSRZRfuoQoDCZjAM4bYX1U1j%2F6uUvrxY%2Fvqqr%2F12ASIMOrpEB2rt1ci42t%2BartPh0nBM%2BPCGnyixcBtU1lSnO3G%2FXE8oQvDH2Q%2BRjLeiNU0v%2B%2BNfL9XUtGM6HQh%2FiSyAopo%2BSPKglMmmy%2BvOCH2aP%2F8mllAXsQMqPR%2B6wkNqf6dC6zdj8rzIBJPZ6I51noXks97mOid5IOdRVcDebIxPXcCavFn%2B4bRnZVJ42od7TNghhAZK3CsGOvkvch6EHk5ikxM4VJZoVD5NsUjmdDtfxxtj3B%2B6bDl9AYAAvnf%2Bt09%2FDteoZDMVtdahMU7mNoWhdAPt2Dow69mk0YrYyZpdAJeywB%2FbPpQ6aQmHR7scVMv05yBUNvsYMnT547e54hv2YjCi%2BbrGBjqyAapuXTcSqmv37uQmHZNEsIEym7Oya8DXnPui3tiJT01Bm%2FrUCuDAx5vY0bdeR6nGW9wyKohFgcLkUQwyFejtb5lRfN7lsdjRlEPq%2F2AsTNXoBmb1EZnwkcPZ7YT8IqlQUdR97WKAnvbvfzcd7UO0zkVpQdQ680Z3XkZCQJWR5ikQWnUqmeDhBI9mFD1bLIpM05eBQFqJSpV%2F8FHxpSDCkhm7XZ98DJjb6aYZhpIgBOeL3Zg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=88cf85b6bf538566702813ef14ba7c3deccb1c82067f0f3676174abb7c57f918",
+      "file_size": 23312975,
+      "type": "video/quicktime",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 99,
+  "voters": [
+    "orange303",
+    "k0ns0l",
+    "0xcyborg",
+    "expression4865",
+    "0xh4mzaxp",
+    "neat_panda",
+    "loaymorad",
+    "almuntadhar",
+    "1ncognitox",
+    "starlox",
+    "and 89 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "Team"
+  },
+  "structured_scope": {
+    "databaseId": 103067,
+    "asset_type": "WILDCARD",
+    "asset_identifier": "*.acronis.work",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
