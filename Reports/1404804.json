@@ -1,0 +1,157 @@
+{
+  "id": 1404804,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNDA0ODA0",
+  "url": "https://hackerone.com/reports/1404804",
+  "title": "Email templates XSS by filterXSS bypass",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2021-11-19T01:19:30.225Z",
+  "submitted_at": "2021-11-19T01:19:30.319Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "caue",
+    "url": "/caue",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/9p2kas9r0xrwhvs4tacmp324q5b1/c8a1698ff707a5e3e8a91a3484838363845daac68cb82c86d55c9e2d44d67b67"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 50842,
+    "url": "https://hackerone.com/judgeme",
+    "handle": "judgeme",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/nlko0t9tbnnnvrnboo0f2qpliu7t/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/nlko0t9tbnnnvrnboo0f2qpliu7t/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Judge.me ",
+      "twitter_handle": "",
+      "website": "https://judge.me",
+      "about": "Judge.me powers the product reviews for e-commerce stores. Our apps help you collect and display reviews on Shopify, WooCommerce and BigCommerce."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2022-05-25T07:45:26.623Z",
+  "bug_reporter_agreed_on_going_public_at": "2021-12-23T05:35:55.778Z",
+  "team_member_agreed_on_going_public_at": "2022-05-25T07:45:26.451Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\n`js-xss` is used to prevent XSS on email templates previews but the custom `onIgnoreTag` function can be used to bypass this filter. This leads to a Self-XSS scenario that can be used to achieve Account Takeover in 1-click.\n\n```js\nonIgnoreTag: function (e, t) {\n   return \"!--[if\" === e || \"![endif]--\" === e || \"<!-->\" === t ? t : void 0; \n},\n```\n\n## XSS\n\nThe way how `js-xss` parse tags starting with `<![` differ from how browser parse it, so it's possible to abuse this in this way:\n```html\n<![endif]-- onerror=\"<![endif]-->\" onload=\"<img src=1 onerror='alert(1)' />\">\n```\nSending this as the HTML email template will trigger an XSS when the email is previewed. Since email templates are private and only the owner of the template can preview it, this can be considered a Self-XSS. But there is a way to do another user preview it, leading to an account takeover in 1-click.\nWe can use HMAC authentication feature to force another user login in our account and preview the malicious email:\n```\nhttps://www.judge.me/shop/emails/2243518/edit?no_iframe=1&shop_domain=wordpress.caueo.me&platform=woocommerce&hmac=████\n```\nThis URL authenticates as admin on `wordpress.caueo.me` domain, where the malicious email will be. The HMAC hash is created on this way (taken from wordpress plugin):\n```php\n$hmac       = hash_hmac( 'sha256', \"no_iframe=1&platform=woocommerce&shop_domain={$domain}\", $token, false );\n```\n\nHaving this XSS with the victim logged in my account is possible to leak HTML content of a page that was loaded with victim's account cookie:\n\n1. Load an iframe with the victim's page (HTML content to leak) - Authenticated as victim\n2. Load another iframe with the XSS (Use HMAC authentication) - Authenticated as me\n3. We can use the XSS to read `parent.frames[0]` HTML content since it is same-origin\n\n## CSP bypass\nAt a first sight we can't load an iframe to victim's page, since it has a CSP that whitelists iframe origins:\n```\nframe-ancestors https://wordpress.caueo.me http://wordpress.caueo.me wordpress.caueo.me https://woocommerce-adapter.judge.me/ *.judge.me\n```\nTo bypass it we can use the XSS to load the iframes, but we need to do it on another subdomain, because to trigger this XSS is needed to login in my account and then it would not be possible to load the victim's page authenticated as victim's account later. So we trigger the XSS on `www.judge.me` subdomain.\n\n## Limitation to 0-click account takeover\nAt this point it is already **possible to read HTML content of almost any page authenticated as victim**. To achieve account takeover we only need to get the private API token from victim because it is used as the key of HMAC authentication.\nThe problem is that the endpoint that retrieves the API private token checks if the `Referer` header starts with `https://judge.me/settings`, so is not possible to load this endpoint in an iframe.\n\n## Clickjacking\nWe can load an iframe to `https://judge.me/settings` where has a button that retrieves the API token from the endpoint successfully. So it is possible to perform a clickjacking to that button, and if the victim clicks on it, we can get the API private token. \n\n## PoC\nI made a PoC on how is possible to perform this account takeover with user interaction and leak some stuffs without user interaction.\n[PoC](https://www.judge.me/shop/emails/2243518/edit?no_iframe=1&shop_domain=wordpress.caueo.me&platform=woocommerce&hmac=█████████)\n\nIn this PoC I leaked FreshChat token without clickjacking, so we can impersonate another user in support chat without needing a user click.\n\n## Impact\n\nShop account takeover (user interaction)\nImpersonation on support chat\nPrivate content leak",
+  "bounty_amount": "1250.0",
+  "formatted_bounty": "$1,250",
+  "weakness": {
+    "id": 60,
+    "name": "Cross-site Scripting (XSS) - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 50,
+  "voters": [
+    "8910jq",
+    "mr-medi",
+    "bugappetite",
+    "n1m0",
+    "tolga",
+    "xploiterr",
+    "zy9ard3",
+    "caioluders",
+    "shreyaschavhan",
+    "iismailu",
+    "and 40 more..."
+  ],
+  "severity": {
+    "rating": "high",
+    "score": 7.5,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "low",
+      "integrity": "low",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 57459,
+    "asset_type": "URL",
+    "asset_identifier": "judge.me",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "id": 155698,
+      "category": "team",
+      "content": "XSS in `js-xss` with `onIgnoreTag` option. \n\n`js-xss` is used to prevent XSS on email templates previews but the custom `onIgnoreTag` function can be used to bypass this filter. This leads to a Self-XSS scenario that can be used to achieve Account Takeover in 1-click.\n\nThe way how js-xss parse tags starting with <![ differ from how browser parse it, so it's possible to abuse this in this way:\n```html\n<![endif]-- onerror=\"<![endif]-->\" onload=\"<img src=1 onerror='alert(1)' />\">\n```",
+      "updated_at": "2022-05-25T07:45:15.216Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 473614,
+        "username": "linhdam",
+        "name": "Linh Dam",
+        "bio": "",
+        "cleared": false,
+        "verified": false,
+        "website": "https://the.great.dev/",
+        "location": "",
+        "created_at": "2019-01-21T03:00:57.894Z",
+        "url": "https://hackerone.com/linhdam",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "company",
+        "profile_picture_urls": {
+          "small": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/variants/613qwlr9euarpq3az6paegjoly1x/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef?response-content-disposition=inline%3B%20filename%3D%22mind-blown.jpg%22%3B%20filename%2A%3DUTF-8%27%27mind-blown.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ5NFJOVAF%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T233653Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEID%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCYoKrB%2B5OAtMEvTgI1XSN2%2BKvLv%2FCStZ28UmgWI5ObKwIhALGCZDa0Bq2L38Z%2Fa7dYv4m2VMjCdwsGoNrRzMjVp2KLKrsFCPn%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5IgxKteL6N%2B7t%2BhCTQkMqjwXJeRXjJ4O0ufVhiNeAdWoTAeaS3K9z5%2B%2FSJHMf2WAtLZx4kgetOSeeHRtMugsPWBC%2Bug6jjsy76pybkL1EYFZ%2BHurdTOiA10xtB%2BEu%2Bo0zHXt4s6wJlbTsOBpzJcycP0%2Bj9fSWmQlKTPvdqmHcHAIeH4D6hmNRS%2FyYtefuzRd9jc6xfeHyrsGV8mo4d6uZ2A0fg2hy1%2F1qb1XadZ1paLPyCZfgzQtVXH%2Bvhky1YB1dckNPacNmZA7mSLSZNoy4lgr39%2FuP02mR%2Bx08coW0djJuPXpBNPpQ5GuIsA1ev%2Bg%2FkxzkNFg8Iurb8xrHQlMBno3ZmujhXMO6mQmjclRB7stxh1Exi4ToRyAj9ys2n5n9DI2lu82NXIEx2c8u5M17em7dBXmFeS8XKoIjEq0vX1h%2B2SWji6fyrSN0Y3zSkqVo2SFA7SnmS9bAwBB7VHIslHZoHC7TDp%2BpUyuXMg4WJmQd07kGmm%2Fb9xxb562ODFeVFV%2Bw3uVJ840nT%2BzgJR84a%2F4tGuGqocZ8Cy4E0zkK9MZ3Hsd6x3IXOyrX%2Fh%2F8u%2F2fjtBFTcmxdfiXSNNx2jj%2FZ9iE4xZCEeVw0nyPWvTfkJTjiSjA2LbQgCK9BI0K%2FNrgP5FhiR8VL%2F1JNnDuXT1ae36m90n%2B4kaOygNNiVrLZDXu11ZidM%2B8L0ZnsA53ktL9bcmVTKWElcsa7vHZkwD7vj%2FDoZkQKpgj5fwgbOF2X0LcBNcSHRHyaln9fxl9ibEusC6ISslQ1JW0EAgzGKuPJIk7cemZi6RtrNjcT87VZIttNPNsH45zqIA%2B8njei2FQScCK744SPZQhZNEVgBwTKUMjHeg3OMfzHwRHi%2FGjpyemyKwKX93dJ5FxqEuMhtCeMKXzvMYGOrABS%2F7GpsZUawWuSZ4%2BGnTjwxHQ%2B2HPFUulGEIalHAL2LHhOVp3YYjZj90cWKPb83oDioKgtRsR%2Fn%2BfBauIB8qIbDmxt1s42h5r8Lzd66%2BpoizioEqa8kvLNvzoBvDaNu1Zvp50qJjqpcCfaXUg%2FrcpMV4530V1SIlrwEmkUCmLSOvc8n8%2FBSC5ML1W5ET5l8wee8Q1UP1EVxOOQddUIyli3p6tfFbhXY222hPpGECFxgM%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=8520357867097b4490dd0aaa073f43b1a60295cfa5b31b1714b486b650f676f7",
+          "medium": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/variants/613qwlr9euarpq3az6paegjoly1x/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a?response-content-disposition=inline%3B%20filename%3D%22mind-blown.jpg%22%3B%20filename%2A%3DUTF-8%27%27mind-blown.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ5NFJOVAF%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T233653Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEID%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCYoKrB%2B5OAtMEvTgI1XSN2%2BKvLv%2FCStZ28UmgWI5ObKwIhALGCZDa0Bq2L38Z%2Fa7dYv4m2VMjCdwsGoNrRzMjVp2KLKrsFCPn%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5IgxKteL6N%2B7t%2BhCTQkMqjwXJeRXjJ4O0ufVhiNeAdWoTAeaS3K9z5%2B%2FSJHMf2WAtLZx4kgetOSeeHRtMugsPWBC%2Bug6jjsy76pybkL1EYFZ%2BHurdTOiA10xtB%2BEu%2Bo0zHXt4s6wJlbTsOBpzJcycP0%2Bj9fSWmQlKTPvdqmHcHAIeH4D6hmNRS%2FyYtefuzRd9jc6xfeHyrsGV8mo4d6uZ2A0fg2hy1%2F1qb1XadZ1paLPyCZfgzQtVXH%2Bvhky1YB1dckNPacNmZA7mSLSZNoy4lgr39%2FuP02mR%2Bx08coW0djJuPXpBNPpQ5GuIsA1ev%2Bg%2FkxzkNFg8Iurb8xrHQlMBno3ZmujhXMO6mQmjclRB7stxh1Exi4ToRyAj9ys2n5n9DI2lu82NXIEx2c8u5M17em7dBXmFeS8XKoIjEq0vX1h%2B2SWji6fyrSN0Y3zSkqVo2SFA7SnmS9bAwBB7VHIslHZoHC7TDp%2BpUyuXMg4WJmQd07kGmm%2Fb9xxb562ODFeVFV%2Bw3uVJ840nT%2BzgJR84a%2F4tGuGqocZ8Cy4E0zkK9MZ3Hsd6x3IXOyrX%2Fh%2F8u%2F2fjtBFTcmxdfiXSNNx2jj%2FZ9iE4xZCEeVw0nyPWvTfkJTjiSjA2LbQgCK9BI0K%2FNrgP5FhiR8VL%2F1JNnDuXT1ae36m90n%2B4kaOygNNiVrLZDXu11ZidM%2B8L0ZnsA53ktL9bcmVTKWElcsa7vHZkwD7vj%2FDoZkQKpgj5fwgbOF2X0LcBNcSHRHyaln9fxl9ibEusC6ISslQ1JW0EAgzGKuPJIk7cemZi6RtrNjcT87VZIttNPNsH45zqIA%2B8njei2FQScCK744SPZQhZNEVgBwTKUMjHeg3OMfzHwRHi%2FGjpyemyKwKX93dJ5FxqEuMhtCeMKXzvMYGOrABS%2F7GpsZUawWuSZ4%2BGnTjwxHQ%2B2HPFUulGEIalHAL2LHhOVp3YYjZj90cWKPb83oDioKgtRsR%2Fn%2BfBauIB8qIbDmxt1s42h5r8Lzd66%2BpoizioEqa8kvLNvzoBvDaNu1Zvp50qJjqpcCfaXUg%2FrcpMV4530V1SIlrwEmkUCmLSOvc8n8%2FBSC5ML1W5ET5l8wee8Q1UP1EVxOOQddUIyli3p6tfFbhXY222hPpGECFxgM%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=2b50d4f359453e0ab3871d0098ddd2cfdaf956a21cd1108f1c833d82591a96a7",
+          "xtralarge": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTM2NTM5MCwicHVyIjoiYmxvYl9pZCJ9fQ==--e9202c88173ce5abd40b6d7d9c4a1c088ade409e/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJyZXNpemUiOiIyNjB4MjYwXHUwMDNlIn0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--cf3aeca803d1baf476958c689ca7b472a4cb54f1/mind-blown.jpg"
+        }
+      }
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
