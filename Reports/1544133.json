@@ -1,0 +1,143 @@
+{
+  "id": 1544133,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNTQ0MTMz",
+  "url": "https://hackerone.com/reports/1544133",
+  "title": "SSRF vulnerability can be exploited when a hijacked aggregated api server such as metrics-server returns 30X",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2022-04-19T01:33:58.642Z",
+  "submitted_at": "2022-04-19T01:33:58.737Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "weinongw",
+    "url": "/weinongw",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/pzm1oebfe949nlq59hr5riqn6fak/c8a1698ff707a5e3e8a91a3484838363845daac68cb82c86d55c9e2d44d67b67"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 39386,
+    "url": "https://hackerone.com/kubernetes",
+    "handle": "kubernetes",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/039/386/486f4380e09776d05a912ca9f46be23f72fe8197_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/039/386/486f4380e09776d05a912ca9f46be23f72fe8197_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Kubernetes",
+      "twitter_handle": "kubernetesio",
+      "website": "https://kubernetes.io/",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2022-3172"
+  ],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2022-12-10T18:45:00.828Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2022-11-10T18:44:57.136Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Report Submission Form\n\n## Summary:\nThis report uses metrics-server as example, but it should be applicable to any aggregated api server.\n\nWhen metrics-server is hijacked, either by modifying the container image directly or by running another pods using the same label selector in kube-system namespace, and is returning 30X redirect, the clients calling the metrics api will follow the redirect.\n\nIt could be a serious issue in managed Kubernetes offerings such as Azure Kubernetes Service (AKS) where clients from managed components may be redirected to call the internal endpoints.\n\nNote: my coworker, Nicolas Joly, found the issue and reported my team (AKS)\n\n## Kubernetes Version:\nall k8s versions on AKS. I believe it's the same in other cloud providers.\n\n## Component Version:\nn/a\n\n## Steps To Reproduce:\n* Attached main.go is a very simple redirection api server. I've built the docker image on weinong/go-redirect.\n* update and deploy `go-redirect.yaml` with your endpoint to capture the redirected  traffic in kube-system namespace. It uses the same pod label selector as metrics-server does\n* you should be able to observe redirected traffic from the control plane components \n\n## Supporting Material/References:\nSample output being logged in the web server capturing redirected traffic:\n```\n2022/04/16 00:30:13 src IP: 20.51.80.40:4096\nGET / HTTP/1.1\nHost: 20.85.59.5\nAccept: application/json, */*\nAccept-Encoding: gzip\nAuthorization: Bearer <omitted>\nUser-Agent: azurepolicyaddon/v0.0.0 (linux/amd64) kubernetes/$Format\n\nGET / HTTP/1.1\nHost: 20.85.59.5\nAccept: application/vnd.kubernetes.protobuf, */*\nAuthorization: Bearer <omitted>\nUser-Agent: kube-controller-manager/v1.17.13 (linux/amd64) kubernetes/f4a8e76/system:serviceaccount:kube-system:generic-garbage-collector\n\n2022/04/16 00:34:37 src IP: 20.69.190.88:21504\nGET / HTTP/1.1\nHost: 20.85.59.5\nAccept: application/json, */*\nAccept-Encoding: gzip\nAuthorization: Bearer  <omitted>\nUser-Agent: cpmonitor/v0.0.0 (linux/amd64) kubernetes/$Format\n```\n\n  * [attachment / reference]\n\n## Impact\n\n* Bearer token may be logged in the logging system in those internal backend \n* Potentially, they may be logged by kube-controller-manager or kubernetes api-server at certain verbose level   (not verified)\n* Redirected traffic may hit external/internal endpoints for spamming which would look originating from the cloud providers",
+  "bounty_amount": "1000.0",
+  "formatted_bounty": "$1,000",
+  "weakness": {
+    "id": 68,
+    "name": "Server-Side Request Forgery (SSRF)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1698068,
+      "file_name": "go-redirect.yaml",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/1gtkkevefgffgztljnozrdz6228e?response-content-disposition=attachment%3B%20filename%3D%22go-redirect.yaml%22%3B%20filename%2A%3DUTF-8%27%27go-redirect.yaml&response-content-type=application%2Fx-yaml&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ5J3FLMZK%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T220305Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH0aCXVzLXdlc3QtMiJIMEYCIQDJbyucmfkE7IWRnmdh7aBafx94FtqZyWym6ertugVT8AIhAMv%2BWMRD5O450QxVW9JPHZVTE5QwT8cGx9AdabacvaUYKrsFCPb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5IgwP6nHkv%2F2HUVmZe8UqjwWbex%2Bc9ZiZ2S4lp7XTm8I9yVUZ3sFfW3JeZieuCQ90RZlgGkEwXgdkgbljV%2F8%2BkdrcLu%2BcbWlwUlKBunmA4zzdLwDj1om9qrAWX%2FaAgOsVO9%2BIghQqYJv%2FmOLdjAECk0CIyOiZVrtLxaPzhHFASohHciQDhWa4%2BGlmqesaoW5KlWt%2FZrDek5f8zJNAxSi%2BNQRvmD%2Bzvf4zKnhk%2B7hDBnbBsItd%2F91ndxZYwAkQQ%2FbPQYDsUH7WNUMV%2BUnjfTMNCi4Ck1f4ybg9ay41dd8dnsmO5HTmEGkE3u88ZPFuJFuQ39FBK6FtO5SXdlcfRmaboACWTlsiSDjYZVm51jddjDRJNN0hgrz%2BojnYqe%2BMtZYqE7Sbhz1otYwDDYVZ%2BkfWZ%2FQX0lwlhADvp6EKXzR1CQqL3hFgLTW0GRPs%2By8jxjXuoyizWTaSW65i22mCHG9fknm5BJ4jTZTqorYnJcf18VDw076Tyd7amdYOkPeKnO%2BdgWEkTqtgXnfI6aR0my%2FR%2FY4uK%2BXS%2FFSSQd%2F2w1OtPDSVA%2FhsdAR0oS0QodOUJCRg6mrftBJu9RME%2B61I%2BaX0ODRgRZrMPHtURuh%2BBZXDe5k0dbCZx9pMF3TF9lo4lrMZ3D5l14vMlIm9oHqyvyPRfsdSYxNHuPjY8lhiM%2FVG7UvKNyMzghLsKSwZRKtXCbsseBtXw%2BlFKAK%2F%2BOg206VTJpMemMouUQlcDGC4tIEmpiclDqakXvtEkW%2Fmw3j8%2BlJl2IAFPDaVaRPDGHcv0W49iu%2BBdhugzAsvtnLUAAYq9nS5BctH7kOT69Cx8gPYyjGpgYS73EKeiMWC2ZsxgeS3ziTT714a2qE5X3efmirkHDq%2FaWRzANaBtOuzZnW9REUqMOCpvMYGOrABC0plGcJPsVFmy1GsgAnFdqS0bfqfKgFBiqe6xAg005r%2BD1PFxCvlHejv44AKlhwHJ5PovTM0LXAkVwg4fCov%2FVv1tN8hDSfXKZCYn2huyCBhGk5dUCnnxWGjJOYgpY9nPDS%2FmKkjQiwQMe7RqNrnhBNm3iAPMPfeBSYgoU09fyT%2Bhim9FrdGNxfablUxxMNo4QQj96WG%2BEyND9Su1JvzVWhWZNYu9sdL1TOKtQG%2FrAw%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=7e4c56696a860fa25dd61dd0b5a09b9db22f292eea8f6c462a66447bb168ee27",
+      "file_size": 478,
+      "type": "application/x-yaml",
+      "moderated": null
+    },
+    {
+      "id": 1698069,
+      "file_name": "main.go",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/amwwsuruv90unujefwwcfz8s91yc?response-content-disposition=attachment%3B%20filename%3D%22main.go%22%3B%20filename%2A%3DUTF-8%27%27main.go&response-content-type=text%2Fx-go&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ5J3FLMZK%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T220305Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH0aCXVzLXdlc3QtMiJIMEYCIQDJbyucmfkE7IWRnmdh7aBafx94FtqZyWym6ertugVT8AIhAMv%2BWMRD5O450QxVW9JPHZVTE5QwT8cGx9AdabacvaUYKrsFCPb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5IgwP6nHkv%2F2HUVmZe8UqjwWbex%2Bc9ZiZ2S4lp7XTm8I9yVUZ3sFfW3JeZieuCQ90RZlgGkEwXgdkgbljV%2F8%2BkdrcLu%2BcbWlwUlKBunmA4zzdLwDj1om9qrAWX%2FaAgOsVO9%2BIghQqYJv%2FmOLdjAECk0CIyOiZVrtLxaPzhHFASohHciQDhWa4%2BGlmqesaoW5KlWt%2FZrDek5f8zJNAxSi%2BNQRvmD%2Bzvf4zKnhk%2B7hDBnbBsItd%2F91ndxZYwAkQQ%2FbPQYDsUH7WNUMV%2BUnjfTMNCi4Ck1f4ybg9ay41dd8dnsmO5HTmEGkE3u88ZPFuJFuQ39FBK6FtO5SXdlcfRmaboACWTlsiSDjYZVm51jddjDRJNN0hgrz%2BojnYqe%2BMtZYqE7Sbhz1otYwDDYVZ%2BkfWZ%2FQX0lwlhADvp6EKXzR1CQqL3hFgLTW0GRPs%2By8jxjXuoyizWTaSW65i22mCHG9fknm5BJ4jTZTqorYnJcf18VDw076Tyd7amdYOkPeKnO%2BdgWEkTqtgXnfI6aR0my%2FR%2FY4uK%2BXS%2FFSSQd%2F2w1OtPDSVA%2FhsdAR0oS0QodOUJCRg6mrftBJu9RME%2B61I%2BaX0ODRgRZrMPHtURuh%2BBZXDe5k0dbCZx9pMF3TF9lo4lrMZ3D5l14vMlIm9oHqyvyPRfsdSYxNHuPjY8lhiM%2FVG7UvKNyMzghLsKSwZRKtXCbsseBtXw%2BlFKAK%2F%2BOg206VTJpMemMouUQlcDGC4tIEmpiclDqakXvtEkW%2Fmw3j8%2BlJl2IAFPDaVaRPDGHcv0W49iu%2BBdhugzAsvtnLUAAYq9nS5BctH7kOT69Cx8gPYyjGpgYS73EKeiMWC2ZsxgeS3ziTT714a2qE5X3efmirkHDq%2FaWRzANaBtOuzZnW9REUqMOCpvMYGOrABC0plGcJPsVFmy1GsgAnFdqS0bfqfKgFBiqe6xAg005r%2BD1PFxCvlHejv44AKlhwHJ5PovTM0LXAkVwg4fCov%2FVv1tN8hDSfXKZCYn2huyCBhGk5dUCnnxWGjJOYgpY9nPDS%2FmKkjQiwQMe7RqNrnhBNm3iAPMPfeBSYgoU09fyT%2Bhim9FrdGNxfablUxxMNo4QQj96WG%2BEyND9Su1JvzVWhWZNYu9sdL1TOKtQG%2FrAw%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=7b6eff22deedca1963b817cbaf58490be1a0e085ad91a186056f636a016730cd",
+      "file_size": 952,
+      "type": "text/x-go",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2022-12-10T18:44:57.254Z",
+  "allow_singular_disclosure_after": -87707887.7712992,
+  "singular_disclosure_allowed": true,
+  "vote_count": 48,
+  "voters": [
+    "jumpydata",
+    "n1m0",
+    "cetri0n",
+    "zy9ard3",
+    "shreyaschavhan",
+    "encryptsaan123",
+    "savitar0x01",
+    "mohaned0101",
+    "q0120s",
+    "hunterr0x01",
+    "and 38 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 32497,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/kubernetes/kube-aggregator",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
