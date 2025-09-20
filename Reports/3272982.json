@@ -1,0 +1,145 @@
+{
+  "id": 3272982,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMjcyOTgy",
+  "url": "https://hackerone.com/reports/3272982",
+  "title": "Vulnerability Report: Public Exposure of Security Audit File",
+  "state": "Closed",
+  "substate": "not-applicable",
+  "severity_rating": "medium",
+  "readable_substate": "N/A",
+  "created_at": "2025-07-26T21:18:06.517Z",
+  "submitted_at": "2025-07-26T21:18:06.730Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "cyph3r_nitro",
+    "url": "/cyph3r_nitro",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 35663,
+    "url": "https://hackerone.com/curl",
+    "handle": "curl",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/035/663/2faf4c279d437d64bfda6d23d62ce1833813a4d9_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/035/663/2faf4c279d437d64bfda6d23d62ce1833813a4d9_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "curl",
+      "twitter_handle": "",
+      "website": "https://curl.se",
+      "about": "cURL is an Open Source project providing a library and command-line tool doing internet transfers"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2025-07-27T15:23:27.748Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2025-07-27T08:05:27.175Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "##Summary:\n\nA sensitive internal security audit report file for cURL/libcurl—specifically cure53-curl-report-2016.pdf—was found to be publicly accessible via search engine dorking. This file includes detailed vulnerability findings, exploit vectors, code review observations, and remediation advice from the Cure53 audit engagement in 2016.\n\nThe exposure of this report may aid malicious actors in reverse engineering older vulnerabilities or targeting systems running legacy versions of libcurl that have not been patched. The report was retrieved through Google dorking, indicating a potential oversight in public file indexing or access control.\n\n##Steps To Reproduce:\n\n- Go to your browser and open Google (or any search engine).\n\n- Search using the following dorking query:\n\nsite:curl.se grep\n\n- This reveals publicly accessible internal audit reports related to cURL.\n\n- Click the link titled cure53-curl-report-2016.pdf or go directly to:\n\nhttps://curl.se/docs/audit/cure53-curl-report-2016.pdf\n\n- Open the PDF and navigate to Page 10 to find the detailed description of the Host Header Injection vulnerability (ID: T6).\n\n## Impact\n\n## Summary:\nAn attacker gaining access to the publicly exposed security audit file (cure53-curl-report-2016.pdf) can leverage the information within to:\n\n1. Discover Exploitable Vulnerabilities:\n\n- The report details multiple vulnerabilities (e.g., Host Header Injection, TLS validation flaws, memory handling issues) with clear descriptions, impact, and affected code areas.\n\n- Even though some issues are patched, older systems or forks may still be vulnerable.\n\n2. Develop Targeted Exploits:\n\n- The audit includes technical steps, affected functions, and logic flaws that can be used to craft reliable exploits or proofs of concept (PoCs).\n\n3. Attack Legacy Systems:\n\n- Organizations or embedded systems using older versions of libcurl could still be exploitable if they haven’t applied patches.\n\n- Attackers could scan for such outdated deployments.\n\n4. Undermine Software Supply Chain Security:\n\n- Projects or products depending on outdated libcurl could be targeted indirectly (supply chain attack surface increases).\n\n5. Leak Internal Security Posture:\n\n- The report exposes how the code is audited, what weaknesses are common, and how securely certain parts are implemented—providing attackers with insight into the development process and threat modeling priorities.",
+  "weakness": {
+    "id": 18,
+    "name": "Information Disclosure"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 4614378,
+      "file_name": "cure53-curl-report-2016.pdf",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/ccqlfev6d604n84nwwn3o88edksl?response-content-disposition=attachment%3B%20filename%3D%22cure53-curl-report-2016.pdf%22%3B%20filename%2A%3DUTF-8%27%27cure53-curl-report-2016.pdf&response-content-type=application%2Fpdf&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ26R4OIGG%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T164403Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHcaCXVzLXdlc3QtMiJHMEUCIHcT9zBkMzb1mZybEbGGwV0UK1UrrMOWNn9LQQU3HzoPAiEAhM9sBWLVAQZnK0GghYMBC%2BJ6PTRl5ZWjwfeJNAVfe7MqugUI8P%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDMIVmDUtYfGoFkLkPCqOBWaKGqYaG1JwDc1MYo1MQevDiB%2BNgH8BFt8MAHCw5URgVnNdgdLis05ioGmXM25TqXqTu3W6rPAK0jBFOr6gaL%2FMATh0JQtzVdzKiblKD5N8%2BsV9qz3QZsBPJBsHlbRznzJ776iEYeEYnPoq2%2F7qxBTmJaj5hvVOfZPPVe8Uzo2Xe%2B5ZRyJj00Zb%2F%2BATR9IkvYG6FgpibSoXaDbJNfRDQcAaYu2ikg%2BNeIzojXCpT7KBLmGmZ8q266v5PNVoFrw0Kb%2BDUPVvxP4uKLRpfKmWwDvbknEAo5HXW7E13wS4h9JPMWOWe1zEJuORdiobUETUIkR0UsVZH6x2g13uxUIE4xfHisiJx%2FqPubkIHZzpF5wbftYzvZ%2FCDAtRW8RT5CylyBhp2Cx3KgE7NopyacSVk29AhxXRRZ3XAnqJXn3sO72B4UJgmZrC3av0%2BuZqWvgiX7Ll5cS5ncJyQI7hppOewT2YPfcf2EoI9j20QOeRTM%2BmGB61Ak%2BlQdhAynlI3%2FkI1KcK0Z3yg6zlgUdxOcZ1Pe17IRknrD4m9LbGSq3Wpvp6d%2Faa8vFJRWCW0yLEaSGZo%2B4A1VTVErYUr1RTiSM%2BK6wa8b2WcZN59ASLbPNgmK5%2Fy%2FQ4ykcPDvqAM3twyBdqyMJpgI7n9PNzSKUWkVaiqpsYNp8f1Uajuhl4b70bxCXwuO8%2BZRB64bL%2FMVjQkuKY35Gacsa1P37p5b3Jr9H%2Bb5xjFnw0oiw1b6AKiVGohS%2FRyWFt2sq4oV8G%2BLEwhNZF7fUTVKaHjEVm%2FkIFnuaJ0ibipn3HkgvAUxLn5rEW4c1Ft9CxvZ4Y%2BAS784ipw1pv2LwerT13gELUYoiiYEylSM9U%2BbuXjQnA70jT6yV9ojC4h7vGBjqxAW8i2RghZbofAOswXNRqqAoa82UR72PAdwyadbRBMB4G31IhkS%2BIbHz6GGwcipsLmX%2FhfidG2dDUO%2FyWt0bvQFUTWKIoddwDKUh6Gw%2BUaFWA4eReyQ%2FGgzpCmq1cBFrvAdEojz4WTj%2FZ9k73J9y1glTgYskOF0JQKzvGgKNE05amUokC8EOJq8xnTwuUPaxV7YVX%2FPzrTmerGSTPeXTYy1Tt3%2FLKrNzQw3xWE%2Bs4fiE31Q%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=09e19119d1034030e258fc449def57123137363d90c84fc8385cc1a7c506a125",
+      "file_size": 451709,
+      "type": "application/pdf",
+      "moderated": null
+    },
+    {
+      "id": 4614380,
+      "file_name": "Screenshot_2025-07-27_023927.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/v9nzwjr7v0892l3drj75dmtyap83?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_2025-07-27_023927.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_2025-07-27_023927.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ26R4OIGG%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T164403Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHcaCXVzLXdlc3QtMiJHMEUCIHcT9zBkMzb1mZybEbGGwV0UK1UrrMOWNn9LQQU3HzoPAiEAhM9sBWLVAQZnK0GghYMBC%2BJ6PTRl5ZWjwfeJNAVfe7MqugUI8P%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDMIVmDUtYfGoFkLkPCqOBWaKGqYaG1JwDc1MYo1MQevDiB%2BNgH8BFt8MAHCw5URgVnNdgdLis05ioGmXM25TqXqTu3W6rPAK0jBFOr6gaL%2FMATh0JQtzVdzKiblKD5N8%2BsV9qz3QZsBPJBsHlbRznzJ776iEYeEYnPoq2%2F7qxBTmJaj5hvVOfZPPVe8Uzo2Xe%2B5ZRyJj00Zb%2F%2BATR9IkvYG6FgpibSoXaDbJNfRDQcAaYu2ikg%2BNeIzojXCpT7KBLmGmZ8q266v5PNVoFrw0Kb%2BDUPVvxP4uKLRpfKmWwDvbknEAo5HXW7E13wS4h9JPMWOWe1zEJuORdiobUETUIkR0UsVZH6x2g13uxUIE4xfHisiJx%2FqPubkIHZzpF5wbftYzvZ%2FCDAtRW8RT5CylyBhp2Cx3KgE7NopyacSVk29AhxXRRZ3XAnqJXn3sO72B4UJgmZrC3av0%2BuZqWvgiX7Ll5cS5ncJyQI7hppOewT2YPfcf2EoI9j20QOeRTM%2BmGB61Ak%2BlQdhAynlI3%2FkI1KcK0Z3yg6zlgUdxOcZ1Pe17IRknrD4m9LbGSq3Wpvp6d%2Faa8vFJRWCW0yLEaSGZo%2B4A1VTVErYUr1RTiSM%2BK6wa8b2WcZN59ASLbPNgmK5%2Fy%2FQ4ykcPDvqAM3twyBdqyMJpgI7n9PNzSKUWkVaiqpsYNp8f1Uajuhl4b70bxCXwuO8%2BZRB64bL%2FMVjQkuKY35Gacsa1P37p5b3Jr9H%2Bb5xjFnw0oiw1b6AKiVGohS%2FRyWFt2sq4oV8G%2BLEwhNZF7fUTVKaHjEVm%2FkIFnuaJ0ibipn3HkgvAUxLn5rEW4c1Ft9CxvZ4Y%2BAS784ipw1pv2LwerT13gELUYoiiYEylSM9U%2BbuXjQnA70jT6yV9ojC4h7vGBjqxAW8i2RghZbofAOswXNRqqAoa82UR72PAdwyadbRBMB4G31IhkS%2BIbHz6GGwcipsLmX%2FhfidG2dDUO%2FyWt0bvQFUTWKIoddwDKUh6Gw%2BUaFWA4eReyQ%2FGgzpCmq1cBFrvAdEojz4WTj%2FZ9k73J9y1glTgYskOF0JQKzvGgKNE05amUokC8EOJq8xnTwuUPaxV7YVX%2FPzrTmerGSTPeXTYy1Tt3%2FLKrNzQw3xWE%2Bs4fiE31Q%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=1f8d3a4f529ad683f38866f6a430c08b5f4677e9a431e2dea524f38e0899955d",
+      "file_size": 50645,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 4614381,
+      "file_name": "Screenshot_2025-07-27_024516.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/h2el4t42n0jn8tvfsnwk3lhm0gfx?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_2025-07-27_024516.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_2025-07-27_024516.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ26R4OIGG%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T164403Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHcaCXVzLXdlc3QtMiJHMEUCIHcT9zBkMzb1mZybEbGGwV0UK1UrrMOWNn9LQQU3HzoPAiEAhM9sBWLVAQZnK0GghYMBC%2BJ6PTRl5ZWjwfeJNAVfe7MqugUI8P%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDMIVmDUtYfGoFkLkPCqOBWaKGqYaG1JwDc1MYo1MQevDiB%2BNgH8BFt8MAHCw5URgVnNdgdLis05ioGmXM25TqXqTu3W6rPAK0jBFOr6gaL%2FMATh0JQtzVdzKiblKD5N8%2BsV9qz3QZsBPJBsHlbRznzJ776iEYeEYnPoq2%2F7qxBTmJaj5hvVOfZPPVe8Uzo2Xe%2B5ZRyJj00Zb%2F%2BATR9IkvYG6FgpibSoXaDbJNfRDQcAaYu2ikg%2BNeIzojXCpT7KBLmGmZ8q266v5PNVoFrw0Kb%2BDUPVvxP4uKLRpfKmWwDvbknEAo5HXW7E13wS4h9JPMWOWe1zEJuORdiobUETUIkR0UsVZH6x2g13uxUIE4xfHisiJx%2FqPubkIHZzpF5wbftYzvZ%2FCDAtRW8RT5CylyBhp2Cx3KgE7NopyacSVk29AhxXRRZ3XAnqJXn3sO72B4UJgmZrC3av0%2BuZqWvgiX7Ll5cS5ncJyQI7hppOewT2YPfcf2EoI9j20QOeRTM%2BmGB61Ak%2BlQdhAynlI3%2FkI1KcK0Z3yg6zlgUdxOcZ1Pe17IRknrD4m9LbGSq3Wpvp6d%2Faa8vFJRWCW0yLEaSGZo%2B4A1VTVErYUr1RTiSM%2BK6wa8b2WcZN59ASLbPNgmK5%2Fy%2FQ4ykcPDvqAM3twyBdqyMJpgI7n9PNzSKUWkVaiqpsYNp8f1Uajuhl4b70bxCXwuO8%2BZRB64bL%2FMVjQkuKY35Gacsa1P37p5b3Jr9H%2Bb5xjFnw0oiw1b6AKiVGohS%2FRyWFt2sq4oV8G%2BLEwhNZF7fUTVKaHjEVm%2FkIFnuaJ0ibipn3HkgvAUxLn5rEW4c1Ft9CxvZ4Y%2BAS784ipw1pv2LwerT13gELUYoiiYEylSM9U%2BbuXjQnA70jT6yV9ojC4h7vGBjqxAW8i2RghZbofAOswXNRqqAoa82UR72PAdwyadbRBMB4G31IhkS%2BIbHz6GGwcipsLmX%2FhfidG2dDUO%2FyWt0bvQFUTWKIoddwDKUh6Gw%2BUaFWA4eReyQ%2FGgzpCmq1cBFrvAdEojz4WTj%2FZ9k73J9y1glTgYskOF0JQKzvGgKNE05amUokC8EOJq8xnTwuUPaxV7YVX%2FPzrTmerGSTPeXTYy1Tt3%2FLKrNzQw3xWE%2Bs4fiE31Q%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=99563320cb960185b918bc7a7e9812659290c1c40a9f63713ea2da048fa9e6cf",
+      "file_size": 357332,
+      "type": "image/png",
+      "moderated": false
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 23,
+  "voters": [
+    "corrupted_bytes",
+    "k0ns0l",
+    "2026",
+    "thalaivar304",
+    "f46",
+    "agnel22",
+    "adce626q",
+    "ak_zsh",
+    "yusuf-linux",
+    "prince391",
+    "and 13 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 18844,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/curl/curl",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
