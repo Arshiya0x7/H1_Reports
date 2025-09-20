@@ -1,0 +1,128 @@
+{
+  "id": 2706358,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yNzA2MzU4",
+  "url": "https://hackerone.com/reports/2706358",
+  "title": "[ addons-preview-cdn.mozilla.net ] A subdomain takeover is available via unregistered domain in Fastly",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2024-09-08T01:13:38.884Z",
+  "submitted_at": "2024-09-08T01:13:39.169Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "haveaniceday",
+    "url": "/haveaniceday",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/219/051/bc46f4016c20b2e64fa2160674a4feacf1469b3c_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 61236,
+    "url": "https://hackerone.com/mozilla",
+    "handle": "mozilla",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/0p8e6gg8xoy45dhjxs5wh4iti6k8/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/0p8e6gg8xoy45dhjxs5wh4iti6k8/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Mozilla",
+      "twitter_handle": "",
+      "website": "https://www.mozilla.org",
+      "about": "Mozilla web bug bounty program specific to encouraging security research in Mozilla's products and web services."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2024-12-06T10:52:26.197Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2024-11-06T10:52:16.394Z",
+  "comments_closed?": true,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary\n\nThe domain **addons-preview-cdn.mozilla.net** will CNAME resolve to **addons.allizom.org**, which resolves within Fastly's service.  The domain **addons-preview-cdn.mozilla.net** was not registered within Fastly, which resulted in an error that says \"Fastly error: unknown domain\"  \n\nAfter registering this domain on Fastly, I was able to serve custom content on **addons-preview-cdn.mozilla.net**.  \n\n## Proof-of-Concept\n\n1. Go to [http://addons-preview-cdn.mozilla.net/haveanicetakeover-poc.html](http://addons-preview-cdn.mozilla.net/haveanicetakeover-poc.html?x)\n\n## Supporting Material\n\n* Screenshot of [http://addons-preview-cdn.mozilla.net/haveanicetakeover-poc.html](http://addons-preview-cdn.mozilla.net/haveanicetakeover-poc.html?x) displaying custom content\n\n## Impact\n\n## Summary:\nA subdomain takeover can be a serious issue, in which an attacker can load their own content while impersonating a targeted victim. \n\nThis impersonation can be abused for numerous impacts, including, but not limited to:\n\n* Cookie Stealing\n* Phishing Campaigns (i.e. Stealing Credentials)\n* Cross-Site Scripting (XSS)\n* Authentication Bypass\n* Malware Distribution\n\nMore information on the impact of subdomain takeovers can be found at: https://0xpatrik.com/subdomain-takeover-impact/\n\n## Fix\n\nIn order to fix this bug, one only needs to remove the CNAME DNS record for **addons-preview-cdn.mozilla.net**, so that it not longer points to **addons.allizom.org**  Alternatively, the domain **addons-preview-cdn.mozilla.net** could be claimed within Fastly, in order to properly direct this domain to the correct endpoint.\n\nIf you have any questions about this report, please let me know.\n\nThank you,\n\nHave a Nice Day!",
+  "bounty_amount": "500.0",
+  "formatted_bounty": "$500",
+  "weakness": {
+    "id": 145,
+    "name": "Misconfiguration"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 3583614,
+      "file_name": "feeds.support.dyson.com-takeover.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/zplqtxuxwkkpdgd5pmmpxfo4oll0?response-content-disposition=attachment%3B%20filename%3D%22feeds.support.dyson.com-takeover.png%22%3B%20filename%2A%3DUTF-8%27%27feeds.support.dyson.com-takeover.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ65VHY4Z7%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T174709Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHgaCXVzLXdlc3QtMiJHMEUCIQCyg%2B5Ssf9GRU59%2Bkync2bOt7x6A4WYOE2EWe8N9ua8DgIgSNulINmRAv2Bt0wwr8UYwa5xpgMH6LtJxEneNLUcFRsqugUI8f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDOTz%2FpGvx8cQysomJiqOBS99Jtfa15bKJomjTK5QnIoppnlQkyD4rjs%2FsJTgjQoYAXbWi7xejVNGhvBzQi4ad2dUQIYFs7OAzdT%2FUllZvMfuZpYyWOg3l04gn1q%2BRyvMLsBr%2FbOr%2BqcwAlNBKJpnd%2BgSEHRk1fsnuCuN1whhpTdUc6mxHlyDoEnZDNZKENrXz7QOuc2yv9ZXCJE%2BmssW9ffIQK3n%2FlQOeh31Ss2Wlrp1TQSVOxUFVgGA2G%2BXb7THpC7A9IZN7juETY1FNPV2ve52kdkpdpl9yphdTxuVrxvd5AYAhkzMmBXxEwR1Cj1yovx0IunZaV879Bazbm%2BcfHZgwys5Qat2muSFv9NFAiayu63r9kkgSXKRgJTBSo27EVJ0hLPmeHl5pSs3%2B3z7Rz3K2JTWBJKacaNrY4ityJHG0lChY3AiUUEQfm6FH56HSdUCzlRhCgRXw7vHnhxfH8Pm2LwZpJ1qxaE%2ByXIQZ%2Fbkdw8aXV5z5Idg213EEC0ILR4vgn1Orzbwl0g1%2FrOTESYLHasy0wcLKIa7%2Bx5GsybsaztcM%2FaeDIkgmyDHrE8dmUM4OGGoFrEiLptvi4ipQTfOnZv%2FW8L0DmN1mCew0ZGuLQoDefflIXeN3js453tCYkgw47FLq5o3XWx7t83rShJXDkk9Z67O91QPdHoajRK2WUBEfSdSx0K4ZP%2BUUnEyFH7UNpgQ0RGtT1YKDRo6DnWUZNpFUV72FrTG%2B%2B%2BWhirUXxnwzxtN49el9oy%2B6Zp%2FjfTVEDNdGnKmLX4Rp5BzUPGHXo9%2F2M76%2Fo9gaYWPekSq%2B%2FGwN9jyRLHBAVa1AwiFHx8rdMSBE9uFPnYCooXI%2BCZoWzutS%2B%2B6zqgl2eAD1hzd7%2FXRzzh9u64VTZ3tijDbnrvGBjqxARFf0E54%2BgdK7Dqw81sRnbmFvMlT3dHf%2BiqrwGKs4KOFIaHkwmBzOVE3vpsUIrNUgO920xXt4Wxnl%2BYVYIiB%2BzXNbT46JlZcZk%2FbfkQJG9TKQLeemXNwhR3OPAW0ypnaTobqy2zzn8d3dbTbKWbz5CaaRn%2B%2BgyNRP2zWb6y7hi4GhpVQS4%2FKbVxoNvkNg6OpFGsFaCjVmQzDmM300a0zrZ2shsdclYZacrrYxRPYPrAzDg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=9d188230e989538e37fb78abb1df7202f8161b51d4c50905c40093a829c2d7e0",
+      "file_size": 85616,
+      "type": "image/png",
+      "moderated": false
+    }
+  ],
+  "allow_singular_disclosure_at": "2024-12-06T10:52:16.576Z",
+  "allow_singular_disclosure_after": -24908092.55490432,
+  "singular_disclosure_allowed": true,
+  "vote_count": 66,
+  "voters": [
+    "orange303",
+    "loaymorad",
+    "k0ns0l",
+    "zy9ard3",
+    "mk7120",
+    "skizzik",
+    "thalaivar304",
+    "f_m",
+    "naysec_",
+    "xoemekk1",
+    "and 56 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "Team"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
