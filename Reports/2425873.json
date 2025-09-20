@@ -1,0 +1,121 @@
+{
+  "id": 2425873,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yNDI1ODcz",
+  "url": "https://hackerone.com/reports/2425873",
+  "title": "[Monero wallet RPC] File precreation to file ownership and credentials leak",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2024-03-20T17:04:04.563Z",
+  "submitted_at": "2024-03-20T17:04:04.690Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "selmelc",
+    "url": "/selmelc",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/68gqya4e30aqvzh8b8hd08wrb0y4/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": true,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 7731,
+    "url": "https://hackerone.com/monero",
+    "handle": "monero",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/007/731/55634f7fcd917725c7a5771cc6e7c9b4d5fe0c22_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/007/731/55634f7fcd917725c7a5771cc6e7c9b4d5fe0c22_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Monero",
+      "twitter_handle": "monero",
+      "website": "https://getmonero.org",
+      "about": " Monero: the secure, private, untraceable cryptocurrency"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2024-09-04T17:07:49.843Z",
+  "bug_reporter_agreed_on_going_public_at": "2024-09-04T17:07:49.739Z",
+  "team_member_agreed_on_going_public_at": "2024-09-02T20:07:59.785Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello,\n\nDuring my testing I observed a problematic file creation in the monero wallet rpc which causes the credentials of that rpc to potentially leak to an attacker if this vulnerability is exploited correctly.\n\nThe vulnerable code is located [here](https://github.com/monero-project/monero/blob/c8214782fb2a769c57382a999eaf099691c836e7/src/wallet/wallet_rpc_server.cpp#L248) at the line 248 of the wallet_rpc_server.cpp file inside the wallet_rpc_server::init method.\n```\n...\n        std::string temp = \"monero-wallet-rpc.\" + bind_port + \".login\";\n        rpc_login_file = tools::private_file::create(temp);\n...\n```\nWe see here that the monero-wallet-rpc will generate a file with a none random name and will later write the username and password of the RPC in it.\n\nAnother interesting  piece of code is the implementation of private_file::create() and most importantly at [line 196](https://github.com/monero-project/monero/blob/c8214782fb2a769c57382a999eaf099691c836e7/src/common/util.cpp#L196)\n```\n    const int fdr = open(name.c_str(), (O_RDONLY | O_CREAT), S_IRUSR);\n```\n\nWhat I observed here is that the O_EXCL flag isn't used, this means that if the file exists before this line of code is triggered then the file is simply opened instead of being created and will keep all its original meta information such as permissions and owner.\n\nThis is problematic as an attacker could precreate the monero-wallet-rpc.[port].login file and give themself arbitrary permissions and full ownership of the credentials file before the victim starts the RPC server.\n\n## Patch suggestion:\nAt first I thought the O_EXCL flag wasn't used for functional reasons but from testing I observe that the file is deleted as the RPC server goes down anyway so using the O_EXCL flag would patch this vulnerability without affecting functionality at all.\n\n## Releases Affected:\n\n  * Tested on linux, from main branch. Vulnerable code present for a long time at least the last 6 years.\n\n## Steps To Reproduce:\n\n  1. Have two users on a linux system (A and V).\n  1. For simplicity move them both in the same working directory\n  1. As A execute the following commands: `touch monero-wallet-rpc.16969.login;chmod a+rwx monero-wallet-rpc.16969.login`\n  1. V has a monero wallet that is located at /home/selmelc/Monero/wallets/selmelc/selmelc.keys.\n  1. V wants to start a wallet RPC server so they start monerod in the background and executes the following command: `monero-wallet-rpc --wallet-file /home/selmelc/Monero/wallets/selmelc/selmelc.keys --prompt-for-password --rpc-bind-port 16969`\n 1. As A execute `ls -l monero-wallet-rpc.16969.login; cat monero-wallet-rpc.16969.login` and you can observe that the attacker A owns the credential file that should be owned by the victim V and the attacker can read it.\n\nSee screenshots where I reproduce those steps, on the left is the attacker and on the right the victim starting the RPC server:\n\n{F3133373}\n\n\nXMR address: `44FvRkLxcfnc8zBNFHU8xoh9LdvTgF8iEJUpkrBtGMBLgVf5UGuHrUD3mgMJyMYGb3BhXE8wzGJqrbxCDFijNo27CuVHByo`\n\n## Impact\n\nA confidential file (RPC .login) can be tampered and disclosed to an attacker.",
+  "weakness": {
+    "id": 26,
+    "name": "Improper Access Control - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 3133373,
+      "file_name": "Capture.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/6lwsd2ya8whnm3ernw34t2gixmte?response-content-disposition=attachment%3B%20filename%3D%22Capture.PNG%22%3B%20filename%2A%3DUTF-8%27%27Capture.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6QNUISWT%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T181145Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHgaCXVzLXdlc3QtMiJHMEUCIBmtXBl8Rwzips0A7Q6M0sgb8TMIyC4Buubg1r02dtPlAiEA1iTMzB8VCdRcg9IUqX0yctfg%2FtbnvCWhEFFJClP8rYIqugUI8f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDE9GGAfI4GH1AJPcwCqOBYjqE4yZZ%2Bh7KTA5J%2FSSpVEIqlFpg3kfXfdTdwlQIZTuRwlubN0upSFOVhgbbLVJbp%2FH0eqzFM13IhCK5iQN3QaAjsgEBq67St8O0ilWut88JnmyLUqEAaLVECsydXaOa3PDwLPOqODrfTTVCSemT1GOy0%2FfUPH8RFfhQZ%2FQq8rftp8pkBxoaHmOkK1SCROSJB9bFWI6woePSpWl3tWFpmykeelOwJM2CoZ0I2sgBdWGsGv4QVNPu4OfabmsLrOpd1BQSZWFMmDHa%2F0oK9JsSg%2Bkx%2BhX1pxq1XnhhenqQNm8GYTywfdz%2FVoNeJKjc4cUfU1JMjX1chI1%2BOmMxr2%2Fu2Q%2BRRKoZM%2BMsL8giTNFf3SeFI3P3iuNtrVHHJpeo6B%2FRB6QH7SrQ4A5ZQjEymhxze3u2Ino08ujt8MRSQwCU23m907eb%2BlD793jRK6XPMwq3qvSq6kzZTEgbUJTLC%2BDDE8zXbUjiMTTKOv6%2B%2FygOR%2F%2BB%2BYNXot4h5XWB7yhI87MMbPfCqk5uWgl890wlsoTKTsVP9n7RKdCJKH%2FyYG4idJzmcXoRQbttw2KxfyO6j13uJGDbYqHUs%2BzI1SETm76PF1ZDDKO%2F7QI6x%2BzUZfxFvVnh7d51SogemIeTTYSzaT5QkEJirJZWStvBuN6xQeSxNpypmiX0oSBmkRNa83j69yszfA1%2FtUozf2FB9lCwI20u4u%2FPrpEgm%2Br6S27rTkQnFIfxl9%2BfZ1lrRDxTlN8LrSdaTt0n6lXbm3NHtVFXTFNrrghqfz%2FQji16tbG1ogWZ3MLz7XxFOpk8AdlCQg03p8Dn5U7lx7kxyUroJCkzRrhGDSj5VjcyHmnkwWinAlhzkLe%2BbeY7XNut%2BEK7tHHYzCgnLvGBjqxAbvyLEbeNaNnOnBecA0B2uttE4x4WA%2Fuz%2Fsq370DHUwGqgMU%2BTavNj2bZs1Dv8rx4QjUFKSwVUUHuUODNidCndrFJ1ydaN3kxDf3BhJMe%2FG9%2FXkQfYb8AhAfDm2tepXEjn2IeQq8cE%2BqpDDJq21V5ot0%2BP7f9K4JMrzp5Q%2BGACXkL2Nrxye355K%2BxPXQDn%2B0Hn0xnPwSVe682Z6edttdF%2BCRmqqVVT%2Fipp8rqmNfVWEjPQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=de318284c888b9372418982217c466498dec88427f803150e80c03444362b66f",
+      "file_size": 197523,
+      "type": "image/png",
+      "moderated": false
+    }
+  ],
+  "allow_singular_disclosure_at": "2024-10-02T20:07:59.948Z",
+  "allow_singular_disclosure_after": -30492225.25438647,
+  "singular_disclosure_allowed": true,
+  "vote_count": 74,
+  "voters": [
+    "lones",
+    "selmelc",
+    "yassinelgammal",
+    "zomasec",
+    "aziz0x48",
+    "yoerivegt",
+    "zy9ard3",
+    "shreyaschavhan",
+    "d3f7ult",
+    "thalaivar304",
+    "and 64 more..."
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
