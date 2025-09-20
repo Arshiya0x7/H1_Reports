@@ -1,0 +1,140 @@
+{
+  "id": 1832494,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xODMyNDk0",
+  "url": "https://hackerone.com/reports/1832494",
+  "title": "Blind SSRF on https://my.exnessaffiliates.com/ allows for internal network enumeration",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2023-01-12T13:49:27.027Z",
+  "submitted_at": "2023-01-12T13:49:27.283Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "null_hypothesis",
+    "url": "/null_hypothesis",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/002/919/2effe36d9a514cd008bde34f73aaec8546c123bb_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 12719,
+    "url": "https://hackerone.com/exness",
+    "handle": "exness",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/nqcs1q40b15orz664sixj9ltiejh/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/nqcs1q40b15orz664sixj9ltiejh/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "EXNESS",
+      "twitter_handle": "",
+      "website": "https://www.exness.com",
+      "about": "We offer better-than-market conditions on currencies, crypto, stocks, indices, metals, and commodities."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2023-10-25T13:09:58.717Z",
+  "bug_reporter_agreed_on_going_public_at": "2023-10-25T13:09:58.620Z",
+  "team_member_agreed_on_going_public_at": "2023-07-13T13:23:16.514Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nHi\nHope you're well\nI have found a Blind SSRF vulnerability, in an endpoint on exnessaffiliates.com endpoint, which would allow for Internal network enumeration.\n\nThe endpoint in question is \n`https://my.exnessaffiliates.com/api/partner_integrations/template/probe`\n\nWhen an attacker makes a POST request, with the post data:\n```\n{\"data\":{\"url\":\"https://attacker-domain.tld\"}}\n```\n\nWe can see a DNS and HTTP request being made as so:\n```\nGET / HTTP/1.1\nHost: sa66ovrblrbiviochnojtli2bthk5ft4.oastify.com\nsentry-trace: xxx,baggage: sentry-trace_id=xxx,sentry-environment=production,sentry-public_key=xxx,sentry-transaction=/api/v1/partners/%7Bpartner_partner_uid%7D/integrations/\nUser-Agent: python-requests/2.28.1\nAccept-Encoding: gzip, deflate\nAccept: */*\nConnection: keep-alive\nuber-trace-id: xxx\n```\n\nThis is itself, would constitute a minor Blind SSRF vulnerability, if it is not intentionally accepted.\n\nHowever, if we use the post data:\n```\n{\"data\":{\"url\":\"https://127.0.0.1:80\"}}\n```\n\nNormally, if the port/host is not reachable, it will return a simple error:\n```\n\"code\":\"ValidationError\",\"message\":\"Invalid input.\",\"details\":[{\"field\":\"url\",\"message\":\"Invalid Postback URL\",\"code\":\"invalid\"}]\n```\n\nHowever, if the port is open, Python Requests is returning the error message to the user as so:\n{F2117769}\n\nThis indicates that the HTTP port 80 on 127.0.0.1 is open.\n\nWith permission, I will further this attack to inspect the internal network.\n\n\n## Steps to Reproduce:\n[Add details for how we can reproduce the issue. Please ensure reproducibility of the issue.]\n\n  1. Make a POST request to https://my.exnessaffiliates.com/api/partner_integrations/template/probe/\n       with the post data \n      {\"data\":{\"url\":\"https://127.0.0.1:80\"}}\n\n\n## Impact\nHow does the issue affect the business or the user? \nInternal network details are disclosed.\n\nWhat can the attacker get through the issue? \nInternal network device enumeration\nUtilise the requests for DDOS on a victim's server.\n\n\nCan the issue be escalated further? If so, how? \nPotentially, I will attempt further escalation with permission.\n\n## Mitigation\nDo not return Python errors to the user - even when URL contains blacklisted contents.\n\n\n## Supporting Material/References:\nattached above.\n\n## Impact\n\nCurrently, this will allow for network enumeration from the internal IP:\n███████\nWith permission, I will attempt to escalate this issue to inspect the internal network further, and attempt RCE.",
+  "weakness": {
+    "id": 68,
+    "name": "Server-Side Request Forgery (SSRF)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 2117769,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/he2m5kmuthpgrur7l1hki0v62h8p?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXZZIVV5J%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T195902Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHgaCXVzLXdlc3QtMiJIMEYCIQCGlC8uuhaOQu0Bap1hI1S9LUjZl%2FWt75i7wEZd0I8kOgIhAPo2QLbtQ3igMd6c6EP6S0vN%2FAnoC7v3%2BAqb0pGpgtnpKroFCPH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5IgwYr8Z15bn0jLVYw20qjgX0tUaxf7N5SGMOiPoF5MkNNn0U7siBo5bf%2BgOeBZChN7zOZdu%2Frc3P25xknDOoE91MLQsgw8F%2FfkuUpdQ4YTDG9dB5O%2FrUrc1kzotpF3gI2euR3ejFd%2Fm%2BoAYx5bz04W4IU0vG9x2q6PO9eHyoYNI81dxlrv%2FFDQx4pfjcnAHNE%2FIfKBGhPHHMdtNwrNZN1GHlC1wIMNP%2FIaivLVoLcYmDd1DyGOTuE6SmACbTNdemxkNvehZ6xofkgYXRhe8ZfmKdWH3I7gd7ym1BQGXP6Y2bTDUEajNzgy%2F0wExsT%2Fhmwz34S%2FklOmAVPN%2F3cE6HPqSPBK9tcVYrCTpsz%2BPDjbsINBQ34X0hnNE9p3I%2FFvNYjBYNiKqSWRVbvL4PGyavgSrKQe2nlqkQDZcjizaqfXtgcRQdfKmgemPMbxaNawS6MW%2B%2BP%2FjJJtcdfYNdU9yc8F3yhz9zMMaGOnhtbYhl125jC6TEDYkVh9z8BeaazQkb7FV428OJ5QHueDqEY7PxXjx4lRzno2FmpzbHPXasyxEPUv5ICnPSFEdpBV57Z%2BnWV8iVTbY2RZDXCM%2BYaTr00GkQZqw9fQhw4ezg5Rj5oc0hLBlFyPAavVuNvRzO8qcpGgUzwag7FHaLZArx7ldluBJFsegf92xG9h584t8rB8x4IWPzeYuCVQmaexNIUWVsFITCr4bB4GXkj1P3RFCugnenvsalBaygka%2BovQDmg7hjCPZ4hq%2B6NMODPUdiaNTSiWcIWzxgeWSfK5A%2BTele7QZza6Hfd3xq%2BxKKT7VdHnqijgNcO1IwspZJlSQ0RwKe8MEb6DdYgXzwmN6x7MDls4sxxncNO5anKsPtZycO8uPUVGUy9im7moXLXv7sihIwipm7xgY6sAEI6lWkpv%2Fc0YxVCdMv7xegG1otzjYOVvYUxeJK3s4XgvvDpBlpCb%2FjuybYOC2l%2FI6aUBId3OlOVo9IpXE5aRgCaHiM1KtThZsPspmi0XujqT4Ou0wHvvaZDPvHDk%2BxE77XeD5T%2FeLtJdXdxp%2BEplWfSmpcYM5iMlQhrox03H6YSXOZ0YY4u5%2Ba7wLkBh0KxQrtZ1q99eY8%2BQ2NBb6eQjvbDXDETMy1DWq8sGRZ%2FmfIWQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=5f12d0b99b74891917db413dbdb9bcf51efb0867e6d62d2f1685639e545ee48e",
+      "file_size": 44383,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 113,
+  "voters": [
+    "h4x0r_ly",
+    "alganad",
+    "0xu",
+    "datsuraku147",
+    "dreamnailxx",
+    "jadav_",
+    "defenderwww",
+    "8910jq",
+    "n1m0",
+    "ganeshbagaria",
+    "and 103 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 6.1,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "low",
+      "integrity": "none",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 440313,
+    "asset_type": "URL",
+    "asset_identifier": "exnessaffiliates.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
