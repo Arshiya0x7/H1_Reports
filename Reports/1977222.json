@@ -1,0 +1,167 @@
+{
+  "id": 1977222,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xOTc3MjIy",
+  "url": "https://hackerone.com/reports/1977222",
+  "title": "Open redirect on \"Unsupported browser\" warning",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2023-05-08T15:24:16.203Z",
+  "submitted_at": "2023-05-08T15:24:16.321Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "akshayravic09yc47",
+    "url": "/akshayravic09yc47",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NzQ5Mzg2LCJwdXIiOiJibG9iX2lkIn19--582a6c618bc9b90dea5de4c4832563dadffc8698/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--2de8067d228529d65848a4eeed0bed0bb2531bc3/IMG_20191119_211951_602.jpg"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13291,
+    "url": "https://hackerone.com/nextcloud",
+    "handle": "nextcloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Nextcloud",
+      "twitter_handle": "nextclouders",
+      "website": "https://nextcloud.com",
+      "about": "Access, share and protect your files, calendars, contacts, communication & more at home and in your enterprise."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2023-35171"
+  ],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2023-06-22T06:54:21.862Z",
+  "bug_reporter_agreed_on_going_public_at": "2023-06-22T06:54:21.728Z",
+  "team_member_agreed_on_going_public_at": "2023-06-22T06:16:04.841Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello team,\nThe below mentioned source code is using a unsanitized URL redirection mechanism which will cause open redirection vulnerability\n\n```\n\t\t\tconst urlParams = new URLSearchParams(window.location.search)\n\t\t\tif (urlParams.has('redirect_url')) {\n\t\t\t\tconst redirectPath = Buffer.from(urlParams.get('redirect_url'), 'base64').toString() || '/'\n\t\t\t\twindow.location = redirectPath\n\t\t\t\treturn\n\t\t\t}\n```\nThe `UnsupportedBrowser.vue` component used to display a message to users of unsupported browsers. If the user's browser is unsupported, it will display a message with an icon and a button to continue browsing with the unsupported browser.The script checks if there is a query parameter called `redirect_url` in the query string. If the parameter is present, it decodes the value of the parameter from base64 and then redirects the user to the decoded URL and it does not validate the decoded URL or check whether it is a trusted URL before redirecting the user. This makes it possible for an attacker to construct a malicious URL that includes the `redirect_url` parameter and a URL of their choice. When a user clicks on the link, the script will decode the value of the `redirect_url` parameter and redirect the user to the attacker's URL\n\n#Vulnerable Source Permalink:\nhttps://github.com/nextcloud/server/blob/master/core/src/views/UnsupportedBrowser.vue#L140-#L146\n\n#Mitigation:\n- Use any functions that check if the input of the `redirect_url` parameter and ensure that it is a trusted URL before redirecting the user.\n- Add a Link warning popup like hackerone do, proceed redirection only when user accept the conditions, example like this:\n\n{F2340720}\n\n## Impact\n\nIf the app does not validate untrusted user input, an attacker could supply a URL that redirects an unsuspecting victim from a legitimate domain to an attacker's site.",
+  "bounty_amount": "150.0",
+  "formatted_bounty": "$150",
+  "weakness": {
+    "id": 53,
+    "name": "Open Redirect"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 2340720,
+      "file_name": "Screenshot_2023-05-08_at_8.48.54_PM.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/osbefdd0wqs6xwfvplubcf18txwl?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_2023-05-08_at_8.48.54_PM.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_2023-05-08_at_8.48.54_PM.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ57TNZH7T%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T204546Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHsaCXVzLXdlc3QtMiJHMEUCIQDvYVAn1CR4Ovsi%2FwrlXfyGXFaS0luNYrsMxdsskRJ%2BngIgSfnPPgqYpS5dloL0lDVxL6zeU7sppq7W0kgeso7BLNYqugUI9P%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDDIWv2pQv%2FHgsvhjXyqOBadmsc2%2FE%2F%2BZFNdhUggwURhRt4gPKJeY%2BKVfIicpXneXh6oiABjPSE634TUkfMP6EV5nTh2l892eN7NpVzDy71D2DqOesJQ8mm9JAttoE5FUE%2Fj%2B76L5m7Trtb2rYmwpBCBd41BxUknAJHn7V3zSHzkhNjMyieLKh0OA%2Fn%2FTZ5nGFinmqepR6AwmpHkQZy%2FtXi4jyoCwcqR4k9RnMkaEpEnajdta%2FeZFni9YCOZpFrVLNOleWkAqtM9ac0dLamrZbHiJDiJ%2BZy%2FLQfmOzdO20h8AW%2Fbk5DT6knRjGGW61wSio5%2FgDZzCvEu2%2Bgn5ThyYtFNVsPLQHxTl3DVott3OYsu5Z7nJxjYawzZqaxn8OU6Gbea61HVcwFp1VJAkGGQTLcBNozc8y%2FgQZzkPjJ6KBNy7YDUMmE80nf1T633uJbtu4hDPk0HOpcgG%2FYoCdbUeGzSqbn4BFqDnNXlKTL1S1etzX7lfQyhQrsgE8jIR1tl4GAzeHo8m1eJPtyvu8sHdq4Dqvulc70HiMydsVGaOpBdRHwwKINmMSunJiQc%2FbPEidVHfXE8QfzNoRWOlaBUjymAYJvEC5dfKK9gy6GA1cyc8FGtb7HomvK%2F59sZ0uWFxTpGVt4vP0EJLpccYIcXXR3nNKCZULZkgx8vERYdf5NGo%2FsInnC29lpnju%2BwdmLmhdLEIddaUqGyzCHtY%2BCRdjjawrOlyUCQK7jgo8EjmtgoEQGscfwJaD%2FGWL%2FCPEqyWWxQS9qsSK09hpiraSWNTglvj6MqWdYOjyuKUOixNnN1gEvYjJgOaylpvTcsQuUUdyUomv%2F231KnkzdBbVjzbzUYByZyrTErTLTVrJcM9TVgVrGkPbeABqPxPzofGZjCp77vGBjqxAYhCYo2%2FMLH3%2F9V3JUcjM9X5UC3fi5Wui%2FNFQTD8USOctNHRF9v3YhGXH6%2F7YvV47A2FMiI0zd%2FVSnu%2BqRuVcSx05wRX7E9GWqVzI%2B6GFYc4UkteshIWXzJCWqFPexcvTtdtxsW4BIBePSJ39qQ9fnkaNd4mzpPkuiURYCzbeZxICmEBqiA2NXoYH1psRYBALjNkKYTxFdv2I%2F65YGM6TSSKPOHjENntcqC00FTsrf4Z6w%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=417e2e719b82646f44ef336e8e6dd29b46ddf62e5dae8769ace63ad37d7debae",
+      "file_size": 114348,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2023-07-22T06:16:04.927Z",
+  "allow_singular_disclosure_after": -68394581.30368914,
+  "singular_disclosure_allowed": true,
+  "vote_count": 8,
+  "voters": [
+    "zy9ard3",
+    "shreyaschavhan",
+    "shubham_srt",
+    "spaghettisec",
+    "shivammusic",
+    "kurd_112113",
+    "sweetygremlin",
+    "amr4l44"
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 4.1,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "low",
+      "user_interaction": "required",
+      "scope": "changed",
+      "confidentiality": "low",
+      "integrity": "none",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 13,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "nextcloud/server",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "id": 309788,
+      "category": "team",
+      "content": "Security advisory at https://github.com/nextcloud/security-advisories/security/advisories/GHSA-h353-vvwv-j2r4",
+      "updated_at": "2023-06-21T04:17:58.540Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 89223,
+        "username": "nickvergessen",
+        "name": "Joas Schilling",
+        "bio": "",
+        "cleared": false,
+        "verified": false,
+        "website": null,
+        "location": "Germany",
+        "created_at": "2016-07-01T08:17:59.061Z",
+        "url": "https://hackerone.com/nickvergessen",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "company",
+        "profile_picture_urls": {
+          "small": "https://profile-photos.hackerone-user-content.com/variants/5DBbeB7om4ZiKgskrEoeTyGH/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/5DBbeB7om4ZiKgskrEoeTyGH/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c",
+          "xtralarge": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6ODQyMTQ5LCJwdXIiOiJibG9iX2lkIn19--7544c99c2f87f134b16d5b20f81dbc06444df8d8/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJyZXNpemUiOiIyNjB4MjYwXHUwMDNlIn0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--c155082ce6f9751dcb29cd6ea061a7e4d7329577/2019_cfhn1.png"
+        }
+      }
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
