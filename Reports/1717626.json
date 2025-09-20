@@ -1,0 +1,157 @@
+{
+  "id": 1717626,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNzE3NjI2",
+  "url": "https://hackerone.com/reports/1717626",
+  "title": "Sub-Domain Takeover at   http://www.codefi.consensys.net/",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2022-09-30T08:16:28.652Z",
+  "submitted_at": "2022-09-30T08:16:28.777Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "krrish_hackk",
+    "url": "/krrish_hackk",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/6690hpdsoxq8lc1kcn5cw37kksrh/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 40160,
+    "url": "https://hackerone.com/consensys",
+    "handle": "consensys",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/pvie1iqo4u4c1cfsogw8e4hrbv9m/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/pvie1iqo4u4c1cfsogw8e4hrbv9m/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Consensys",
+      "twitter_handle": "",
+      "website": "http://consensys.io",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2022-12-16T18:24:27.444Z",
+  "bug_reporter_agreed_on_going_public_at": "2022-12-16T18:24:27.269Z",
+  "team_member_agreed_on_going_public_at": "2022-12-05T16:03:14.106Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Summary:\n \nSubdomain takeovers:\n\nA subdomain takeover occurs when an attacker gains control over a subdomain of a target domain. Typically, this happens when the subdomain has a canonical name (CNAME) in the Domain Name System (DNS), but no host is providing content for it. This can happen because either a virtual host hasn't been published yet or a virtual host has been removed. An attacker can take over that subdomain by providing their own virtual host and then hosting their own content for it.\n\nIf an attacker can do this, they can potentially read cookies set from the main domain, perform cross-site scripting, or circumvent content security policies, thereby enabling them to capture protected information (including logins) or send malicious content to unsuspecting users.\n\n Steps To Reproduce:\n\n  1. GO to http://consensys.net and find its sub-domains using Subfinder.\n  1. now find sub-domains status code.\n  1. Search for 404 code.\n 4.  its showing :- \nDomain Not Claimed\nThis domain has been mapped to Squarespace, but it has not yet been claimed by a website. If this is your domain, claim it in the Domains tab of your Website Manager.\n5. now create a account at Squarespace, create a website template and then go to use a domain i own.\n 6. then copy and paste http://www.codefi.consensys.net/  and  boom sub-domain takeover completed.\n\nSupporting Material/References:\n\nPOC is attached below.\n\n\n How to prevent it ?\n\nPreventing subdomain takeovers is a matter of order of operations in lifecycle management for virtual hosts and DNS. Depending on the size of the organization, this may require communication and coordination across multiple departments, which can only increase the likelihood for a vulnerable misconfiguration.\n\nDefine standard processes for provisioning and deprovisioning hosts. Do all steps as closely together as possible.\nStart provisioning by claiming the virtual host; create DNS records last.\nStart deprovisioning by removing DNS records first.\nCreate an inventory of all of your organization's domains and their hosting providers, and update it as things change, to ensure that nothing is left dangling.\n\n## Impact\n\nRisks of a Subdomain Takeover:-\n\nVarious risks could be the result of a subdomain takeover.\n\n1. Bypassing CSRF protection\n2. Phishing\n3. Leak of OAuth 2.0 Tokens\n4. The redirect is only performed if the target URL is trusted. If all subdomains are trusted as target URL, an attacker might be able to get OAuth 2.0 tokens via a target URL which points to a compromised subdomain.\n5. Bypass Content Security Policy\n6. A, AAAA and CNAME Records",
+  "bounty_amount": "500.0",
+  "formatted_bounty": "$500",
+  "weakness": {
+    "id": 26,
+    "name": "Improper Access Control - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1962507,
+      "file_name": "screen-capture.webm",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/n4cmsb5gmuj4e3gygd358ou4ke3x?response-content-disposition=attachment%3B%20filename%3D%22screen-capture.webm%22%3B%20filename%2A%3DUTF-8%27%27screen-capture.webm&response-content-type=video%2Fwebm&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYGGFHRSZ%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T220035Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJHMEUCIHxVTsSunHQ88w8v5Phcr4OO8veCEoxwykDBf3GISKdFAiEAurKLjSC2eHk9cdgXdv6Cf1B8%2FPb0KbzKwW%2BhYwFOOB0quwUI9f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDOAwI%2BpsM3WzBS4iniqPBZejabYYfP4uBxFwFqqlBteUZGht2gVxiYYdownO1bQgyboWRw0KgVCZv9YBGoipl8w4IIDuNF4yL2Nmrf77YdXx4up3i6wmg8O%2BLrBDVv6KfZGhmbn1V7D0MZ0IiwjEVhusb73Es6huu88BGtwsNIzAS2DpIsBaR2zNZM%2BEw3FjQsRiI5mpEssmzYxRNFq5%2BeTlGnmf9VJR%2FR8qjpQOlFnu73Rq6frB9hpQwAakKrSsE31RuS2JDhAppiATPfbsFFpuHU3r4LBGX5JYLHv%2FDAshd02n%2FtrB22K5xbR9OV8fELtKCEbsQ5R84qBDRhuxrTgjMo1HYrmoSaSQA0dFQWBg%2Br2ftixlpZlSR9i%2BD8ROxRBrP5wOwhUhtNOv0ek0Sgu9sCmQ5GA3h69tqmp3UVOXtA3BGlMIgkBPZ7EigeOp1pWt1AqruHug%2B2Tfh%2BkZfnpB8ENpNK3TQp4VKnR8sjjDhFopFbqywV%2Bf%2F87NkfMNAmVgTTi5YdKbR14DFn0vUvvjuK51WxLp%2FS0PL1ylOrWjvDG%2BbNt3I7MyDH4oSLqayGtrKdTlVBWkiYIVz6ZshRzVOhGdAtIiIuPrQnF3udy9nARyR2t85ckEKuMZmO%2FsQFMY%2BxrQeHazpH3myDrqJqkcmw0opDha6doqBHbL3zo58M1vHxNQosfLbULgGBws6rmZY6KjUm26objppv5YjLWD4eDZBgpi2VJOU4ZdmiVVdPgjUavs7dznLq0ZQiUhWOTGQmLuHmLcHqH6HP1cgQCLQpzZ5YoOsIVbaNC2czu3xKBLsFTUDOQ%2Fymn5nrzZXucmXow7qWN%2Bdh306BQX7Df3%2FqFDD69c80M3w6A24JZWb01Dy65MI76ZZ3Dp8Mow9I68xgY6sQGxGEMhwI%2BWGSShkwiG3PZVdCnSu67lWGqnKO91KL0keldYeiVRCdKge4nAP7Yfb998UXTaywIIdrotd%2B507nbqRV5HFgP7qfzkx%2FDmxLK6bld4wsbquaZKRjmUJQz73wd5p%2Fw3yj4r3PKikmZRvtyWd508FxsF0paftxj04oNDzWqKQ6YiSCw4HhClLB3juK6Tm9JwlkUf4O0FS3hYBatVsXPNlsf8V4oW8G7Bnq7VNZo%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=14c55c9566cc4c193b838fc65a33b67bb701982e6eb9ad78d4ca352341e0903c",
+      "file_size": 107343604,
+      "type": "video/webm",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2023-01-04T16:03:14.233Z",
+  "allow_singular_disclosure_after": -85557441.57760659,
+  "singular_disclosure_allowed": true,
+  "vote_count": 39,
+  "voters": [
+    "achabi7",
+    "jumpydata",
+    "loaymorad",
+    "nicochess",
+    "p4n7h3rx",
+    "shreyaschavhan",
+    "shubham_srt",
+    "2026",
+    "thalaivar304",
+    "h4x0r_dz",
+    "and 29 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "Team"
+  },
+  "structured_scope": {
+    "databaseId": 75679,
+    "asset_type": "URL",
+    "asset_identifier": "consensys.net",
+    "max_severity": "none"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "id": 231275,
+      "category": "researcher",
+      "content": "This is my first bounty and report and itzzz just amazing.❤️",
+      "updated_at": "2022-12-17T04:26:31.793Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 2408705,
+        "username": "krrish_hackk",
+        "name": "krrish bajaj",
+        "bio": "\"><img src=x onerror=alert(1)>",
+        "cleared": false,
+        "verified": false,
+        "website": null,
+        "location": "\"><img src=\"https://iplogger.com/1EQwH4\">",
+        "created_at": "2022-07-18T07:54:33.413Z",
+        "url": "https://hackerone.com/krrish_hackk",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "hacker",
+        "profile_picture_urls": {
+          "small": "https://profile-photos.hackerone-user-content.com/variants/6690hpdsoxq8lc1kcn5cw37kksrh/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/6690hpdsoxq8lc1kcn5cw37kksrh/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a",
+          "xtralarge": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MjI3MjE4OSwicHVyIjoiYmxvYl9pZCJ9fQ==--efbd35e6fb55d50e4562c8e3959746c45ec445aa/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJyZXNpemUiOiIyNjB4MjYwXHUwMDNlIn0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--cf3aeca803d1baf476958c689ca7b472a4cb54f1/PaintTool_sample.jpg"
+        }
+      }
+    }
+  ]
+}
