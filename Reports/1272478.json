@@ -1,0 +1,147 @@
+{
+  "id": 1272478,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMjcyNDc4",
+  "url": "https://hackerone.com/reports/1272478",
+  "title": "IDOR Leads To Account Takeover Without User Interaction",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "critical",
+  "readable_substate": "Resolved",
+  "created_at": "2021-07-21T18:40:29.114Z",
+  "submitted_at": "2021-07-21T18:40:29.205Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "theranger",
+    "url": "/theranger",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 41919,
+    "url": "https://hackerone.com/mtn_group",
+    "handle": "mtn_group",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/4e6ikuxrt34g8b14w2bk53c6vyry/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/4e6ikuxrt34g8b14w2bk53c6vyry/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "MTN Group",
+      "twitter_handle": "",
+      "website": "https://www.mtn.com/",
+      "about": ""
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2022-09-04T13:23:03.840Z",
+  "bug_reporter_agreed_on_going_public_at": "2022-08-05T13:23:02.348Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nHello Team,\nThere's IDOR Bug on this subdomain `mtnmobad.mtnbusiness.com.ng` leads to account takeover, More details check the Poc. \n\n## Steps To Reproduce:\n\n  1. Create two accounts on `mtnmobad.mtnbusiness.com.ng` and both accounts verify the emails from your email inbox\n  2. Login to attacker account on Browser A Go to update Profile Try to update the address for example and Capture the Request with burp send it to `Repeater`\n{F1384484}\n3. Login to Victim account on browser B do the same to get the victim `ID` you can Grab his ID without sending this request to `Repeater`\n4. Go to the Attacker Request You sent to `Repeater` Change `/ID` with the Victim's `ID` you Grabbed From Step 3 Then change `Email` with different email, you need to change the `username` parameter not the `email` see this screenshot, Leave the email as your attacker email. the `username` Value is email and just update that one.\n\n{F1384509} \n5.  Go Reset the Password (act like you don't know the Pass XD), login and successfully account Takeover without User Interaction\n\n## Supporting Material/References:\n--Check this Video :\n{F1384553}\n\n## Impact\n\nFull account Takeover without user interaction",
+  "weakness": {
+    "id": 55,
+    "name": "Insecure Direct Object Reference (IDOR)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1384484,
+      "file_name": "Screenshot_1.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/r25jc8xxy2lh3m38yxi6jbvvhbpr?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_1.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_1.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUWZG3SN5%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T225314Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJHMEUCIGGGIiCa8Tin%2FVxWsyDFZL9sLJ%2BVC%2FxUtEnwo1Gqvx0KAiEAlwZdYjmy4U8FnznLNof%2FJ10hnVGdZ2RcwFdPG7G8wlIquwUI9f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDFuHfVk%2FCeMMw%2BcQsCqPBZO7f77H9VwIsfGgeIszz%2Fdt2iDafEzoA3%2BY7RMD%2FLvV8y%2F3r7wilNGgVq52P20GqJBWGow0RNwWo5ibMPOKaf5S2kBXkwL6aMFa1IJJAxAYWbnQLemq%2BXkCSoKnYXAJL7%2FN%2FC9V5H%2Ffy4cwF%2FHRg9cnbZp9HD44QuExgBhhEqu7emCtYjKwpr%2FwEbOBIEsm23vVkHxdMe3S0F0HzNxW%2Bt2E4CnpJAwOkVhftr0VGnPl9ptuPqma6peqayqv4wNWolUKlxhKumgFJkbEzt9xDTeFzUSwzL5GBHtQPAq0rP5K7kIGHE6AzJxHB9kOKc9S4qBir6ZIJLfS9nfHMnJu1a7auNhVNafnPv3vfGnCss8cfyZSr49PAq6XITe9DYAGsgQyFmIFoRv6WsoYLX8h8kb9l3oISOnMgafxv0du3NrPxsJdvLyIPvHQsdU9PNJ3ksTeu0SlEEQVCrkZXbayCtVh%2BlVmVg4C1hHu0fzmR2IBI5eZb2RnfnyzGyI3ZtK%2BYhjFxnYahFHEO7%2BAROxfDoUse5KREiqF19ylj3SxWJcIObfqngVaMHkKODgjn02E5gJKBLx7QKiKsRlXDuwSOSh2fv%2FY65gEnfgsX6J50w4QHfrvxuJrK9wwhij37Q6PDALxBROq5MH4ND%2BGYK04rBvJF6wvdlOom4QRMUqM8ude5xmAxq5bxFXVNREi6%2BSidgLDCEofYq651AiCJa870l71S6%2BE3u5OkwbEtsWUgC08bX%2BxEtRQO%2Fr2qJbbPs9XerHMpNxKq%2BQKwLRAIxMASQMWFzEdu3rV%2B8B%2FcRtLvFWb0dolejIzjMjBNuOP%2FaMXFa7su7WjbUNJA4Z9sx77wkfr6z7aaqjQFyj%2FeoCCFUMwrpO8xgY6sQFTaIweQAtFohR51QootYYPu4MVY5ONgXkNtgPQdLH4ZpivwP19zthuuDGCA%2FzTfmBQzqzhRdE1LwnpQwhNKXonlH8s0u8OBhyRjK8v6TBgH63eoeCB%2FQ7QPzct3DKBHni%2Bq2bLQ18Tkf0qX7q%2Flrdx10I83zC8O9N%2F21cH1JnDQYeUA4hpvWxgEFkMnbmDZ5%2F18s2eO48LKTmBpbv2G0psWJBYd0V%2FadiLJ9qAp%2B%2BwuZ0%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=7f41ea6593bf4742498c2c8c2bc4ff077cdc7ff85f373303f40e28b48c97f622",
+      "file_size": 11673,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1384509,
+      "file_name": "Screenshot_1.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/itzi1nm2vvut2b2lqdevmz5szs64?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_1.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_1.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUWZG3SN5%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T225314Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJHMEUCIGGGIiCa8Tin%2FVxWsyDFZL9sLJ%2BVC%2FxUtEnwo1Gqvx0KAiEAlwZdYjmy4U8FnznLNof%2FJ10hnVGdZ2RcwFdPG7G8wlIquwUI9f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDFuHfVk%2FCeMMw%2BcQsCqPBZO7f77H9VwIsfGgeIszz%2Fdt2iDafEzoA3%2BY7RMD%2FLvV8y%2F3r7wilNGgVq52P20GqJBWGow0RNwWo5ibMPOKaf5S2kBXkwL6aMFa1IJJAxAYWbnQLemq%2BXkCSoKnYXAJL7%2FN%2FC9V5H%2Ffy4cwF%2FHRg9cnbZp9HD44QuExgBhhEqu7emCtYjKwpr%2FwEbOBIEsm23vVkHxdMe3S0F0HzNxW%2Bt2E4CnpJAwOkVhftr0VGnPl9ptuPqma6peqayqv4wNWolUKlxhKumgFJkbEzt9xDTeFzUSwzL5GBHtQPAq0rP5K7kIGHE6AzJxHB9kOKc9S4qBir6ZIJLfS9nfHMnJu1a7auNhVNafnPv3vfGnCss8cfyZSr49PAq6XITe9DYAGsgQyFmIFoRv6WsoYLX8h8kb9l3oISOnMgafxv0du3NrPxsJdvLyIPvHQsdU9PNJ3ksTeu0SlEEQVCrkZXbayCtVh%2BlVmVg4C1hHu0fzmR2IBI5eZb2RnfnyzGyI3ZtK%2BYhjFxnYahFHEO7%2BAROxfDoUse5KREiqF19ylj3SxWJcIObfqngVaMHkKODgjn02E5gJKBLx7QKiKsRlXDuwSOSh2fv%2FY65gEnfgsX6J50w4QHfrvxuJrK9wwhij37Q6PDALxBROq5MH4ND%2BGYK04rBvJF6wvdlOom4QRMUqM8ude5xmAxq5bxFXVNREi6%2BSidgLDCEofYq651AiCJa870l71S6%2BE3u5OkwbEtsWUgC08bX%2BxEtRQO%2Fr2qJbbPs9XerHMpNxKq%2BQKwLRAIxMASQMWFzEdu3rV%2B8B%2FcRtLvFWb0dolejIzjMjBNuOP%2FaMXFa7su7WjbUNJA4Z9sx77wkfr6z7aaqjQFyj%2FeoCCFUMwrpO8xgY6sQFTaIweQAtFohR51QootYYPu4MVY5ONgXkNtgPQdLH4ZpivwP19zthuuDGCA%2FzTfmBQzqzhRdE1LwnpQwhNKXonlH8s0u8OBhyRjK8v6TBgH63eoeCB%2FQ7QPzct3DKBHni%2Bq2bLQ18Tkf0qX7q%2Flrdx10I83zC8O9N%2F21cH1JnDQYeUA4hpvWxgEFkMnbmDZ5%2F18s2eO48LKTmBpbv2G0psWJBYd0V%2FadiLJ9qAp%2B%2BwuZ0%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=1196bb161729fa222e8abeffab901047be7706b4b7967412ddcfb2ff20519da3",
+      "file_size": 29541,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1384553,
+      "file_name": "idor.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/fndijqkcovqn1c5vlpjfa00h7so3?response-content-disposition=attachment%3B%20filename%3D%22idor.mp4%22%3B%20filename%2A%3DUTF-8%27%27idor.mp4&response-content-type=video%2Fwebm&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUWZG3SN5%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T225314Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJHMEUCIGGGIiCa8Tin%2FVxWsyDFZL9sLJ%2BVC%2FxUtEnwo1Gqvx0KAiEAlwZdYjmy4U8FnznLNof%2FJ10hnVGdZ2RcwFdPG7G8wlIquwUI9f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDFuHfVk%2FCeMMw%2BcQsCqPBZO7f77H9VwIsfGgeIszz%2Fdt2iDafEzoA3%2BY7RMD%2FLvV8y%2F3r7wilNGgVq52P20GqJBWGow0RNwWo5ibMPOKaf5S2kBXkwL6aMFa1IJJAxAYWbnQLemq%2BXkCSoKnYXAJL7%2FN%2FC9V5H%2Ffy4cwF%2FHRg9cnbZp9HD44QuExgBhhEqu7emCtYjKwpr%2FwEbOBIEsm23vVkHxdMe3S0F0HzNxW%2Bt2E4CnpJAwOkVhftr0VGnPl9ptuPqma6peqayqv4wNWolUKlxhKumgFJkbEzt9xDTeFzUSwzL5GBHtQPAq0rP5K7kIGHE6AzJxHB9kOKc9S4qBir6ZIJLfS9nfHMnJu1a7auNhVNafnPv3vfGnCss8cfyZSr49PAq6XITe9DYAGsgQyFmIFoRv6WsoYLX8h8kb9l3oISOnMgafxv0du3NrPxsJdvLyIPvHQsdU9PNJ3ksTeu0SlEEQVCrkZXbayCtVh%2BlVmVg4C1hHu0fzmR2IBI5eZb2RnfnyzGyI3ZtK%2BYhjFxnYahFHEO7%2BAROxfDoUse5KREiqF19ylj3SxWJcIObfqngVaMHkKODgjn02E5gJKBLx7QKiKsRlXDuwSOSh2fv%2FY65gEnfgsX6J50w4QHfrvxuJrK9wwhij37Q6PDALxBROq5MH4ND%2BGYK04rBvJF6wvdlOom4QRMUqM8ude5xmAxq5bxFXVNREi6%2BSidgLDCEofYq651AiCJa870l71S6%2BE3u5OkwbEtsWUgC08bX%2BxEtRQO%2Fr2qJbbPs9XerHMpNxKq%2BQKwLRAIxMASQMWFzEdu3rV%2B8B%2FcRtLvFWb0dolejIzjMjBNuOP%2FaMXFa7su7WjbUNJA4Z9sx77wkfr6z7aaqjQFyj%2FeoCCFUMwrpO8xgY6sQFTaIweQAtFohR51QootYYPu4MVY5ONgXkNtgPQdLH4ZpivwP19zthuuDGCA%2FzTfmBQzqzhRdE1LwnpQwhNKXonlH8s0u8OBhyRjK8v6TBgH63eoeCB%2FQ7QPzct3DKBHni%2Bq2bLQ18Tkf0qX7q%2Flrdx10I83zC8O9N%2F21cH1JnDQYeUA4hpvWxgEFkMnbmDZ5%2F18s2eO48LKTmBpbv2G0psWJBYd0V%2FadiLJ9qAp%2B%2BwuZ0%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=9e53ff0635606ad8891a0bd9c35c769777d5e102efbb1e7c76562429f0667328",
+      "file_size": 70885189,
+      "type": "video/webm",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2022-09-04T13:23:02.404Z",
+  "allow_singular_disclosure_after": -96111011.87472314,
+  "singular_disclosure_allowed": true,
+  "vote_count": 26,
+  "voters": [
+    "loaymorad",
+    "tinmo",
+    "zy9ard3",
+    "shreyaschavhan",
+    "shubham_srt",
+    "2026",
+    "f1ras",
+    "0x_makaveli",
+    "sa1tama0",
+    "thecyberjerry",
+    "and 16 more..."
+  ],
+  "severity": {
+    "rating": "critical",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 34328,
+    "asset_type": "URL",
+    "asset_identifier": "mtnbusiness.com.ng",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
