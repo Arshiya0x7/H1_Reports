@@ -1,0 +1,153 @@
+{
+  "id": 1791558,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNzkxNTU4",
+  "url": "https://hackerone.com/reports/1791558",
+  "title": "S3 Bucket Takeover : brave-apt",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2022-12-03T18:16:08.462Z",
+  "submitted_at": "2022-12-03T18:16:08.727Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "j3rry-1729",
+    "url": "/j3rry-1729",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/y76qpubybxbvkri1qoppt5e4ops2/c8a1698ff707a5e3e8a91a3484838363845daac68cb82c86d55c9e2d44d67b67"
+    },
+    "is_me?": false,
+    "cleared": true,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 15688,
+    "url": "https://hackerone.com/brave",
+    "handle": "brave",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/015/688/2aad5641af643ee4f4402896e4747293f6e9c5ca_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/015/688/2aad5641af643ee4f4402896e4747293f6e9c5ca_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Brave Software",
+      "twitter_handle": "brave",
+      "website": "https://brave.com",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2023-04-26T19:48:25.515Z",
+  "bug_reporter_agreed_on_going_public_at": "2023-04-26T02:32:41.510Z",
+  "team_member_agreed_on_going_public_at": "2023-04-26T19:48:25.399Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi Team,\n\nHope Everything is going well on your side.\n\nRecently I was enumerating `brave.com` and I found that there is an unclaimed S3 bucket that can be takeover by any attacker and was being used in the installation of brave-browser in Linux distros.\n\nVulnerable URL:-\n\nhttps://s3-us-west-2.amazonaws.com/brave-apt/\n\nHere there is an S3 Bucket that is pointing towards domain hosting services so that these domains can be taken over can be used to do any type of attack mostly I can make a fake login page on your behalf and spoof your users; this is a critical vulnerability and needs to be fixed. In this case, it was pointing toward an unclaimed S3-Bucket.\n\n-->POC:-\n\nCheck out the attachments for more information I have claimed the subdomain through AWS S3 services. As soon as you will resolve this issue, I will release it.\n\n {F2060639}\n\nI have uploaded proof.txt for further clarification.\n\nAlso, Bucket Takeover screenshots are attached.\n\n--> Before Takeover\n {F2060641} \n\nAWS \n {F2060640}\n\n\n--> URL:-\n\n`https://s3-us-west-2.amazonaws.com/brave-apt/proof.txt`\n\n\n--> Steps To Reproduce:-\n\n1) Go to any of the below-mentioned URLs\n\n`https://community.brave.com/t/updates-on-linux-error-messages-appearing/103564`\n`https://elementaryforums.com/index.php?threads/brave-browser.2390/`\n`https://github.com/brave/browser-laptop/issues/13861`\n`https://github.com/brave/browser-laptop/issues/12636`\n`https://forums.linuxmint.com/viewtopic.php?t=300633`\n\n2) Here you can find the `https://s3-us-west-2.amazonaws.com/brave-apt/` the S3 bucket is used for downloading brave-browser in linux distros.\n\n3) Many users who visit the webpage to see how to install brave-browser in Linux will be redirected to the S3-Bucket, which is controlled by the attacker.\n\n--> Video POC:-\n\n{F2060642}\n\n## Impact\n\nAn attacker can take over the unclaimed s3 bucket and can spread the malware using this release of brave browser then, an attacker can create a malicious file with custom payloads and can harm the user by downloading the malicious file instead of the original file.\n\n\n--> References:-\n\nhttps://hackerone.com/reports/1316650\n\nhttps://blog.sweepatic.com/subdomain-takeover-principles/\n\nhttps://hackerone.com/reports/32825\n\nhttps://hackerone.com/reports/175070\n\nhttps://hackerone.com/reports/172137\n\nhttps://github.com/EdOverflow/can-i-take-over-xyz",
+  "weakness": {
+    "id": 26,
+    "name": "Improper Access Control - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 2060639,
+      "file_name": "Screenshot_2022-12-03_at_11.28.27_PM.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/8fyaz7w18j7kbpa5finvt6rlg59j?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_2022-12-03_at_11.28.27_PM.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_2022-12-03_at_11.28.27_PM.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZ44KYFFS%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T210722Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJHMEUCIFPYrndZA%2BqYr1%2BDi6FtjPsUS8S3i6VJZYKkaRtMuEf9AiEA2RrDiVnmvdDtJneFfnDv03YTVWlLTpnuMdItluUuEsEqugUI9f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDEC7SH%2BwB4dOi8f9syqOBQgLlBttN6pXp4ikIVfXUPqECOK%2FSOw%2BFs5Vj90cPp3mAtPyLAUWOWxDAEFDX05nJ2lQyEshBmehJs3ELxTuTCk2DfRnJQhPl9agZsPEfWwFKijPBawKzTni6sAq3kuOPcvGm9dUE8xw6THK5N0B9sBCBizbEvWDbbQK6EKfLjwwknOAzwhA7W4C9dn%2BL%2FUhvWLIkhMNCWWv4NuFr3KcWG6lre5NgB%2F5FOqcRi%2Bf87T2AB6jwHEA9He9ocaS8C6FtOIMjxP1CRVb9J0Qvw0hPism97C%2BLfuctbm%2FAhSg0Kcg8yv5ah7QNvDT90OrVs%2FV7xkUFuHA%2BYCfetUY8bPQEnxPb04DgbXOdR%2FPC5kFuJMKciG%2BzWLkXk5ZpwPErfOoKOhAV1IQmUuJF7Cqb%2FdkMj3PvtnwfTXocH6yDtfqqMPaV5a7G%2BkOiVsgRfe4nf9KWYsbWtKyvZJo0n4ckieINH45QNK%2F%2FlCYLGgdHVKOv%2FeNjO%2FQlM5CvK4FCC3JQKmZKx4RRgDffkY1z021Rf52lIwX9TPnDStjltSRAlXA7eGcViWAm8sKWH8nlfx9xg%2Fn1FKrv2qf4Ci9KTML%2FZiyCZ2WClHyKl7xxQ%2ByNfcV4NdAwH08dze3S7%2F9wI8tIqxsh%2FQBNGhnQLZagEEKhhbiZkkJS7flrw6HZiraf0ZimTx7jiIAnGHYNDKhCkkf4dNjR3D5PsXmjWID7O6TZObu6v3ichBwR%2BsW%2BITcmhj8CrHW%2BaHBxUu4ZWucWMwemmGicDJhLy%2FiEdfjYRa5BLIiPzAZ3l3gdVvQpRhGb0dh%2F6zHNvbINKvc8SlN2Iv0HwehbYOLF7nDaAFheMe7rrIE9ll%2FbGuQ9zlqs8LVo39ukjC5i7zGBjqxAQpJ6SIfI1ouri2FWq2q5jl1Yiu%2FnFIZL4ru7hE7ALfTVMGS6etyHXy%2FoLq5HFEsasrnuWRga7ZnnAZyasNoqaXEqv67Y%2Bq8KD1ifc8pWOrXGxioBYkveNvgssonhlYbv0gBFowkhiusr7F52VPbxEVER5IoFqDLlBz5HcDUkhDXr32QqTAr9d7g9JRnuIVK9%2B6avvjq19Cp5p6WYf%2BGz7xOriKXb6dpGefpH%2FJxEUa8%2Bw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=d8b77b264b509e1060ba97aad2a4a39a56262893eae40b5283c78f289b7fd872",
+      "file_size": 173046,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 2060640,
+      "file_name": "Screenshot_2022-12-03_at_11.28.43_PM.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/pk5kxa1po6d03lgqrl90a3vvq1nz?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_2022-12-03_at_11.28.43_PM.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_2022-12-03_at_11.28.43_PM.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZ44KYFFS%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T210722Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJHMEUCIFPYrndZA%2BqYr1%2BDi6FtjPsUS8S3i6VJZYKkaRtMuEf9AiEA2RrDiVnmvdDtJneFfnDv03YTVWlLTpnuMdItluUuEsEqugUI9f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDEC7SH%2BwB4dOi8f9syqOBQgLlBttN6pXp4ikIVfXUPqECOK%2FSOw%2BFs5Vj90cPp3mAtPyLAUWOWxDAEFDX05nJ2lQyEshBmehJs3ELxTuTCk2DfRnJQhPl9agZsPEfWwFKijPBawKzTni6sAq3kuOPcvGm9dUE8xw6THK5N0B9sBCBizbEvWDbbQK6EKfLjwwknOAzwhA7W4C9dn%2BL%2FUhvWLIkhMNCWWv4NuFr3KcWG6lre5NgB%2F5FOqcRi%2Bf87T2AB6jwHEA9He9ocaS8C6FtOIMjxP1CRVb9J0Qvw0hPism97C%2BLfuctbm%2FAhSg0Kcg8yv5ah7QNvDT90OrVs%2FV7xkUFuHA%2BYCfetUY8bPQEnxPb04DgbXOdR%2FPC5kFuJMKciG%2BzWLkXk5ZpwPErfOoKOhAV1IQmUuJF7Cqb%2FdkMj3PvtnwfTXocH6yDtfqqMPaV5a7G%2BkOiVsgRfe4nf9KWYsbWtKyvZJo0n4ckieINH45QNK%2F%2FlCYLGgdHVKOv%2FeNjO%2FQlM5CvK4FCC3JQKmZKx4RRgDffkY1z021Rf52lIwX9TPnDStjltSRAlXA7eGcViWAm8sKWH8nlfx9xg%2Fn1FKrv2qf4Ci9KTML%2FZiyCZ2WClHyKl7xxQ%2ByNfcV4NdAwH08dze3S7%2F9wI8tIqxsh%2FQBNGhnQLZagEEKhhbiZkkJS7flrw6HZiraf0ZimTx7jiIAnGHYNDKhCkkf4dNjR3D5PsXmjWID7O6TZObu6v3ichBwR%2BsW%2BITcmhj8CrHW%2BaHBxUu4ZWucWMwemmGicDJhLy%2FiEdfjYRa5BLIiPzAZ3l3gdVvQpRhGb0dh%2F6zHNvbINKvc8SlN2Iv0HwehbYOLF7nDaAFheMe7rrIE9ll%2FbGuQ9zlqs8LVo39ukjC5i7zGBjqxAQpJ6SIfI1ouri2FWq2q5jl1Yiu%2FnFIZL4ru7hE7ALfTVMGS6etyHXy%2FoLq5HFEsasrnuWRga7ZnnAZyasNoqaXEqv67Y%2Bq8KD1ifc8pWOrXGxioBYkveNvgssonhlYbv0gBFowkhiusr7F52VPbxEVER5IoFqDLlBz5HcDUkhDXr32QqTAr9d7g9JRnuIVK9%2B6avvjq19Cp5p6WYf%2BGz7xOriKXb6dpGefpH%2FJxEUa8%2Bw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=169e718d3706835771abbbfb756444c264e69d10027835fe3077ef146721fe6e",
+      "file_size": 528777,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 2060641,
+      "file_name": "Screenshot_2022-12-03_at_11.32.33_PM.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/co18slgt6xdt8j3gu5h1fq4l6qdr?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_2022-12-03_at_11.32.33_PM.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_2022-12-03_at_11.32.33_PM.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZ44KYFFS%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T210722Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJHMEUCIFPYrndZA%2BqYr1%2BDi6FtjPsUS8S3i6VJZYKkaRtMuEf9AiEA2RrDiVnmvdDtJneFfnDv03YTVWlLTpnuMdItluUuEsEqugUI9f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDEC7SH%2BwB4dOi8f9syqOBQgLlBttN6pXp4ikIVfXUPqECOK%2FSOw%2BFs5Vj90cPp3mAtPyLAUWOWxDAEFDX05nJ2lQyEshBmehJs3ELxTuTCk2DfRnJQhPl9agZsPEfWwFKijPBawKzTni6sAq3kuOPcvGm9dUE8xw6THK5N0B9sBCBizbEvWDbbQK6EKfLjwwknOAzwhA7W4C9dn%2BL%2FUhvWLIkhMNCWWv4NuFr3KcWG6lre5NgB%2F5FOqcRi%2Bf87T2AB6jwHEA9He9ocaS8C6FtOIMjxP1CRVb9J0Qvw0hPism97C%2BLfuctbm%2FAhSg0Kcg8yv5ah7QNvDT90OrVs%2FV7xkUFuHA%2BYCfetUY8bPQEnxPb04DgbXOdR%2FPC5kFuJMKciG%2BzWLkXk5ZpwPErfOoKOhAV1IQmUuJF7Cqb%2FdkMj3PvtnwfTXocH6yDtfqqMPaV5a7G%2BkOiVsgRfe4nf9KWYsbWtKyvZJo0n4ckieINH45QNK%2F%2FlCYLGgdHVKOv%2FeNjO%2FQlM5CvK4FCC3JQKmZKx4RRgDffkY1z021Rf52lIwX9TPnDStjltSRAlXA7eGcViWAm8sKWH8nlfx9xg%2Fn1FKrv2qf4Ci9KTML%2FZiyCZ2WClHyKl7xxQ%2ByNfcV4NdAwH08dze3S7%2F9wI8tIqxsh%2FQBNGhnQLZagEEKhhbiZkkJS7flrw6HZiraf0ZimTx7jiIAnGHYNDKhCkkf4dNjR3D5PsXmjWID7O6TZObu6v3ichBwR%2BsW%2BITcmhj8CrHW%2BaHBxUu4ZWucWMwemmGicDJhLy%2FiEdfjYRa5BLIiPzAZ3l3gdVvQpRhGb0dh%2F6zHNvbINKvc8SlN2Iv0HwehbYOLF7nDaAFheMe7rrIE9ll%2FbGuQ9zlqs8LVo39ukjC5i7zGBjqxAQpJ6SIfI1ouri2FWq2q5jl1Yiu%2FnFIZL4ru7hE7ALfTVMGS6etyHXy%2FoLq5HFEsasrnuWRga7ZnnAZyasNoqaXEqv67Y%2Bq8KD1ifc8pWOrXGxioBYkveNvgssonhlYbv0gBFowkhiusr7F52VPbxEVER5IoFqDLlBz5HcDUkhDXr32QqTAr9d7g9JRnuIVK9%2B6avvjq19Cp5p6WYf%2BGz7xOriKXb6dpGefpH%2FJxEUa8%2Bw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=4fc619b7f0a0183964ee65b9f650fa4bf1f939d8d627141c3662af3844fdb89c",
+      "file_size": 292655,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 2060642,
+      "file_name": "Screen_Recording_2022-12-03_at_11.39.22_PM.mov",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/062d5coe7c2nss3mi24b0sgfs88v?response-content-disposition=attachment%3B%20filename%3D%22Screen_Recording_2022-12-03_at_11.39.22_PM.mov%22%3B%20filename%2A%3DUTF-8%27%27Screen_Recording_2022-12-03_at_11.39.22_PM.mov&response-content-type=video%2Fquicktime&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZ44KYFFS%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T210722Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJHMEUCIFPYrndZA%2BqYr1%2BDi6FtjPsUS8S3i6VJZYKkaRtMuEf9AiEA2RrDiVnmvdDtJneFfnDv03YTVWlLTpnuMdItluUuEsEqugUI9f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDEC7SH%2BwB4dOi8f9syqOBQgLlBttN6pXp4ikIVfXUPqECOK%2FSOw%2BFs5Vj90cPp3mAtPyLAUWOWxDAEFDX05nJ2lQyEshBmehJs3ELxTuTCk2DfRnJQhPl9agZsPEfWwFKijPBawKzTni6sAq3kuOPcvGm9dUE8xw6THK5N0B9sBCBizbEvWDbbQK6EKfLjwwknOAzwhA7W4C9dn%2BL%2FUhvWLIkhMNCWWv4NuFr3KcWG6lre5NgB%2F5FOqcRi%2Bf87T2AB6jwHEA9He9ocaS8C6FtOIMjxP1CRVb9J0Qvw0hPism97C%2BLfuctbm%2FAhSg0Kcg8yv5ah7QNvDT90OrVs%2FV7xkUFuHA%2BYCfetUY8bPQEnxPb04DgbXOdR%2FPC5kFuJMKciG%2BzWLkXk5ZpwPErfOoKOhAV1IQmUuJF7Cqb%2FdkMj3PvtnwfTXocH6yDtfqqMPaV5a7G%2BkOiVsgRfe4nf9KWYsbWtKyvZJo0n4ckieINH45QNK%2F%2FlCYLGgdHVKOv%2FeNjO%2FQlM5CvK4FCC3JQKmZKx4RRgDffkY1z021Rf52lIwX9TPnDStjltSRAlXA7eGcViWAm8sKWH8nlfx9xg%2Fn1FKrv2qf4Ci9KTML%2FZiyCZ2WClHyKl7xxQ%2ByNfcV4NdAwH08dze3S7%2F9wI8tIqxsh%2FQBNGhnQLZagEEKhhbiZkkJS7flrw6HZiraf0ZimTx7jiIAnGHYNDKhCkkf4dNjR3D5PsXmjWID7O6TZObu6v3ichBwR%2BsW%2BITcmhj8CrHW%2BaHBxUu4ZWucWMwemmGicDJhLy%2FiEdfjYRa5BLIiPzAZ3l3gdVvQpRhGb0dh%2F6zHNvbINKvc8SlN2Iv0HwehbYOLF7nDaAFheMe7rrIE9ll%2FbGuQ9zlqs8LVo39ukjC5i7zGBjqxAQpJ6SIfI1ouri2FWq2q5jl1Yiu%2FnFIZL4ru7hE7ALfTVMGS6etyHXy%2FoLq5HFEsasrnuWRga7ZnnAZyasNoqaXEqv67Y%2Bq8KD1ifc8pWOrXGxioBYkveNvgssonhlYbv0gBFowkhiusr7F52VPbxEVER5IoFqDLlBz5HcDUkhDXr32QqTAr9d7g9JRnuIVK9%2B6avvjq19Cp5p6WYf%2BGz7xOriKXb6dpGefpH%2FJxEUa8%2Bw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=ed697344641375c69d4dbf01073a4bd673c8e18a32a7bd7f2d993df63569d0e8",
+      "file_size": 48182545,
+      "type": "video/quicktime",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 17,
+  "voters": [
+    "loaymorad",
+    "zy9ard3",
+    "shreyaschavhan",
+    "ali",
+    "shubham_srt",
+    "thalaivar304",
+    "ysxninja",
+    "mohaned0101",
+    "compromiseed",
+    "shivammusic",
+    "and 7 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 7965,
+    "asset_type": "URL",
+    "asset_identifier": "brave.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
