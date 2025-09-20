@@ -1,0 +1,131 @@
+{
+  "id": 2018615,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yMDE4NjE1",
+  "url": "https://hackerone.com/reports/2018615",
+  "title": "HTML injection on newsroom.snap.com/* via search?q=1",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2023-06-08T20:23:08.284Z",
+  "submitted_at": "2023-06-08T20:23:08.358Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "jotita3",
+    "url": "/jotita3",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/iz0gkbnpgq9nvdgtmzw80t1dzpad/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 513,
+    "url": "https://hackerone.com/snapchat",
+    "handle": "snapchat",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/513/87067c5c4ed63c2c07a522ca3198d2310e2a14c6_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/513/87067c5c4ed63c2c07a522ca3198d2310e2a14c6_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Snapchat",
+      "twitter_handle": "",
+      "website": "https://www.snapchat.com/",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2023-08-14T16:46:05.200Z",
+  "bug_reporter_agreed_on_going_public_at": "2023-08-14T16:46:05.070Z",
+  "team_member_agreed_on_going_public_at": "2023-08-14T16:24:29.103Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi security team members,\n\nHope you are well!\n\nI found an unauthenticated HTML injection in the browser of NewRooms section: https://newsroom.snap.com/[code_country]/*. It is possible to inject any HTML code from the \"?q=\" parameter of the following endpoints newsroom.snap.com/[code_country]/search?q= since the text input in the search engine is not sanitized at all.\n\nThe steps to reproduce the attack are:\n\n1. Inject any HTML code into the URL: https://newsroom.snap.com/es-ES/search?q=%3Ca%20style=%22position:absolute;margin:50px;%20background-color:%20yellow;%20z-index:1000;top:50px;padding:100px;font-weight:bold;font-size:45px;color:red;%22%20href=%22https://evil.com%22%3EClick%20here%20for%20win%201000%E2%82%AC!%3C/a%3E\n\n2. In this PoC example, an attacker would send this seemingly legitimate URL to victims pretending that Snapchat is offering money as an excuse. In reality, these users would access the attacker's website (https://evil.com/) if they click on the <a></a> element.\n\n## Impact\n\nAn attacker can inject as much HTML code as desired and edit the style of the website to cause a Defacement in order to deceive users through Phishing, links to other websites controlled by the attacker through scams,... . There are many scenarios .",
+  "bounty_amount": "500.0",
+  "formatted_bounty": "$500",
+  "weakness": {
+    "id": 70,
+    "name": "Code Injection"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 2406882,
+      "file_name": "htmlinjection.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/ukhbiliqbbz524hu9rktiqu57d38?response-content-disposition=attachment%3B%20filename%3D%22htmlinjection.png%22%3B%20filename%2A%3DUTF-8%27%27htmlinjection.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZAV7AOYP%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T202554Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHsaCXVzLXdlc3QtMiJGMEQCIDsjnwRrf1ZYFVN5N1vXwf5iqTWU999shyIMNO2J5TvvAiADf1PkrEBWQIbBovxHxHjmhUIYL%2FIFMssqKgUnHkFEbyq6BQj0%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMTUvwJgH%2BaypGnn5sKo4FFLj1zSC%2FhY%2B%2BVm6dOZqnLI4H5JjQ10ClNb8NCZouhLHDWPf%2FxgszulaseQp3eqo3lIq9LrRdDdN9fQ2ZrZN6hRpZDSxfWNvYU%2FuwozYU4tfNZOipP26DZLwVEIALGeJ5Fwa%2FcIYipYLDi0i1C%2Fav9x7%2FFrCaZHcxIgphd8%2BEn410KvMTMuramosllDFqcu7Li4O339wj%2FiAe3eqqsewfexfUqJ4YfaU20nWYXPtZTMMEIOybyvhVfCwxbHMqf7bkOs3rhW%2Fn60BAS6VgXx8cnMFrvxqWwr4A6oF5%2BzOdnzV2L%2BCjkkX%2FG6I3DUnfLsrSarBC2WInFtnlwUID876zNpJMeQx2EVHSv%2BeKPxjtzMBUUzbntZQzsnS252NpAq%2FbGif%2B%2BviVXn6wTbN8RDj9nMJENkz1%2BzXP9bIwhC56lxsJaAgMmXkCK5ylpjObk8s5dV8wBs1HLQAWYQRAxATDRR6AC%2F9CIfjsPuRKqlNaBEKsNYV8f%2FdId%2FmiVmAULotIqDmWYODA9lMlBMAZUA5oUA5TOTu5dMHnSsO6Ph%2B7yp%2B2NRoZs79tYTSqysgPi%2FseMvUVlRv7Z3hqtWjgfcHwmoEiSjoOxLyTw2TxbhbWeGAdWGUFp5SSFInQyI8gZwAfDtnGbs6ipcH3%2BoOpdGn800SGi0clgtIqui4LdCq4cbvJ1MJ0AZc6uKKpVzKqUIxoC0MNQdAcWJXUQEL1XpCvmgzY4CgSVhw2KlCx0NWkjld7XpKlB7zCqs6SG7%2B5PAkH4AFJ5QxK07%2F%2F4BwBtFaoPLmkXwEM3rr1xR%2FR2uu7yWhGGzo%2FkBicfCrqxXO0N42w0%2BIjQ2HdzNZmQynSH%2FH8QRC2JQburSePA4vzZUUHMI77u8YGOrIBbB9ezFp%2Boweea5oWecm7G%2Fra0u8TXEqAXopZOpHcfKFa6A3mHqLUVcs2YuV%2FR69AL5DFE%2FnM1s8EaESOmiL6HWXKtNM14hiPVvYdg8px7CfKonUklznYYhiEiLJIVsHBTUqsvRgEKh3qQ8y3LBRcC%2FiCPZAiBx3DdqTgULzG9BmaIdPk0bx9lPCEatZO%2Fu3VnPY%2B18uiik8yf5pDKcLT6B48KUZX%2FI4pKhs%2FniCwLB31Sw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=58e47e5e4ec5fefe93f8106b79ebdc9e9184f956a50e2c4f0b65218019d72e1c",
+      "file_size": 126226,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 51,
+  "voters": [
+    "appsettings",
+    "8910jq",
+    "g3ksec",
+    "zy9ard3",
+    "shreyaschavhan",
+    "jotita3",
+    "excessum",
+    "duckb1ll",
+    "panikbr",
+    "shubham_srt",
+    "and 41 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "Team"
+  },
+  "structured_scope": {
+    "databaseId": 168454,
+    "asset_type": "URL",
+    "asset_identifier": "web.snapchat.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
