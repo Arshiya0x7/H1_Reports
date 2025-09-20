@@ -1,0 +1,137 @@
+{
+  "id": 3306456,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMzA2NDU2",
+  "url": "https://hackerone.com/reports/3306456",
+  "title": "Curl parse_connect_to_string Heap-Overread Leading to Denial of Service via CURLOPT_CONNECT_TO",
+  "state": "Closed",
+  "substate": "not-applicable",
+  "severity_rating": "medium",
+  "readable_substate": "N/A",
+  "created_at": "2025-08-20T07:46:39.442Z",
+  "submitted_at": "2025-08-20T07:46:39.682Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "irene1hacker",
+    "url": "/irene1hacker",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 35663,
+    "url": "https://hackerone.com/curl",
+    "handle": "curl",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/035/663/2faf4c279d437d64bfda6d23d62ce1833813a4d9_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/035/663/2faf4c279d437d64bfda6d23d62ce1833813a4d9_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "curl",
+      "twitter_handle": "",
+      "website": "https://curl.se",
+      "about": "cURL is an Open Source project providing a library and command-line tool doing internet transfers"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2025-08-20T08:00:26.835Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2025-08-20T07:53:54.276Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nA heap-buffer-overread occurs in Curl's parse_connect_to_string function when using the CURLOPT_CONNECT_TO option with crafted input. This can lead to a segmentation fault and crash of the application, resulting in a denial-of-service. The issue is triggered by malformed host strings containing unexpected characters, such as newline (\\n), that are not properly validated before dereferencing.\n\n## Affected version\ncurl 8.16.0-DEV (Linux) libcurl/8.16.0-DEV\n\n## Steps To Reproduce:\n[add details for how we can reproduce the issue]\n\n  1.Compile libcurl with sanitizers enabled:\n```\nmkdir build && cd build\nCC=clang CXX=clang++ cmake ..   -DCMAKE_BUILD_TYPE=Debug   -DCMAKE_C_FLAGS=\"-g -O1 -fsanitize=address\"   -DBUILD_SHARED_LIBS=OFF   -DBUILD_STATIC_LIBS=ON   -DBUILD_TESTING=OFF   -DBUILD_EXAMPLES=OFF   -DENABLE_MANUAL=OFF\ncmake --build . --config Debug\n```\n 2. Build the test target\n```\nclang++ -g -O1 -fsanitize=address     -I../include -I../src/include     minimal_curl_connect_crash.cpp ./lib/libcurl-d.a     -o minimal_curl_connect_crash     -lpsl -ldl -lpthread -lssl -lcrypto -lz\n```\n3. Run the test target\n```\n./minimal_curl_connect_crash\n```\n## Supporting Material/References:\n{F4696730}\n{F4696745}\n\n## Impact\n\n## Summary:\nAn attacker can cause a denial-of-service (DoS) by crashing the application using a specially crafted CURLOPT_CONNECT_TO string. No code execution or data leakage is known; the primary risk is service disruption.",
+  "weakness": {
+    "id": 9,
+    "name": "Buffer Over-read"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 4696730,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/6uhb1emfahz4ydu2657tbedfeymh?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ22GI6AJO%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T163756Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHcaCXVzLXdlc3QtMiJIMEYCIQDhkxULfbGHzrM%2BP4u130o5iNX449PnGMhMXB6ZQIgi7gIhAMYfP0xhrfX4mGnsrVJiHRmlfzhIdZ0zDUEle89WzG7LKrsFCPD%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5Igy%2F8rboJlHSGkM780UqjwWpqDwsLb4tFvRMTIqUkZ5yYr46yzZmIE%2BhWKvjpBJ4UVnArntWxN6j6AVdSV6aGrpMWhuuxejk75OcNvH3jL2om5SPnHnaJBfx15Rsgx%2Bc3AX8GYlsIYt5Nbi9LpjSfaZ0M9RfPtEKmX5MxQYQZwRsy9ZVOV8WrKJxfMGpavqOk4U7HptwDOrzIti2fuJAlmErSELhZJ1GP7F91SMHdArMWju%2FJty6VIT4sTe58dmvwv6t4u03%2Ffr7Zi9vrP5mwSxGfUsWKR0dJj9u7%2BySt3bFdTtcDpneF0cLNreOM2J9CaIWjcDW9ax4oAE8y88%2BadacB5hwJaUZDHhSRVkCGqoKq0cOuEmOoqKTj1gDW2D9X6H42FT4ocwpDE4Aw2Ayr5sVglV4YO6WUHe1EfPxNKiJWA1y8OLm10uMvYJsSUmqTJQB1QxsdbNPeNaVmRyKr7Y2iRK%2BleJUObm%2B%2BR%2BeyGaSMwmNwSBKhNYxb4AJGEGKLEFOAHzmVfS73MSl9vgsrC4W5TcIC6aDPx1WTSbZsjpQcf8%2BJr93CiCdsCvISKgMkU51q2sgIeQCBeKuRqr8xEVdUEyfj8r9fABEsOgJ%2FEgSYhXQQlY66NeTeTObe2rGyvidcRPQjcBMNUSx%2FVSI08cuDLu6cl3boN9i0zNRi5f7mgyz3q6H2IvGjEzdqKXCBz4Re%2BBP1kkM42Da%2BNN9funbR7tNkgXv1OqMbvOk5fIpn65l5qG9IpYpqiECdghjLuodeEmhmaQPXqxWoIJBR4Nrk8rf%2Faas5xyrz9HAn32OWhu3bbIHvF3Hhxuv9Xxzv9CbtKVul06zbVolbc6OG0ieIz9N37MsLJrT5eRcKzLVWqT3uQK%2FUeAhsjQD6PB6MMyEu8YGOrABd4hyrzlNmVpjVHJM68xEVKXzfWKaivAhDwsxId87nWVbfuZesu6zgqEYBzqTvAllTaNcYg06Nhxo1Obyn8ZpDu6%2BI5IJN7Ky%2BPwGrMoBkO0XPLRQ2e4GrIbay5n%2BiKUe4ia9WT7QarHwIEVtnuYIJ07fGM1p6brAJccQjYLPxryMQ716usw3v67Yf%2B5NoX%2FrtDZEsQbAdRplSMs9UgVA9xjYX95G6AultOWbprmbmcE%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=176468c903f5d1fcbfa4f766086edadb40534e6f6f8679e8df58cf0521f1f765",
+      "file_size": 153789,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 4696745,
+      "file_name": "minimal_curl_connect_crash.cpp",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/ku2hwq2l0fags9aqmeilp9v9g469?response-content-disposition=attachment%3B%20filename%3D%22minimal_curl_connect_crash.cpp%22%3B%20filename%2A%3DUTF-8%27%27minimal_curl_connect_crash.cpp&response-content-type=text%2Fx-csrc&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ22GI6AJO%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T163756Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHcaCXVzLXdlc3QtMiJIMEYCIQDhkxULfbGHzrM%2BP4u130o5iNX449PnGMhMXB6ZQIgi7gIhAMYfP0xhrfX4mGnsrVJiHRmlfzhIdZ0zDUEle89WzG7LKrsFCPD%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5Igy%2F8rboJlHSGkM780UqjwWpqDwsLb4tFvRMTIqUkZ5yYr46yzZmIE%2BhWKvjpBJ4UVnArntWxN6j6AVdSV6aGrpMWhuuxejk75OcNvH3jL2om5SPnHnaJBfx15Rsgx%2Bc3AX8GYlsIYt5Nbi9LpjSfaZ0M9RfPtEKmX5MxQYQZwRsy9ZVOV8WrKJxfMGpavqOk4U7HptwDOrzIti2fuJAlmErSELhZJ1GP7F91SMHdArMWju%2FJty6VIT4sTe58dmvwv6t4u03%2Ffr7Zi9vrP5mwSxGfUsWKR0dJj9u7%2BySt3bFdTtcDpneF0cLNreOM2J9CaIWjcDW9ax4oAE8y88%2BadacB5hwJaUZDHhSRVkCGqoKq0cOuEmOoqKTj1gDW2D9X6H42FT4ocwpDE4Aw2Ayr5sVglV4YO6WUHe1EfPxNKiJWA1y8OLm10uMvYJsSUmqTJQB1QxsdbNPeNaVmRyKr7Y2iRK%2BleJUObm%2B%2BR%2BeyGaSMwmNwSBKhNYxb4AJGEGKLEFOAHzmVfS73MSl9vgsrC4W5TcIC6aDPx1WTSbZsjpQcf8%2BJr93CiCdsCvISKgMkU51q2sgIeQCBeKuRqr8xEVdUEyfj8r9fABEsOgJ%2FEgSYhXQQlY66NeTeTObe2rGyvidcRPQjcBMNUSx%2FVSI08cuDLu6cl3boN9i0zNRi5f7mgyz3q6H2IvGjEzdqKXCBz4Re%2BBP1kkM42Da%2BNN9funbR7tNkgXv1OqMbvOk5fIpn65l5qG9IpYpqiECdghjLuodeEmhmaQPXqxWoIJBR4Nrk8rf%2Faas5xyrz9HAn32OWhu3bbIHvF3Hhxuv9Xxzv9CbtKVul06zbVolbc6OG0ieIz9N37MsLJrT5eRcKzLVWqT3uQK%2FUeAhsjQD6PB6MMyEu8YGOrABd4hyrzlNmVpjVHJM68xEVKXzfWKaivAhDwsxId87nWVbfuZesu6zgqEYBzqTvAllTaNcYg06Nhxo1Obyn8ZpDu6%2BI5IJN7Ky%2BPwGrMoBkO0XPLRQ2e4GrIbay5n%2BiKUe4ia9WT7QarHwIEVtnuYIJ07fGM1p6brAJccQjYLPxryMQ716usw3v67Yf%2B5NoX%2FrtDZEsQbAdRplSMs9UgVA9xjYX95G6AultOWbprmbmcE%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=c729e22b7474bf075279718516f2ee9aee3d33eb31a5bcf8804252b9236e4b1a",
+      "file_size": 806,
+      "type": "text/x-csrc",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 23,
+  "voters": [
+    "corrupted_bytes",
+    "k0ns0l",
+    "xven1c3",
+    "2026",
+    "thalaivar304",
+    "clearlovefanboi",
+    "ek3nk4r",
+    "haomerck1",
+    "antedeeeguemon",
+    "mgkred",
+    "and 13 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 18844,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/curl/curl",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
