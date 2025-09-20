@@ -1,0 +1,211 @@
+{
+  "id": 1003007,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMDAzMDA3",
+  "url": "https://hackerone.com/reports/1003007",
+  "title": "Local Privilege Escalation via Backup delete",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2020-10-08T21:30:52.986Z",
+  "submitted_at": "2020-10-08T21:30:53.257Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "z3ron3",
+    "url": "/z3ron3",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13428,
+    "url": "https://hackerone.com/acronis",
+    "handle": "acronis",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/e54TDdWdgLKsH3h1oFpK26bq/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/e54TDdWdgLKsH3h1oFpK26bq/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Acronis",
+      "twitter_handle": "Acronis",
+      "website": "https://www.acronis.com",
+      "about": "Complete integrated cybersecurity and data protection for MSPs and IT teams"
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2024-08-27T14:03:18.385Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2021-08-05T08:22:57.763Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary\nAcronis True Image 2021 is famous for its seamless Backup and Restore feature which lets users backup any data to any place of their choice and restore it back in case of accidental loss. I found a serious bug/bypass in Acronis AntiRansomware Service when it comes to accessing backup files which when combined with symlink attack can let an attacker modify AntiRansomware protected backup files and delete any file on the system without permissions leading to Privilege Escalation.\n\n\n## Issue\nAcronis True Image  saves information about backups in ```.tib``` files. The ```.tib``` file itself as well as the folder it is in is monitored by Acronis AntiRansomware Protection to block any kind of modification unless an exclusion is created. The issue is that it monitors all modification operations on the file and folder except **Rename** operation on the folder containing the ```.tib``` file.\n\n\n## Steps To Reproduce\nWe need to have a backup first to be able to delete it. The **Preparation** part contains the steps to create a backup and **Exploitation** part contains the steps to exploit the vulnerability. If you already have a backup, skip **Preparation** part.\n\n\nPreparation:\n------------\n[ 1 ] - Create a file in a folder which is to be backed up. I chose to create a file named ```poc.exe``` in ```data_acronis``` folder on my Desktop.\n\n```mkdir %userprofile%\\Desktop\\data_acronis & echo PoC > %userprofile%\\Desktop\\data_acronis\\poc.exe```\n\n{F1028123}\n\n[ 2 ] - In Backup tab of Acronis True Image, click on **Change source** then click on **Files and folders** and select ```poc.exe``` file from ```data_acronis``` folder.\n\n{F1028125}\n\n[ 3 ] - Create a folder to save the backup .tib files in. I chose to create a folder named ```backup_acronis``` on my Desktop.\n\n```mkdir %userprofile%\\Desktop\\backup_acronis```\n\n{F1028127}\n\n[ 4 ] - Click on **Select destination**, then click on **Browse** and select the ```backup_acronis``` folder.\n\n{F1028128}\n\n[ 5 ] - Click on **Back up now**.\n\n{F1028129}\n\n```poc.exe``` file from ```data_acronis``` folder will be backed up by Acronis True Image and the .tib files will be saved in ```backup_folder``` folder.\n\n{F1028130}\n\nExploitation:\n------------\nThe name pattern for the .tib files is ```[backup_name]_[backup_scheme]_b1_s1_v1.tib``` so after the backup, a file named ```poc_full_b1_s1_v1.tib``` will be created in ```backup_acronis``` folder.\n\nNormally, the backup ```.tib``` files and folder are protected by Acronis AntiRansomware Protection from any kind of modification.\n\n{F1028131}\n\nBut the issue is that it does not monitor and block **Rename** operation on the folder where the ```.tib``` files are stored which is ```%userprofile%\\Desktop\\backup_acronis``` in this case.\n\n[ 1 ] - Rename ```backup_acronis``` to any other name.\n\n```rename %userprofile%\\Desktop\\backup_acronis not_backup_acronis```\n\n{F1028132}\n\n[ 2 ] - Create a symlink from ```%userprofile%\\Desktop\\acronis_backup\\poc_full_b1_s1_v1.tib``` file to the target file which is to be deleted. I will try to delete ```C:\\Windows\\System32\\drivers\\pci.sys``` file.\nI've used CreateSymlink tool from [symboliclink-testing-tools](https://github.com/googleprojectzero/symboliclink-testing-tools) in this example.\n\n```CreateSymlink %userprofile%\\Desktop\\backup_acronis\\poc_full_b1_s1_v1.tib C:\\Windows\\System32\\drivers\\pci.sys```\n\n{F1028133}\n\n[ 3 ] - Go to Backup tab, right click on the backup and click on **Delete**, then click on **Delete entirely** option.\n\n{F1028134}\n\nAcronis True Image will try to delete the ```poc_full_b1_s1_v1.tib``` file from ```%userprofile%\\Desktop\\backup_acronis``` folder but because of the symlink the operation will be performed on ```C:\\Windows\\System32\\drivers\\pci.sys``` resulting in its deletion.\n\n{F1028135}\n\n\n## Tested on\nWindows 10 Home, Version 2004 (OS Build 19041.450)\nAcronis True Image 2021, Build 32010\n\nRegards,\nSaurabh Patil  ( @z3ron3 )\n\n## Impact\n\nIf we rename the folder which contains the ```.tib``` file and create new folder of same name, we are able to write into the new folder without AntiRansomware protection blocking the write and Acronis True Image will assume its the same folder and read content from it which totally breaks the aim of Actve AntiRansomware protection as anyone is able to change contents of the ```.tib``` file.\n\nBeing able to change contents of AntiRansomware protected backup files without permission is a big issue in itself for True Image so I think this issue should be considered with greater severity. Privileged delete was just an application of the issue .",
+  "bounty_amount": "250.0",
+  "formatted_bounty": "$250",
+  "weakness": {
+    "id": 75,
+    "name": "Privilege Escalation"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1028123,
+      "file_name": "1.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/BgUTH2rgEyTRAwrzPzZ55MQ5?response-content-disposition=attachment%3B%20filename%3D%221.png%22%3B%20filename%2A%3DUTF-8%27%271.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6QNUISWT%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T181521Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHgaCXVzLXdlc3QtMiJHMEUCIBmtXBl8Rwzips0A7Q6M0sgb8TMIyC4Buubg1r02dtPlAiEA1iTMzB8VCdRcg9IUqX0yctfg%2FtbnvCWhEFFJClP8rYIqugUI8f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDE9GGAfI4GH1AJPcwCqOBYjqE4yZZ%2Bh7KTA5J%2FSSpVEIqlFpg3kfXfdTdwlQIZTuRwlubN0upSFOVhgbbLVJbp%2FH0eqzFM13IhCK5iQN3QaAjsgEBq67St8O0ilWut88JnmyLUqEAaLVECsydXaOa3PDwLPOqODrfTTVCSemT1GOy0%2FfUPH8RFfhQZ%2FQq8rftp8pkBxoaHmOkK1SCROSJB9bFWI6woePSpWl3tWFpmykeelOwJM2CoZ0I2sgBdWGsGv4QVNPu4OfabmsLrOpd1BQSZWFMmDHa%2F0oK9JsSg%2Bkx%2BhX1pxq1XnhhenqQNm8GYTywfdz%2FVoNeJKjc4cUfU1JMjX1chI1%2BOmMxr2%2Fu2Q%2BRRKoZM%2BMsL8giTNFf3SeFI3P3iuNtrVHHJpeo6B%2FRB6QH7SrQ4A5ZQjEymhxze3u2Ino08ujt8MRSQwCU23m907eb%2BlD793jRK6XPMwq3qvSq6kzZTEgbUJTLC%2BDDE8zXbUjiMTTKOv6%2B%2FygOR%2F%2BB%2BYNXot4h5XWB7yhI87MMbPfCqk5uWgl890wlsoTKTsVP9n7RKdCJKH%2FyYG4idJzmcXoRQbttw2KxfyO6j13uJGDbYqHUs%2BzI1SETm76PF1ZDDKO%2F7QI6x%2BzUZfxFvVnh7d51SogemIeTTYSzaT5QkEJirJZWStvBuN6xQeSxNpypmiX0oSBmkRNa83j69yszfA1%2FtUozf2FB9lCwI20u4u%2FPrpEgm%2Br6S27rTkQnFIfxl9%2BfZ1lrRDxTlN8LrSdaTt0n6lXbm3NHtVFXTFNrrghqfz%2FQji16tbG1ogWZ3MLz7XxFOpk8AdlCQg03p8Dn5U7lx7kxyUroJCkzRrhGDSj5VjcyHmnkwWinAlhzkLe%2BbeY7XNut%2BEK7tHHYzCgnLvGBjqxAbvyLEbeNaNnOnBecA0B2uttE4x4WA%2Fuz%2Fsq370DHUwGqgMU%2BTavNj2bZs1Dv8rx4QjUFKSwVUUHuUODNidCndrFJ1ydaN3kxDf3BhJMe%2FG9%2FXkQfYb8AhAfDm2tepXEjn2IeQq8cE%2BqpDDJq21V5ot0%2BP7f9K4JMrzp5Q%2BGACXkL2Nrxye355K%2BxPXQDn%2B0Hn0xnPwSVe682Z6edttdF%2BCRmqqVVT%2Fipp8rqmNfVWEjPQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=2c89f23b2d14bbf7065c68a5389f6d22e7fbddb111536a59d7465769ca6799d1",
+      "file_size": 7734,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1028125,
+      "file_name": "2.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/MJ4MMQbwzpvP9w2957N5FSRb?response-content-disposition=attachment%3B%20filename%3D%222.png%22%3B%20filename%2A%3DUTF-8%27%272.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6QNUISWT%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T181521Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHgaCXVzLXdlc3QtMiJHMEUCIBmtXBl8Rwzips0A7Q6M0sgb8TMIyC4Buubg1r02dtPlAiEA1iTMzB8VCdRcg9IUqX0yctfg%2FtbnvCWhEFFJClP8rYIqugUI8f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDE9GGAfI4GH1AJPcwCqOBYjqE4yZZ%2Bh7KTA5J%2FSSpVEIqlFpg3kfXfdTdwlQIZTuRwlubN0upSFOVhgbbLVJbp%2FH0eqzFM13IhCK5iQN3QaAjsgEBq67St8O0ilWut88JnmyLUqEAaLVECsydXaOa3PDwLPOqODrfTTVCSemT1GOy0%2FfUPH8RFfhQZ%2FQq8rftp8pkBxoaHmOkK1SCROSJB9bFWI6woePSpWl3tWFpmykeelOwJM2CoZ0I2sgBdWGsGv4QVNPu4OfabmsLrOpd1BQSZWFMmDHa%2F0oK9JsSg%2Bkx%2BhX1pxq1XnhhenqQNm8GYTywfdz%2FVoNeJKjc4cUfU1JMjX1chI1%2BOmMxr2%2Fu2Q%2BRRKoZM%2BMsL8giTNFf3SeFI3P3iuNtrVHHJpeo6B%2FRB6QH7SrQ4A5ZQjEymhxze3u2Ino08ujt8MRSQwCU23m907eb%2BlD793jRK6XPMwq3qvSq6kzZTEgbUJTLC%2BDDE8zXbUjiMTTKOv6%2B%2FygOR%2F%2BB%2BYNXot4h5XWB7yhI87MMbPfCqk5uWgl890wlsoTKTsVP9n7RKdCJKH%2FyYG4idJzmcXoRQbttw2KxfyO6j13uJGDbYqHUs%2BzI1SETm76PF1ZDDKO%2F7QI6x%2BzUZfxFvVnh7d51SogemIeTTYSzaT5QkEJirJZWStvBuN6xQeSxNpypmiX0oSBmkRNa83j69yszfA1%2FtUozf2FB9lCwI20u4u%2FPrpEgm%2Br6S27rTkQnFIfxl9%2BfZ1lrRDxTlN8LrSdaTt0n6lXbm3NHtVFXTFNrrghqfz%2FQji16tbG1ogWZ3MLz7XxFOpk8AdlCQg03p8Dn5U7lx7kxyUroJCkzRrhGDSj5VjcyHmnkwWinAlhzkLe%2BbeY7XNut%2BEK7tHHYzCgnLvGBjqxAbvyLEbeNaNnOnBecA0B2uttE4x4WA%2Fuz%2Fsq370DHUwGqgMU%2BTavNj2bZs1Dv8rx4QjUFKSwVUUHuUODNidCndrFJ1ydaN3kxDf3BhJMe%2FG9%2FXkQfYb8AhAfDm2tepXEjn2IeQq8cE%2BqpDDJq21V5ot0%2BP7f9K4JMrzp5Q%2BGACXkL2Nrxye355K%2BxPXQDn%2B0Hn0xnPwSVe682Z6edttdF%2BCRmqqVVT%2Fipp8rqmNfVWEjPQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=ef37b4f04bd9d75efc94b63f94d5962e15824540666a39ae1289f23d0eb41150",
+      "file_size": 42262,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1028127,
+      "file_name": "3.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/C6zWEPy2ptSoxKLdKFrJHncd?response-content-disposition=attachment%3B%20filename%3D%223.png%22%3B%20filename%2A%3DUTF-8%27%273.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6QNUISWT%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T181521Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHgaCXVzLXdlc3QtMiJHMEUCIBmtXBl8Rwzips0A7Q6M0sgb8TMIyC4Buubg1r02dtPlAiEA1iTMzB8VCdRcg9IUqX0yctfg%2FtbnvCWhEFFJClP8rYIqugUI8f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDE9GGAfI4GH1AJPcwCqOBYjqE4yZZ%2Bh7KTA5J%2FSSpVEIqlFpg3kfXfdTdwlQIZTuRwlubN0upSFOVhgbbLVJbp%2FH0eqzFM13IhCK5iQN3QaAjsgEBq67St8O0ilWut88JnmyLUqEAaLVECsydXaOa3PDwLPOqODrfTTVCSemT1GOy0%2FfUPH8RFfhQZ%2FQq8rftp8pkBxoaHmOkK1SCROSJB9bFWI6woePSpWl3tWFpmykeelOwJM2CoZ0I2sgBdWGsGv4QVNPu4OfabmsLrOpd1BQSZWFMmDHa%2F0oK9JsSg%2Bkx%2BhX1pxq1XnhhenqQNm8GYTywfdz%2FVoNeJKjc4cUfU1JMjX1chI1%2BOmMxr2%2Fu2Q%2BRRKoZM%2BMsL8giTNFf3SeFI3P3iuNtrVHHJpeo6B%2FRB6QH7SrQ4A5ZQjEymhxze3u2Ino08ujt8MRSQwCU23m907eb%2BlD793jRK6XPMwq3qvSq6kzZTEgbUJTLC%2BDDE8zXbUjiMTTKOv6%2B%2FygOR%2F%2BB%2BYNXot4h5XWB7yhI87MMbPfCqk5uWgl890wlsoTKTsVP9n7RKdCJKH%2FyYG4idJzmcXoRQbttw2KxfyO6j13uJGDbYqHUs%2BzI1SETm76PF1ZDDKO%2F7QI6x%2BzUZfxFvVnh7d51SogemIeTTYSzaT5QkEJirJZWStvBuN6xQeSxNpypmiX0oSBmkRNa83j69yszfA1%2FtUozf2FB9lCwI20u4u%2FPrpEgm%2Br6S27rTkQnFIfxl9%2BfZ1lrRDxTlN8LrSdaTt0n6lXbm3NHtVFXTFNrrghqfz%2FQji16tbG1ogWZ3MLz7XxFOpk8AdlCQg03p8Dn5U7lx7kxyUroJCkzRrhGDSj5VjcyHmnkwWinAlhzkLe%2BbeY7XNut%2BEK7tHHYzCgnLvGBjqxAbvyLEbeNaNnOnBecA0B2uttE4x4WA%2Fuz%2Fsq370DHUwGqgMU%2BTavNj2bZs1Dv8rx4QjUFKSwVUUHuUODNidCndrFJ1ydaN3kxDf3BhJMe%2FG9%2FXkQfYb8AhAfDm2tepXEjn2IeQq8cE%2BqpDDJq21V5ot0%2BP7f9K4JMrzp5Q%2BGACXkL2Nrxye355K%2BxPXQDn%2B0Hn0xnPwSVe682Z6edttdF%2BCRmqqVVT%2Fipp8rqmNfVWEjPQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=bc6ce683298182d95e0a774abe3941d6193ac324ea9d9c2e55484008321c498f",
+      "file_size": 5957,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1028128,
+      "file_name": "4.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/GUuCsCpcZoR5y7AM5RTnWSXU?response-content-disposition=attachment%3B%20filename%3D%224.png%22%3B%20filename%2A%3DUTF-8%27%274.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6QNUISWT%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T181521Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHgaCXVzLXdlc3QtMiJHMEUCIBmtXBl8Rwzips0A7Q6M0sgb8TMIyC4Buubg1r02dtPlAiEA1iTMzB8VCdRcg9IUqX0yctfg%2FtbnvCWhEFFJClP8rYIqugUI8f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDE9GGAfI4GH1AJPcwCqOBYjqE4yZZ%2Bh7KTA5J%2FSSpVEIqlFpg3kfXfdTdwlQIZTuRwlubN0upSFOVhgbbLVJbp%2FH0eqzFM13IhCK5iQN3QaAjsgEBq67St8O0ilWut88JnmyLUqEAaLVECsydXaOa3PDwLPOqODrfTTVCSemT1GOy0%2FfUPH8RFfhQZ%2FQq8rftp8pkBxoaHmOkK1SCROSJB9bFWI6woePSpWl3tWFpmykeelOwJM2CoZ0I2sgBdWGsGv4QVNPu4OfabmsLrOpd1BQSZWFMmDHa%2F0oK9JsSg%2Bkx%2BhX1pxq1XnhhenqQNm8GYTywfdz%2FVoNeJKjc4cUfU1JMjX1chI1%2BOmMxr2%2Fu2Q%2BRRKoZM%2BMsL8giTNFf3SeFI3P3iuNtrVHHJpeo6B%2FRB6QH7SrQ4A5ZQjEymhxze3u2Ino08ujt8MRSQwCU23m907eb%2BlD793jRK6XPMwq3qvSq6kzZTEgbUJTLC%2BDDE8zXbUjiMTTKOv6%2B%2FygOR%2F%2BB%2BYNXot4h5XWB7yhI87MMbPfCqk5uWgl890wlsoTKTsVP9n7RKdCJKH%2FyYG4idJzmcXoRQbttw2KxfyO6j13uJGDbYqHUs%2BzI1SETm76PF1ZDDKO%2F7QI6x%2BzUZfxFvVnh7d51SogemIeTTYSzaT5QkEJirJZWStvBuN6xQeSxNpypmiX0oSBmkRNa83j69yszfA1%2FtUozf2FB9lCwI20u4u%2FPrpEgm%2Br6S27rTkQnFIfxl9%2BfZ1lrRDxTlN8LrSdaTt0n6lXbm3NHtVFXTFNrrghqfz%2FQji16tbG1ogWZ3MLz7XxFOpk8AdlCQg03p8Dn5U7lx7kxyUroJCkzRrhGDSj5VjcyHmnkwWinAlhzkLe%2BbeY7XNut%2BEK7tHHYzCgnLvGBjqxAbvyLEbeNaNnOnBecA0B2uttE4x4WA%2Fuz%2Fsq370DHUwGqgMU%2BTavNj2bZs1Dv8rx4QjUFKSwVUUHuUODNidCndrFJ1ydaN3kxDf3BhJMe%2FG9%2FXkQfYb8AhAfDm2tepXEjn2IeQq8cE%2BqpDDJq21V5ot0%2BP7f9K4JMrzp5Q%2BGACXkL2Nrxye355K%2BxPXQDn%2B0Hn0xnPwSVe682Z6edttdF%2BCRmqqVVT%2Fipp8rqmNfVWEjPQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=1196ceaff8d4addd8c61b8c311b8d467ff575250c1436c451fa973d2aa75fbdd",
+      "file_size": 40885,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1028129,
+      "file_name": "5.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/A2HYW8jD2AK3wYsc8EbsU9u3?response-content-disposition=attachment%3B%20filename%3D%225.png%22%3B%20filename%2A%3DUTF-8%27%275.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6QNUISWT%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T181521Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHgaCXVzLXdlc3QtMiJHMEUCIBmtXBl8Rwzips0A7Q6M0sgb8TMIyC4Buubg1r02dtPlAiEA1iTMzB8VCdRcg9IUqX0yctfg%2FtbnvCWhEFFJClP8rYIqugUI8f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDE9GGAfI4GH1AJPcwCqOBYjqE4yZZ%2Bh7KTA5J%2FSSpVEIqlFpg3kfXfdTdwlQIZTuRwlubN0upSFOVhgbbLVJbp%2FH0eqzFM13IhCK5iQN3QaAjsgEBq67St8O0ilWut88JnmyLUqEAaLVECsydXaOa3PDwLPOqODrfTTVCSemT1GOy0%2FfUPH8RFfhQZ%2FQq8rftp8pkBxoaHmOkK1SCROSJB9bFWI6woePSpWl3tWFpmykeelOwJM2CoZ0I2sgBdWGsGv4QVNPu4OfabmsLrOpd1BQSZWFMmDHa%2F0oK9JsSg%2Bkx%2BhX1pxq1XnhhenqQNm8GYTywfdz%2FVoNeJKjc4cUfU1JMjX1chI1%2BOmMxr2%2Fu2Q%2BRRKoZM%2BMsL8giTNFf3SeFI3P3iuNtrVHHJpeo6B%2FRB6QH7SrQ4A5ZQjEymhxze3u2Ino08ujt8MRSQwCU23m907eb%2BlD793jRK6XPMwq3qvSq6kzZTEgbUJTLC%2BDDE8zXbUjiMTTKOv6%2B%2FygOR%2F%2BB%2BYNXot4h5XWB7yhI87MMbPfCqk5uWgl890wlsoTKTsVP9n7RKdCJKH%2FyYG4idJzmcXoRQbttw2KxfyO6j13uJGDbYqHUs%2BzI1SETm76PF1ZDDKO%2F7QI6x%2BzUZfxFvVnh7d51SogemIeTTYSzaT5QkEJirJZWStvBuN6xQeSxNpypmiX0oSBmkRNa83j69yszfA1%2FtUozf2FB9lCwI20u4u%2FPrpEgm%2Br6S27rTkQnFIfxl9%2BfZ1lrRDxTlN8LrSdaTt0n6lXbm3NHtVFXTFNrrghqfz%2FQji16tbG1ogWZ3MLz7XxFOpk8AdlCQg03p8Dn5U7lx7kxyUroJCkzRrhGDSj5VjcyHmnkwWinAlhzkLe%2BbeY7XNut%2BEK7tHHYzCgnLvGBjqxAbvyLEbeNaNnOnBecA0B2uttE4x4WA%2Fuz%2Fsq370DHUwGqgMU%2BTavNj2bZs1Dv8rx4QjUFKSwVUUHuUODNidCndrFJ1ydaN3kxDf3BhJMe%2FG9%2FXkQfYb8AhAfDm2tepXEjn2IeQq8cE%2BqpDDJq21V5ot0%2BP7f9K4JMrzp5Q%2BGACXkL2Nrxye355K%2BxPXQDn%2B0Hn0xnPwSVe682Z6edttdF%2BCRmqqVVT%2Fipp8rqmNfVWEjPQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=3fd1ac094675222394361a7590d28fe4787403bd67df1e2409078c1fc4359f9e",
+      "file_size": 26022,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1028130,
+      "file_name": "6.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/XqJXfu5n5neJ1jiZZavw8xjN?response-content-disposition=attachment%3B%20filename%3D%226.png%22%3B%20filename%2A%3DUTF-8%27%276.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6QNUISWT%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T181521Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHgaCXVzLXdlc3QtMiJHMEUCIBmtXBl8Rwzips0A7Q6M0sgb8TMIyC4Buubg1r02dtPlAiEA1iTMzB8VCdRcg9IUqX0yctfg%2FtbnvCWhEFFJClP8rYIqugUI8f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDE9GGAfI4GH1AJPcwCqOBYjqE4yZZ%2Bh7KTA5J%2FSSpVEIqlFpg3kfXfdTdwlQIZTuRwlubN0upSFOVhgbbLVJbp%2FH0eqzFM13IhCK5iQN3QaAjsgEBq67St8O0ilWut88JnmyLUqEAaLVECsydXaOa3PDwLPOqODrfTTVCSemT1GOy0%2FfUPH8RFfhQZ%2FQq8rftp8pkBxoaHmOkK1SCROSJB9bFWI6woePSpWl3tWFpmykeelOwJM2CoZ0I2sgBdWGsGv4QVNPu4OfabmsLrOpd1BQSZWFMmDHa%2F0oK9JsSg%2Bkx%2BhX1pxq1XnhhenqQNm8GYTywfdz%2FVoNeJKjc4cUfU1JMjX1chI1%2BOmMxr2%2Fu2Q%2BRRKoZM%2BMsL8giTNFf3SeFI3P3iuNtrVHHJpeo6B%2FRB6QH7SrQ4A5ZQjEymhxze3u2Ino08ujt8MRSQwCU23m907eb%2BlD793jRK6XPMwq3qvSq6kzZTEgbUJTLC%2BDDE8zXbUjiMTTKOv6%2B%2FygOR%2F%2BB%2BYNXot4h5XWB7yhI87MMbPfCqk5uWgl890wlsoTKTsVP9n7RKdCJKH%2FyYG4idJzmcXoRQbttw2KxfyO6j13uJGDbYqHUs%2BzI1SETm76PF1ZDDKO%2F7QI6x%2BzUZfxFvVnh7d51SogemIeTTYSzaT5QkEJirJZWStvBuN6xQeSxNpypmiX0oSBmkRNa83j69yszfA1%2FtUozf2FB9lCwI20u4u%2FPrpEgm%2Br6S27rTkQnFIfxl9%2BfZ1lrRDxTlN8LrSdaTt0n6lXbm3NHtVFXTFNrrghqfz%2FQji16tbG1ogWZ3MLz7XxFOpk8AdlCQg03p8Dn5U7lx7kxyUroJCkzRrhGDSj5VjcyHmnkwWinAlhzkLe%2BbeY7XNut%2BEK7tHHYzCgnLvGBjqxAbvyLEbeNaNnOnBecA0B2uttE4x4WA%2Fuz%2Fsq370DHUwGqgMU%2BTavNj2bZs1Dv8rx4QjUFKSwVUUHuUODNidCndrFJ1ydaN3kxDf3BhJMe%2FG9%2FXkQfYb8AhAfDm2tepXEjn2IeQq8cE%2BqpDDJq21V5ot0%2BP7f9K4JMrzp5Q%2BGACXkL2Nrxye355K%2BxPXQDn%2B0Hn0xnPwSVe682Z6edttdF%2BCRmqqVVT%2Fipp8rqmNfVWEjPQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=015eb9a6d3b1ed664ef586498ec150fdb595e01ab00a9caa1ccdcd3cf571b6fe",
+      "file_size": 15598,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1028131,
+      "file_name": "7.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/qg1fSdtFj6qb4cAhpEtPdFJz?response-content-disposition=attachment%3B%20filename%3D%227.png%22%3B%20filename%2A%3DUTF-8%27%277.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6QNUISWT%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T181521Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHgaCXVzLXdlc3QtMiJHMEUCIBmtXBl8Rwzips0A7Q6M0sgb8TMIyC4Buubg1r02dtPlAiEA1iTMzB8VCdRcg9IUqX0yctfg%2FtbnvCWhEFFJClP8rYIqugUI8f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDE9GGAfI4GH1AJPcwCqOBYjqE4yZZ%2Bh7KTA5J%2FSSpVEIqlFpg3kfXfdTdwlQIZTuRwlubN0upSFOVhgbbLVJbp%2FH0eqzFM13IhCK5iQN3QaAjsgEBq67St8O0ilWut88JnmyLUqEAaLVECsydXaOa3PDwLPOqODrfTTVCSemT1GOy0%2FfUPH8RFfhQZ%2FQq8rftp8pkBxoaHmOkK1SCROSJB9bFWI6woePSpWl3tWFpmykeelOwJM2CoZ0I2sgBdWGsGv4QVNPu4OfabmsLrOpd1BQSZWFMmDHa%2F0oK9JsSg%2Bkx%2BhX1pxq1XnhhenqQNm8GYTywfdz%2FVoNeJKjc4cUfU1JMjX1chI1%2BOmMxr2%2Fu2Q%2BRRKoZM%2BMsL8giTNFf3SeFI3P3iuNtrVHHJpeo6B%2FRB6QH7SrQ4A5ZQjEymhxze3u2Ino08ujt8MRSQwCU23m907eb%2BlD793jRK6XPMwq3qvSq6kzZTEgbUJTLC%2BDDE8zXbUjiMTTKOv6%2B%2FygOR%2F%2BB%2BYNXot4h5XWB7yhI87MMbPfCqk5uWgl890wlsoTKTsVP9n7RKdCJKH%2FyYG4idJzmcXoRQbttw2KxfyO6j13uJGDbYqHUs%2BzI1SETm76PF1ZDDKO%2F7QI6x%2BzUZfxFvVnh7d51SogemIeTTYSzaT5QkEJirJZWStvBuN6xQeSxNpypmiX0oSBmkRNa83j69yszfA1%2FtUozf2FB9lCwI20u4u%2FPrpEgm%2Br6S27rTkQnFIfxl9%2BfZ1lrRDxTlN8LrSdaTt0n6lXbm3NHtVFXTFNrrghqfz%2FQji16tbG1ogWZ3MLz7XxFOpk8AdlCQg03p8Dn5U7lx7kxyUroJCkzRrhGDSj5VjcyHmnkwWinAlhzkLe%2BbeY7XNut%2BEK7tHHYzCgnLvGBjqxAbvyLEbeNaNnOnBecA0B2uttE4x4WA%2Fuz%2Fsq370DHUwGqgMU%2BTavNj2bZs1Dv8rx4QjUFKSwVUUHuUODNidCndrFJ1ydaN3kxDf3BhJMe%2FG9%2FXkQfYb8AhAfDm2tepXEjn2IeQq8cE%2BqpDDJq21V5ot0%2BP7f9K4JMrzp5Q%2BGACXkL2Nrxye355K%2BxPXQDn%2B0Hn0xnPwSVe682Z6edttdF%2BCRmqqVVT%2Fipp8rqmNfVWEjPQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=ef932b34b0508aed267f9ddcb204dc5f60e0347fee36fb761f898100cec71b7a",
+      "file_size": 93982,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1028132,
+      "file_name": "8.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/nF11M4uWoBQpWbLPaAWNfe2w?response-content-disposition=attachment%3B%20filename%3D%228.png%22%3B%20filename%2A%3DUTF-8%27%278.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6QNUISWT%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T181521Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHgaCXVzLXdlc3QtMiJHMEUCIBmtXBl8Rwzips0A7Q6M0sgb8TMIyC4Buubg1r02dtPlAiEA1iTMzB8VCdRcg9IUqX0yctfg%2FtbnvCWhEFFJClP8rYIqugUI8f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDE9GGAfI4GH1AJPcwCqOBYjqE4yZZ%2Bh7KTA5J%2FSSpVEIqlFpg3kfXfdTdwlQIZTuRwlubN0upSFOVhgbbLVJbp%2FH0eqzFM13IhCK5iQN3QaAjsgEBq67St8O0ilWut88JnmyLUqEAaLVECsydXaOa3PDwLPOqODrfTTVCSemT1GOy0%2FfUPH8RFfhQZ%2FQq8rftp8pkBxoaHmOkK1SCROSJB9bFWI6woePSpWl3tWFpmykeelOwJM2CoZ0I2sgBdWGsGv4QVNPu4OfabmsLrOpd1BQSZWFMmDHa%2F0oK9JsSg%2Bkx%2BhX1pxq1XnhhenqQNm8GYTywfdz%2FVoNeJKjc4cUfU1JMjX1chI1%2BOmMxr2%2Fu2Q%2BRRKoZM%2BMsL8giTNFf3SeFI3P3iuNtrVHHJpeo6B%2FRB6QH7SrQ4A5ZQjEymhxze3u2Ino08ujt8MRSQwCU23m907eb%2BlD793jRK6XPMwq3qvSq6kzZTEgbUJTLC%2BDDE8zXbUjiMTTKOv6%2B%2FygOR%2F%2BB%2BYNXot4h5XWB7yhI87MMbPfCqk5uWgl890wlsoTKTsVP9n7RKdCJKH%2FyYG4idJzmcXoRQbttw2KxfyO6j13uJGDbYqHUs%2BzI1SETm76PF1ZDDKO%2F7QI6x%2BzUZfxFvVnh7d51SogemIeTTYSzaT5QkEJirJZWStvBuN6xQeSxNpypmiX0oSBmkRNa83j69yszfA1%2FtUozf2FB9lCwI20u4u%2FPrpEgm%2Br6S27rTkQnFIfxl9%2BfZ1lrRDxTlN8LrSdaTt0n6lXbm3NHtVFXTFNrrghqfz%2FQji16tbG1ogWZ3MLz7XxFOpk8AdlCQg03p8Dn5U7lx7kxyUroJCkzRrhGDSj5VjcyHmnkwWinAlhzkLe%2BbeY7XNut%2BEK7tHHYzCgnLvGBjqxAbvyLEbeNaNnOnBecA0B2uttE4x4WA%2Fuz%2Fsq370DHUwGqgMU%2BTavNj2bZs1Dv8rx4QjUFKSwVUUHuUODNidCndrFJ1ydaN3kxDf3BhJMe%2FG9%2FXkQfYb8AhAfDm2tepXEjn2IeQq8cE%2BqpDDJq21V5ot0%2BP7f9K4JMrzp5Q%2BGACXkL2Nrxye355K%2BxPXQDn%2B0Hn0xnPwSVe682Z6edttdF%2BCRmqqVVT%2Fipp8rqmNfVWEjPQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=2c00a19a77d1ed9ec60488947be280ea5d43cf7662565750ac37465b9db51803",
+      "file_size": 6354,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1028133,
+      "file_name": "9.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/c4adg5K3fYT4TqkbnrUATe5T?response-content-disposition=attachment%3B%20filename%3D%229.png%22%3B%20filename%2A%3DUTF-8%27%279.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6QNUISWT%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T181521Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHgaCXVzLXdlc3QtMiJHMEUCIBmtXBl8Rwzips0A7Q6M0sgb8TMIyC4Buubg1r02dtPlAiEA1iTMzB8VCdRcg9IUqX0yctfg%2FtbnvCWhEFFJClP8rYIqugUI8f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDE9GGAfI4GH1AJPcwCqOBYjqE4yZZ%2Bh7KTA5J%2FSSpVEIqlFpg3kfXfdTdwlQIZTuRwlubN0upSFOVhgbbLVJbp%2FH0eqzFM13IhCK5iQN3QaAjsgEBq67St8O0ilWut88JnmyLUqEAaLVECsydXaOa3PDwLPOqODrfTTVCSemT1GOy0%2FfUPH8RFfhQZ%2FQq8rftp8pkBxoaHmOkK1SCROSJB9bFWI6woePSpWl3tWFpmykeelOwJM2CoZ0I2sgBdWGsGv4QVNPu4OfabmsLrOpd1BQSZWFMmDHa%2F0oK9JsSg%2Bkx%2BhX1pxq1XnhhenqQNm8GYTywfdz%2FVoNeJKjc4cUfU1JMjX1chI1%2BOmMxr2%2Fu2Q%2BRRKoZM%2BMsL8giTNFf3SeFI3P3iuNtrVHHJpeo6B%2FRB6QH7SrQ4A5ZQjEymhxze3u2Ino08ujt8MRSQwCU23m907eb%2BlD793jRK6XPMwq3qvSq6kzZTEgbUJTLC%2BDDE8zXbUjiMTTKOv6%2B%2FygOR%2F%2BB%2BYNXot4h5XWB7yhI87MMbPfCqk5uWgl890wlsoTKTsVP9n7RKdCJKH%2FyYG4idJzmcXoRQbttw2KxfyO6j13uJGDbYqHUs%2BzI1SETm76PF1ZDDKO%2F7QI6x%2BzUZfxFvVnh7d51SogemIeTTYSzaT5QkEJirJZWStvBuN6xQeSxNpypmiX0oSBmkRNa83j69yszfA1%2FtUozf2FB9lCwI20u4u%2FPrpEgm%2Br6S27rTkQnFIfxl9%2BfZ1lrRDxTlN8LrSdaTt0n6lXbm3NHtVFXTFNrrghqfz%2FQji16tbG1ogWZ3MLz7XxFOpk8AdlCQg03p8Dn5U7lx7kxyUroJCkzRrhGDSj5VjcyHmnkwWinAlhzkLe%2BbeY7XNut%2BEK7tHHYzCgnLvGBjqxAbvyLEbeNaNnOnBecA0B2uttE4x4WA%2Fuz%2Fsq370DHUwGqgMU%2BTavNj2bZs1Dv8rx4QjUFKSwVUUHuUODNidCndrFJ1ydaN3kxDf3BhJMe%2FG9%2FXkQfYb8AhAfDm2tepXEjn2IeQq8cE%2BqpDDJq21V5ot0%2BP7f9K4JMrzp5Q%2BGACXkL2Nrxye355K%2BxPXQDn%2B0Hn0xnPwSVe682Z6edttdF%2BCRmqqVVT%2Fipp8rqmNfVWEjPQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=dc87328fffc2d5347ff63113fab14c1fb01be3c8924f3369caf31a278ce9c382",
+      "file_size": 15723,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1028134,
+      "file_name": "10.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/wJfbuZXqjK8oc9vowVs1kna9?response-content-disposition=attachment%3B%20filename%3D%2210.png%22%3B%20filename%2A%3DUTF-8%27%2710.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6QNUISWT%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T181521Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHgaCXVzLXdlc3QtMiJHMEUCIBmtXBl8Rwzips0A7Q6M0sgb8TMIyC4Buubg1r02dtPlAiEA1iTMzB8VCdRcg9IUqX0yctfg%2FtbnvCWhEFFJClP8rYIqugUI8f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDE9GGAfI4GH1AJPcwCqOBYjqE4yZZ%2Bh7KTA5J%2FSSpVEIqlFpg3kfXfdTdwlQIZTuRwlubN0upSFOVhgbbLVJbp%2FH0eqzFM13IhCK5iQN3QaAjsgEBq67St8O0ilWut88JnmyLUqEAaLVECsydXaOa3PDwLPOqODrfTTVCSemT1GOy0%2FfUPH8RFfhQZ%2FQq8rftp8pkBxoaHmOkK1SCROSJB9bFWI6woePSpWl3tWFpmykeelOwJM2CoZ0I2sgBdWGsGv4QVNPu4OfabmsLrOpd1BQSZWFMmDHa%2F0oK9JsSg%2Bkx%2BhX1pxq1XnhhenqQNm8GYTywfdz%2FVoNeJKjc4cUfU1JMjX1chI1%2BOmMxr2%2Fu2Q%2BRRKoZM%2BMsL8giTNFf3SeFI3P3iuNtrVHHJpeo6B%2FRB6QH7SrQ4A5ZQjEymhxze3u2Ino08ujt8MRSQwCU23m907eb%2BlD793jRK6XPMwq3qvSq6kzZTEgbUJTLC%2BDDE8zXbUjiMTTKOv6%2B%2FygOR%2F%2BB%2BYNXot4h5XWB7yhI87MMbPfCqk5uWgl890wlsoTKTsVP9n7RKdCJKH%2FyYG4idJzmcXoRQbttw2KxfyO6j13uJGDbYqHUs%2BzI1SETm76PF1ZDDKO%2F7QI6x%2BzUZfxFvVnh7d51SogemIeTTYSzaT5QkEJirJZWStvBuN6xQeSxNpypmiX0oSBmkRNa83j69yszfA1%2FtUozf2FB9lCwI20u4u%2FPrpEgm%2Br6S27rTkQnFIfxl9%2BfZ1lrRDxTlN8LrSdaTt0n6lXbm3NHtVFXTFNrrghqfz%2FQji16tbG1ogWZ3MLz7XxFOpk8AdlCQg03p8Dn5U7lx7kxyUroJCkzRrhGDSj5VjcyHmnkwWinAlhzkLe%2BbeY7XNut%2BEK7tHHYzCgnLvGBjqxAbvyLEbeNaNnOnBecA0B2uttE4x4WA%2Fuz%2Fsq370DHUwGqgMU%2BTavNj2bZs1Dv8rx4QjUFKSwVUUHuUODNidCndrFJ1ydaN3kxDf3BhJMe%2FG9%2FXkQfYb8AhAfDm2tepXEjn2IeQq8cE%2BqpDDJq21V5ot0%2BP7f9K4JMrzp5Q%2BGACXkL2Nrxye355K%2BxPXQDn%2B0Hn0xnPwSVe682Z6edttdF%2BCRmqqVVT%2Fipp8rqmNfVWEjPQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=132590b21ed76aaced3f9a108948ca5d52a7f585dc89eb8995d28c8f9f691cf4",
+      "file_size": 31790,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1028135,
+      "file_name": "11.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/VL93nUvYNdevL7R2QVjqpbmX?response-content-disposition=attachment%3B%20filename%3D%2211.png%22%3B%20filename%2A%3DUTF-8%27%2711.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6QNUISWT%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T181521Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHgaCXVzLXdlc3QtMiJHMEUCIBmtXBl8Rwzips0A7Q6M0sgb8TMIyC4Buubg1r02dtPlAiEA1iTMzB8VCdRcg9IUqX0yctfg%2FtbnvCWhEFFJClP8rYIqugUI8f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDE9GGAfI4GH1AJPcwCqOBYjqE4yZZ%2Bh7KTA5J%2FSSpVEIqlFpg3kfXfdTdwlQIZTuRwlubN0upSFOVhgbbLVJbp%2FH0eqzFM13IhCK5iQN3QaAjsgEBq67St8O0ilWut88JnmyLUqEAaLVECsydXaOa3PDwLPOqODrfTTVCSemT1GOy0%2FfUPH8RFfhQZ%2FQq8rftp8pkBxoaHmOkK1SCROSJB9bFWI6woePSpWl3tWFpmykeelOwJM2CoZ0I2sgBdWGsGv4QVNPu4OfabmsLrOpd1BQSZWFMmDHa%2F0oK9JsSg%2Bkx%2BhX1pxq1XnhhenqQNm8GYTywfdz%2FVoNeJKjc4cUfU1JMjX1chI1%2BOmMxr2%2Fu2Q%2BRRKoZM%2BMsL8giTNFf3SeFI3P3iuNtrVHHJpeo6B%2FRB6QH7SrQ4A5ZQjEymhxze3u2Ino08ujt8MRSQwCU23m907eb%2BlD793jRK6XPMwq3qvSq6kzZTEgbUJTLC%2BDDE8zXbUjiMTTKOv6%2B%2FygOR%2F%2BB%2BYNXot4h5XWB7yhI87MMbPfCqk5uWgl890wlsoTKTsVP9n7RKdCJKH%2FyYG4idJzmcXoRQbttw2KxfyO6j13uJGDbYqHUs%2BzI1SETm76PF1ZDDKO%2F7QI6x%2BzUZfxFvVnh7d51SogemIeTTYSzaT5QkEJirJZWStvBuN6xQeSxNpypmiX0oSBmkRNa83j69yszfA1%2FtUozf2FB9lCwI20u4u%2FPrpEgm%2Br6S27rTkQnFIfxl9%2BfZ1lrRDxTlN8LrSdaTt0n6lXbm3NHtVFXTFNrrghqfz%2FQji16tbG1ogWZ3MLz7XxFOpk8AdlCQg03p8Dn5U7lx7kxyUroJCkzRrhGDSj5VjcyHmnkwWinAlhzkLe%2BbeY7XNut%2BEK7tHHYzCgnLvGBjqxAbvyLEbeNaNnOnBecA0B2uttE4x4WA%2Fuz%2Fsq370DHUwGqgMU%2BTavNj2bZs1Dv8rx4QjUFKSwVUUHuUODNidCndrFJ1ydaN3kxDf3BhJMe%2FG9%2FXkQfYb8AhAfDm2tepXEjn2IeQq8cE%2BqpDDJq21V5ot0%2BP7f9K4JMrzp5Q%2BGACXkL2Nrxye355K%2BxPXQDn%2B0Hn0xnPwSVe682Z6edttdF%2BCRmqqVVT%2Fipp8rqmNfVWEjPQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=0ba0e8167376c41eb20fe5a6fbe25faa582e90b1a925072b2728894c49fbfe82",
+      "file_size": 7739,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 18,
+  "voters": [
+    "orange303",
+    "danyar0",
+    "zy9ard3",
+    "shreyaschavhan",
+    "ali",
+    "ayoub0x1",
+    "thalaivar304",
+    "mohaned0101",
+    "ahmed_xyz",
+    "011alsanosi",
+    "and 8 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "Team"
+  },
+  "structured_scope": {
+    "databaseId": 50772,
+    "asset_type": "DOWNLOADABLE_EXECUTABLES",
+    "asset_identifier": "Acronis Cyber Protect Home Office (formerly Acronis True Image)",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
