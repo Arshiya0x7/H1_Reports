@@ -1,0 +1,138 @@
+{
+  "id": 970739,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC85NzA3Mzk=",
+  "url": "https://hackerone.com/reports/970739",
+  "title": "Local Privilege Escalation via EXE hijacking with Acronis True Image 2021 installer",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2020-08-30T14:33:07.505Z",
+  "submitted_at": "2020-08-30T14:33:07.528Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "mmg",
+    "url": "/mmg",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/222/119/30b5386d5cc0fd351927b57fa02a7cf7c81a7a2b_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13428,
+    "url": "https://hackerone.com/acronis",
+    "handle": "acronis",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/e54TDdWdgLKsH3h1oFpK26bq/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/e54TDdWdgLKsH3h1oFpK26bq/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Acronis",
+      "twitter_handle": "Acronis",
+      "website": "https://www.acronis.com",
+      "about": "Complete integrated cybersecurity and data protection for MSPs and IT teams"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2024-08-27T13:39:03.021Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2021-06-22T06:39:12.028Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Using the latest version of Acronis True Image 2021 (25.4.30480) is possible to perform EXE Hijacking.\nThis could potentially allow an authorized but privileged local user to execute arbitrary code with elevated privileges on the system.\n\nA successful attempt would require the local attacker must insert an executable file in the path of the EXE that is called.\nUpon the software installation or possibly upgrade, the malicious code will be run with elevated privileges.\n\n-Impact:\nIf a local attacker has modifying rights, or is chaining the attack with an arbitrary move/write vulnerability, and be able to store the file in the path from where the EXE is called, allowing to perform horizontal and/or vertical privilege escalation.\n\n-How to Reproduce:\n1.Download the latest version of  Acronis True Image 2021 installer\n\nURL: https://download.acronis.com/AcronisTrueImage2021.exe\n\n2.Start a procmon utility, from Sysinternal, and monitor \"atih_installer_shell_standard.exe\".\n\nStart the installation\n4.During the installation process the atih_installer_shell_standard.exe is looking for C:\\program.exe\nBelow is an output:\n\natih_installer_shell_standard.exe\t19792\tCreateFile\tC:\\Program.exe\tNAME NOT FOUND\n\nThe test was perform on my Windows 10 Pro Version 1909 (OS Build 18363.1016).\n\nI have attached a sample exe file, that when executed will display a pop-up with the message \"EXE Loaded\".\nThis need to be stored in the C:\\ just to demonstrate this behavior, before the installation process begins.\n\n## Impact\n\nThis could potentially allow an authorized low privileged local account to execute arbitrary code in order to perform horizontal and/or vertical privilege escalation.",
+  "weakness": {
+    "id": 75,
+    "name": "Privilege Escalation"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 969503,
+      "file_name": "Program.7z",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/FuktmJAMU9uH8TvzMKdxQ47E?response-content-disposition=attachment%3B%20filename%3D%22Program.7z%22%3B%20filename%2A%3DUTF-8%27%27Program.7z&response-content-type=application%2Fx-7z-compressed&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQSM6EO2MH%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T181645Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHYaCXVzLXdlc3QtMiJIMEYCIQD8nrwaO7FAjf7fhoOVnCcvAsimtxi2Pd%2BxsKU4sLXr0QIhAOTCiOM6y06yEnLf0%2Fjf6zSB%2B583CJKp7vux3CMr%2Boe9KrsFCO%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5IgyG6oYQKIT5Dzu3TmcqjwWD%2BRtrkeeDV8F3iWV9tOgFfZFru9ETAbKv%2BI%2FMxcQ2OrTZSebkMzXYA2vE7gl1hKtKqDKcwbZTMTZN%2FJcgpCZCsLzVuBIfybktxv2bL9qn9oiBGPIk%2B1WuaprYoiLPQr%2FfipxuksHlQNSh7mm%2BOUdecA1pmx6TGfnlr5ojoQ9LQ9H5E77Uc%2BefNmADyTQBSLOsF7t1eK%2FBAOVROoGIfy%2FbWQKAkFIZbRw4OOWHa9V5j%2B6FnE1WvARQYLAdThC4IQLf5JleqxBEnvKnkTFgir5n9UWXjrODYXJBfKrYyd7o2KouXfiJC0yEdibKP5%2BG8gU04QAsAw8whAAY2OmB8zCVjREm4iuhfP0QhQXMJa2brcGkeMNP4V4%2FCpgkgCxWnk89bsPM1dEl8aUIXVyTnA8RYNFpwpL6XE2f%2B4sf%2BJ%2FO3nG29aAZYlmsP0bgweCCq9gjEMfXwaejKEnQdzg%2BhP8P80n2s4%2BbiRpW5YDkcE7doxGr1u%2BGwymES9ERO90GA0wRMudlcMpE5rH3%2FEpcpl6pS3GRehmbmdmGN2Hz48oB6scuLP7xvHZtK04A%2FXb5xLAERlTp5WbUdXPtqu8Ygugi%2BSypnmszVdpWqmLJNvIMbPc6NQn%2B%2FTXeKAnnytYly2k%2FEIWrJqgk3HrysePyt1hGAfOiKyQ0tTi5K8pAc2rHXHjJIjR0HautHUUSruqPjzvbCRU1ckazh55%2Bae1jzdt%2B%2BPsoVxJQKbfR6nH8zAc0dV9YwT5Opx2GOqIMZkZTvpLpjKehWQmdHtjg7Zshi2SDbly3JvcZBJfqm33YjEclbM%2BeWur%2F0PHbkmbZtgkkZM4WxHfi8%2BszTnUGpGtc4JXAg4EIcs8kxScuU2irho7TMKPrusYGOrABeAw8CbPPyJqHPGOttKccPJgb14PO9HVAhfPkE8vdtixFEcGCTI0aYeAwxVt3Kc6rY7%2B3MtRVFBd%2FFUgbcK%2FnHp6pgiX8nqLsILABwCZwVMOe3Bm%2FEphuV%2Fj%2BFVxJ%2F1Wl9zW94zYYtUa3lkZS83Hv6Qf3UtQlIsSn%2BKGBmgV7oArLbc92B8fUW93hWUxJgIjUb4BUR5ImR1U1nBbVHjuXCNQ4U1XfEkvu8Fk2h4Lri1I%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=3f7c207a75a1adf1ef1ea64d6ed4cba9d5bc5da778280547b51397b3a37f60aa",
+      "file_size": 201977,
+      "type": "application/x-7z-compressed",
+      "moderated": null
+    },
+    {
+      "id": 969504,
+      "file_name": "Insecure-execution-True-01.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/kkpNRSJgFTn7NyNVnSsJ4mhk?response-content-disposition=attachment%3B%20filename%3D%22Insecure-execution-True-01.png%22%3B%20filename%2A%3DUTF-8%27%27Insecure-execution-True-01.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQSM6EO2MH%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T181645Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHYaCXVzLXdlc3QtMiJIMEYCIQD8nrwaO7FAjf7fhoOVnCcvAsimtxi2Pd%2BxsKU4sLXr0QIhAOTCiOM6y06yEnLf0%2Fjf6zSB%2B583CJKp7vux3CMr%2Boe9KrsFCO%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5IgyG6oYQKIT5Dzu3TmcqjwWD%2BRtrkeeDV8F3iWV9tOgFfZFru9ETAbKv%2BI%2FMxcQ2OrTZSebkMzXYA2vE7gl1hKtKqDKcwbZTMTZN%2FJcgpCZCsLzVuBIfybktxv2bL9qn9oiBGPIk%2B1WuaprYoiLPQr%2FfipxuksHlQNSh7mm%2BOUdecA1pmx6TGfnlr5ojoQ9LQ9H5E77Uc%2BefNmADyTQBSLOsF7t1eK%2FBAOVROoGIfy%2FbWQKAkFIZbRw4OOWHa9V5j%2B6FnE1WvARQYLAdThC4IQLf5JleqxBEnvKnkTFgir5n9UWXjrODYXJBfKrYyd7o2KouXfiJC0yEdibKP5%2BG8gU04QAsAw8whAAY2OmB8zCVjREm4iuhfP0QhQXMJa2brcGkeMNP4V4%2FCpgkgCxWnk89bsPM1dEl8aUIXVyTnA8RYNFpwpL6XE2f%2B4sf%2BJ%2FO3nG29aAZYlmsP0bgweCCq9gjEMfXwaejKEnQdzg%2BhP8P80n2s4%2BbiRpW5YDkcE7doxGr1u%2BGwymES9ERO90GA0wRMudlcMpE5rH3%2FEpcpl6pS3GRehmbmdmGN2Hz48oB6scuLP7xvHZtK04A%2FXb5xLAERlTp5WbUdXPtqu8Ygugi%2BSypnmszVdpWqmLJNvIMbPc6NQn%2B%2FTXeKAnnytYly2k%2FEIWrJqgk3HrysePyt1hGAfOiKyQ0tTi5K8pAc2rHXHjJIjR0HautHUUSruqPjzvbCRU1ckazh55%2Bae1jzdt%2B%2BPsoVxJQKbfR6nH8zAc0dV9YwT5Opx2GOqIMZkZTvpLpjKehWQmdHtjg7Zshi2SDbly3JvcZBJfqm33YjEclbM%2BeWur%2F0PHbkmbZtgkkZM4WxHfi8%2BszTnUGpGtc4JXAg4EIcs8kxScuU2irho7TMKPrusYGOrABeAw8CbPPyJqHPGOttKccPJgb14PO9HVAhfPkE8vdtixFEcGCTI0aYeAwxVt3Kc6rY7%2B3MtRVFBd%2FFUgbcK%2FnHp6pgiX8nqLsILABwCZwVMOe3Bm%2FEphuV%2Fj%2BFVxJ%2F1Wl9zW94zYYtUa3lkZS83Hv6Qf3UtQlIsSn%2BKGBmgV7oArLbc92B8fUW93hWUxJgIjUb4BUR5ImR1U1nBbVHjuXCNQ4U1XfEkvu8Fk2h4Lri1I%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=b3ca7d4024fb5cbaf59add994f2f9545b6ac611aee9e004d287b0c20ba7089fb",
+      "file_size": 53530,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 969505,
+      "file_name": "Insecure-execution-True-02.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/VJDKtjQ8PJxxXe2hJBbXWrX5?response-content-disposition=attachment%3B%20filename%3D%22Insecure-execution-True-02.png%22%3B%20filename%2A%3DUTF-8%27%27Insecure-execution-True-02.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQSM6EO2MH%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T181645Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHYaCXVzLXdlc3QtMiJIMEYCIQD8nrwaO7FAjf7fhoOVnCcvAsimtxi2Pd%2BxsKU4sLXr0QIhAOTCiOM6y06yEnLf0%2Fjf6zSB%2B583CJKp7vux3CMr%2Boe9KrsFCO%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5IgyG6oYQKIT5Dzu3TmcqjwWD%2BRtrkeeDV8F3iWV9tOgFfZFru9ETAbKv%2BI%2FMxcQ2OrTZSebkMzXYA2vE7gl1hKtKqDKcwbZTMTZN%2FJcgpCZCsLzVuBIfybktxv2bL9qn9oiBGPIk%2B1WuaprYoiLPQr%2FfipxuksHlQNSh7mm%2BOUdecA1pmx6TGfnlr5ojoQ9LQ9H5E77Uc%2BefNmADyTQBSLOsF7t1eK%2FBAOVROoGIfy%2FbWQKAkFIZbRw4OOWHa9V5j%2B6FnE1WvARQYLAdThC4IQLf5JleqxBEnvKnkTFgir5n9UWXjrODYXJBfKrYyd7o2KouXfiJC0yEdibKP5%2BG8gU04QAsAw8whAAY2OmB8zCVjREm4iuhfP0QhQXMJa2brcGkeMNP4V4%2FCpgkgCxWnk89bsPM1dEl8aUIXVyTnA8RYNFpwpL6XE2f%2B4sf%2BJ%2FO3nG29aAZYlmsP0bgweCCq9gjEMfXwaejKEnQdzg%2BhP8P80n2s4%2BbiRpW5YDkcE7doxGr1u%2BGwymES9ERO90GA0wRMudlcMpE5rH3%2FEpcpl6pS3GRehmbmdmGN2Hz48oB6scuLP7xvHZtK04A%2FXb5xLAERlTp5WbUdXPtqu8Ygugi%2BSypnmszVdpWqmLJNvIMbPc6NQn%2B%2FTXeKAnnytYly2k%2FEIWrJqgk3HrysePyt1hGAfOiKyQ0tTi5K8pAc2rHXHjJIjR0HautHUUSruqPjzvbCRU1ckazh55%2Bae1jzdt%2B%2BPsoVxJQKbfR6nH8zAc0dV9YwT5Opx2GOqIMZkZTvpLpjKehWQmdHtjg7Zshi2SDbly3JvcZBJfqm33YjEclbM%2BeWur%2F0PHbkmbZtgkkZM4WxHfi8%2BszTnUGpGtc4JXAg4EIcs8kxScuU2irho7TMKPrusYGOrABeAw8CbPPyJqHPGOttKccPJgb14PO9HVAhfPkE8vdtixFEcGCTI0aYeAwxVt3Kc6rY7%2B3MtRVFBd%2FFUgbcK%2FnHp6pgiX8nqLsILABwCZwVMOe3Bm%2FEphuV%2Fj%2BFVxJ%2F1Wl9zW94zYYtUa3lkZS83Hv6Qf3UtQlIsSn%2BKGBmgV7oArLbc92B8fUW93hWUxJgIjUb4BUR5ImR1U1nBbVHjuXCNQ4U1XfEkvu8Fk2h4Lri1I%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=5c649edb3ac58148715de52f72516ce5a1c5b5b7abb8c43bcb197be1f80691c9",
+      "file_size": 107655,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 4,
+  "voters": [
+    "zy9ard3",
+    "ali",
+    "mohaned0101",
+    "aecherli"
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "Team"
+  },
+  "structured_scope": {
+    "databaseId": 50772,
+    "asset_type": "DOWNLOADABLE_EXECUTABLES",
+    "asset_identifier": "Acronis Cyber Protect Home Office (formerly Acronis True Image)",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
