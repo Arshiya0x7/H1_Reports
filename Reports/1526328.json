@@ -1,0 +1,139 @@
+{
+  "id": 1526328,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNTI2MzI4",
+  "url": "https://hackerone.com/reports/1526328",
+  "title": "CVE-2022-22576: OAUTH2 bearer bypass in connection re-use",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2022-03-30T12:47:16.155Z",
+  "submitted_at": "2022-03-30T12:47:16.215Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "monnerat",
+    "url": "/monnerat",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 35663,
+    "url": "https://hackerone.com/curl",
+    "handle": "curl",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/035/663/2faf4c279d437d64bfda6d23d62ce1833813a4d9_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/035/663/2faf4c279d437d64bfda6d23d62ce1833813a4d9_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "curl",
+      "twitter_handle": "",
+      "website": "https://curl.se",
+      "about": "cURL is an Open Source project providing a library and command-line tool doing internet transfers"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2022-22576"
+  ],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2022-04-29T11:27:58.510Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2022-04-27T10:01:43.242Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nA cached connection authenticated with the OAUTH2 mechanisms can be reused by a subsequent request even if the bearer is not correct.\nThis affects SASL-enabled protcols: SMPTP(S), IMAP(S), POP3(S) and LDAP(S) (openldap only).\n\nAn application that can be accessed by more than one user (such as a webmail server) would be affected by this flaw.\n\n## Steps To Reproduce:\n`curl 'imap://server:port/path/;MAILINDEX=1' --login-options 'AUTH=OAUTHBEARER' -u user: --oauth2-bearer validbearer --next 'imap://server:port/path/;MAILINDEX=1' --login-options 'AUTH=OAUTHBEARER' -u user: --oauth2-bearer anything`\n\n## Supporting Material/References:\n  * Patch 0001-url-check-sasl-additional-parameters-for-connection-.patch fixes this flaw.\n\nAs an alternative to apply the patch, use another (unused) password within each request: the second request in the command below will properly fail.\n`curl 'imap://server:port/path/;MAILINDEX=1' --login-options 'AUTH=OAUTHBEARER' -u user:dummy1 --oauth2-bearer validbearer --next 'imap://server:port/path/;MAILINDEX=1' --login-options 'AUTH=OAUTHBEARER' -u user:dummy2 --oauth2-bearer anything`\n\n## Impact\n\nAccess (read/write) unauthorized data",
+  "weakness": {
+    "id": 27,
+    "name": "Improper Authentication - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1673507,
+      "file_name": "0001-url-check-sasl-additional-parameters-for-connection-.patch",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/k7n7v01ocaq1o1f5hpufis9mu3t1?response-content-disposition=attachment%3B%20filename%3D%220001-url-check-sasl-additional-parameters-for-connection-.patch%22%3B%20filename%2A%3DUTF-8%27%270001-url-check-sasl-additional-parameters-for-connection-.patch&response-content-type=application%2Fmbox&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXT4DERRQ%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T235056Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH0aCXVzLXdlc3QtMiJIMEYCIQC11Miz1cjNNXKzJTdEEtlkCcJ594CxI%2FZGJyXldINcHwIhAN1HIJ6z0FHBLTMESFgOI%2BEAHcaT1OAtdSz%2BULEfZ7IcKrsFCPb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5Igx8pMMNo%2F0UzhY4QW0qjwUT6rwtcKyUFqZ03Y8aP97Kjfl6fhibAMK1HSmo2x9RkRFgxHW%2FDhItExYKg5xdLkWgXroI8IsbMuTkYDgxjVtPYKsxQPT0FiVDVrvUBzVtlShiNfeoR6F9L7egr9Ucw91%2FRU56%2B6U%2B1PBf5Jsy8g8jzVcD8K8gLBdAsLTCgTalQdSlNoXvEqjDdwjZ17Ld5pYe%2Blbr%2B2J%2FNVuFZS4ibcGRU1i1MixSQIGkH7o%2BK0pOeybw9DInFx36QSQ0YyeSl0Ygq9nWQJQHmoy73ahJSfCPdEh4BliTUvHqZs0MY3sO1sIeggIRpK6rD9bFV7jQ8jc1QpeahL5ddIz9cIimvhks2EgTYb641Km%2FEQBoElxHX7%2BLqve1gWN8%2F1dkAxvoICzmvq7Osw3lRm9od3bB0i6msga0NLBwkIx%2FAwJmT6GgaLo3mbZ324HtcGn2oEV8Pasb9x5XeuJsNksd3E5%2BMU9ZLs9tjmH%2F1%2Bz4Tkf0A7vQRs51MVhUk%2Bee%2BM2TVp2tHv%2F4Wla1DDiDHxBawEhDYM4U0xQdiZLfOzevl%2BkXvZrMwFe%2F0cV3xjluLeJfmRzfhd0tVxGdZNI3UtVswuapjKg%2Bx0NV2znk8YU9odspxXnKVrM8nqQhVbnws%2FIHQGx4P7yswwoLq80qs2ZyIcTMOAoKgjvc0l%2FUemEVe8u4HcAldHVvu4Oa1KPDP4sYvSZ9pyIt5Y8l4maDzUg88Qcf9rguhyciSO94lQ0qqLDW8nbCxox47h6ZjWFwLaxvU7RiYvSzr7hD%2FUnxtzHsE9kuXZorQn22Vj6pd4twgY6PPVOVq5UfbHEEmbwnLbuFUGCIZRoPhqNpMwbYZveE6hPPWSmBIAKDHPOGLHlbPDjfOZhsMO2tvMYGOrAB72ce509bguRZhVh5qAd92hjXYy3U0ySE6T2gegLTYyTVbZQG0A9J9al0ZdZ00SIRn9hXeLIgiy1zhug1NpM44mf8JOuD3LDhNHOYBD1IZqnZ9oL%2FYP7GzZ2r6Mw3fdaMAaSFhG9Fnz6QpMjknTvawMwUZskNNUQ%2BI70sEC5%2Bt%2FMvjo5zem7icAW6QEie4JhYhMP1ScMES66G%2Fnww3jXLdv7wvMTd%2B514r%2FhvwSmszdw%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=9e595748c33eb9fce5d09d58109a41ce57aa3fe5161cc251c3727bc55c7759d4",
+      "file_size": 5229,
+      "type": "application/mbox",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2022-05-27T10:01:43.364Z",
+  "allow_singular_disclosure_after": -104766553.25211924,
+  "singular_disclosure_allowed": true,
+  "vote_count": 6,
+  "voters": [
+    "monnerat",
+    "zy9ard3",
+    "h4x0r_dz",
+    "f1ras",
+    "shivammusic",
+    "destinedtohack"
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 5.1,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "local",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "low",
+      "integrity": "low",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 18844,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/curl/curl",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
