@@ -1,0 +1,133 @@
+{
+  "id": 815085,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC84MTUwODU=",
+  "url": "https://hackerone.com/reports/815085",
+  "title": "Account creation with invalid email addresses / email is accepting % and %0d%0a line termination chars",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2020-03-09T13:56:00.538Z",
+  "submitted_at": "2020-03-09T13:56:00.538Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "resett3r",
+    "url": "/resett3r",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/200/405/8b74c3b0343495dd73674d60e2940e566ceba3a3_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13,
+    "url": "https://hackerone.com/security",
+    "handle": "security",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/013/fa942b9b1cbf4faf37482bf68458e1195aab9c02_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/013/fa942b9b1cbf4faf37482bf68458e1195aab9c02_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "HackerOne",
+      "twitter_handle": "Hacker0x01",
+      "website": "https://hackerone.com",
+      "about": "Vulnerability disclosure should be safe, transparent, and rewarding."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2024-02-04T16:58:28.007Z",
+  "bug_reporter_agreed_on_going_public_at": "2024-02-04T16:58:27.829Z",
+  "team_member_agreed_on_going_public_at": "2024-02-04T03:25:30.670Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "**Summary:**\nHackerone SignUp feature is misconfigured with email parameter. Email address parameter is accepting % and %0d%0a character along with genuine email address. Using this technique hackerone user account can be created but cannot be verified as there is not possible to verify those invalid email accounts. Basically random use of invalid email address, attacker can create multiple accounts.\n\n**Description:**\nAs email address field always being verified with any special character (except @ and .) but here email is accepting % and line termination char %0d%0a\n\n### Steps To Reproduce\n\n1. SignUp with new hacker account \n2. Use email address adding with character like % or %0d%0a, account will be created and you will get a account creation message\n████ ███████\n{F742080}\n3. Even if you try now to login using same above email and password then you will get same message for account is already created and need to verify email\n█████\n4. You can not use the same invalid email again, as it will show an error of reuse of that invalid email address\n\n## Impact\n\n>>Garbage value can be stored in database using user account signup form\n>>Multiple account can be created, just like if any use has real account with his email address, then also account can be created by adding %0d%0a or % char\n>>Account is created using invalid email address, but can not be used",
+  "bounty_amount": "3750.0",
+  "formatted_bounty": "$3,750",
+  "weakness": {
+    "id": 57,
+    "name": "Violation of Secure Design Principles"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 742080,
+      "file_name": "email_verification_message.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/yRaAtz454NiU2o3u1qGG11u7?response-content-disposition=attachment%3B%20filename%3D%22email_verification_message.png%22%3B%20filename%2A%3DUTF-8%27%27email_verification_message.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ3VJ7R3GL%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T192525Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHkaCXVzLXdlc3QtMiJHMEUCID4Bv74%2FLGGAbJg2KqgFCyyLIB%2FnnAMpcaWX5h3iUUvFAiEAvh3QDobEHNY5c%2BymXe1h2IFxpeX24FwTKHOqnQY9n2AqugUI8v%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDIBcg%2Fp45849bp0hRCqOBShkDx8ZqXH2y09B0r3niwOdi6v83ziVdoKv0eS2jH6TjOucKVJuwPHg%2FiUfPLIVdHDKVMVL0QsEx5jlrusWR2oZqF6v7aKJVQt6keyt9mRyoEqVrDRh3dhcfZpL1Hrq5isHT%2FDyrzYER8oqlhSkMI3OyBpyALAr6yEWcWXPwWgZHty26s8TNu3buT%2FZdyih9ddC8u4zzXFjcjYLw3MN7jGNU3doM4wWs%2Fj2jFoICSKZtdIlQjc4L5sFlzAMJy%2B3yVk5hKvBXsWaouoV9GhbxHCdB6s%2B%2FXfj47Sh6ZiBin4Bv5ijl4DUppVP0elJn8fgfzj11hI7DarkxZsK%2Buq27hhYV4cr1jeInGIZPK5DSPg7qSIWL9QIJxAsHnuuIhWeRd%2BZATtC1BC8tCBaBDedaQ8Pj1%2FBwfmFWvi5ouaPyNY7vVyIxzBRANjC2V%2F6BjuNbsoUMSnAfS9te%2F4Nhw8oJU%2FmSgEK5rgQP6GmJBG1cGl4e2WSz0YBxbvD2ukUuUnXGvI2dEHrFsvpzqt77YKYGl1hZ4oT14vgBYKjibvBa3%2FUd%2FEZfYxYFs%2BTFsQkDLBkhdZ5koJjo90fHv%2FHK5SadelOg%2FUU2XJuLbV0KeuElwhOemzNuh%2B%2FriFUdE%2BvA8bSNJVUexGBp01itxIVMCFvw1%2FRNT6Zyadsc71xnRLFdJxTj0GuKNVC9Z8J9y2N0RfjYgOaxLDcGxHjCnSinBNMaAKzv%2Bw%2F%2B3Ax25sgqBFsmp0ESM3j21ALJRi6wSCsYudSksh9HGBnAyw3UydtDGkoQ3w0wpukQkskI2a%2FV6qROAuzSSzXvTiCjZmbfi8lVdA1IrW10uDIjay8iLi%2BJ2RRDSnYizTme2pcxp2Ya2oS8DCrw7vGBjqxAfzHC5y7PUE8bIt78rThsF7ttQZaA1AU1I9coXpUQ9hMhYRSJVv88e13CqI78pnHFhQloloYx%2FoCa0s%2F8apnF91AG5Hm%2FkilrW8c50Wb62wK62uyBB4TjT8G6MWe9COqt%2Bx6EMZC4clMU1hLQaYhuLzcMWP7kbxG91lox4hfA%2FlOZ6QYVTJ%2B7XYO5sgZ0zPOxAqT35CfJVK3nXkRnYHwInwB4TZrV4zS0VCJqxS%2BPLy4pQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=347a62f34b8d2f2e5d962e365250abc7fc1e50e8bd13e6918501b7ba2733ccb8",
+      "file_size": 27787,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2024-03-05T03:25:30.876Z",
+  "allow_singular_disclosure_after": -48787194.63143267,
+  "singular_disclosure_allowed": true,
+  "vote_count": 163,
+  "voters": [
+    "l0da",
+    "prathap_ilango",
+    "k0ns0l",
+    "loaymorad",
+    "ac7n0w",
+    "tinmo",
+    "kurogai",
+    "faav",
+    "immahdisv",
+    "awhacken",
+    "and 153 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 3,
+    "asset_type": "URL",
+    "asset_identifier": "hackerone.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
