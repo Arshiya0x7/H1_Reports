@@ -1,0 +1,139 @@
+{
+  "id": 743953,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC83NDM5NTM=",
+  "url": "https://hackerone.com/reports/743953",
+  "title": "Steal private objects of other projects via project import",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "critical",
+  "readable_substate": "Resolved",
+  "created_at": "2019-11-22T04:52:22.161Z",
+  "submitted_at": "2019-11-22T04:52:22.161Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "saltyyolk",
+    "url": "/saltyyolk",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/252/596/b03010470e2928f744f71fb5c1685806f1878341_original.jpeg/c8a1698ff707a5e3e8a91a3484838363845daac68cb82c86d55c9e2d44d67b67"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 264,
+    "url": "https://hackerone.com/gitlab",
+    "handle": "gitlab",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/f0hovtq73f9ap815a0r1w42bocp4/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/f0hovtq73f9ap815a0r1w42bocp4/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "GitLab",
+      "twitter_handle": "gitlab",
+      "website": "https://about.gitlab.com",
+      "about": "A single application for the entire software development lifecycle."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2022-06-07T14:16:42.999Z",
+  "bug_reporter_agreed_on_going_public_at": "2022-06-07T14:16:42.783Z",
+  "team_member_agreed_on_going_public_at": "2020-11-20T20:53:48.144Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "### Summary\nAn attacker could transfer issues, merge requests of another project to the imported project by importing a crafted GitLab export. \n\n### Steps to reproduce\n1. Import the attached tarball as GitLab export.\n2. Check the issues page of the imported project. You will see an private issue created by https://gitlab.com/nyangawa-h1 instead of the current user.\n\n### Description\nThe exploit is in project.json, I added one line to assign `issue_ids` and kept `issues` an empty array.\n```\n    \"issue_ids\": [ 27422144 ],                                                 \n    \"issues\": [],  \n```\n\nThe issues_ids contains the database id of the issues the attacker wants to steal. There's no good way for the attacker to know the id of a specific issue, but as the id is incremental, the attacker could simply steal as many issues as possible in a brute forcing manner.\n\nThe root cause of this issue lies in `project_tree_restorer.rb`\n```\n...\n@project.assign_attributes(project_params)\n...\n```\n\nMany attributes (foreign key) like `issue_ids` and `merge_request_ids` are not excluded during import. According to my observation, affected objects including (but not limited to):\n```\nboard_ids\nissue_ids\nmerge_request_ids\nnote_ids\n...\n```\nLooks like almost all non-excluded attributes behaves like `issues` are affected.\n\n### Examples\n\n{F640860}\n\n### Output of checks\n\nThis bug happens on GitLab.com and self-hosted GitLab installations.\n\n## Impact\n\nWith this ability to modify relations between objects, an attacker could end up with accessing random resources of other users by traversing the incremental ID space.",
+  "bounty_amount": "20000.0",
+  "formatted_bounty": "$20,000",
+  "weakness": {
+    "id": 55,
+    "name": "Insecure Direct Object Reference (IDOR)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 640856,
+      "file_name": "test.tar.gz",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/sFaiSjSTfMNxkLJdoQbgNYpP?response-content-disposition=attachment%3B%20filename%3D%22test.tar.gz%22%3B%20filename%2A%3DUTF-8%27%27test.tar.gz&response-content-type=application%2Fgzip&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYXA2JSSL%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T233143Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH4aCXVzLXdlc3QtMiJHMEUCIQC9JgjrvVUHLexbFFv1tEgfY61VXBaWjZG5Y1kCBeTTRwIgN4w9WZOIFqxTGgZtblXFHwLNndfRzCx7%2FtF990wpwqAquwUI9%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDFQQKMJ34gpArjRt1yqPBfsavkZG4y0a4%2B%2B6zExz7sIfTEiWsrYLUFI%2B2rH%2FMqEC5JKgvwN34AGHEcsJ6FYUyKBDyQvrKwNlUx1Dv6e69ooLk9%2FMwiE22BIdReSXJuRdc56g5VV0%2B4RAAjWzaggh5VSlobr4TGZcr0VEAJBljJ9xv71OuyL4%2FJspexJlmcgTHUxdCQYBOnAacgW8c4FLQXZqhY%2BJE%2BnGI7EuKx6E%2F5k0JEXErJOsVu0LtxE4wNrOwhGWzV%2BIA7BAkZvD9dd655%2BFzwD0nID%2FN36wizb6FRNXOsX93t%2Fm0wyHunGcvNKYfYDumcaKrR6mWgQeCDll%2BMomNPzEU6WUVdw%2BGKnckwUQVkrHCCeNAkqeL6LI6WiixgaTnnRaDOKz78g5QbTAy4a2kaywzuDPi6QHuRLZj3calmuqJQsHUJoQGsjexurUfZFmj0C1zz0lcAO48Dk888Ke2DdpvqUxJiY48beUl3v5B%2BnA8MRoQHTNMbyykk%2FuGKeiyFN54LUX7Q9aZXTV9fCu1f7DQKASWyWyRFdh4jLvHjKpSKwgNGJ2RJN7UrTRWO4WFfHLdNtyd2HpmT6TKv8DdOGpepARtBExTdU0w%2FstYcBn5e8bOgzUy9ujlcXJzBmvVgncLf1wK2d1LpCURcjpvoETmc3jpEmrnGDCKOSAy51TQTGSlqCXXwNApBTB2F2g6dI2dFi0T4YT08nbH0NFt2NhbnxBWyQlfRpRuRxA00gmv68Y8fRcn4GfP2Ur83OwMCndv4YUWq9jrRjeeKgC0PWX5yLbw5nflu7UVQGVfR0Ct2MPqcXfxmETgsh8jtV92SNqz0URr5eEN%2F7pTkS8skAfG1lo%2F13vu0OHsjVncbEMZ5ICBvJjyrWbPNkwlci8xgY6sQG%2B8Sed1scznEQp2l1oRVJoEoysZ8Uqp8zg1M3o42tyMwi%2BhBVuG%2FXGy1juWBwLBOTkdns%2BN3JdhwQnI3%2B%2FR6eHLGUyPB5xgieePV4Rj3%2FJ33lTbVxkHrvkIPdi%2Bp8jfQZJuyKwz6kN5IR%2FlR6OFVtN2oUwkN00DbVY%2FTZSaZcu%2BFRFJwNsFITbZqHpWyLk40OOFMeXoemxRC2JZzw380gA7oh3tqKilPIQfcSPzDvqOoo%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=f760cab3b1c0756d57f7b1b772d982a51a9d0330933511e1fd75c10fad2bc490",
+      "file_size": 1233,
+      "type": "application/gzip",
+      "moderated": null
+    },
+    {
+      "id": 640860,
+      "file_name": "2019-11-22-123223_591x403_scrot.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/mU6SsWtvFottUvWorQ6S3ZCL?response-content-disposition=attachment%3B%20filename%3D%222019-11-22-123223_591x403_scrot.png%22%3B%20filename%2A%3DUTF-8%27%272019-11-22-123223_591x403_scrot.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYXA2JSSL%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T233143Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH4aCXVzLXdlc3QtMiJHMEUCIQC9JgjrvVUHLexbFFv1tEgfY61VXBaWjZG5Y1kCBeTTRwIgN4w9WZOIFqxTGgZtblXFHwLNndfRzCx7%2FtF990wpwqAquwUI9%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDFQQKMJ34gpArjRt1yqPBfsavkZG4y0a4%2B%2B6zExz7sIfTEiWsrYLUFI%2B2rH%2FMqEC5JKgvwN34AGHEcsJ6FYUyKBDyQvrKwNlUx1Dv6e69ooLk9%2FMwiE22BIdReSXJuRdc56g5VV0%2B4RAAjWzaggh5VSlobr4TGZcr0VEAJBljJ9xv71OuyL4%2FJspexJlmcgTHUxdCQYBOnAacgW8c4FLQXZqhY%2BJE%2BnGI7EuKx6E%2F5k0JEXErJOsVu0LtxE4wNrOwhGWzV%2BIA7BAkZvD9dd655%2BFzwD0nID%2FN36wizb6FRNXOsX93t%2Fm0wyHunGcvNKYfYDumcaKrR6mWgQeCDll%2BMomNPzEU6WUVdw%2BGKnckwUQVkrHCCeNAkqeL6LI6WiixgaTnnRaDOKz78g5QbTAy4a2kaywzuDPi6QHuRLZj3calmuqJQsHUJoQGsjexurUfZFmj0C1zz0lcAO48Dk888Ke2DdpvqUxJiY48beUl3v5B%2BnA8MRoQHTNMbyykk%2FuGKeiyFN54LUX7Q9aZXTV9fCu1f7DQKASWyWyRFdh4jLvHjKpSKwgNGJ2RJN7UrTRWO4WFfHLdNtyd2HpmT6TKv8DdOGpepARtBExTdU0w%2FstYcBn5e8bOgzUy9ujlcXJzBmvVgncLf1wK2d1LpCURcjpvoETmc3jpEmrnGDCKOSAy51TQTGSlqCXXwNApBTB2F2g6dI2dFi0T4YT08nbH0NFt2NhbnxBWyQlfRpRuRxA00gmv68Y8fRcn4GfP2Ur83OwMCndv4YUWq9jrRjeeKgC0PWX5yLbw5nflu7UVQGVfR0Ct2MPqcXfxmETgsh8jtV92SNqz0URr5eEN%2F7pTkS8skAfG1lo%2F13vu0OHsjVncbEMZ5ICBvJjyrWbPNkwlci8xgY6sQG%2B8Sed1scznEQp2l1oRVJoEoysZ8Uqp8zg1M3o42tyMwi%2BhBVuG%2FXGy1juWBwLBOTkdns%2BN3JdhwQnI3%2B%2FR6eHLGUyPB5xgieePV4Rj3%2FJ33lTbVxkHrvkIPdi%2Bp8jfQZJuyKwz6kN5IR%2FlR6OFVtN2oUwkN00DbVY%2FTZSaZcu%2BFRFJwNsFITbZqHpWyLk40OOFMeXoemxRC2JZzw380gA7oh3tqKilPIQfcSPzDvqOoo%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=a382d71e2fad14edcccb65af91713f7e4116d7ed86125be218a04c32f4c7bbd8",
+      "file_size": 36737,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 239,
+  "voters": [
+    "cucumbersalad",
+    "ghaem51",
+    "napkin",
+    "jumpydata",
+    "joaxcar",
+    "nicochess",
+    "orange303",
+    "loaymorad",
+    "adilnbabras",
+    "is-",
+    "and 229 more..."
+  ],
+  "severity": {
+    "rating": "critical",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 18138,
+    "asset_type": "URL",
+    "asset_identifier": "gitlab.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
