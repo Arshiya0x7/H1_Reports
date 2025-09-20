@@ -1,0 +1,144 @@
+{
+  "id": 2212627,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yMjEyNjI3",
+  "url": "https://hackerone.com/reports/2212627",
+  "title": "Delete external storage of any user",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2023-10-17T00:08:29.562Z",
+  "submitted_at": "2023-10-17T00:08:29.709Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "cx75fa",
+    "url": "/cx75fa",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/0r7pp45t3pml4bfrs0854y7yb1g5/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13291,
+    "url": "https://hackerone.com/nextcloud",
+    "handle": "nextcloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Nextcloud",
+      "twitter_handle": "nextclouders",
+      "website": "https://nextcloud.com",
+      "about": "Access, share and protect your files, calendars, contacts, communication & more at home and in your enterprise."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2023-48239"
+  ],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2023-11-21T09:22:22.998Z",
+  "bug_reporter_agreed_on_going_public_at": "2023-11-21T09:22:22.917Z",
+  "team_member_agreed_on_going_public_at": "2023-11-21T05:27:32.839Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "A security vulnerability was uncovered that allowed standard users to remove external storage resources from any user account in the application. This flaw was particularly concerning because it enabled unauthorized users to delete these resources based on a system-generated ID, which automatically incremented, without requiring any special privileges. This issue didn't grant access to the data but allowed for the indiscriminate removal of external storage associated with user accounts, potentially leading to data loss and disruption of service for affected users.\n\nReproduction Steps:\n1.Begin by logging in with a standard user account and establish an external storage connection.\n2. Afterward, update the storage configuration. Observe that the following request is generated:\n```\nPUT /apps/files_external/userstorages/<storage_id> HTTP/1.1\nHost: 127.0.0.1:9090\n[REDACTED]\n\n{\"mountPoint\":\"simpleuser\",\"backend\":\"owncloud\",\"authMechanism\":\"password::logincredentials\",\"backendOptions\":{\"host\":\"cq6xxrdnw1941wu9jk4gcyfuglmfa4.oastify.com\",\"root\":\"\",\"secure\":true},\"testOnly\":true,\"id\":<storage_id>,\"mountOptions\":{\"enable_sharing\":true,\"encoding_compatibility\":false,\"encrypt\":true,\"filesystem_check_changes\":1,\"previews\":true,\"readonly\":false}}\n```\n3.Next, log in to the application with an administrative user account or any other role and establish a storage connection.\n4.Observe that each new storage created increments the ID automatically. For instance, it could become 28.\n5. Using the standard user role, issue the request once more to modify the ID linked to the administrative storage. Observe that this action leads to the removal of the storage from the administrator's account.\n\nVIDEO POC:\n{F2778950}\n\n## Impact\n\nThis finding has a huge impact on the application, including data loss, service disruption, unauthorized actions, data privacy concerns, security risks, and potential reputation damage.",
+  "weakness": {
+    "id": 26,
+    "name": "Improper Access Control - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 2778950,
+      "file_name": "delete_storage.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/6ri1dttcueld38dbdgnwfugbutp1?response-content-disposition=attachment%3B%20filename%3D%22delete_storage.mp4%22%3B%20filename%2A%3DUTF-8%27%27delete_storage.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQSKB2FQVG%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T195121Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHkaCXVzLXdlc3QtMiJIMEYCIQD7MAK8tbcUewbApwJe3CJ6yN7fT9PV3MY4F9JXNU1K5AIhAK7ASYtwmIBZ60ySZI3bSJzYTbIU3OrzA0fJLPV8aoyoKrsFCPL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5IgwUsPDJHp3H0KpDoqcqjwWbVKzMpetPCLAbcRQLGtHLwDevjWPYj0SAWzAsfXULr6ggeLDwpEN5gtdbXTiumxqkcord59Xwt5y1b4hc5sx%2Fo9T1tXwZRk2LD6qLUxCs3vkYjnm9Xhn3YUs2O48L8my3T4GbV9sQOl9qXfy99jO6TUCjN6%2Fo9kf6LAGkW2H7BO%2FLWluI8cyAppBEj%2B%2FK%2BXyffAhvNFvrFuKs%2F0jPi6qZCeRTsaGnhB3%2FH29VMlUJWPDToNkVg%2FWQ2lLSIEjo5WHhxG9EJ49F%2FIvpfUOUR%2BDgXNEyVYGTvcumnVKhWckIQHMqewt19CYvjr%2BH3UGNvu8%2FDWxrKI8wweEVPmtCiVN0%2FWIekTqf2vAviO70QHjiZAwshlkqq4qrFkenaWkjvqAZGZhybQ53MVqqceC0bWdjZAcGfnaGBKKDAcye9wC94mLcY2AlHVtsoA2LR7wJ%2BUcZQysXVikJ58vTniOcJFGfqFhaC2bJGvhX%2F22RSW40Jd%2FzcmYrD1sAVkP8FTH3ysPc6N15m0iBboRZ0i2g3edxAzN9GS2UvF2NX2aDqM864RH1vvs%2BZbSylsqLn2GW%2BWD1LjEObBQV%2F8PVhhgT8zKOOBnDUwXnYJb8DZ9SbnHkvUqsKL4GjFgyehcUCJ3LRYnCpoN%2FzXwAK8Fkns3uBOUtq0FetkG9K8mk7GBPg%2Fu3SSQAu6hAj0ZJxpqsaKipVM%2FO8Dax4NzXtgjYvaE84XZLP05WkGyFIIQI9DZcRxwrWko7FOs7qalJsmNGzxAt22RowFPrX9PmfT93eVxaECfiqzrv%2BywekNX57eI7ZZx8249coRA%2BaS4Tk67SK%2BYLAQCJOu2D%2Fz%2ByJ8Bf1T8BDUC3ASTaFqFRX0LxRjdj9NrWMM%2B%2Fu8YGOrABF%2FC8bMq8eP9v6YreMtbSLQExVZBQECAsI6C5J69iZ9LA8GIDwCSPnqTBLnLEtc42l%2FEquIlBiX9q9zivb2lmOb1gP0OyBQHlojjYz%2FLoLltcMQI8iT2E5skFjBBdACiEBqnCkCkK18ssiGwuuq6HBNLWpZVdVVDzziLoOi%2F93A24YKGa63MUsbh8vLBeINjls0ZaiOS%2B8nw1enqEz%2BL3euYvLg3NVDgvfA8ybv%2FC%2FE8%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=0e8ed3a779eb298ae9d97e7c9d08306148fcf94061390a0121c67a1af99400b1",
+      "file_size": 16541551,
+      "type": "video/mp4",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2023-12-21T05:27:32.952Z",
+  "allow_singular_disclosure_after": -55261428.50718067,
+  "singular_disclosure_allowed": true,
+  "vote_count": 43,
+  "voters": [
+    "defenderwww",
+    "zy9ard3",
+    "shreyaschavhan",
+    "themarkib0x0",
+    "shubham_srt",
+    "nischalxd",
+    "maholli",
+    "mohaned0101",
+    "unknownsh",
+    "hesham_elsheme",
+    "and 33 more..."
+  ],
+  "severity": {
+    "rating": "high",
+    "score": 8.5,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "low",
+      "user_interaction": "none",
+      "scope": "changed",
+      "confidentiality": "none",
+      "integrity": "low",
+      "availability": "high"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 13,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "nextcloud/server",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
