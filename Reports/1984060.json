@@ -1,0 +1,168 @@
+{
+  "id": 1984060,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xOTg0MDYw",
+  "url": "https://hackerone.com/reports/1984060",
+  "title": "After the upload of an private file, using transformations, the file becomes public without the possibility of changing it.",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2023-05-11T14:54:33.064Z",
+  "submitted_at": "2023-05-11T14:54:33.393Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "limusec",
+    "url": "/limusec",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 61236,
+    "url": "https://hackerone.com/mozilla",
+    "handle": "mozilla",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/0p8e6gg8xoy45dhjxs5wh4iti6k8/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/0p8e6gg8xoy45dhjxs5wh4iti6k8/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Mozilla",
+      "twitter_handle": "",
+      "website": "https://www.mozilla.org",
+      "about": "Mozilla web bug bounty program specific to encouraging security research in Mozilla's products and web services."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2023-10-20T09:37:30.009Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2023-09-20T09:37:26.399Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nWhen an user uploads a private file, ex (Screenshot 1), where only he has access to. Using the \"View transformations\" function can generate different kinds of image transformations (Screenshot 2). But after the generation of that transformation for example clicking on  the regenerate button next to profile. The function will create a cropped public image, where the user is unable to edit or modify his own generated image (Screenshot 3). \n\nIssue: You have a picture with you smiling and your passport holding in your hand (An example would be a \"know you customer purpose\" selfie). You like that picture on how you look, so you upload it on phabricator, privately, assuming nobody can view it. You click on view transformations, to modify and crop that picture, to get rid of the sensitive data passport you are holding in your hand, so only the face remains. After you clicked on the regenerate next to profile, you realize the crop doesn't work as intended and your passport data is still in there. So you want to modify/delete that picture but you cant. And what's worse that picture visible to anyone and you don't have access to remove it nor to modify it.\n\n## Steps To Reproduce:\n[add details for how we can reproduce the issue]\n\n 1.Upload a private picture here: https://phabricator.allizom.org/file/upload/\n 2.Change the visibility to no one or just you.\n 3. After the upload, click on \"View Transformations\" on the right.\n 4. There you can create different transformations when you click on regenerate.\n 5. After that you, you get a new preview to your generated picture. \n 6. Now go back, to the transforms page, and you get a new link on phabricator, that is public, and can't be changed.\n\nI've added a video that showcases this behavior. \n\n\n## Supporting Material/References:\n[list any additional material (e.g. screenshots, logs, etc.)]\nI've added screenshots and a video to showcase this issue.\n  * [attachment / reference]\n\n## Impact\n\nThe user is assuming that he can upload private data securely. Not knowing that the transform feature will make his uploaded files public with no way to delete it, could in worst case leak PII information.",
+  "bounty_amount": "1000.0",
+  "formatted_bounty": "$1,000",
+  "weakness": {
+    "id": 26,
+    "name": "Improper Access Control - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 2347503,
+      "file_name": "1.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/42eu0ryfuqv1nedhf0wb2t6nrfy9?response-content-disposition=attachment%3B%20filename%3D%221.PNG%22%3B%20filename%2A%3DUTF-8%27%271.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZAV7AOYP%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T195930Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHsaCXVzLXdlc3QtMiJGMEQCIDsjnwRrf1ZYFVN5N1vXwf5iqTWU999shyIMNO2J5TvvAiADf1PkrEBWQIbBovxHxHjmhUIYL%2FIFMssqKgUnHkFEbyq6BQj0%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMTUvwJgH%2BaypGnn5sKo4FFLj1zSC%2FhY%2B%2BVm6dOZqnLI4H5JjQ10ClNb8NCZouhLHDWPf%2FxgszulaseQp3eqo3lIq9LrRdDdN9fQ2ZrZN6hRpZDSxfWNvYU%2FuwozYU4tfNZOipP26DZLwVEIALGeJ5Fwa%2FcIYipYLDi0i1C%2Fav9x7%2FFrCaZHcxIgphd8%2BEn410KvMTMuramosllDFqcu7Li4O339wj%2FiAe3eqqsewfexfUqJ4YfaU20nWYXPtZTMMEIOybyvhVfCwxbHMqf7bkOs3rhW%2Fn60BAS6VgXx8cnMFrvxqWwr4A6oF5%2BzOdnzV2L%2BCjkkX%2FG6I3DUnfLsrSarBC2WInFtnlwUID876zNpJMeQx2EVHSv%2BeKPxjtzMBUUzbntZQzsnS252NpAq%2FbGif%2B%2BviVXn6wTbN8RDj9nMJENkz1%2BzXP9bIwhC56lxsJaAgMmXkCK5ylpjObk8s5dV8wBs1HLQAWYQRAxATDRR6AC%2F9CIfjsPuRKqlNaBEKsNYV8f%2FdId%2FmiVmAULotIqDmWYODA9lMlBMAZUA5oUA5TOTu5dMHnSsO6Ph%2B7yp%2B2NRoZs79tYTSqysgPi%2FseMvUVlRv7Z3hqtWjgfcHwmoEiSjoOxLyTw2TxbhbWeGAdWGUFp5SSFInQyI8gZwAfDtnGbs6ipcH3%2BoOpdGn800SGi0clgtIqui4LdCq4cbvJ1MJ0AZc6uKKpVzKqUIxoC0MNQdAcWJXUQEL1XpCvmgzY4CgSVhw2KlCx0NWkjld7XpKlB7zCqs6SG7%2B5PAkH4AFJ5QxK07%2F%2F4BwBtFaoPLmkXwEM3rr1xR%2FR2uu7yWhGGzo%2FkBicfCrqxXO0N42w0%2BIjQ2HdzNZmQynSH%2FH8QRC2JQburSePA4vzZUUHMI77u8YGOrIBbB9ezFp%2Boweea5oWecm7G%2Fra0u8TXEqAXopZOpHcfKFa6A3mHqLUVcs2YuV%2FR69AL5DFE%2FnM1s8EaESOmiL6HWXKtNM14hiPVvYdg8px7CfKonUklznYYhiEiLJIVsHBTUqsvRgEKh3qQ8y3LBRcC%2FiCPZAiBx3DdqTgULzG9BmaIdPk0bx9lPCEatZO%2Fu3VnPY%2B18uiik8yf5pDKcLT6B48KUZX%2FI4pKhs%2FniCwLB31Sw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=3dd5507da732c0a7e2acf19a3a3aac6c666c8c440366c50f1be62b9a62747d39",
+      "file_size": 124026,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 2347505,
+      "file_name": "2.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/6cz51b7lwas89qvhwtsmbwuggph9?response-content-disposition=attachment%3B%20filename%3D%222.PNG%22%3B%20filename%2A%3DUTF-8%27%272.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZAV7AOYP%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T195930Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHsaCXVzLXdlc3QtMiJGMEQCIDsjnwRrf1ZYFVN5N1vXwf5iqTWU999shyIMNO2J5TvvAiADf1PkrEBWQIbBovxHxHjmhUIYL%2FIFMssqKgUnHkFEbyq6BQj0%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMTUvwJgH%2BaypGnn5sKo4FFLj1zSC%2FhY%2B%2BVm6dOZqnLI4H5JjQ10ClNb8NCZouhLHDWPf%2FxgszulaseQp3eqo3lIq9LrRdDdN9fQ2ZrZN6hRpZDSxfWNvYU%2FuwozYU4tfNZOipP26DZLwVEIALGeJ5Fwa%2FcIYipYLDi0i1C%2Fav9x7%2FFrCaZHcxIgphd8%2BEn410KvMTMuramosllDFqcu7Li4O339wj%2FiAe3eqqsewfexfUqJ4YfaU20nWYXPtZTMMEIOybyvhVfCwxbHMqf7bkOs3rhW%2Fn60BAS6VgXx8cnMFrvxqWwr4A6oF5%2BzOdnzV2L%2BCjkkX%2FG6I3DUnfLsrSarBC2WInFtnlwUID876zNpJMeQx2EVHSv%2BeKPxjtzMBUUzbntZQzsnS252NpAq%2FbGif%2B%2BviVXn6wTbN8RDj9nMJENkz1%2BzXP9bIwhC56lxsJaAgMmXkCK5ylpjObk8s5dV8wBs1HLQAWYQRAxATDRR6AC%2F9CIfjsPuRKqlNaBEKsNYV8f%2FdId%2FmiVmAULotIqDmWYODA9lMlBMAZUA5oUA5TOTu5dMHnSsO6Ph%2B7yp%2B2NRoZs79tYTSqysgPi%2FseMvUVlRv7Z3hqtWjgfcHwmoEiSjoOxLyTw2TxbhbWeGAdWGUFp5SSFInQyI8gZwAfDtnGbs6ipcH3%2BoOpdGn800SGi0clgtIqui4LdCq4cbvJ1MJ0AZc6uKKpVzKqUIxoC0MNQdAcWJXUQEL1XpCvmgzY4CgSVhw2KlCx0NWkjld7XpKlB7zCqs6SG7%2B5PAkH4AFJ5QxK07%2F%2F4BwBtFaoPLmkXwEM3rr1xR%2FR2uu7yWhGGzo%2FkBicfCrqxXO0N42w0%2BIjQ2HdzNZmQynSH%2FH8QRC2JQburSePA4vzZUUHMI77u8YGOrIBbB9ezFp%2Boweea5oWecm7G%2Fra0u8TXEqAXopZOpHcfKFa6A3mHqLUVcs2YuV%2FR69AL5DFE%2FnM1s8EaESOmiL6HWXKtNM14hiPVvYdg8px7CfKonUklznYYhiEiLJIVsHBTUqsvRgEKh3qQ8y3LBRcC%2FiCPZAiBx3DdqTgULzG9BmaIdPk0bx9lPCEatZO%2Fu3VnPY%2B18uiik8yf5pDKcLT6B48KUZX%2FI4pKhs%2FniCwLB31Sw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=ab6496c8db2614da93c2f72fb31b89072e4a9f1c80ce3a8376ce1aeabab2e60f",
+      "file_size": 63786,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 2347506,
+      "file_name": "3.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/8ruo169rv6rgkdxqiydj0ydivt30?response-content-disposition=attachment%3B%20filename%3D%223.PNG%22%3B%20filename%2A%3DUTF-8%27%273.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZAV7AOYP%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T195931Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHsaCXVzLXdlc3QtMiJGMEQCIDsjnwRrf1ZYFVN5N1vXwf5iqTWU999shyIMNO2J5TvvAiADf1PkrEBWQIbBovxHxHjmhUIYL%2FIFMssqKgUnHkFEbyq6BQj0%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMTUvwJgH%2BaypGnn5sKo4FFLj1zSC%2FhY%2B%2BVm6dOZqnLI4H5JjQ10ClNb8NCZouhLHDWPf%2FxgszulaseQp3eqo3lIq9LrRdDdN9fQ2ZrZN6hRpZDSxfWNvYU%2FuwozYU4tfNZOipP26DZLwVEIALGeJ5Fwa%2FcIYipYLDi0i1C%2Fav9x7%2FFrCaZHcxIgphd8%2BEn410KvMTMuramosllDFqcu7Li4O339wj%2FiAe3eqqsewfexfUqJ4YfaU20nWYXPtZTMMEIOybyvhVfCwxbHMqf7bkOs3rhW%2Fn60BAS6VgXx8cnMFrvxqWwr4A6oF5%2BzOdnzV2L%2BCjkkX%2FG6I3DUnfLsrSarBC2WInFtnlwUID876zNpJMeQx2EVHSv%2BeKPxjtzMBUUzbntZQzsnS252NpAq%2FbGif%2B%2BviVXn6wTbN8RDj9nMJENkz1%2BzXP9bIwhC56lxsJaAgMmXkCK5ylpjObk8s5dV8wBs1HLQAWYQRAxATDRR6AC%2F9CIfjsPuRKqlNaBEKsNYV8f%2FdId%2FmiVmAULotIqDmWYODA9lMlBMAZUA5oUA5TOTu5dMHnSsO6Ph%2B7yp%2B2NRoZs79tYTSqysgPi%2FseMvUVlRv7Z3hqtWjgfcHwmoEiSjoOxLyTw2TxbhbWeGAdWGUFp5SSFInQyI8gZwAfDtnGbs6ipcH3%2BoOpdGn800SGi0clgtIqui4LdCq4cbvJ1MJ0AZc6uKKpVzKqUIxoC0MNQdAcWJXUQEL1XpCvmgzY4CgSVhw2KlCx0NWkjld7XpKlB7zCqs6SG7%2B5PAkH4AFJ5QxK07%2F%2F4BwBtFaoPLmkXwEM3rr1xR%2FR2uu7yWhGGzo%2FkBicfCrqxXO0N42w0%2BIjQ2HdzNZmQynSH%2FH8QRC2JQburSePA4vzZUUHMI77u8YGOrIBbB9ezFp%2Boweea5oWecm7G%2Fra0u8TXEqAXopZOpHcfKFa6A3mHqLUVcs2YuV%2FR69AL5DFE%2FnM1s8EaESOmiL6HWXKtNM14hiPVvYdg8px7CfKonUklznYYhiEiLJIVsHBTUqsvRgEKh3qQ8y3LBRcC%2FiCPZAiBx3DdqTgULzG9BmaIdPk0bx9lPCEatZO%2Fu3VnPY%2B18uiik8yf5pDKcLT6B48KUZX%2FI4pKhs%2FniCwLB31Sw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=bf05f3247569e416bbdf75c5104b3527d77b8682dc7ee2e0e3c60271ff9d9240",
+      "file_size": 295439,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 2347533,
+      "file_name": "2023-05-11_16-48-42.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/tlct2ra68xukfg4pwzs4peh4762k?response-content-disposition=attachment%3B%20filename%3D%222023-05-11_16-48-42.mp4%22%3B%20filename%2A%3DUTF-8%27%272023-05-11_16-48-42.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZAV7AOYP%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T195931Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHsaCXVzLXdlc3QtMiJGMEQCIDsjnwRrf1ZYFVN5N1vXwf5iqTWU999shyIMNO2J5TvvAiADf1PkrEBWQIbBovxHxHjmhUIYL%2FIFMssqKgUnHkFEbyq6BQj0%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMTUvwJgH%2BaypGnn5sKo4FFLj1zSC%2FhY%2B%2BVm6dOZqnLI4H5JjQ10ClNb8NCZouhLHDWPf%2FxgszulaseQp3eqo3lIq9LrRdDdN9fQ2ZrZN6hRpZDSxfWNvYU%2FuwozYU4tfNZOipP26DZLwVEIALGeJ5Fwa%2FcIYipYLDi0i1C%2Fav9x7%2FFrCaZHcxIgphd8%2BEn410KvMTMuramosllDFqcu7Li4O339wj%2FiAe3eqqsewfexfUqJ4YfaU20nWYXPtZTMMEIOybyvhVfCwxbHMqf7bkOs3rhW%2Fn60BAS6VgXx8cnMFrvxqWwr4A6oF5%2BzOdnzV2L%2BCjkkX%2FG6I3DUnfLsrSarBC2WInFtnlwUID876zNpJMeQx2EVHSv%2BeKPxjtzMBUUzbntZQzsnS252NpAq%2FbGif%2B%2BviVXn6wTbN8RDj9nMJENkz1%2BzXP9bIwhC56lxsJaAgMmXkCK5ylpjObk8s5dV8wBs1HLQAWYQRAxATDRR6AC%2F9CIfjsPuRKqlNaBEKsNYV8f%2FdId%2FmiVmAULotIqDmWYODA9lMlBMAZUA5oUA5TOTu5dMHnSsO6Ph%2B7yp%2B2NRoZs79tYTSqysgPi%2FseMvUVlRv7Z3hqtWjgfcHwmoEiSjoOxLyTw2TxbhbWeGAdWGUFp5SSFInQyI8gZwAfDtnGbs6ipcH3%2BoOpdGn800SGi0clgtIqui4LdCq4cbvJ1MJ0AZc6uKKpVzKqUIxoC0MNQdAcWJXUQEL1XpCvmgzY4CgSVhw2KlCx0NWkjld7XpKlB7zCqs6SG7%2B5PAkH4AFJ5QxK07%2F%2F4BwBtFaoPLmkXwEM3rr1xR%2FR2uu7yWhGGzo%2FkBicfCrqxXO0N42w0%2BIjQ2HdzNZmQynSH%2FH8QRC2JQburSePA4vzZUUHMI77u8YGOrIBbB9ezFp%2Boweea5oWecm7G%2Fra0u8TXEqAXopZOpHcfKFa6A3mHqLUVcs2YuV%2FR69AL5DFE%2FnM1s8EaESOmiL6HWXKtNM14hiPVvYdg8px7CfKonUklznYYhiEiLJIVsHBTUqsvRgEKh3qQ8y3LBRcC%2FiCPZAiBx3DdqTgULzG9BmaIdPk0bx9lPCEatZO%2Fu3VnPY%2B18uiik8yf5pDKcLT6B48KUZX%2FI4pKhs%2FniCwLB31Sw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=263c321b339a397cedb2f002f76241368c0cb206fd9670a9b17b654bf0d12af5",
+      "file_size": 8237457,
+      "type": "video/mp4",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2023-10-20T09:37:26.546Z",
+  "allow_singular_disclosure_after": -60603724.49623715,
+  "singular_disclosure_allowed": true,
+  "vote_count": 59,
+  "voters": [
+    "h4x0r_ly",
+    "hackerbmw",
+    "n1m0",
+    "zy9ard3",
+    "mr-k0anti",
+    "shreyaschavhan",
+    "threatmodel",
+    "shubham_srt",
+    "mohaned0101",
+    "moshakes",
+    "and 49 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 6.5,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "low",
+      "integrity": "low",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 635518,
+    "asset_type": "URL",
+    "asset_identifier": "phabricator.allizom.org",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
