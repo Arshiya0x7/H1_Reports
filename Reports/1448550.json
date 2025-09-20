@@ -1,0 +1,139 @@
+{
+  "id": 1448550,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNDQ4NTUw",
+  "url": "https://hackerone.com/reports/1448550",
+  "title": "Remove Every User, Admin, And Owner Out Of Their Teams on developers.mtn.com via IDOR + Information Disclosure",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "critical",
+  "readable_substate": "Resolved",
+  "created_at": "2022-01-13T06:01:56.556Z",
+  "submitted_at": "2022-01-13T06:01:56.649Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "wallotry",
+    "url": "/wallotry",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/9f65k0wiay2qdsapspyb0zvsg8nr/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 41919,
+    "url": "https://hackerone.com/mtn_group",
+    "handle": "mtn_group",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/4e6ikuxrt34g8b14w2bk53c6vyry/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/4e6ikuxrt34g8b14w2bk53c6vyry/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "MTN Group",
+      "twitter_handle": "",
+      "website": "https://www.mtn.com/",
+      "about": ""
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2022-12-01T17:34:30.586Z",
+  "bug_reporter_agreed_on_going_public_at": "2022-11-01T17:34:28.249Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello world,\n\nThis vulnerability is too involved with regular users, in order for us to prevent any damage, we need 3 different user accounts we own. \nThis gives us specific \"user_id\" and \"team_id\" to work with.\nThere's an Information Disclosure as a side effect of this vulnerability. User and team names are disclosed in the response from the server.\n\n## Steps To Reproduce(POC)\n\n==First, let's paint a mental picture of this vulnerability and the required conditions using accounts with imaginary user_id & team_id.\nThe vulnerability and conditions are realistic, the only imaginary thing is the user_id and team_id.==\n\n 1. Create 3 accounts on developers.mtn.com(Account A, B, and C)\n\n==My imaginary accounts:==\n- A: First Account(imaginary user_id=1111 & team_id=0001)\n- B: Second Account(imaginary user_id=1112 & team_id=0002)\n- C: Third Account(imaginary user_id=1113 & team_id=0003)\n 2. Login to A, Invite B to your Team A\n 3. Login to B, Invite C to your team B\n 4. Open Burp Suite\n 5. Login to A, Remove B(Please Intercept This Request)\n 6. Send the Intercepted request to the repeater tab\n 7. Modify the request(Our Goal is to remove C from Team B, which we don't have access or permissions to.)\n 8. Replace the team_id with Team B's team_id. Replace the user_id with C's user_id.\n 9. Send the Request. (This Request will disclose C's username And Team B's name. Making this an information disclosure. PII)\n\n{F1577574}\n\n 10. C will be removed from B's Team B.\n 11. C will receive an email from MTN telling him/her that he/she has been removed from Team B.\n\n{F1577544}\n\n## Steps To Reproduce(Removing Every User)\n\n==This can be done with a custom script/code without the need for Burp Suite==\n 1. Intercept the request for removing a user, and send it to the Burp Suite intercept tab.\n 2. Config your settings to brute-force through every team_id and user_id. This part is not that hard because every user_id and team_id has only 4 digits.\n 3. Run the intruder request. When there's a successful user_id and team_id match, the user whose ID has been matched, will be removed.\n 4. If my calculations are correct, it should take 12 Hours to remove every user from every group they're in, the maximum being 20 Hours. The faster the internet speed, the faster the computer, the shorter the time it'll take to brute-force through every user_id and team_id.\n\n## Exploitability\n- Anyone with an account on developers.mtn.com can exploit this vulnerability\n- All you need is a user_id and a team_id to remove a user from his/her team.(Their privileges don't matter, even the owner is vulnerable)\n\n## Remediation\n- Ensure proper session management and object-level user access control checks.\n- Apply access control mechanisms such as permissions to certain action.\n- Validation of access to a team_id.\n- You should always check if a user submitting the request isn't tampering and isn't submitting any ID's that do not belong to his/her account.\n\n## Reference\n#1448475\n\n## Impact\n\nA low level user can remove his Admin and Owner from the team.\nEvery user will be removed from every team they are in, including owners and admins.",
+  "weakness": {
+    "id": 55,
+    "name": "Insecure Direct Object Reference (IDOR)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1577544,
+      "file_name": "removed_email.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/uz3jpt9gl0s61nunel1sxa00lhkz?response-content-disposition=attachment%3B%20filename%3D%22removed_email.png%22%3B%20filename%2A%3DUTF-8%27%27removed_email.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ7YWD44EF%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T220634Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH0aCXVzLXdlc3QtMiJHMEUCIACcdJGeT7z%2FXsoOetbAiWdDspfE7I7qsHiLr%2FO%2Fv9TCAiEA7ik%2BrDnK9qXk5DWrJuTOH5eIU5N%2Bzs%2F4bLYH3EohN20qugUI9f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDJozzCVwDtp1WiPLnyqOBet2M7DVsH%2BhorPYLcXdLvE%2FKPu7NzbhYc4ylxiDU0IdJO7HnhWo37U%2FeGB%2FM%2Fu5uqTJdBXOB2q67R6gjYddR9IyxYHUH8HbGEETfX7KkRSgP8NuUTKazBRhnA5J68yGIJU9ifU%2F7aqhhtqEumyS%2F%2FH2YmLey3KWZgyhBJN8RpZZuLUoq3GgPbIJp8jMUvIRCbr2B9CZBkQXvXF2BbTfTd2QdGUVpa5VR1zoujZzd1Ves3b994CNCaskZEaOjABa6hK1%2FJvjaBaYlbNgu3Z%2FiJCecjhestb2uUHiH69LMXWHxYz60rpSxxDsxuA598YkVGx7dWka7NPI%2Fj856CUAUSi5qpvdrXQpDehZHYagwtow5e7Dc%2FehWjJJsxG3hye38iB0Z8ycjkvtxJoE0eJXrRGqGUZisZ7x8vlceCe%2BiBChtauB3Z2clR4gUaaKPo8i8L0ka0Bnk%2B4Yfq28sH%2BkGgz1qo4%2Fx%2BiSNEBMEC4vyTTBFuOW78xW6qQ44FhLn9n2lJTyWu7fQC74mSTCP3B%2FIfuMld07m34BNmVoT7ZYPtTDJpHCpQWDIteasrf3q4%2BGTNlsM0wBgsxIaq3IVD%2BhZiaPMh23ZJPn7dgyVdr%2FnaXfjU7wonUKcEgo85v0YUgsdGUkJ4a6o5ylWQK65K7%2FA6cbtBael81Mlu2gUqXZcPHLNa%2FL8WVKFefGsuRpaYagpMB7b5Ev8xkdzzHSvjTauLlx7XFq0fFuxTk4eGmpXRnI9YN6DM3opOmFPzmBXncNvNv4xBJ0kyH1b88M2ijDGYYCUdvBpZ2FUUJDcFH9CIHMYd%2FpzEbR%2BnuTcMbPPLZo%2BRHETXicoe01WSSQsMJZGQKGc5aN0uigI90pgVgujDC1mLzGBjqxATwQljAQnc1LUID8JKRnnRA6tMX7rMhpBITsYCHWVkXWKEfEcykQ%2FiSX%2FFtn5Jkp5huJJDVGD%2B%2Fj%2BCaZNCnS5kDn%2BqXP%2BfCPWUOyYRVDSlbFhaJTCDP94fuBVUQUkfD7%2BmAa6Kmq2h0gep%2Fq%2F0lkYTBcRmNSSZWY%2BQZQE8Y29bsPzBMKvR%2BSZXvMbpIDQaSRHWnStxulF6L5MK4S1DztW7TZq8fAOwwsKNQSCM5DL5L%2BCg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=e07d6899f37d26b8aba2e715fb1dd3c3e90f35525e777e4a6ae5c723b4e26382",
+      "file_size": 42424,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1577574,
+      "file_name": "IDOR___Disclosure.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/jbiaersuhlgiveesqyx0k02xtqf2?response-content-disposition=attachment%3B%20filename%3D%22IDOR___Disclosure.mp4%22%3B%20filename%2A%3DUTF-8%27%27IDOR___Disclosure.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ7YWD44EF%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T220634Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH0aCXVzLXdlc3QtMiJHMEUCIACcdJGeT7z%2FXsoOetbAiWdDspfE7I7qsHiLr%2FO%2Fv9TCAiEA7ik%2BrDnK9qXk5DWrJuTOH5eIU5N%2Bzs%2F4bLYH3EohN20qugUI9f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDJozzCVwDtp1WiPLnyqOBet2M7DVsH%2BhorPYLcXdLvE%2FKPu7NzbhYc4ylxiDU0IdJO7HnhWo37U%2FeGB%2FM%2Fu5uqTJdBXOB2q67R6gjYddR9IyxYHUH8HbGEETfX7KkRSgP8NuUTKazBRhnA5J68yGIJU9ifU%2F7aqhhtqEumyS%2F%2FH2YmLey3KWZgyhBJN8RpZZuLUoq3GgPbIJp8jMUvIRCbr2B9CZBkQXvXF2BbTfTd2QdGUVpa5VR1zoujZzd1Ves3b994CNCaskZEaOjABa6hK1%2FJvjaBaYlbNgu3Z%2FiJCecjhestb2uUHiH69LMXWHxYz60rpSxxDsxuA598YkVGx7dWka7NPI%2Fj856CUAUSi5qpvdrXQpDehZHYagwtow5e7Dc%2FehWjJJsxG3hye38iB0Z8ycjkvtxJoE0eJXrRGqGUZisZ7x8vlceCe%2BiBChtauB3Z2clR4gUaaKPo8i8L0ka0Bnk%2B4Yfq28sH%2BkGgz1qo4%2Fx%2BiSNEBMEC4vyTTBFuOW78xW6qQ44FhLn9n2lJTyWu7fQC74mSTCP3B%2FIfuMld07m34BNmVoT7ZYPtTDJpHCpQWDIteasrf3q4%2BGTNlsM0wBgsxIaq3IVD%2BhZiaPMh23ZJPn7dgyVdr%2FnaXfjU7wonUKcEgo85v0YUgsdGUkJ4a6o5ylWQK65K7%2FA6cbtBael81Mlu2gUqXZcPHLNa%2FL8WVKFefGsuRpaYagpMB7b5Ev8xkdzzHSvjTauLlx7XFq0fFuxTk4eGmpXRnI9YN6DM3opOmFPzmBXncNvNv4xBJ0kyH1b88M2ijDGYYCUdvBpZ2FUUJDcFH9CIHMYd%2FpzEbR%2BnuTcMbPPLZo%2BRHETXicoe01WSSQsMJZGQKGc5aN0uigI90pgVgujDC1mLzGBjqxATwQljAQnc1LUID8JKRnnRA6tMX7rMhpBITsYCHWVkXWKEfEcykQ%2FiSX%2FFtn5Jkp5huJJDVGD%2B%2Fj%2BCaZNCnS5kDn%2BqXP%2BfCPWUOyYRVDSlbFhaJTCDP94fuBVUQUkfD7%2BmAa6Kmq2h0gep%2Fq%2F0lkYTBcRmNSSZWY%2BQZQE8Y29bsPzBMKvR%2BSZXvMbpIDQaSRHWnStxulF6L5MK4S1DztW7TZq8fAOwwsKNQSCM5DL5L%2BCg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=08f93bd6857b78c0821605635ccbac6729c59c54c20c01a06c70d498e8900fec",
+      "file_size": 2460634,
+      "type": "video/mp4",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2022-12-01T17:34:28.346Z",
+  "allow_singular_disclosure_after": -88489925.86360683,
+  "singular_disclosure_allowed": true,
+  "vote_count": 24,
+  "voters": [
+    "hacker_441",
+    "jumpydata",
+    "zy9ard3",
+    "shreyaschavhan",
+    "shubham_srt",
+    "lesleybw",
+    "0x478",
+    "pr0f0x01",
+    "panda_12",
+    "shivammusic",
+    "and 14 more..."
+  ],
+  "severity": {
+    "rating": "critical",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 34306,
+    "asset_type": "URL",
+    "asset_identifier": "mtn.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
