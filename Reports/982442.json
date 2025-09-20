@@ -1,0 +1,145 @@
+{
+  "id": 982442,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC85ODI0NDI=",
+  "url": "https://hackerone.com/reports/982442",
+  "title": "XSS in https://promo.acronis.com/",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2020-09-15T07:06:32.054Z",
+  "submitted_at": "2020-09-15T07:06:32.246Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "yash_",
+    "url": "/yash_",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/hfX1HzJ4HtreSfHG2VRuHbN2/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13428,
+    "url": "https://hackerone.com/acronis",
+    "handle": "acronis",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/e54TDdWdgLKsH3h1oFpK26bq/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/e54TDdWdgLKsH3h1oFpK26bq/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Acronis",
+      "twitter_handle": "Acronis",
+      "website": "https://www.acronis.com",
+      "about": "Complete integrated cybersecurity and data protection for MSPs and IT teams"
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2024-08-26T15:34:06.480Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2021-08-05T08:21:21.740Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello, \n\nI found DOM XSS in https://promo.acronis.com/  \nOpen this URL https://promo.acronis.com/GL-Trial-MassTransit.html and view source.\nSearch for `document.write` and there will be 4 statements inside try/catch block.  \n{F988381}\n\nThe last statement loads script from using `document.referrer`. So we can host a page that loads https://promo.acronis.com/GL-Trial-MassTransit.html in iframe. So it will load the script `/marketo/common.js` from our domain.\n\n## Steps To Reproduce\n  1. To create server I am using Node.js you can use static files also..  If you are using static files server make sure to create `/marketo/common.js` file.\n  1. Create a director and copy this file F988371 in it.\n  1. Run `npm init -y`\n  1. and then `npm i express` to install exprss.\n  1. Now run `node index.js` this will start server on 'localhost:5000'\n  1. Open http://localhost:5000 and you will see alert.  \n   {F988380}\n\n## Impact\n\nAnyone who opens this page, attacker can execute JavaScript code on their device or redirect victims to phishing websites.",
+  "weakness": {
+    "id": 63,
+    "name": "Cross-site Scripting (XSS) - DOM"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 988371,
+      "file_name": "index.js",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/XEY39jxJgEX7qSQgxRvTLSrr?response-content-disposition=attachment%3B%20filename%3D%22index.js%22%3B%20filename%2A%3DUTF-8%27%27index.js&response-content-type=text%2Fjavascript&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ3X75U5D5%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T181735Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHoaCXVzLXdlc3QtMiJHMEUCIFgPRyoB2RPTZX7janUl%2F2argJS6Nymn2fPexsC48gVVAiEA73szecMe84n3HEXFclYySjXip5kT4jJWqLIFuu79Jy4qugUI8%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDFMkIdACvD568bz6USqOBRod9RZAm37unEE2cze3V%2FDSMNaQs2UuJyNwpaSq5eMhCf0MsW3LnC2hVM8EFDfc7h1WUoa%2FdXviGEVee35n3IX06Jp8jgCgsyTEYOJuZBIacGeBeBUHOSTUy8nOBpNOy%2FKKuJ2fq2ws8QWWPanpgxD9Y8evltLgK1XGSt8texQbEBe5Wmsqar7NChsrVNo0tWaZTx5iH9H0lxBWAk2ZP%2FoQ0LVfv6Xb5CiX0TXoL%2FHCQ0w0brdTlRLvjLxGVBxaA7qmhanpOEyL%2F9Y85JvVTu8s%2FltCqoxLvrZqvCzgQpJfsnTJWYkeLoTdqw3OQMfg0FWsAGAWa8WGOrbyeMBOXknEGkY2hLiGrfAMBNDh9ZpoDMPIG6ZuqvKVFwNIBITqaJBJNzBLUzhUmauu0iqYb2YkNbcArA0LyBa%2FINJr%2F9nakCIIBL5UuMSCj3oRyNBD0ATGscCyGsPwD1yOZv%2FDQ5dtg5w2NcmpaShtTYYc6oqaRuMZRAq3OY1FtuZZMwHi%2F05pyVpGvrK%2BcMzu7OPIPJEiu8J4TlEpJy%2BJjUvJNSKfegwPVkqN68eVrfZENwwARZmf7Ku7ldY3nNAeDAN6zPAdOCWAHv1cBhIvSZrVbBnK6CJy7ilV27kLdY21kPAlkbKh9LqPARw7iU21DS7MJoZaeypaKSxxMI1XuR1X%2BdBKs2upPJuZmtlf3VDUGlOX9tM0q6JTGH4CmVEV8mQR3vwr2IvXB%2FRFdK6NL4n5v636fd2jOf8gn0jz5foelCKWsKJWadh%2FD9xJ3gUfoC9HAWLmYXS585zqXyWYwXyRiUazpI4ryTbZNpETAECH7fTfFcj1Ga0B52ptcjHBZC7LzNyWGxkWj8gkHlF7ZQSwuzDl0bvGBjqxAa9%2BsCGQbV7lVzaLESOI9V%2F%2BDdyzrf2exjlFVIjcRJIujswgV%2FwTKveeJY5CVSPIv2aIHeJ0SJZ0%2BjKoBZSJ%2BPgfKFUSDhGBrGKb411Uat2C3oEKcbbopgYvizXF7%2FFfHSLbofYEg99kc38SfckxQOf73u1lHXDxOXMUCaolGnPlv90AAUtImm1PVoEaOqcbDlp2R0iyTUMMuKAgd2buKr2un4FssBKU7mkUEx3RJkQlpg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=15dd46ed16bb85f7c0831ba003d2c69d43a2e55e8df705fa7fd14ab1f0adaea5",
+      "file_size": 422,
+      "type": "text/javascript",
+      "moderated": null
+    },
+    {
+      "id": 988380,
+      "file_name": "1.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/MdsrLCzgNbqzHA5RE5dusT3r?response-content-disposition=attachment%3B%20filename%3D%221.png%22%3B%20filename%2A%3DUTF-8%27%271.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ3X75U5D5%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T181735Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHoaCXVzLXdlc3QtMiJHMEUCIFgPRyoB2RPTZX7janUl%2F2argJS6Nymn2fPexsC48gVVAiEA73szecMe84n3HEXFclYySjXip5kT4jJWqLIFuu79Jy4qugUI8%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDFMkIdACvD568bz6USqOBRod9RZAm37unEE2cze3V%2FDSMNaQs2UuJyNwpaSq5eMhCf0MsW3LnC2hVM8EFDfc7h1WUoa%2FdXviGEVee35n3IX06Jp8jgCgsyTEYOJuZBIacGeBeBUHOSTUy8nOBpNOy%2FKKuJ2fq2ws8QWWPanpgxD9Y8evltLgK1XGSt8texQbEBe5Wmsqar7NChsrVNo0tWaZTx5iH9H0lxBWAk2ZP%2FoQ0LVfv6Xb5CiX0TXoL%2FHCQ0w0brdTlRLvjLxGVBxaA7qmhanpOEyL%2F9Y85JvVTu8s%2FltCqoxLvrZqvCzgQpJfsnTJWYkeLoTdqw3OQMfg0FWsAGAWa8WGOrbyeMBOXknEGkY2hLiGrfAMBNDh9ZpoDMPIG6ZuqvKVFwNIBITqaJBJNzBLUzhUmauu0iqYb2YkNbcArA0LyBa%2FINJr%2F9nakCIIBL5UuMSCj3oRyNBD0ATGscCyGsPwD1yOZv%2FDQ5dtg5w2NcmpaShtTYYc6oqaRuMZRAq3OY1FtuZZMwHi%2F05pyVpGvrK%2BcMzu7OPIPJEiu8J4TlEpJy%2BJjUvJNSKfegwPVkqN68eVrfZENwwARZmf7Ku7ldY3nNAeDAN6zPAdOCWAHv1cBhIvSZrVbBnK6CJy7ilV27kLdY21kPAlkbKh9LqPARw7iU21DS7MJoZaeypaKSxxMI1XuR1X%2BdBKs2upPJuZmtlf3VDUGlOX9tM0q6JTGH4CmVEV8mQR3vwr2IvXB%2FRFdK6NL4n5v636fd2jOf8gn0jz5foelCKWsKJWadh%2FD9xJ3gUfoC9HAWLmYXS585zqXyWYwXyRiUazpI4ryTbZNpETAECH7fTfFcj1Ga0B52ptcjHBZC7LzNyWGxkWj8gkHlF7ZQSwuzDl0bvGBjqxAa9%2BsCGQbV7lVzaLESOI9V%2F%2BDdyzrf2exjlFVIjcRJIujswgV%2FwTKveeJY5CVSPIv2aIHeJ0SJZ0%2BjKoBZSJ%2BPgfKFUSDhGBrGKb411Uat2C3oEKcbbopgYvizXF7%2FFfHSLbofYEg99kc38SfckxQOf73u1lHXDxOXMUCaolGnPlv90AAUtImm1PVoEaOqcbDlp2R0iyTUMMuKAgd2buKr2un4FssBKU7mkUEx3RJkQlpg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=d87a7558cadcc8e92b0e0c07b5138bc02887965fec085c161e76a34b1af37b4e",
+      "file_size": 10660,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 988381,
+      "file_name": "0.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/m5PwxgT2dJHMwoQfSXfNMdXf?response-content-disposition=attachment%3B%20filename%3D%220.png%22%3B%20filename%2A%3DUTF-8%27%270.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ3X75U5D5%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T181735Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHoaCXVzLXdlc3QtMiJHMEUCIFgPRyoB2RPTZX7janUl%2F2argJS6Nymn2fPexsC48gVVAiEA73szecMe84n3HEXFclYySjXip5kT4jJWqLIFuu79Jy4qugUI8%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDFMkIdACvD568bz6USqOBRod9RZAm37unEE2cze3V%2FDSMNaQs2UuJyNwpaSq5eMhCf0MsW3LnC2hVM8EFDfc7h1WUoa%2FdXviGEVee35n3IX06Jp8jgCgsyTEYOJuZBIacGeBeBUHOSTUy8nOBpNOy%2FKKuJ2fq2ws8QWWPanpgxD9Y8evltLgK1XGSt8texQbEBe5Wmsqar7NChsrVNo0tWaZTx5iH9H0lxBWAk2ZP%2FoQ0LVfv6Xb5CiX0TXoL%2FHCQ0w0brdTlRLvjLxGVBxaA7qmhanpOEyL%2F9Y85JvVTu8s%2FltCqoxLvrZqvCzgQpJfsnTJWYkeLoTdqw3OQMfg0FWsAGAWa8WGOrbyeMBOXknEGkY2hLiGrfAMBNDh9ZpoDMPIG6ZuqvKVFwNIBITqaJBJNzBLUzhUmauu0iqYb2YkNbcArA0LyBa%2FINJr%2F9nakCIIBL5UuMSCj3oRyNBD0ATGscCyGsPwD1yOZv%2FDQ5dtg5w2NcmpaShtTYYc6oqaRuMZRAq3OY1FtuZZMwHi%2F05pyVpGvrK%2BcMzu7OPIPJEiu8J4TlEpJy%2BJjUvJNSKfegwPVkqN68eVrfZENwwARZmf7Ku7ldY3nNAeDAN6zPAdOCWAHv1cBhIvSZrVbBnK6CJy7ilV27kLdY21kPAlkbKh9LqPARw7iU21DS7MJoZaeypaKSxxMI1XuR1X%2BdBKs2upPJuZmtlf3VDUGlOX9tM0q6JTGH4CmVEV8mQR3vwr2IvXB%2FRFdK6NL4n5v636fd2jOf8gn0jz5foelCKWsKJWadh%2FD9xJ3gUfoC9HAWLmYXS585zqXyWYwXyRiUazpI4ryTbZNpETAECH7fTfFcj1Ga0B52ptcjHBZC7LzNyWGxkWj8gkHlF7ZQSwuzDl0bvGBjqxAa9%2BsCGQbV7lVzaLESOI9V%2F%2BDdyzrf2exjlFVIjcRJIujswgV%2FwTKveeJY5CVSPIv2aIHeJ0SJZ0%2BjKoBZSJ%2BPgfKFUSDhGBrGKb411Uat2C3oEKcbbopgYvizXF7%2FFfHSLbofYEg99kc38SfckxQOf73u1lHXDxOXMUCaolGnPlv90AAUtImm1PVoEaOqcbDlp2R0iyTUMMuKAgd2buKr2un4FssBKU7mkUEx3RJkQlpg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=2e1b61bd7dc3dbdfe302c56713139cfb2f13cf428c94dde355ddabaf8cc57406",
+      "file_size": 21596,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 23,
+  "voters": [
+    "orange303",
+    "mr-medi",
+    "zy9ard3",
+    "shreyaschavhan",
+    "r1sb0",
+    "20kilograma",
+    "mr-inspector",
+    "cryptographer",
+    "eminfidan",
+    "sa0k0",
+    "and 13 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 50773,
+    "asset_type": "WILDCARD",
+    "asset_identifier": "*.acronis.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
