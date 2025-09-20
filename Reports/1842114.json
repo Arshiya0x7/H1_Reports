@@ -1,0 +1,168 @@
+{
+  "id": 1842114,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xODQyMTE0",
+  "url": "https://hackerone.com/reports/1842114",
+  "title": "Missing brute force protection on password confirmation modal",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2023-01-20T16:45:21.320Z",
+  "submitted_at": "2023-01-20T16:45:21.445Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "hackit_bharat",
+    "url": "/hackit_bharat",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/rbaj1j9bgnu10ys0yk2krh5o450u/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13291,
+    "url": "https://hackerone.com/nextcloud",
+    "handle": "nextcloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Nextcloud",
+      "twitter_handle": "nextclouders",
+      "website": "https://nextcloud.com",
+      "about": "Access, share and protect your files, calendars, contacts, communication & more at home and in your enterprise."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2023-25820"
+  ],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2023-03-21T13:46:57.708Z",
+  "bug_reporter_agreed_on_going_public_at": "2023-03-21T13:46:57.581Z",
+  "team_member_agreed_on_going_public_at": "2023-03-21T13:40:42.887Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi Team,\n\nI hope you are doing well.\n\nI found a vulnerability in Next cloud , let's exploit\n\nI am not reporting this for every feature in different different report , please increase the severity in single Report. \n\nVulnerability Name :- Lack of Rate limit While Generating Backup code , Deleting Account , Profile Updating\n\nVulnerability Description :- Hi Team , there is no rate limit while sending request to  Generating Backup code , Deleting Account , Profile Updating endpoint that leads to bypass the password protection and even attacker can view current password of user.\n\nSteps to Reproduce :- 1. Signup with an provider and verify your account.\n2. Once verified --> Go to Settings --> Security.\n3. Click on Generate Backup code , enable password less authentication , Update Profile  it asks for password for authentication.\n4. Enter Random Password --> Capture this request n burp suite.\n5. Sent this to intruder and select password position and select Payload type as Brute Force.\n6. Click on Attack.\n7. Boom! On correct password you got response 200 ok and for incorrect you got 403 Forbidden.\n\nReference Report Next cloud team resolved previously :- #1596673\n\n## Impact\n\nPassword protected Authentication Bypass.\n2. Attacker able to know the user current password in cleartext and able to takeover the account if they are at same place or someone forgot to logout from public PC also.\n\nPOC Attached\n\nIf you need further info I am here to help you.\nThanks and Regards,\nBhaRat",
+  "weakness": {
+    "id": 31,
+    "name": "Improper Restriction of Authentication Attempts"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 2130407,
+      "file_name": "Bypasses.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/r1azct31w7la8mia5qf28u2rg45l?response-content-disposition=attachment%3B%20filename%3D%22Bypasses.mp4%22%3B%20filename%2A%3DUTF-8%27%27Bypasses.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYGGFHRSZ%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T212504Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJHMEUCIHxVTsSunHQ88w8v5Phcr4OO8veCEoxwykDBf3GISKdFAiEAurKLjSC2eHk9cdgXdv6Cf1B8%2FPb0KbzKwW%2BhYwFOOB0quwUI9f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDOAwI%2BpsM3WzBS4iniqPBZejabYYfP4uBxFwFqqlBteUZGht2gVxiYYdownO1bQgyboWRw0KgVCZv9YBGoipl8w4IIDuNF4yL2Nmrf77YdXx4up3i6wmg8O%2BLrBDVv6KfZGhmbn1V7D0MZ0IiwjEVhusb73Es6huu88BGtwsNIzAS2DpIsBaR2zNZM%2BEw3FjQsRiI5mpEssmzYxRNFq5%2BeTlGnmf9VJR%2FR8qjpQOlFnu73Rq6frB9hpQwAakKrSsE31RuS2JDhAppiATPfbsFFpuHU3r4LBGX5JYLHv%2FDAshd02n%2FtrB22K5xbR9OV8fELtKCEbsQ5R84qBDRhuxrTgjMo1HYrmoSaSQA0dFQWBg%2Br2ftixlpZlSR9i%2BD8ROxRBrP5wOwhUhtNOv0ek0Sgu9sCmQ5GA3h69tqmp3UVOXtA3BGlMIgkBPZ7EigeOp1pWt1AqruHug%2B2Tfh%2BkZfnpB8ENpNK3TQp4VKnR8sjjDhFopFbqywV%2Bf%2F87NkfMNAmVgTTi5YdKbR14DFn0vUvvjuK51WxLp%2FS0PL1ylOrWjvDG%2BbNt3I7MyDH4oSLqayGtrKdTlVBWkiYIVz6ZshRzVOhGdAtIiIuPrQnF3udy9nARyR2t85ckEKuMZmO%2FsQFMY%2BxrQeHazpH3myDrqJqkcmw0opDha6doqBHbL3zo58M1vHxNQosfLbULgGBws6rmZY6KjUm26objppv5YjLWD4eDZBgpi2VJOU4ZdmiVVdPgjUavs7dznLq0ZQiUhWOTGQmLuHmLcHqH6HP1cgQCLQpzZ5YoOsIVbaNC2czu3xKBLsFTUDOQ%2Fymn5nrzZXucmXow7qWN%2Bdh306BQX7Df3%2FqFDD69c80M3w6A24JZWb01Dy65MI76ZZ3Dp8Mow9I68xgY6sQGxGEMhwI%2BWGSShkwiG3PZVdCnSu67lWGqnKO91KL0keldYeiVRCdKge4nAP7Yfb998UXTaywIIdrotd%2B507nbqRV5HFgP7qfzkx%2FDmxLK6bld4wsbquaZKRjmUJQz73wd5p%2Fw3yj4r3PKikmZRvtyWd508FxsF0paftxj04oNDzWqKQ6YiSCw4HhClLB3juK6Tm9JwlkUf4O0FS3hYBatVsXPNlsf8V4oW8G7Bnq7VNZo%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=0ec57e6a7f5dedbe4dabbfc67af635662ca56ce0a797e02f55d8a8b771f4955e",
+      "file_size": 9738146,
+      "type": "video/mp4",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2023-04-20T13:40:42.959Z",
+  "allow_singular_disclosure_after": -76405461.87786901,
+  "singular_disclosure_allowed": true,
+  "vote_count": 24,
+  "voters": [
+    "pentestor",
+    "shreyaschavhan",
+    "7odamoo",
+    "yassinek3ch",
+    "dotxml",
+    "shubham_srt",
+    "theteatoast",
+    "shivammusic",
+    "abdulhafiz",
+    "mojitombn",
+    "and 14 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 4.2,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "local",
+      "attack_complexity": "high",
+      "privileges_required": "low",
+      "user_interaction": "required",
+      "scope": "unchanged",
+      "confidentiality": "low",
+      "integrity": "low",
+      "availability": "low"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 13,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "nextcloud/server",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "id": 257559,
+      "category": "team",
+      "content": "Security advisory at https://github.com/nextcloud/security-advisories/security/advisories/GHSA-36g6-wjx2-333x",
+      "updated_at": "2023-02-22T16:13:46.327Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 89223,
+        "username": "nickvergessen",
+        "name": "Joas Schilling",
+        "bio": "",
+        "cleared": false,
+        "verified": false,
+        "website": null,
+        "location": "Germany",
+        "created_at": "2016-07-01T08:17:59.061Z",
+        "url": "https://hackerone.com/nickvergessen",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "company",
+        "profile_picture_urls": {
+          "small": "https://profile-photos.hackerone-user-content.com/variants/5DBbeB7om4ZiKgskrEoeTyGH/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/5DBbeB7om4ZiKgskrEoeTyGH/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c",
+          "xtralarge": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6ODQyMTQ5LCJwdXIiOiJibG9iX2lkIn19--7544c99c2f87f134b16d5b20f81dbc06444df8d8/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJyZXNpemUiOiIyNjB4MjYwXHUwMDNlIn0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--c155082ce6f9751dcb29cd6ea061a7e4d7329577/2019_cfhn1.png"
+        }
+      }
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
