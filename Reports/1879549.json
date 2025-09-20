@@ -1,0 +1,168 @@
+{
+  "id": 1879549,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xODc5NTQ5",
+  "url": "https://hackerone.com/reports/1879549",
+  "title": "Basic auth header on WebDAV requests is not bruteforce protected",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2023-02-20T11:47:15.231Z",
+  "submitted_at": "2023-02-20T11:47:15.351Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "hackit_bharat",
+    "url": "/hackit_bharat",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/rbaj1j9bgnu10ys0yk2krh5o450u/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13291,
+    "url": "https://hackerone.com/nextcloud",
+    "handle": "nextcloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Nextcloud",
+      "twitter_handle": "nextclouders",
+      "website": "https://nextcloud.com",
+      "about": "Access, share and protect your files, calendars, contacts, communication & more at home and in your enterprise."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2023-32319"
+  ],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2023-06-02T04:18:38.749Z",
+  "bug_reporter_agreed_on_going_public_at": "2023-06-02T04:18:38.630Z",
+  "team_member_agreed_on_going_public_at": "2023-05-24T09:48:19.599Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi Team,\n\nI hope you are doing well.\n\nVulnerability Name :- Basic Authentication Bypass due to Lack of Rate Limit\n\nVulnerable URL :- https://efss.qloud.my/remote.php/dav/calendars/ha.ckitbharat3@gmail.com/app-generated--deck--board-5269/\n\nSteps to Reproduce :- 1. Login --> Go to Tasks.\n2. Copy private Link.\n3. It looks like :- https://efss.qloud.my/remote.php/dav/calendars/ha.ckitbharat3@gmail.com/app-generated--deck--board-5269/\n4. Open it in other browser .\n5. It asks for username and password .\n6. Username/email is in URL , enter same and for password enter random password.\n7. Capture this request in burp suite.\n8. There is an Auth header --> copy there value and see it's b64 encoded --> decode it --> create payloads of password and encode it as b64.\n9. Send to intruder and select that position and paste the payload list.\n10. Click on start attack and Boom! after few mins it got bypassed with Response code 200.\n\n## Impact\n\n1. Basic Authentication Bypass.\n2. Full Account takeover because attacker can easily know the password through here because of brute forcing as no rate limit is there.",
+  "weakness": {
+    "id": 31,
+    "name": "Improper Restriction of Authentication Attempts"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 2185246,
+      "file_name": "Basic_auth.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/852mfy0qg7h62zorqsko30mmo4nx?response-content-disposition=attachment%3B%20filename%3D%22Basic_auth.mp4%22%3B%20filename%2A%3DUTF-8%27%27Basic_auth.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQSTQAVQP4%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T205205Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJIMEYCIQCTUONg8rOgt0jJ%2F3TrAqfnw601jJWVPfXifsk%2FW%2BLK7QIhAMGGDYfFDmVKxAob%2BionYCWkghzARXsi80rujTijS1y1KrsFCPX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5Igx94JKvjDXdvmt2Z5YqjwUIZSeIw%2FwdcJm5YM7%2Fzj2Nb7%2BL07VSGrwZcrAFdg553eL0%2BZAQc76fk8Ex7l6Uf%2F3ikVcxL9ziiMsVIXtsj7Ng8u8JV%2ByqYngvufFEBqwmF0v1BH9rqMO7LF6urIIWOASyXaCQ3X%2BY1tUJxe37UXfc17QXjdbJGxNuVHVgClJYS7PV2V%2B%2FsJFxLRAeN%2BR%2FJSwGltigg5dYzBvuce3MqykGzHR%2FsIRYBwuyQ5faPmbZQT96kayjFLZs%2B7NNWtW9VgHP%2B%2FX5nGFQg%2BEyAPH4ocZ%2BHEQesKz1xFaKagmxSdiKW2TWlS7j3BmjeA4GLFHGXPYvGuSHZXkIlnlynUpViNaMRooYDcZ469KjIMZ52msg5uTSTqZH8RN71i75ZXUowtuEG6lCR225YRPUH7aNh%2B6SYx%2B%2Fiq9rI%2BWz2tWEni9GPcBiEYCHY4vvOwSVSEeYnlKMBV9ePkwk4EuvYdcDMllyXcvrVxpLuB%2BqKQ3pPl4CZ5Q361PbRVYMPJUY%2Bgtwj7wGQlO6lyO5Lt6ALg2g0LYqYKYvbB6qZ0KCguD4y%2Bk%2FLBW0oYXNn4jN5D6C7o8AshcXjt7U1s6RnEx%2F0g373zMFJ37i%2BmWwhX4bGvnjWdwLQw03OtJhLCC4NqXrJhFxybk5wTHwa%2FzSSrB%2FHW8uAIvBzBI4UAYwtMklIHgi3gTQKQ%2FdhUNRAZlbxyZHNTeR4XWsNTXmsBAuW%2FyUHWgxsWzvy5BY%2B%2FrTdU1qqyaIheuZkpahjVk4NFY6nuc3pITKxMyqi98hhRiVAhgRebro9ayUQc1ph9hfQlK%2FYtHa3IDyEacxkXteXUJY6SNCmAkTWRQy18FEIU%2Fwcj0iPZEL8TXqsOZcfO8h7JQheRzqIHIKMPWJvMYGOrAB%2FG5iWehhltchMJFe0uyAuUiK5LT9GEHYkAXnr89MJSI5Cbs4afjg0tB9hGrwm5w61IusnmMYEWeN6kzojlt7qZ6MLbqHlPnVfWq78NdihXFuDtuVoSz8jxC%2FA79MlEjp%2Bcne1ic8SOAztDSoLuVM6FQuc8AKWiQbievmOjsXXNF3Goxsgkv4tPjXu52e2zlnyfoMEzgXb40sGah%2FuFrbe%2FCgc%2F3oFfp11VPwBr33XYo%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=b68f651237f217727d66741f2d0c2593aa02091660ba80932e035a20b58866d1",
+      "file_size": 13660308,
+      "type": "video/mp4",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2023-06-23T09:48:19.733Z",
+  "allow_singular_disclosure_after": -70887826.11145127,
+  "singular_disclosure_allowed": true,
+  "vote_count": 52,
+  "voters": [
+    "0xotachi",
+    "mahdidhaini",
+    "achabi7",
+    "muslimfrompk",
+    "zy9ard3",
+    "shreyaschavhan",
+    "khananali",
+    "shubham_srt",
+    "red_h_a_t",
+    "usagib4",
+    "and 42 more..."
+  ],
+  "severity": {
+    "rating": "high",
+    "score": 8.1,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "low",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "high",
+      "integrity": "high",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 13,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "nextcloud/server",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "id": 294329,
+      "category": "team",
+      "content": "Security advisory at https://github.com/nextcloud/security-advisories/security/advisories/GHSA-mr7q-xf62-fw54",
+      "updated_at": "2023-05-16T10:41:33.269Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 89223,
+        "username": "nickvergessen",
+        "name": "Joas Schilling",
+        "bio": "",
+        "cleared": false,
+        "verified": false,
+        "website": null,
+        "location": "Germany",
+        "created_at": "2016-07-01T08:17:59.061Z",
+        "url": "https://hackerone.com/nickvergessen",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "company",
+        "profile_picture_urls": {
+          "small": "https://profile-photos.hackerone-user-content.com/variants/5DBbeB7om4ZiKgskrEoeTyGH/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/5DBbeB7om4ZiKgskrEoeTyGH/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c",
+          "xtralarge": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6ODQyMTQ5LCJwdXIiOiJibG9iX2lkIn19--7544c99c2f87f134b16d5b20f81dbc06444df8d8/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJyZXNpemUiOiIyNjB4MjYwXHUwMDNlIn0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--c155082ce6f9751dcb29cd6ea061a7e4d7329577/2019_cfhn1.png"
+        }
+      }
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
