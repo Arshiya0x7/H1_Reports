@@ -1,0 +1,126 @@
+{
+  "id": 2412983,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yNDEyOTgz",
+  "url": "https://hackerone.com/reports/2412983",
+  "title": "sentry Auth Token exposed publicly in docker hub image ",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "none",
+  "readable_substate": "Resolved",
+  "created_at": "2024-03-11T22:00:28.980Z",
+  "submitted_at": "2024-03-11T22:00:29.266Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "ghaazy",
+    "url": "/ghaazy",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/68dixpgscswlvu7xhb3rhnqpehmc/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 61236,
+    "url": "https://hackerone.com/mozilla",
+    "handle": "mozilla",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/0p8e6gg8xoy45dhjxs5wh4iti6k8/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/0p8e6gg8xoy45dhjxs5wh4iti6k8/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Mozilla",
+      "twitter_handle": "",
+      "website": "https://www.mozilla.org",
+      "about": "Mozilla web bug bounty program specific to encouraging security research in Mozilla's products and web services."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2024-10-18T10:50:15.634Z",
+  "bug_reporter_agreed_on_going_public_at": "2024-10-18T09:12:42.889Z",
+  "team_member_agreed_on_going_public_at": "2024-10-18T10:50:15.323Z",
+  "comments_closed?": true,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nHi during my recon I found Sentry token which belongs to taskcluster\nThe token is still active.\n## Steps\n\n1. Go to https://hub.docker.com/r/taskcluster/taskcluster/tags\n2. pull these images tags ```v15.0.0-20-g0eca18b7c``` and ``` c061025dc``` and ```ba7958766``` and ```v16.2.0-77-gd8577f62a``` may be this exist in more tags \n3. You will see this token 5841673fc43843db98088d579568271bcee388b21d91455b9c1fb151bab260b9 in /app/node_modules/sentry-api/test.js\n4. Try using the token with below curl request\n\ncurl -X GET -H \"Authorization: Bearer 5841673fc43843db98088d579568271bcee388b21d91455b9c1fb151bab260b9\" https://sentry.io/api/0/projects/\n\n5. You will see api response.\n\n{F3113306}\n## Supporting Material/References:\n\n  * https://www.invicti.com/web-vulnerability-scanner/vulnerabilities/sensitive-data-exposure-sentry-auth-token/\n\n## Impact\n\n## Summary:\nSentry exposes logs of the application which can contain sensitive information and PII.\nThis is basic impact.\nBut sentry contains application logs it can be used to find more vulnerabilities in the code base",
+  "weakness": {
+    "id": 18,
+    "name": "Information Disclosure"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 3113306,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/go8z6g1ymzq33ypu514afplcr2ua?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ75B57S52%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T180025Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHcaCXVzLXdlc3QtMiJGMEQCIE%2BgchX9JTqHlw5doTQtHfduNiCY02NVh%2FTpcyFH31dkAiATLfZb4I2jyzsPqzC%2Bn9wqWIYfiIjbjIkQdhwfOQ4XlSq7BQjw%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMEWCgTedrfEPc6GXSKo8FhzmZ7I87jx37A1z2z10yPATcLxx1Oj0f1M0S8WPvD183VGqg4W66MD5upXU%2FssuJ2sQZ1lUAggDL5iM%2B44nFndv9N%2FCI2HfJIf5QB2a9vq5Nk0CKgFRHlpVvE9p7e%2BUw99iIWxq6VcYP5FRNdZ9DStIjdo6vd0nv0Ql8ge2NADkPOs90o9SzR6eENt8b7B1lkQcY90bFYtfiYWKHK8Nnf1QA8ugMbRglhqzS9GkZ94Npv5LTgYvTPVUzsu1YbG4WdjAYMY%2FRseyaicTSfSHARvYt%2B5F6bCDQX%2F1%2BCUaGoX2WKfEME3W0ggG613lVGPFSx0LhH%2BaVmhvDjJL%2B1pSsKApq3EgZl4OnLcE3rduJbU1qrXbsHGB8BhwrQqccXLmTDQSPuGXjYWbYakpOMi0iDyXYQdTZbC2VwwPPU74a0xyf0gjpmUqf%2FHUcCXL71szV85IbWIgo2ElM4%2BxyzSJ7T3J7TaGJMIOY74m8AGiyWpiwBLLGTALXoJ6rQu%2FblohbeRwT%2FdfcxKN1pv2KZDzQhybSOReIyqyC2Qe9JCM%2F3xgP1IvPHsu9MnEI4e4%2F%2FALfThV1a3tX3fTLXtysfl5UnRc6XyU7gwHu4qc2PxKm3eSdHZjKDO1o9j2RoIHLF%2FmxItQ2XG0I7IYEnZ%2B14iuyKLJ7FwAeGgWdoGYW%2FzFCXlJRPzIEBzzkfFupzpubkYyeoJPHhR1rm2utUyBJiZKSYBxA3CYb61k6rN7hwf9%2FAEyVe8eYNVniCJIjDMFjmXNWLFXDnQSQGc%2Fb4kBbj4kgBOpMVIJzcm%2BQLGnzzZwm%2FQqaiQoM2sgGdQesRuav4fPZ1pgcUfQcxN0MXYgpHEjSe%2BviKgg%2BDGSkIF%2F8wub3cjCe%2FbrGBjqyARYWynJYwOjfynDPhjVK%2FH9eye8krLCnrmCRs42QdJsFYTbUuTG9QXvo8uVY%2BWKujV5rZ38tCPfxYDigPDZIm5HwzhVyN6fDKpHwHFLqPoXdGl0m6K7zsnyBd7nOaKX5dXVjsQcC8DseurEd4HkVd1WLiGbV9ADtyhKGQVof5WWTwr49E6NiUGsD97oZmq6kpn0Qy5BcdmxgEnT6%2FIFlxfJkbm93L59dItI6f3clT%2FrzMaQ%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=26af2b4852dacb9d7f9da04d250237b9ab12f2ab0ad5ec91f72747f14abef2c8",
+      "file_size": 334771,
+      "type": "image/png",
+      "moderated": false
+    }
+  ],
+  "allow_singular_disclosure_at": "2024-11-17T09:12:43.302Z",
+  "allow_singular_disclosure_after": -26556462.285380326,
+  "singular_disclosure_allowed": true,
+  "vote_count": 51,
+  "voters": [
+    "aboalezz",
+    "k0ns0l",
+    "r3dw4n",
+    "zy9ard3",
+    "hide_khan",
+    "thalaivar304",
+    "spaghettisec",
+    "0xshii",
+    "hundredpercent",
+    "ibraheem0x49",
+    "and 41 more..."
+  ],
+  "severity": {
+    "rating": "none",
+    "author_type": "Team"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
