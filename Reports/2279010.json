@@ -1,0 +1,155 @@
+{
+  "id": 2279010,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yMjc5MDEw",
+  "url": "https://hackerone.com/reports/2279010",
+  "title": "A user with only [MODIFY_SETTINGS] permmision could takeover any user accounts",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2023-12-09T05:30:55.788Z",
+  "submitted_at": "2023-12-09T05:30:55.990Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "osama-hamad",
+    "url": "/osama-hamad",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/q9sqakVY34ddtTTga6eK1XYi/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 15252,
+    "url": "https://hackerone.com/portswigger",
+    "handle": "portswigger",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/015/252/60e8778f4f1fee57ea2b164a7d2ec1e2d2dd7bc8_original./235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/015/252/60e8778f4f1fee57ea2b164a7d2ec1e2d2dd7bc8_original./3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "PortSwigger Web Security",
+      "twitter_handle": "Burp_Suite",
+      "website": "https://portswigger.net",
+      "about": "Burp Suite is the leading software for web security testing"
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2024-05-20T09:06:47.723Z",
+  "bug_reporter_agreed_on_going_public_at": "2024-05-20T08:46:36.894Z",
+  "team_member_agreed_on_going_public_at": "2024-05-20T09:06:47.493Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "a user with modify_settings permission only is not allowed to view team, edit users or groups or manage extensions which allows code execution. \n{F2912067}\n\nhowever, modifying settings allows to configure email settings therefore, the attacker could submit a public SMTP that can view its logs, and whenever an administrator or a user with a permssion to edit or add user ask a reset password for a user or add a user via its account , the attacker will capture the added / existed edited user email and password reset link. \n\n### Proof of Concept\n\n- Create a user with Modify settings permission only. \n- Login into the account you created. \n- Navigate to email from settings , change SMTP information to a public one , you can create a free smtp from here \nhttps://elasticemail.com/\n- Set up the info from your account and save it. \n{F2912082}\n- Login to an administrator account and to users , press reset password for any user and observe logs in https://elasticemail.com/ dashboard. \nYou will get that user : username , email and password reset link .\n\n{F2912084}\n{F2912085}\n\nit will be similar case in case of an administrator in the dashboard or someone with similar role try to add a user + attacker could read any message for any action that sends email from enterprise burp dashboard.\n\n## Impact\n\nany user with modify_settings permission is able to takeover other users account ( needs interaction either by reset password or user addition functionalities )",
+  "weakness": {
+    "id": 26,
+    "name": "Improper Access Control - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 2912067,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/0piu286466gxatw2xjpjio9yyj5i?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6QNUISWT%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T185705Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHgaCXVzLXdlc3QtMiJHMEUCIBmtXBl8Rwzips0A7Q6M0sgb8TMIyC4Buubg1r02dtPlAiEA1iTMzB8VCdRcg9IUqX0yctfg%2FtbnvCWhEFFJClP8rYIqugUI8f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDE9GGAfI4GH1AJPcwCqOBYjqE4yZZ%2Bh7KTA5J%2FSSpVEIqlFpg3kfXfdTdwlQIZTuRwlubN0upSFOVhgbbLVJbp%2FH0eqzFM13IhCK5iQN3QaAjsgEBq67St8O0ilWut88JnmyLUqEAaLVECsydXaOa3PDwLPOqODrfTTVCSemT1GOy0%2FfUPH8RFfhQZ%2FQq8rftp8pkBxoaHmOkK1SCROSJB9bFWI6woePSpWl3tWFpmykeelOwJM2CoZ0I2sgBdWGsGv4QVNPu4OfabmsLrOpd1BQSZWFMmDHa%2F0oK9JsSg%2Bkx%2BhX1pxq1XnhhenqQNm8GYTywfdz%2FVoNeJKjc4cUfU1JMjX1chI1%2BOmMxr2%2Fu2Q%2BRRKoZM%2BMsL8giTNFf3SeFI3P3iuNtrVHHJpeo6B%2FRB6QH7SrQ4A5ZQjEymhxze3u2Ino08ujt8MRSQwCU23m907eb%2BlD793jRK6XPMwq3qvSq6kzZTEgbUJTLC%2BDDE8zXbUjiMTTKOv6%2B%2FygOR%2F%2BB%2BYNXot4h5XWB7yhI87MMbPfCqk5uWgl890wlsoTKTsVP9n7RKdCJKH%2FyYG4idJzmcXoRQbttw2KxfyO6j13uJGDbYqHUs%2BzI1SETm76PF1ZDDKO%2F7QI6x%2BzUZfxFvVnh7d51SogemIeTTYSzaT5QkEJirJZWStvBuN6xQeSxNpypmiX0oSBmkRNa83j69yszfA1%2FtUozf2FB9lCwI20u4u%2FPrpEgm%2Br6S27rTkQnFIfxl9%2BfZ1lrRDxTlN8LrSdaTt0n6lXbm3NHtVFXTFNrrghqfz%2FQji16tbG1ogWZ3MLz7XxFOpk8AdlCQg03p8Dn5U7lx7kxyUroJCkzRrhGDSj5VjcyHmnkwWinAlhzkLe%2BbeY7XNut%2BEK7tHHYzCgnLvGBjqxAbvyLEbeNaNnOnBecA0B2uttE4x4WA%2Fuz%2Fsq370DHUwGqgMU%2BTavNj2bZs1Dv8rx4QjUFKSwVUUHuUODNidCndrFJ1ydaN3kxDf3BhJMe%2FG9%2FXkQfYb8AhAfDm2tepXEjn2IeQq8cE%2BqpDDJq21V5ot0%2BP7f9K4JMrzp5Q%2BGACXkL2Nrxye355K%2BxPXQDn%2B0Hn0xnPwSVe682Z6edttdF%2BCRmqqVVT%2Fipp8rqmNfVWEjPQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=8c5c5584a556e22fb8c170c6f4c2cee5fdf8ac227a4abeaed4fd56ee5381fb91",
+      "file_size": 21025,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 2912082,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/ka8ios7hqqo6plbn83j2t6dou5az?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6QNUISWT%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T185705Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHgaCXVzLXdlc3QtMiJHMEUCIBmtXBl8Rwzips0A7Q6M0sgb8TMIyC4Buubg1r02dtPlAiEA1iTMzB8VCdRcg9IUqX0yctfg%2FtbnvCWhEFFJClP8rYIqugUI8f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDE9GGAfI4GH1AJPcwCqOBYjqE4yZZ%2Bh7KTA5J%2FSSpVEIqlFpg3kfXfdTdwlQIZTuRwlubN0upSFOVhgbbLVJbp%2FH0eqzFM13IhCK5iQN3QaAjsgEBq67St8O0ilWut88JnmyLUqEAaLVECsydXaOa3PDwLPOqODrfTTVCSemT1GOy0%2FfUPH8RFfhQZ%2FQq8rftp8pkBxoaHmOkK1SCROSJB9bFWI6woePSpWl3tWFpmykeelOwJM2CoZ0I2sgBdWGsGv4QVNPu4OfabmsLrOpd1BQSZWFMmDHa%2F0oK9JsSg%2Bkx%2BhX1pxq1XnhhenqQNm8GYTywfdz%2FVoNeJKjc4cUfU1JMjX1chI1%2BOmMxr2%2Fu2Q%2BRRKoZM%2BMsL8giTNFf3SeFI3P3iuNtrVHHJpeo6B%2FRB6QH7SrQ4A5ZQjEymhxze3u2Ino08ujt8MRSQwCU23m907eb%2BlD793jRK6XPMwq3qvSq6kzZTEgbUJTLC%2BDDE8zXbUjiMTTKOv6%2B%2FygOR%2F%2BB%2BYNXot4h5XWB7yhI87MMbPfCqk5uWgl890wlsoTKTsVP9n7RKdCJKH%2FyYG4idJzmcXoRQbttw2KxfyO6j13uJGDbYqHUs%2BzI1SETm76PF1ZDDKO%2F7QI6x%2BzUZfxFvVnh7d51SogemIeTTYSzaT5QkEJirJZWStvBuN6xQeSxNpypmiX0oSBmkRNa83j69yszfA1%2FtUozf2FB9lCwI20u4u%2FPrpEgm%2Br6S27rTkQnFIfxl9%2BfZ1lrRDxTlN8LrSdaTt0n6lXbm3NHtVFXTFNrrghqfz%2FQji16tbG1ogWZ3MLz7XxFOpk8AdlCQg03p8Dn5U7lx7kxyUroJCkzRrhGDSj5VjcyHmnkwWinAlhzkLe%2BbeY7XNut%2BEK7tHHYzCgnLvGBjqxAbvyLEbeNaNnOnBecA0B2uttE4x4WA%2Fuz%2Fsq370DHUwGqgMU%2BTavNj2bZs1Dv8rx4QjUFKSwVUUHuUODNidCndrFJ1ydaN3kxDf3BhJMe%2FG9%2FXkQfYb8AhAfDm2tepXEjn2IeQq8cE%2BqpDDJq21V5ot0%2BP7f9K4JMrzp5Q%2BGACXkL2Nrxye355K%2BxPXQDn%2B0Hn0xnPwSVe682Z6edttdF%2BCRmqqVVT%2Fipp8rqmNfVWEjPQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=9aa29fd410e90af22ef650fad16eff5c8bb79f6d0989c341e2be46f33fa78b2d",
+      "file_size": 71166,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 2912084,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/xgk3dqrqyfbf18kbua8n8k68h01u?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6QNUISWT%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T185705Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHgaCXVzLXdlc3QtMiJHMEUCIBmtXBl8Rwzips0A7Q6M0sgb8TMIyC4Buubg1r02dtPlAiEA1iTMzB8VCdRcg9IUqX0yctfg%2FtbnvCWhEFFJClP8rYIqugUI8f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDE9GGAfI4GH1AJPcwCqOBYjqE4yZZ%2Bh7KTA5J%2FSSpVEIqlFpg3kfXfdTdwlQIZTuRwlubN0upSFOVhgbbLVJbp%2FH0eqzFM13IhCK5iQN3QaAjsgEBq67St8O0ilWut88JnmyLUqEAaLVECsydXaOa3PDwLPOqODrfTTVCSemT1GOy0%2FfUPH8RFfhQZ%2FQq8rftp8pkBxoaHmOkK1SCROSJB9bFWI6woePSpWl3tWFpmykeelOwJM2CoZ0I2sgBdWGsGv4QVNPu4OfabmsLrOpd1BQSZWFMmDHa%2F0oK9JsSg%2Bkx%2BhX1pxq1XnhhenqQNm8GYTywfdz%2FVoNeJKjc4cUfU1JMjX1chI1%2BOmMxr2%2Fu2Q%2BRRKoZM%2BMsL8giTNFf3SeFI3P3iuNtrVHHJpeo6B%2FRB6QH7SrQ4A5ZQjEymhxze3u2Ino08ujt8MRSQwCU23m907eb%2BlD793jRK6XPMwq3qvSq6kzZTEgbUJTLC%2BDDE8zXbUjiMTTKOv6%2B%2FygOR%2F%2BB%2BYNXot4h5XWB7yhI87MMbPfCqk5uWgl890wlsoTKTsVP9n7RKdCJKH%2FyYG4idJzmcXoRQbttw2KxfyO6j13uJGDbYqHUs%2BzI1SETm76PF1ZDDKO%2F7QI6x%2BzUZfxFvVnh7d51SogemIeTTYSzaT5QkEJirJZWStvBuN6xQeSxNpypmiX0oSBmkRNa83j69yszfA1%2FtUozf2FB9lCwI20u4u%2FPrpEgm%2Br6S27rTkQnFIfxl9%2BfZ1lrRDxTlN8LrSdaTt0n6lXbm3NHtVFXTFNrrghqfz%2FQji16tbG1ogWZ3MLz7XxFOpk8AdlCQg03p8Dn5U7lx7kxyUroJCkzRrhGDSj5VjcyHmnkwWinAlhzkLe%2BbeY7XNut%2BEK7tHHYzCgnLvGBjqxAbvyLEbeNaNnOnBecA0B2uttE4x4WA%2Fuz%2Fsq370DHUwGqgMU%2BTavNj2bZs1Dv8rx4QjUFKSwVUUHuUODNidCndrFJ1ydaN3kxDf3BhJMe%2FG9%2FXkQfYb8AhAfDm2tepXEjn2IeQq8cE%2BqpDDJq21V5ot0%2BP7f9K4JMrzp5Q%2BGACXkL2Nrxye355K%2BxPXQDn%2B0Hn0xnPwSVe682Z6edttdF%2BCRmqqVVT%2Fipp8rqmNfVWEjPQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=3bdeec4f5d96eb129e602dd88492b793c9567375f21a7a8bf7642fb52f778647",
+      "file_size": 27534,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 2912085,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/adzjm6c6gnz0yhauxfz14tu4qrkr?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6QNUISWT%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T185705Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHgaCXVzLXdlc3QtMiJHMEUCIBmtXBl8Rwzips0A7Q6M0sgb8TMIyC4Buubg1r02dtPlAiEA1iTMzB8VCdRcg9IUqX0yctfg%2FtbnvCWhEFFJClP8rYIqugUI8f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDE9GGAfI4GH1AJPcwCqOBYjqE4yZZ%2Bh7KTA5J%2FSSpVEIqlFpg3kfXfdTdwlQIZTuRwlubN0upSFOVhgbbLVJbp%2FH0eqzFM13IhCK5iQN3QaAjsgEBq67St8O0ilWut88JnmyLUqEAaLVECsydXaOa3PDwLPOqODrfTTVCSemT1GOy0%2FfUPH8RFfhQZ%2FQq8rftp8pkBxoaHmOkK1SCROSJB9bFWI6woePSpWl3tWFpmykeelOwJM2CoZ0I2sgBdWGsGv4QVNPu4OfabmsLrOpd1BQSZWFMmDHa%2F0oK9JsSg%2Bkx%2BhX1pxq1XnhhenqQNm8GYTywfdz%2FVoNeJKjc4cUfU1JMjX1chI1%2BOmMxr2%2Fu2Q%2BRRKoZM%2BMsL8giTNFf3SeFI3P3iuNtrVHHJpeo6B%2FRB6QH7SrQ4A5ZQjEymhxze3u2Ino08ujt8MRSQwCU23m907eb%2BlD793jRK6XPMwq3qvSq6kzZTEgbUJTLC%2BDDE8zXbUjiMTTKOv6%2B%2FygOR%2F%2BB%2BYNXot4h5XWB7yhI87MMbPfCqk5uWgl890wlsoTKTsVP9n7RKdCJKH%2FyYG4idJzmcXoRQbttw2KxfyO6j13uJGDbYqHUs%2BzI1SETm76PF1ZDDKO%2F7QI6x%2BzUZfxFvVnh7d51SogemIeTTYSzaT5QkEJirJZWStvBuN6xQeSxNpypmiX0oSBmkRNa83j69yszfA1%2FtUozf2FB9lCwI20u4u%2FPrpEgm%2Br6S27rTkQnFIfxl9%2BfZ1lrRDxTlN8LrSdaTt0n6lXbm3NHtVFXTFNrrghqfz%2FQji16tbG1ogWZ3MLz7XxFOpk8AdlCQg03p8Dn5U7lx7kxyUroJCkzRrhGDSj5VjcyHmnkwWinAlhzkLe%2BbeY7XNut%2BEK7tHHYzCgnLvGBjqxAbvyLEbeNaNnOnBecA0B2uttE4x4WA%2Fuz%2Fsq370DHUwGqgMU%2BTavNj2bZs1Dv8rx4QjUFKSwVUUHuUODNidCndrFJ1ydaN3kxDf3BhJMe%2FG9%2FXkQfYb8AhAfDm2tepXEjn2IeQq8cE%2BqpDDJq21V5ot0%2BP7f9K4JMrzp5Q%2BGACXkL2Nrxye355K%2BxPXQDn%2B0Hn0xnPwSVe682Z6edttdF%2BCRmqqVVT%2Fipp8rqmNfVWEjPQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=0a269e5270c29266ee14eae005a53d28848e5a99414df83a2d9c8083efe6c54c",
+      "file_size": 36540,
+      "type": "image/png",
+      "moderated": false
+    }
+  ],
+  "allow_singular_disclosure_at": "2024-06-19T08:46:37.045Z",
+  "allow_singular_disclosure_after": -39607828.11354114,
+  "singular_disclosure_allowed": true,
+  "vote_count": 48,
+  "voters": [
+    "d3xterv",
+    "drsniper",
+    "zy9ard3",
+    "yash_005",
+    "xsky",
+    "never_die",
+    "hackermaneia_",
+    "shubham_srt",
+    "thalaivar304",
+    "mohaned0101",
+    "and 38 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "Team"
+  },
+  "structured_scope": {
+    "databaseId": 14056,
+    "asset_type": "DOWNLOADABLE_EXECUTABLES",
+    "asset_identifier": "Burp Suite Enterprise Edition",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
