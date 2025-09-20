@@ -1,0 +1,158 @@
+{
+  "id": 1439552,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNDM5NTUy",
+  "url": "https://hackerone.com/reports/1439552",
+  "title": "Gitlab Pages token theft using service workers",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2022-01-02T21:42:02.917Z",
+  "submitted_at": "2022-01-02T21:42:03.018Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "ehhthing",
+    "url": "/ehhthing",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 264,
+    "url": "https://hackerone.com/gitlab",
+    "handle": "gitlab",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/f0hovtq73f9ap815a0r1w42bocp4/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/f0hovtq73f9ap815a0r1w42bocp4/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "GitLab",
+      "twitter_handle": "gitlab",
+      "website": "https://about.gitlab.com",
+      "about": "A single application for the entire software development lifecycle."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2022-06-08T14:06:40.906Z",
+  "bug_reporter_agreed_on_going_public_at": "2022-05-13T15:20:52.220Z",
+  "team_member_agreed_on_going_public_at": "2022-06-08T14:06:40.596Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "### Summary\nIt is possible to steal Gitlab Pages session tokens by intercepting requests to the `/auth` endpoint on a Pages site using service workers. \n\n### Attack Flow\n**Setup**\n1. The attacker creates a private Gitlab Pages site at the root of their user page `attacker.gitlab.io`, ensuring that the project is `private to collaborators` for Gitlab Pages visibility. \n2. The attacker invites the victim to collaborate to the project, thus giving them access to the private Pages site.\n3. The victim clicks on a link to `attacker.gitlab.io`, and a service worker is registered for the domain, passing through all requests back to the server except the `/auth` endpoint, which it intercepts.\n\n**Bypassing the CSRF protection (OAuth2 `state` param)**\n4. A script on the website requests a valid session cookie and redirection URL from an attacker controlled website.\n5. The attacker controlled website sends its own request to `attacker.gitlab.io`, and retrieves a redirection URL and a session cookie.\n6. A script on the website redirects the victim to the redirection URL retrieved by the attacker, and the user authenticates (since the user is already logged in, this does not require any kind of interaction)\n\n**Intercepting the OAuth2 Response**\n7. The OAuth2 service redirects the user back to `attacker.gitlab.io/auth` with the code and state, which is intercepted by the attacker's service worker and sent to the attacker controlled website.\n8. The attacker controlled website sends a request to the auth endpoint with the original session cookie and the intercepted code and state to obtain an authenticated session cookie.\n9. The attacker can use this cookie to access other GitLab Pages sites that the victim has access to.\n\n### Steps to reproduce\n1. Create an attacker account and victim account. The victim account should have access to a private GitLab Pages site that the attacker does not have access to.\n2. Start the attacker controlled server (ensure that it is on a remote server with HTTPS)\n3. Import the Proof of Concept repository into the attacker's account, rename it to `{attacker username}.gitlab.io` and change the attacker server to the server deployed in step 2.\n4. Invite the victim to collaborate on the `{attacker username}.gitlab.io` project.\n5. While logged into the victim account, visit `{attacker username}.gitlab.io`.\n6. The attacker controlled server will output a valid `gitlab-pages` session cookie, which can be inserted into a browser or curl command (`curl -v --cookie '{cookie}' https://{victim username}.gitlab.io/{private Gitlab Pages project}`) to gain access to the private Gitlab Pages project on the victim's account.\n\n### Examples\n\n**Proof of Concept:**\n\nPages Project export: F1565711\nPages Project on gitlab.com: https://gitlab.com/dotchinavideo/dotchinavideo.gitlab.io\nAttacker controlled server: F1565227 (requires `flask` and `flask-cors` installed, outputs the stolen token to stdout)\n\n### What is the current *bug* behavior?\nThe current behavior is that `gitlab-pages` session cookies are not properly validated to ensure that the requested subdomain is the same as the subdomain to which the session cookie was issued for.\n\n### What is the expected *correct* behavior?\nThe expected behavior is for each `gitlab-pages` session cookie be validated to prevent cross-subdomain usage.\n\n### Relevant logs and/or screenshots\nF1565251\n\n### Output of checks\nThis bug happens on GitLab.com\n\n#### Results of GitLab environment info\nThis bug happens on GitLab.com\n\n## Impact\n\nOnce an attacker has a valid Pages session token, they are able to access every private Gitlab Pages site that the victim has access to.",
+  "bounty_amount": "1680.0",
+  "formatted_bounty": "$1,680",
+  "weakness": {
+    "id": 124,
+    "name": "Improper Authorization"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1565227,
+      "file_name": "app.py",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/whrub2n3tm3k9fczzwfe55czpl6k?response-content-disposition=attachment%3B%20filename%3D%22app.py%22%3B%20filename%2A%3DUTF-8%27%27app.py&response-content-type=text%2Fx-python-script&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZ44KYFFS%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T233035Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJHMEUCIFPYrndZA%2BqYr1%2BDi6FtjPsUS8S3i6VJZYKkaRtMuEf9AiEA2RrDiVnmvdDtJneFfnDv03YTVWlLTpnuMdItluUuEsEqugUI9f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDEC7SH%2BwB4dOi8f9syqOBQgLlBttN6pXp4ikIVfXUPqECOK%2FSOw%2BFs5Vj90cPp3mAtPyLAUWOWxDAEFDX05nJ2lQyEshBmehJs3ELxTuTCk2DfRnJQhPl9agZsPEfWwFKijPBawKzTni6sAq3kuOPcvGm9dUE8xw6THK5N0B9sBCBizbEvWDbbQK6EKfLjwwknOAzwhA7W4C9dn%2BL%2FUhvWLIkhMNCWWv4NuFr3KcWG6lre5NgB%2F5FOqcRi%2Bf87T2AB6jwHEA9He9ocaS8C6FtOIMjxP1CRVb9J0Qvw0hPism97C%2BLfuctbm%2FAhSg0Kcg8yv5ah7QNvDT90OrVs%2FV7xkUFuHA%2BYCfetUY8bPQEnxPb04DgbXOdR%2FPC5kFuJMKciG%2BzWLkXk5ZpwPErfOoKOhAV1IQmUuJF7Cqb%2FdkMj3PvtnwfTXocH6yDtfqqMPaV5a7G%2BkOiVsgRfe4nf9KWYsbWtKyvZJo0n4ckieINH45QNK%2F%2FlCYLGgdHVKOv%2FeNjO%2FQlM5CvK4FCC3JQKmZKx4RRgDffkY1z021Rf52lIwX9TPnDStjltSRAlXA7eGcViWAm8sKWH8nlfx9xg%2Fn1FKrv2qf4Ci9KTML%2FZiyCZ2WClHyKl7xxQ%2ByNfcV4NdAwH08dze3S7%2F9wI8tIqxsh%2FQBNGhnQLZagEEKhhbiZkkJS7flrw6HZiraf0ZimTx7jiIAnGHYNDKhCkkf4dNjR3D5PsXmjWID7O6TZObu6v3ichBwR%2BsW%2BITcmhj8CrHW%2BaHBxUu4ZWucWMwemmGicDJhLy%2FiEdfjYRa5BLIiPzAZ3l3gdVvQpRhGb0dh%2F6zHNvbINKvc8SlN2Iv0HwehbYOLF7nDaAFheMe7rrIE9ll%2FbGuQ9zlqs8LVo39ukjC5i7zGBjqxAQpJ6SIfI1ouri2FWq2q5jl1Yiu%2FnFIZL4ru7hE7ALfTVMGS6etyHXy%2FoLq5HFEsasrnuWRga7ZnnAZyasNoqaXEqv67Y%2Bq8KD1ifc8pWOrXGxioBYkveNvgssonhlYbv0gBFowkhiusr7F52VPbxEVER5IoFqDLlBz5HcDUkhDXr32QqTAr9d7g9JRnuIVK9%2B6avvjq19Cp5p6WYf%2BGz7xOriKXb6dpGefpH%2FJxEUa8%2Bw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=7322879d7af5557fe9a1e8edec1fe4611b50fd2dba60c6ef424f42e05d4398ad",
+      "file_size": 651,
+      "type": "text/x-python-script",
+      "moderated": null
+    },
+    {
+      "id": 1565251,
+      "file_name": "exploit.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/ur83qfgralu7ggojw42ff9v77kbc?response-content-disposition=attachment%3B%20filename%3D%22exploit.mp4%22%3B%20filename%2A%3DUTF-8%27%27exploit.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZ44KYFFS%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T233035Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJHMEUCIFPYrndZA%2BqYr1%2BDi6FtjPsUS8S3i6VJZYKkaRtMuEf9AiEA2RrDiVnmvdDtJneFfnDv03YTVWlLTpnuMdItluUuEsEqugUI9f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDEC7SH%2BwB4dOi8f9syqOBQgLlBttN6pXp4ikIVfXUPqECOK%2FSOw%2BFs5Vj90cPp3mAtPyLAUWOWxDAEFDX05nJ2lQyEshBmehJs3ELxTuTCk2DfRnJQhPl9agZsPEfWwFKijPBawKzTni6sAq3kuOPcvGm9dUE8xw6THK5N0B9sBCBizbEvWDbbQK6EKfLjwwknOAzwhA7W4C9dn%2BL%2FUhvWLIkhMNCWWv4NuFr3KcWG6lre5NgB%2F5FOqcRi%2Bf87T2AB6jwHEA9He9ocaS8C6FtOIMjxP1CRVb9J0Qvw0hPism97C%2BLfuctbm%2FAhSg0Kcg8yv5ah7QNvDT90OrVs%2FV7xkUFuHA%2BYCfetUY8bPQEnxPb04DgbXOdR%2FPC5kFuJMKciG%2BzWLkXk5ZpwPErfOoKOhAV1IQmUuJF7Cqb%2FdkMj3PvtnwfTXocH6yDtfqqMPaV5a7G%2BkOiVsgRfe4nf9KWYsbWtKyvZJo0n4ckieINH45QNK%2F%2FlCYLGgdHVKOv%2FeNjO%2FQlM5CvK4FCC3JQKmZKx4RRgDffkY1z021Rf52lIwX9TPnDStjltSRAlXA7eGcViWAm8sKWH8nlfx9xg%2Fn1FKrv2qf4Ci9KTML%2FZiyCZ2WClHyKl7xxQ%2ByNfcV4NdAwH08dze3S7%2F9wI8tIqxsh%2FQBNGhnQLZagEEKhhbiZkkJS7flrw6HZiraf0ZimTx7jiIAnGHYNDKhCkkf4dNjR3D5PsXmjWID7O6TZObu6v3ichBwR%2BsW%2BITcmhj8CrHW%2BaHBxUu4ZWucWMwemmGicDJhLy%2FiEdfjYRa5BLIiPzAZ3l3gdVvQpRhGb0dh%2F6zHNvbINKvc8SlN2Iv0HwehbYOLF7nDaAFheMe7rrIE9ll%2FbGuQ9zlqs8LVo39ukjC5i7zGBjqxAQpJ6SIfI1ouri2FWq2q5jl1Yiu%2FnFIZL4ru7hE7ALfTVMGS6etyHXy%2FoLq5HFEsasrnuWRga7ZnnAZyasNoqaXEqv67Y%2Bq8KD1ifc8pWOrXGxioBYkveNvgssonhlYbv0gBFowkhiusr7F52VPbxEVER5IoFqDLlBz5HcDUkhDXr32QqTAr9d7g9JRnuIVK9%2B6avvjq19Cp5p6WYf%2BGz7xOriKXb6dpGefpH%2FJxEUa8%2Bw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=c8f922aee9386267795080fa5137524530090ba861f0bccbe9e8329462fc50aa",
+      "file_size": 2555851,
+      "type": "video/mp4",
+      "moderated": null
+    },
+    {
+      "id": 1565711,
+      "file_name": "2022-01-02_21-40-801_dotchinavideo_dotchinavideo.gi_export.tar.gz",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/zkrv0a8f5rgy20iusix8owjk69bu?response-content-disposition=attachment%3B%20filename%3D%222022-01-02_21-40-801_dotchinavideo_dotchinavideo.gi_export.tar.gz%22%3B%20filename%2A%3DUTF-8%27%272022-01-02_21-40-801_dotchinavideo_dotchinavideo.gi_export.tar.gz&response-content-type=application%2Fgzip&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZ44KYFFS%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T233035Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJHMEUCIFPYrndZA%2BqYr1%2BDi6FtjPsUS8S3i6VJZYKkaRtMuEf9AiEA2RrDiVnmvdDtJneFfnDv03YTVWlLTpnuMdItluUuEsEqugUI9f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDEC7SH%2BwB4dOi8f9syqOBQgLlBttN6pXp4ikIVfXUPqECOK%2FSOw%2BFs5Vj90cPp3mAtPyLAUWOWxDAEFDX05nJ2lQyEshBmehJs3ELxTuTCk2DfRnJQhPl9agZsPEfWwFKijPBawKzTni6sAq3kuOPcvGm9dUE8xw6THK5N0B9sBCBizbEvWDbbQK6EKfLjwwknOAzwhA7W4C9dn%2BL%2FUhvWLIkhMNCWWv4NuFr3KcWG6lre5NgB%2F5FOqcRi%2Bf87T2AB6jwHEA9He9ocaS8C6FtOIMjxP1CRVb9J0Qvw0hPism97C%2BLfuctbm%2FAhSg0Kcg8yv5ah7QNvDT90OrVs%2FV7xkUFuHA%2BYCfetUY8bPQEnxPb04DgbXOdR%2FPC5kFuJMKciG%2BzWLkXk5ZpwPErfOoKOhAV1IQmUuJF7Cqb%2FdkMj3PvtnwfTXocH6yDtfqqMPaV5a7G%2BkOiVsgRfe4nf9KWYsbWtKyvZJo0n4ckieINH45QNK%2F%2FlCYLGgdHVKOv%2FeNjO%2FQlM5CvK4FCC3JQKmZKx4RRgDffkY1z021Rf52lIwX9TPnDStjltSRAlXA7eGcViWAm8sKWH8nlfx9xg%2Fn1FKrv2qf4Ci9KTML%2FZiyCZ2WClHyKl7xxQ%2ByNfcV4NdAwH08dze3S7%2F9wI8tIqxsh%2FQBNGhnQLZagEEKhhbiZkkJS7flrw6HZiraf0ZimTx7jiIAnGHYNDKhCkkf4dNjR3D5PsXmjWID7O6TZObu6v3ichBwR%2BsW%2BITcmhj8CrHW%2BaHBxUu4ZWucWMwemmGicDJhLy%2FiEdfjYRa5BLIiPzAZ3l3gdVvQpRhGb0dh%2F6zHNvbINKvc8SlN2Iv0HwehbYOLF7nDaAFheMe7rrIE9ll%2FbGuQ9zlqs8LVo39ukjC5i7zGBjqxAQpJ6SIfI1ouri2FWq2q5jl1Yiu%2FnFIZL4ru7hE7ALfTVMGS6etyHXy%2FoLq5HFEsasrnuWRga7ZnnAZyasNoqaXEqv67Y%2Bq8KD1ifc8pWOrXGxioBYkveNvgssonhlYbv0gBFowkhiusr7F52VPbxEVER5IoFqDLlBz5HcDUkhDXr32QqTAr9d7g9JRnuIVK9%2B6avvjq19Cp5p6WYf%2BGz7xOriKXb6dpGefpH%2FJxEUa8%2Bw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=77513b1768c93f3cb049c9de00c13e24996e459af3bc05999f465789294ed13c",
+      "file_size": 4912,
+      "type": "application/gzip",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 12,
+  "voters": [
+    "mr-medi",
+    "thruster",
+    "yukusawa18",
+    "zy9ard3",
+    "yassinek3ch",
+    "bl4de",
+    "imranhudaa",
+    "msakr",
+    "eminfidan",
+    "shivammusic",
+    "and 2 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 5.3,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "high",
+      "privileges_required": "none",
+      "user_interaction": "required",
+      "scope": "unchanged",
+      "confidentiality": "high",
+      "integrity": "none",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 55901,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://gitlab.com/gitlab-org/gitlab-pages",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
