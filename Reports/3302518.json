@@ -1,0 +1,137 @@
+{
+  "id": 3302518,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMzAyNTE4",
+  "url": "https://hackerone.com/reports/3302518",
+  "title": "## Title  Heap Use-After-Free Vulnerability in `curl` Leading to Potential Code Execution",
+  "state": "Closed",
+  "substate": "not-applicable",
+  "severity_rating": "medium",
+  "readable_substate": "N/A",
+  "created_at": "2025-08-17T12:55:49.079Z",
+  "submitted_at": "2025-08-17T12:55:49.250Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "irene1hacker",
+    "url": "/irene1hacker",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 35663,
+    "url": "https://hackerone.com/curl",
+    "handle": "curl",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/035/663/2faf4c279d437d64bfda6d23d62ce1833813a4d9_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/035/663/2faf4c279d437d64bfda6d23d62ce1833813a4d9_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "curl",
+      "twitter_handle": "",
+      "website": "https://curl.se",
+      "about": "cURL is an Open Source project providing a library and command-line tool doing internet transfers"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2025-08-18T05:04:11.327Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2025-08-17T18:04:52.588Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary\n\nA **Use-After-Free (UAF)** vulnerability was discovered in `curl` at **`curl_trc.c:195`**.  \nWhen processing specially crafted input, the code accesses memory after it has already been freed.  \nThis can result in undefined behavior, leading to a **denial of service (crash)** and potentially enabling **information disclosure** or **remote code execution**, depending on the attacker’s ability to control heap layout.  \n\ncode\n```C\nif(data->set.errorbuffer && !data->state.errorbuf) {\n   strcpy(data->set.errorbuffer, error); \n   data->state.errorbuf = TRUE; /* wrote error string */ \n}\n```\n## Affected version\ncurl 8.16.0-DEV (Linux) libcurl/8.16.0-DEV\n\n## Steps To Reproduce:\nI used LLVM libFuzzer to find this.\n\n  1.Compile libcurl with sanitizers enabled:\n```shell\nmkdir build && cd build\nCC=clang CXX=clang++ cmake ..   -DCMAKE_BUILD_TYPE=Debug   -DCMAKE_C_FLAGS=\"-g -O1 -fsanitize=address\"   -DBUILD_SHARED_LIBS=OFF   -DBUILD_STATIC_LIBS=ON   -DBUILD_TESTING=OFF   -DBUILD_EXAMPLES=OFF   -DENABLE_MANUAL=OFF\ncmake --build . --config Debug\n```\n  2. Build the fuzz target vulnerablityfuzz.cpp with coverage instrumentation enabled.\n```shell\nclang++ -g -O1 -fsanitize=address,fuzzer   -I../include   -I../src/include   vulnerablityfuzz.cpp ./lib/libcurl-d.a -o vulfuzz   -lpsl -ldl -lpthread -lssl -lcrypto -lz\n```\n3. Run the fuzzer:\n```shell\n./vulfuzz\n```\n## Supporting Material/References:\n{F4686953}\n{F4687026}\n\n## Impact\n\n## Summary:\nThe discovered vulnerability is a **heap-use-after-free** in `curl` that occurs when previously freed heap memory is accessed and written via `strcpy()`.\n\nAn attacker who can influence the input processed by the vulnerable functions (e.g., SSL configuration, proxy configuration, or callback functions) may achieve the following impacts:\n\n- **Denial of Service (DoS):**  \n  By triggering the use-after-free condition, an attacker can reliably crash the process, making the application or service unavailable.\n\n- **Information Disclosure:**  \n  Since freed memory may still contain sensitive data, an attacker may be able to read unintended memory contents, potentially leaking secrets such as credentials or session tokens.\n\n- **Arbitrary Code Execution (High Risk):**  \n  With careful heap grooming, an attacker could exploit the dangling pointer to overwrite adjacent memory structures, potentially gaining control of program flow and executing arbitrary code in the context of the application.\n\nGiven that `curl` is widely used in network-related applications, exploitation of this bug can have a significant impact on the security of systems that rely on it.",
+  "weakness": {
+    "id": 50,
+    "name": "Use After Free"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 4686953,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/a5gwuhf6xyi2bxxkts13lqaj9fsy?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQREMC7CON%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T163845Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHYaCXVzLXdlc3QtMiJIMEYCIQCW8SxQKgARnLryAh2r4n3odN%2B7zqFhHLBFpGvgAn4XGQIhALV8j%2BDSVqm9UmUGt2DO4qp5pLHNIMOJpyo%2BQr4jZzIdKrsFCO%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5Igzz%2FcwnvkPCLs%2Bn6ygqjwV3N4a%2FZ0EATSX1wO%2Bd%2F9a4sFO6Mt858m3ydeh4j2%2BqqKgVb9fLUqWZQ3Xmx8UrY2Jf77ASqF10QqWvu5mjhlL%2F6cJVHqOqGfS1YHTxePFExVYWJW0mX9DONhiwDrcFQLe6DMPyTeYR9bFqemJKpl4W0Lq0mBgjk2J9L7vjh9lmdSMB4mW4bwDlytP%2B2OOXnfUPo0Ue3CLKUgn7VKZPMNGMod8rA1p1Nj2o8GDxDQz8S9B9GWeiNrQfKMx1j1yZzUmUiJWYYZg6VPKQd%2Fh6zYAbXPqMB%2B%2BeYrNZaOFzPzwOG7lz3sie7Zq7J2P4WTqz7cIDi8ljg%2BXpQNu1NXVgFuLw05lTmJyAurl8%2F7XqwxcAr%2F3WyKzTA%2BN3MidnphMoj9k0FIhqGYXLon9kWmvgmOuS2N%2Bi1Bz6dFV%2FFoCh0inpBfQQf6i10%2FwuwAsDIqOnV%2F%2BsA6UQx0nIY1BZz%2Fu43hkfkcs%2B4emD%2BwTox%2BXml7bT3PyhNAONbvlX%2BjYFGSsu7%2BIT82VvjaOHI4IsYtryLUHHku1lde74QudXzS5Am6sbCGdn28GddjTRySk0O1VctM8gf7kLszOuunYtzmI%2F60PGxa8%2FKfHIIzYH0xHPgB7ZyjWCrbq78RXvAoyRnfnKzgDeuPP6kt%2Fmw%2Bn55w2gkhfYV8yWgFq44AQd%2FO7GQhS6uYp0kYsYocWSYyXa8aaKrcll4f1tA6oisyBTb5pzXLwukKj8q7hpMQCyXrKYULgrq1rwLMpUhMi91AEHWm%2FLmP8LtrrYdGaptsjtLzHdKzyfuCGCmmDyXS2O7gkVx3S3TIPZ8BlVvBNPeFh%2FY2AILsegfWYoGHx2Q6h3aohdbdWqAHWRhkqdFirzl%2BWKCUAzMI3ausYGOrABMUFpfpVhbtSigmBVkvXCN%2FGp5olQ43QMjeJxuPdkJr0Fk%2FUK2lCX0avcZTMgAcB8v%2FQrrd3%2Bl%2BHr0R%2FBCDD9ZgoXNh5Bs%2Bt6BlNJOLEuPeXscn3g%2FxGeNJRbaq1iW9c2cGZgqYwCB4eSCi3VOE7kvGz8sbUTPOdQOuINtDKGv%2BBSVbxIVtIkLo0cDeLpp621mg%2F4Mrq6KjHRapHnYIEjGudjLEEElfe0kgRyJajdUUw%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=381f39296daa37949eb91ccd1fa634aa65efef58d6d2236e4e80120b59f43087",
+      "file_size": 202188,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 4687026,
+      "file_name": "curl_vulnerability_fuzzer.cpp",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/nl701p8c7t8mo7w6wnqr9qrvexca?response-content-disposition=attachment%3B%20filename%3D%22curl_vulnerability_fuzzer.cpp%22%3B%20filename%2A%3DUTF-8%27%27curl_vulnerability_fuzzer.cpp&response-content-type=text%2Fx-csrc&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQREMC7CON%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T163845Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHYaCXVzLXdlc3QtMiJIMEYCIQCW8SxQKgARnLryAh2r4n3odN%2B7zqFhHLBFpGvgAn4XGQIhALV8j%2BDSVqm9UmUGt2DO4qp5pLHNIMOJpyo%2BQr4jZzIdKrsFCO%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5Igzz%2FcwnvkPCLs%2Bn6ygqjwV3N4a%2FZ0EATSX1wO%2Bd%2F9a4sFO6Mt858m3ydeh4j2%2BqqKgVb9fLUqWZQ3Xmx8UrY2Jf77ASqF10QqWvu5mjhlL%2F6cJVHqOqGfS1YHTxePFExVYWJW0mX9DONhiwDrcFQLe6DMPyTeYR9bFqemJKpl4W0Lq0mBgjk2J9L7vjh9lmdSMB4mW4bwDlytP%2B2OOXnfUPo0Ue3CLKUgn7VKZPMNGMod8rA1p1Nj2o8GDxDQz8S9B9GWeiNrQfKMx1j1yZzUmUiJWYYZg6VPKQd%2Fh6zYAbXPqMB%2B%2BeYrNZaOFzPzwOG7lz3sie7Zq7J2P4WTqz7cIDi8ljg%2BXpQNu1NXVgFuLw05lTmJyAurl8%2F7XqwxcAr%2F3WyKzTA%2BN3MidnphMoj9k0FIhqGYXLon9kWmvgmOuS2N%2Bi1Bz6dFV%2FFoCh0inpBfQQf6i10%2FwuwAsDIqOnV%2F%2BsA6UQx0nIY1BZz%2Fu43hkfkcs%2B4emD%2BwTox%2BXml7bT3PyhNAONbvlX%2BjYFGSsu7%2BIT82VvjaOHI4IsYtryLUHHku1lde74QudXzS5Am6sbCGdn28GddjTRySk0O1VctM8gf7kLszOuunYtzmI%2F60PGxa8%2FKfHIIzYH0xHPgB7ZyjWCrbq78RXvAoyRnfnKzgDeuPP6kt%2Fmw%2Bn55w2gkhfYV8yWgFq44AQd%2FO7GQhS6uYp0kYsYocWSYyXa8aaKrcll4f1tA6oisyBTb5pzXLwukKj8q7hpMQCyXrKYULgrq1rwLMpUhMi91AEHWm%2FLmP8LtrrYdGaptsjtLzHdKzyfuCGCmmDyXS2O7gkVx3S3TIPZ8BlVvBNPeFh%2FY2AILsegfWYoGHx2Q6h3aohdbdWqAHWRhkqdFirzl%2BWKCUAzMI3ausYGOrABMUFpfpVhbtSigmBVkvXCN%2FGp5olQ43QMjeJxuPdkJr0Fk%2FUK2lCX0avcZTMgAcB8v%2FQrrd3%2Bl%2BHr0R%2FBCDD9ZgoXNh5Bs%2Bt6BlNJOLEuPeXscn3g%2FxGeNJRbaq1iW9c2cGZgqYwCB4eSCi3VOE7kvGz8sbUTPOdQOuINtDKGv%2BBSVbxIVtIkLo0cDeLpp621mg%2F4Mrq6KjHRapHnYIEjGudjLEEElfe0kgRyJajdUUw%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=a5a44d600af0b0bd53569db41fbe6a2cb99c41aa18446cf14a3358d3fabca81b",
+      "file_size": 14928,
+      "type": "text/x-csrc",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 19,
+  "voters": [
+    "corrupted_bytes",
+    "2026",
+    "thalaivar304",
+    "ap09h15",
+    "mhd01",
+    "urlocalarsonist",
+    "tairn",
+    "mai91",
+    "anonusr404",
+    "ienevorawat94",
+    "and 9 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 18844,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/curl/curl",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
