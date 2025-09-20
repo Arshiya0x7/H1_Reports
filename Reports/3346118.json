@@ -1,0 +1,124 @@
+{
+  "id": 3346118,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMzQ2MTE4",
+  "url": "https://hackerone.com/reports/3346118",
+  "title": "Timing Attack Vulnerability in curl Digest Authentication via Non-Constant-Time String Comparison",
+  "state": "Closed",
+  "substate": "not-applicable",
+  "severity_rating": "medium",
+  "readable_substate": "N/A",
+  "created_at": "2025-09-18T16:11:20.710Z",
+  "submitted_at": "2025-09-18T16:11:21.001Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "frizo_05",
+    "url": "/frizo_05",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 35663,
+    "url": "https://hackerone.com/curl",
+    "handle": "curl",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/035/663/2faf4c279d437d64bfda6d23d62ce1833813a4d9_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/035/663/2faf4c279d437d64bfda6d23d62ce1833813a4d9_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "curl",
+      "twitter_handle": "",
+      "website": "https://curl.se",
+      "about": "cURL is an Open Source project providing a library and command-line tool doing internet transfers"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2025-09-18T21:28:32.189Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2025-09-18T16:30:04.485Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nA timing attack vulnerability exists in curl's Digest Authentication implementation due to the use of non-constant-time string comparison (strcmp()) when comparing authentication algorithms in digest.c line 360. This allows attackers to determine the supported authentication algorithm through response time analysis.\n\nNo AI was used to discover this vulnerability or generate this report.\n\n## Affected version\n    * curl version 7.88.1 (x86_64-pc-linux-gnu)\n\n    * libcurl/7.88.1 OpenSSL/3.0.8 zlib/1.2.13 libidn2/2.3.4 libpsl/0.21.2 (+libidn2/2.3.4) libssh2/1.10.0 nghttp2/1.52.0\n\n    * Platform: Linux Ubuntu 22.04.3 LTS\n\n## Steps To Reproduce:\n   1.  Set up a test server with Digest Authentication enabled:\n\nbash\n```\n# Using a simple Python HTTP server with digest auth\npython3 -m http.server 8080 --digest\n```\n    2. Run the timing attack PoC against the local server: {F4799894}\n\nbash\n```\npython3 poc_timing_attack.py http://localhost:8080/protected\n```\n    3. Observe the timing differences between algorithm comparisons:\n\ntext\n```\nTesting algorithm: MD5             -   963236.5 ns\nTesting algorithm: MD5-sess        -   826390.0 ns\nTesting algorithm: SHA-1           -   814495.0 ns\n```\n\n   4.  The PoC will identify the algorithm with significantly different response times:\n\ntext\n```\nVULNERABILITY CONFIRMED: Timing attack possible\n   The server likely uses algorithm: MD5\n   Response time: 963236.50 ns\n   Deviation: +25.9% from average\n```\n\n\n## Supporting Material/References:\n   * PoC script output showing timing differences \n\n    *Vulnerable code location in digest.c line 360\n\n    *curl documentation on Digest Authentication : https://everything.curl.dev/libcurl-http/auth.html\n\n## Impact\n\n## Summary:\nAn attacker can exploit this vulnerability to:\n\n    1. Determine supported authentication algorithms on the server\n\n    2. Facilitate targeted attacks by identifying weaker algorithms (e.g., MD5 vs SHA-256)\n\n    3. Gain reconnaissance information about server configuration\n\n    4. Potentially bypass authentication if combined with other vulnerabilities\n\nThe vulnerability violates the principle of constant-time comparison for security-sensitive operations and could lead to authentication mechanism fingerprinting.\n\n##Additional Information:\n\n    * CVSS Score: 5.3 (Medium) - CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N\n\n    * Fix Recommendation: Replace strcmp() with Curl_timestrcmp() in /lib/vauth/digest.c:360\n\n    * Similar vulnerabilities: Previously addressed in other parts of curl codebase with constant-time comparison fixes",
+  "weakness": {
+    "id": 116,
+    "name": "Information Exposure Through Timing Discrepancy"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 4799894,
+      "file_name": "poc_timing_attack.py",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/h0h1llrczzhyhl941x480fp6yusj?response-content-disposition=attachment%3B%20filename%3D%22poc_timing_attack.py%22%3B%20filename%2A%3DUTF-8%27%27poc_timing_attack.py&response-content-type=application%2Fx-sh&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ5N7XHBZX%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T162659Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHUaCXVzLXdlc3QtMiJHMEUCIQD97e0enHdQWOzRCmQGVqGEDKzBjbIPmrC11AWOVIdZ7AIgCGJypHPny88O6ifa7Kn3xciy7q93fnywOTtwH3Wke3squwUI7f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDLvb%2FJ%2Be3gfd3EIwkiqPBfe0hBfrbTrTLMsUoqY3BgU2HsAWYwqxIHy8pxCQ8B%2Fxt%2FWSPWq5z76fr99x761Dbb%2F%2FcUgl53gPL9OKAnFAuazVz02E%2F59hSI%2FOjD9ohqeNwGL5aLIe5icFmT%2BiLhbTTRlvLOkxrlKKC8dGCc4F4WqcfOey9%2B73yGa7K92Rth7bh%2BX8zaIo8F2VcObGIVQKhW%2FShw1I0sbYpAfHlb8S8X9c%2F%2B8BWUg2WsdLZZfXWVn6VP%2BKL7o6Y14tBL3iNMn940YpXZ%2FUr87L%2BetZUGRfNvcOt7FWUOg5cXOYsu5v7BYmqBEcvOUMS8b2cJ05Y%2F2veH7H96DexkRcTrqroFjWKWxPZHuqjqT5ggrqchQpmlveww%2Fpi5CIr85%2FEZijKAsNJv6dgHAQPC%2Ftn0jrMqaGEbydwntwCdDog9AqEKwvhn2dHc03%2FOomoqyME0zpqnWgPP%2BWbf24Z0r1xCZ3Z8fuH%2BbMfMFx7mNdUA6vFzt7XDmuqLQ2jRATHvDM8AcGniTsjGSkfwDPZ7%2FzL9VtjxWyPv%2BU%2BKejojRCwixYWsCL%2B7ryHu9jm5qLuaKThlJoDs%2BDjSceTGZzh5hQSRzILFR9IAdnQCWxYMm0g%2FYlylnZdaubKB3Fbp9KLw6mRllV3VssJeyrhSJuxGfavd%2FgmPUqz%2BqBMEl7NKLAuSipviyVUGZGv0Ztp4aCLXYsJKqkpCsthucHbSdhTeA4%2FNLyNOETg20XD31W41pRC6%2FCHgtBZcoB6AHgpySCg0GIhGzTHI5mJac6Dy5OTJji6kuthTG%2FjCuYY9tGkk8h1dgxxuONwvQC%2FvmkEa%2BSHgqLVYpc97KMkb2qN8XlCIcm8QKOs6kp63o5xQDlEGT7jvWMNP8yjSwwy7e6xgY6sQEHYI7FwkPjr3BJHfIpZNeDwJfazq7SRb2%2BlY24XBB9zGIH%2Fx7NZnUVK6Ze%2B8gCCrnx1z%2FzYBxOcNUJnI5JSsCoo0kntt8LYtzJ70VGYtX%2F4rTgz8VpSm4nQeqK0v74KMgXhUtuaWOt5VMBI6TOZERdDTpZKuiQDsedib3u1%2BPkiOrBuAfww6XNhd7Dv0CwwZqORIOT51jo%2BN2V8wEBuWIfVqePHVtZp0GjSiMuz93qf%2F4%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=82908ad6eb480d335d4c997d8b55a5a36a31184767dd7c8df0daad595d00cc33",
+      "file_size": 6338,
+      "type": "application/x-sh",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 6,
+  "voters": [
+    "2026",
+    "aryanstha",
+    "hackvegas001",
+    "whitehatethicalhacker_pathum_p",
+    "chenlvtang",
+    "stackraid"
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 18844,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/curl/curl",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
