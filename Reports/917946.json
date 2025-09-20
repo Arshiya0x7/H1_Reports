@@ -1,0 +1,159 @@
+{
+  "id": 917946,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC85MTc5NDY=",
+  "url": "https://hackerone.com/reports/917946",
+  "title": "It is possible to elevate privileges for any authenticated user to view permissions matrix and view Direct messages without appropriate permissions.",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2020-07-07T13:23:16.542Z",
+  "submitted_at": "2020-07-07T13:23:16.542Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "garretby",
+    "url": "/garretby",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 19858,
+    "url": "https://hackerone.com/rocket_chat",
+    "handle": "rocket_chat",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/019/858/ada6c92a338715afad123af214dd6e22fd8dc6ff_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/019/858/ada6c92a338715afad123af214dd6e22fd8dc6ff_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Rocket.Chat",
+      "twitter_handle": "RocketChat",
+      "website": "https://rocket.chat",
+      "about": "Rocket.Chat is a company built on open source values and a love for efficiency. The company is driven by our amazing community of contributors."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "no-content",
+  "cve_ids": [
+    "CVE-2022-35250"
+  ],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2022-09-22T16:00:58.697Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2022-09-22T11:59:43.630Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "",
+  "weakness": {
+    "id": 75,
+    "name": "Privilege Escalation"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [],
+  "allow_singular_disclosure_at": "2022-10-22T11:59:43.741Z",
+  "allow_singular_disclosure_after": -91968061.8407815,
+  "singular_disclosure_allowed": true,
+  "vote_count": 3,
+  "voters": [
+    "shreyaschavhan",
+    "mmnah1an",
+    "shivammusic"
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "Team"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "id": 194856,
+      "category": "team",
+      "content": "Description:\n=====================\n\n\nFor the user with \"View Private Room\" permission only it is possible to rewrite permission role (e.g. to admin) in /api/v1/me method response via some proxy tools (e.g. Charles) and get access to server`s permissions matrix and view Direct messages.\n\nReleases Affected:\n=====================\n\nTested on 3.3.3\n\nSteps To Reproduce (from initial installation to vulnerability):\n=====================\n\nLeave existing \"Guest\" role with only \"View Private Room\" permission and associate newly created user with it .\nInstall Charles or another network proxy\nEnable local SSL proxy.\nTurn on the rewrite tool and edit body response \"roles\" parameter to admin (\"roles\": [\"admin\"]) for /api/v1/me method.\nReload Rocket page.\nNow you can get https://your_server/admin/permissions page with current server`s permissions.\nNow you can receive Direct Messages even if \"View Direct Messages\" permissions is disabled for you.\n\nImpact\n=====================\n\nThe user which is not meant to be able to participate in Direct Messaging gains the ability to do so and also gets access to the server`s permissions scheme.\n\n\nThis issue has been fixed in 5.0>\n---------------------",
+      "updated_at": "2022-09-22T11:59:17.878Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 1989106,
+        "username": "mrd0d",
+        "name": "Offsec team engineer",
+        "bio": "",
+        "cleared": false,
+        "verified": false,
+        "website": null,
+        "location": "",
+        "created_at": "2021-09-27T20:52:41.370Z",
+        "url": "https://hackerone.com/mrd0d",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "company",
+        "profile_picture_urls": {
+          "small": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/variants/j9d22b8d3wdw2lskn3dviwszwnze/c8a1698ff707a5e3e8a91a3484838363845daac68cb82c86d55c9e2d44d67b67?response-content-disposition=inline%3B%20filename%3D%22Ghost%20Boy.jpeg%22%3B%20filename%2A%3DUTF-8%27%27Ghost%2520Boy.jpeg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWOFFUOGP%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T224045Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJIMEYCIQCO8e98CG93gx6FI93avcVk93orGMThgwEg%2BxhAiYwrXgIhAMah1DU4HhGxSu5S4LbJ3j6IyULGaP4hFSPFJv2WNr2JKrsFCPT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5Igzev0Pr%2F5UlW%2FL7fPYqjwXWJoLjlkU8GWlAViMQ3u%2FjvH9y3yiMa5dU8xk%2BCsIybMAVwkKy%2FBzn%2FowkGS27NxJfn4Get3qq07Iq%2FfxvVifPXry2iqo0%2BtesEWRNnYEoDy1WXB8NP3nSK1RdZ4C%2BDEjFUfiGdVtbebkEzw1ifv0o%2B6sJRawWSgazfGXh6pEjgcIH%2FComPwS%2BpJweMpmQOzZomMfh4hSjUQcFSMNWjn4RVMFIAwBOLe54KdqfWPrfIQWxngSoN%2Bmsgp55TAiS7yHoghkgQ5ZL8wi5V%2Fj3jOZnpcQs7ceV%2F4JinpFzHxdHrZGqHTTBNuGs2CX%2F6tynSVMQ8lldsKCjREPSVnNx6RB0GF92bYT6wxggCqxCPziGaT3Q8Ch24afG6ztAt%2BxbY3rAeNbBeE4s35EGKSWYA6GrLs8G35CZsg3wblIuvx4JdnAF14owRU27QTNGY869dHq1kTev8mlUwq%2FH6%2BK981EmupY7zkmfxeQtJ9T%2BfpFoOogHERfTb%2FlF0Y3xr5ikBgMkSZoAOHl%2BXIJgEv5DM7p1t9Ml3jLA%2Bp2mc0HOAF0EUmgI6x80Kc0eRN4BpKrb5JMw2XcyTG%2FlADP9Ojq2o2mnHdHhmMQdKo%2BfnD6XyX32lVj0POdfQerAYK1vjIKF1COpZnmyJTy4mlRM1TIhd3LL8%2F5mWZu4hMFbOJ4ZeN4%2FyIOQ1S3Gdw4hHQiyoXQnJqZbqrmQ%2F%2Brg5q94emnWgheoPI5UBfqjKv0HWzSpyLAR6ED%2BQipJTzHhFkDifRCM8f%2FfMKrMQ7xNsAHNf%2FL%2F3ZM1c23%2F3ENsujqGsRLhXc3uGGWBQZkmwiMqXOvn4POKiMpj%2BquxFhFjrppowZ7a0DYCsGBHS4PX5T8Zryd4PbyjMOv7u8YGOrABYECv1ysrusYXz8v1PffKu2oS9%2FWTV3wfmfM994qCLjqBjzayF%2BG46FDMOHWKiyMXvtqUS%2FSnsTAiz5nWitLq1BHR5WmrwcvldH2z%2BI5FyrT9%2B49ixOsFaHdDn%2FwdS2GSJqanubFedGASA6T%2FEoZ78mFlMM4QbCwrlIwr0DtRZMTOJVWMyadjBPUIPVz3rimScaaqXJhy5htKpLL3HXszy1hHTdkrWLjXMtW7vgtkBO0%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=6a02d3c68f9ee3f283a7f7774f67dbba6f028727f970273566abdc258920a7ac",
+          "medium": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/variants/j9d22b8d3wdw2lskn3dviwszwnze/74790fe75ac5dbe8a5140a122388d59ebac913dcfa941f0b3a45e6cad161f9ea?response-content-disposition=inline%3B%20filename%3D%22Ghost%20Boy.jpeg%22%3B%20filename%2A%3DUTF-8%27%27Ghost%2520Boy.jpeg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWOFFUOGP%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T224045Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJIMEYCIQCO8e98CG93gx6FI93avcVk93orGMThgwEg%2BxhAiYwrXgIhAMah1DU4HhGxSu5S4LbJ3j6IyULGaP4hFSPFJv2WNr2JKrsFCPT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5Igzev0Pr%2F5UlW%2FL7fPYqjwXWJoLjlkU8GWlAViMQ3u%2FjvH9y3yiMa5dU8xk%2BCsIybMAVwkKy%2FBzn%2FowkGS27NxJfn4Get3qq07Iq%2FfxvVifPXry2iqo0%2BtesEWRNnYEoDy1WXB8NP3nSK1RdZ4C%2BDEjFUfiGdVtbebkEzw1ifv0o%2B6sJRawWSgazfGXh6pEjgcIH%2FComPwS%2BpJweMpmQOzZomMfh4hSjUQcFSMNWjn4RVMFIAwBOLe54KdqfWPrfIQWxngSoN%2Bmsgp55TAiS7yHoghkgQ5ZL8wi5V%2Fj3jOZnpcQs7ceV%2F4JinpFzHxdHrZGqHTTBNuGs2CX%2F6tynSVMQ8lldsKCjREPSVnNx6RB0GF92bYT6wxggCqxCPziGaT3Q8Ch24afG6ztAt%2BxbY3rAeNbBeE4s35EGKSWYA6GrLs8G35CZsg3wblIuvx4JdnAF14owRU27QTNGY869dHq1kTev8mlUwq%2FH6%2BK981EmupY7zkmfxeQtJ9T%2BfpFoOogHERfTb%2FlF0Y3xr5ikBgMkSZoAOHl%2BXIJgEv5DM7p1t9Ml3jLA%2Bp2mc0HOAF0EUmgI6x80Kc0eRN4BpKrb5JMw2XcyTG%2FlADP9Ojq2o2mnHdHhmMQdKo%2BfnD6XyX32lVj0POdfQerAYK1vjIKF1COpZnmyJTy4mlRM1TIhd3LL8%2F5mWZu4hMFbOJ4ZeN4%2FyIOQ1S3Gdw4hHQiyoXQnJqZbqrmQ%2F%2Brg5q94emnWgheoPI5UBfqjKv0HWzSpyLAR6ED%2BQipJTzHhFkDifRCM8f%2FfMKrMQ7xNsAHNf%2FL%2F3ZM1c23%2F3ENsujqGsRLhXc3uGGWBQZkmwiMqXOvn4POKiMpj%2BquxFhFjrppowZ7a0DYCsGBHS4PX5T8Zryd4PbyjMOv7u8YGOrABYECv1ysrusYXz8v1PffKu2oS9%2FWTV3wfmfM994qCLjqBjzayF%2BG46FDMOHWKiyMXvtqUS%2FSnsTAiz5nWitLq1BHR5WmrwcvldH2z%2BI5FyrT9%2B49ixOsFaHdDn%2FwdS2GSJqanubFedGASA6T%2FEoZ78mFlMM4QbCwrlIwr0DtRZMTOJVWMyadjBPUIPVz3rimScaaqXJhy5htKpLL3HXszy1hHTdkrWLjXMtW7vgtkBO0%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=6f77506210af0ab8d8c058e512471d7c675701515e1acf6529c323b56e0ffd5a",
+          "xtralarge": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTcwOTk1NSwicHVyIjoiYmxvYl9pZCJ9fQ==--be5e56ef7524606adf37a742155f3190b1c2c329/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGVnIiwicmVzaXplIjoiMjYweDI2MFx1MDAzZSJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--cea846659d6dfdc215f3c0fb14f7ed8ebc9f95ef/Ghost%20Boy.jpeg"
+        }
+      }
+    },
+    {
+      "id": 23437,
+      "category": "researcher",
+      "content": "I found out, that ANY user with the role without permissions at all, can be added to channel, private group or direct message, and can see permission matrix as well, following the steps describe in attached video.\n",
+      "updated_at": "2020-07-09T12:02:07.046Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 1234695,
+        "username": "garretby",
+        "name": "Garret",
+        "bio": null,
+        "cleared": false,
+        "verified": false,
+        "website": null,
+        "location": null,
+        "created_at": "2020-07-07T11:51:14.690Z",
+        "url": "https://hackerone.com/garretby",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "hacker",
+        "profile_picture_urls": {
+          "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png",
+          "medium": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png",
+          "xtralarge": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+        }
+      }
+    }
+  ]
+}
