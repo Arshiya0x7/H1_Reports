@@ -1,0 +1,161 @@
+{
+  "id": 1893800,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xODkzODAw",
+  "url": "https://hackerone.com/reports/1893800",
+  "title": "SQL Injection in CVE Discovery Search ",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2023-03-06T17:00:12.487Z",
+  "submitted_at": "2023-03-06T17:55:10.839Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "rcoleman",
+    "url": "/rcoleman",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13,
+    "url": "https://hackerone.com/security",
+    "handle": "security",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/013/fa942b9b1cbf4faf37482bf68458e1195aab9c02_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/013/fa942b9b1cbf4faf37482bf68458e1195aab9c02_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "HackerOne",
+      "twitter_handle": "Hacker0x01",
+      "website": "https://hackerone.com",
+      "about": "Vulnerability disclosure should be safe, transparent, and rewarding."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": true,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2023-03-06T19:52:20.028Z",
+  "bug_reporter_agreed_on_going_public_at": "2023-03-06T19:52:19.915Z",
+  "team_member_agreed_on_going_public_at": "2023-03-06T19:02:30.165Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "**Summary:**\nUnsanitized user-controlled inputs in the CVE Discovery Search allow for SQL injection.\n\n**Description:**\nSearch terms are split on whitespace but no additional sanitization is applied, allowing arbitrary SQL statements, such as a blind or timing-based attack. \n\n### Steps To Reproduce\n\n1. Visit https://hackerone.com/intelligence/cve_discovery\n2.  Enter a search term that normally returns results, plus an injection payload such as /**/AND/**/'1%'='1 and confirm that the results are still returned\n3. Change the payload to /**/AND/**/'1%'='0 and confirm that no results are returned\n\n### Optional: Your Environment (Browser version, Device, etc)\n\n * Chrome\n\n### Optional: Supporting Material/References (Screenshots)\n{F2211684}\n{F2211685}\n\n## Impact\n\nDisclosure of  data in Analytics Database, including report, team, and asset data",
+  "weakness": {
+    "id": 67,
+    "name": "SQL Injection"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 2211681,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/r74v24he1cxfnrabxa11ds8i1q3u?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZ44KYFFS%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T212916Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJHMEUCIFPYrndZA%2BqYr1%2BDi6FtjPsUS8S3i6VJZYKkaRtMuEf9AiEA2RrDiVnmvdDtJneFfnDv03YTVWlLTpnuMdItluUuEsEqugUI9f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDEC7SH%2BwB4dOi8f9syqOBQgLlBttN6pXp4ikIVfXUPqECOK%2FSOw%2BFs5Vj90cPp3mAtPyLAUWOWxDAEFDX05nJ2lQyEshBmehJs3ELxTuTCk2DfRnJQhPl9agZsPEfWwFKijPBawKzTni6sAq3kuOPcvGm9dUE8xw6THK5N0B9sBCBizbEvWDbbQK6EKfLjwwknOAzwhA7W4C9dn%2BL%2FUhvWLIkhMNCWWv4NuFr3KcWG6lre5NgB%2F5FOqcRi%2Bf87T2AB6jwHEA9He9ocaS8C6FtOIMjxP1CRVb9J0Qvw0hPism97C%2BLfuctbm%2FAhSg0Kcg8yv5ah7QNvDT90OrVs%2FV7xkUFuHA%2BYCfetUY8bPQEnxPb04DgbXOdR%2FPC5kFuJMKciG%2BzWLkXk5ZpwPErfOoKOhAV1IQmUuJF7Cqb%2FdkMj3PvtnwfTXocH6yDtfqqMPaV5a7G%2BkOiVsgRfe4nf9KWYsbWtKyvZJo0n4ckieINH45QNK%2F%2FlCYLGgdHVKOv%2FeNjO%2FQlM5CvK4FCC3JQKmZKx4RRgDffkY1z021Rf52lIwX9TPnDStjltSRAlXA7eGcViWAm8sKWH8nlfx9xg%2Fn1FKrv2qf4Ci9KTML%2FZiyCZ2WClHyKl7xxQ%2ByNfcV4NdAwH08dze3S7%2F9wI8tIqxsh%2FQBNGhnQLZagEEKhhbiZkkJS7flrw6HZiraf0ZimTx7jiIAnGHYNDKhCkkf4dNjR3D5PsXmjWID7O6TZObu6v3ichBwR%2BsW%2BITcmhj8CrHW%2BaHBxUu4ZWucWMwemmGicDJhLy%2FiEdfjYRa5BLIiPzAZ3l3gdVvQpRhGb0dh%2F6zHNvbINKvc8SlN2Iv0HwehbYOLF7nDaAFheMe7rrIE9ll%2FbGuQ9zlqs8LVo39ukjC5i7zGBjqxAQpJ6SIfI1ouri2FWq2q5jl1Yiu%2FnFIZL4ru7hE7ALfTVMGS6etyHXy%2FoLq5HFEsasrnuWRga7ZnnAZyasNoqaXEqv67Y%2Bq8KD1ifc8pWOrXGxioBYkveNvgssonhlYbv0gBFowkhiusr7F52VPbxEVER5IoFqDLlBz5HcDUkhDXr32QqTAr9d7g9JRnuIVK9%2B6avvjq19Cp5p6WYf%2BGz7xOriKXb6dpGefpH%2FJxEUa8%2Bw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=d911a72cf21b661c764ccbd00be70dee684c97421a6199b7e7083cb9f05321e2",
+      "file_size": 64985,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 2211682,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/81h3wcumvsrl5sjax2u60hnj9r2x?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZ44KYFFS%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T212916Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJHMEUCIFPYrndZA%2BqYr1%2BDi6FtjPsUS8S3i6VJZYKkaRtMuEf9AiEA2RrDiVnmvdDtJneFfnDv03YTVWlLTpnuMdItluUuEsEqugUI9f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDEC7SH%2BwB4dOi8f9syqOBQgLlBttN6pXp4ikIVfXUPqECOK%2FSOw%2BFs5Vj90cPp3mAtPyLAUWOWxDAEFDX05nJ2lQyEshBmehJs3ELxTuTCk2DfRnJQhPl9agZsPEfWwFKijPBawKzTni6sAq3kuOPcvGm9dUE8xw6THK5N0B9sBCBizbEvWDbbQK6EKfLjwwknOAzwhA7W4C9dn%2BL%2FUhvWLIkhMNCWWv4NuFr3KcWG6lre5NgB%2F5FOqcRi%2Bf87T2AB6jwHEA9He9ocaS8C6FtOIMjxP1CRVb9J0Qvw0hPism97C%2BLfuctbm%2FAhSg0Kcg8yv5ah7QNvDT90OrVs%2FV7xkUFuHA%2BYCfetUY8bPQEnxPb04DgbXOdR%2FPC5kFuJMKciG%2BzWLkXk5ZpwPErfOoKOhAV1IQmUuJF7Cqb%2FdkMj3PvtnwfTXocH6yDtfqqMPaV5a7G%2BkOiVsgRfe4nf9KWYsbWtKyvZJo0n4ckieINH45QNK%2F%2FlCYLGgdHVKOv%2FeNjO%2FQlM5CvK4FCC3JQKmZKx4RRgDffkY1z021Rf52lIwX9TPnDStjltSRAlXA7eGcViWAm8sKWH8nlfx9xg%2Fn1FKrv2qf4Ci9KTML%2FZiyCZ2WClHyKl7xxQ%2ByNfcV4NdAwH08dze3S7%2F9wI8tIqxsh%2FQBNGhnQLZagEEKhhbiZkkJS7flrw6HZiraf0ZimTx7jiIAnGHYNDKhCkkf4dNjR3D5PsXmjWID7O6TZObu6v3ichBwR%2BsW%2BITcmhj8CrHW%2BaHBxUu4ZWucWMwemmGicDJhLy%2FiEdfjYRa5BLIiPzAZ3l3gdVvQpRhGb0dh%2F6zHNvbINKvc8SlN2Iv0HwehbYOLF7nDaAFheMe7rrIE9ll%2FbGuQ9zlqs8LVo39ukjC5i7zGBjqxAQpJ6SIfI1ouri2FWq2q5jl1Yiu%2FnFIZL4ru7hE7ALfTVMGS6etyHXy%2FoLq5HFEsasrnuWRga7ZnnAZyasNoqaXEqv67Y%2Bq8KD1ifc8pWOrXGxioBYkveNvgssonhlYbv0gBFowkhiusr7F52VPbxEVER5IoFqDLlBz5HcDUkhDXr32QqTAr9d7g9JRnuIVK9%2B6avvjq19Cp5p6WYf%2BGz7xOriKXb6dpGefpH%2FJxEUa8%2Bw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=f7e469445c3a7d6b6eccdbe2381e3f8b4d9e3fb91569d1d950eda99ce9675b76",
+      "file_size": 64985,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 2211684,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/efdy81zir08lb5he5632ixuofv3a?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZ44KYFFS%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T212916Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJHMEUCIFPYrndZA%2BqYr1%2BDi6FtjPsUS8S3i6VJZYKkaRtMuEf9AiEA2RrDiVnmvdDtJneFfnDv03YTVWlLTpnuMdItluUuEsEqugUI9f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDEC7SH%2BwB4dOi8f9syqOBQgLlBttN6pXp4ikIVfXUPqECOK%2FSOw%2BFs5Vj90cPp3mAtPyLAUWOWxDAEFDX05nJ2lQyEshBmehJs3ELxTuTCk2DfRnJQhPl9agZsPEfWwFKijPBawKzTni6sAq3kuOPcvGm9dUE8xw6THK5N0B9sBCBizbEvWDbbQK6EKfLjwwknOAzwhA7W4C9dn%2BL%2FUhvWLIkhMNCWWv4NuFr3KcWG6lre5NgB%2F5FOqcRi%2Bf87T2AB6jwHEA9He9ocaS8C6FtOIMjxP1CRVb9J0Qvw0hPism97C%2BLfuctbm%2FAhSg0Kcg8yv5ah7QNvDT90OrVs%2FV7xkUFuHA%2BYCfetUY8bPQEnxPb04DgbXOdR%2FPC5kFuJMKciG%2BzWLkXk5ZpwPErfOoKOhAV1IQmUuJF7Cqb%2FdkMj3PvtnwfTXocH6yDtfqqMPaV5a7G%2BkOiVsgRfe4nf9KWYsbWtKyvZJo0n4ckieINH45QNK%2F%2FlCYLGgdHVKOv%2FeNjO%2FQlM5CvK4FCC3JQKmZKx4RRgDffkY1z021Rf52lIwX9TPnDStjltSRAlXA7eGcViWAm8sKWH8nlfx9xg%2Fn1FKrv2qf4Ci9KTML%2FZiyCZ2WClHyKl7xxQ%2ByNfcV4NdAwH08dze3S7%2F9wI8tIqxsh%2FQBNGhnQLZagEEKhhbiZkkJS7flrw6HZiraf0ZimTx7jiIAnGHYNDKhCkkf4dNjR3D5PsXmjWID7O6TZObu6v3ichBwR%2BsW%2BITcmhj8CrHW%2BaHBxUu4ZWucWMwemmGicDJhLy%2FiEdfjYRa5BLIiPzAZ3l3gdVvQpRhGb0dh%2F6zHNvbINKvc8SlN2Iv0HwehbYOLF7nDaAFheMe7rrIE9ll%2FbGuQ9zlqs8LVo39ukjC5i7zGBjqxAQpJ6SIfI1ouri2FWq2q5jl1Yiu%2FnFIZL4ru7hE7ALfTVMGS6etyHXy%2FoLq5HFEsasrnuWRga7ZnnAZyasNoqaXEqv67Y%2Bq8KD1ifc8pWOrXGxioBYkveNvgssonhlYbv0gBFowkhiusr7F52VPbxEVER5IoFqDLlBz5HcDUkhDXr32QqTAr9d7g9JRnuIVK9%2B6avvjq19Cp5p6WYf%2BGz7xOriKXb6dpGefpH%2FJxEUa8%2Bw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=5d247acbacbc95991ef9d1d235afe84c16afb7cc0397142a326ee3473beafb91",
+      "file_size": 64985,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 2211685,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/ouqets1vdc1uli9u1frnv8h5hs4y?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZ44KYFFS%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T212916Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJHMEUCIFPYrndZA%2BqYr1%2BDi6FtjPsUS8S3i6VJZYKkaRtMuEf9AiEA2RrDiVnmvdDtJneFfnDv03YTVWlLTpnuMdItluUuEsEqugUI9f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDEC7SH%2BwB4dOi8f9syqOBQgLlBttN6pXp4ikIVfXUPqECOK%2FSOw%2BFs5Vj90cPp3mAtPyLAUWOWxDAEFDX05nJ2lQyEshBmehJs3ELxTuTCk2DfRnJQhPl9agZsPEfWwFKijPBawKzTni6sAq3kuOPcvGm9dUE8xw6THK5N0B9sBCBizbEvWDbbQK6EKfLjwwknOAzwhA7W4C9dn%2BL%2FUhvWLIkhMNCWWv4NuFr3KcWG6lre5NgB%2F5FOqcRi%2Bf87T2AB6jwHEA9He9ocaS8C6FtOIMjxP1CRVb9J0Qvw0hPism97C%2BLfuctbm%2FAhSg0Kcg8yv5ah7QNvDT90OrVs%2FV7xkUFuHA%2BYCfetUY8bPQEnxPb04DgbXOdR%2FPC5kFuJMKciG%2BzWLkXk5ZpwPErfOoKOhAV1IQmUuJF7Cqb%2FdkMj3PvtnwfTXocH6yDtfqqMPaV5a7G%2BkOiVsgRfe4nf9KWYsbWtKyvZJo0n4ckieINH45QNK%2F%2FlCYLGgdHVKOv%2FeNjO%2FQlM5CvK4FCC3JQKmZKx4RRgDffkY1z021Rf52lIwX9TPnDStjltSRAlXA7eGcViWAm8sKWH8nlfx9xg%2Fn1FKrv2qf4Ci9KTML%2FZiyCZ2WClHyKl7xxQ%2ByNfcV4NdAwH08dze3S7%2F9wI8tIqxsh%2FQBNGhnQLZagEEKhhbiZkkJS7flrw6HZiraf0ZimTx7jiIAnGHYNDKhCkkf4dNjR3D5PsXmjWID7O6TZObu6v3ichBwR%2BsW%2BITcmhj8CrHW%2BaHBxUu4ZWucWMwemmGicDJhLy%2FiEdfjYRa5BLIiPzAZ3l3gdVvQpRhGb0dh%2F6zHNvbINKvc8SlN2Iv0HwehbYOLF7nDaAFheMe7rrIE9ll%2FbGuQ9zlqs8LVo39ukjC5i7zGBjqxAQpJ6SIfI1ouri2FWq2q5jl1Yiu%2FnFIZL4ru7hE7ALfTVMGS6etyHXy%2FoLq5HFEsasrnuWRga7ZnnAZyasNoqaXEqv67Y%2Bq8KD1ifc8pWOrXGxioBYkveNvgssonhlYbv0gBFowkhiusr7F52VPbxEVER5IoFqDLlBz5HcDUkhDXr32QqTAr9d7g9JRnuIVK9%2B6avvjq19Cp5p6WYf%2BGz7xOriKXb6dpGefpH%2FJxEUa8%2Bw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=a68be63bc057cbcffc4c87b2072b18d9f6f4ea1ee953c13c1da52bea1655b384",
+      "file_size": 87909,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2023-04-05T19:02:30.340Z",
+  "allow_singular_disclosure_after": -77682406.28741457,
+  "singular_disclosure_allowed": true,
+  "vote_count": 84,
+  "voters": [
+    "corrupted_bytes",
+    "khawlawired",
+    "buraaqsec",
+    "0xhuz",
+    "drsniper",
+    "arthuraires",
+    "thruster",
+    "chigorin",
+    "zy9ard3",
+    "mattberg",
+    "and 74 more..."
+  ],
+  "severity": {
+    "rating": "high",
+    "score": 7.5,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "high",
+      "integrity": "none",
+      "availability": "none"
+    }
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
