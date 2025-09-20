@@ -1,0 +1,158 @@
+{
+  "id": 2201370,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yMjAxMzcw",
+  "url": "https://hackerone.com/reports/2201370",
+  "title": "Information disclosure via enabled Django Debug Mode ",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2023-10-11T12:54:23.137Z",
+  "submitted_at": "2023-10-11T12:54:23.270Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "nhx1",
+    "url": "/nhx1",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/9prfvax8pij4u28l7ssj12cv120g/c8a1698ff707a5e3e8a91a3484838363845daac68cb82c86d55c9e2d44d67b67"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 41919,
+    "url": "https://hackerone.com/mtn_group",
+    "handle": "mtn_group",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/4e6ikuxrt34g8b14w2bk53c6vyry/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/4e6ikuxrt34g8b14w2bk53c6vyry/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "MTN Group",
+      "twitter_handle": "",
+      "website": "https://www.mtn.com/",
+      "about": ""
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2024-12-25T08:12:21.321Z",
+  "bug_reporter_agreed_on_going_public_at": "2024-11-25T08:12:17.066Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\n\nVulnerable URL:  `██████████`\n\nI observed that Django Debug Mode was enabled. It was leaking error messages and API endpoints so I decided to exploit it further to see what I could do. Here's a list of things I was able to do:\n\n1. ** Register arbitrary user accounts **\n2. ** Enumerate email addresses of registered user accounts **\n3. **View all debug information such as API endpoints**\n4. **Looks like it's also possible to fetch DNS records of registered domains from the endpoint `/api/domains/dns-records`, these records leak Origin IPs which might be highly confidential in nature** I haven't tested this from my end since I don't want to access any sensitive information. :) \n\n\n## API Information\n{F2765264}\n\n## Registering arbitrary user accounts\n{F2765262}\n\n## Email enumeration\n{F2765267}\n\n\n\nI stopped at this point so that you could review it from your end...\n\nThe email I used to registered was **██████**\n\n## Steps To Reproduce:\n[add details for how we can reproduce the issue]\n\n### Request to register arbitrary user accounts and enumerate email addresses\n```\nPOST /api/auth/register/ HTTP/1.1\nHost: backend.webreg.mtn.zm\nCookie: ███████\nUser-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0\nAccept: text/html; q=1.0, */*\nAccept-Language: en-US,en;q=0.5\nAccept-Encoding: gzip, deflate\nReferer: ████████\nX-Csrftoken: ██████████\nX-Requested-With: XMLHttpRequest\nContent-Length: 80\nOrigin: ██████████: 1\nSec-Fetch-Dest: empty\nSec-Fetch-Mode: cors\nSec-Fetch-Site: same-origin\nTe: trailers\nConnection: close\n\n{\n\"email\": \"██████████\",\n\"password\": \"password██████████\"\n}\n```\n\n## Supporting Material/References:\n[list any additional material (e.g. screenshots, logs, etc.)]\n\n  * [attachment / reference]\n\n## Impact\n\nAn actor could get access to information he/she is not supposed to get.",
+  "weakness": {
+    "id": 18,
+    "name": "Information Disclosure"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 2765262,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/gdghp2c2l1thh4vzk2tn4wvvfd61?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQRNJ6PC7P%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T174232Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHgaCXVzLXdlc3QtMiJGMEQCIC6mjI6wkq77EwW4RnWj4BcAykSi7RUyhDVg0vT82SSfAiBmkPt2NE1NgirWjCev3v28WiPJFpgBoaWm%2Fl47FfRfQyq6BQjx%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMD%2FiiwpTPq0pAGccNKo4Fi9Es7Y1oB1%2FDgdnfqbOiyUZioaZqL8rTPebrBmkpUhgYRn8e3bfuQxPynXK2sor1BQijKDi7u38TkMZkDJdn%2FkHxxMl6gzbKVLy%2BkYcScRBek2u7K%2Fi%2BzKwJeKNvj6WfimkmSZ3eCPPBB33reaBTXKu2KT6upKjhQyklZHTm5K3SqOACU2SMwibzmG8C7Cjc8z0B4FcTfztRbfxn4ew%2FGoevRISFvlqrGSSqoZ6xCCP78OcJPcEB6ACRzFglYQAxTMuNl4N3DzMHHTUg%2FRdM6GpgH4hQwEuutn2ncG64GuQYxVF92n3q6INk6MV%2FGRh4XDbllJfrJooHVbE2BSM4h3oHEqmm2dT6P%2Bd9vQXUOsZW7y694DZJgkMPY6RuVxV7ctvKr81ksNrBGDKWLoeEktUtQFc%2BxAZacVWeIOjcjbT0THN7BcfMwTe1V6sqU135SfJPEuACZbftn%2Bj6FKNiYr7FF6nNKKUAbuHqqddTiWm0JNJohKvn94IKO%2FD1lqYf6ey04aOAMsMiutoMXJcJEer0ENCTO2A5hGTFYOuQfs1XFL4fR2gsT%2Bo%2B8Q7T9sCbzj2BIf1I6SkNs3gm1Sf4MZBxRHLodbny3RRD6Qzy5Lg9EZRW5JEF0Jw4o%2BYp7LBsNhZ0DegThntKiKIbvcMbVz5eLx5CV5vYZWrM0URDPH4AUyHQcbS8IcziZKu4IWJJ%2Bhj%2Fyh7I9Rz5EjikpAKOJOpS2ar88cEsTZZOk757PmbJriAjECeRWFMDfUuk0S%2BDVhgcsyh7g%2BbZYTHl8Kdu%2FIOhGrrrO1CB1OYob2Gi3alAmgq7%2FFMHatDsrX7z55RncGUowwhHVwun%2FfAmVKq3Du2g35xFjD2oT9qx%2BnCLMLeju8YGOrIBbbwmX7ydNrdBXusbyjAwpztNgH69uK9F5UL4BEqHMy%2B5VP4%2B0DgQVtlJ%2BqmtDgxyEB5LEzMx35W%2BvAlgolbfI%2BMIESNu07NKbCwZ5uoiOwe1l%2FQktIvD%2BowhUlWHLuHj60Wq5BTUyQr4UQYxxRS0V72c1G%2FkxuGOapuAcpGz2j%2BdGjxvJ%2BiRkzTwtRB3HeE8QoiAd72vJHhRg1HjT1Qd5QXG7I73OH9kQV1M48juD7fJSg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=314e9b88cff270ec1f5bcd20921e9497ec69118b08abb60ed36f6550d78bfea0",
+      "file_size": 109094,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 2765264,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/n99incmikdnzolggx3ul6xxl3vg2?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQRNJ6PC7P%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T174232Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHgaCXVzLXdlc3QtMiJGMEQCIC6mjI6wkq77EwW4RnWj4BcAykSi7RUyhDVg0vT82SSfAiBmkPt2NE1NgirWjCev3v28WiPJFpgBoaWm%2Fl47FfRfQyq6BQjx%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMD%2FiiwpTPq0pAGccNKo4Fi9Es7Y1oB1%2FDgdnfqbOiyUZioaZqL8rTPebrBmkpUhgYRn8e3bfuQxPynXK2sor1BQijKDi7u38TkMZkDJdn%2FkHxxMl6gzbKVLy%2BkYcScRBek2u7K%2Fi%2BzKwJeKNvj6WfimkmSZ3eCPPBB33reaBTXKu2KT6upKjhQyklZHTm5K3SqOACU2SMwibzmG8C7Cjc8z0B4FcTfztRbfxn4ew%2FGoevRISFvlqrGSSqoZ6xCCP78OcJPcEB6ACRzFglYQAxTMuNl4N3DzMHHTUg%2FRdM6GpgH4hQwEuutn2ncG64GuQYxVF92n3q6INk6MV%2FGRh4XDbllJfrJooHVbE2BSM4h3oHEqmm2dT6P%2Bd9vQXUOsZW7y694DZJgkMPY6RuVxV7ctvKr81ksNrBGDKWLoeEktUtQFc%2BxAZacVWeIOjcjbT0THN7BcfMwTe1V6sqU135SfJPEuACZbftn%2Bj6FKNiYr7FF6nNKKUAbuHqqddTiWm0JNJohKvn94IKO%2FD1lqYf6ey04aOAMsMiutoMXJcJEer0ENCTO2A5hGTFYOuQfs1XFL4fR2gsT%2Bo%2B8Q7T9sCbzj2BIf1I6SkNs3gm1Sf4MZBxRHLodbny3RRD6Qzy5Lg9EZRW5JEF0Jw4o%2BYp7LBsNhZ0DegThntKiKIbvcMbVz5eLx5CV5vYZWrM0URDPH4AUyHQcbS8IcziZKu4IWJJ%2Bhj%2Fyh7I9Rz5EjikpAKOJOpS2ar88cEsTZZOk757PmbJriAjECeRWFMDfUuk0S%2BDVhgcsyh7g%2BbZYTHl8Kdu%2FIOhGrrrO1CB1OYob2Gi3alAmgq7%2FFMHatDsrX7z55RncGUowwhHVwun%2FfAmVKq3Du2g35xFjD2oT9qx%2BnCLMLeju8YGOrIBbbwmX7ydNrdBXusbyjAwpztNgH69uK9F5UL4BEqHMy%2B5VP4%2B0DgQVtlJ%2BqmtDgxyEB5LEzMx35W%2BvAlgolbfI%2BMIESNu07NKbCwZ5uoiOwe1l%2FQktIvD%2BowhUlWHLuHj60Wq5BTUyQr4UQYxxRS0V72c1G%2FkxuGOapuAcpGz2j%2BdGjxvJ%2BiRkzTwtRB3HeE8QoiAd72vJHhRg1HjT1Qd5QXG7I73OH9kQV1M48juD7fJSg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=172463362a28b78013f5c88d85cb6e38c9156a87605b7825ac5db95cd46cc23c",
+      "file_size": 52191,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 2765267,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/0jicrlztaso7uex947lngxprae0b?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQRNJ6PC7P%2F20250920%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250920T174232Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHgaCXVzLXdlc3QtMiJGMEQCIC6mjI6wkq77EwW4RnWj4BcAykSi7RUyhDVg0vT82SSfAiBmkPt2NE1NgirWjCev3v28WiPJFpgBoaWm%2Fl47FfRfQyq6BQjx%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMD%2FiiwpTPq0pAGccNKo4Fi9Es7Y1oB1%2FDgdnfqbOiyUZioaZqL8rTPebrBmkpUhgYRn8e3bfuQxPynXK2sor1BQijKDi7u38TkMZkDJdn%2FkHxxMl6gzbKVLy%2BkYcScRBek2u7K%2Fi%2BzKwJeKNvj6WfimkmSZ3eCPPBB33reaBTXKu2KT6upKjhQyklZHTm5K3SqOACU2SMwibzmG8C7Cjc8z0B4FcTfztRbfxn4ew%2FGoevRISFvlqrGSSqoZ6xCCP78OcJPcEB6ACRzFglYQAxTMuNl4N3DzMHHTUg%2FRdM6GpgH4hQwEuutn2ncG64GuQYxVF92n3q6INk6MV%2FGRh4XDbllJfrJooHVbE2BSM4h3oHEqmm2dT6P%2Bd9vQXUOsZW7y694DZJgkMPY6RuVxV7ctvKr81ksNrBGDKWLoeEktUtQFc%2BxAZacVWeIOjcjbT0THN7BcfMwTe1V6sqU135SfJPEuACZbftn%2Bj6FKNiYr7FF6nNKKUAbuHqqddTiWm0JNJohKvn94IKO%2FD1lqYf6ey04aOAMsMiutoMXJcJEer0ENCTO2A5hGTFYOuQfs1XFL4fR2gsT%2Bo%2B8Q7T9sCbzj2BIf1I6SkNs3gm1Sf4MZBxRHLodbny3RRD6Qzy5Lg9EZRW5JEF0Jw4o%2BYp7LBsNhZ0DegThntKiKIbvcMbVz5eLx5CV5vYZWrM0URDPH4AUyHQcbS8IcziZKu4IWJJ%2Bhj%2Fyh7I9Rz5EjikpAKOJOpS2ar88cEsTZZOk757PmbJriAjECeRWFMDfUuk0S%2BDVhgcsyh7g%2BbZYTHl8Kdu%2FIOhGrrrO1CB1OYob2Gi3alAmgq7%2FFMHatDsrX7z55RncGUowwhHVwun%2FfAmVKq3Du2g35xFjD2oT9qx%2BnCLMLeju8YGOrIBbbwmX7ydNrdBXusbyjAwpztNgH69uK9F5UL4BEqHMy%2B5VP4%2B0DgQVtlJ%2BqmtDgxyEB5LEzMx35W%2BvAlgolbfI%2BMIESNu07NKbCwZ5uoiOwe1l%2FQktIvD%2BowhUlWHLuHj60Wq5BTUyQr4UQYxxRS0V72c1G%2FkxuGOapuAcpGz2j%2BdGjxvJ%2BiRkzTwtRB3HeE8QoiAd72vJHhRg1HjT1Qd5QXG7I73OH9kQV1M48juD7fJSg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=2e94401ab674bb875b28ed21158c97c55f4d34b52150c9dc18f033cf20935ddf",
+      "file_size": 120449,
+      "type": "image/png",
+      "moderated": false
+    }
+  ],
+  "allow_singular_disclosure_at": "2024-12-25T08:12:17.336Z",
+  "allow_singular_disclosure_after": -23275815.494112346,
+  "singular_disclosure_allowed": true,
+  "vote_count": 53,
+  "voters": [
+    "canalun",
+    "orange303",
+    "alejandroar",
+    "ronak_9889",
+    "shubham_srt",
+    "2026",
+    "thalaivar304",
+    "spaghettisec",
+    "mohaned0101",
+    "syper-shuvo",
+    "and 43 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 6.1,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "low",
+      "integrity": "none",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 45860,
+    "asset_type": "URL",
+    "asset_identifier": "www.mtn.zm",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
