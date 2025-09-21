@@ -1,0 +1,139 @@
+{
+  "id": 632101,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC82MzIxMDE=",
+  "url": "https://hackerone.com/reports/632101",
+  "title": "Server Side Request Forgery mitigation bypass",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2019-06-29T12:45:33.724Z",
+  "submitted_at": "2019-06-29T12:45:33.724Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "mclaren650sspider",
+    "url": "/mclaren650sspider",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/d6cH7GqnLfhX5P1RQZXv3XwX/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": true,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 264,
+    "url": "https://hackerone.com/gitlab",
+    "handle": "gitlab",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/f0hovtq73f9ap815a0r1w42bocp4/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/f0hovtq73f9ap815a0r1w42bocp4/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "GitLab",
+      "twitter_handle": "gitlab",
+      "website": "https://about.gitlab.com",
+      "about": "A single application for the entire software development lifecycle."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2019-5464"
+  ],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2020-04-18T12:17:25.803Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-04-18T12:17:25.762Z",
+  "team_member_agreed_on_going_public_at": "2019-08-30T22:26:52.692Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "### Summary\n\nThis vulnerability allows attacker to send arbitrary requests to local network which hosts GitLab and read the response. This is possible due to flawed DNS rebinding protection.\n\nThe attack is possible due to flaw here: https://gitlab.com/gitlab-org/gitlab-ce/blob/108c3cf16bed5733ffae086fb62c226961356560/lib/gitlab/url_blocker.rb#L59\n\nThe `validate` function performs DNS lookup to check whether the IP address of a domain belongs to the local network. If the IP address belongs to the local network, the `validate` function raises an error and no HTTP request is sent. Furthermore, `validate` returns URI as well as the IP address of the domain to protect against DNS rebinding attacks.\nHowever, if `validate` encounters an error while resolving the domain (for example, the domain does not resolve), the DNS rebinding protection is not applied.\n\n### Steps to reproduce\n 1. Create a webhook for a repository on GitLab.com. Use the URL `http://990.hacker1.xyz`. It may return error but let's ignore it now.\n 2. Wait about 10 seconds and test webhook by clicking on \"Test\" and \"Push events\".\n 3. After the hook has executed, you should see content of `http://169.254.169.254` returned.\n\nWait about 15 seconds between testing attempts, otherwise it may not work due to DNS caching.\n\nThe code for proof-of-concept DNS server which hosts `hacker1.xyz` is attached. The PoC uses a chain of CNAME records to prevent caching.\n\n### What is the current *bug* behavior?\n\nThe outgoing HTTP requests from webhooks can be sent to the internal network.\n\n### What is the expected *correct* behavior?\n\nIt is expected that HTTP requests cannot be sent to the internal network.\n\n### Relevant logs and/or screenshots\n\nF519096\nContent of `http://169.254.169.254`\n\nF519095\nContent of `http://127.0.0.1`\n\n### Output of checks\n\nThis bug happens on GitLab.com\n\n## Impact\n\nAttacker can use SSRF to access sensitive information on the internal network. Furthermore, SSRF in Google Cloud can be leveraged to Remote Code Execution depending on the setup. Publicly disclosed $25,000 #341876 describes a way to gain root access to Google Cloud server via a SSRF vulnerability.",
+  "weakness": {
+    "id": 68,
+    "name": "Server-Side Request Forgery (SSRF)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 519095,
+      "file_name": "Screen_Shot_2019-06-29_at_15.37.14.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/519/095/c118534084fe805f9f54179164a7ea133ed90603/Screen_Shot_2019-06-29_at_15.37.14.png?response-content-disposition=attachment%3B%20filename%3D%22Screen_Shot_2019-06-29_at_15.37.14.png%22%3B%20filename%2A%3DUTF-8%27%27Screen_Shot_2019-06-29_at_15.37.14.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYAI44UUZ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T114733Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIFnznGupH6e54NvfcNpXG1fTkfeS%2F%2B4teUauLzxrIq4YAiBshmGMJ%2Bo8WM%2FFrf7MR%2FU21KtXRONpl5NElLsIaMUQfSqyBQgREAMaDDAxMzYxOTI3NDg0OSIMXPiWQtj6xSi2cjIbKo8FRWivxOLh01wA%2Fz1AtWdUT%2FDuDfnITDsEc0h0ZC0yraEvha7LjG4t3v5I908iN5vTo4EaDTLjvXl1rCGzdWevtLl1NeJX1RdkL5C1gAMVdLGx%2B5fJIz0U2TaOwlZLZGTfLXuvz0TYTIoXCv%2BTJ%2BCuCXfmsxzWLgOvtpQ6Fe1pfGxTxavuuP%2FwaohZmOInE1ToPHFI6BuB1gHpgt1uFStw%2FpNPckkPR3sr2uBWze4ANd4ON2wrZhY8Pxk3top00Ve%2F1XDJHx3M%2BKqmealPl9nvCzCZvijQCF8o8SXOenErrcgnr6Tneilwgd%2FgvKcxCJgGGNacER%2BA%2FCfExC%2B6gZOmWZxGPP1xzmOpCcMjRXNaxId%2F%2BItvDudmYkq8n%2FGslstAKUNQHYaVy4kBXgRB1RH7nN5GMxBXuAo626lO2XresQRQOaAJfgPdvOYIfo8XLeU13MEkHusR1%2FSRrQNiNMwre3akw%2F2m2Xljv8qpi4O%2F90xehyveSyKABniDZV4eWd%2BywLj4NDd2va5YysIZcfQOpTreBAgND6t8bL9QZ2bIj5DivhAVk8KMBWQ14ckYbgi7wx6IscTukzq6EP1mP6duppBXSs39lKprZ95RmIBRAUBLkVZyh5yzGHc9GTZJRjrvnhmPEQ9ejo7e%2Fhr3gEeJiJA4HVa69pHf3L%2BNYw81XYIZOFXVfxclkLuWNXGN858R7xtCjnmLq1namZIoDbKkwgmaL8tQEDF48pcE%2BkZcdA%2F%2Be%2FMRc9m3BdEtpaHhAYuuzK017Eg54rq56nJYOIiT1vYw4xD1A4%2FE6ijPE8b5Gyy8JtlpcwWayVgyBsIv0SSUH04KVu555J%2FU81sKKwdB%2BUmwDm3WwiJ9Zbuqyp9VSDCo4b7GBjqyATX09D9cMLHStjYE4l3%2Boe0gkIYCsy%2BdDoZ80qsOhDrtYMQU%2B92NOTmY2k8LmyQa6%2BwNOBgXXTzI3Uy3rHXq78Nnli8tiTQXLW2QhF1Kb9jIQeSh6%2BxyPQCbIabbisZgl3httI9UOrVsuH8tXmJsD0LIT2Eyjy96wQh52riOwwuGzSDGbcjkRlcFBXY5YAVSxsgcno3ZE3%2FPbJmyqXIyf2yH6TqnjaPl6oiSTv0vQpO8rk0%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=b588f69d6be7e0a46221f6dbf4fd028b0feefd9e0d1eadc7f798579991d3944f",
+      "file_size": 110704,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 519096,
+      "file_name": "Screen_Shot_2019-06-29_at_15.36.41.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/519/096/5229378f4e01b66219e1808cefb27369b3e5e29f/Screen_Shot_2019-06-29_at_15.36.41.png?response-content-disposition=attachment%3B%20filename%3D%22Screen_Shot_2019-06-29_at_15.36.41.png%22%3B%20filename%2A%3DUTF-8%27%27Screen_Shot_2019-06-29_at_15.36.41.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYAI44UUZ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T114733Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIFnznGupH6e54NvfcNpXG1fTkfeS%2F%2B4teUauLzxrIq4YAiBshmGMJ%2Bo8WM%2FFrf7MR%2FU21KtXRONpl5NElLsIaMUQfSqyBQgREAMaDDAxMzYxOTI3NDg0OSIMXPiWQtj6xSi2cjIbKo8FRWivxOLh01wA%2Fz1AtWdUT%2FDuDfnITDsEc0h0ZC0yraEvha7LjG4t3v5I908iN5vTo4EaDTLjvXl1rCGzdWevtLl1NeJX1RdkL5C1gAMVdLGx%2B5fJIz0U2TaOwlZLZGTfLXuvz0TYTIoXCv%2BTJ%2BCuCXfmsxzWLgOvtpQ6Fe1pfGxTxavuuP%2FwaohZmOInE1ToPHFI6BuB1gHpgt1uFStw%2FpNPckkPR3sr2uBWze4ANd4ON2wrZhY8Pxk3top00Ve%2F1XDJHx3M%2BKqmealPl9nvCzCZvijQCF8o8SXOenErrcgnr6Tneilwgd%2FgvKcxCJgGGNacER%2BA%2FCfExC%2B6gZOmWZxGPP1xzmOpCcMjRXNaxId%2F%2BItvDudmYkq8n%2FGslstAKUNQHYaVy4kBXgRB1RH7nN5GMxBXuAo626lO2XresQRQOaAJfgPdvOYIfo8XLeU13MEkHusR1%2FSRrQNiNMwre3akw%2F2m2Xljv8qpi4O%2F90xehyveSyKABniDZV4eWd%2BywLj4NDd2va5YysIZcfQOpTreBAgND6t8bL9QZ2bIj5DivhAVk8KMBWQ14ckYbgi7wx6IscTukzq6EP1mP6duppBXSs39lKprZ95RmIBRAUBLkVZyh5yzGHc9GTZJRjrvnhmPEQ9ejo7e%2Fhr3gEeJiJA4HVa69pHf3L%2BNYw81XYIZOFXVfxclkLuWNXGN858R7xtCjnmLq1namZIoDbKkwgmaL8tQEDF48pcE%2BkZcdA%2F%2Be%2FMRc9m3BdEtpaHhAYuuzK017Eg54rq56nJYOIiT1vYw4xD1A4%2FE6ijPE8b5Gyy8JtlpcwWayVgyBsIv0SSUH04KVu555J%2FU81sKKwdB%2BUmwDm3WwiJ9Zbuqyp9VSDCo4b7GBjqyATX09D9cMLHStjYE4l3%2Boe0gkIYCsy%2BdDoZ80qsOhDrtYMQU%2B92NOTmY2k8LmyQa6%2BwNOBgXXTzI3Uy3rHXq78Nnli8tiTQXLW2QhF1Kb9jIQeSh6%2BxyPQCbIabbisZgl3httI9UOrVsuH8tXmJsD0LIT2Eyjy96wQh52riOwwuGzSDGbcjkRlcFBXY5YAVSxsgcno3ZE3%2FPbJmyqXIyf2yH6TqnjaPl6oiSTv0vQpO8rk0%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=e7db2b1f70257658ceb8c50056ab0c01217cafcb980c39a82f8fb87ec9d72642",
+      "file_size": 370459,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 341,
+  "voters": [
+    "nyantw",
+    "omarelfarsaoui",
+    "karan0805",
+    "jimmy-doe",
+    "skr0x1c0",
+    "n4tur3_",
+    "itsmatinx",
+    "orange303",
+    "sky003",
+    "th3hidd3nmist",
+    "and 331 more..."
+  ],
+  "severity": {
+    "rating": "high",
+    "author_type": "Team"
+  },
+  "structured_scope": {
+    "databaseId": 18138,
+    "asset_type": "URL",
+    "asset_identifier": "gitlab.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
