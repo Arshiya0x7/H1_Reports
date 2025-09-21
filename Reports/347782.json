@@ -1,0 +1,125 @@
+{
+  "id": 347782,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zNDc3ODI=",
+  "url": "https://hackerone.com/reports/347782",
+  "title": "Click Jacking Nextcloud",
+  "state": "Closed",
+  "substate": "informative",
+  "severity_rating": "low",
+  "readable_substate": "Informative",
+  "created_at": "2018-05-05T15:38:23.376Z",
+  "submitted_at": "2018-05-05T15:38:23.376Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "enz0",
+    "url": "/enz0",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MjA3MTUsInB1ciI6ImJsb2JfaWQifX0=--7f15602a592d00b20e60b381f19974cbcb413198/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--a4d91faed3dff6024dfc1a7b7f8ccc6b45e38396/imageedit_3_9321391258.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13291,
+    "url": "https://hackerone.com/nextcloud",
+    "handle": "nextcloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Nextcloud",
+      "twitter_handle": "nextclouders",
+      "website": "https://nextcloud.com",
+      "about": "Access, share and protect your files, calendars, contacts, communication & more at home and in your enterprise."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2019-07-01T10:02:23.776Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2019-07-01T10:02:14.925Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello Security,\nClickjacking (User Interface redress attack, UI redress attack, UI redressing) is a malicious technique of tricking a Web user into clicking on something different from what the user perceives they are clicking on, thus potentially revealing confidential information or taking control of their computer while clicking on seemingly innocuous web pages.\nThe server didn't return an X-Frame-Options header which means that this website could be at risk of a clickjacking attack. The X-Frame-Options HTTP response header can be used to indicate whether or not a browser should be allowed to render a page in a <frame> or <iframe>. Sites can use this to avoid clickjacking attacks, by ensuring that their content is not embedded into other sites.\nThis vulnerability affects Web Server.\nIMPACT:\nAn attacker can host this domain in other evil site by using iframe and if a user fill the given filed it can directly redirect as logs to attacker and after its redirect to your web server.. its lead to steal user information too and use that host site as phishing of your site its CSRF and Clickjacking\n\nPOC:\n1. open https://portal.nextcloud.com/login.php or https://nextcloud.com\n2. Put the url in the below code of iframe\n<html>\n<body>\n<iframe \nsandbox=\"allow-modals allow-scripts allow-forms allow-popups allow-same-origin\"\nsrc=\"https://portal.nextcloud.com/login.php\" width=600 height=400>\n</iframe>\n</body>\n</html>\n3.Observe that site is getting displayed in Iframe\n\n## Impact\n\nBy using Clickjacking technique, an attacker hijack's click's\nmeant for one page and route them to another page, most likely\nfor another application, domain, or both.\n\nThe hacker selected the **UI Redressing (Clickjacking)** weakness. This vulnerability type requires contextual information from the hacker. They provided the following answers:\n\n**URL**\nhttps://portal.nextcloud.com/login.php\n\n**Can a victim be tricked into unknowingly initiating a specific action?**\nYes\n\n**What specific action can the user be tricked into?**\nThis is the nexcloud login page, it can trick user login or forgot password function",
+  "weakness": {
+    "id": 74,
+    "name": "UI Redressing (Clickjacking)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 294073,
+      "file_name": "poc.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/294/073/bcdf6630276dda67c2323aa01a3c42d6e8d3acb3/poc.png?response-content-disposition=attachment%3B%20filename%3D%22poc.png%22%3B%20filename%2A%3DUTF-8%27%27poc.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQRFHFU2CE%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T151537Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIHHk5KprzzraqX9WAR4WY3R95lW4kmOx1jm5VlPhFZn0AiEAps40phpYm5pLYBCZa%2Bz0Hd0tK9hBZJgyHCzGVUDaNiMqsgUIFxADGgwwMTM2MTkyNzQ4NDkiDOvzfXWWyql5a1PkciqPBUxYkJSBnLdFEkp%2FZs7XfkEz%2FzWXU%2Furg8hrdAtsc97fByHoA1L9hSnk1EJFW4KzD8EPCVj6dyvq2Ll39EV%2Bpg5nwLvLUv%2BsCGp22Ct0y8c68P4jx7k%2BWIh8fQFEXf6arz%2FVj1Pw3yOlcO0v%2Bb%2Fbo112KHtBTlCt%2BOo9CtSxzlXXSeOd%2BVrawDeoUnLM8PQE9XpMFhZRGBB6zsxlJCB0sz5bslLgy%2BlWg801IOE9Y%2FY7A0JFmWHTWEM5nOWi8Is%2BIhu%2FUZfRePXRVlBDm6U2UlkUI0vB5xNN2oRKAmQB0q5vsL89Ur64oBauiqV49NUGslDk0A8JJWTi570MP5%2FuZs0LeHk7C8xdAEF4GNPYWqLKyBq57UQgs7P8HHv7QXK4oaOPINs7G5owq64ZtZhYaf0y8aYG1uZZheusyJRrH5eATD01pbxOhiCDi12CDc4EETiy2QRZg5jQfnzWHpmTjp1CLOg%2FIY2I2qF%2BpQOXmgNyjOMZ3QfDkRY3n7Z5z4Zd8WHA5F5vC6JvuOdnZSgR6dH%2Bitr5VXPXqE%2FxQLpkkhxN5xKJ%2ByZ%2B086cEIoafBd4dJOXUagGzMbtifJwp6NM3tOvAzlrKCwExFRMziHYPSPXYnMUZ0ZUYcuE8gP%2FhCi5SzGrzAsfapaWomdgn8GFFahLDFo2K6BPYvU3Opp%2FJrmDVWJVqF2Sp0sCRarn%2FoSkbKzD1Frq7yoqVDlMiZtPTpAPkkmxiGaSSHAijgdrQClbuev9v%2BpGzu7VsTI66s9NrfKvusQLRDYdmQLciljzA15Nn7eaoU6%2BuwmdEgBZg1geJP5hJLWTY4NB%2BuZ%2B8zFiEb075SesgGZAAW2TnK831ei7cJqBHQjh3o%2FTFubPjBgwlIvAxgY6sQFUbZKjTTcw2J0TMBR8Oyc3RPkBYWF%2FivLNO6JVGCxyksPyRTodv2iO63dwSQa86T4lFkFCZ7CJtjHPSWgaTHB%2BidkgWIIK5XR%2BYNYqWnkEt3rEzJcDoRS%2F0QPP9ZL4gZYS4R7f9huonvYk3sr2qPsNYLe9liigzsqbjZdGqSmhLIkYMk4bwLvYUcJFN%2FzGmzVg3XLhfltfgw8vpeOXRf51OZGoA2X9j9FRvlN56JILav4%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=5238bfb685a64def891e876812ecd64c57c0ab7c479969db90753bb934317e64",
+      "file_size": 85203,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 7,
+  "voters": [
+    "cryptographer",
+    "tiago-danin",
+    "sulimanalkhadr",
+    "bcc828fbbb59ba6a5d4093b",
+    "yahialachrem",
+    "facmagsbtfo",
+    "sn1per47"
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 49,
+    "asset_type": "URL",
+    "asset_identifier": "portal.nextcloud.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
