@@ -1,0 +1,146 @@
+{
+  "id": 819807,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC84MTk4MDc=",
+  "url": "https://hackerone.com/reports/819807",
+  "title": "Missing ownership check on remote wipe endpoint",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2020-03-15T21:55:05.955Z",
+  "submitted_at": "2020-03-15T21:55:05.955Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "hitman_47",
+    "url": "/hitman_47",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/KKToEm4ceuWpEmuv6Lh1SXpn/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13291,
+    "url": "https://hackerone.com/nextcloud",
+    "handle": "nextcloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Nextcloud",
+      "twitter_handle": "nextclouders",
+      "website": "https://nextcloud.com",
+      "about": "Access, share and protect your files, calendars, contacts, communication & more at home and in your enterprise."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2020-8154"
+  ],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2020-04-19T13:15:25.770Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-03-20T13:15:24.064Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "On settings/user/security\n\nYou can mark a device for wipe out that does not belong to you.\n\nSteps:\n\n1. Create 2 accounts one for the hacker and one for the victim\n2. On both accounts add devices with different names\n3.  On the hacker account, while intercepting with burpsuite, select the option to wipe out a device\n4.  Forward with burpsuite and in the url that looks like settings/personal/authtokens/wipe/{data-id}, change the data-id to the id of the device of the victim\n5. Stop intercepting or forward again and the device of the victim will be marked for wipe out. \n\nHere is a video demo \n{F748890}\n\n## Impact\n\nAttacker can wipe out the device of another user by using the device ID",
+  "bounty_amount": "500.0",
+  "formatted_bounty": "$500",
+  "weakness": {
+    "id": 55,
+    "name": "Insecure Direct Object Reference (IDOR)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 748890,
+      "file_name": "IDORNextCloud.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/ghq1dGTeVsM2Xp5U4vMi1pUP?response-content-disposition=attachment%3B%20filename%3D%22IDORNextCloud.mp4%22%3B%20filename%2A%3DUTF-8%27%27IDORNextCloud.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQOS66S2J%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T114712Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIFyCNIIOlsQ8QQkmrSS8Y1PaLCB4uC66eE9OhsYKBzzYAiAYgGTmrppEI8a1VbSwK3tjJ%2BqBltJWjaN5JoyAHDv3uiqxBQgREAMaDDAxMzYxOTI3NDg0OSIMpRfkA99lOye9CBHqKo4FCmevMYUoOVdqFqkrBdaoOVi8RxgJUMPghmhZUP6qPT%2FikA9XtCUgrOceg3WQvTWvMMRYEewv8JnYfCTfVxLkdJ8HboLMqOB77Fe1lRNOt9X2sSDFi7JuA628ie5UP%2BSwXyAfvA7M4TZ7x3E9GDqStnB8a0ofuOpTY6AhGEUfpg6hxgkbZvNkwV3GdmVgMlE21OTMskrQ0WpxNAgrsj89WHVc6%2F7Bn%2BYRqE67YNzXcRXIPLDwv%2FYr7XP1rGz6etO41RxizD2fHRrI6OAAYHmzMxX4OOrLIjcBy%2FrvQF3Ak3h2tqE3wK%2BKEGDlZJgenPjbSVj01HDGs9tzKWQsuZ2Nuc%2FXu09MlWZc%2FEMxY3KUYM0b7n2yi0T9ZOLS6tXg87Hh0Sp3%2ByJJkj0tEmzDvt%2FCy1rSSlC13Z%2Bbo0eb%2Bbgb%2Ffdn4BBq4TGub1ftI1UDGg%2BlMN7bql7r3d55KzhS3i%2B%2Fi50pjhrgTrHApUht27zYvpVk61wbml8XxzlBTIkAsEv%2ByGRUJsRhhetk317DudAyMMvOkHnBP%2B7tJ17njven9AzfGTwyjkIMrD8YnusdLmz%2B%2BG21BNuqAINVBWHLHaeFlJA3xk%2FddJCGWBDxGwkFmegTRV57FdsG0dH%2FVystH0XOHRa%2BZrHZnmmI3ZkHloD7%2FL9ZCaU5xfBVytc69dFzWYtZZ4hIrvGsfEdSw%2BPLjaQeNmVbwJhJgAkkp6lXYbDB46GrZnpP5JNJw1PdTwbsYdO%2FZOWjkuN0X%2FZ9FJvqCycONhHlySfL6UAStucoLrl6kBOfLQVSMyL9ME%2BO9iQF2fAMqJeTEl8HeAWiqUv1k2ek7VZZQ5VUXmJrlmlDrywN5jCY6N0JTG%2FbTwrOknyXMIXdvsYGOrIBaTtS0VWhB%2FiyDQRz%2FbgRgPv8J1HuWiMzKJhYUu4kW%2FbsZujVIK3DdIsCG8vl%2BsSHnA3uZNfp39vnq8xj%2FkkxljE8%2BU83SGVMPPhtXoXMb5Iy8pZwMGmdLXaueY%2FnXrwRxwFhHSbzxxCl1tCesGC0CeeL52VmTz6G%2B6nHsmPDjnc6xehw%2BSdh7gcP3U5l1gSLD0e2yGEeku7WBUT7vaedoWWCBMDuVzoFz5OjzbtFAHxeMw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=61148ea800750bb26d9b737e434c323c7d62e9183aebc2b975f04eb34e2a35df",
+      "file_size": 6844992,
+      "type": "video/mp4",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2020-04-19T13:15:24.116Z",
+  "allow_singular_disclosure_after": -171153108.00975066,
+  "singular_disclosure_allowed": true,
+  "vote_count": 137,
+  "voters": [
+    "wi11",
+    "n4tur3_",
+    "8910jq",
+    "wargsec",
+    "jimmy-doe",
+    "a_d_a_m",
+    "refu",
+    "shreyaschavhan",
+    "mik317",
+    "2026",
+    "and 127 more..."
+  ],
+  "severity": {
+    "rating": "high",
+    "score": 7.7,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "low",
+      "user_interaction": "none",
+      "scope": "changed",
+      "confidentiality": "none",
+      "integrity": "none",
+      "availability": "high"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 13,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "nextcloud/server",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
