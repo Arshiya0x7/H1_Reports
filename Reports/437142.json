@@ -1,0 +1,126 @@
+{
+  "id": 437142,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC80MzcxNDI=",
+  "url": "https://hackerone.com/reports/437142",
+  "title": "Instant open redirect on Live preview WEB Ide opening",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2018-11-08T14:39:28.541Z",
+  "submitted_at": "2018-11-08T14:39:28.541Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "chaosbolt",
+    "url": "/chaosbolt",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/d81xKAqqBxYLV8QQn83n3V5d/bed42d272a1818a1eb3af40534cbe7bcf569a39b21efc09eb6567e8302fc07c8"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 264,
+    "url": "https://hackerone.com/gitlab",
+    "handle": "gitlab",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/f0hovtq73f9ap815a0r1w42bocp4/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/f0hovtq73f9ap815a0r1w42bocp4/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "GitLab",
+      "twitter_handle": "gitlab",
+      "website": "https://about.gitlab.com",
+      "about": "A single application for the entire software development lifecycle."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2020-11-04T11:16:59.809Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-11-04T11:12:29.134Z",
+  "team_member_agreed_on_going_public_at": "2020-11-04T11:16:59.705Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello Gitlab team! Asset is my own gitlab installation for Ubuntu.\n\nThe issue I want to report is lack of sandbox attribute in iframe pointing to codesandbox. This results content inside iframe redirect top level window on load.\n\nHow to reproduce:\n\n1. create index.js with following content:\n```\nwindow.open(\"https://evil.com\",\"_top\");\n```\n2.  create package.json with following content:\n```\n{\n  \"main\": \"index.js\",\n  \"dependencies\": {\n    \"vue\": \"latest\"\n  }\n}\n```\n3. open file in Web IDE and load preview\n\nHow to fix:\n\n1. add sandbox attribute with needed permissions (for example, you need allow-scripts for sure) on codesandbox iframe.\n\n## Impact\n\nOpen redirect on web ide preview load.",
+  "bounty_amount": "1000.0",
+  "formatted_bounty": "$1,000",
+  "weakness": {
+    "id": 53,
+    "name": "Open Redirect"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 372473,
+      "file_name": "openredirectwebide.gif",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/372/473/4e8addfc0e66201f03769050efa22fb0bfb49145/openredirectwebide.gif?response-content-disposition=attachment%3B%20filename%3D%22openredirectwebide.gif%22%3B%20filename%2A%3DUTF-8%27%27openredirectwebide.gif&response-content-type=image%2Fgif&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6RL7JDZO%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T083319Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQC7XGzjvdAXxgOAbM7htEcFDK6mgcY6mJAu0XxKCH72TgIgPNka884wcQVC2K6aPsrSzRtQupemxREgVHzAesGj9lgqsgUIEBADGgwwMTM2MTkyNzQ4NDkiDFiiTQINJQZAwrCV7CqPBa6TQBUQ80L0PcHg%2BZzc2cy1wUy74QU1jU9xMyXU%2FBJtxU5jdr%2Bt0FAAeAntFPrVcX5EcKnvovk2zqvks1nOLQ8%2BvBA7VO1SjpsZ%2BGSpmU0T%2F7ttfy0UpDjXdST1cF88CWXWWlrVK6iGo6Fv0zK3i9Nq%2FddB%2FB73YCj1SEqFOXEM7O%2B0c9v2AkEBLPUDWDVPxCib%2BPqb0yYSnatPPBiYyyW%2BMsTtOVfmY4TRHUHjw5mYizCfUCz3MO13LIkXyjZVh6Xd3qJedJSzYGn9k86PHJpatVhyf7L8w4Vs7ZRzwuHJH0NOgG1ot5%2FAgGLY3HsCq%2FYGs6YXr2V5PZ0JcEJJDTSuuB7FTFalRN7NEUvKDJurU1oS49K3zNyDFWOth6Zaw3CNjmhcAg2%2B%2BUCzLDrQTXJCVfnb2TCJQUEsAYV8DNDraAzAZ1Px%2FGpTM9LjphvH3aSr5LUDN%2FdJSKA5T4l5HqTeG62aOMidpxEkNHY%2BnYQ35Xj8sRBJqrqt%2Fgr1GyZE2W%2BbdwkoXhGc12fLqgY2xbZF1NxymmjBLBnH2eBST728sSmuPeAvx9kngq7leLjjPYg6Pn%2BeJWiwcMHQU6zdKd6GieK3HyTgbSMgo18HmHz3eoODwMIvtDNCTzXOGRUNluw337s8H2Gea1i3Ed%2BDT0LYRjlhci6zlzppuHB%2Bj4dSHeUe3gflNXXb8UV9UprqnD8IX%2F9Q1pzn6OjL4Gad%2F0D2w1xTJ2Iae82TEY0GeEN05LfquF7qWTcF1ZrnA73klXotikQKoSglP3RKc6q8rPp%2F99CGgerh%2BUnw%2F%2FzOF3gs7N5bQ5MuSjkW5Q4TFkgC3beWZpsVuLWcW9Ks8RkgsKGdSpdmboEkJpFqfqv32Fcw%2F8e%2BxgY6sQH5shaO6zTwwwOgUFc9NIgf98bJ3qC0PcPtyZfZuzE0QH2QOFddDQBcH7%2B8HzGvpabxEGAH%2FgXQkmiz0pposmEvRRk%2F3EqUz%2FzfBfBnEgBybVVf19Ptfx9SLGI0Hya2EpywPNZN%2FjXA7K2I7N729Pgz661PhyvOqii5ICIRXWFjmJwPIsi5Yl56wp4GyIwy6RoxMGrFBYIUv0UP9gQRDP2wqoRHPjF0yrop%2Frnxd4fxNh8%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=558e8afc3cb847fb8e002603d30c1b95b8af05ce1e983d03b63f68d07423df85",
+      "file_size": 346668,
+      "type": "image/gif",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 20,
+  "voters": [
+    "pat_ventuzelo",
+    "erg0n-xx",
+    "mzfr",
+    "ali",
+    "akashhamal0x01",
+    "snoopy101",
+    "term1nal",
+    "dastan_9408",
+    "0xhussein",
+    "cryptographer",
+    "and 10 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "User"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
