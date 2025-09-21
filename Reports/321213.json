@@ -1,0 +1,115 @@
+{
+  "id": 321213,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMjEyMTM=",
+  "url": "https://hackerone.com/reports/321213",
+  "title": "Monero GUI not linked with /DYNAMICBASE or hardening on windows, no ASLR",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2018-03-01T20:21:49.113Z",
+  "submitted_at": "2018-03-01T20:21:49.113Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "flxflndy_",
+    "url": "/flxflndy_",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MjQ2OTksInB1ciI6ImJsb2JfaWQifX0=--a8e72cbdc9eb9ae421832e269dba93278ab9cacb/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--2de8067d228529d65848a4eeed0bed0bb2531bc3/bunny-rabbit-jpg.jpg"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 7731,
+    "url": "https://hackerone.com/monero",
+    "handle": "monero",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/007/731/55634f7fcd917725c7a5771cc6e7c9b4d5fe0c22_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/007/731/55634f7fcd917725c7a5771cc6e7c9b4d5fe0c22_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Monero",
+      "twitter_handle": "monero",
+      "website": "https://getmonero.org",
+      "about": " Monero: the secure, private, untraceable cryptocurrency"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2018-03-18T00:46:08.663Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2018-03-17T16:15:25.736Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "**Summary:**\nThe monero daemon is compiled and linked without ASLR, at least on windows. This security hardening feature should be enabled in order to make exploiting of this service harder.\n\n**Description:** \nSee above. \n\n## Releases Affected:\n\n  * At least v0.11.1.0 (probably more) / Tested on Windows 8.1\n\n## Steps To Reproduce:\n\n  1. Start the monero-gui and monero daemon on windows\n  2. Start Process Explorer https://docs.microsoft.com/en-us/sysinternals/downloads/process-explorer \n  3. Check ASLR under \"select columns\"\n  4. See that ASLR is not activated for this process.\n\n## Supporting Material/References:\n\n  * I've attached a screenshot of the sysinternals tool on my machine.\n\n## Impact\n\nExploiting code reuse attacks is alot easier without this feature. \nThis might impact future bug bounty payouts because people can't exploit reliable bugs to get code execution :)",
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 268304,
+      "file_name": "monero-aslr.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/268/304/580ee7dd83b6dd9c5301c919b1ce8a77ec453ddd/monero-aslr.png?response-content-disposition=attachment%3B%20filename%3D%22monero-aslr.png%22%3B%20filename%2A%3DUTF-8%27%27monero-aslr.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ65WOA7G6%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T183937Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJD%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIBTB5FOiz2xfB8lQx1pNmxOchIiX9CorPa79ekyICT%2FIAiA4%2BRsfB9L4zvgWA%2Fv388H8ZoXAyDq4sxUeu%2BfCpeqxlyqxBQgZEAMaDDAxMzYxOTI3NDg0OSIMKfPGyDOi8pwjR3yhKo4FDTiSCy8q7JQFmt%2FrBtKI0nqteGSxb2H7XFDZwOLI7rgYIJiHCA%2FUkO%2FUPiAQf2lGZQtB%2Fc7KW9OAT9BjBVaWIZI2KXQ1vokOHFrmfIECMNpEIO8byNajt9HBCOXiucE3UhAA8xQ7qWWfzVZaFcl2t2dAN%2BvLahw9lYCAcWDTpI5rDKdPX%2FQdD%2BFO7EMJSNcGGWvs5NfUu8wm%2BKoAnrp7gsPz0ldpHJTSC4c%2BSPRtWcAx2kCTGhtuve8pGrgGG3guL9pgGdLjCP3h5CUNWWHGntfMnQlykowKyB%2F%2BmVsVdF%2Bl1jTgA8KXhvbLfJ2KWIn%2B4Xnga8pKFyzA6hw8AkEswGuPuFycwbGsjHnJr4jBkthdo%2BfJ%2F9cDSmHZ6vc3fRmLsRP2NmGlkqSKVu%2FNpgcxyP0jA%2F67dkdWICs4WHLPJ9DmNu0bcgxJ3VDFigxO6jpqIym4LTfulv8Ni6Wbqq4SiSUvQC%2BsLygRoNcR46bqafhB5qZ1d9KVJkeheKHzLOUI%2BqKIDXfQZnmCNRyjmjM0ma7XfExKYrKDCQ91B0nAh1JgTBCuWYYEH91%2BklLXw%2F5QqRX%2FicI1%2BewX63WDfbyAwzL%2FzPK%2FBJi0Esj9FD4qz5rgg1%2FhZbDvd794Eg6d8iF5qJXR9rkkYLMFqnF6Q5vC8vy%2BRq21O6zos5rXyi2TOvz%2BuLK%2F7E7gnKithHMVA%2Ft89rIT%2BVOjOHwuVeSi6voSvUnWJKdgg8HCBuh4vp%2F4uJyRfadc3hNFYkZl0gGWRuJPaOAf0ivSLRjxnZIJFxGrCczuT6yKo9oGAu9Xh8cvFgpUPb1%2FdZfjWuCpa7uUzmLwDoIDeVguW4NeHZ4IhsES3v2qNjUvIwpc2J2DLSYKMIfAwMYGOrIBTVi0Z077CJtbOCvdu4nM5Olwv8CseCCMQV9%2FzeMMsHp%2FgtrgAFvmrCIKgibKMQngnZCskiMkLzmj3PS13r42xOQGVqynLVSxWnkBBYEcVlXOYOGKdNYrrX4EvDFD5Yme5zVhmnmgm%2Fv1uxvFUy7KVpCUGDRiOXesVJ30b%2BexuUkmkOMxRWnfe5WuTxoaBIIh7bRW%2FAbFKgri%2BCo8ii%2FH9bwd7I87u5moQ0VH68qeNK67Rw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=7b91fd64d0ae689ee5c8abd89489691b389375237d719258c7c1b5227c08629e",
+      "file_size": 10434,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2018-04-16T16:15:25.816Z",
+  "allow_singular_disclosure_after": -234584651.67446893,
+  "singular_disclosure_allowed": true,
+  "vote_count": 9,
+  "voters": [
+    "apapedulimu",
+    "r3y",
+    "geeknik",
+    "eveeez",
+    "hassham",
+    "lopwoq",
+    "anonimal",
+    "unununvb",
+    "frrrrriend"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
