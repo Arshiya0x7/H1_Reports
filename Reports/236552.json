@@ -1,0 +1,149 @@
+{
+  "id": 236552,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yMzY1NTI=",
+  "url": "https://hackerone.com/reports/236552",
+  "title": "Unauthenticated RCE in Vaultpress",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "critical",
+  "readable_substate": "Resolved",
+  "created_at": "2017-06-05T10:28:51.711Z",
+  "submitted_at": "2017-06-05T10:28:51.711Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": true,
+    "username": "b258ea62bf297b02afa9854",
+    "url": "/b258ea62bf297b02afa9854",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 111,
+    "url": "https://hackerone.com/automattic",
+    "handle": "automattic",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/111/7f89e1ea233f92916202521a069fdbfe9eced339_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/111/7f89e1ea233f92916202521a069fdbfe9eced339_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Automattic",
+      "twitter_handle": "",
+      "website": "https://automattic.com",
+      "about": "WordPress.com, WooCommerce, WordPress VIP, Jetpack, Beeper, Texts, Akismet, Gravatar, Crowdsignal, Tumblr and more!"
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2017-09-15T12:51:38.159Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-08-16T12:51:21.119Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hitting wordpress instalattion with vaultpress on it with get parameter vaultpress=true attacker is one method away from RCE and that method is **validate_api_signature**.\n\nIn this method we have the following constraints:\n1. Firewall\n2. Usage (recomended) of openssl to validate API call\n\nIn case of disabled firewall or its bypass ( easy on many configurations, specially the ones behind proxy/balancer servers ) then in case of usage of openssl to verify the signature we have easy bypass because unsafe usage of **openssl_verify** PHP function.\n\n```\nif ( $this->can_use_openssl() ) {\n\t\t\t\n\t\t\t$sslsig = '';\n\t\t\tif ( isset( $post['sslsig'] ) ) {\n\t\t\t\t$sslsig = $post['sslsig'];\n\t\t\t\tunset( $post['sslsig'] );\n\t\t\t}\n\t\t\tif ( openssl_verify( serialize( array( 'uri' => $uri, 'post' => $post ) ), base64_decode( $sslsig ), $this->get_option( 'public_key' ) ) ) {\n\t\t\t\treturn true;\n\t\t\t} else {\n\t\t\t\t$__vp_validate_error = array( 'error' => 'invalid_signed_data' );\n\t\t\t\treturn false;\n\t\t\t}\n\t\t}\n```\nThis function **openssl_verify** have 3 possible values as result value: \n- int(1) success \n- int(0) failure to verify\n- int(-1) error \n\nbut we all know that \n```\nif (-1) {echo \"Hi RCE\";}\n```\nwill print **Hi RCE**\n\nProposed fix:\n```\nif ( openssl_verify( serialize( array( 'uri' => $uri, 'post' => $post ) ), base64_decode( $sslsig ), $this->get_option( 'public_key' ) ) ===1 ) {\n\t\t\t\treturn true;\n\t\t\t} else {\n\t\t\t\t$__vp_validate_error = array( 'error' => 'invalid_signed_data' );\n\t\t\t\treturn false;\n\t\t\t}\n```\nIn order to get the idea how to cause **openssl_verify** to return -1all you need is to provide valid signature towards public key from different type. Check the uploaded files and execute them in the CMD in the following order:\n```\nphp genkey1.php\nphp genkey2.php\nphp PoC.php\n```\n",
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 191300,
+      "file_name": "genkey2.php",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/191/300/344a2d70a66ac330d5ca7d26b064c37299e2de78/genkey2.php?response-content-disposition=attachment%3B%20filename%3D%22genkey2.php%22%3B%20filename%2A%3DUTF-8%27%27genkey2.php&response-content-type=text%2Fx-php&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4YHF5EHB%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T202807Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJFMEMCIFqNX39T%2FXCJhXUkbTX3lWx8BjPqVE8MnKgEzGKAKedeAh8dx5v6uHPjEk%2BCj1ZBqfgMzv%2FRNtdMS5lgFNUa32GFKrEFCBwQAxoMMDEzNjE5Mjc0ODQ5IgyhgfORnLRqY3GEXbQqjgWHdxllSIT1v7ozL1D563B3s5O9ppME84bDUJGGDi%2FctsJl6PItf3fupoMgly%2BkTvfb2jozfmh9mV82Kqp4iSDMuv3e7FKFmhbLBA6YSKPJdW3rIk6n4KIghj%2BdsH6bsNQuY1JxIlX2ZFqxoftDjH1cH9WWdy5w8azr7yDVYBl09F6ATbB493UmlGzdGQNRvdUgGq8XsJ1lZLvZEXkErLgzZd7SvkL%2FOo82Tqn11F3mw%2BOMSwpTgg8op2AmldjwgJe4CyLZhYriUIvRjGpA9sAnJL0AH9rUE%2BG87yIiPrUndpYtlh1Hvq4JxQ3rGLwxdCy3ScMpdlJqwog9YlWK6SAm4LFTwZybjjWvjU0TbynlPsZHapyntasFH0GrPhe3qHBfMwsFMkbCWFgoqx%2FuShmHW35zishdC6hc1dbVq6V7J4IC%2FNAa40woeXKdsnJDxwMZy3EYYDTuD%2F1Y2dWkmrROK6hhz4BDLx41pApZwDKMYbqdv0jytswxYRDwr%2B9j7Ca%2BO8%2FN4Zx7lWj5L7aDsr1NNuhIRrPGg8zEB8QLYXXV5X6xS%2BSIfRbcm29JOJ7%2Fa8JYhO6oFu4R%2F2oN3I7VRJfNDF5UixB7Zye6Xw8AbS1qEOxkzkypZIIn0f1l%2Bj4IPgf5%2BEnLB8NWzclNpQRclJviZl2aVnzDgB8J9RvFXtJjugsM3YoDeE%2F%2BSzeEtLdTQGy3L8WRXoEr3d15VxuZF2wX9NOiYHtel8GFpxCiGeRXO4oGgd3KT4EuN15tUqoR9ESrzIJ6O0kwAEX%2FU4prAw1u6QqyVOIJqRTdbzbC6jB%2BlkJXSAbA%2BKnhEgq9hDn4CNaHhbmd5yrSXuONjzc%2F%2B9BM6egXoLNPqd0aXIOy5mUwy43BxgY6swHRMbrsLgWKjiiaI7ot7fwXNzz7VF5aCF%2BXCd1qM%2BtvalLfUA6wxzmvlPsK6Uvp8pMk%2Fs8PG1rn4ZcdJ94EDxC0O636Z5A36vcUecw5uqrpX1JABFxT%2Be7Da%2BVq%2FkwnCL%2BQHPDHgJu9ZiHHUim6IRY78Qpu1mi4h3eEA5F7xpCa4MK6cNBtr%2F8mJRiVVhpocrBv%2Bv1aG1CCL60oc6WNadMp4yhkrXtSek0v%2BTAaxXRS08p3%2BQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=2f4c85a1fe8362b446d671910669339e332f91af66016b4e8d2ee8263aec06a5",
+      "file_size": 716,
+      "type": "text/x-php",
+      "moderated": null
+    },
+    {
+      "id": 191301,
+      "file_name": "genkey1.php",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/191/301/40a8794e4d194e8d084f6a85c49da93c6e6e64a1/genkey1.php?response-content-disposition=attachment%3B%20filename%3D%22genkey1.php%22%3B%20filename%2A%3DUTF-8%27%27genkey1.php&response-content-type=text%2Fx-php&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4YHF5EHB%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T202807Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJFMEMCIFqNX39T%2FXCJhXUkbTX3lWx8BjPqVE8MnKgEzGKAKedeAh8dx5v6uHPjEk%2BCj1ZBqfgMzv%2FRNtdMS5lgFNUa32GFKrEFCBwQAxoMMDEzNjE5Mjc0ODQ5IgyhgfORnLRqY3GEXbQqjgWHdxllSIT1v7ozL1D563B3s5O9ppME84bDUJGGDi%2FctsJl6PItf3fupoMgly%2BkTvfb2jozfmh9mV82Kqp4iSDMuv3e7FKFmhbLBA6YSKPJdW3rIk6n4KIghj%2BdsH6bsNQuY1JxIlX2ZFqxoftDjH1cH9WWdy5w8azr7yDVYBl09F6ATbB493UmlGzdGQNRvdUgGq8XsJ1lZLvZEXkErLgzZd7SvkL%2FOo82Tqn11F3mw%2BOMSwpTgg8op2AmldjwgJe4CyLZhYriUIvRjGpA9sAnJL0AH9rUE%2BG87yIiPrUndpYtlh1Hvq4JxQ3rGLwxdCy3ScMpdlJqwog9YlWK6SAm4LFTwZybjjWvjU0TbynlPsZHapyntasFH0GrPhe3qHBfMwsFMkbCWFgoqx%2FuShmHW35zishdC6hc1dbVq6V7J4IC%2FNAa40woeXKdsnJDxwMZy3EYYDTuD%2F1Y2dWkmrROK6hhz4BDLx41pApZwDKMYbqdv0jytswxYRDwr%2B9j7Ca%2BO8%2FN4Zx7lWj5L7aDsr1NNuhIRrPGg8zEB8QLYXXV5X6xS%2BSIfRbcm29JOJ7%2Fa8JYhO6oFu4R%2F2oN3I7VRJfNDF5UixB7Zye6Xw8AbS1qEOxkzkypZIIn0f1l%2Bj4IPgf5%2BEnLB8NWzclNpQRclJviZl2aVnzDgB8J9RvFXtJjugsM3YoDeE%2F%2BSzeEtLdTQGy3L8WRXoEr3d15VxuZF2wX9NOiYHtel8GFpxCiGeRXO4oGgd3KT4EuN15tUqoR9ESrzIJ6O0kwAEX%2FU4prAw1u6QqyVOIJqRTdbzbC6jB%2BlkJXSAbA%2BKnhEgq9hDn4CNaHhbmd5yrSXuONjzc%2F%2B9BM6egXoLNPqd0aXIOy5mUwy43BxgY6swHRMbrsLgWKjiiaI7ot7fwXNzz7VF5aCF%2BXCd1qM%2BtvalLfUA6wxzmvlPsK6Uvp8pMk%2Fs8PG1rn4ZcdJ94EDxC0O636Z5A36vcUecw5uqrpX1JABFxT%2Be7Da%2BVq%2FkwnCL%2BQHPDHgJu9ZiHHUim6IRY78Qpu1mi4h3eEA5F7xpCa4MK6cNBtr%2F8mJRiVVhpocrBv%2Bv1aG1CCL60oc6WNadMp4yhkrXtSek0v%2BTAaxXRS08p3%2BQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=c3f2be49ae4255ce41224342370677516fb7c282883c612e6a46066e55c5e2f2",
+      "file_size": 714,
+      "type": "text/x-php",
+      "moderated": null
+    },
+    {
+      "id": 191302,
+      "file_name": "PoC.php",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/191/302/4a20e2244e6c30767c07fb7ada43f2c4f4667444/PoC.php?response-content-disposition=attachment%3B%20filename%3D%22PoC.php%22%3B%20filename%2A%3DUTF-8%27%27PoC.php&response-content-type=text%2Fx-php&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4YHF5EHB%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T202807Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJFMEMCIFqNX39T%2FXCJhXUkbTX3lWx8BjPqVE8MnKgEzGKAKedeAh8dx5v6uHPjEk%2BCj1ZBqfgMzv%2FRNtdMS5lgFNUa32GFKrEFCBwQAxoMMDEzNjE5Mjc0ODQ5IgyhgfORnLRqY3GEXbQqjgWHdxllSIT1v7ozL1D563B3s5O9ppME84bDUJGGDi%2FctsJl6PItf3fupoMgly%2BkTvfb2jozfmh9mV82Kqp4iSDMuv3e7FKFmhbLBA6YSKPJdW3rIk6n4KIghj%2BdsH6bsNQuY1JxIlX2ZFqxoftDjH1cH9WWdy5w8azr7yDVYBl09F6ATbB493UmlGzdGQNRvdUgGq8XsJ1lZLvZEXkErLgzZd7SvkL%2FOo82Tqn11F3mw%2BOMSwpTgg8op2AmldjwgJe4CyLZhYriUIvRjGpA9sAnJL0AH9rUE%2BG87yIiPrUndpYtlh1Hvq4JxQ3rGLwxdCy3ScMpdlJqwog9YlWK6SAm4LFTwZybjjWvjU0TbynlPsZHapyntasFH0GrPhe3qHBfMwsFMkbCWFgoqx%2FuShmHW35zishdC6hc1dbVq6V7J4IC%2FNAa40woeXKdsnJDxwMZy3EYYDTuD%2F1Y2dWkmrROK6hhz4BDLx41pApZwDKMYbqdv0jytswxYRDwr%2B9j7Ca%2BO8%2FN4Zx7lWj5L7aDsr1NNuhIRrPGg8zEB8QLYXXV5X6xS%2BSIfRbcm29JOJ7%2Fa8JYhO6oFu4R%2F2oN3I7VRJfNDF5UixB7Zye6Xw8AbS1qEOxkzkypZIIn0f1l%2Bj4IPgf5%2BEnLB8NWzclNpQRclJviZl2aVnzDgB8J9RvFXtJjugsM3YoDeE%2F%2BSzeEtLdTQGy3L8WRXoEr3d15VxuZF2wX9NOiYHtel8GFpxCiGeRXO4oGgd3KT4EuN15tUqoR9ESrzIJ6O0kwAEX%2FU4prAw1u6QqyVOIJqRTdbzbC6jB%2BlkJXSAbA%2BKnhEgq9hDn4CNaHhbmd5yrSXuONjzc%2F%2B9BM6egXoLNPqd0aXIOy5mUwy43BxgY6swHRMbrsLgWKjiiaI7ot7fwXNzz7VF5aCF%2BXCd1qM%2BtvalLfUA6wxzmvlPsK6Uvp8pMk%2Fs8PG1rn4ZcdJ94EDxC0O636Z5A36vcUecw5uqrpX1JABFxT%2Be7Da%2BVq%2FkwnCL%2BQHPDHgJu9ZiHHUim6IRY78Qpu1mi4h3eEA5F7xpCa4MK6cNBtr%2F8mJRiVVhpocrBv%2Bv1aG1CCL60oc6WNadMp4yhkrXtSek0v%2BTAaxXRS08p3%2BQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=be0d5dcaee486c19aca96b159ce684b784e004b0a5d6aaeda248f422b47c4785",
+      "file_size": 249,
+      "type": "text/x-php",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-09-15T12:51:21.193Z",
+  "allow_singular_disclosure_after": -253006606.20745203,
+  "singular_disclosure_allowed": true,
+  "vote_count": 31,
+  "voters": [
+    "marcs0h",
+    "flamezzz",
+    "bogdantc",
+    "cha5m",
+    "bl4de",
+    "vijay_kumar",
+    "harrymg",
+    "cuso4",
+    "edoverflow",
+    "r3y",
+    "and 21 more..."
+  ],
+  "severity": {
+    "rating": "critical",
+    "score": 9.9,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "low",
+      "user_interaction": "none",
+      "scope": "changed",
+      "confidentiality": "high",
+      "integrity": "high",
+      "availability": "high"
+    }
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
