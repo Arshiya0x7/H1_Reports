@@ -1,0 +1,137 @@
+{
+  "id": 1047124,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMDQ3MTI0",
+  "url": "https://hackerone.com/reports/1047124",
+  "title": "No rate limit in email subscription",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2020-11-30T15:27:54.948Z",
+  "submitted_at": "2020-11-30T15:27:55.003Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "splint3rsec",
+    "url": "/splint3rsec",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/nDXK7ygk6qmX9GoRxS5hoALU/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 42368,
+    "url": "https://hackerone.com/stripo",
+    "handle": "stripo",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/042/368/5b1017d17427be6c8e05cbc95da27646bf45e925_original./235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/042/368/5b1017d17427be6c8e05cbc95da27646bf45e925_original./3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Stripo Inc",
+      "twitter_handle": "",
+      "website": "https://stripo.email",
+      "about": "Stripo is a lightweight and intuitive email template editor that lets users build professional looking and highly responsive email templates."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2021-01-11T08:48:14.718Z",
+  "bug_reporter_agreed_on_going_public_at": "2021-01-09T12:08:46.722Z",
+  "team_member_agreed_on_going_public_at": "2021-01-11T08:48:14.647Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "I managed to bypass the following report #1029723 please follow the steps below:\n\n##Description:\nNo rate limit in Email Subscription, you just have to add a fixed throttle in Burp Suite to avoid the `429` response.\n\n**Note:** I will use tempmail in the screenshots PoC\n\n##Steps:\n\n1. Go to https://stripo.email/ and scroll down to the subscribe field\n2. Put an email\n3. Click on `Subscribe` and intercept the following request\n\n```\nPOST /fr/subscribe/ HTTP/1.1\nHost: stripo.email\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:83.0) Gecko/20100101 Firefox/83.0\nAccept: */*\nAccept-Language: fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3\nAccept-Encoding: gzip, deflate\nContent-Type: application/x-www-form-urlencoded; charset=UTF-8\nX-CSRF-TOKEN: OC5q3gnsKxUZRrGIN3ke5ZdqEbmneEuknaNmnQUe\nX-Requested-With: XMLHttpRequest\nContent-Length: 129\nOrigin: https://stripo.email\nConnection: close\nReferer: https://stripo.email/\n\n_token=&source=LANDING&subscribe-email=kakema3700%40tdcryo.com&g-recaptcha-response=\n```\n4.Send the request to Burp intruder, go to the `Positions` tab and clear the `§`\n5.Add `§` in the last number of the `Accept-Language` header like this`Accept-Language: fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.§3§`\n6.Go to `Payloads` tab and choose `Null payloads` in the `Payload type`\n7.You can set how much email you want to send.. `50` for example in the `Generate` field\n8.Go to `Options` tab and change the `Throttle (milliseconds)` Fixed value to **1500** or more..\n9.Click on `Start attack`\nYou will start receiving emails.\n\n##Suggested Mitigation:\nAdd a number of requests limit\n\n## Impact\n\nAn attacker can send bulk emails to the victim",
+  "weakness": {
+    "id": 65,
+    "name": "Business Logic Errors"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1098700,
+      "file_name": "2.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/rb4zivay0awzkbl8vkyzzsy6a62j?response-content-disposition=attachment%3B%20filename%3D%222.png%22%3B%20filename%2A%3DUTF-8%27%272.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYGJLCUIC%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T074154Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIHDrCN2CiN2Tx12uS%2F0bVNpMFmIANVesbFOJi2n3IlEcAiBIlWwJKWctifVWLod2YkTIOhqiqXK6K0Aigt8rLYPyIiq6BQj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMw6g1dvl6aThDm%2BTuKo4Fg75uWuN3qPFsZGOieLLU0L0I6OfisU01HeY1hC4Fi6ykD8ZQ68E1uF7DYy6Dz6WST8HP7Qs3WzSeyTtrUdQ2eAOqqcCaJk0cnGHgNOJaNht04wNTPXojMaEXcZOMyU6ABFQMdQGbh2dAeViwRQOHK49j05s6VRqhLscLAfVO2khyVYXl%2Bzb3Fef71GYPIjpMicfUbCRF4VSQTWOKsCHec%2B6ux6GCvRPa40tsOQcSaPwGraZdk830sG7JjclbyaPLQWmHiw1I%2BsVLh7WsSLITL9FVwN036b83C0ZvWEiiE4j0b%2BdaUeFDH6r1wnXD7gatrkWraZDB1xe9ZgKn5u80vjN7Q9oFf1hMvj6I4ixHfYEiKT4jJk5acwh5p%2FiYv7Q%2F6I4xTaQF%2Ft0wOKviCzcSRb00Zyq%2FgdZSwYYTkbWdwEju7qA7aMiPNtXEiXa1iBOFPyOvh4TWiM7YXj16Nq1mzBXVxlTEekh9UKLrHuyJkHYhKvvzV%2BWz3uIWe1yWsDcYe2VLlEmeAg8CUxJDX1EcBx%2BvIdTV1To2Y45HkF%2FovRESM7l0M4Mrq7ZAYdzjE%2FrTKg1pY3crPRD7flK4YisvFhxwyIpEveDFkXaOckgLYZyDJUzdrpuBixJPeIreN2md6GjzESUF3Qi7fFEGeS8MR3AguXuZ4FayUBmGNASnjEwlNmblTPdXpTuwxi9AmenxneasBp%2FM64pUQ18t8ST8VoKILKavJALb9Zizuvz53qlMwXq1aQ0LqXmFWmj8A3%2FTh9r9mKu81OcW7%2Fi7xeQIuHAHGWrnnm2VIkkyEunpNmA3lB9KegSzqPx%2BEufHZH4vNu3j0PcBBryZdSkKtCFOrYAkUmxjA5NBX2KEW6vAMN%2BmvsYGOrIBxoxRsMtJOu7WzzAR6pJ28DwFNMhGRqHDtsEPvSDk7njNW9wOvGZ%2BAxF%2F7bk961Z71X8vxqd0ywIKZSS0GZk7hboE8T466bNcuckixP1vX%2FL1RvyO4%2Blj16VlBFWrYXPZNKNWOS0jX%2F7sv7lYYbcXGAQgMrD41ysGpftPFM3dzhSdA8oEycBJQc8D7wnwBmE18gkcrL3Hb5rsCBFm8eAENQa8Vwm4F1AN8CQjFKj%2Bxb2AVg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=1697798d0081276c763bb08145cc98bdf2d9826ac1b6ca38a25f51642fb371ee",
+      "file_size": 55498,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1098701,
+      "file_name": "1.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/07ekhqd3kj7161bvvuyz76dyq32y?response-content-disposition=attachment%3B%20filename%3D%221.png%22%3B%20filename%2A%3DUTF-8%27%271.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYGJLCUIC%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T074154Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIHDrCN2CiN2Tx12uS%2F0bVNpMFmIANVesbFOJi2n3IlEcAiBIlWwJKWctifVWLod2YkTIOhqiqXK6K0Aigt8rLYPyIiq6BQj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMw6g1dvl6aThDm%2BTuKo4Fg75uWuN3qPFsZGOieLLU0L0I6OfisU01HeY1hC4Fi6ykD8ZQ68E1uF7DYy6Dz6WST8HP7Qs3WzSeyTtrUdQ2eAOqqcCaJk0cnGHgNOJaNht04wNTPXojMaEXcZOMyU6ABFQMdQGbh2dAeViwRQOHK49j05s6VRqhLscLAfVO2khyVYXl%2Bzb3Fef71GYPIjpMicfUbCRF4VSQTWOKsCHec%2B6ux6GCvRPa40tsOQcSaPwGraZdk830sG7JjclbyaPLQWmHiw1I%2BsVLh7WsSLITL9FVwN036b83C0ZvWEiiE4j0b%2BdaUeFDH6r1wnXD7gatrkWraZDB1xe9ZgKn5u80vjN7Q9oFf1hMvj6I4ixHfYEiKT4jJk5acwh5p%2FiYv7Q%2F6I4xTaQF%2Ft0wOKviCzcSRb00Zyq%2FgdZSwYYTkbWdwEju7qA7aMiPNtXEiXa1iBOFPyOvh4TWiM7YXj16Nq1mzBXVxlTEekh9UKLrHuyJkHYhKvvzV%2BWz3uIWe1yWsDcYe2VLlEmeAg8CUxJDX1EcBx%2BvIdTV1To2Y45HkF%2FovRESM7l0M4Mrq7ZAYdzjE%2FrTKg1pY3crPRD7flK4YisvFhxwyIpEveDFkXaOckgLYZyDJUzdrpuBixJPeIreN2md6GjzESUF3Qi7fFEGeS8MR3AguXuZ4FayUBmGNASnjEwlNmblTPdXpTuwxi9AmenxneasBp%2FM64pUQ18t8ST8VoKILKavJALb9Zizuvz53qlMwXq1aQ0LqXmFWmj8A3%2FTh9r9mKu81OcW7%2Fi7xeQIuHAHGWrnnm2VIkkyEunpNmA3lB9KegSzqPx%2BEufHZH4vNu3j0PcBBryZdSkKtCFOrYAkUmxjA5NBX2KEW6vAMN%2BmvsYGOrIBxoxRsMtJOu7WzzAR6pJ28DwFNMhGRqHDtsEPvSDk7njNW9wOvGZ%2BAxF%2F7bk961Z71X8vxqd0ywIKZSS0GZk7hboE8T466bNcuckixP1vX%2FL1RvyO4%2Blj16VlBFWrYXPZNKNWOS0jX%2F7sv7lYYbcXGAQgMrD41ysGpftPFM3dzhSdA8oEycBJQc8D7wnwBmE18gkcrL3Hb5rsCBFm8eAENQa8Vwm4F1AN8CQjFKj%2Bxb2AVg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=ad9a520772acb9fe3b7c9af5f70f0a1311c9e9a82e85bf2d20a95b585a2728ce",
+      "file_size": 261972,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 16,
+  "voters": [
+    "ezzra",
+    "redhotchilihacker_",
+    "mainteemoforfun",
+    "rook1337",
+    "shubham_srt",
+    "ayoub0x1",
+    "thalaivar304",
+    "mohaned0101",
+    "hundredpercent",
+    "pr0f0x01",
+    "and 6 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 38701,
+    "asset_type": "URL",
+    "asset_identifier": "stripo.email",
+    "max_severity": "medium"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
