@@ -1,0 +1,122 @@
+{
+  "id": 190016,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xOTAwMTY=",
+  "url": "https://hackerone.com/reports/190016",
+  "title": "[network.informatica.com] The login form XSS via the referer value",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2016-12-10T00:47:35.155Z",
+  "submitted_at": "2016-12-10T00:47:35.155Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "s_p_q_r",
+    "url": "/s_p_q_r",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/032/547/1d8b3feccf1a8281a2285cdbfc482aaf3b046b22_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 453,
+    "url": "https://hackerone.com/informatica",
+    "handle": "informatica",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/6yxveqohTKjQLQyJm5Xv7Eye/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/6yxveqohTKjQLQyJm5Xv7Eye/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Informatica",
+      "twitter_handle": "informatica",
+      "website": "https://www.informatica.com/",
+      "about": "Informatica Corporation is the world’s number one independent provider of data integration software."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2017-05-22T04:08:13.461Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-04-26T11:51:52.261Z",
+  "team_member_agreed_on_going_public_at": "2017-05-22T04:08:13.386Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "The **referer** parameter value https://network.informatica.com/login!input.jspa?referer=%ref% is inserted into the Javascript code\n\n```javascript\nif (pageURL.indexOf(\"login!input.jspa?referer=\") > -1 || pageURL.indexOf(\"login.jspa?referer=\") > -1) {\n\tfinalPageURL='%ref%';\n}\n```\nand used in further redirection without validation:\n\n```javascript\nInfaAutoLogin.authenticateUser(response.id, finalPageURL, {\n\tcallback:function(responseMap) {\n\t\tif(responseMap['status'] === 'success') {\n\t\t\tdocument.location = responseMap['location'];\n\t\t}\n\t\telse {\n\t\t\tsessionStorage.setItem('autoLoginType', responseMap['statusMsg']);\n\t\t}\n\t}\n});\n```\n\nThis means an attacker can put JS links there, which will cause script execution in the victim's browser:\n\n1. Log into your Informatica Network account\n2. Go to https://network.informatica.com/login!input.jspa?referer=javascript:alert(document.domain)\n\n{F142238}\n\nTested with latest Firefox and Chrome.\n",
+  "weakness": {
+    "id": 60,
+    "name": "Cross-site Scripting (XSS) - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 142238,
+      "file_name": "inf_nw_xss.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/142/238/8976b0c8f984cc9212f52cb19a6f94a02822ab90/inf_nw_xss.png?response-content-disposition=attachment%3B%20filename%3D%22inf_nw_xss.png%22%3B%20filename%2A%3DUTF-8%27%27inf_nw_xss.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ36VXQE3T%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T221835Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCWvfR%2F7bO7KVs74VlcQ8phfZclxEhFJT8QhFCWut9VqwIhAJCgvsVcGKbIf0iHbXtdli6l96hV9oFeoiHSHVlQAMFaKrIFCBsQAxoMMDEzNjE5Mjc0ODQ5IgyHZelqLV6LIVPeHPoqjwUB43YrhhflYw1hLir7hdZ7fM8syLnl4B7aqgklNQHqVLox45B0almyPs2ff%2FUO6oR9sFx3Q5OGJ87ZCF9DY7AfGwtlAdmz%2F9oojEWXKr4ytVbOmk6JurwgcRG45YUuzwvJ2qX5r7pALzAxoOXEQyjZMDuehGI1HHeq77VQbEvlK1XuekJLQiJGyBg98341LhTn%2FJ729ELk8KIJXBL6EcMSW9Iu9skmN3Km4HvweyC0EOYvLYThRD95hq0Tr3XFYnFfrUHD2Md1KpR8apol3E9jqVADhtjhIX%2F1gXDxPlM%2B0XK4HJDbkdZzURjS30ieG0NwRySxpcSwf7I6HO0JYzBKcQLhKpQwrBjFBr%2BoK1Up6MuLoSezxx9ThB4QpG9%2BxYxBLMzJ3azndXTwCZeiDZciLQFZzi8dsTsW0gjm%2BbmCdi9uSXmLt7JKpo1t1Bq6WQwiv%2FP%2Bm7JMmKq32fdF2WUjzzb8KujX78f7HjaqGNYF%2BuEnKhaCZ3omrG89kfz7sA7sWdzfNtVeNiRUNamgqgkgT8Z%2B%2B8bcsmOvEV01LrTknIH8GxcNGouE6fNkZLRVmVnlNKgZFVDSIDCa4u0VfxOCmJKbhUGUNovNIQKyHxyXYuLbRBVw8z7gSCZIQSnJAN%2FJVieZykZbeDExcT0bXldFnGq9mDi4EYvIxiwP7H1YHkKLf%2Fv29V%2Bhg8PTfpLKU7KjvrDheZ0z2NTz69t%2Ffn5wcI%2F1mclvvgVl1PYtLlnxf63c9vE6SnfpyEcJ5PJYEj%2BE1PkWPxOUFst0HD3oU6eh8xWcOS98lQcDK9Gl8%2F%2BvqwBfOHoB0x2HrEPzVdzLgF%2F7ldlxhyF%2F5x1qP1E3Wj%2FDDxOa43bEzeUc7igAB08cMPSEwcYGOrABpDEKo2dyhvrWAJ8uuk1cSzq04CkYPrlqAoH62WN92kvPrownYtcvoDC5hazDWaPlxk3JHWYRSJOEwkQNGbPmybM1y9w0Z5nJTNVRrVGRWiGMKj3c%2Bwz0NVVG%2BexpcH8RM0zht%2BediYfNYJwQDMcraDTQsWfGM4VPr4pBv%2B5RT68NW7fejGUYJJdDs2lng%2F3AB4a%2BeN5Tkjn9WKI%2Ff%2FVpdmNUJQXHP0O5M5neLwvic7I%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=07bc1fb4098a6945d2aeeac1fe859537a5a41e90ed7254c970550a928238b64a",
+      "file_size": 20547,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-05-26T11:51:52.302Z",
+  "allow_singular_disclosure_after": -262693603.26949418,
+  "singular_disclosure_allowed": true,
+  "vote_count": 7,
+  "voters": [
+    "eveeez",
+    "pr0f0x01",
+    "japz",
+    "spearx",
+    "secdoor",
+    "spetr0x",
+    "mrnull1337"
+  ],
+  "severity": {
+    "rating": "high",
+    "author_type": "Team"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
