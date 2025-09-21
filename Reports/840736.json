@@ -1,0 +1,131 @@
+{
+  "id": 840736,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC84NDA3MzY=",
+  "url": "https://hackerone.com/reports/840736",
+  "title": "Open Redirect filter bypass through '\\' character via URL parameter",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2020-04-05T19:25:29.379Z",
+  "submitted_at": "2020-04-05T19:25:29.379Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "droop3r",
+    "url": "/droop3r",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/NXyokUaESNi8gKmJqYK5Uam9/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 44612,
+    "url": "https://hackerone.com/myndr",
+    "handle": "myndr",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/72u0z23kuv9tw493ss9ee5qupf0u/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/72u0z23kuv9tw493ss9ee5qupf0u/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Myndr",
+      "twitter_handle": "myndr_NL",
+      "website": "https://www.myndr.nl/",
+      "about": "Myndr makes sure your Internet in the classroom is more suited to the actual needs of your students."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2020-04-06T15:39:02.330Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-04-06T15:39:02.267Z",
+  "team_member_agreed_on_going_public_at": "2020-04-06T15:32:48.265Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi, I hope I find you all safe and good regarding those hard times nowadays.\n\n## Summary:\nFound an Open Redirect vulnerability on http://meta.myndr.net by bypassing the trusted domain filter using a '\\' character.\n\nI was able to get the original redirection URL from the register button located at http://dashboard.myndr.net/auth/login\n\nOriginal Redirection URL\n```http://meta.myndr.net/latest/meta-data/filter-id/add?ref_url=http://dashboard.myndr.net/auth/register?id= ```\n\nMalicious URL \n```http://meta.myndr.net/latest/meta-data/filter-id/add/?ref_url=http://phishing.com\\dashboard.myndr.net/../../../ ```\n\nThe vulnerable URL parameter is ```ref_url```\n\nThe trusted domain (or string) is ```dashboard.myndr.net```\n\nIt can be bypassed only from its beginning!  (between ```http://``` and the string) and not after ```.net```\n\n## Steps To Reproduce:\nNavigate to : ```http://meta.myndr.net/latest/meta-data/filter-id/add/?ref_url=http://phishing.com\\dashboard.myndr.net/../../../```\n\nYou will be redirected to ```phising.com``` domain\n\n## PoC: attached to the report\n\n## Impact\n\n1. Phishing campaigns can be initiated using such a vulnerability\n2. It is an efficient way to bypass monitoring and email filters within an organization (the organization can check the \"trust\" level of each domains that they receive emails from)",
+  "weakness": {
+    "id": 53,
+    "name": "Open Redirect"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 775045,
+      "file_name": "Screencast_04-05-2020_03_17_46_PM.webm",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/L9WGD6Bxnv2cPQghqS9AoCFx?response-content-disposition=attachment%3B%20filename%3D%22Screencast_04-05-2020_03_17_46_PM.webm%22%3B%20filename%2A%3DUTF-8%27%27Screencast_04-05-2020_03_17_46_PM.webm&response-content-type=video%2Fwebm&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWU6W3YR5%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T115230Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCICT0En%2BDp3YvkU5SZTMMxyrxZ7Ft1kjGs0IfO0I0AURKAiBzPKfBO1C%2B2pCTovANeKuAfSdy4RsfE1ELoIif4DmyFSqyBQgQEAMaDDAxMzYxOTI3NDg0OSIMMMUD2e96ZEe%2FBdbRKo8FIlyj3ImbR9P06VhgB6i5aYNVl6QUpN%2BFF7fdK3GXoPBqBe3RTAQT41ylUVef1%2B0Ull7xXvkcKxmySy5oHwtsW1W0C%2BryYu%2FkH0g7bnnrui%2B37bTv9q3NirU5lM1ouACBHYCXgh5cLxBZSzNZyz2uLBpkGvQOoKMt7nCSzfoogUx5KioZ0dCruLtwe6F08e8zDbtosxk9yBLWSnNd7CPWHfhgmB45eh0S1yTOY11mPDb1r%2FjlVEeJldaQx5hc439Ci9k1oQFbcGeM3mmRtheuudScCDfn1Tly8PE9TZLyKebcSjqSjReoxWyPxLvTaUCiX%2FicbsD3E%2BHE5xmVdPnPvPvLmUMUbVKbwMG2bHYGHi1HHpsz9Qxc5Ktat8vqwLEm53cQSFHducawN5aCs7Dona4hV5xmg5NeJ1Enco0X9RF0dRSLPhbyEaLZ%2B62tXVfi4zuGZaOVf416yhstpqu5PD3yxDpm%2ByMpNcpYXzvix519V%2BMrddrq6O%2BM1plTpZHvuqubpZ5CxNomzEIXXzswlsrDPYdqIacYQzjx76XObIQVjaReOIqFnsTOo1r3sTrBekl08DjWetk8bamlsWj9p9ppv9UWnMLwq7dfPspIBZFAKO6R1PtixRYbPD%2Ft4shblVUHq9BFfKWbTNq6b%2Bm%2BLhXQJZHI6EvvdbQhCurcb5VJlUt8KpPNdMeCsSGkmhEb3yIpqmZDxGs0FKfwyKK%2FeaMWoPlsVhHQBzTbncbZ5slJ7WUXC%2BjUaeqvPzpzfJmyNbQgYN5%2BJNPBldEoHyEDich4kebgeZEAjP7l4pY6CrqPzIJr5YJA3evbU8Yy4kOBrIzX6AQSk8%2FV%2BTkIH3j%2F5tXsfWwhAubCp%2FhLiIWVaDCpyr7GBjqyATq3IYcvNvIRPYX18R6%2BpLLs6exiiEC17bSLS95ViceA9Jj1Iuq4V5pxaCDvppKuMPH0olISPV7QXjgviGlfbNmpQh2jq32bnftPRkKD2Q3dVqJ8lDtIXP4Oz176Je1gOTGaC3TJJVi8%2BO2AS3GMhyJi1zbnAP0IvjuOu6%2F30CYDqkUDk%2Ff3y1XLjr8jyjdsUPthzw317AhVZSSN%2Fb5xXtI4%2BJLd6oxzZ1MpEy6coOiq2CA%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=7c6bb057064fb66f61d7af6b1ba2c7e456f8d5e6baa26a0f79243caebc1343a7",
+      "file_size": 2035906,
+      "type": "video/webm",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2020-05-06T15:32:48.386Z",
+  "allow_singular_disclosure_after": -169676382.3384114,
+  "singular_disclosure_allowed": true,
+  "vote_count": 38,
+  "voters": [
+    "lvl0x00",
+    "nytr0gen",
+    "n0x496n",
+    "mashoud1122",
+    "7odamoo",
+    "rzx007x",
+    "ali",
+    "xsstestov",
+    "amad3u6",
+    "amcq",
+    "and 28 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 41214,
+    "asset_type": "WILDCARD",
+    "asset_identifier": "*.myndr.net",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
