@@ -1,0 +1,142 @@
+{
+  "id": 704266,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC83MDQyNjY=",
+  "url": "https://hackerone.com/reports/704266",
+  "title": "DOM XSS at www.forescout.com in Microsoft Edge and IE Browser",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2019-09-30T13:12:39.890Z",
+  "submitted_at": "2019-09-30T13:12:39.890Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "enesdexh1",
+    "url": "/enesdexh1",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6OTAyODcwLCJwdXIiOiJibG9iX2lkIn19--ac4cabbebd574dfe37a6029b0bf8cffc27a31a35/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--2de8067d228529d65848a4eeed0bed0bb2531bc3/the-last-kingdom-uhtred.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 39489,
+    "url": "https://hackerone.com/forescout_technologies",
+    "handle": "forescout_technologies",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/039/489/f946bfc9677084447f98ce6402a3672d680591d8_original./235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/039/489/f946bfc9677084447f98ce6402a3672d680591d8_original./3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "ForeScout Technologies",
+      "twitter_handle": "",
+      "website": "https://forescout.com",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2020-04-07T08:37:19.705Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-03-08T08:37:17.888Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nI've found an DOM Based XSS on homepage \n\n## Steps To Reproduce:\n1.Go to this url and you'll see alert pop\n`https://www.forescout.com/#<img src=x onerror=alert('XSS')>`\n\nBut this will work just on ME/IE browsers because chrome and firefox have default encode system hash url\n\nAnd vulnerable code is on your directly source code within jquery code. As you can see there is no encode in ==window.location.hash== code so when we open the page with #<img src=x onerror=alert(1)> it executes code.\n\n`jQuery(window).load(function() {\n    jQuery('a.fancybox-inline[href=\"' + window.location.hash + '\"]:first').each(function() {\n        jQuery(this).delay(700).trigger('click');\n    });\n});`\n\n## Supporting Material/References:\nI have uploaded a picture to show you POC\n\n\nRegards \nEnesdex\n\n## Impact\n\n--Hacker can execute malicious codes in victim's browser\n--Hacker can redirect user to malicious website\n--Hacker can steal victim's cookies etc.",
+  "weakness": {
+    "id": 63,
+    "name": "Cross-site Scripting (XSS) - DOM"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 595565,
+      "file_name": "DOM_XSS.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/6V5DgmxAt2V5BLmHMCyr22wz?response-content-disposition=attachment%3B%20filename%3D%22DOM_XSS.PNG%22%3B%20filename%2A%3DUTF-8%27%27DOM_XSS.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4E3YHULU%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T115200Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIn%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQD27rxmKncxQHhku1gLeJUK%2FBunEp%2Foqe27XZ49V6qmvQIhANYXenTaBiv5rKYFNzJaOHiZ0XAWcdgjDQ2VZLQgdEhqKrEFCBIQAxoMMDEzNjE5Mjc0ODQ5IgzmgOoIarLU%2FIa%2F3YAqjgXD2YNIpO8kBBWNWDMaIGLnu2xcFoTVvyzqCqxoxuCn3X66%2Fb8dAoQp3vQUD3TM%2BD66m3vcmLhdqmeHlLMdgcGEePCK%2Bslo951oI%2FivIg60W%2FJt9Z6xfafgg66NygBfDNK9tkxP0iKwwxpPuPD4YI%2FuKvt12ft%2FkRwWBM7M9Z47jDbubEwxtoAuK747xkBxCnj%2BRvJCxzKjCwWA7Ob%2Ft3w6waIxDMbvIFJ5w4Epm%2BYr3%2B6NgJwuAtK4aWlpelU3WVxMFtByER5Mg2c5jiffb6eo%2Bfco9BBf1xBrexvC9utizauOw1UHYkfW4cyqPAuxnYV1fqo0K36H94rkT8Tqzw44nd5hXFeugZzCL%2FPvZ2%2BageUmM01nnHRhpR%2BJmnSNMeRVAtZiEW%2F98qIHcXmY7FjNUesiDSzmcVa4DM%2Fys%2BGXw%2BxdzIdHfAC9zZNVBCFme2aQDqS43ySHpuxyBB4v5GeSiApqmplu5tYyAg5Oh4onhgr2f6VgEQciuubXf1K9ysnblPVzlMBIqn9rfubiqdbtNmooImUfXNJIs2xBhtKM4%2B1SYqeIpOjlDDqeKNi0xuzmY2L4KxJebwfn6CVGI35syvg%2B5rrTKkGXjXtqrxScYpKuf0n1FoposcosbTSdbr%2BH56pU%2BUpSklvIzdyWBczIGibJKevuKO6BNB7s3gtrLlao%2BpdhYEgp3pFfd5XM20KeKyNZKV%2FmjRtonhbrb%2FoG8%2FiGtW%2FBgwp36b0rulseNtHDdWiu22yg4vMxjwiLbWP6h%2FA%2B3Wbd5GyCK7Gsa3kCgfCncnQaI20Nb6FYnyyJRWDqc52UhcAp%2F3AoU1NPIWSCmgVxtZfIPlqxLBKFo4j%2BMlWXH3XEBnz%2BZjLHX0swhYC%2FxgY6sAHPpEcSqjzdX1PFYDvDmjEHYIcuK1dmAyMPebox4X5x2hxgonOQgIYU2TTvA6lU9PuYWo472OfJ8PlEgxkiO8qj08k5uYCfyl1s4Ge35azFAq2XmXvelF%2Fqwa%2BEdmKn3n9ZeNPnC1mVyw5TN9FQhm3nE4cUq%2BsWcvhxdMi%2B5lq67XaLn8%2F57QUxM6PGhrEBWziMnOSMvL8CbV%2FshU6b7NHV8eTxAVnVaqnDg9%2FYlhYzow%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=a66bdb56ca57d8a462c9f2175bd237aaeb70601ffc0bcadc1c1dd69834b4cadc",
+      "file_size": 603814,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2020-04-07T08:37:17.985Z",
+  "allow_singular_disclosure_after": -172206882.83895248,
+  "singular_disclosure_allowed": true,
+  "vote_count": 96,
+  "voters": [
+    "0xtarun",
+    "foulenzer",
+    "a_d_a_m",
+    "lemonoftroy",
+    "rzx007x",
+    "un4gi",
+    "sameerphad72",
+    "leonishan",
+    "zeroxyele",
+    "themastersunil",
+    "and 86 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 4.7,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "high",
+      "privileges_required": "none",
+      "user_interaction": "required",
+      "scope": "unchanged",
+      "confidentiality": "low",
+      "integrity": "low",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 36920,
+    "asset_type": "URL",
+    "asset_identifier": "www.forescout.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
