@@ -1,0 +1,116 @@
+{
+  "id": 1271710,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMjcxNzEw",
+  "url": "https://hackerone.com/reports/1271710",
+  "title": "Broken Authentication and Session Management lead to take over account",
+  "state": "Closed",
+  "substate": "not-applicable",
+  "severity_rating": "high",
+  "readable_substate": "N/A",
+  "created_at": "2021-07-21T07:33:12.889Z",
+  "submitted_at": "2021-07-21T07:33:12.965Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "thund3r17",
+    "url": "/thund3r17",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTUzNTc1OCwicHVyIjoiYmxvYl9pZCJ9fQ==--8eb4e3f46efc93eae50846464b357c3925055425/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--a4d91faed3dff6024dfc1a7b7f8ccc6b45e38396/images.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 18,
+    "url": "https://hackerone.com/phabricator",
+    "handle": "phabricator",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/018/61446f7e6f0684c8c9f7c36c918b7ecd58183588_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/018/61446f7e6f0684c8c9f7c36c918b7ecd58183588_original.jpg/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Phabricator",
+      "twitter_handle": "phabricator",
+      "website": "http://phacility.com/phabricator/",
+      "about": "Phabricator is a collection of open source web applications that help software companies build better software."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2021-07-21T16:32:52.928Z",
+  "bug_reporter_agreed_on_going_public_at": "2021-07-21T15:51:16.097Z",
+  "team_member_agreed_on_going_public_at": "2021-07-21T16:32:52.820Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello, \nI found vulnerability using phone\n\nSummary : \nSession token weakness, allowing attackers to take over accounts\n\nTools :\nLightning.apk (Browser) \nSandroProxy.apk or you can use all available proxies\n\nSteps to Reproduce:\n1) Create a phacility account.\n2) Go to https://admin.phacility.com/settings/user/(username)/page/email/\n3) Add new account\n4) Open SandroProxy (Capture all http request) the request should look like this:\n\nPOST /settings/user/(username)/page/email/ HTTP/1.1\nHost: admin.phacility.com\nConnection: keep-alive\nContent-Length: 157\nsec-ch-ua: \" Not A;Brand\";v=\"99\", \"Chromium\";v=\"90\", \"Google Chrome\";v=\"90\"\nX-Phabricator-Csrf: B@5xu5frjn4f5238616917563d\nsec-ch-ua-mobile: ?1\nUser-Agent: Mozilla/5.0 (Linux; Android 8.1.0; vivo 1820) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.210 Mobile Safari/537.36\nX-Phabricator-Via: /settings/user/(username)/page/email/\nContent-Type: application/x-www-form-urlencoded\nAccept: */*\nOrigin: https://admin.phacility.com\nSec-Fetch-Site: same-origin\nSec-Fetch-Mode: cors\nSec-Fetch-Dest: empty\nAccept-Encoding: gzip, deflate, br\nAccept-Language: id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7,cs;q=0.6\nCookie: aura=u2FOcME6PSlT; admin_phusr=amer17; admin_phsid=ld7bdwzjadvg5x3go3wykgzj3blk3qrdidlqd452; halo=9LIv4U24kVpa\n\n__csrf__=B%402hmxctpgc672d004d5b2cc5c&__form__=1&__dialog__=1&new=true&email=asuuu17%40gmail.com&__submit__=true&__wflow__=true&__ajax__=true&__metablock__=3\n\nPay attention (email=), change the victim's email to the attacker email with the same token, in this case the attacker can enter his email\n\n## Impact\n\nThe weakness of the session token, allows the attacker to add his email and reset the password via the attacker's email",
+  "weakness": {
+    "id": 26,
+    "name": "Improper Access Control - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1383876,
+      "file_name": "poc.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/3ealeaf0idtwtvyanedfycwplhrg?response-content-disposition=attachment%3B%20filename%3D%22poc.mp4%22%3B%20filename%2A%3DUTF-8%27%27poc.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ3PTGXCBB%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T021451Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH4aCXVzLXdlc3QtMiJHMEUCICjPKCfEn7AzycH5jzZC7bvFmMGFnjr4oFB%2FNgW3fv16AiEAvEp1gK8uBkiiia7oKy7ZybEQRET%2F8yTlaL28zTnf3fsquwUI9%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDEUTE9utFMEn%2FQK%2FYiqPBVRkPSsYq7uvD9%2FivaWJFIoEuYA7tLMX2eEcpuuElpR9QkX5OJsNGxobnVIsj65e9n0XSOMTjUb7HT1bXgiYmpUxSGXKXH%2FvFY23mlNfEWpej3tzXKZXDg6Vp9%2F4gTo9nKxsSkX4KHBNReGnrV%2BmsbA%2FXVo1uCgEJg2HMUB3pjxo4Bnj9uWloEq1%2FbGRg2jZjgp2hnoBic0SgCCi0Lizfaqz656iQdzUQw0A3QtmzCZacMxI16BTroiegvDzcVXNf5L2IgwDJ7BdOHwbqwwFvoMN6tYc%2BvqkEWWGFgx%2Buh1b%2BoroG%2BtI044eCZYO2Btw8%2F3Ler6C8uk262h3IhH0RO0cR8LPeZg7Rkdq6mZhf60opgPJ6DoDsE27lPtDhNJQOftEa3gld8YHNcIsUxMaK8SR0N38XFwp2gPBCKUNN4BX1ilg3FNnncaDZjOZcKfVYpGICtr9IVuUYQidJKvLe%2B0%2Fs06h2uUW06e4bLzok5DBVHNGaFB9ns7%2BXIzZBM%2FipMiBopIu9yq2OC8s2I1D%2BhnOEN1Dc13cl0BJFBcFcK2GTOretKK%2BPwat9Sq%2Buo5VjihH7VlXZzjlBUJwZBbgvL26pNtw4uCocwWTanXDIvVFCEF3ht2t1iQMvIOkoYNtDyjI82AOy2NlWAz%2BVkDH4l53WKQu3f%2F%2FI%2FBAMeIgC2PXqdk6xcFleFCe8UkEk4PBljDaW1afSLK6FPF5keBH4paTYchEvBe5nuHjPfQfEF5Cgj7d7u9yZhoLCVi%2BuglEjy%2BIS4r8WGqzw8fiR9TPVeLYdiU4HY9AoKOALnQ6X6lN%2FxZIxr4HUKNi9x3fP9lLjTFpHrIJoq5lN8HLX4M7l5hs6fHTjQeHyv4hmzMMH5Qwgs%2B8xgY6sQFVBrHoNhlPezyl%2BxgBzHIDE0XJJjUMV6JDrYYRdNGfHBE51sVGxD8SBpdLQDw9CrNA2c4EJb52K84GGU4D6A1gI0eRq90SSQ7zTvwwycz6AuIYdlCtIWlte1%2BWcVYiH30RDk1i7WaBTHPyBWZ37qcQ4s4UKti1Lh%2BE7W2TYgH56XfqVMkh1ITF83feBaScIj4IzM1y8%2BpZi6wqAfD%2Batz9Z7DLBfbk719662jWXfOT%2FZo%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=e2c089a30e9b92522e5886f21205f0a8ab391e687b7501282cede6ff1183f793",
+      "file_size": 21609559,
+      "type": "video/mp4",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 3,
+  "voters": [
+    "pr0f0x01",
+    "destinedtohack",
+    "ekgaribadmi"
+  ],
+  "severity": {
+    "rating": "high",
+    "author_type": "User"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
