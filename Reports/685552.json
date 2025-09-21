@@ -1,0 +1,144 @@
+{
+  "id": 685552,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC82ODU1NTI=",
+  "url": "https://hackerone.com/reports/685552",
+  "title": "XSS in desktop client via invalid server address on login form",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2019-08-31T15:16:17.398Z",
+  "submitted_at": "2019-08-31T15:16:17.398Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "jplopezy",
+    "url": "/jplopezy",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/003/115/148192f6ec8b1f75f8c9b4c1c8d9be6782aab7c0_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13291,
+    "url": "https://hackerone.com/nextcloud",
+    "handle": "nextcloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Nextcloud",
+      "twitter_handle": "nextclouders",
+      "website": "https://nextcloud.com",
+      "about": "Access, share and protect your files, calendars, contacts, communication & more at home and in your enterprise."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2020-8189"
+  ],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2020-08-17T00:50:32.231Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-08-17T00:50:32.123Z",
+  "team_member_agreed_on_going_public_at": "2020-08-05T08:46:59.663Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Team!\n\nI have found this vulnerability that in my time would be called \"cross zone\" but at the moment I don't know.\n\nThe problem is found in the latest version of \"nextcloud.exe\" for your windows version.\n\nThe problem occurs with the initial screen where you ask to connect to a website.\n\nApparently when you put an invalid URI that generates some type of response code like 403, it is reported in a small window, as if it were an alert box, not in the main.\n\nThis \"alert box\" visualizes the response and to my impression (that's why I said the cross zone) has a little more permissions than the internet explorer.\n\nFor example, if the response code has an <S> test</S> it will interpret it as IE does.\n\nThat's fine, it would only be an html injection.\n\nThe problem, for example, is that it allows you to run a file like the calculator locally without any confirmation.\n\nThis vector works : <A HREF=\"file:///C:/WINDOWS/system32/calc.exe\">CALC.EXE</A>\n\nIn my opinion, response code errors are a problem and must be controlled by the application.\n\nFor the demonstration use the burp.\n\nBut basically any personal site where the response code building could be controlled could exploit it.\n\nI attach a video to make everything clearer.\n\n## Impact\n\nThe impact is that you can run local files without authorization (of the application) in a context where you should warn.\n\nIt should be filtered so as not to disturb that it is a vector.",
+  "weakness": {
+    "id": 60,
+    "name": "Cross-site Scripting (XSS) - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 571293,
+      "file_name": "nextcloud.webm",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/eAe6Aitre3r5FKfjpjomhU1U?response-content-disposition=attachment%3B%20filename%3D%22nextcloud.webm%22%3B%20filename%2A%3DUTF-8%27%27nextcloud.webm&response-content-type=video%2Fwebm&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ7BBVFU4D%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T092719Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJFMEMCHxWJeaa4jykUOtc8ZAfXBMblPV1osi%2BWpT0r90pmFgcCIGeyNYgMkok2PEBIjGsLh6Tg6KVm5cjve5rNcaV986NAKrEFCBAQAxoMMDEzNjE5Mjc0ODQ5IgzV2rTErDdfDMUGdowqjgWpUaTD3wWzPdoGMT0jK0ubefZ0uAwRPkW%2Bc9RS7PG%2B1WSWIgqxEJOv7EnqLzo0a5agVuMN81E8Uc2apuKVoJ%2BMUMIlEyW43ru9SB%2FYBUBydMDkdRCVOOpQDpdffpsi%2Ft6ZwbyDWLZD9Ecl3ivc7gYqTlQMbk9u8drKVL5NejotJKDENIOteNKoC0IRVlg%2F%2Fb7CTEUcD2hT2VMlegdizwoCRNIbyuVpR4OD54WRKL8lrOZDsRY1o1sa3Js2e41Zz261Tk5v9l0QO22l2606h2HijAnOgbs1iqylEwT3zZvttvLgl%2BG731DOoJApHFUl61WqqkOk0PWRAhm3ZW5F276vQxWrX%2BfW3Aekawbo05H2hbcB4KY7ok0oNu6tvjKzBac23Lhqcx97lWxCWI0icK%2F7WD3upBjDh4zDUaczIBv9ScHnEqxL4k2%2F%2BOuSpK4ks%2BH%2BzzfTmwoBhLpowCx%2FWIVyHYRqmNAVAFtPovFlCb7r0ijgUGiY7cEmBaKVaVcqGP2X1nU5iW21Jsx8BQ8icolepdjNycyzteoeHLCi7fDS%2BDD%2F6McIbdcTj1JU%2F6BIMYfTE%2FWaIRFW0byzlgNffJ9dFWdZQiNc1dy7el45JfEFjw0k3%2BrwvWVp%2FfhcoYS6RartW4HBjPxfj%2FMJLA2rK8M1DveHOfkPj836ALQzy3KJeCJUCJYCw8SnH3uEZoWma2OUvTCXLslwT3Sv%2B4Jw7qUH8R35CIBB6%2B9UseJNMizKQ6S%2FKr2%2BhfuW%2BKXa1pD4tM%2F%2F9AInwpgBcsGxlKQ5MtRL7WwUHLe9VL%2F%2F1JHLui0yIm3313hhIp30ZcuKga7MxVK0Pu3gsnbcAEYF0aiw2jLIDSKqfp8nTgI%2B%2F6QidGMwh7O%2BxgY6swE%2F9VVU2yseos21Gc5pMk2mN1cWuKsmekBIOtmO3eI6aS9gGibD2U1actblhNIUJBrxk8RTcUy9cOD4eLBV8cVyr1BDxYnOjVpyR%2Bf6qxJlD88BnwWTMZg%2B1KcXbJLaG2PItDARFzaEBBj%2F6ODXFQgBQfJaasBiOMI0Pk1HJZrXaQtWV2%2Bzun%2B8yHCqqKDzovG%2FLHK2jF2DNErtDi8PNkwLc01tXAcxAoeaVEaAKJ5x650jgg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=e9058aec31fc036f09b15174e05cb73cd35bfdca74609833e5c27c49dc39c2d1",
+      "file_size": 13665823,
+      "type": "video/webm",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2020-09-04T08:46:59.778Z",
+  "allow_singular_disclosure_after": -159237619.79807276,
+  "singular_disclosure_allowed": true,
+  "vote_count": 17,
+  "voters": [
+    "cxzer0",
+    "mashoud1122",
+    "m00n_knight",
+    "mik317",
+    "khizer47",
+    "pr0f0x01",
+    "sa1tama0",
+    "enessltk",
+    "hitman_",
+    "nhlanhla_dludlu",
+    "and 7 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 4.7,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "physical",
+      "attack_complexity": "low",
+      "privileges_required": "low",
+      "user_interaction": "required",
+      "scope": "changed",
+      "confidentiality": "low",
+      "integrity": "low",
+      "availability": "low"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 77,
+    "asset_type": "DOWNLOADABLE_EXECUTABLES",
+    "asset_identifier": "Desktop Client",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
