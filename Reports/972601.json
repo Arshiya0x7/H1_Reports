@@ -1,0 +1,131 @@
+{
+  "id": 972601,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC85NzI2MDE=",
+  "url": "https://hackerone.com/reports/972601",
+  "title": "Open Redirect at https://oauth.secure.pixiv.net",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2020-09-02T01:56:14.267Z",
+  "submitted_at": "2020-09-02T01:56:14.470Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "zimmer75",
+    "url": "/zimmer75",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/QnE16zGFjcK2ZLqyNFPWJcqE/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 29446,
+    "url": "https://hackerone.com/pixiv",
+    "handle": "pixiv",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/zwZW6NWs5m7fkL6SV9jkncqW/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/zwZW6NWs5m7fkL6SV9jkncqW/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "pixiv",
+      "twitter_handle": "pixiv",
+      "website": "https://www.pixiv.net",
+      "about": "Online community platform for creators all over the world."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2020-12-22T01:24:27.491Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-12-21T23:09:15.536Z",
+  "team_member_agreed_on_going_public_at": "2020-12-22T01:24:26.940Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nHello @pixiv security team,  i hope you are well, i noticed you can redirect users to another domain if you send an invalided scope.\n\n**Vulnerable Url**\n\n* `https://oauth.secure.pixiv.net/v2/auth/authorize?client_id=Y1olfIApoCNuSGzx9kTgIbf5Wk4R&redirect_uri=https%3A%2F%2Fsketch.pixiv.net%2Fsession%2Fpixiv%2Fcallback&response_type=code&scope=read-email+read-x-restrict+read-birth+write-upload+read-profile+write-profile+read-favorite-users&state=security_token%3D5cb310fefea19a5cb56307af3488a816921413bc70b5b142%2Crequest_type%3Ddefault`\n\n## Steps To Reproduce:\n\n  *   In the request looks for the **scope** parameter and change his value to *ggg*.\n \n  *    Looks for the **redirect_uri** parameter and change it for an arbitrary domain, i.e `https://example.com`\n\n  *   Open the link in your browser and done.\n  \n  *   `https://oauth.secure.pixiv.net/v2/auth/authorize?client_id=Y1olfIApoCNuSGzx9kTgIbf5Wk4R&redirect_uri=https%3A%2F%2Fexample.com%2Fsession%2Fpixiv%2Fcallback&response_type=code&scope=ggg&state=security_token%3D5cb310fefea19a5cb56307af3488a816921413bc70b5b142%2Crequest_type%3Ddefault`\n\n{F972733}\n\n## Impact\n\nIt may lead users to a phishing site and an attacker can steals his credentials.",
+  "bounty_amount": "200.0",
+  "formatted_bounty": "$200",
+  "weakness": {
+    "id": 53,
+    "name": "Open Redirect"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 972733,
+      "file_name": "pixiv_open_redirect_poc.mkv",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/fuuNqzuR6mYW767v22tpQ1i2?response-content-disposition=attachment%3B%20filename%3D%22pixiv_open_redirect_poc.mkv%22%3B%20filename%2A%3DUTF-8%27%27pixiv_open_redirect_poc.mkv&response-content-type=video%2Fwebm&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYPOFYQG4%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T075524Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIBmu3GQHg70X330n2%2BBanZR7V9qvbbd%2Fmtpos1MgwZ%2FHAiB6F7F2fV1OvA82Y%2BFy9JoX8eB3otaacV5N8wgGVpxb8yq7BQj%2B%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMuz2KclKcXvYWn7PdKo8Fb6mKB6T1lr%2FMKU8PB2L4HnA1SvA4a0tVn1Si9zDh7xasjgEG%2BQ0ExVu260uKJsjBoy4yFn9bD15Vq73n4k8m51BOtQCWPRnHwuGxYJXMmulwYOI2l6NkpThun1XhLwU5TAy4MVOs0YhYauCquXWzEcRnoW8s3eI0tcTuoxeTHVc8%2FQ5%2BJxaC%2FY6Q0qS2DfZDFx450ak27mw%2Fb4ffWDzB4mpCPBjOUYcm088ZFL3I7KnY4IJ4NxG1Yx4gZiprXsLxeqOVu9plDTPGoNamgMK4I9dJN3qjRw6vyud%2FY4vDO3HZc6daDhoG5NTCKMjodvAElOh6jGWaUc%2BjenP9Zru1SUAtsO07pFGBF1LFBMziGojS17nRwBeTvq%2FVkEgqfmWLNpnADtU%2BVdKQfX%2FrU%2FoSdaAX6eQkla17GWkIqITnXEHfUFiekccUommEoHBodv%2B1tGXgHgvb5%2Fy%2Fttt%2FK6gIdz5amyhpaUjT%2BhuISg39DrhNQNHCq8NL0rJXNftQIofIHT%2FkfG8Kk6cNUVs%2FSKQEZbRR4hxyaGDb%2FLnDUJ73mi6qUJnFJd7ZUTJqomQLyK9SIUvsXYp1sKAb6CSArLzLhkVGXRJocBZO2TtMtfz8RFIdQeMwvoLfEToF8sHFoSchZkY1FbZFDViSmthHTEb13mLVVcnHyKvJ0me84XMRaJrZyOYniu0sC0TghGoUL4pDoDJrgdNRP0GrMfQ%2FSo3IZ3UkI%2BdzCOUQhUktc3RIEcBMxCpL0CpfqPLFyGgCKI1J%2BnOc88mJLo7buzKRzgZk2UfgJtaeqMccmMBdmniF4bxMNwfs00fS7T23JgTaOeO2pu4I1wytxyUg3djZ4kjo0vkS7TYMEJP3oRuAqeMkAjC%2Fhb7GBjqyAQIGbGO9fWXRcAZ2FIK6F0O%2FPFHSK1S27nOgLrCXnNYiXtl3UMe8wMzebECB%2FtVSlTcXF%2FhvKoWR63G8NRLCvVaMl%2Fc%2ByEU6EK170SO2YPtrhy1HjztHhaTZ191Mm4IHHZRlqrDXSIzI9S3BAA%2Fo7MPBDi47cMQ04DEd%2BbhIPxPgwsleYFF4GNeuUS%2BNCHcpeQKGyxj1MXEZdGqorw%2B0zoHmr2p52Kiv7rkhtSqdK4XrHuQ%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=f763ac7bc3be6d218215961742bfa734159b709cb8cc4dddf95b640ab4dd0147",
+      "file_size": 4071437,
+      "type": "video/webm",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 28,
+  "voters": [
+    "loaymorad",
+    "xploiterr",
+    "badcracker",
+    "sklnhunt",
+    "ali",
+    "bibekshah",
+    "tess",
+    "2026",
+    "xsstestov",
+    "0x478",
+    "and 18 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 12024,
+    "asset_type": "URL",
+    "asset_identifier": "accounts.pixiv.net",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
