@@ -1,0 +1,133 @@
+{
+  "id": 1332433,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMzMyNDMz",
+  "url": "https://hackerone.com/reports/1332433",
+  "title": "RCE on 17 different Docker containers on your network",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "critical",
+  "readable_substate": "Resolved",
+  "created_at": "2021-09-07T16:45:45.769Z",
+  "submitted_at": "2021-09-07T16:45:45.843Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "0x0luke",
+    "url": "/0x0luke",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/Vbo4CrJ7Y9bLqt1jQxFxvH6X/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13291,
+    "url": "https://hackerone.com/nextcloud",
+    "handle": "nextcloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Nextcloud",
+      "twitter_handle": "nextclouders",
+      "website": "https://nextcloud.com",
+      "about": "Access, share and protect your files, calendars, contacts, communication & more at home and in your enterprise."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2021-10-20T15:07:37.818Z",
+  "bug_reporter_agreed_on_going_public_at": "2021-09-20T15:07:35.478Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nI was able to get RCE on 17 different docker containers, ranging from postgres and some prod enviroments\n\n## Steps To Reproduce:\nI found that there was a unconfigured portainer.io service running on http://spreed-demo.nextcloud.com:9000\n\n  1. I created an administrator account with the login creds admin:password (please change these credentials!!!)\n  2. The site redirected me to the portainer backend, which displayed the docker containers running on the box, see first screen shot\n  3. I was able to fully interact with the docker containers running, the site also allows me to execute arbitrary bash commands on the boxes, See second screenshot\n\nOther info that was disclosed to me from the panel:\nInternal IP addresses,\nDocker disk volumes\nDocker images,\nThe docker stacks\n\n## Supporting Material/References:\n\n{F1439949}\n{F1439951}\n\n## Impact\n\nAn attacker can directly take over each docker container on this system to deploy his own malware, run DDoS attacks etc from inside Nextclouds services.",
+  "weakness": {
+    "id": 70,
+    "name": "Code Injection"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1439949,
+      "file_name": "RCE.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/hw6mgt8mo7lbywj1f12drnvuebto?response-content-disposition=attachment%3B%20filename%3D%22RCE.PNG%22%3B%20filename%2A%3DUTF-8%27%27RCE.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ7YXEB66U%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T012344Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEID%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIGgbni997Y%2FPicZYRQjPF2jhlRwca7QDELf6N4Ej0suPAiA3vWlWbv9WcGL9TFSBAV4jJYu3L211LeLKlg7XCYW%2Fvyq7BQj5%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMKDvOTVX2R0ng5lLSKo8FQa4kkdzfqEeaXGwar%2BzCEInZJ9T9ri2xckIAsTX7UpOGHnpKe8SahorIOHg%2BZX6LAy0%2FcWG10%2B1ux7nwO26VPRdY9aB5xCDZ2t3QALcaMFWHDij%2BNii3%2FvKGaGfReT3sAOiEwLac2a2ElNgz%2FRXj6912lZkSUN0tSSpVgb1LKh39XnhY8jHirWvHjAIJAzSm1N490svOKw8vr%2BdgBvJyrvsE4%2BuqZtqZoVvETQ1SpbkMBou54JXYCjWcA9KsDij2Ba1oRJwhz1uDLBYHjU%2BNn1qpnm4XEAAE3SLBMDrvRXnSgn%2Fb1R3RSZUdUvYgXQ5IWhOv5S9Asuw4wdVJsxMRJGiqowb332fEkjJZQDSO389UH6Tdg%2B9z3Z2qrA5o39b%2FzQsG166nojWjAfc3ve8oc1U2XeWV%2FcSPeZpIyLtKzlGWiRkRtI6a%2BoDTLliANcbon1pJedcj96og1Vzk1k0io98CY5x2cZzsY1TyF0cqaixF98TzGVVlyzj%2FHPE62W5aDW%2F%2B%2BYf62Me8B%2BA0BgCsAsJF50AIhn%2B2k738pjN6lXLptjFTHHcGwqdjNlj7d9a5hVPB1CaKVB%2BZY%2BmBe3wz%2BAD8TtcDlzuB63B9HOLby5m5aDFn%2BWWCoaZJVUsQkB73uHe7qZb%2Bmux8yxOq3JK5HLsOgdVnJsa0Ui%2B89XIfZFMKVwoRPFhOrPlPAINY07PzwGEyAdv%2FR6KY7jTdrjxFy9c3mVykeBWQ0qC4qmdWp2EnaW83FLjp6dufYjpPko6Fk6XmWWFgt8XEismtTIMDywZCK5H9%2Fh2z9L%2Bo%2BDRvA0kiNooB1EDr0qV5nQa6%2B0wlAx5ITg7aQ4450iN0HumrdTLdXQUGIgh3arDvAYGnTDCB97zGBjqyAb6jd6eigiM796Kfjqm1kpb4mTbp3hiYpNoAoJ0pdGB972LwCKAEE23h4YvYIEoONrzjfXk2W6KOizv2t%2BgDDoyvcZRXt3ZsnApyE2cBgzrfVGjbWLQ4lZ0v9B2TLoElGcj3hONtZVUHsafXcSHbv%2B%2Fq7tSP3Sl2BK2V8xL%2FXmlLPjQTm49%2F%2FIFdr%2BO9hZbpCaG%2F2a9Zb%2BnAFtnoT0dg8pWZzHuBTNShLQsyqx58PezO7Xo%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=17ef700e93bc2f0fb304ab3453eb50dec868967f993b7f2dc74ebe1ef3d2ffd7",
+      "file_size": 134332,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1439951,
+      "file_name": "RCE2.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/n97rbipy0cn9ai6bhkn4u8yqgwrb?response-content-disposition=attachment%3B%20filename%3D%22RCE2.PNG%22%3B%20filename%2A%3DUTF-8%27%27RCE2.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ7YXEB66U%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T012344Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEID%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIGgbni997Y%2FPicZYRQjPF2jhlRwca7QDELf6N4Ej0suPAiA3vWlWbv9WcGL9TFSBAV4jJYu3L211LeLKlg7XCYW%2Fvyq7BQj5%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMKDvOTVX2R0ng5lLSKo8FQa4kkdzfqEeaXGwar%2BzCEInZJ9T9ri2xckIAsTX7UpOGHnpKe8SahorIOHg%2BZX6LAy0%2FcWG10%2B1ux7nwO26VPRdY9aB5xCDZ2t3QALcaMFWHDij%2BNii3%2FvKGaGfReT3sAOiEwLac2a2ElNgz%2FRXj6912lZkSUN0tSSpVgb1LKh39XnhY8jHirWvHjAIJAzSm1N490svOKw8vr%2BdgBvJyrvsE4%2BuqZtqZoVvETQ1SpbkMBou54JXYCjWcA9KsDij2Ba1oRJwhz1uDLBYHjU%2BNn1qpnm4XEAAE3SLBMDrvRXnSgn%2Fb1R3RSZUdUvYgXQ5IWhOv5S9Asuw4wdVJsxMRJGiqowb332fEkjJZQDSO389UH6Tdg%2B9z3Z2qrA5o39b%2FzQsG166nojWjAfc3ve8oc1U2XeWV%2FcSPeZpIyLtKzlGWiRkRtI6a%2BoDTLliANcbon1pJedcj96og1Vzk1k0io98CY5x2cZzsY1TyF0cqaixF98TzGVVlyzj%2FHPE62W5aDW%2F%2B%2BYf62Me8B%2BA0BgCsAsJF50AIhn%2B2k738pjN6lXLptjFTHHcGwqdjNlj7d9a5hVPB1CaKVB%2BZY%2BmBe3wz%2BAD8TtcDlzuB63B9HOLby5m5aDFn%2BWWCoaZJVUsQkB73uHe7qZb%2Bmux8yxOq3JK5HLsOgdVnJsa0Ui%2B89XIfZFMKVwoRPFhOrPlPAINY07PzwGEyAdv%2FR6KY7jTdrjxFy9c3mVykeBWQ0qC4qmdWp2EnaW83FLjp6dufYjpPko6Fk6XmWWFgt8XEismtTIMDywZCK5H9%2Fh2z9L%2Bo%2BDRvA0kiNooB1EDr0qV5nQa6%2B0wlAx5ITg7aQ4450iN0HumrdTLdXQUGIgh3arDvAYGnTDCB97zGBjqyAb6jd6eigiM796Kfjqm1kpb4mTbp3hiYpNoAoJ0pdGB972LwCKAEE23h4YvYIEoONrzjfXk2W6KOizv2t%2BgDDoyvcZRXt3ZsnApyE2cBgzrfVGjbWLQ4lZ0v9B2TLoElGcj3hONtZVUHsafXcSHbv%2B%2Fq7tSP3Sl2BK2V8xL%2FXmlLPjQTm49%2F%2FIFdr%2BO9hZbpCaG%2F2a9Zb%2BnAFtnoT0dg8pWZzHuBTNShLQsyqx58PezO7Xo%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=1d474a74d3a8a20c1de8514997b796b29d441918a007eb03ea2d51db88ba6058",
+      "file_size": 23469,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2021-10-20T15:07:35.543Z",
+  "allow_singular_disclosure_after": -123675368.76340923,
+  "singular_disclosure_allowed": true,
+  "vote_count": 10,
+  "voters": [
+    "akashhamal0x01",
+    "sa1tama0",
+    "cryptographer",
+    "d4w",
+    "meispi",
+    "cyb0rgs",
+    "zelad",
+    "b0a3893fb8f8cc88ecd0483",
+    "di993r",
+    "rainsw0rd"
+  ],
+  "severity": {
+    "rating": "critical",
+    "author_type": "User"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
