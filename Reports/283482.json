@@ -1,0 +1,124 @@
+{
+  "id": 283482,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yODM0ODI=",
+  "url": "https://hackerone.com/reports/283482",
+  "title": "Login Cross Site Request Forgery ",
+  "state": "Closed",
+  "substate": "duplicate",
+  "readable_substate": "Duplicate",
+  "created_at": "2017-10-27T10:36:11.988Z",
+  "submitted_at": "2017-10-27T10:36:11.988Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "bluedangerforyou",
+    "url": "/bluedangerforyou",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/212/167/d4fe589a65a1733508ddc0a5d29090eeaaf3dbfc_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 21745,
+    "url": "https://hackerone.com/infogram",
+    "handle": "infogram",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/021/745/553edf21f45ba8f73faba5d308e0d91fc026fef0_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/021/745/553edf21f45ba8f73faba5d308e0d91fc026fef0_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Infogram",
+      "twitter_handle": "infogram",
+      "website": "http://infogram.com",
+      "about": "Make Infographics and Charts that People Love"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2017-10-27T11:34:22.851Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2017-10-27T11:33:56.583Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Login form is not protected against Cross Site Request Forgery.\nAn attacker can craft html page containing POST information to have victim sign into an attacker's account, where the victim can add information assuming he/she is logged into the correct account, where in reality, the victim is signed into the attacker's account where the changes are visible to the attacker.\n\nThe real issue here, is that when the victim runs the html Proof of Concept, the account is logged in to attacker's without any visible warnings, thus the victim is capable of theft of data and potentially vulnerable to account takeover.\n\nSteps to reproduce\n1. Create victim account\n2. Create attacker account\n3. Run attached Proof of Concept in same browser as victim and press submit (The POF can be modified to look like a fake blog post relating to infogram as someone searching a blog post is likely logged in and using the web application already)\n4. On the victim browser, he/she is logged in as an attacker without any indication unless the page is manually refreshed.\n5. Go to library and add a facebook post, or a chart.\n6. On attacker browser, refresh page and navigate to library. You will see the victims added, or edited projects.\n\n\nMitigation\n\nPlease add a csrf token to login request or make some type prompt that the session has ended when the new login from attacker occurs.\n\nI have attached a video proof of concept with audio of my voice explaining and instructing.\nI have also attached the HTML proof of concept.",
+  "weakness": {
+    "id": 45,
+    "name": "Cross-Site Request Forgery (CSRF)"
+  },
+  "original_report_id": 280366,
+  "original_report_url": "https://hackerone.com/reports/280366",
+  "attachments": [
+    {
+      "id": 233367,
+      "file_name": "infogramLOGINCSRF.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/233/367/da38580331ce9396700fa0b5a23916136e804684/infogramLOGINCSRF.mp4?response-content-disposition=attachment%3B%20filename%3D%22infogramLOGINCSRF.mp4%22%3B%20filename%2A%3DUTF-8%27%27infogramLOGINCSRF.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ7TY53NAO%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T195339Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJD%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIEXkR1lg621bE17cu%2Fl3fXwdZqc3ohK8RLoUW6neTOnUAiEA1hVcNDQ0HwLz92IFS%2BgVT485kbOVACCMZOb9uO2j69oqsQUIGRADGgwwMTM2MTkyNzQ4NDkiDLnpL0YhLpymbc6hLiqOBV1CaTmkhcUZlzYsktvfJWg%2Fm1RG06rbDZybD1fxzCGn3wbF4jjjJUQ2ScgmEFpzTl1Q3AqXLGOli0TDRTqN2rNHVDdk4bU9V5M%2FeBVdBo4qrt0f5je9X3fGbikIf26eWeEKLG3EhEqFK2lAUZmV5315nncfTk6hoszJHkQ8sRjDlN2HS9TtXTryF61OFTtRVjJNTH%2BLtNyV9BtIJQn%2F4BxNCnlGbsixm2CKXEaiC8CXDcYojRSbHDKW7Ynd%2BssAEjCFrYz5xQb5%2F9WDmBLkZLsp0RZpFKEuTO%2FsxE8MZ53IetZilewLtTExCRLi4yVWvd6RKr9z%2Bg38vAoLhkIRJrh1Pnoc4muTfSuaNqR2zPwuqRRpQExXPBLZs2Dqho2td7D7D59nhiLMBwoeQFq4toyGBQeFp1loI2ba2KWA27Ojs5Xy%2FNhd3CtKtQeCeoC0sTvfmZgUDu236C%2B2Cd%2FPkiNKuO0VXWq5SmNbmS%2BDDcaZSgyT2Ck2tu8LfLeYvCB6UjYC5SqpGoJ%2BBhN6Yj2o57WPXYo3yw8Za7dxfzDLusTZLfTNCXg%2FKga55KcTAusLwlnLEkCSqFGv8YSDe%2F7ANND2JHh505IlqbZg7nNadcE%2Fn5uhBqfdHzfoMEWLwtDA7cvwEB0GGxv%2FZ8j7tHIIajXdhkWblxZroQGISMj6R%2BcF0ynatCZQ%2Fnl%2FmMLA%2BtAnjy6LxZrFxJTL8ehsF48BaqaMPWtTFY0489glRg%2B%2BTCBrMRND4%2BWnJ7%2Fc7ldXTCwGQsEqO0sHuX3SDIfa4KqORwxQfFf1JJIU%2B2%2FTnEu3ZOKwCrvKT6%2Fl%2B6ujUKNDXnXQJSWA1z%2FYyX99rBlKWt0JXX7B4l%2F4R69pcDKn16ZcgjD6ycDGBjqxAXAuX6Omt6PkikjdkxQ2Y2mRMR65OggU4DqSRgS2wUwGnciOVqgDnaca3BCcAJ%2BmMGOYDkGFsgFv89LcJ%2FH6%2Fq6ggTPzdb%2B9jO69O1SyqbRuJbfu%2BuhDWmWaIgUrRddktOFe%2FFZgznaOMgpq1Hb2Ktm%2FqrF85hbzPR%2B1oVZR5hU%2BjyTSBXUExbJ0qdus2cJ%2FmUIVFrnuCqJHUn1yOziH5zT45%2B%2B9%2FMz7i%2BFiDiPI%2BsEnuw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=0aa1b059fac1c75d43034f8b2d62a8633c3937fbe5cbb802d257c66973c69ae2",
+      "file_size": 16815472,
+      "type": "video/mp4",
+      "moderated": null
+    },
+    {
+      "id": 233368,
+      "file_name": "infogramLOGINCSRF_POC.html",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/233/368/7306423df21075fa41b6ad351d549a75cb44b09d/infogramLOGINCSRF_POC.html?response-content-disposition=attachment%3B%20filename%3D%22infogramLOGINCSRF_POC.html%22%3B%20filename%2A%3DUTF-8%27%27infogramLOGINCSRF_POC.html&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ7TY53NAO%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T195339Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJD%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIEXkR1lg621bE17cu%2Fl3fXwdZqc3ohK8RLoUW6neTOnUAiEA1hVcNDQ0HwLz92IFS%2BgVT485kbOVACCMZOb9uO2j69oqsQUIGRADGgwwMTM2MTkyNzQ4NDkiDLnpL0YhLpymbc6hLiqOBV1CaTmkhcUZlzYsktvfJWg%2Fm1RG06rbDZybD1fxzCGn3wbF4jjjJUQ2ScgmEFpzTl1Q3AqXLGOli0TDRTqN2rNHVDdk4bU9V5M%2FeBVdBo4qrt0f5je9X3fGbikIf26eWeEKLG3EhEqFK2lAUZmV5315nncfTk6hoszJHkQ8sRjDlN2HS9TtXTryF61OFTtRVjJNTH%2BLtNyV9BtIJQn%2F4BxNCnlGbsixm2CKXEaiC8CXDcYojRSbHDKW7Ynd%2BssAEjCFrYz5xQb5%2F9WDmBLkZLsp0RZpFKEuTO%2FsxE8MZ53IetZilewLtTExCRLi4yVWvd6RKr9z%2Bg38vAoLhkIRJrh1Pnoc4muTfSuaNqR2zPwuqRRpQExXPBLZs2Dqho2td7D7D59nhiLMBwoeQFq4toyGBQeFp1loI2ba2KWA27Ojs5Xy%2FNhd3CtKtQeCeoC0sTvfmZgUDu236C%2B2Cd%2FPkiNKuO0VXWq5SmNbmS%2BDDcaZSgyT2Ck2tu8LfLeYvCB6UjYC5SqpGoJ%2BBhN6Yj2o57WPXYo3yw8Za7dxfzDLusTZLfTNCXg%2FKga55KcTAusLwlnLEkCSqFGv8YSDe%2F7ANND2JHh505IlqbZg7nNadcE%2Fn5uhBqfdHzfoMEWLwtDA7cvwEB0GGxv%2FZ8j7tHIIajXdhkWblxZroQGISMj6R%2BcF0ynatCZQ%2Fnl%2FmMLA%2BtAnjy6LxZrFxJTL8ehsF48BaqaMPWtTFY0489glRg%2B%2BTCBrMRND4%2BWnJ7%2Fc7ldXTCwGQsEqO0sHuX3SDIfa4KqORwxQfFf1JJIU%2B2%2FTnEu3ZOKwCrvKT6%2Fl%2B6ujUKNDXnXQJSWA1z%2FYyX99rBlKWt0JXX7B4l%2F4R69pcDKn16ZcgjD6ycDGBjqxAXAuX6Omt6PkikjdkxQ2Y2mRMR65OggU4DqSRgS2wUwGnciOVqgDnaca3BCcAJ%2BmMGOYDkGFsgFv89LcJ%2FH6%2Fq6ggTPzdb%2B9jO69O1SyqbRuJbfu%2BuhDWmWaIgUrRddktOFe%2FFZgznaOMgpq1Hb2Ktm%2FqrF85hbzPR%2B1oVZR5hU%2BjyTSBXUExbJ0qdus2cJ%2FmUIVFrnuCqJHUn1yOziH5zT45%2B%2B9%2FMz7i%2BFiDiPI%2BsEnuw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=a4bcec3051c12ef7e6409a593d661f04f3d6817f6105fc4ee11899ff4e7cd33f",
+      "file_size": 409,
+      "type": "text/html",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 3,
+  "voters": [
+    "pr0f0x01",
+    "geekninja",
+    "bluedangerforyou"
+  ],
+  "structured_scope": {
+    "databaseId": 870,
+    "asset_type": "URL",
+    "asset_identifier": "infogram.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
