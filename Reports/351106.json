@@ -1,0 +1,150 @@
+{
+  "id": 351106,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zNTExMDY=",
+  "url": "https://hackerone.com/reports/351106",
+  "title": "resetreportedcount & updatetags doesn't verify appid param",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2018-05-13T11:05:19.956Z",
+  "submitted_at": "2018-05-13T11:05:19.956Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "creekie",
+    "url": "/creekie",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 23363,
+    "url": "https://hackerone.com/valve",
+    "handle": "valve",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/023/363/c78d46a7d0ea39e3a15a7c19c1a48634f2571eb9_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/023/363/c78d46a7d0ea39e3a15a7c19c1a48634f2571eb9_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Valve",
+      "twitter_handle": "",
+      "website": "https://www.valvesoftware.com",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2018-07-02T23:49:14.415Z",
+  "bug_reporter_agreed_on_going_public_at": "2018-06-06T14:46:07.740Z",
+  "team_member_agreed_on_going_public_at": "2018-07-02T23:49:14.272Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "This **requires** an account that has admin permissions on any community hub & Fiddler (not 100% required, but I'll use it for the demonstration.)\n\n**resetreportedcount**:\n\nStep 1:\nGo to any UGC in the hub you have admin access on, open Fiddler if you haven't yet, click Clear Reports and click OK on the dialogbox.\n\nStep 2:\nDrag that request over to the composer tab, modify the id param in the body to any UGC (Outside your hub!), and execute the request! You've now reset all reports on that UGC item.\n\n**updatetags**:\n\nStep 1:\nGo to any **guide** in the hub you have admin access on, open Fiddler if you haven't yet, click Update Tags and just select a few checkboxes and click Update. \n\nStep 2: \nDrag that request over to the composer tab, modify the id param in the body to any guide (Outside your hub!), and execute the request! You've now updated that guide's tags.\n\n**Guide before**\n{F296857}\n\n**Guide after**\n{F296858}\n\n## Impact\n\nAn attacker could reset all reports on UGC, and could also change a guide's tags.",
+  "bounty_amount": "750.0",
+  "formatted_bounty": "$750",
+  "weakness": {
+    "id": 27,
+    "name": "Improper Authentication - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 296857,
+      "file_name": "Steam_2018-05-13_12-51-18.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/296/857/50a5db93aad8271234d20aa5a1757b8f5bd7f945/Steam_2018-05-13_12-51-18.png?response-content-disposition=attachment%3B%20filename%3D%22Steam_2018-05-13_12-51-18.png%22%3B%20filename%2A%3DUTF-8%27%27Steam_2018-05-13_12-51-18.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQVEJIXONP%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T174439Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIH8AfdM1IKkiBfUEz%2FBO7LFjez%2BUQDg01sIrpsf4EUcBAiBSpVIGQhH6dvIVEdS013E3d77NSPuZ6tkJqUiut1d5ayqxBQgXEAMaDDAxMzYxOTI3NDg0OSIM5KKvvFo%2FqCzdKYojKo4F1%2BxUKjmtoEnCcoIjJvK408ALZil4QNP4qd%2B9SxE2nN4XJtMsRrYo337HtrFn5oO%2FaZ%2Fo7msCxdECjjQnR%2B%2BiOIRw47xO%2BN%2BroD4eFU0Lis8VXL7dneMK0%2FZKVqVB%2BC9tGiRF8jr69GjaOncBp0t%2BX3cMNxBXvRLz3bKIbAg4La2IjqOjzgBTnn%2BIQ3Yhe4BZXvg3RG5sRY2fxBARtQlU7dKqtW6H02iITGdunmfJ1IT%2B3XU2w03%2FcST6rc293dotAdvtrqi681dI6SPYP5SZFsFaToGOXjSXYCaiYNylKPtCRLxqaQMRG5TQX9%2ByCCOVPymZiYFyP%2BNOadkXnUbMb2eQoJYrzOSkfeHj2bWS3RmbO0DRT%2Ff3P4edxF6mtA4y5a5Rbb9QQmxfvt2CB%2B9H4K0szePZZxL3RAcHqBhvq60iVi2HG9fbJX6X9KRmIe60IihzAb8bPagbeh9aJD2NPOr97NdRsEOyoTZVTVqJq3dZTERme2wlhIVMu5zrFQmWXEFknB4fS17jS5t8TKS4KTjVFpEZmE7fMH738HaaBGO4Vg2iNfyjYzLcWfZx%2FUbEXuG1t98I6yBnAESEHAv346Q0BPQr%2Bz87XrCSQdjmWab9zu6ALnBNaKQo4GsSmEixRTkV%2BfZTJFbhc6J1kQlOqv5S36YxT%2B7%2FW3YfSFHXiDLqoNDDaFU6Xrxf4B3AZla5abRXGNVFTHsf6qhKV9VxT%2BVVeQn%2FdCSZGarNUggIqacMenhuAX0nJZEiqxIEeJsJkkM%2BdIXSTEfPjpuSr4EgWjzOTshSC70x%2BG3z5Xy9Rg0898Dqo9%2B6bgq2Y6eUlND5h9YFj2B6tvh%2FxxMTFsGZpgowwHabY0dQaABJE0FHMIWMwMYGOrIB%2FnjXTbo03i5xP3rcMU3bObaCEWOYTy%2F50Ggf7zk3XIOVnx9L4WAz0%2BkC4QuUVgTdg4m3vSVaCadxQKgpnOARKNEU7hiIdSjWNWsznEUhz3m0VcGL8VLeBZxihvQtGtDTEtGjHNLS%2FKP80xsNti6GBmErPMO5xp0uYHZmDW87sx6pMfyUJD3jZY9hW1E%2BtCtsgwzAj7%2FoAV6Xj647N%2F89fogX1xb57jhfm0OpuwqOUaJLQw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=8d82490a675600a3c7c67dc98fbbbf4852bff0b77348cd17fb3b5874854d326b",
+      "file_size": 257504,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 296858,
+      "file_name": "Steam_2018-05-13_12-52-22.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/296/858/a57fa14ef81a43ef7cdd31e2f0f5018674a26828/Steam_2018-05-13_12-52-22.png?response-content-disposition=attachment%3B%20filename%3D%22Steam_2018-05-13_12-52-22.png%22%3B%20filename%2A%3DUTF-8%27%27Steam_2018-05-13_12-52-22.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQVEJIXONP%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T174439Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIH8AfdM1IKkiBfUEz%2FBO7LFjez%2BUQDg01sIrpsf4EUcBAiBSpVIGQhH6dvIVEdS013E3d77NSPuZ6tkJqUiut1d5ayqxBQgXEAMaDDAxMzYxOTI3NDg0OSIM5KKvvFo%2FqCzdKYojKo4F1%2BxUKjmtoEnCcoIjJvK408ALZil4QNP4qd%2B9SxE2nN4XJtMsRrYo337HtrFn5oO%2FaZ%2Fo7msCxdECjjQnR%2B%2BiOIRw47xO%2BN%2BroD4eFU0Lis8VXL7dneMK0%2FZKVqVB%2BC9tGiRF8jr69GjaOncBp0t%2BX3cMNxBXvRLz3bKIbAg4La2IjqOjzgBTnn%2BIQ3Yhe4BZXvg3RG5sRY2fxBARtQlU7dKqtW6H02iITGdunmfJ1IT%2B3XU2w03%2FcST6rc293dotAdvtrqi681dI6SPYP5SZFsFaToGOXjSXYCaiYNylKPtCRLxqaQMRG5TQX9%2ByCCOVPymZiYFyP%2BNOadkXnUbMb2eQoJYrzOSkfeHj2bWS3RmbO0DRT%2Ff3P4edxF6mtA4y5a5Rbb9QQmxfvt2CB%2B9H4K0szePZZxL3RAcHqBhvq60iVi2HG9fbJX6X9KRmIe60IihzAb8bPagbeh9aJD2NPOr97NdRsEOyoTZVTVqJq3dZTERme2wlhIVMu5zrFQmWXEFknB4fS17jS5t8TKS4KTjVFpEZmE7fMH738HaaBGO4Vg2iNfyjYzLcWfZx%2FUbEXuG1t98I6yBnAESEHAv346Q0BPQr%2Bz87XrCSQdjmWab9zu6ALnBNaKQo4GsSmEixRTkV%2BfZTJFbhc6J1kQlOqv5S36YxT%2B7%2FW3YfSFHXiDLqoNDDaFU6Xrxf4B3AZla5abRXGNVFTHsf6qhKV9VxT%2BVVeQn%2FdCSZGarNUggIqacMenhuAX0nJZEiqxIEeJsJkkM%2BdIXSTEfPjpuSr4EgWjzOTshSC70x%2BG3z5Xy9Rg0898Dqo9%2B6bgq2Y6eUlND5h9YFj2B6tvh%2FxxMTFsGZpgowwHabY0dQaABJE0FHMIWMwMYGOrIB%2FnjXTbo03i5xP3rcMU3bObaCEWOYTy%2F50Ggf7zk3XIOVnx9L4WAz0%2BkC4QuUVgTdg4m3vSVaCadxQKgpnOARKNEU7hiIdSjWNWsznEUhz3m0VcGL8VLeBZxihvQtGtDTEtGjHNLS%2FKP80xsNti6GBmErPMO5xp0uYHZmDW87sx6pMfyUJD3jZY9hW1E%2BtCtsgwzAj7%2FoAV6Xj647N%2F89fogX1xb57jhfm0OpuwqOUaJLQw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=0684f24e9509e726eb44750b59c215146868e36a960cbbab09f1cefe1515679d",
+      "file_size": 256586,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 18,
+  "voters": [
+    "ali",
+    "miguel_santareno",
+    "savitar0x01",
+    "apapedulimu",
+    "eveeez",
+    "pr0f0x01",
+    "m7mdharoun",
+    "japz",
+    "cryptographer",
+    "wragg-s",
+    "and 8 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 4.1,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "high",
+      "user_interaction": "none",
+      "scope": "changed",
+      "confidentiality": "none",
+      "integrity": "low",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 2430,
+    "asset_type": "URL",
+    "asset_identifier": "steamcommunity.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
