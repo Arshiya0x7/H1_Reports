@@ -1,0 +1,126 @@
+{
+  "id": 283821,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yODM4MjE=",
+  "url": "https://hackerone.com/reports/283821",
+  "title": "XSS when Shared",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2017-10-28T19:34:41.914Z",
+  "submitted_at": "2017-10-28T19:34:41.914Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "haystack_needle",
+    "url": "/haystack_needle",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6Mjg5NjYsInB1ciI6ImJsb2JfaWQifX0=--f2e836dc023e2d7d7fd5cf6bee5e85bccef180dd/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--2de8067d228529d65848a4eeed0bed0bb2531bc3/1074014-haystack.jpg"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 21745,
+    "url": "https://hackerone.com/infogram",
+    "handle": "infogram",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/021/745/553edf21f45ba8f73faba5d308e0d91fc026fef0_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/021/745/553edf21f45ba8f73faba5d308e0d91fc026fef0_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Infogram",
+      "twitter_handle": "infogram",
+      "website": "http://infogram.com",
+      "about": "Make Infographics and Charts that People Love"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2017-11-01T09:58:30.767Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-10-31T17:53:34.819Z",
+  "team_member_agreed_on_going_public_at": "2017-11-01T09:58:30.590Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Introduction\nXSS on an embedded piece of code that, when shared, may make it seem as if it was infogram.com that was doing the malicious act.\n\n## Proof of Concept\n1. Create an account\n2. Create a project titled \"script>alert(1);</script>\"\n3. Click on share \n\nHere's an example of the share embedded code:\n```\n<div class=\"infogram-embed\" data-id=\"d08ad077-3490-4241-b9a9-057da53e2e7d\" data-type=\"interactive\" data-title=\"<script>alert(1);</script>\"></div><script>!function(e,t,s,i){var n=\"InfogramEmbeds\",o=e.getElementsByTagName(\"script\"),d=o[0],r=/^http:/.test(e.location)?\"http:\":\"https:\";if(/^\\/{2}/.test(i)&&(i=r+i),window[n]&&window[n].initialized)window[n].process&&window[n].process();else if(!e.getElementById(s)){var a=e.createElement(\"script\");a.async=1,a.id=s,a.src=i,d.parentNode.insertBefore(a,d)}}(document,0,\"infogram-async\",\"https://e.infogram.com/js/dist/embed-loader-min.js\");</script><div style=\"padding:8px 0;font-family:Arial!important;font-size:13px!important;line-height:15px!important;text-align:center;border-top:1px solid #dadada;margin:0 30px\"><a href=\"https://infogram.com/d08ad077-3490-4241-b9a9-057da53e2e7d\" style=\"color:#989898!important;text-decoration:none!important;\" target=\"_blank\"><script>alert(1);</script></a><br><a href=\"https://infogram.com\" style=\"color:#989898!important;text-decoration:none!important;\" target=\"_blank\" rel=\"nofollow\">Infogram</a></div>\n```\n\n## Potential Fixes\n* Display the project title so the web surfer knows it's not actually infogram.com that is that's doing the malicious act\n* Prevent the project name to be created in the first place. \n\n\n## Consequences:\nAn XSS like this is likely to **tarnish the trust between the Infogram.com brand and its customers**. A hacker can make an html page of just solely this embeded piece of HTML code. When a customer or user clicks on a link that would redirect the user to the embedded infogram.com page, it would seem as though infogram.com is not trustable by the user. Therefore, the brand gets less trusted over time. This is just one of many malicious acts a hacker can do.",
+  "weakness": {
+    "id": 61,
+    "name": "Cross-site Scripting (XSS) - Reflected"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 233765,
+      "file_name": "infogram-test.html",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/233/765/ae1246d881090e8b2adb0bb2881f8b9447f7ec6c/infogram-test.html?response-content-disposition=attachment%3B%20filename%3D%22infogram-test.html%22%3B%20filename%2A%3DUTF-8%27%27infogram-test.html&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZ7PMGTAW%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T194930Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDO4x%2Fpx8gQZl02vXdejigWG0bDUqwUjXPehVP1WpCRAwIhALG3sSp0darhKEB35IZ%2FA%2BG8pFF%2FFxQ6NuBiHl9GUUfKKrEFCBsQAxoMMDEzNjE5Mjc0ODQ5Igwc7QmYh6jH6lhi3hcqjgXyLwMiJqB%2FCAcI66qSGkkel6%2Bqn7u1O2hQafMsmapQmFxJ6N%2BRZNlO1uphua5qUxqkx8zPqN7a4B1rcHQVUOSzaDR2mXM%2BWL4jO6oKnivrwhsujBC6YTiBPh7ev887GHZqukjZYxt9mr5rqrsqIWRqs5b85M0vTOBoHBtQOdhYv3nYZL3FxI4aZ7jqCaXDwBCL8jU4b0tNZaZhpzUPM5kKEd2vVDM07MQfBlON2FJnsR8%2BaYZ8Fjde2u9mefwCMkaCGMraR8scdPF7BI%2FN0gvXJhLPjWBQR9U3UWYCCp%2BWaQVk83EN4vikgCZsdb35kD8alLKgty%2F%2BieBruOFhrHBNefOTrf7uQX%2FGEA5doEC1AcHNCisvgYvdhxw7f9gZoF7oWsKHcAong7mRkF%2Ff%2B68a8cyh7SRoKoD2yphVH2OZFuCseQNesDviEVwYVHOtMa5JP67p2dgqHXSoVKjms%2BEfK7LXXsw%2BhoGuzQIcwsbJC%2BwlFSGzhxEFthPSDwJrfimDIcbO1W7FYuWK3Y9zocBpTg1otb4tmUDBkQLXBrIVq4uhsRamwgVGQh17C5wGWRSkQKxlmCpv5w81EjkcqtU1CqiyOe3OeRDHhtC1U3XUTwduURV%2FUZ93FV0CLGHwKAK1U69j5%2BbXvd%2B%2BBnyYzs7jwKgfNIT0ATWJER05J0nYlaEGuM9Vf5IMVIM1gaieNK12CP3mVsrqsxJyfglyrfRFbGJhXOJ%2FWSUV4yLjy6w5Egrs5bNjL7qvA3ySuZwersgQP8XjTnUmB%2FHNNlT2sE7ynrbrMoItjC%2F5Zt03xzNIjp4adzO3EbBYsjpAxTFXzJ0AeTBdbb3VBG281GlIt3g84E6fKBH0iZfHSTTDdJkwuPDAxgY6sAGHlnOWP%2BPQxD54Nv9B0Q2OwbTTAz5U%2BRQqB3RTEjhXTR8Xmt41%2FAz8cIba4q%2FKsMIPHSi25obiDiNjEPkuD9oOoNZFeyc%2FvO5Pa7wu%2FhcbIfEVNFyuo0UlGZCGyo6aSP43aJy3RqGg2goYUcTM%2B8ed65FhJ1ImVLJZpqpKdRTrFv9lf98PF7OnPsPd5obCq7hOnGOkTA8MJIdLEpMdYwY9CnNnfvJgJphJ1MTVksBsKQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=2fb6a32a95c741697d95c88f6efa689c6193117ae0260f8849cc29e866721292",
+      "file_size": 1089,
+      "type": "text/html",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-11-30T17:53:34.931Z",
+  "allow_singular_disclosure_after": -246419756.0097915,
+  "singular_disclosure_allowed": true,
+  "vote_count": 6,
+  "voters": [
+    "r3y",
+    "eveeez",
+    "zerotoone",
+    "mondhers",
+    "b4155f7c29acd42c27d007a",
+    "haystack_needle"
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 870,
+    "asset_type": "URL",
+    "asset_identifier": "infogram.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
