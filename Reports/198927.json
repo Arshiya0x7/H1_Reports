@@ -1,0 +1,127 @@
+{
+  "id": 198927,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xOTg5Mjc=",
+  "url": "https://hackerone.com/reports/198927",
+  "title": "Parsing invalid unicode codepoints using json c extension (2.0.1+) triggers a segfault",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "none",
+  "readable_substate": "Resolved",
+  "created_at": "2017-01-17T06:15:41.770Z",
+  "submitted_at": "2017-01-17T06:15:41.770Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "dgollahon",
+    "url": "/dgollahon",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 7724,
+    "url": "https://hackerone.com/ruby",
+    "handle": "ruby",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/007/724/bb067434deef370d6a0b16c2cbbc030b57c75e92_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/007/724/bb067434deef370d6a0b16c2cbbc030b57c75e92_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Ruby",
+      "twitter_handle": "",
+      "website": "https://www.ruby-lang.org",
+      "about": "A Programmer's Best Friend"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2017-10-25T13:57:33.611Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2017-09-25T13:57:21.249Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Using the default `json` library packaged with ruby, one can trigger a segmentation fault by submitting a string with a unicode escape sequence in the range between ` \\ud800-\\udbff` (https://en.wikipedia.org/wiki/UTF-16#U.2BD800_to_U.2BDFFF).\n\nThis is can lead to a denial of service attack by segmentation fault and could be a possible point of memory corruption or remote code execution. Any program that calls `JSON.parse` on untrusted input (which is, of course, exceedingly common in web APIs/apps) is affected. I have also reproduced this bug on a private API server I control.\n\nMinimal reproduction:\n```ruby\nrequire 'json'; JSON.parse('\"\\ud800\"')\n```\n\nThe resulting segfault output and crash report are attached.\n\nTested in 2.3.3 and 2.4.0. Does NOT occur in 2.2.5.\n\nIn 2.3.3 and 2.4.0, if `json/pure` is required, an error is raised instead of a segmentation fault.\n\n```ruby\nrequire 'json/pure'; JSON.parse('\"\\ud800\"') # => JSON::ParserError: Caught Encoding::InvalidByteSequenceError at '': incomplete \"\\xD8\\x00\" on UTF-16BE\n```\nAdditionally, if you append 6 valid characters after the escape sequence, the escaped value is replaced with '?' and the following character is destroyed (surprising behavior, but no segfault).\n\n```ruby\nrequire 'json';\nJSON.parse('\"\\ud800123456\"') #  => \"?23456\"\n2.3.3 :006 > JSON.parse('\"\\ud800\\ud800123456\"') # => \"𐀀123456\"\n2.3.3 :007 > JSON.parse('\"\\ud800\\ud800\\ud800123456\"') # => \"𐀀?23456\"\n```\n\nIn 2.2.5, bare values are not accepted so testing this requires using a key or string value inside a json object as shown below:\n```ruby\nrequire \"json\"; p JSON.parse(\"{\\\"key\\\":\\\"#{\"\\\\u\" + format(\"%.04x\", 56296)}\\\"}\") # => {\"key\"=>nil}\n```\nIn this case the result is `nil`. Instead, it should likely be an encoding error.\n\nScript I used to iterate over all the codepoints in the range to verify it was not only a handful of specific values:\n```ruby\n# gem 'json', '2.0.1'\n# gem 'json', '2.0.2'\n# gem 'json', '2.0.3'\nrequire 'json'\n\n# or 0...1<<16 to explore the entire range\n(0xd800..0xdbff).each do |i|\n  uni = '\\u' + format(\"%.04x\", i)\n\n  program = \"require 'json'; JSON.parse('\\\\\\\"#{uni}\\\\\\\"')\"\n  system(\"ruby -e \\\"#{program}\\\"\")\n\n  status = $?.to_i\n  if status != 0\n    puts \"#{uni} -> exit status #{status}\"\n  end\nend\n```",
+  "weakness": {
+    "id": 2,
+    "name": "Memory Corruption - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 152894,
+      "file_name": "segfault.txt",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/152/894/8950add2270b5705bff848e67b79fc422bdaeb3b/segfault.txt?response-content-disposition=attachment%3B%20filename%3D%22segfault.txt%22%3B%20filename%2A%3DUTF-8%27%27segfault.txt&response-content-type=text%2Fplain&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUNXCE6YL%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T195650Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDTqjg3%2F60zMbBv7Y%2FmGhKkm3GmrH3kxkZindmKEbQ8BAIgU6oFyNOx91SPL1yh3n4qa6w6Suy2ZZsRH%2F3QXJ0zfn4qsQUIGxADGgwwMTM2MTkyNzQ4NDkiDDmfL9Egc9HEdTNjDSqOBVzAkKHHcqMcDpeuaSCjFaKNDIz39dvxYduW5YPZ0IWglk9GqF48bMAxZmKuQA3utmy7%2BghVmkw5X8X5YOVuhVC%2FIEHQWLg6fBSyn1VD7XpfAbi8YKmWpuMEV9y2NuxjzeAEkZMVHXz78FmNKUk0UzoScP214X3Hntvlj25GmNeFVDggCpnIYIRTjz6lyqIg8I2EgVq4GpB9oYlMVU5lMZCJ2PQJeJS0CIYvyw5HREPinKc2iLVK4Pe%2B0bNIc3yqCaou%2BrA%2BieCpmr8vnLCyrkO4jBVnoovtP%2Bum5CqxfGcxp5YAGXgLREEuFtc0nY5t%2BBHXF07Ihp9aZDosuEj6OeIrDDwpioycdp7eN1vwD9Sdkz0Lm%2FTaRgkdZEQ%2FS%2FruTs0g6rHlpf1wUX7M6LSFX3%2FXdKuM8euvRh1aCnO%2F92CT8PE62UW2bBcCNdFUJcSSfT0CguV0aEHXFW5vezs8jinBCZCON23nPquPbE%2F1bOLcOEsALR6hphFbJSMql%2BOf9CKwZfWN85hdzq12XFfFE8P9AX6BWgY9Vvosa%2BjXU4Qeg2OKVcVPqZsk6tx1UMgNrwKXdH2agiN%2FPI%2FIqh5ppaDbZuNYt1Y1hIND0IAYHmsyqLVMYhL04bpOYSqaRHQQXVrGNqJKnUwdvUdKDji0IopXg9onJ8gyQPbmWxpXje4%2Bda0FS1NwAORZ%2FLnPTV2ohOHSad6wkQAdRY36Lfz1HWkRzEzcDKu7I473kpLexahRvl1K8x6rUa6KmiV8bEGHkir9SOf1eA6rBw7EEcKSfZqgXMqC90rDheCMBfrF3wHKIedPYrx8SjwBJ%2B8BxXREYIzu2xl0nEUz22OOH%2Bm%2FG7QVetMxNW7qs66HudlmHjCR%2BsDGBjqxASjXXkC23Ath0pdbOUYJmJWIWkJn5jAOvzdFLAwsMJwbNPFkZ05jRfF0usEvjzSDaEBcgTKvP0V1ZxrUrWAPqlbxLQIh9MPO2wGpqUcMZvVRtnJD7WNgLR7l7%2Bky7LymGL1o8v9PX4sPAV81eXujmX0DUAiCCbP4HQlsB%2FXzw66%2Fc1N7l7voC4ygwYREKnPLgiox2ok2ZFma6zp721Pml0LO5ymAECII%2BKRajF%2F8ZgxK9w%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=0173c6e2ef817a9bb805bb5f41749d6f05d33cce3c2dd4787c105e4b1caf6e13",
+      "file_size": 7208,
+      "type": "text/plain",
+      "moderated": null
+    },
+    {
+      "id": 152915,
+      "file_name": "ruby_2017-01-16-165949_Daniels-MacBook-Pro.crash",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/152/915/a1ceef83ec5711f87ec8b4b350ab45a979c2c6ee/ruby_2017-01-16-165949_Daniels-MacBook-Pro.crash?response-content-disposition=attachment%3B%20filename%3D%22ruby_2017-01-16-165949_Daniels-MacBook-Pro.crash%22%3B%20filename%2A%3DUTF-8%27%27ruby_2017-01-16-165949_Daniels-MacBook-Pro.crash&response-content-type=text%2Fplain&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUNXCE6YL%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T195650Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDTqjg3%2F60zMbBv7Y%2FmGhKkm3GmrH3kxkZindmKEbQ8BAIgU6oFyNOx91SPL1yh3n4qa6w6Suy2ZZsRH%2F3QXJ0zfn4qsQUIGxADGgwwMTM2MTkyNzQ4NDkiDDmfL9Egc9HEdTNjDSqOBVzAkKHHcqMcDpeuaSCjFaKNDIz39dvxYduW5YPZ0IWglk9GqF48bMAxZmKuQA3utmy7%2BghVmkw5X8X5YOVuhVC%2FIEHQWLg6fBSyn1VD7XpfAbi8YKmWpuMEV9y2NuxjzeAEkZMVHXz78FmNKUk0UzoScP214X3Hntvlj25GmNeFVDggCpnIYIRTjz6lyqIg8I2EgVq4GpB9oYlMVU5lMZCJ2PQJeJS0CIYvyw5HREPinKc2iLVK4Pe%2B0bNIc3yqCaou%2BrA%2BieCpmr8vnLCyrkO4jBVnoovtP%2Bum5CqxfGcxp5YAGXgLREEuFtc0nY5t%2BBHXF07Ihp9aZDosuEj6OeIrDDwpioycdp7eN1vwD9Sdkz0Lm%2FTaRgkdZEQ%2FS%2FruTs0g6rHlpf1wUX7M6LSFX3%2FXdKuM8euvRh1aCnO%2F92CT8PE62UW2bBcCNdFUJcSSfT0CguV0aEHXFW5vezs8jinBCZCON23nPquPbE%2F1bOLcOEsALR6hphFbJSMql%2BOf9CKwZfWN85hdzq12XFfFE8P9AX6BWgY9Vvosa%2BjXU4Qeg2OKVcVPqZsk6tx1UMgNrwKXdH2agiN%2FPI%2FIqh5ppaDbZuNYt1Y1hIND0IAYHmsyqLVMYhL04bpOYSqaRHQQXVrGNqJKnUwdvUdKDji0IopXg9onJ8gyQPbmWxpXje4%2Bda0FS1NwAORZ%2FLnPTV2ohOHSad6wkQAdRY36Lfz1HWkRzEzcDKu7I473kpLexahRvl1K8x6rUa6KmiV8bEGHkir9SOf1eA6rBw7EEcKSfZqgXMqC90rDheCMBfrF3wHKIedPYrx8SjwBJ%2B8BxXREYIzu2xl0nEUz22OOH%2Bm%2FG7QVetMxNW7qs66HudlmHjCR%2BsDGBjqxASjXXkC23Ath0pdbOUYJmJWIWkJn5jAOvzdFLAwsMJwbNPFkZ05jRfF0usEvjzSDaEBcgTKvP0V1ZxrUrWAPqlbxLQIh9MPO2wGpqUcMZvVRtnJD7WNgLR7l7%2Bky7LymGL1o8v9PX4sPAV81eXujmX0DUAiCCbP4HQlsB%2FXzw66%2Fc1N7l7voC4ygwYREKnPLgiox2ok2ZFma6zp721Pml0LO5ymAECII%2BKRajF%2F8ZgxK9w%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=9fd445f853e0e8177fbe33ef1d2473b37dcce04740a7c38123718b602e89ffe2",
+      "file_size": 14862,
+      "type": "text/plain",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-10-25T13:57:21.322Z",
+  "allow_singular_disclosure_after": -249544769.1100792,
+  "singular_disclosure_allowed": true,
+  "vote_count": 4,
+  "voters": [
+    "yassinek3ch",
+    "eveeez",
+    "spetr0x",
+    "b4155f7c29acd42c27d007a"
+  ],
+  "severity": {
+    "rating": "none",
+    "author_type": "Team"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
