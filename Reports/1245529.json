@@ -1,0 +1,145 @@
+{
+  "id": 1245529,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMjQ1NTI5",
+  "url": "https://hackerone.com/reports/1245529",
+  "title": "No Rate Limit On Forgot Password Page",
+  "state": "Closed",
+  "substate": "not-applicable",
+  "severity_rating": "medium",
+  "readable_substate": "N/A",
+  "created_at": "2021-06-27T06:08:21.839Z",
+  "submitted_at": "2021-06-27T06:08:22.039Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": true,
+    "username": "bcbc04131e9a7775cc46c97",
+    "url": "/bcbc04131e9a7775cc46c97",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13428,
+    "url": "https://hackerone.com/acronis",
+    "handle": "acronis",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/e54TDdWdgLKsH3h1oFpK26bq/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/e54TDdWdgLKsH3h1oFpK26bq/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Acronis",
+      "twitter_handle": "Acronis",
+      "website": "https://www.acronis.com",
+      "about": "Complete integrated cybersecurity and data protection for MSPs and IT teams"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2021-07-09T13:25:32.949Z",
+  "bug_reporter_agreed_on_going_public_at": "2021-07-09T13:25:32.871Z",
+  "team_member_agreed_on_going_public_at": "2021-07-06T09:49:24.826Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary\nA little bit about Rate Limit:\nA rate limiting algorithm is used to check if the user session (or IP-address) has to be limited based on the information in the session cache.\nIn case a client made too many requests within a given time frame, HTTP-Servers can respond with status code 429: Too Many Requests.\n\n\n## Steps To Reproduce\n[add details for how we can reproduce the issue]\n \nVisit https://account.acronis.com/\nLogin and then click on forgot password \nEnter your mail and click on Forgot Password\n\nStep 2- Intercept This Request In Burp And Forward Till You Found Your NumberStep 3- Now Send This Request To Intruder And Repeat It as many as time By Fixing Any Arbitrary Payload Which Doesn't No Effect Request I Choose Accept-Language: en-US,en;q=0.$9$\n\nPOST /v2/auth/password/reset HTTP/1.1\nHost: account.acronis.com\nConnection: close\nContent-Length: 36\nAccept: application/json, text/plain, */*\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36\nContent-Type: application/json;charset=UTF-8\nOrigin: https://account.acronis.com\nSec-Fetch-Site: same-origin\nSec-Fetch-Mode: cors\nSec-Fetch-Dest: empty\nReferer: https://account.acronis.com/\nAccept-Encoding: gzip, deflate\nAccept-Language: en-US,en;q=0.9\nCookie: _ga=GA1.2.1812368333.1624773555; _gid=GA1.2.1077432380.1624773555; _gat_UA-149943-47=1\n\n{\"email\":\"fexec99607@paseacuba.com\"}\n\nStep 3- Now Send This Request To Intruder And Repeat It as many as time By Fixing Any Arbitrary Payload Which Doesn't No Effect Request I Choose Accept-Language: en-US,en;q=0.$9$\n\nPOST /v2/auth/password/reset HTTP/1.1\nHost: account.acronis.com\nConnection: close\nContent-Length: 36\nAccept: application/json, text/plain, */*\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36\nContent-Type: application/json;charset=UTF-8\nOrigin: https://account.acronis.com\nSec-Fetch-Site: same-origin\nSec-Fetch-Mode: cors\nSec-Fetch-Dest: empty\nReferer: https://account.acronis.com/\nAccept-Encoding: gzip, deflate\nAccept-Language: en-US,en;q=0.$9$\nCookie: _ga=GA1.2.1812368333.1624773555; _gid=GA1.2.1077432380.1624773555; _gat_UA-149943-47=1\n\n{\"email\":\"fexec99607@paseacuba.com\"}\n\nStep 4 - See You Will Get 200, 204 ok Status Code & 100 + Email In Your INBOX\nSee It Is Resulting In Mass Mailing Or Email Bombing To Your Users Which Is Bad For Business Impact.\n\n## Impact\n\nIf You Are Using Any Email Service Software API Or Some Tool Which Costs You For Your Email This Type Of Attack Can Result in You In Financial Lose And It Can Also Slow Down Your Services It Can Take Bulk Of Storage In Sent Mail Although If Users Are Affected By This Vulnerability They Can Stop Using Your Services Which Can Lead To Business Risk",
+  "weakness": {
+    "id": 26,
+    "name": "Improper Access Control - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1354917,
+      "file_name": "Capture.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/ed2hzjm78vtjq23s1obxw71w3rz1?response-content-disposition=attachment%3B%20filename%3D%22Capture.PNG%22%3B%20filename%2A%3DUTF-8%27%27Capture.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYXA2JSSL%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T022026Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH4aCXVzLXdlc3QtMiJHMEUCIQC9JgjrvVUHLexbFFv1tEgfY61VXBaWjZG5Y1kCBeTTRwIgN4w9WZOIFqxTGgZtblXFHwLNndfRzCx7%2FtF990wpwqAquwUI9%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDFQQKMJ34gpArjRt1yqPBfsavkZG4y0a4%2B%2B6zExz7sIfTEiWsrYLUFI%2B2rH%2FMqEC5JKgvwN34AGHEcsJ6FYUyKBDyQvrKwNlUx1Dv6e69ooLk9%2FMwiE22BIdReSXJuRdc56g5VV0%2B4RAAjWzaggh5VSlobr4TGZcr0VEAJBljJ9xv71OuyL4%2FJspexJlmcgTHUxdCQYBOnAacgW8c4FLQXZqhY%2BJE%2BnGI7EuKx6E%2F5k0JEXErJOsVu0LtxE4wNrOwhGWzV%2BIA7BAkZvD9dd655%2BFzwD0nID%2FN36wizb6FRNXOsX93t%2Fm0wyHunGcvNKYfYDumcaKrR6mWgQeCDll%2BMomNPzEU6WUVdw%2BGKnckwUQVkrHCCeNAkqeL6LI6WiixgaTnnRaDOKz78g5QbTAy4a2kaywzuDPi6QHuRLZj3calmuqJQsHUJoQGsjexurUfZFmj0C1zz0lcAO48Dk888Ke2DdpvqUxJiY48beUl3v5B%2BnA8MRoQHTNMbyykk%2FuGKeiyFN54LUX7Q9aZXTV9fCu1f7DQKASWyWyRFdh4jLvHjKpSKwgNGJ2RJN7UrTRWO4WFfHLdNtyd2HpmT6TKv8DdOGpepARtBExTdU0w%2FstYcBn5e8bOgzUy9ujlcXJzBmvVgncLf1wK2d1LpCURcjpvoETmc3jpEmrnGDCKOSAy51TQTGSlqCXXwNApBTB2F2g6dI2dFi0T4YT08nbH0NFt2NhbnxBWyQlfRpRuRxA00gmv68Y8fRcn4GfP2Ur83OwMCndv4YUWq9jrRjeeKgC0PWX5yLbw5nflu7UVQGVfR0Ct2MPqcXfxmETgsh8jtV92SNqz0URr5eEN%2F7pTkS8skAfG1lo%2F13vu0OHsjVncbEMZ5ICBvJjyrWbPNkwlci8xgY6sQG%2B8Sed1scznEQp2l1oRVJoEoysZ8Uqp8zg1M3o42tyMwi%2BhBVuG%2FXGy1juWBwLBOTkdns%2BN3JdhwQnI3%2B%2FR6eHLGUyPB5xgieePV4Rj3%2FJ33lTbVxkHrvkIPdi%2Bp8jfQZJuyKwz6kN5IR%2FlR6OFVtN2oUwkN00DbVY%2FTZSaZcu%2BFRFJwNsFITbZqHpWyLk40OOFMeXoemxRC2JZzw380gA7oh3tqKilPIQfcSPzDvqOoo%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=d0cc602eb902131f3d31bcf4d2950be4e5ea05a26c9429235bcd47b80871140c",
+      "file_size": 143704,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1354918,
+      "file_name": "bandicam_2021-06-27_11-29-32-427.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/2uw8oqwk8ruuopoc7e66jmj65u38?response-content-disposition=attachment%3B%20filename%3D%22bandicam_2021-06-27_11-29-32-427.mp4%22%3B%20filename%2A%3DUTF-8%27%27bandicam_2021-06-27_11-29-32-427.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYXA2JSSL%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T022026Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH4aCXVzLXdlc3QtMiJHMEUCIQC9JgjrvVUHLexbFFv1tEgfY61VXBaWjZG5Y1kCBeTTRwIgN4w9WZOIFqxTGgZtblXFHwLNndfRzCx7%2FtF990wpwqAquwUI9%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDFQQKMJ34gpArjRt1yqPBfsavkZG4y0a4%2B%2B6zExz7sIfTEiWsrYLUFI%2B2rH%2FMqEC5JKgvwN34AGHEcsJ6FYUyKBDyQvrKwNlUx1Dv6e69ooLk9%2FMwiE22BIdReSXJuRdc56g5VV0%2B4RAAjWzaggh5VSlobr4TGZcr0VEAJBljJ9xv71OuyL4%2FJspexJlmcgTHUxdCQYBOnAacgW8c4FLQXZqhY%2BJE%2BnGI7EuKx6E%2F5k0JEXErJOsVu0LtxE4wNrOwhGWzV%2BIA7BAkZvD9dd655%2BFzwD0nID%2FN36wizb6FRNXOsX93t%2Fm0wyHunGcvNKYfYDumcaKrR6mWgQeCDll%2BMomNPzEU6WUVdw%2BGKnckwUQVkrHCCeNAkqeL6LI6WiixgaTnnRaDOKz78g5QbTAy4a2kaywzuDPi6QHuRLZj3calmuqJQsHUJoQGsjexurUfZFmj0C1zz0lcAO48Dk888Ke2DdpvqUxJiY48beUl3v5B%2BnA8MRoQHTNMbyykk%2FuGKeiyFN54LUX7Q9aZXTV9fCu1f7DQKASWyWyRFdh4jLvHjKpSKwgNGJ2RJN7UrTRWO4WFfHLdNtyd2HpmT6TKv8DdOGpepARtBExTdU0w%2FstYcBn5e8bOgzUy9ujlcXJzBmvVgncLf1wK2d1LpCURcjpvoETmc3jpEmrnGDCKOSAy51TQTGSlqCXXwNApBTB2F2g6dI2dFi0T4YT08nbH0NFt2NhbnxBWyQlfRpRuRxA00gmv68Y8fRcn4GfP2Ur83OwMCndv4YUWq9jrRjeeKgC0PWX5yLbw5nflu7UVQGVfR0Ct2MPqcXfxmETgsh8jtV92SNqz0URr5eEN%2F7pTkS8skAfG1lo%2F13vu0OHsjVncbEMZ5ICBvJjyrWbPNkwlci8xgY6sQG%2B8Sed1scznEQp2l1oRVJoEoysZ8Uqp8zg1M3o42tyMwi%2BhBVuG%2FXGy1juWBwLBOTkdns%2BN3JdhwQnI3%2B%2FR6eHLGUyPB5xgieePV4Rj3%2FJ33lTbVxkHrvkIPdi%2Bp8jfQZJuyKwz6kN5IR%2FlR6OFVtN2oUwkN00DbVY%2FTZSaZcu%2BFRFJwNsFITbZqHpWyLk40OOFMeXoemxRC2JZzw380gA7oh3tqKilPIQfcSPzDvqOoo%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=6a5d17ed4c21b2eebf7e4a3bb90262ee6118f15bbb4eb368835886cfab2e0d39",
+      "file_size": 14875487,
+      "type": "video/mp4",
+      "moderated": null
+    },
+    {
+      "id": 1354919,
+      "file_name": "bandicam_2021-06-27_11-37-32-330.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/4obuhjw3tegd22i4g77n2r6yz62h?response-content-disposition=attachment%3B%20filename%3D%22bandicam_2021-06-27_11-37-32-330.mp4%22%3B%20filename%2A%3DUTF-8%27%27bandicam_2021-06-27_11-37-32-330.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYXA2JSSL%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T022026Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH4aCXVzLXdlc3QtMiJHMEUCIQC9JgjrvVUHLexbFFv1tEgfY61VXBaWjZG5Y1kCBeTTRwIgN4w9WZOIFqxTGgZtblXFHwLNndfRzCx7%2FtF990wpwqAquwUI9%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDFQQKMJ34gpArjRt1yqPBfsavkZG4y0a4%2B%2B6zExz7sIfTEiWsrYLUFI%2B2rH%2FMqEC5JKgvwN34AGHEcsJ6FYUyKBDyQvrKwNlUx1Dv6e69ooLk9%2FMwiE22BIdReSXJuRdc56g5VV0%2B4RAAjWzaggh5VSlobr4TGZcr0VEAJBljJ9xv71OuyL4%2FJspexJlmcgTHUxdCQYBOnAacgW8c4FLQXZqhY%2BJE%2BnGI7EuKx6E%2F5k0JEXErJOsVu0LtxE4wNrOwhGWzV%2BIA7BAkZvD9dd655%2BFzwD0nID%2FN36wizb6FRNXOsX93t%2Fm0wyHunGcvNKYfYDumcaKrR6mWgQeCDll%2BMomNPzEU6WUVdw%2BGKnckwUQVkrHCCeNAkqeL6LI6WiixgaTnnRaDOKz78g5QbTAy4a2kaywzuDPi6QHuRLZj3calmuqJQsHUJoQGsjexurUfZFmj0C1zz0lcAO48Dk888Ke2DdpvqUxJiY48beUl3v5B%2BnA8MRoQHTNMbyykk%2FuGKeiyFN54LUX7Q9aZXTV9fCu1f7DQKASWyWyRFdh4jLvHjKpSKwgNGJ2RJN7UrTRWO4WFfHLdNtyd2HpmT6TKv8DdOGpepARtBExTdU0w%2FstYcBn5e8bOgzUy9ujlcXJzBmvVgncLf1wK2d1LpCURcjpvoETmc3jpEmrnGDCKOSAy51TQTGSlqCXXwNApBTB2F2g6dI2dFi0T4YT08nbH0NFt2NhbnxBWyQlfRpRuRxA00gmv68Y8fRcn4GfP2Ur83OwMCndv4YUWq9jrRjeeKgC0PWX5yLbw5nflu7UVQGVfR0Ct2MPqcXfxmETgsh8jtV92SNqz0URr5eEN%2F7pTkS8skAfG1lo%2F13vu0OHsjVncbEMZ5ICBvJjyrWbPNkwlci8xgY6sQG%2B8Sed1scznEQp2l1oRVJoEoysZ8Uqp8zg1M3o42tyMwi%2BhBVuG%2FXGy1juWBwLBOTkdns%2BN3JdhwQnI3%2B%2FR6eHLGUyPB5xgieePV4Rj3%2FJ33lTbVxkHrvkIPdi%2Bp8jfQZJuyKwz6kN5IR%2FlR6OFVtN2oUwkN00DbVY%2FTZSaZcu%2BFRFJwNsFITbZqHpWyLk40OOFMeXoemxRC2JZzw380gA7oh3tqKilPIQfcSPzDvqOoo%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=fd67aaae12a7a9bb3cc4be31afa35f6188d8f7dc8ae6608967942b51db0af9f2",
+      "file_size": 4891633,
+      "type": "video/mp4",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 13,
+  "voters": [
+    "2026",
+    "akashhamal0x01",
+    "k4lki",
+    "pr0f0x01",
+    "bb00x",
+    "citril",
+    "3l33t",
+    "bcbc04131e9a7775cc46c97",
+    "destinedtohack",
+    "sidemeet",
+    "and 3 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 50774,
+    "asset_type": "URL",
+    "asset_identifier": "account.acronis.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
