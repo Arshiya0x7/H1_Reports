@@ -1,0 +1,150 @@
+{
+  "id": 1213765,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMjEzNzY1",
+  "url": "https://hackerone.com/reports/1213765",
+  "title": "IDOR to pay less for coin purchases on oauth.reddit.com via /api/v2/gold/paypal/create_coin_purchase_order in `order_id` parameter ",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2021-06-01T00:08:29.474Z",
+  "submitted_at": "2021-06-01T00:08:29.625Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "yanouhd",
+    "url": "/yanouhd",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NjE0NDE3MiwicHVyIjoiYmxvYl9pZCJ9fQ==--495ee51eca3e4e5487baf03d7652fdee7c028adb/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--2de8067d228529d65848a4eeed0bed0bb2531bc3/memoji.jpg"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 35710,
+    "url": "https://hackerone.com/reddit",
+    "handle": "reddit",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/osci5oey0q0wkiom39bk5onv8p7q/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/osci5oey0q0wkiom39bk5onv8p7q/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Reddit",
+      "twitter_handle": "reddit",
+      "website": "https://www.reddit.com",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2021-10-21T19:50:33.525Z",
+  "bug_reporter_agreed_on_going_public_at": "2021-06-13T22:35:25.152Z",
+  "team_member_agreed_on_going_public_at": "2021-10-21T19:50:33.378Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nThis vulnerability consist of modifying the PayPal transaction ID to buy a big coin pack but paying the small price for it.\n\n## Impact:\nThe only impact here could be that you don't earn the money you deserve, and users can offer a lot of presents to other users, breaking the magic of the reddit community.\n\n## Steps To Reproduce:\nHere are the steps to reproduce : \n\n  1. Click on the PayPal button to buy the smallest package (1.99$ for 500 coins at the time of writing).\n\n  2. By intercepting requests,  you should see a POST to https://oauth.reddit.com/api/v2/gold/paypal/create_coin_purchase_order, with this body : \n`coins=500&pennies=199&correlation_id=b0fc62e4-e759-4b9e-be52-da4c926560ce`\n\n  3. The response to this request is an order_id, keep it aside. This is the order_id corresponding to a PayPal transaction with an amount of 1.99$.\n{\"order_id\": \"1CR56170K7852611T\"}\n\n  4. Cancel the order, then make a new one with a bigger package (I took the 3.99$ for 1100 coins for my tests.)\n\n  5. Keep intercepting requests until you make it to the POST /api/v2/gold/paypal/create_coin_purchase_order one.\n\n  6. Now instead of forwarding the real response, change the `order_id` of this order to the one you kept from the 1.99$ transaction.\n{\"order_id\": \"~~1CR56170K7852611T~~ **1F444042JJ523625W**\"}\n  7. You will be redirected to the PayPal transaction page with an amount of 1.99$ to pay.\n\n  8. Pay, and boom ! You paid 1.99$, but when you complete the order you will be given the amount of coins you \"purchased\" for the \"fake price\".\n\n## Supporting Material/References:\n\nIf you want to check my purchase history, here is the account I used for this exploit : u/YanvegHD (This is my personal account, I think I made a mistake and I should've used a test account, my apologise...)\n\n{F1321925}\n{F1321926}\n\n## Impact\n\nBreaks the reddit magic about rewarding people / and people kinda stealing your money.",
+  "bounty_amount": "500.0",
+  "formatted_bounty": "$500",
+  "weakness": {
+    "id": 65,
+    "name": "Business Logic Errors"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1321925,
+      "file_name": "reddit1.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/jrodt7nf6jytp4cs49r3h08a98nx?response-content-disposition=attachment%3B%20filename%3D%22reddit1.png%22%3B%20filename%2A%3DUTF-8%27%27reddit1.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ7WWLIBQT%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T012140Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH8aCXVzLXdlc3QtMiJGMEQCIBcKE4LPoP53hW2o9EjW1Wr%2FPqll1nlAYbPemooXK1%2BQAiAFY6cTPuo7LT3Iu9AXBvaUB9wL5kFEXnFVzeqbw7NBWSq6BQj4%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMR9lWme5VM%2BVncU%2B8Ko4FtJbvvJ%2FGHH%2BYc0BUZEN8YzH3WWOHAik11N1nzncmHa6Oq823GdXlhmMowsAXwYw4bLNvMfG31A2arPbrEj7TplRbFBdV4zpzsWuaj97CHfRvTUeCyZxpMmsbUyFyMjQ16i%2FKdhGYtTcv1xKFxl6FzrNNzohOOuNptYplPgrYZA8PTgLjjihadpOM6TzH5kztbJi1Zyry4Fu41OQbkJaARdBma2TcwJlRE7xJ86RZKtXdsr2PXbI3YX4OpKwgSDlLlnLxNSz4V3B3DTd%2FqgfbFWCtXY0g%2B8yla6BitjDBY5U%2BHzJPRpQrlUaEUdohGfO2Gt%2Fvimp%2BBzsu7h7CUPExsHjMWXSXgV2oq616cRPrHpMnrHIzDh3V0DSMDtKXDJvpVWt16D60Moh3rozR5%2BOc8NqcRPJzWdPynsBp1A36xBDvPEthBNGUMY%2Bzk64BdHKsL3R%2BFw2Mo25tscO8YtE3e%2Bb%2F3npZlVAW%2Bwt7TjszQoTy6DdB0I7u%2BSMsoinFXAJ4%2Fux6%2FGrT3I43SjJHUFO9uqzayBvXAIq08hiwAF%2BoETDNmoRP%2BqT5xPKRxcN3Fewl9gMbw7k3F8ZFr2XV0OvYhsmW77qqDZG78zBTyc83VhqLgLMXjCttmcHdmZp0zvhafNWUbMQRBGBtp29%2FZypf1Gj%2BX%2FnO6NOYNOkBgVgYx5Cpol8pZAhGdNp7qsFTw3fGQH5lKiwxNfVnlZC3WMVz3hQpNA46bjIeMMK2Lt2jS8RomlGT46grn23wSp8%2F4JtI2JWIYVRKuPYXJ8LNmWNvDrUy%2BxCQoHX5O5driXtWNBeyarO5EO9gppU29Plq3mTcXIhMLnhxdJLDCwbFH%2FH0DoB5KbbgHhyukwcWslAXMIDmvMYGOrIBF0eo1Gz65fkLGuT29n6sTW%2F3pGuFthiLi8utLCp2KRtYUrRo21O5V0kKpHq%2Fh9zZlPhrzh5c9Ffuvze1fmP%2FQP1hTAnC7plR5G2Z2a45C0mCZ4oRTWD7SJJkQ%2FlHaq4nZNQeA82P2JxVOqxgg%2BqjdQrbpIcmBLH2zueNO03koFZvvG9h9gXCDnlH%2FSDAbtwdwbs3gdKuAc5cB2LgFFYi6HlmneEMDJLVSm%2BzRR%2BCAwVVQA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=0162d0afeaaf1901132771502d6cdc89152c47d0b8d0e0c76a75b7ee25d83889",
+      "file_size": 26829,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1321926,
+      "file_name": "reddit2.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/dawj9ihdlkuxe94cpdevdx13zwfb?response-content-disposition=attachment%3B%20filename%3D%22reddit2.png%22%3B%20filename%2A%3DUTF-8%27%27reddit2.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ7WWLIBQT%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T012140Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH8aCXVzLXdlc3QtMiJGMEQCIBcKE4LPoP53hW2o9EjW1Wr%2FPqll1nlAYbPemooXK1%2BQAiAFY6cTPuo7LT3Iu9AXBvaUB9wL5kFEXnFVzeqbw7NBWSq6BQj4%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMR9lWme5VM%2BVncU%2B8Ko4FtJbvvJ%2FGHH%2BYc0BUZEN8YzH3WWOHAik11N1nzncmHa6Oq823GdXlhmMowsAXwYw4bLNvMfG31A2arPbrEj7TplRbFBdV4zpzsWuaj97CHfRvTUeCyZxpMmsbUyFyMjQ16i%2FKdhGYtTcv1xKFxl6FzrNNzohOOuNptYplPgrYZA8PTgLjjihadpOM6TzH5kztbJi1Zyry4Fu41OQbkJaARdBma2TcwJlRE7xJ86RZKtXdsr2PXbI3YX4OpKwgSDlLlnLxNSz4V3B3DTd%2FqgfbFWCtXY0g%2B8yla6BitjDBY5U%2BHzJPRpQrlUaEUdohGfO2Gt%2Fvimp%2BBzsu7h7CUPExsHjMWXSXgV2oq616cRPrHpMnrHIzDh3V0DSMDtKXDJvpVWt16D60Moh3rozR5%2BOc8NqcRPJzWdPynsBp1A36xBDvPEthBNGUMY%2Bzk64BdHKsL3R%2BFw2Mo25tscO8YtE3e%2Bb%2F3npZlVAW%2Bwt7TjszQoTy6DdB0I7u%2BSMsoinFXAJ4%2Fux6%2FGrT3I43SjJHUFO9uqzayBvXAIq08hiwAF%2BoETDNmoRP%2BqT5xPKRxcN3Fewl9gMbw7k3F8ZFr2XV0OvYhsmW77qqDZG78zBTyc83VhqLgLMXjCttmcHdmZp0zvhafNWUbMQRBGBtp29%2FZypf1Gj%2BX%2FnO6NOYNOkBgVgYx5Cpol8pZAhGdNp7qsFTw3fGQH5lKiwxNfVnlZC3WMVz3hQpNA46bjIeMMK2Lt2jS8RomlGT46grn23wSp8%2F4JtI2JWIYVRKuPYXJ8LNmWNvDrUy%2BxCQoHX5O5driXtWNBeyarO5EO9gppU29Plq3mTcXIhMLnhxdJLDCwbFH%2FH0DoB5KbbgHhyukwcWslAXMIDmvMYGOrIBF0eo1Gz65fkLGuT29n6sTW%2F3pGuFthiLi8utLCp2KRtYUrRo21O5V0kKpHq%2Fh9zZlPhrzh5c9Ffuvze1fmP%2FQP1hTAnC7plR5G2Z2a45C0mCZ4oRTWD7SJJkQ%2FlHaq4nZNQeA82P2JxVOqxgg%2BqjdQrbpIcmBLH2zueNO03koFZvvG9h9gXCDnlH%2FSDAbtwdwbs3gdKuAc5cB2LgFFYi6HlmneEMDJLVSm%2BzRR%2BCAwVVQA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=f001bef0a23d74352498e780c2e7f158a5bdab88ec145f97194d67cfa75d1797",
+      "file_size": 80148,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 31,
+  "voters": [
+    "ezzra",
+    "tinmo",
+    "bombon",
+    "shreyaschavhan",
+    "0xa1mn",
+    "run_win",
+    "th4nu_0x0",
+    "2026",
+    "thalaivar304",
+    "mohaned0101",
+    "and 21 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 6.1,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "none",
+      "integrity": "low",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 18836,
+    "asset_type": "URL",
+    "asset_identifier": "oauth.reddit.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
