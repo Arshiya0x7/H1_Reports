@@ -1,0 +1,126 @@
+{
+  "id": 341908,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zNDE5MDg=",
+  "url": "https://hackerone.com/reports/341908",
+  "title": "XSS via Direct Message deeplinks",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2018-04-23T05:13:18.832Z",
+  "submitted_at": "2018-04-23T05:13:18.832Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "0xsobky",
+    "url": "/0xsobky",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/KUci7XnpJPBx2BXVZpjgovzZ/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 61,
+    "url": "https://hackerone.com/x",
+    "handle": "x",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/ikx4ept298unt534kpz4am2bd4zs/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/ikx4ept298unt534kpz4am2bd4zs/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "X / xAI",
+      "twitter_handle": "XSecurity",
+      "website": "https://x.com",
+      "about": "X helps you create and share ideas and information instantly, without barriers."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2019-05-09T18:03:28.588Z",
+  "bug_reporter_agreed_on_going_public_at": "2019-05-02T15:21:33.320Z",
+  "team_member_agreed_on_going_public_at": "2019-05-09T18:03:28.502Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "**Description:** \nBy using a specially crafted payload as the value of the text parameter in a Direct Message deeplink, a malicious user can inject arbitrary HTML tags and possibly run arbitrary JavaScript code on the \"twitter.com\" origin.\n\n## Steps To Reproduce:\n\n  1. Create a Direct Message deeplink by following the instructions on this [Twitter developer guide](https://developer.twitter.com/en/docs/direct-messages/welcome-messages/guides/deeplinking-to-welcome-message).\n  2. Use the following payload as the value for the text parameter:\n```\n%3C%3C/%3Cx%3E/script/test000%3E%3C%3C/%3Cx%3Esvg%20onload%3Dalert%28%29%3E%3C/%3E%3Cscript%3E1%3C%5Cx%3E2\n```\n  3. Tweet the deeplink you created. It should look like the following:\n```\nhttps://twitter.com/messages/compose?recipient_id=988260476659404801&welcome_message_id=988274596427304964&text=%3C%3C/%3Cx%3E/script/test000%3E%3C%3C/%3Cx%3Esvg%20onload%3Dalert%28%29%3E%3C/%3E%3Cscript%3E1%3C%5Cx%3E2\n```\n\n## Impact\n\nIt seems that the deployed CSP policy currently blocks the execution of arbitrary JavaScript code, however, arbitrary HTML tags can still be injection on `twitter.com` to carry out other kinds of attacks (i.e., deanonymization attacks, phishing, etc.). While you're in the process of verifying this, I'll be working on a bypass for the CSP policy in order to execute arbitrary JavaScript.\n\nThe hacker selected the **Cross-site Scripting (XSS) - DOM** weakness. This vulnerability type requires contextual information from the hacker. They provided the following answers:\n\n**URL**\nhttps://twitter.com/fvofo0000001444/status/988278372894740480\n\n**Verified**\nYes\n\n",
+  "weakness": {
+    "id": 63,
+    "name": "Cross-site Scripting (XSS) - DOM"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 289494,
+      "file_name": "screenshot.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/289/494/10e65052fac77d1f74e0f6544c9568b7ca6f467a/screenshot.png?response-content-disposition=attachment%3B%20filename%3D%22screenshot.png%22%3B%20filename%2A%3DUTF-8%27%27screenshot.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWKBFQSW3%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T153510Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCVG7trP9vGn62lDqsg3oiJqNj6TD81Iy6uTZOfG0blZAIgEUwidNHGZnkHub4KHvQNcdg8UO8%2BVn3zzGzNf8MLm2sqsQUIFxADGgwwMTM2MTkyNzQ4NDkiDGgDHHuHeCPjHubRkSqOBbEm5VlET425jXvKNfk8Vq%2F%2BbKEq%2B6MPI%2BtUKDLLBejpAvJotMmvQdSlHEGdxi8Id6M8ukng%2FRTj53sctPnin2TuVCx1utzky58Jf8UJWdQyffy870Xacx59ealmWdeinmPgK5NFiyHxRYvkspraDLj4U5S2PjcE6fPd0ediILlgioj3hYePetqrefoShQKyebTcL6cKRdOZL0sKAbRI%2B%2B48VskqwrPUTC6MmbC%2B1yLY8dATCzYJbhRcyBFvJd%2Fp0wQj8Bd1s8dG%2B4i3BqhT3nLqBOP2ceZU57JJQ3PEfE1xikKhVL6bpE%2B3JtXXhc21XlYYXpUzjOkg0cHSCoBE3lPil%2Fy9M5hBtfjD7jhPsAQTBscWVtT1mPaQsC%2FXflINBkiYXqn4DpcJf2xmfhm32GA25dCc68og%2B4sOE%2Bwm%2FsaSZ9aGc65fkPeCpTqQiErbY%2FzCXzuk8%2FlMG2d0u9nOR5f6FXRt8laT39k8XEeWWui5mGzIBO7O6mfLICRqGESR5F1gfk7A51gfmRAF5677OigN7K57YSO1fQmsLRtKfFMdAX55VYT1aoXqYBZ36tK9Ac3yx0LnUNTzGW3lxDG7%2BaxNtdmg7gHgu%2BhPOvDzLQtnW5vFeWgTlBWdp37%2FPdlTIDPTPIf8c3iJiKedLDvPKFN2gJIf2mupDkAydYZnez9xsKAoRAEBi3fAdyFs41Rs4Mv2x2lsmWvFIRDvG%2Bwe92OKfx3MWafTptWboG9%2BMnLKqynnxvtQtD%2Bn8e9yz%2FnA2jfpcZ7wYn84ISjADtYZ8gtIxejSWIy8rzA0O0hd8E%2B3BQbqvq%2FGayHvicRShAuvDSu3WDqSe%2Bsn%2Bokbaz0QPdlIoHxEUMH7mCtyi9wUIzC%2FhcDGBjqxAbQN9aN%2B%2F2gYLgjzkJwBasWMBUGgBaaesruY2Z2oSc5YA1depYn41xUmk8r%2FuOP4QTpABwTyM78WLRvIpKrQEmMWXnedDFquXNBOu%2BqPjod73CPdSFWy5YVbDRBBbKSW%2FcHb%2FGMbVHo3dSI5afHtzv1cpK5AknPr%2Bi9KunOwRezwqPcU3nYv9uMtlQ871mnbq1BehqFu0pfjB75IPGTq16RPIBlrTQHLaxaEEbxz5oOisg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=615b4e8efe9353443102fd856b0bd659b89f8bb719a2c8468e0835ff48bd2549",
+      "file_size": 152597,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2019-06-01T15:21:33.417Z",
+  "allow_singular_disclosure_after": -199066416.7552897,
+  "singular_disclosure_allowed": true,
+  "vote_count": 231,
+  "voters": [
+    "orange303",
+    "overjt",
+    "ermilov",
+    "ranapir",
+    "kashsec",
+    "dninjadave",
+    "jensec",
+    "samengmg",
+    "pomme",
+    "alittleninja",
+    "and 221 more..."
+  ],
+  "structured_scope": {
+    "databaseId": 1062,
+    "asset_type": "WILDCARD",
+    "asset_identifier": "*.twitter.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
