@@ -1,0 +1,146 @@
+{
+  "id": 277502,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yNzc1MDI=",
+  "url": "https://hackerone.com/reports/277502",
+  "title": "[BuddyPress 2.9.1] Open Redirect via \"wp_http_referer\" parameter on \"bp-profile-edit\" endpoint",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2017-10-15T20:36:39.950Z",
+  "submitted_at": "2017-10-15T20:36:39.950Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": true,
+    "username": "ysx",
+    "url": "/ysx",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 55,
+    "url": "https://hackerone.com/wordpress",
+    "handle": "wordpress",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/055/f114d1d31f904e3b903cd99a6cf566bb531f8401_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/055/f114d1d31f904e3b903cd99a6cf566bb531f8401_original.jpg/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "WordPress",
+      "twitter_handle": "wordpress",
+      "website": "https://wordpress.org/",
+      "about": "Beautiful sites of any kind."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2017-11-02T16:56:46.533Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-11-02T16:49:23.462Z",
+  "team_member_agreed_on_going_public_at": "2017-11-02T16:56:46.244Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi,\n\nIn a similar manner to #228569, it is currently possible to execute authenticated open redirections via the `wp_http_referer` parameter used in the [BuddyPress](https://wordpress.org/plugins/buddypress/) extended user edit screen.\n\n## Proof of concept\n\nUpon accessing the below URL, please select the \"Update Profile\" button, then select the \"**←Back to Users**\" link. This will redirect a target to the attacker-specified address (in this case, \"google.com\").\n\n\n```\nhttp://instance/wp-admin/users.php?page=bp-profile-edit&wp_http_referer=https://google.com\n```\n\n### Supporting evidence\n\n{F229538}\n\nThanks,\n\nYasin",
+  "weakness": {
+    "id": 53,
+    "name": "Open Redirect"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 229538,
+      "file_name": "BuddyPress_Redirect.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/229/538/6fe744a96c06aec1927c0f7d1273f9246c1cce5f/BuddyPress_Redirect.png?response-content-disposition=attachment%3B%20filename%3D%22BuddyPress_Redirect.png%22%3B%20filename%2A%3DUTF-8%27%27BuddyPress_Redirect.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQW4JMTUEX%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T194212Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIGk%2B%2FI96AebG%2Bq4t6kGHWoW1GeNLRxKaIwuFErYm6n2oAiApMQHmA26JpDTgeSFA%2FGVjFPzH7o7YnVldg2N4aNgXuiqyBQgcEAMaDDAxMzYxOTI3NDg0OSIMjSHVV5QBPqBYk%2FbVKo8FafD%2BvGmQQBKCfBVi%2FKQ1T5lEpOoX7wgT7OEJcEH8mOt4AfvinVyeXHCfOqOnpO%2FMjkpYOpz%2FwK3Xem6L%2Bve8%2F0pYHsES6QRjwyRqChMJk5s1wD5p2hD0GlEEekxlsFYyHmX2pGtsvNyMQPSm8W7Fe3ISvuWxnERUclppsk1Lr%2B2H%2F%2F4QVbtXUeGYRB2ob4AO%2FZE4Gei3mgoqi0ot6tfHaucdXGp6ZuxxqpKhlkvoF5EmnxGlmpDRdwdrJw0FCOiF8JeUCpZXm4q6uPkzGg8QfY5zH5BvQ7WBzbttdllxbK6%2BzzMs0EQ8oOHmSKYoOxbZrI67zgGpBe80IQ4d0oQWjPzQr1H44GrkPB5SxD4hLyxIh1KY%2FWE3GkNXrxhGbO9iTBcbKY%2Fi1OOmy6KYqXU6ZJ%2B7LEWoe2Rz27rxAk4PwBr%2B8Le0wusmW2MJgK4eTVaFuPcoJLSd3QU5KpPAmEiZMrVJq9K2TgtPWfK5mSk3CjFKt28qz47MD0g%2BbEcBQUEVX2WeBleECXZxJ3vhdnuhXiqAc2AoAxCSD14OeHS1fgN1F8Lr%2F3uGtfbAkLeb%2BhKkyvxjRfBHG75X%2BwQYFlts5WiRkF%2BQH8AXia7rZlRNeaPBrnvh1AkbJ2YDH8Uv6QgUuECFOflemNuWJ7%2BOTXW%2B014HSXNZkZtQZG90EFT6rkX5B5odVKId3FcLbokgxY0qsfkLj9ZwSxkWecELK1tvJ17Ptb1mY%2Bp3u1fYizrdThqSdjHnlPcmVpg3Gn4h%2B1gYFMSaql3mCjwQJG87cDt%2BfoDKtscg79MRGrn8GUf5xqx1ajnhjD%2FLLl%2F7lTillWV%2FHML3%2FlZD0D5yesKIaQCCOSr3BFdicBvSm5T3EZBVhDDdkMHGBjqyAZnVGhmShZi8BxqzmCrmO%2Bj455VcS6IGCbwD4ZbyNokefn92sysAnKTG6wN3a2jzc0rxXlVvgY5eC5%2B8JXGyaS%2FD6MsFw3Cr4XzQab9n5V2%2ByDppZIx0Ph5z%2BPO%2BDJPF3Bmx1E8Bsp0lYRxsMnXDVqhbEnKM22hk4iv6lOzalu2PPvd6HV%2FDIO2WSfTjdLkVDr2OBF%2FXCNsEhHEXe2XjnPzKlPza8ahVMOszcNSwEMZKkdA%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=e25b835bd371e754fcd75e49ccd998f93c41dbf83d50a26d178d2697c2070b18",
+      "file_size": 8340,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-12-02T16:49:23.907Z",
+  "allow_singular_disclosure_after": -246250368.20612234,
+  "singular_disclosure_allowed": true,
+  "vote_count": 7,
+  "voters": [
+    "bl4de",
+    "skansing",
+    "eveeez",
+    "khizer47",
+    "cr4xerbik4sh",
+    "japz",
+    "b4155f7c29acd42c27d007a"
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "User"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "id": 5759,
+      "category": "researcher",
+      "content": "An injection in the `wp_http_referer` parameter used on the BuddyPress Extended Profile edit screen could be leveraged to conduct authenticated open redirections. Thanks again to @boonebgorges, @iandunn, and the BuddyPress team for the swift communication and fix.",
+      "updated_at": "2017-11-02T16:49:06.147Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 47082,
+        "username": "ysx",
+        "name": "",
+        "bio": "",
+        "cleared": false,
+        "verified": false,
+        "website": "",
+        "location": "",
+        "created_at": "2015-12-20T12:11:13.354Z",
+        "url": "https://hackerone.com/ysx",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "hacker",
+        "profile_picture_urls": {
+          "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png",
+          "medium": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png",
+          "xtralarge": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+        }
+      }
+    }
+  ]
+}
