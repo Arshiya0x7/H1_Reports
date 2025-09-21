@@ -1,0 +1,161 @@
+{
+  "id": 205481,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yMDU0ODE=",
+  "url": "https://hackerone.com/reports/205481",
+  "title": "Wordpress unzip_file path traversal",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2017-02-11T12:11:51.002Z",
+  "submitted_at": "2017-02-11T12:11:51.002Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "ajxchapman",
+    "url": "/ajxchapman",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/ey3f0qnxrppswp9im09fgv2kaecf/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": true,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 55,
+    "url": "https://hackerone.com/wordpress",
+    "handle": "wordpress",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/055/f114d1d31f904e3b903cd99a6cf566bb531f8401_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/055/f114d1d31f904e3b903cd99a6cf566bb531f8401_original.jpg/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "WordPress",
+      "twitter_handle": "wordpress",
+      "website": "https://wordpress.org/",
+      "about": "Beautiful sites of any kind."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2020-01-29T20:27:37.751Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-01-29T14:48:24.292Z",
+  "team_member_agreed_on_going_public_at": "2020-01-29T20:27:37.646Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "# Summary\nThe Wordpress unzip_file function (https://codex.wordpress.org/Function_Reference/unzip_file) is vulnerable to path traversal when extracting zip files. Extracting untrusted zip files using this function this could lead to code execution through placing arbitrary PHP files in the DocumentRoot of the webserver.\n\n# Analysis\nThe unzip_file function takes a target directory, `$to`, as an argument into which the files in the zip should be extracted. If a maliciously crafted zip file is extracted with a filename starting with the parent directory specifier (`../`) the file will be extracted into the parent of the '$to' argument target directory. Filenames can be crafted in order to place files in any directory which the webserver has write permissions, for example a zip entry with a filename of `../../../../../../../../../../tmp/poc_file` would place the file contents in the '/tmp/poc_file' directory.\n\nThis vulnerability exists both when unzip_file uses PHP's built-in ZipArchive (/wp-admin/includes/file.php:`_unzip_file_ziparchive`) and the 3rd party PclZip (/wp-admin/includes/file.php:`_unzip_file_pclzip`) extraction methods. Neither of these functions check to confirm that the normalised output path is within the `$to` target directory.\n\nAn example zip, 'zip_poc.zip' is attached. If this is extracted with the unzip_file function, for example through the \"Upload Plugin\" admin function or the attached 'poc.php', a file called 'poc_output' will be extracted to the operating system '/tmp' directory. The 'poc.php' attachment shows how the unzip_file function may be used in a wordpress plugin. This Proof of Concept has been tested on Wordpress 4.7.2 running on Ubuntu 14.04 LTS.\n\nIt should be noted that the built-in PHP ZipArchive extractTo method is not vulnerable to this path traversal.\n\nCursory analysis of a number of popular Wordpress plugins suggests that gallery plugins, such as NextGen Gallery, which allow lower privilege non-admin users to upload zips to be extracted would be particularly susceptible to this issue.\n\n# Suggested Remediation\nThe `_unzip_file_ziparchive` and `_unzip_file_pclzip` functions should normalise the output paths of zip file entries ensuring that after normalisation the paths reside within the `$to` argument target directory.",
+  "weakness": {
+    "id": 57,
+    "name": "Violation of Secure Design Principles"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 159707,
+      "file_name": "zip_poc.zip",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/159/707/0489a8e5a470ba145db834da6c90bbb2bcb8803d/zip_poc.zip?response-content-disposition=attachment%3B%20filename%3D%22zip_poc.zip%22%3B%20filename%2A%3DUTF-8%27%27zip_poc.zip&response-content-type=application%2Fzip&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQACXHSS4%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T124125Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDXRxo5zHpRt3ZYoenJ1wd5JkJ1NBujQ%2BLJAzF85PgA4gIgG8P8%2BYTN%2B6LK3LM2x%2BQsJbsbKJ3XlF%2BgWjt8CO7wqw0qsgUIFRADGgwwMTM2MTkyNzQ4NDkiDPMRaLfxVYuzcejcByqPBYsP1GpgsQNCDwEj7s2ooDqZfTFIhmfXHzhnkAKYMZ6JKsMj%2FyCHRggO9kolqojogIgII2B%2Fpzw7htnWmV2d%2FFbHE9WmkbkKSW9tmwKM8V2SwcWeT42e2sPftwmfmuIRnT88rlN2UxIf2%2Bye%2F6PXyq94y0rCVHdZ00hmGUcHuxLSx7Hky%2FYBvUPB3PBQ12gIcvx7s2bdvavvHSI9E2cp7t3ANfDQwt%2Fg1UeszKImi0NFvr8y201sI%2FoKXbv49qIpkA1A%2F%2F99HZE%2B0OQEbRRSAMqhuxfG32PyQUHAhhZs2hcl6XWz%2F3MM%2F%2FscnTPIXpEU3QEtqMN4XwsuqdR%2FigvbraW1MuAGufP3vBd5AGTCtp49hb8Bx0FV6kVQdZVzV0L4M2pqqwlOTfeLRwdx5%2FUhexV59JeWHlO%2BTVCof2IcMLMwN6jys3Mnk5L0VeTKiqO820qFc8UdL3JcUT0tG%2F4S7ip1wQvG5xZ1dmtVJt6N2m5daSpmCer2TCkou8LlZ0qRSYTKQ6SiXQTs0q9WpDBJmhdHkP1A4zqfGZ3BLlO0mhF7cx79e2934UNro8M5irr9s5xtgij6DQUFDPvDLXbAXaTVjYd1ylrOByBT2vvWfcxLONeP17kQ5FLhpdm3E%2BpvMewO9BJi2tA7dZwgFolH98Cvwvu9fixFNLmOVo3dJV8ZOMr%2FnBXH70Ndj7KbjgsemH05aAaA86qVPKxRXgV%2FTFlx5OHox%2FKxUCRbyORTNnURe7JdSM16fHIGTYZdAdpcd4xdP4k7kzdobMK8KrWIH5UrimidhxmZ9bu9DNFt%2FyMpzAEXCoYSUY1til%2FkewRpbxDTmKiz7uB%2Biou1Aauv6qEgjsu7%2Fgb7SWEGE5ufSnUw6sK%2FxgY6sQF5Kk5TmB2V6LdEC6pSpNvzOH1fucPURtQpsz5uxo6Iq4nJ4584p%2F0o%2BtJYLUdylV93CoJ9tEMUF8bqMBeEKLaEkRfyctibov9LR64Zox6VOfJOfvfCTmktsfATzhP527cPTYxwvAK2OxeuHmsPTXWcoNbnSBxv27j54e9IDm8edP0S4frvZlDWwxQTp0TgQBgZvX7ZRClpIzfszIfPtAR9Us8IBiXbZ9d4EdmHUDKKXTQ%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=69a7e6e9bd335df173ced80e2c67e8e269fc199bfa40c2b3de222090e4725a50",
+      "file_size": 386,
+      "type": "application/zip",
+      "moderated": null
+    },
+    {
+      "id": 159708,
+      "file_name": "poc.php",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/159/708/f580e6dda74fab3b549ba72440541725ab59ebe5/poc.php?response-content-disposition=attachment%3B%20filename%3D%22poc.php%22%3B%20filename%2A%3DUTF-8%27%27poc.php&response-content-type=text%2Fx-php&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQACXHSS4%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T124125Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDXRxo5zHpRt3ZYoenJ1wd5JkJ1NBujQ%2BLJAzF85PgA4gIgG8P8%2BYTN%2B6LK3LM2x%2BQsJbsbKJ3XlF%2BgWjt8CO7wqw0qsgUIFRADGgwwMTM2MTkyNzQ4NDkiDPMRaLfxVYuzcejcByqPBYsP1GpgsQNCDwEj7s2ooDqZfTFIhmfXHzhnkAKYMZ6JKsMj%2FyCHRggO9kolqojogIgII2B%2Fpzw7htnWmV2d%2FFbHE9WmkbkKSW9tmwKM8V2SwcWeT42e2sPftwmfmuIRnT88rlN2UxIf2%2Bye%2F6PXyq94y0rCVHdZ00hmGUcHuxLSx7Hky%2FYBvUPB3PBQ12gIcvx7s2bdvavvHSI9E2cp7t3ANfDQwt%2Fg1UeszKImi0NFvr8y201sI%2FoKXbv49qIpkA1A%2F%2F99HZE%2B0OQEbRRSAMqhuxfG32PyQUHAhhZs2hcl6XWz%2F3MM%2F%2FscnTPIXpEU3QEtqMN4XwsuqdR%2FigvbraW1MuAGufP3vBd5AGTCtp49hb8Bx0FV6kVQdZVzV0L4M2pqqwlOTfeLRwdx5%2FUhexV59JeWHlO%2BTVCof2IcMLMwN6jys3Mnk5L0VeTKiqO820qFc8UdL3JcUT0tG%2F4S7ip1wQvG5xZ1dmtVJt6N2m5daSpmCer2TCkou8LlZ0qRSYTKQ6SiXQTs0q9WpDBJmhdHkP1A4zqfGZ3BLlO0mhF7cx79e2934UNro8M5irr9s5xtgij6DQUFDPvDLXbAXaTVjYd1ylrOByBT2vvWfcxLONeP17kQ5FLhpdm3E%2BpvMewO9BJi2tA7dZwgFolH98Cvwvu9fixFNLmOVo3dJV8ZOMr%2FnBXH70Ndj7KbjgsemH05aAaA86qVPKxRXgV%2FTFlx5OHox%2FKxUCRbyORTNnURe7JdSM16fHIGTYZdAdpcd4xdP4k7kzdobMK8KrWIH5UrimidhxmZ9bu9DNFt%2FyMpzAEXCoYSUY1til%2FkewRpbxDTmKiz7uB%2Biou1Aauv6qEgjsu7%2Fgb7SWEGE5ufSnUw6sK%2FxgY6sQF5Kk5TmB2V6LdEC6pSpNvzOH1fucPURtQpsz5uxo6Iq4nJ4584p%2F0o%2BtJYLUdylV93CoJ9tEMUF8bqMBeEKLaEkRfyctibov9LR64Zox6VOfJOfvfCTmktsfATzhP527cPTYxwvAK2OxeuHmsPTXWcoNbnSBxv27j54e9IDm8edP0S4frvZlDWwxQTp0TgQBgZvX7ZRClpIzfszIfPtAR9Us8IBiXbZ9d4EdmHUDKKXTQ%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=9228949e15d7845a154c1e107094ec8608efc231afb986ed1ae3ae7c013f74cf",
+      "file_size": 189,
+      "type": "text/x-php",
+      "moderated": null
+    },
+    {
+      "id": 159709,
+      "file_name": "Screen_Shot_2017-02-11_at_12.01.59.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/159/709/21565f00f96cbef69d427c19943f1b45bcf2163e/Screen_Shot_2017-02-11_at_12.01.59.png?response-content-disposition=attachment%3B%20filename%3D%22Screen_Shot_2017-02-11_at_12.01.59.png%22%3B%20filename%2A%3DUTF-8%27%27Screen_Shot_2017-02-11_at_12.01.59.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQACXHSS4%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T124125Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDXRxo5zHpRt3ZYoenJ1wd5JkJ1NBujQ%2BLJAzF85PgA4gIgG8P8%2BYTN%2B6LK3LM2x%2BQsJbsbKJ3XlF%2BgWjt8CO7wqw0qsgUIFRADGgwwMTM2MTkyNzQ4NDkiDPMRaLfxVYuzcejcByqPBYsP1GpgsQNCDwEj7s2ooDqZfTFIhmfXHzhnkAKYMZ6JKsMj%2FyCHRggO9kolqojogIgII2B%2Fpzw7htnWmV2d%2FFbHE9WmkbkKSW9tmwKM8V2SwcWeT42e2sPftwmfmuIRnT88rlN2UxIf2%2Bye%2F6PXyq94y0rCVHdZ00hmGUcHuxLSx7Hky%2FYBvUPB3PBQ12gIcvx7s2bdvavvHSI9E2cp7t3ANfDQwt%2Fg1UeszKImi0NFvr8y201sI%2FoKXbv49qIpkA1A%2F%2F99HZE%2B0OQEbRRSAMqhuxfG32PyQUHAhhZs2hcl6XWz%2F3MM%2F%2FscnTPIXpEU3QEtqMN4XwsuqdR%2FigvbraW1MuAGufP3vBd5AGTCtp49hb8Bx0FV6kVQdZVzV0L4M2pqqwlOTfeLRwdx5%2FUhexV59JeWHlO%2BTVCof2IcMLMwN6jys3Mnk5L0VeTKiqO820qFc8UdL3JcUT0tG%2F4S7ip1wQvG5xZ1dmtVJt6N2m5daSpmCer2TCkou8LlZ0qRSYTKQ6SiXQTs0q9WpDBJmhdHkP1A4zqfGZ3BLlO0mhF7cx79e2934UNro8M5irr9s5xtgij6DQUFDPvDLXbAXaTVjYd1ylrOByBT2vvWfcxLONeP17kQ5FLhpdm3E%2BpvMewO9BJi2tA7dZwgFolH98Cvwvu9fixFNLmOVo3dJV8ZOMr%2FnBXH70Ndj7KbjgsemH05aAaA86qVPKxRXgV%2FTFlx5OHox%2FKxUCRbyORTNnURe7JdSM16fHIGTYZdAdpcd4xdP4k7kzdobMK8KrWIH5UrimidhxmZ9bu9DNFt%2FyMpzAEXCoYSUY1til%2FkewRpbxDTmKiz7uB%2Biou1Aauv6qEgjsu7%2Fgb7SWEGE5ufSnUw6sK%2FxgY6sQF5Kk5TmB2V6LdEC6pSpNvzOH1fucPURtQpsz5uxo6Iq4nJ4584p%2F0o%2BtJYLUdylV93CoJ9tEMUF8bqMBeEKLaEkRfyctibov9LR64Zox6VOfJOfvfCTmktsfATzhP527cPTYxwvAK2OxeuHmsPTXWcoNbnSBxv27j54e9IDm8edP0S4frvZlDWwxQTp0TgQBgZvX7ZRClpIzfszIfPtAR9Us8IBiXbZ9d4EdmHUDKKXTQ%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=524bce9eec2d8eb1cb64737d5130d69f2383787ce9625245fce34af1efcfec98",
+      "file_size": 125586,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 159710,
+      "file_name": "Screen_Shot_2017-02-11_at_12.00.10.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/159/710/b8cc4e2dba684d9a08b488a834f7e78e520ee88c/Screen_Shot_2017-02-11_at_12.00.10.png?response-content-disposition=attachment%3B%20filename%3D%22Screen_Shot_2017-02-11_at_12.00.10.png%22%3B%20filename%2A%3DUTF-8%27%27Screen_Shot_2017-02-11_at_12.00.10.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQACXHSS4%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T124125Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDXRxo5zHpRt3ZYoenJ1wd5JkJ1NBujQ%2BLJAzF85PgA4gIgG8P8%2BYTN%2B6LK3LM2x%2BQsJbsbKJ3XlF%2BgWjt8CO7wqw0qsgUIFRADGgwwMTM2MTkyNzQ4NDkiDPMRaLfxVYuzcejcByqPBYsP1GpgsQNCDwEj7s2ooDqZfTFIhmfXHzhnkAKYMZ6JKsMj%2FyCHRggO9kolqojogIgII2B%2Fpzw7htnWmV2d%2FFbHE9WmkbkKSW9tmwKM8V2SwcWeT42e2sPftwmfmuIRnT88rlN2UxIf2%2Bye%2F6PXyq94y0rCVHdZ00hmGUcHuxLSx7Hky%2FYBvUPB3PBQ12gIcvx7s2bdvavvHSI9E2cp7t3ANfDQwt%2Fg1UeszKImi0NFvr8y201sI%2FoKXbv49qIpkA1A%2F%2F99HZE%2B0OQEbRRSAMqhuxfG32PyQUHAhhZs2hcl6XWz%2F3MM%2F%2FscnTPIXpEU3QEtqMN4XwsuqdR%2FigvbraW1MuAGufP3vBd5AGTCtp49hb8Bx0FV6kVQdZVzV0L4M2pqqwlOTfeLRwdx5%2FUhexV59JeWHlO%2BTVCof2IcMLMwN6jys3Mnk5L0VeTKiqO820qFc8UdL3JcUT0tG%2F4S7ip1wQvG5xZ1dmtVJt6N2m5daSpmCer2TCkou8LlZ0qRSYTKQ6SiXQTs0q9WpDBJmhdHkP1A4zqfGZ3BLlO0mhF7cx79e2934UNro8M5irr9s5xtgij6DQUFDPvDLXbAXaTVjYd1ylrOByBT2vvWfcxLONeP17kQ5FLhpdm3E%2BpvMewO9BJi2tA7dZwgFolH98Cvwvu9fixFNLmOVo3dJV8ZOMr%2FnBXH70Ndj7KbjgsemH05aAaA86qVPKxRXgV%2FTFlx5OHox%2FKxUCRbyORTNnURe7JdSM16fHIGTYZdAdpcd4xdP4k7kzdobMK8KrWIH5UrimidhxmZ9bu9DNFt%2FyMpzAEXCoYSUY1til%2FkewRpbxDTmKiz7uB%2Biou1Aauv6qEgjsu7%2Fgb7SWEGE5ufSnUw6sK%2FxgY6sQF5Kk5TmB2V6LdEC6pSpNvzOH1fucPURtQpsz5uxo6Iq4nJ4584p%2F0o%2BtJYLUdylV93CoJ9tEMUF8bqMBeEKLaEkRfyctibov9LR64Zox6VOfJOfvfCTmktsfATzhP527cPTYxwvAK2OxeuHmsPTXWcoNbnSBxv27j54e9IDm8edP0S4frvZlDWwxQTp0TgQBgZvX7ZRClpIzfszIfPtAR9Us8IBiXbZ9d4EdmHUDKKXTQ%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=a0980363a2e289e9b11800f005edce28ea33bf770d5da26b324fd26d09e87be4",
+      "file_size": 100939,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2020-02-28T14:48:24.374Z",
+  "allow_singular_disclosure_after": -175557181.5274459,
+  "singular_disclosure_allowed": true,
+  "vote_count": 115,
+  "voters": [
+    "r4d1kal",
+    "kouzirou",
+    "muslimfrompk",
+    "a_d_a_m",
+    "snorlhax",
+    "checkm50",
+    "foobar7",
+    "base_64",
+    "ali",
+    "stealthy",
+    "and 105 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 6.6,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "high",
+      "privileges_required": "high",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "high",
+      "integrity": "high",
+      "availability": "high"
+    }
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
