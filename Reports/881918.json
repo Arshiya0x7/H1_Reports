@@ -1,0 +1,155 @@
+{
+  "id": 881918,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC84ODE5MTg=",
+  "url": "https://hackerone.com/reports/881918",
+  "title": "Authenticated Stored Cross-site Scripting in bbPress",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2020-05-24T19:39:24.327Z",
+  "submitted_at": "2020-05-24T19:39:24.327Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "whoisbinit",
+    "url": "/whoisbinit",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 55,
+    "url": "https://hackerone.com/wordpress",
+    "handle": "wordpress",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/055/f114d1d31f904e3b903cd99a6cf566bb531f8401_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/055/f114d1d31f904e3b903cd99a6cf566bb531f8401_original.jpg/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "WordPress",
+      "twitter_handle": "wordpress",
+      "website": "https://wordpress.org/",
+      "about": "Beautiful sites of any kind."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2020-06-29T10:08:42.091Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-05-30T10:08:30.995Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Description:\nThere exists a stored XSS vulnerability in bbPress, due to which the XSS payload which I enter in my content, gets executed at **/wp-admin/edit.php?post_type=forum**. This vulnerability requires you to be an authenticated user.\n\n## Steps To Reproduce:\nStep 1. Visit /wp-admin/edit.php?post_type=forum\nStep 2. Click on **Add New**\nStep 3. Write any title, and in content, write your XSS payload through the \"Text\" editor, rather than the \"Visual\" one, and publish the content.\nStep 4. Now, visit /wp-admin/edit.php?post_type=forum, and you will be able to see the payload getting executed.\n\n## Recommendations\nMaking use of proper functions in PHP or WordPress core in the bbPress source code regarding the filtering or sanitization of user input is a recommended way to fix this vulnerability.\n\n## Impact\n\nBy taking an advantage of this vulnerability, an owner of a WordPress-based website would be able to execute their malicious JavaScript codes in context to the WordPress dashboard, which could result in bad issues to other users.",
+  "weakness": {
+    "id": 62,
+    "name": "Cross-site Scripting (XSS) - Stored"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 841334,
+      "file_name": "bbPress.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/uVkVCK2NYeFsRnC76RRUVuN3?response-content-disposition=attachment%3B%20filename%3D%22bbPress.png%22%3B%20filename%2A%3DUTF-8%27%27bbPress.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWYOZNPRR%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T100035Z&X-Amz-Expires=932&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIHUb94qd%2BwbE1nDnLmYMvNhihYV8B4aSKhE0a5fiYycLAiEA8rvigSIsnJGMAs%2FAAVf%2BGs5%2FCSIpgafe1mG8nd3qgiQqugUI%2Ff%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDM7JItEWWYFJVSEX3yqOBWeASjubcH9qXyvIqIGsFPonQJrngPBqs4%2FeunxtBVvycFRMcC3q41LGNV7FlkfVFhn7AsNJsMcFTCR%2Bf0Z%2FrK98fW8VHAGXUU3T6FdVdh0UpxgvFO8pXsNWs901Rh6M%2FlMa4taUHhxiWzetjmB8nnOz2e5MEoYOoO684SAxt%2BZwL9JMhr9ntlAHTgaCvJMK31YV%2BOGa31YDdncbAFNIypBRFAVwUzdH0j45PuSjgsECaJ%2BfLTWfxX1XZszak%2FzFWx%2FG5PS4mOwxVXqfqPTK2h8%2FIe6yoMjIIyngYlFM3SXWo%2BppKR5tWtLvgU24PHgVXpHfPZMXY8PO2kLcLl%2BFHiXnhv8%2FWqKG1zVa2V8gdzQsjYF9%2BK91zv809dnTTN7YBX4JuKaBduLf8OHOHTCGF1zmSpWmapG%2BWnFXy6YsfvMPmR40YRtmHG1zCK1LDH9ruuYwjoHB%2BPqWaJVdBlEW%2BYcYqJd46Ap%2BY8zqqp%2Fy90Hn7syhYdvHUpmOsrONGBHGY1eEZW2gTWTvHDiXDTxfsl1iNushD47IKHcippvEzxSyegLjdjcqb87SoJN%2BN43gfZeJ4eKyQDI3aG0HnfZtFbJj%2BHUVer%2Ftg%2BQkswLeCKEgiCylywq6YgIzTKUNj1SUjZJ4O6VfrWfy1ZsWWtrNixQoxF5au0Ymtm2ex7Sr8a0cBDmo5%2BkX74aw4AtvLSLz4CWgeRk%2FxIRXeefy4GsZQIaht8PubTwsNd8Mt6ZX68Q8v8mqnLbNCB59HjBcMKptGX%2FrB67qQOBlbZOyXiinVLNH4rZV2%2FTNGas959P5crKly7I6rJvxs3aJcqz%2Bl2Touy36eP3ZTTuH6saoxXvc1Ua17RQORfvDaBLB3mq7vTCN873GBjqxAWmZOUb81xVKGGiakl%2BGcs5%2FeTs2MHC66wfkkC1qHxW10Pa6hp9fSIpHF5YM69xbf5BvsUF%2F5teoQsfu7zZh0HbEXgb%2BtiXSybJ9OI3WW7tn6nwfMLVD9y%2BfEVh8LnpEQOsXlZfhmrCxnF%2Blbaoe5iwsViMoy%2BEEwi2PM46yJ3aa0Izg9XtPQ9EjfDAtcvvuHrlaF%2FJV%2B9YbGhivIi%2B2FXnOft%2Fd2AMuYurhuigKde0lyA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=681b3abf3c73992d7a1ec20fc4ee8fcb086dacc8f078922acd4a9dd72afc0e1e",
+      "file_size": 120846,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2020-06-29T10:08:31.111Z",
+  "allow_singular_disclosure_after": -165023524.72463414,
+  "singular_disclosure_allowed": true,
+  "vote_count": 24,
+  "voters": [
+    "ali",
+    "spongebhav",
+    "akashhamal0x01",
+    "0xelkomy",
+    "dhakal_bibek",
+    "styrene",
+    "sa1tama0",
+    "4xrhd",
+    "0x0days",
+    "bibek1",
+    "and 14 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 2752,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "BBPress Core",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "id": 23254,
+      "category": "researcher",
+      "content": "**CVE-2020-13487** | The bbPress plugin through 2.6.4 for WordPress has stored XSS in the Forum creation section, resulting in JavaScript execution at *wp-admin/edit.php?post_type=forum* (aka the Forum listing page) for all users. An administrator can exploit this at the *wp-admin/post.php?action=edit* URI.",
+      "updated_at": "2020-06-29T10:23:24.509Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 204685,
+        "username": "whoisbinit",
+        "name": "Binit Ghimire",
+        "bio": "I am a Tech Enthusiastic full-stack web developer, programmer and web/network penetration tester from Nepal.",
+        "cleared": false,
+        "verified": false,
+        "website": "https://WHOISbinit.me/",
+        "location": "Bharatpur-9, Milanchowk, Chitwan",
+        "created_at": "2017-10-02T06:42:57.263Z",
+        "url": "https://hackerone.com/whoisbinit",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "hacker",
+        "profile_picture_urls": {
+          "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png",
+          "medium": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png",
+          "xtralarge": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+        }
+      }
+    }
+  ]
+}
