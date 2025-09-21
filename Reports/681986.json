@@ -1,0 +1,152 @@
+{
+  "id": 681986,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC82ODE5ODY=",
+  "url": "https://hackerone.com/reports/681986",
+  "title": "[node-red] Stored XSS within Flow's - \"Name\" field ",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2019-08-26T09:17:03.178Z",
+  "submitted_at": "2019-08-26T09:17:03.178Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "vineetpandey",
+    "url": "/vineetpandey",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 23949,
+    "url": "https://hackerone.com/nodejs-ecosystem",
+    "handle": "nodejs-ecosystem",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/023/949/3ea3b2ae039a8f955a4a8fe65d99fe85dc817398_original./235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/023/949/3ea3b2ae039a8f955a4a8fe65d99fe85dc817398_original./3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "disabled",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Node.js third-party modules",
+      "twitter_handle": "",
+      "website": "https://nodejs.org/en/security/",
+      "about": "This program was used to handle vulnerabilities in the Node.js ecosystem."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2019-15607"
+  ],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2020-01-11T16:11:38.868Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-01-11T16:11:38.806Z",
+  "team_member_agreed_on_going_public_at": "2020-01-10T17:37:56.569Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "> NOTE! Thanks for submitting a report! Please replace *all* the [square] sections below with the pertinent details. Remember, the more detail you provide, the easier it is for us to triage and respond quickly, so be sure to take your time filling out the report!\n\nI would like to report Stored XSS in node-red.\nIt allows to steal session cookies, deface web applications, etc.\n\n# Module\n\n**module name:** node-red\n**version:** 0.20.7\n**npm page:** `https://www.npmjs.com/package/node-red`\n\n## Module Description\n\nA visual tool for wiring the Internet of Things.\n\n## Module Stats\n\n> Replace stats below with numbers from npm’s module page:\n\nWeekly downloads - 23,557 \n\n\n# Vulnerability\n\n## Vulnerability Description\n\nnpm-red has flows to demonstrate the Inject, Debug and Function nodes, etc and you can define multiple flows. \nFor your customization, when renaming the flow - malicious javascript can be inserted into the \"Name\" field and Click \"Done\". Then after clicking the \"Deploy\" button, changes will take effect. Then Everytime you double-click the flow, inserted malicious code will be executed.\n\n## Steps To Reproduce:\n1.\ninstall node-red: sudo npm install -g --unsafe-perm node-red\nstart node-red: node-red\n& \nOpen http://localhost:1880\n\n2. Now Edit the flow (refer img_1.png)\n3. Insert malicious javascript code and click \"Done\" (refer img_2.png) \n4. Click Deploy and changes will take place.\n5. Double click on flow and you'll observe a pop-up executing the malicious content (refer img_3.png) \n\n## Patch\nDeploy input sanitization/validation around the input fields.\n\n> If you're able to provide a patch with the fix please post it in this section\n\n## Supporting Material/References:\n\n> State all technical information about the stack where the vulnerability was found\n\n- Kali linux\n- Node.js v12.8.0\n- NPM v6.10.2\n- Firefox 60.8.0esr\n- Burpsuite, if there would have been client side validation\n\n# Wrap up\n\n> Select Y or N for the following statements:\n\n- I contacted the maintainer to let them know: N \n- I opened an issue in the related repository: N\n\n## Impact\n\nThis vulnerability will allow the attacker to steal session cookies, deface web applications, etc.",
+  "weakness": {
+    "id": 62,
+    "name": "Cross-site Scripting (XSS) - Stored"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 566686,
+      "file_name": "img_2.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/rdxGPdvRE4G7b3Wqk4s7kiTJ?response-content-disposition=attachment%3B%20filename%3D%22img_2.PNG%22%3B%20filename%2A%3DUTF-8%27%27img_2.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWLIXK7KK%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T124928Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCn9dBDjuRnR6R6gwO7wx1V9VTCorPNrsiHfcpQFucMbgIga98tHzwspPe%2FMy%2FsxRSx9minsZ%2FmvaaRCrdbchOwi8MqsgUIFhADGgwwMTM2MTkyNzQ4NDkiDOfrddDnnKJLEaVlcSqPBfc6dsF029BlI%2Bzcy0u3riyL4%2F%2FT8xwtdkFDq1v%2BQabUqM9VNCUvDv7%2FWtv5itm3mLChE%2FgPaggTV0x1i4M9I96rP1Tdx734GZtatA9caD0YziJznRTFhZdv%2BRpZyqW0x%2BDBWmkbnL3q9Mk2VqWGuv8w0WORhVkr4U%2FwRPgCzLAhLmRIBtlGR3Le2jV5izWW%2FiA%2Bf1VF%2F4NRpjSpghXMCMfWFc%2B%2FoHd6Wx8j5FDXlE5MWsh80fs6d%2BW%2BxlwigGZiMnj1JTbOJkwOMap0zEoscOF4D2%2FoN7V6DeI3J7XqFN9oNB8hnPJdHB6tQpL8WGDV1jlfkfiOZPgJl2YRYT3VR%2F6PiV9ep5i7rm%2BRdQSo8dXy%2BfO573cpC4qYbOku4H0hb8Fphn24zLF7xfIRfvxEkjhvCkj6lS6sLM%2FnLqOxjn%2BLpJ%2FlY%2FL%2BBYIuaVPtIRs5qcp9L9UqnSDMtgkM3Mz0z5SWl5HxDRdxvfCCuyKUUNmTVams1QJBlVA%2BdYMt%2ByxelC%2BwpnG1PPTfmEonQn%2FYp4kODNrhsXvXelOeN7kZobZPGu4%2B7bVbNinz2qD%2Br2yCTjvjFqwAFCo9WlKaheGttma8EXZB61nf28NRE4J%2FEJ9WmT3aOBUvHDxbx6npxblNmsoexiEUKtlU6govA%2ByAMHswQidvdg9KEkEKlH4y7tFfmMeqf6iNRhhDz1FSIY98LQeNqswenjrx9ZR7n7kxipXGpSAPqVBcwDdS9tply%2BdNvqgyt5QNcP%2FIbbVHpppKANGqJVb4FpkajI2KOva%2Bixf1meJEdCm5OjL5pPuuGqyVZRw%2FQ8S8uX38e7ftk%2BLHhMhPAdw1R7UxZzic8TTUrGwzA%2FIVMziQ6bSVobTS8Bsw2d6%2FxgY6sQFM%2B90JI1LEO4gKDDWGfro2TDqdvKNUO%2Fvlb3svsloHnDao94fo%2F%2B3Ol%2FaogxtrDavOPVXuINmcNsIMdhE7eJrmttrpl7ilZclTNPMTu10XV8QWwX19%2F0HFf%2BUEVINni3fExXGHohjy3vo40Ac8cmd3D%2FpVgn%2BLhUVMBm9Y1A7EjU59wdGt49wIk9a387%2FWElmuu5RqXQqqrsQ9uelZBSyRqZFNO0jvoeWtkr%2B5%2BBzLIWg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=f86f2c91c513cb38772c491ae5526129257656d1d522551abb9a40a2c2e9d85d",
+      "file_size": 149637,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 566687,
+      "file_name": "img_1.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/ZXfyX88y26Pdvs1Q9YiVYJpt?response-content-disposition=attachment%3B%20filename%3D%22img_1.PNG%22%3B%20filename%2A%3DUTF-8%27%27img_1.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWLIXK7KK%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T124928Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCn9dBDjuRnR6R6gwO7wx1V9VTCorPNrsiHfcpQFucMbgIga98tHzwspPe%2FMy%2FsxRSx9minsZ%2FmvaaRCrdbchOwi8MqsgUIFhADGgwwMTM2MTkyNzQ4NDkiDOfrddDnnKJLEaVlcSqPBfc6dsF029BlI%2Bzcy0u3riyL4%2F%2FT8xwtdkFDq1v%2BQabUqM9VNCUvDv7%2FWtv5itm3mLChE%2FgPaggTV0x1i4M9I96rP1Tdx734GZtatA9caD0YziJznRTFhZdv%2BRpZyqW0x%2BDBWmkbnL3q9Mk2VqWGuv8w0WORhVkr4U%2FwRPgCzLAhLmRIBtlGR3Le2jV5izWW%2FiA%2Bf1VF%2F4NRpjSpghXMCMfWFc%2B%2FoHd6Wx8j5FDXlE5MWsh80fs6d%2BW%2BxlwigGZiMnj1JTbOJkwOMap0zEoscOF4D2%2FoN7V6DeI3J7XqFN9oNB8hnPJdHB6tQpL8WGDV1jlfkfiOZPgJl2YRYT3VR%2F6PiV9ep5i7rm%2BRdQSo8dXy%2BfO573cpC4qYbOku4H0hb8Fphn24zLF7xfIRfvxEkjhvCkj6lS6sLM%2FnLqOxjn%2BLpJ%2FlY%2FL%2BBYIuaVPtIRs5qcp9L9UqnSDMtgkM3Mz0z5SWl5HxDRdxvfCCuyKUUNmTVams1QJBlVA%2BdYMt%2ByxelC%2BwpnG1PPTfmEonQn%2FYp4kODNrhsXvXelOeN7kZobZPGu4%2B7bVbNinz2qD%2Br2yCTjvjFqwAFCo9WlKaheGttma8EXZB61nf28NRE4J%2FEJ9WmT3aOBUvHDxbx6npxblNmsoexiEUKtlU6govA%2ByAMHswQidvdg9KEkEKlH4y7tFfmMeqf6iNRhhDz1FSIY98LQeNqswenjrx9ZR7n7kxipXGpSAPqVBcwDdS9tply%2BdNvqgyt5QNcP%2FIbbVHpppKANGqJVb4FpkajI2KOva%2Bixf1meJEdCm5OjL5pPuuGqyVZRw%2FQ8S8uX38e7ftk%2BLHhMhPAdw1R7UxZzic8TTUrGwzA%2FIVMziQ6bSVobTS8Bsw2d6%2FxgY6sQFM%2B90JI1LEO4gKDDWGfro2TDqdvKNUO%2Fvlb3svsloHnDao94fo%2F%2B3Ol%2FaogxtrDavOPVXuINmcNsIMdhE7eJrmttrpl7ilZclTNPMTu10XV8QWwX19%2F0HFf%2BUEVINni3fExXGHohjy3vo40Ac8cmd3D%2FpVgn%2BLhUVMBm9Y1A7EjU59wdGt49wIk9a387%2FWElmuu5RqXQqqrsQ9uelZBSyRqZFNO0jvoeWtkr%2B5%2BBzLIWg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=7afb1fd5981941182cfc8ec8e40c348fb4eed2296dd4fe476f743a2f3eef6d7a",
+      "file_size": 111882,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 566688,
+      "file_name": "img_3.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/4Tzcs2FXH4J6aLJYPJqfU5gz?response-content-disposition=attachment%3B%20filename%3D%22img_3.PNG%22%3B%20filename%2A%3DUTF-8%27%27img_3.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWLIXK7KK%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T124928Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCn9dBDjuRnR6R6gwO7wx1V9VTCorPNrsiHfcpQFucMbgIga98tHzwspPe%2FMy%2FsxRSx9minsZ%2FmvaaRCrdbchOwi8MqsgUIFhADGgwwMTM2MTkyNzQ4NDkiDOfrddDnnKJLEaVlcSqPBfc6dsF029BlI%2Bzcy0u3riyL4%2F%2FT8xwtdkFDq1v%2BQabUqM9VNCUvDv7%2FWtv5itm3mLChE%2FgPaggTV0x1i4M9I96rP1Tdx734GZtatA9caD0YziJznRTFhZdv%2BRpZyqW0x%2BDBWmkbnL3q9Mk2VqWGuv8w0WORhVkr4U%2FwRPgCzLAhLmRIBtlGR3Le2jV5izWW%2FiA%2Bf1VF%2F4NRpjSpghXMCMfWFc%2B%2FoHd6Wx8j5FDXlE5MWsh80fs6d%2BW%2BxlwigGZiMnj1JTbOJkwOMap0zEoscOF4D2%2FoN7V6DeI3J7XqFN9oNB8hnPJdHB6tQpL8WGDV1jlfkfiOZPgJl2YRYT3VR%2F6PiV9ep5i7rm%2BRdQSo8dXy%2BfO573cpC4qYbOku4H0hb8Fphn24zLF7xfIRfvxEkjhvCkj6lS6sLM%2FnLqOxjn%2BLpJ%2FlY%2FL%2BBYIuaVPtIRs5qcp9L9UqnSDMtgkM3Mz0z5SWl5HxDRdxvfCCuyKUUNmTVams1QJBlVA%2BdYMt%2ByxelC%2BwpnG1PPTfmEonQn%2FYp4kODNrhsXvXelOeN7kZobZPGu4%2B7bVbNinz2qD%2Br2yCTjvjFqwAFCo9WlKaheGttma8EXZB61nf28NRE4J%2FEJ9WmT3aOBUvHDxbx6npxblNmsoexiEUKtlU6govA%2ByAMHswQidvdg9KEkEKlH4y7tFfmMeqf6iNRhhDz1FSIY98LQeNqswenjrx9ZR7n7kxipXGpSAPqVBcwDdS9tply%2BdNvqgyt5QNcP%2FIbbVHpppKANGqJVb4FpkajI2KOva%2Bixf1meJEdCm5OjL5pPuuGqyVZRw%2FQ8S8uX38e7ftk%2BLHhMhPAdw1R7UxZzic8TTUrGwzA%2FIVMziQ6bSVobTS8Bsw2d6%2FxgY6sQFM%2B90JI1LEO4gKDDWGfro2TDqdvKNUO%2Fvlb3svsloHnDao94fo%2F%2B3Ol%2FaogxtrDavOPVXuINmcNsIMdhE7eJrmttrpl7ilZclTNPMTu10XV8QWwX19%2F0HFf%2BUEVINni3fExXGHohjy3vo40Ac8cmd3D%2FpVgn%2BLhUVMBm9Y1A7EjU59wdGt49wIk9a387%2FWElmuu5RqXQqqrsQ9uelZBSyRqZFNO0jvoeWtkr%2B5%2BBzLIWg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=02ceeb1e511967b38e34d3cbbcbed8d64169053c852591bd4dc4db566016bd80",
+      "file_size": 430533,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2020-02-09T17:37:56.638Z",
+  "allow_singular_disclosure_after": -177189091.9974004,
+  "singular_disclosure_allowed": true,
+  "vote_count": 3,
+  "voters": [
+    "m1ndfulhacker",
+    "vu1n",
+    "assembly84"
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 4.6,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "low",
+      "user_interaction": "required",
+      "scope": "unchanged",
+      "confidentiality": "low",
+      "integrity": "low",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 14635,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "node-red",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
