@@ -1,0 +1,156 @@
+{
+  "id": 1298902,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMjk4OTAy",
+  "url": "https://hackerone.com/reports/1298902",
+  "title": "Outsider can affect Upvote Percentage of private subreddit post by calling /api/vote API",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2021-08-11T03:43:44.283Z",
+  "submitted_at": "2021-08-11T03:43:44.447Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "trieulieuf9",
+    "url": "/trieulieuf9",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/4il816od8nm3q9l0osei40prlyxz/8774a5031fc14b74dc4404da039040c69df8ed41021007c0c2beb9de489fcf66"
+    },
+    "is_me?": false,
+    "cleared": true,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 35710,
+    "url": "https://hackerone.com/reddit",
+    "handle": "reddit",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/osci5oey0q0wkiom39bk5onv8p7q/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/osci5oey0q0wkiom39bk5onv8p7q/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Reddit",
+      "twitter_handle": "reddit",
+      "website": "https://www.reddit.com",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2021-10-27T14:05:25.410Z",
+  "bug_reporter_agreed_on_going_public_at": "2021-10-23T03:39:58.286Z",
+  "team_member_agreed_on_going_public_at": "2021-10-27T14:05:25.259Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nAttacker that does not have access to a private subreddit, can still affect `Upvote Percentage` of any posts in this private subreddit. He does that by calling `/api/vote` API and passing post id directly.\n\nWhat is `Upvote Percentage`?: F1407175\n\n\n## Impact:\n- Attacker can affect `Upvote Percentage` of private subreddit posts, although he does not have access to this private subreddit posts.\n- Only `Upvote Percentage` is changed, vote number is not affected.\n- Limitation: Attacker needs to know post id in private subreddit to start the attack.\n\n\n## Steps To Reproduce:\n\n  1. Victim prepare a private subreddit and create a post in it [1]\n  2. Attacker intercepts a legitimate `/api/vote` request in Burp and send to Repeater\n  3. In Repeater, request body, change param `id` value to Victim's post id (assume that attacker has a way to get post id)  F1407184\n  4. Change param `dir` value to -1 and send request. `Upvote Percentage` decreases from 100% => 99%\n  5. Then change param `dir` value to 1 and send request. `Upvote Percentage` decreases from 99% => 67%\n\n\n[1]: If you just created a new post, please wait for half a day, until vote number is visible F1407178. It is fine to start the exploit right away, but the result does not update correctly until vote number is visible.\n\n## Impact\n\n- Attacker can affect `Upvote Percentage` of private subreddit posts, although he does not have access to this private subreddit posts.\n- Only `Upvote Percentage` is changed, vote number is not affected.\n- Limitation: Attacker needs to know post id in private subreddit to start the attack.",
+  "weakness": {
+    "id": 26,
+    "name": "Improper Access Control - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1407175,
+      "file_name": "upvote_percentage.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/it9dqa392ygo2usp95j27dyqqwnz?response-content-disposition=attachment%3B%20filename%3D%22upvote_percentage.png%22%3B%20filename%2A%3DUTF-8%27%27upvote_percentage.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYEN6ZMX6%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T011817Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJIMEYCIQDaPeTSLue%2BnrEQPFz%2BGFlOGBetmNIsUt4npGAtXrfntwIhAJQjhaKlYHqET5ebauD%2F36ivbCgvomtYsJw7jjns6wfxKroFCPX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5IgxATwEa%2Bklbzl1pOOIqjgWLiQYO1cLoMkYQ%2FM7yAqTtHBJPPMqU0kuJzwgknHMNizUjfFdnqf6%2F4%2BTnQnOKC%2Fg89XTHcDgjdpJ9MPoIUAHnmevlDSZ4v1PVq1z8b9OVPf1sabxVIJiNQn56qXcUrTfrXoxd97irBxCyfBrC6MiLJ8igFe3JyYHxdQnk%2BU0D8TTm6mOqNiOXFiDgwuSKAaBOuk3Ht5IJ3D%2B8kUFzgbGzhH4WUrPlS1bT%2FoHmfCEL%2FSD4J2UIakTNj%2FGh6SukadXYwvKp5wMfIkr%2FkpHTQ8zP8%2BBaig1ZBvZaRPguK2yNI1HV3hhx38Yh%2BfZp566I29M%2BFUGwCtXKOR6kdZlO75PfRNIcqGhASKKMFdqtT1KjpUg3%2BcvL0lZBTareGY85d34T5lfpgPgGddFv2SJcQvnar0ul1EizwSlqXvT9JVICE1PPs%2FD4DuPWN4dLIa23vyAgeiSmw5%2FLCaxzRc%2FI%2BdQx%2BVcT9sVN677w0I4iT6el8ejQwWsJOrYz4Yh5v5TURo4plIdAy%2BRHfLRg2gbiXGY25B7U8tqCaQ3Vw%2B6R%2BTcJYxS5qAoCPA6eNyhL%2F5ZOzO%2FB7K496u%2BNuulOEYIiNVZ29O2P4C5WENOYsIKZxQqJDwxrHFisMFXINDpZ1EsG%2FN9hz0vwxKj85imB8E8B1zMnY17p%2FvGWwXbIJ0fPND366nUU58FbsKBV68TN0weGkx2i7JW63jZrGDiBs%2B4boCPabrmUiXBgz3cm7CwlyzbIPAL61EsMoTlyc7R3uX4OcgnfziYAixio5ri4gepsLVRRA5bZ2fDgP72H3%2F0UFEbFmSbAWhftwPREqG9nRllckcJ6lxthBf667gza3ccj7YhcoamHFkmucZQWECgMskIwppS8xgY6sAHlIt3gAKrLVe%2B05z%2BrpCfEkWuJtsnsxqBFyPzPzkxEQMemcqp6TN3o6cr7J2KXWl2IO8lymLjoBaLimIW%2B4%2BZrocmXBGDlfHqYyxPCt926V5mmtaUJc2pRkg5hKPHAGa6JbP141KGENaG0dHy0g484U9%2F2%2Fb6FjxlONWFi0bhQEl%2Bw8ks8tpUSG%2FN8HTdx4JQufV9sQC1IP9nwkAjGUetG9LbIf8u5wx1DfNF53NgrlA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=0bba140f88158edd8072c78259427aadfe4e9ea994febf29f2993533aacd8cd2",
+      "file_size": 49467,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1407178,
+      "file_name": "new_post.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/drfvv472xremkz3ggdlipucjadbl?response-content-disposition=attachment%3B%20filename%3D%22new_post.png%22%3B%20filename%2A%3DUTF-8%27%27new_post.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYEN6ZMX6%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T011817Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJIMEYCIQDaPeTSLue%2BnrEQPFz%2BGFlOGBetmNIsUt4npGAtXrfntwIhAJQjhaKlYHqET5ebauD%2F36ivbCgvomtYsJw7jjns6wfxKroFCPX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5IgxATwEa%2Bklbzl1pOOIqjgWLiQYO1cLoMkYQ%2FM7yAqTtHBJPPMqU0kuJzwgknHMNizUjfFdnqf6%2F4%2BTnQnOKC%2Fg89XTHcDgjdpJ9MPoIUAHnmevlDSZ4v1PVq1z8b9OVPf1sabxVIJiNQn56qXcUrTfrXoxd97irBxCyfBrC6MiLJ8igFe3JyYHxdQnk%2BU0D8TTm6mOqNiOXFiDgwuSKAaBOuk3Ht5IJ3D%2B8kUFzgbGzhH4WUrPlS1bT%2FoHmfCEL%2FSD4J2UIakTNj%2FGh6SukadXYwvKp5wMfIkr%2FkpHTQ8zP8%2BBaig1ZBvZaRPguK2yNI1HV3hhx38Yh%2BfZp566I29M%2BFUGwCtXKOR6kdZlO75PfRNIcqGhASKKMFdqtT1KjpUg3%2BcvL0lZBTareGY85d34T5lfpgPgGddFv2SJcQvnar0ul1EizwSlqXvT9JVICE1PPs%2FD4DuPWN4dLIa23vyAgeiSmw5%2FLCaxzRc%2FI%2BdQx%2BVcT9sVN677w0I4iT6el8ejQwWsJOrYz4Yh5v5TURo4plIdAy%2BRHfLRg2gbiXGY25B7U8tqCaQ3Vw%2B6R%2BTcJYxS5qAoCPA6eNyhL%2F5ZOzO%2FB7K496u%2BNuulOEYIiNVZ29O2P4C5WENOYsIKZxQqJDwxrHFisMFXINDpZ1EsG%2FN9hz0vwxKj85imB8E8B1zMnY17p%2FvGWwXbIJ0fPND366nUU58FbsKBV68TN0weGkx2i7JW63jZrGDiBs%2B4boCPabrmUiXBgz3cm7CwlyzbIPAL61EsMoTlyc7R3uX4OcgnfziYAixio5ri4gepsLVRRA5bZ2fDgP72H3%2F0UFEbFmSbAWhftwPREqG9nRllckcJ6lxthBf667gza3ccj7YhcoamHFkmucZQWECgMskIwppS8xgY6sAHlIt3gAKrLVe%2B05z%2BrpCfEkWuJtsnsxqBFyPzPzkxEQMemcqp6TN3o6cr7J2KXWl2IO8lymLjoBaLimIW%2B4%2BZrocmXBGDlfHqYyxPCt926V5mmtaUJc2pRkg5hKPHAGa6JbP141KGENaG0dHy0g484U9%2F2%2Fb6FjxlONWFi0bhQEl%2Bw8ks8tpUSG%2FN8HTdx4JQufV9sQC1IP9nwkAjGUetG9LbIf8u5wx1DfNF53NgrlA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=863ab71af68eee7bcaae1d44c660a746fcb8b675eb924a87d5cc1472ae2ac83d",
+      "file_size": 120517,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1407184,
+      "file_name": "post_id.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/0xpnwwmw3yzxmea7yllt8yzpq4f5?response-content-disposition=attachment%3B%20filename%3D%22post_id.png%22%3B%20filename%2A%3DUTF-8%27%27post_id.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYEN6ZMX6%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T011817Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJIMEYCIQDaPeTSLue%2BnrEQPFz%2BGFlOGBetmNIsUt4npGAtXrfntwIhAJQjhaKlYHqET5ebauD%2F36ivbCgvomtYsJw7jjns6wfxKroFCPX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5IgxATwEa%2Bklbzl1pOOIqjgWLiQYO1cLoMkYQ%2FM7yAqTtHBJPPMqU0kuJzwgknHMNizUjfFdnqf6%2F4%2BTnQnOKC%2Fg89XTHcDgjdpJ9MPoIUAHnmevlDSZ4v1PVq1z8b9OVPf1sabxVIJiNQn56qXcUrTfrXoxd97irBxCyfBrC6MiLJ8igFe3JyYHxdQnk%2BU0D8TTm6mOqNiOXFiDgwuSKAaBOuk3Ht5IJ3D%2B8kUFzgbGzhH4WUrPlS1bT%2FoHmfCEL%2FSD4J2UIakTNj%2FGh6SukadXYwvKp5wMfIkr%2FkpHTQ8zP8%2BBaig1ZBvZaRPguK2yNI1HV3hhx38Yh%2BfZp566I29M%2BFUGwCtXKOR6kdZlO75PfRNIcqGhASKKMFdqtT1KjpUg3%2BcvL0lZBTareGY85d34T5lfpgPgGddFv2SJcQvnar0ul1EizwSlqXvT9JVICE1PPs%2FD4DuPWN4dLIa23vyAgeiSmw5%2FLCaxzRc%2FI%2BdQx%2BVcT9sVN677w0I4iT6el8ejQwWsJOrYz4Yh5v5TURo4plIdAy%2BRHfLRg2gbiXGY25B7U8tqCaQ3Vw%2B6R%2BTcJYxS5qAoCPA6eNyhL%2F5ZOzO%2FB7K496u%2BNuulOEYIiNVZ29O2P4C5WENOYsIKZxQqJDwxrHFisMFXINDpZ1EsG%2FN9hz0vwxKj85imB8E8B1zMnY17p%2FvGWwXbIJ0fPND366nUU58FbsKBV68TN0weGkx2i7JW63jZrGDiBs%2B4boCPabrmUiXBgz3cm7CwlyzbIPAL61EsMoTlyc7R3uX4OcgnfziYAixio5ri4gepsLVRRA5bZ2fDgP72H3%2F0UFEbFmSbAWhftwPREqG9nRllckcJ6lxthBf667gza3ccj7YhcoamHFkmucZQWECgMskIwppS8xgY6sAHlIt3gAKrLVe%2B05z%2BrpCfEkWuJtsnsxqBFyPzPzkxEQMemcqp6TN3o6cr7J2KXWl2IO8lymLjoBaLimIW%2B4%2BZrocmXBGDlfHqYyxPCt926V5mmtaUJc2pRkg5hKPHAGa6JbP141KGENaG0dHy0g484U9%2F2%2Fb6FjxlONWFi0bhQEl%2Bw8ks8tpUSG%2FN8HTdx4JQufV9sQC1IP9nwkAjGUetG9LbIf8u5wx1DfNF53NgrlA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=6c0c058bed2a7149a707e930b1d4e3c4bfd5067da1149390c55cae6dd49f4839",
+      "file_size": 128171,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 49,
+  "voters": [
+    "sumzer0",
+    "dsonbaker",
+    "tinmo",
+    "drsniper",
+    "thaivu",
+    "trieulieuf9",
+    "fanimalikhack",
+    "shreyaschavhan",
+    "ali",
+    "run_win",
+    "and 39 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "score": 3.8,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "high",
+      "privileges_required": "low",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "none",
+      "integrity": "low",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 18825,
+    "asset_type": "URL",
+    "asset_identifier": "www.reddit.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
