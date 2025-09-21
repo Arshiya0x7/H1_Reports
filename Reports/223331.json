@@ -1,0 +1,127 @@
+{
+  "id": 223331,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yMjMzMzE=",
+  "url": "https://hackerone.com/reports/223331",
+  "title": "[demo.weblate.org] Stored Self-XSS via Editor Link in Profile",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2017-04-24T09:16:48.255Z",
+  "submitted_at": "2017-04-24T09:16:48.255Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": true,
+    "username": "ysx",
+    "url": "/ysx",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 19468,
+    "url": "https://hackerone.com/weblate",
+    "handle": "weblate",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/019/468/71eb3827ae9f2a388f27bd4b7eefd20bc3ac813c_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/019/468/71eb3827ae9f2a388f27bd4b7eefd20bc3ac813c_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Weblate",
+      "twitter_handle": "WeblateOrg",
+      "website": "https://weblate.org/",
+      "about": "Weblate is a libre software web-based continuous localization system"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2017-05-17T14:20:03.777Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-05-17T14:20:03.740Z",
+  "team_member_agreed_on_going_public_at": "2017-05-17T14:19:07.794Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi,\n\nInput validation and/or sanitisation is not currently applied to the \"Editor Link\" in the user's [Preferences](https://demo.weblate.org/accounts/profile/#preferences). Consequently, it is possible to store a JavaScript payload which is stored and executes in the Weblate instance context.\n\n{F178717}\n\n## Steps to reproduce\n1. Visit the above Preferences page and identify the Editor Link field\n2. Populate the field with: `javascript:confirm(document.domain)`\n3. Visit a [translation page](https://demo.weblate.org/translate/hello/master/zh_CN/?checksum=6412684aaf018e8e) and select a Source String Location\n4. The XSS will trigger upon clicking on a Source String (e.g. `main.c`)\n\n{F178716}\n\nPlease let me know if you require any additional information regarding this issue.\n\nThanks!",
+  "weakness": {
+    "id": 62,
+    "name": "Cross-site Scripting (XSS) - Stored"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 178716,
+      "file_name": "EditorLink.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/178/716/076b538061b5d354e31dfcb9fbb8aa6d5acfd9e7/EditorLink.png?response-content-disposition=attachment%3B%20filename%3D%22EditorLink.png%22%3B%20filename%2A%3DUTF-8%27%27EditorLink.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQRWE5CGQ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T222903Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDLucJCVzPGDbjS%2BDgz2NOmRozTiWOO5zOZecU7uqLYrwIgIj6fBrzvtiVEMdKIwHSnjDZw1CAxqcZJmF0AoYBRjLMqsgUIHRADGgwwMTM2MTkyNzQ4NDkiDM1sziKy9fZSvRR1DyqPBTjTgRLYqW7AclHlt2G%2F4pnVrz2BLMfbK1VRkFES8JYW%2Bb7j9Hj3J8Lr6zTle0kBPpWEPDfYAI6TCKyqDQaHjV4wRLAiIEAu022fvBPui1b2sBpQKQqBL%2BYkNgFjiex4Y0p9puW8RQxa%2BUA7ogsiPm3eLst%2Fb%2BVSdRIzbCsg4KolPlFIMVu6IALYRuagDOr670yPIRmTizdhdGSj%2FcrVkyt34cOPlwKkOfk3GLfsMAEjEGtidIjEa2jGSqDxWbwmLkk%2FNvE6HnaTB3NKuP9km6nE2bWBZI0njCuSM2kLEna3FWJ1QqLoLVXGxhMOwQh9wG4El1hAhZXfkKPZ3F4LmeO8pzgBOHxUfoOcc%2F434Tv4Ggtl0CwoVF61jeDkfeYKIcQOOdDFjAPOmslH40kz12sWoACNBKSfSLiH9XzXpUVx7XB0O4GV2kn3%2BlrSiqmJPB0khb3cEg%2BWMe455qxIP2KK8GP08E1Z19JChj9LEpl1VBODNggDc9Hu1HgvHz9DEczbeoY0iL90VwtSP3Z02Mif2gJEbXPxhEDnx%2BMuCNwDc5OlnSfoTQ9tv7lDs%2FyVr%2FnPaj8xixT%2FRj%2FiC8l5edGLpCCEswDcEgr1jeptF86oXCIW5Qa8ekNmVgnB5NfAsb%2B8sX%2B3InEuwQgv5P1AGYiIhiy4TQiEqOVucP3MHjuHfVNsRGVP16Dmkp50ib2rvDmkiLI68wwl%2Fx%2FM2RuwYnHPp7ZMqimBcGqrCojXZqVbXERYUrKppELX1%2FEY4gmURf%2Bwt3V2O76ml23389bOvxd3pGw1fmyK5WjBMmjKKB7%2FOBL4whXe5wxCcl6vHqDk1Te%2BekrLml3C9V%2FJZDpJ13iUMqIHhN1jSmdWs5RlcSIw87fBxgY6sQGRUi3Az21sTqNlFYngcMx%2FXoJka7q00aRbUfvc49zhHsYTQS%2BIkEW4RG5oOIlxGItjomUEnAhMxOvQ5WtA0jB8%2F9ctqODM6O7ZDIysMRnRjDrlOL3sfiI578wpLf%2BCiMWeQGs5bou9XdM4851%2By0mtupoYmYLHvsC17d0A%2BnSpyhNPxGpRKMXO107c8sUwFzn5XKuO0s5SZ3mW0aXkqnBKVpbACfkIdfaYWviMfXDmS6Q%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=08253d5b24c9fdf8334996d9dd6d4936325b1a78c9ff4ab55fcea73870d57bdd",
+      "file_size": 87640,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 178717,
+      "file_name": "WeblateXSS.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/178/717/eeb4ea0aa73141101030649a2fc77c3115e2a18f/WeblateXSS.png?response-content-disposition=attachment%3B%20filename%3D%22WeblateXSS.png%22%3B%20filename%2A%3DUTF-8%27%27WeblateXSS.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQRWE5CGQ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T222903Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDLucJCVzPGDbjS%2BDgz2NOmRozTiWOO5zOZecU7uqLYrwIgIj6fBrzvtiVEMdKIwHSnjDZw1CAxqcZJmF0AoYBRjLMqsgUIHRADGgwwMTM2MTkyNzQ4NDkiDM1sziKy9fZSvRR1DyqPBTjTgRLYqW7AclHlt2G%2F4pnVrz2BLMfbK1VRkFES8JYW%2Bb7j9Hj3J8Lr6zTle0kBPpWEPDfYAI6TCKyqDQaHjV4wRLAiIEAu022fvBPui1b2sBpQKQqBL%2BYkNgFjiex4Y0p9puW8RQxa%2BUA7ogsiPm3eLst%2Fb%2BVSdRIzbCsg4KolPlFIMVu6IALYRuagDOr670yPIRmTizdhdGSj%2FcrVkyt34cOPlwKkOfk3GLfsMAEjEGtidIjEa2jGSqDxWbwmLkk%2FNvE6HnaTB3NKuP9km6nE2bWBZI0njCuSM2kLEna3FWJ1QqLoLVXGxhMOwQh9wG4El1hAhZXfkKPZ3F4LmeO8pzgBOHxUfoOcc%2F434Tv4Ggtl0CwoVF61jeDkfeYKIcQOOdDFjAPOmslH40kz12sWoACNBKSfSLiH9XzXpUVx7XB0O4GV2kn3%2BlrSiqmJPB0khb3cEg%2BWMe455qxIP2KK8GP08E1Z19JChj9LEpl1VBODNggDc9Hu1HgvHz9DEczbeoY0iL90VwtSP3Z02Mif2gJEbXPxhEDnx%2BMuCNwDc5OlnSfoTQ9tv7lDs%2FyVr%2FnPaj8xixT%2FRj%2FiC8l5edGLpCCEswDcEgr1jeptF86oXCIW5Qa8ekNmVgnB5NfAsb%2B8sX%2B3InEuwQgv5P1AGYiIhiy4TQiEqOVucP3MHjuHfVNsRGVP16Dmkp50ib2rvDmkiLI68wwl%2Fx%2FM2RuwYnHPp7ZMqimBcGqrCojXZqVbXERYUrKppELX1%2FEY4gmURf%2Bwt3V2O76ml23389bOvxd3pGw1fmyK5WjBMmjKKB7%2FOBL4whXe5wxCcl6vHqDk1Te%2BekrLml3C9V%2FJZDpJ13iUMqIHhN1jSmdWs5RlcSIw87fBxgY6sQGRUi3Az21sTqNlFYngcMx%2FXoJka7q00aRbUfvc49zhHsYTQS%2BIkEW4RG5oOIlxGItjomUEnAhMxOvQ5WtA0jB8%2F9ctqODM6O7ZDIysMRnRjDrlOL3sfiI578wpLf%2BCiMWeQGs5bou9XdM4851%2By0mtupoYmYLHvsC17d0A%2BnSpyhNPxGpRKMXO107c8sUwFzn5XKuO0s5SZ3mW0aXkqnBKVpbACfkIdfaYWviMfXDmS6Q%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=6ef8592c954f64dfa6eee3f38de78b3ca258c76cf202463aa8fe29a54b9665d6",
+      "file_size": 241750,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-06-16T14:19:07.818Z",
+  "allow_singular_disclosure_after": -260870995.86431196,
+  "singular_disclosure_allowed": true,
+  "vote_count": 4,
+  "voters": [
+    "spam404",
+    "eveeez",
+    "japz",
+    "spetr0x"
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "User"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
