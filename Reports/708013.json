@@ -1,0 +1,164 @@
+{
+  "id": 708013,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC83MDgwMTM=",
+  "url": "https://hackerone.com/reports/708013",
+  "title": "StoreFront API allows for a brute force attack on customer login by not timing out ALL attempts",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2019-10-04T22:13:38.873Z",
+  "submitted_at": "2019-10-04T22:13:38.873Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "clew",
+    "url": "/clew",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 1382,
+    "url": "https://hackerone.com/shopify",
+    "handle": "shopify",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Shopify",
+      "twitter_handle": "",
+      "website": "https://www.shopify.com",
+      "about": "Shopify is a multi-channel commerce platform that helps people sell online, in-store, and everywhere in between."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2019-10-07T20:12:54.095Z",
+  "bug_reporter_agreed_on_going_public_at": "2019-10-07T20:12:53.993Z",
+  "team_member_agreed_on_going_public_at": "2019-10-07T19:16:40.481Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "It seems that the service used for login purposes could be brute forced. the system fails when the password is incorrect, after some unsuccessful attempts the following message is shown:\n\n \n{\"data\":{\"customerAccessTokenCreate\":null},\"errors\":[{\"message\":\"Login attempt limit exceeded. Please try again later.\",\"locations\":[{\"line\":1,\"column\":10}],\"path\":[\"customerAccessTokenCreate\"]}]}\n\n \nHowever, it still possible to continue brute forcing and if you try with the real password it will work again. So in our case, we have been able to perform brute force attack.  \n\nWe feel Shopify should enforce the \"limit exceeded\" error for BOTH valid and invalid passwords.\n\n## Impact\n\nIf the brute force attack succeeds, the attacker will then gain access to that user's shopify account, including contact information and order history.",
+  "weakness": {
+    "id": 31,
+    "name": "Improper Restriction of Authentication Attempts"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 599924,
+      "file_name": "shopify_brute_force.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/VNrj9Fx69b5DAAp5fqALceDt?response-content-disposition=attachment%3B%20filename%3D%22shopify_brute_force.png%22%3B%20filename%2A%3DUTF-8%27%27shopify_brute_force.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXH3IJ7M2%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T142625Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCmTN%2BvZcEFOamV0Kg8ZJ4ZxIvtcAOCyN2sQtXu9gL4BAIgFUd6qrFnO5TOJAxy7WY1pXtDVyW%2FtooSmtiO9RTHu8UqsQUIFRADGgwwMTM2MTkyNzQ4NDkiDC1Wp%2F3SwOPbRAuuxSqOBcNtuKGMZbO9qIc7GMcE%2F8JdLTMg1N3s89C0FYD8cHLkyrK9DZb4wQZ0Qx%2B%2FPvNAp6gkecweUHJhNibW59it0oZPn50ncqsxwetmpsOGO2gsUId8lI5I8NlXMo1QIUmQgdp95jxdkuXIFNeEqERTWy7Y8JMjoVPglw7kGxObClqZuxapxy%2FU%2FlTOpsh2Y6QUmhobAbDn1weImZdTqE%2BGNZbLB4swr5K7YMgZdhnrnhNKSQQWOvuhsu86TqsICbyL%2B%2B6HVTwpi0uFYSLbgId5h57LTAPskSE2leo%2FooZbDb7ozFHsT27L2bfXfNwa58NRoDwR5lI%2BqHoOTtxW0peKh3GzHtAYbkGSIxOab98d1YU1IYCgNe60AaUhfuFvX21qTItpTZjR7vIAhJ0SSZyqCz%2BJ%2BMga%2BdzPGJE9Jm2%2FVrR6XCTzgK2UFrTyC3fnRbHy5bgHs%2Bz9Y5iejYtmpQPmhTu7le%2Br1w78OhgzdqYD%2F%2Bn02PHHq6VM57QjcLmtaFpTbN%2B9WeKCHnG92Q1nJJvr%2FEawcnOYbtTjlvVvLDv5%2FpggzxVZOQvLOu9o0CdLw18a11d7TJegeDpHYHaI7ij0PBVxXESim5wQSxHQa2S6ZRyBj%2B0zF8xoMibRorSRmDLlEo42jSN2sQ%2BE7bt1yMGe9fBQexEP2aaVpcj4o17M4e%2FVgEi5kK8dVeeE8qxwJgTCu2t%2FuXdXJhYoAKEad6CwiDZVGIdxSxldTULy7H5b%2Fy84GQpUhe%2FeeYGje5viO7O1OKXWpOpVuHn%2BT6VJ5ewZ6R7MjE3BerIgPSAmbDZ%2FNPJN0IqvjcUTck4fBYNrvLbt0OJ2Nl9c3k67FWZ%2BtTFlCCXN98b8R%2F1D9E2CHd82rjD207%2FGBjqxAYgJC3SrIcWSgXMuw%2FprXbX0JnjDjFZ6rNP1n%2BL4G3zbvE5D%2B1rv8pDAjz9ogSPQFV297aM4%2Fnnf6c4Id8aU8x9VTjlc3THODgd5oYEYaoBHqLtWouDpm7p%2BU3O7gLEBuKy2e4%2Fpf1AmMYVjGfoynPb5zpA9kAZtEaJ2zETyM6%2Fh3rHyexd9a8lW7ulQ0vX4CXJSH1sd3qk4s9zUhHtowsaRknU2A50CXgZH9gCJjlaGBw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=bdc015e257f913351cabf4e0fae9a160ff1fa65df9305a17a73f694496b0b445",
+      "file_size": 64332,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 37,
+  "voters": [
+    "drsniper",
+    "p1stachios",
+    "sameerphad72",
+    "dhakal_ananda",
+    "mohaned0101",
+    "hundredpercent",
+    "0-1",
+    "pr0f0x01",
+    "lumbridge",
+    "exception",
+    "and 27 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 5.8,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "high",
+      "privileges_required": "none",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "low",
+      "integrity": "low",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 413,
+    "asset_type": "URL",
+    "asset_identifier": "your-store.myshopify.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "id": 18422,
+      "category": "team",
+      "content": "@clew noticed that the [`customerAccessTokenCreate` mutation](https://help.shopify.com/en/api/storefront-api/reference/mutation/customeraccesstokencreate) in the [Storefront API](https://help.shopify.com/en/api/storefront-api) did not correctly throttle login attempts. The throttle failed to prevent brute force attacks because its counter was only checked & incremented when an invalid password was submitted. We've corrected the problem by applying the throttle to all login attempts, whether the password is valid or invalid.",
+      "updated_at": "2019-10-07T19:01:15.177Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 19166,
+        "username": "clayton",
+        "name": "Clayton Smith",
+        "bio": "",
+        "cleared": false,
+        "verified": false,
+        "website": null,
+        "location": "",
+        "created_at": "2015-03-19T21:02:17.272Z",
+        "url": "https://hackerone.com/clayton",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "company",
+        "profile_picture_urls": {
+          "small": "https://profile-photos.hackerone-user-content.com/variants/YKjJrQvn996bd2n67ELXwtHt/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/YKjJrQvn996bd2n67ELXwtHt/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a",
+          "xtralarge": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTEzOTIwMCwicHVyIjoiYmxvYl9pZCJ9fQ==--305067878f80100c42531d0fe7e980e5a345e62c/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJyZXNpemUiOiIyNjB4MjYwXHUwMDNlIn0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--cf3aeca803d1baf476958c689ca7b472a4cb54f1/5254e0ad-2f9c-4a01-8941-9bd5ca2e75db_edited.jpg"
+        }
+      }
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
