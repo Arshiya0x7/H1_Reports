@@ -1,0 +1,135 @@
+{
+  "id": 195140,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xOTUxNDA=",
+  "url": "https://hackerone.com/reports/195140",
+  "title": "Users with guest access can post notes to private merge requests, issues, and snippets",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2017-01-01T20:46:09.325Z",
+  "submitted_at": "2017-01-01T20:46:09.325Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "jobert",
+    "url": "/jobert",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/ht4b9SmcYNqmpbyCFXd7cxHB/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": true,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 264,
+    "url": "https://hackerone.com/gitlab",
+    "handle": "gitlab",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/f0hovtq73f9ap815a0r1w42bocp4/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/f0hovtq73f9ap815a0r1w42bocp4/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "GitLab",
+      "twitter_handle": "gitlab",
+      "website": "https://about.gitlab.com",
+      "about": "A single application for the entire software development lifecycle."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2017-01-23T23:09:37.689Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-01-23T20:47:09.489Z",
+  "team_member_agreed_on_going_public_at": "2017-01-23T23:09:37.637Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "# Vulnerability details\nA user with guest access to a group / project can post notes to private merge requests, issues, and snippets.\n\n# Impact\nIt seems it only allows an attacker to post notes to objects that the user doesn't have access to. I tried creating notes with slash commands, but unfortunately that didn't work. The hypothesis was to assign myself to an issue or merge request, and then access the object through the API. I'm unsure whether this is a security bug, but when a user is assigned to a merge request, it cannot access the MR through the web application, but it can access the MR through the API.\n\n# Proof of concept\n1. As a group / project owner, invite someone with guest access\n2. As the same user, create a merge request (or issue or snippet, they all work) - this MR is not accessible by users with guest access\n3. Accept the invitation as a new user and create an API token for your account\n4. Now send a `POST` request to the notes API with a reference to the `MR`:\n\n**Request**\n```\ncurl -X POST -H \"Private-Token: XXXX\" http://gitlab-instance/api/v3/projects/1/merge_requests/2/notes -d 'body=Hello+world'\n```\n\n**Response**\n```json\n{\n  \"id\": 1,\n  \"body\": \"Hello world\",\n  \"attachment\": null,\n  \"author\": {\n    \"name\": \"Jobert Abma\",\n    \"username\": \"jobertabma\",\n    \"id\": 1,\n    \"state\": \"active\",\n    \"avatar_url\": \"...\",\n    \"web_url\": \"...\"\n  },\n  \"created_at\": \"2017-01-01T20:33:44.360Z\",\n  \"updated_at\": \"2017-01-01T20:33:44.360Z\",\n  \"system\": false,\n  \"noteable_id\": 2,\n  \"noteable_type\": \"MergeRequest\",\n  \"upvote?\": false,\n  \"downvote?\": false\n}\n```\n\nWhen requesting the discussion page of the private MR, you'll notice that the note was posted, even though the user does not have permissions to do so.\n\n{F148594}\n\n# Remediation\nMake sure the correct ACL is checked before creating the note.",
+  "weakness": {
+    "id": 75,
+    "name": "Privilege Escalation"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 148594,
+      "file_name": "Screen_Shot_2017-01-01_at_21.45.42.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/148/594/0e77dcfc146d776c6fb2b7742247cb4179043e50/Screen_Shot_2017-01-01_at_21.45.42.png?response-content-disposition=attachment%3B%20filename%3D%22Screen_Shot_2017-01-01_at_21.45.42.png%22%3B%20filename%2A%3DUTF-8%27%27Screen_Shot_2017-01-01_at_21.45.42.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUPHDD546%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T235241Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDKsPnwqCh%2FQVaYDYBUsS0icgjcq6yVbEhVYiPJ8ea6FAIgQQ%2BaH%2BfucKthmW9uPJOom68SV7d2Q2FsHrZP7Kr7Q%2FsqsgUIHxADGgwwMTM2MTkyNzQ4NDkiDD0NRkW8orxYL9wKPSqPBV%2F3ezcQmvJbd6s6%2FGKhrbA8tkrzOyBzRNRt6Ms%2BR50M4de2dwuKzmuc%2BE4RRqJDtOiCFWvLWvDSXMfupaVlrMx0koUXpbBvs4KEMKN7X1EA0IMBNnyFh3%2FrfVDP8naoHI4nOhB2PRDLbOf4wMP5BcWxdI2cheJ6KYnapAdfAZhx%2BrBS4Nxx9RownzMDPX%2B7FC8d3n5x%2Fbjhh76VR0P0VszjsR3XemeIXxNhCK%2BLTurR2DFLHqVhx7BpZTaNquXMwgJHk7%2BspxXsArpigqdcxQYFivR77vF7VUjr4bqGtNOvF%2FxnFvwvfzqlB4TaWjh3sB9rXJtkWHgBr3qXVIFs%2BjXnQEaQrin9FakszLpMRSgyrxg70Rbf5H48vkBmFCedGpnnshzQwA7RzzMnTxYsdV1PJKYoFOAea%2BZXFahm5ZNSf0Xj23uz6wLELyMKTg0gjqEtJUz9M13rwVgBQleRZhdkMon%2Bw1PAAhD21QpJyhzEUKffruc6C6lFZz%2FojE3gRaCRWzSfrDdCuRgMIuH1Ti56YzOi6SZj2%2Bj%2FJGKM2pnfXyDZWU7E5uXQtL%2FBuYWD%2F1gbpV0%2FMoSUFWLsrBIJ3Ar%2B0jUZPxvVR05CIafGtMXK2G1x9kYgcIW1mP5H3wi0S6tS40u%2Byecwaf00qgf%2FkjJudj1uaCZaaZdxWtPTZ3haFAKWaUtOb3q%2F%2FLBEC7F7tFYukvjf8tiCwi4uWzRmTya3mRIMX8ONMgCeKln2ggoC0kK%2BXBp2DZHbly4H%2Bqt3dAaXi831U3bujY7bO%2BMcE0Wkc9pzp55bhE1R4zAJy1iw%2BbdKoqnYfYfX48YFpLXaeBvpU3Eu9d00cgLamHUG8nqitJXQXHbPT8lF8wGtxqEwle3BxgY6sQH5vvI1HWOFPwg4t5LVLyhmy%2BFJ37N8Sf6VG77h8lIZ8Btwm0KcD%2BfYJW1s2fynRGJebyKkuBnM3yHjNo4%2F%2FuxmuBgBwKz9G72zYtSlFCOrb8gFDGNLHV4ITKYTCI3f8Ozj7gw2NJMIkph4GZ5kpYT7fSpFkXYvBB7ADdb738O1jsE35vz48OTRzQ%2BqvxFxNbQQquxi0XkZ7WOQdTaqqqNl3WjuB6BjRKXNh%2FU0nvVpRyI%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=b8b3bf4bd080e6037552ee1dc0a5cd53286e8adedc7d4e289d253aed612ae9bc",
+      "file_size": 43570,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-02-22T20:47:09.522Z",
+  "allow_singular_disclosure_after": -270702331.85144925,
+  "singular_disclosure_allowed": true,
+  "vote_count": 9,
+  "voters": [
+    "ysx",
+    "ayoubfathi_",
+    "mpz",
+    "eveeez",
+    "japz",
+    "secdoor",
+    "spetr0x",
+    "arice",
+    "samclarke"
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 4.3,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "low",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "none",
+      "integrity": "low",
+      "availability": "none"
+    }
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
