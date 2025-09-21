@@ -1,0 +1,120 @@
+{
+  "id": 194721,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xOTQ3MjE=",
+  "url": "https://hackerone.com/reports/194721",
+  "title": "Verification of email addresses possible through https://www.yelp.com/signup/facebook",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-12-29T23:22:33.676Z",
+  "submitted_at": "2016-12-29T23:22:33.676Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "coder13",
+    "url": "/coder13",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/089/246/69b05de26a0ed963796a1bae98007b0f227b789e_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 545,
+    "url": "https://hackerone.com/yelp",
+    "handle": "yelp",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/545/de556165eaf2da7600f9ce75d1179281ee2d538f_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/545/de556165eaf2da7600f9ce75d1179281ee2d538f_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Yelp",
+      "twitter_handle": "",
+      "website": "https://www.yelp.com",
+      "about": "Connecting people to great local businesses in communities around the world."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2017-09-16T19:50:06.460Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-08-17T19:50:04.256Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi,\n\nThere is an issue with the https://www.yelp.com/signup/facebook endpoint which allows an attacker to validate whether a specific email address is registered on Yelp. There seems to be no rate limit nor a validation for already used CSRF tokens.\n\nSteps to reproduce:\n\n1. Go to https://www.yelp.com/login?return_url=%2F and sign up with a facebook account which is not linked to any yelp account yet.\n2. After confirming the access on FB, yelp will request to enter an email address and a password, as well as the ZIP code to finish the account creation. Enter any email address/password/zip code.\n3. Capture the request to https://www.yelp.com/signup/facebook with a HTTP sniffer.\n\nThe request body like this (unvalidated/unimportant parameters are ommited):\n\n```\nfirst_name=<FIRSTNAME>&last_name=<LASTNAME>&fb_access_token=<FB_TOKEN>&email=<EMAIL>&post_csrf=<CSRF>&csrftok=<CSRFTOK>&password=<PASSWORD>&zip=<ZIP>\n```\n\nThe response if the email address is already used by another user:\n\n```\n{\n   \"errors\":[\n      \"The email address you entered has already been registered.\"\n   ],\n   \"require_link\":false,\n   \"success\":false,\n   \"error_fields\":[\n      \"email\"\n   ],\n   \"show_captcha\":false,\n   \"return_url\":\"https://www.yelp.com/cookie_bridge/store?dhl=en_US\\u0026redir=https%3A%2F%2Fwww.yelp.com%2Ffind_friends%2Ffacebook\",\n   \"associated_email\":true\n}\n```\n\nShould the email address not be used by any user, we get the following response:\n\n```\n{\n   \"errors\":[\n\n   ],\n   \"photo_id\":\"<PHOTO_ID>\",\n   \"success\":true,\n   \"error_fields\":[\n\n   ],\n   \"show_captcha\":false,\n   \"return_url\":\"https://www.yelp.com/cookie_bridge/store?dhl=en_US\\u0026redir=https%3A%2F%2Fwww.yelp.com%2Ffind_friends%2Ffacebook\"\n}\n```\n\nKnowing how the responses look like and having a valid cookie collection, as well as the values for **post_csrf** and **csrftok** parameters and the FB access token from the captured request, an attacker can test a large list of email addresses against the https://www.yelp.com/signup/facebook endpoint. I could submit hundreds of requests to the given endpoint within a short time with the `hackerone@test.com` email address whch definitely indicates that there is no rate limit.",
+  "weakness": {
+    "id": 18,
+    "name": "Information Disclosure"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 148167,
+      "file_name": "Screenshot_3.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/148/167/bbc3285580e88211101333890773aa985d391015/Screenshot_3.png?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_3.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_3.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZH4PP2EU%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T202633Z&X-Amz-Expires=2649&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDPsHKy%2B9Z18ppMHR%2Brz4JYjOICNwdECPQPDmd48flZ2AIhALHRZOgDMcraak9k1Q5mE5pZOgrP7j7NKrP972DuBDwIKrIFCBgQAxoMMDEzNjE5Mjc0ODQ5Igx5185VGHELQR28cdcqjwX4UX5NRHC6WIhvqJBCzs%2FhOK8pzByrzZVmTgU2PgPOZS5Fc0o8EmtsaWh4D4NJgdRweBOpRWWBhVb43Xo%2BUjf9gQn6XDs60OFCAo5tdLyXu9x15q8lb7e6UDWrASQilfDRNtfc9aWmwlhvAp5Iz0izFAm9CLmZH9MVJryn1u%2FF3lJbdO6nv3rmZPuqetb%2BoMxrGX%2BNPlif6l0%2Bqkj6rB7zCZGmPQtg2ZeN4k9FTconG%2FSFKV0i8s9oe3bVkjIlfcoMj0uJ50wA5BvG%2B7yjlzW0X%2F6WUMwmyQx135WzZ6WzFWaA0cSVCr9AYHNsiYJP9JW24j40LBqx%2Bcr6YxLBbKasZCxeskDMD%2BtJDR8vaHtOpDY2umjTSKDr9zW2mJk4SH6Xk5psuntJC5qKqq6FjH1kgqEmYyZ2eun%2FkHgl4c6W8obz22R1Zz0GdBIheHvBFg9QD0Og9IzISx36BMJ9NwqS9bSzGWFndTRJvHTCNrLXKEcsvBv4XT2H0QlefyaJSASCoZtaojrs6M09JC0JBIze94REepEuQtaV5WN8dGogRj4LCy8wangKg4nMy0Nv07tnAfsmi0AbB86giBDl8xjJ2MuArKtIfs3plSGML31j8QBoTaTSMuQsabfIUae%2FXDnADWLslgnwHZMyHnK0HTYfJbdPvR%2FHoNr8%2BI1qrq%2FAEYn%2FPKD48LgmykyI8PIdgbHy7%2BHDgiFBCMveKJRIEYRSswlcc13jYW7yyQ075nWLGE6GaBft%2Bk71MnlIm3f98AoRCm7yGq1FHidipqYPUYdH2ECzV59OJUr7vQo6FpM6kBli0HjnqXMt4NJyvDuVEx9X%2FYr7NG2rNeU9hMotrGJdFtHp%2B9hcaXrq7ZEekrw4MIKqwMYGOrAB8vOzOXkAO8w6yO95SepBdPR3u4MwaaWSTz%2FfnIG1RAgmz4rXzoKUb3jsULsqFm%2Bej0xl99ee5FaRTDJPiDMbKgih1BukouxDCvzhaCXJL8WsiSrMaG9cqATSigwkBJLoY%2BZOYsf%2FsWX77kgB29lxf6cXKnae1XeRj1cgMKO0RmYSJoi0yU5wBaasoufS3SuFu2MoMAPikvnikZvtPPWH6cEyxLvagkOOxVcoUmgai3A%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=c337bbee4739b8e405da67a65e42985812c84c3525742500cac654bb17f0f621",
+      "file_size": 27918,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-09-16T19:50:04.335Z",
+  "allow_singular_disclosure_after": -252894988.7238307,
+  "singular_disclosure_allowed": true,
+  "vote_count": 10,
+  "voters": [
+    "fa1rlight",
+    "cuso4",
+    "r3y",
+    "eveeez",
+    "khizer47",
+    "sup3r-b0y",
+    "japz",
+    "spetr0x",
+    "jaysonskie",
+    "imching"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
