@@ -1,0 +1,133 @@
+{
+  "id": 500436,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC81MDA0MzY=",
+  "url": "https://hackerone.com/reports/500436",
+  "title": "DOM based CSS Injection on grammarly.com",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2019-02-24T11:42:51.113Z",
+  "submitted_at": "2019-02-24T11:42:51.113Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "gamer7112",
+    "url": "/gamer7112",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 22746,
+    "url": "https://hackerone.com/grammarly",
+    "handle": "grammarly",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/gx1qb7440tyefirbxv1tkl1ty186/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/gx1qb7440tyefirbxv1tkl1ty186/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Grammarly",
+      "twitter_handle": "",
+      "website": "https://www.grammarly.com",
+      "about": "Grammarly makes sure everything you type is clear, effective, and mistake-free."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2019-05-06T09:11:54.696Z",
+  "bug_reporter_agreed_on_going_public_at": "2019-04-25T02:29:47.169Z",
+  "team_member_agreed_on_going_public_at": "2019-05-06T09:11:54.590Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "**Summary:** An attacker can inject an external css file which can lead to phishing attacks and xss in older browsers.\n\n**Description:** Within the main.js file the following code exists:\n```javascript\nt.prototype.componentWillMount = function () {\n        var e = this.getCtx().nav.waypoint.query,\n        t = e.extcss,\n        n = e.affParams,\n        a = e.minWords;\n        this.affParams = n ? JSON.parse(decodeURIComponent(n))  : {\n        },\n        this.minWords = parseInt(a, 10),\n        t && this.addExternalCss(t)\n      },\n      t.prototype.addExternalCss = function (e) {\n        var t = document.createElement('link');\n        t.setAttribute('href', e),\n        t.setAttribute('rel', 'stylesheet'),\n        t.setAttribute('type', 'text/css'),\n        document.head.appendChild(t)\n      },\n```\nWhich allows an external css file to be loaded via the extcss parameter without any kind of origin checking or filtering.\n\n## Browsers Verified In:\n\nChrome Version 72.0.3626.109\nFirefox 65.0.1\n\n## Steps To Reproduce:\n1. Visit ```https://www.grammarly.com/embedded?height=300&extcss=https://www.dl.dropboxusercontent.com/s/e0g51ibqswh0v7d/xss.css?dl=0```\n\n## Supporting Material/References:\n\n  * CSS Injection can be used to create a phishing page like so:\n{F429327}\n\n## Impact\n\nAn attacker can use an external css file to spoof the page to their liking allowing for phishing attacks and if the victim is on an older browser an attacker can execute javascript as well.",
+  "bounty_amount": "250.0",
+  "formatted_bounty": "$250",
+  "weakness": {
+    "id": 63,
+    "name": "Cross-site Scripting (XSS) - DOM"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 429327,
+      "file_name": "css_injection.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/429/327/54badf6c8fc853d0caad67d63f4210d751184a35/css_injection.png?response-content-disposition=attachment%3B%20filename%3D%22css_injection.png%22%3B%20filename%2A%3DUTF-8%27%27css_injection.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQSIKGEP7Z%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T153624Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDXSUJbm47Xkl6GhjmU3im4fJmwYTlkTUAVk7ZOqnxdVAIhAO2uWtZuYHfsefdBGLrVYRcR2FYoDyVPmigBARBQahDxKrEFCBcQAxoMMDEzNjE5Mjc0ODQ5Igy03HZaTgLGoKQJaG8qjgX8W0VTH04xkoaNV862svPDPU80n6pyEi3YUWe10h2lK1TXz0DOs77dMX68bQ18PzzcUav2EhTaNmX5rLjKpJ1DkQKnxzROiK5ZkPsZWdVqmE3fO1vahBNVuuKoeUAaYmqkwujaRmNkP4PdVCB%2BXV8VzyjT33W40cNAtGYtdXdn6wqaEX4J3hfidXlCVJ0wpiAnCqcyQWuYn%2BTq4sJIgNarXyubydkCpAtekhy0bBKNteeTZVMQScHm7vyJzQCV7pCgYbA%2F9%2FUu5q4G2Tzy010pEjyFBZNTA4665siLrU%2F6YKr%2F6nh9ONyY1rCFCAuPWGeuWok4OSdXBkcp3eNvebf8c13CKNItshoUVaWfrW6IkSV1dDrBL4T3WwaBTSZtfMIquer0VUaUEYUPOxu%2FcHYzkaI8hDFNzT8UScwK5BQgK%2BrMe1Rlap%2BxxxL5O2JjPdnoMDRxNVtbrEXLrSpRae1gz0wxcnwgLXeKJMd%2FC3RH9DQZSzY1QKNmzOe%2FHfsH%2BYmn2hieJCllKLnL%2BG01Pl50tWODu8uX0NRn%2Fypiy%2B%2F2eGPHCAU%2ByeuM7JHpqQ0dBLoMtOC0U%2FyIHqnu3%2BGkkzd8wjz9f%2FadmGJxUOza2R2vTCqQ40Me%2Flp65PjJnV9GeDDkO2P5taay5Vp%2BI0EvbolzHzXzpMViuJYnphQ82ft4uYwO1X7OkYX7MBudeZDkW%2FIC0AIk4DZYkjS0Ycmp3dEDL%2Berrf%2BTvveLVHzvzmzNb5wlBiNWlANws1WfGrDWMwPYQdH%2BdayKboNGWL1Rp2twWkWI29ZkNECwdjSvickZ%2Bk51OJoVdq3TUnGT1NOmsLLlOM2jhF%2Bsj9tTangrciafOmLBymP3UYohmtPSYdgwh47AxgY6sAELU2lPQmYa2go0IgVWvMv8Iv8i5y1IKjSv47zwDOk9y6rPQMxOlcinw3T3ewK%2FIMvNRKen0p0QBdpMTv1p7YA6hyrJgw0zI4Twp62x9cvMcLl5NVQglgTZIvSta0fKNAMFRB%2Bd5zl9i%2FzRL%2FEZG5yvG8EMTz7V4FJSfVIR781omSjWgLxNDu4RtpO4zpVf32vf9%2B%2BeKyvx5V%2BbwtSsJUGMGhXENoT4lG%2FWVjcsbgQOSA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=1d4c0443b5f436abe6da7f5183fa8b3187636bde6c254aaff87076d425f8bf35",
+      "file_size": 42464,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2019-05-25T02:29:47.286Z",
+  "allow_singular_disclosure_after": -199717597.32429263,
+  "singular_disclosure_allowed": true,
+  "vote_count": 63,
+  "voters": [
+    "8910jq",
+    "viridian_40826d",
+    "dee-see",
+    "foobar7",
+    "gamer7112",
+    "base_64",
+    "ali",
+    "spam404",
+    "hussu010",
+    "metnew",
+    "and 53 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "Team"
+  },
+  "structured_scope": {
+    "databaseId": 1366,
+    "asset_type": "URL",
+    "asset_identifier": "www.grammarly.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
