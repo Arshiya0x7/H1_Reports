@@ -1,0 +1,141 @@
+{
+  "id": 503298,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC81MDMyOTg=",
+  "url": "https://hackerone.com/reports/503298",
+  "title": "Multiple XSS on account settings that can hijack any users in the company. ",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "critical",
+  "readable_substate": "Resolved",
+  "created_at": "2019-02-28T12:27:15.103Z",
+  "submitted_at": "2019-02-28T12:27:15.103Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "giddsec",
+    "url": "/giddsec",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/a3shn6lec8mhp2cuknl2hyie0v9q/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 61,
+    "url": "https://hackerone.com/x",
+    "handle": "x",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/ikx4ept298unt534kpz4am2bd4zs/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/ikx4ept298unt534kpz4am2bd4zs/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "X / xAI",
+      "twitter_handle": "XSecurity",
+      "website": "https://x.com",
+      "about": "X helps you create and share ideas and information instantly, without barriers."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2019-04-01T16:40:27.104Z",
+  "bug_reporter_agreed_on_going_public_at": "2019-03-22T21:26:25.878Z",
+  "team_member_agreed_on_going_public_at": "2019-04-01T16:40:26.981Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "### Note:\nHello Twitter Team, I just noticed that my report #485748 is already fixed, can you confirm? but my other duplicate reports aren't and still exists. #492444 #492913 are you sure it's on the **same root cause**? because I think the broad fix is already released but didn't fix the other issues.\nI will make a report here so you'll notice. I will merge #492444 #492913 here. I'm also thinking for Twitter Security. I'm monitoring MoPub since report #485748 was set on triage. \n\n*The broad fix didn't really fixed all issues, that's why I'm resubmitting these issues.*\n\n##Description: \nAn issue that can be performed **vice versa**. That a member can hijack a admin or admin hijack a member by injecting a malicious scripts in the **accounts settings**.\n\n##Steps to reproduce:\n\n1. Login to MoPub: https://app.mopub.com/account/login/\n2. Go to **account settings** (*almost everything here is vulnerable to XSS*)\n3. Inject on **currency**\n4. You can also inject on **company's information** (*every input is vulnerable to XSS*) \n\n**Cases of injecting on company's name** \n- When the victim go to **report's tab** XSS will trigger. (*even if the victim is on his/her original company, attacker's company still visible on email drop down menu.*)  \n- When the victim go to **account settings** XSS will trigger.  \n- When the victim go to **edit user settings** XSS will trigger.  \n\n**Cases of injecting on currency**(vice versa attack)\n- Administrator can inject malicious payload in **currency** can hijack member's session. (XSS triggers on member's end) \n- Member can inject malicious payload in **currency** can hijack administrator's session. (XSS triggers on administrator's end)\n\nI provided a **Full Demonstration of the vulnerability**\nF432851\n\n**Based on Roles and Permissions:**\n(Vice Versa Attack)\n\n- Members can make changes in the account, but they cannot add new users, change other users' roles or view payment information. F432849\n\n## Impact\n\nThis vulnerability can impact other users invited by the attacker. And it is Stored XSS that every time the victim visits the vulnerable endpoints, XSS will trigger. The impact here is the attacker can hijack the victim's session.\n\nIt's also a vice versa attack. the attacker could be the administrator or the member.",
+  "bounty_amount": "700.0",
+  "formatted_bounty": "$700",
+  "weakness": {
+    "id": 62,
+    "name": "Cross-site Scripting (XSS) - Stored"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 432849,
+      "file_name": "pic.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/432/849/a859ec0aa88874f6966f8eec9b0e9d92b626a812/pic.PNG?response-content-disposition=attachment%3B%20filename%3D%22pic.PNG%22%3B%20filename%2A%3DUTF-8%27%27pic.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQY5U7GUIN%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T155425Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIC5niQD0qC3aoi4eSiLWoaiY65AIYo1DPdTPjLeAKLP2AiAHHto8YHVb%2FNSxWMUT59231oA%2BwfBjLmaU%2BVXjfUbnviqyBQgXEAMaDDAxMzYxOTI3NDg0OSIMzDlJpBmypiQrtoJNKo8FsGHokkKb9RIXAek5nIi%2FBJK5PvfQ%2FqshJQ5rrqwkMwSdYwrYqwCQvGM1uJGBHzWTyj4zu6Ih4nSgUnBbD%2FzSFDjJ%2BgQIAt8y8EPS2%2FNJk4IaSULYQmxdQOMQzVMdZve0n7cePMkplrYAV945MJCR%2FH%2FUWt09fn%2FAgvAQP2jVE%2BFsZFQG93KzPBmRGYQR34K8hPjz5%2FfuemagW%2Bq58NCTuyDLc1J4umna0Pe0U%2FjJaA5Th1aGEFmhhxcWv6muLhmIkLwqXOrQ7p473v5tOcxSz0F4ldwO3EAIcWVqDAU3F%2FRyirSa8v2I7J1f7lelcLTOoWZsG8yHw49ufk7QV5ia%2B%2BUy1knUrXwUWq%2F3CNHTUzWbYNSIFkX1URqW%2BxayQDqKu7tPTjg%2FBZwUAYavypZFKNmg%2BNWV1AqTvh0G8xm6SSo2erIOpXhXDRDhWY%2BKZjAlqYBgDT8RfiqaiStuQgnjAidULi%2BXSzUx3a3KFv549%2Fb5J1ybLIMsIdjrO5Dzv4JaBCM2Q0Q0bWnE36yuVtU8GxIE0CULiEnZd8oow2HWNuelamtB9QH%2Ft5mi9KQhPYQQo%2BSVS9KoXKCj%2FQSCYe9LcUmco%2F%2FcPmExBzKRoFvTu57n7O%2B9jGGUxBWZT6dCNNqcDe3GVV38uDznrGl50azP4yjkV%2FUXCRJRchK00VD276gGxBm4F8SsMzP9dxtgo4VoQbYZjQPTiPqG3UmkuOVVPoiUoqo3VwSLfH%2B6%2F6eTjMJo%2FlM2voA9pviZPInqBFprWNmjPzG3yDOBNE2l6X4D3pDbSPh2EX8EsA83a9%2FPtP3QY3SgfKurGf1RXnqV2rxrkUfkpwKc3YXfj%2BEkTNO7Xr4fMTxMBbAqalgJkNwAwjDBjsDGBjqyAcrclUxDrZ5iAKX4pfyn6ZYjz7zUvhlu2N1pGEYsrmR%2FWh3TiBu78jAIewRa%2BwR1ZoqcOwbYNR67OK66P7MdOKF8ifnYLE%2FrooR75%2B%2BHerT9RzhprNH79fm%2BZFIN6rElfl1OePlj8uJLM4p0dk1uVmhLdI%2FVazM5dABzjdkbDU7BX68BdWX1qRH5sr4VYAGaWtrt%2B9wvaq7Lvk6dr2Mv%2B9nKULxeHmBlIFMOIkG6Gl6QJf8%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=30ca960bd66cb1827e1d1eef31bf557c08db77d90ac823893cdd11f8824a70a3",
+      "file_size": 14042,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 432851,
+      "file_name": "Full_PoC.webm",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/432/851/d74ba0d858dd3c7b8af4db99770a5da810cad35f/Full_PoC.webm?response-content-disposition=attachment%3B%20filename%3D%22Full_PoC.webm%22%3B%20filename%2A%3DUTF-8%27%27Full_PoC.webm&response-content-type=video%2Fwebm&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQY5U7GUIN%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T155425Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIC5niQD0qC3aoi4eSiLWoaiY65AIYo1DPdTPjLeAKLP2AiAHHto8YHVb%2FNSxWMUT59231oA%2BwfBjLmaU%2BVXjfUbnviqyBQgXEAMaDDAxMzYxOTI3NDg0OSIMzDlJpBmypiQrtoJNKo8FsGHokkKb9RIXAek5nIi%2FBJK5PvfQ%2FqshJQ5rrqwkMwSdYwrYqwCQvGM1uJGBHzWTyj4zu6Ih4nSgUnBbD%2FzSFDjJ%2BgQIAt8y8EPS2%2FNJk4IaSULYQmxdQOMQzVMdZve0n7cePMkplrYAV945MJCR%2FH%2FUWt09fn%2FAgvAQP2jVE%2BFsZFQG93KzPBmRGYQR34K8hPjz5%2FfuemagW%2Bq58NCTuyDLc1J4umna0Pe0U%2FjJaA5Th1aGEFmhhxcWv6muLhmIkLwqXOrQ7p473v5tOcxSz0F4ldwO3EAIcWVqDAU3F%2FRyirSa8v2I7J1f7lelcLTOoWZsG8yHw49ufk7QV5ia%2B%2BUy1knUrXwUWq%2F3CNHTUzWbYNSIFkX1URqW%2BxayQDqKu7tPTjg%2FBZwUAYavypZFKNmg%2BNWV1AqTvh0G8xm6SSo2erIOpXhXDRDhWY%2BKZjAlqYBgDT8RfiqaiStuQgnjAidULi%2BXSzUx3a3KFv549%2Fb5J1ybLIMsIdjrO5Dzv4JaBCM2Q0Q0bWnE36yuVtU8GxIE0CULiEnZd8oow2HWNuelamtB9QH%2Ft5mi9KQhPYQQo%2BSVS9KoXKCj%2FQSCYe9LcUmco%2F%2FcPmExBzKRoFvTu57n7O%2B9jGGUxBWZT6dCNNqcDe3GVV38uDznrGl50azP4yjkV%2FUXCRJRchK00VD276gGxBm4F8SsMzP9dxtgo4VoQbYZjQPTiPqG3UmkuOVVPoiUoqo3VwSLfH%2B6%2F6eTjMJo%2FlM2voA9pviZPInqBFprWNmjPzG3yDOBNE2l6X4D3pDbSPh2EX8EsA83a9%2FPtP3QY3SgfKurGf1RXnqV2rxrkUfkpwKc3YXfj%2BEkTNO7Xr4fMTxMBbAqalgJkNwAwjDBjsDGBjqyAcrclUxDrZ5iAKX4pfyn6ZYjz7zUvhlu2N1pGEYsrmR%2FWh3TiBu78jAIewRa%2BwR1ZoqcOwbYNR67OK66P7MdOKF8ifnYLE%2FrooR75%2B%2BHerT9RzhprNH79fm%2BZFIN6rElfl1OePlj8uJLM4p0dk1uVmhLdI%2FVazM5dABzjdkbDU7BX68BdWX1qRH5sr4VYAGaWtrt%2B9wvaq7Lvk6dr2Mv%2B9nKULxeHmBlIFMOIkG6Gl6QJf8%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=22418232726aa3aa9ecf6ddca411ca3e7ff4a9c488da27e5b221bf3987c363a8",
+      "file_size": 3437580,
+      "type": "video/webm",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2019-04-21T21:26:25.953Z",
+  "allow_singular_disclosure_after": -202588079.83196306,
+  "singular_disclosure_allowed": true,
+  "vote_count": 73,
+  "voters": [
+    "excis3",
+    "rook1337",
+    "ali",
+    "dhakal_ananda",
+    "z4de",
+    "logicmap",
+    "thalaivar304",
+    "savitar0x01",
+    "m3jhrd",
+    "amad3u6",
+    "and 63 more..."
+  ],
+  "severity": {
+    "rating": "critical",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 1074,
+    "asset_type": "URL",
+    "asset_identifier": "mopub.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
