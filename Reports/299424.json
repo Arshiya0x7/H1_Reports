@@ -1,0 +1,137 @@
+{
+  "id": 299424,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yOTk0MjQ=",
+  "url": "https://hackerone.com/reports/299424",
+  "title": "Bypass Filter and get Stored Xss ",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2017-12-19T18:18:30.760Z",
+  "submitted_at": "2017-12-19T18:18:30.760Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "dr_dragon",
+    "url": "/dr_dragon",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/r7Mc1RTnn4g3t5j7eEnogFAr/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 1382,
+    "url": "https://hackerone.com/shopify",
+    "handle": "shopify",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Shopify",
+      "twitter_handle": "",
+      "website": "https://www.shopify.com",
+      "about": "Shopify is a multi-channel commerce platform that helps people sell online, in-store, and everywhere in between."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2018-12-12T17:50:32.678Z",
+  "bug_reporter_agreed_on_going_public_at": "2018-12-12T17:50:32.592Z",
+  "team_member_agreed_on_going_public_at": "2018-12-07T19:51:17.199Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "# Description\n\nShopify allows developers to create a special type of application called a \"Sales Channel\". Developers are allowed to upload a 16x16 SVG \"Navigation Icon\" for their app provided the SVG follows the design guidelines which limits the allowed elements and attributes. For some reason when the SVG contains an XML entity this whitelist is no longer enforced allowing the developer to include malicious attributes such as onload. By uploading a malicious SVG a developer can obtain XSS on both partners.shopify.com, as well as any the admin panel of any shop which has authorized the sales channel.\n\n# Proof of Concept\n\nThis is relatively easy to reproduce, first create a new application within the Partners dashboard then navigate to \"Extensions\" -> \"Sales channel\" to convert the application. After saving those changes a new field within the \"App info\" section titled \"Navigation icon\". Upload the following SVG:\n\n```\n<svg><!--?php \"--><script>confirm(20)</script>?&gt;</svg>\n```\n\n## Impact\n\nAn attacker can use XSS to send a malicious script to an unsuspecting user. The end user’s browser has no way to know that the script should not be trusted, and will execute the script. Because it thinks the script came from a trusted source, the malicious script can access any cookies, session tokens, or other sensitive information retained by the browser and used with that site. These scripts can even rewrite the content of the HTML page. For more details on the different types of XSS flaws",
+  "bounty_amount": "3000.0",
+  "formatted_bounty": "$3,000",
+  "weakness": {
+    "id": 62,
+    "name": "Cross-site Scripting (XSS) - Stored"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 248146,
+      "file_name": "xss.JPG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/248/146/947497f1ba27935e7525242db98d0115c1fa9673/xss.JPG?response-content-disposition=attachment%3B%20filename%3D%22xss.JPG%22%3B%20filename%2A%3DUTF-8%27%27xss.JPG&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXQSJDR46%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T163011Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDFPFELgDCOnkKst7R6HkBJGJ%2FCN2KDvVYDO5pkHu%2FKiQIhAISBMqqvR5CTOhQAr6fNGxrfKjy1tC6xImaZ45b2XRgRKrIFCBgQAxoMMDEzNjE5Mjc0ODQ5IgydT4C5szjSfdEjbG8qjwXNfn48U5qP8DtQh22koX2ZziUvuAcX1UDkxjhArH5miYJ3lBVsPf4f7rN9Wdg4gy8IVjHPq9FbGOTa7hhbMLduKsQ9MVH2fbL%2FeJsUpw8O1rwGYcMqxwuPz2EYdvrXQAtSoCeZO6DYccCmDIwQqNAXqtLuaWCBtuGlEQPxNCOrzbpz1%2Bbfcs1m2KBCbPAbwBYtK9xxcp%2FzBG2nfIThr091pPvXRVPOhCE6XjcyoXQr4zGDpOUncJkF1THSodShAdERB%2B0YpUmkeCtVz%2FEshmOQInZJiX14R0tKQmjS0ORFkX5S2AdrSDfuWVHfINYwtiMfs23zrub8V5lngMpUy1dSSdvrYkAY5T0cesH5i%2FbKGJ4mAkm6FPuFzQJzGPrvTiAMGxGjcjHw4W7kRZSN1EZgxQ5laLr6uiE%2BDG2thvR2JhmBJXoaMBdiLW86PLG6Y7sepas6WVRkvLG3uyZnisBv1cBXZD1fEy5xFwtf56AJh0gxs5%2FiOHoHoIN6rlSgnCIuooJUHhCYvM3Fjz%2BM2%2BEW%2FXgEzkceBA7FOTK1fjrQCSvJVtUFVDS1KTpPb2ltr5cp%2B3di7zoLkBdlgidHD99VAeBsHvRcrvSBeMGnUGVfdM6JqhbzlB5KPj1m1I1cxsNqvBrC7InSR2pLvxvX9O4ri4fjgiIa%2FhMxvq4qpbyKDaCgCYQ0oXFLJJkzRLfaUPg9X3Li%2FXQljumu123J6gBlVrRdTZ0XoeGYKIvdd2zRIbHt1lz2z8zZmTy2z5QYAKPvC855o%2BqYpLNpHSpVg3ELaFPBjjzRCRou6%2FBLghHuLu5DIYjiIQppcBTrEVSW1MHbJTfK0fj20Vnw0w1SuqSRkqmv07W%2FgI8vRf7IDEKgMMajwMYGOrABmTka%2FZg0qf%2BCu4HDa71BELxFKnLAvO8psLVGBiUM3Gzk6YK7YbM8T%2Bo120qRVfuChnTM4%2F3u2RwbocPYWT03D%2F%2FyLjSXliW4gLdOyx9L2YuQD1Y6hMb84DCXLI%2BKb2F8LfmUZIlpIYk4EsnZ2mmSTAy%2BBC0pi%2FqcYIS4PcO7cjLWp4zIMpL3mWD8irtIg1PXYqqoBjtgM8fqgSdB%2Bb2og1UExlulzHb1jazdVeNZ954%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=05d22b2dec70b866a70264a22c0d2694d707bf0cd6939a561fb019caa09ce23b",
+      "file_size": 95055,
+      "type": "image/jpeg",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 33,
+  "voters": [
+    "drsniper",
+    "ali",
+    "sameerphad72",
+    "dhakal_ananda",
+    "2026",
+    "flashdisk",
+    "ahiezer",
+    "savitar0x01",
+    "harrymg",
+    "cyb3rmehul",
+    "and 23 more..."
+  ],
+  "severity": {
+    "rating": "high",
+    "score": 8.1,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "low",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "high",
+      "integrity": "high",
+      "availability": "none"
+    }
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
