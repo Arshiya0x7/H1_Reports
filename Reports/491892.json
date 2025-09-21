@@ -1,0 +1,135 @@
+{
+  "id": 491892,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC80OTE4OTI=",
+  "url": "https://hackerone.com/reports/491892",
+  "title": "Broken access control on apps ",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "critical",
+  "readable_substate": "Resolved",
+  "created_at": "2019-02-06T11:51:30.342Z",
+  "submitted_at": "2019-02-06T11:51:30.342Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "theappsec",
+    "url": "/theappsec",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MzkwMjgsInB1ciI6ImJsb2JfaWQifX0=--cd574b1f939b51145cc1bcf01bc2851a1cae1464/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--2de8067d228529d65848a4eeed0bed0bb2531bc3/avatar.jpg"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 19858,
+    "url": "https://hackerone.com/rocket_chat",
+    "handle": "rocket_chat",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/019/858/ada6c92a338715afad123af214dd6e22fd8dc6ff_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/019/858/ada6c92a338715afad123af214dd6e22fd8dc6ff_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Rocket.Chat",
+      "twitter_handle": "RocketChat",
+      "website": "https://rocket.chat",
+      "about": "Rocket.Chat is a company built on open source values and a love for efficiency. The company is driven by our amazing community of contributors."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2019-06-22T08:41:48.343Z",
+  "bug_reporter_agreed_on_going_public_at": "2019-05-23T08:41:41.718Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "**Summary:** \n\nThe user without administrative privileges can upload and install any Application into the rocket.chat\nAs ID of application is controlled in the app.json file (which is controlled by uploader) user can also activate the app.\n\n## Releases Affected:\n\n  * 0.73.2\n\n## Steps To Reproduce:\n- User log-in into the chat\n- User open the following link:\n\n```\nhttp://<rocket-chat.link>>/admin/app/install\n```\n- Upload any app\n- Activate it by send the following POST request to the installed app:\n\n```http\nPOST /api/apps/<ID_of_the_installed_App>/status HTTP/1.1\nHost: rocket-chat.link\nUser-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0\nAccept: */*\nAccept-Language: en-US,en;q=0.5\nAccept-Encoding: gzip, deflate\nContent-Type: application/json\nX-User-Id: [redacted]\nX-Auth-Token: [redacted]\nX-Requested-With: XMLHttpRequest\nCookie: [redacted]\nDNT: 1\nConnection: close\nContent-Length: 29\n\n{\"status\":\"manually_enabled\"}\n```\n\n## Supporting Material/References:\n\nYou can see the uploading process in the attached video. Left user is admin, right -  user without any additional privileges. \n\n## Suggested mitigation\nManaging apps should be available to admins only.\n\n## Impact\n\nUsers can install and activate malicious apps into the rocket.chat.",
+  "weakness": {
+    "id": 26,
+    "name": "Improper Access Control - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 419022,
+      "file_name": "rocket-upload-plugins-2019-02-06_13.06.45.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/419/022/011ab4c35046ff29fa23e5d78779e93d4f69536e/rocket-upload-plugins-2019-02-06_13.06.45.mp4?response-content-disposition=attachment%3B%20filename%3D%22rocket-upload-plugins-2019-02-06_13.06.45.mp4%22%3B%20filename%2A%3DUTF-8%27%27rocket-upload-plugins-2019-02-06_13.06.45.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ35IKKUL2%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T152017Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIDPkFyAhy%2FpwvxFGMkM3%2F2bfb4n33W0e0f6eNh6RFPxUAiBJKeVcAQroJr2NPLOUyKnrRtE0QNLMpPoL2gT1cHJVUyqxBQgYEAMaDDAxMzYxOTI3NDg0OSIMDOBDc5rfeh0zWELFKo4Frfuu96CtJha2RRUhmEzUwgKzveSjuOztVUIyA3t13W8roNmV5RK4LpR4nRJxw3cHf8NBKQ016l3BOkKLaWtytXCjT1O9ff26AZ%2BEBvos7DsBIHd%2B0bfOurnPTsXcOxYN0p%2BIFtUWr2Qxyp9EXKtVsDfS5lfXMnWf08HXYBDo6F9yYoTqPPqUCzwzAF7BIesRpMynrJA%2F41DgIlKDbNDe0eSDzcwccNERtUxmH48GBHqjftJEQA6ZQq%2FmUv30NG4hURERB0x39j8pbBPwnsKc%2FQdShwJjAtr%2FqGK%2FOD8LmwG3q3L2JqThXWRH3fQbGmqh2qu%2BSFHG8SOzc0RY%2BVUhwxTsunqNQglSfx3eL9RqhjtPlcLcsVr7o6uuWd%2B34io8BwmN%2FV3BBspHY8%2FcasLtYoO%2BV1s369aQANsCx0V6NV3mDyfpD46MZsORh9kHVSARURBnJMT5N4f%2BnIHiINkoIJ2lLZOpGBZY%2BvwYhLGyKvj4uF5xfBodlaNaS%2FbdtQoXqsA5falOeMJvqzqOOUf5PSDgP%2BglkfY5w3aWU9GkpRZshc8pwnWsJ7bvb5vWdjWzW5x0pbX9KZTzEwcAZRRCodU6lExAer7ryOWskkzqBc5HNdHCgDPDEtqXEVXyHt4i7zNkAbBfLa6N7HoiPIR72n%2FQVkGGfdBaHOlqivAc2wqOZWxom1BW3oraNGPmVYiBQsyCYm0SW%2Fel9Zd0fRbu1Hw2JnZTkSIDLSCz6nPN1APC%2BhE9aMUXzCQDTy90Ke0BpZ1jPujr0XiL2qhDxAjT4OE8kEY2t7JpkrgOulrtT8EDUMuHn%2BgMMKLoVDNEHmBV%2BA%2BuFZR6bWbQA0svqGEjjeGPfLNSRLVZDwsoxOdHMM%2BmwMYGOrIBCG0uGM9BVoqemQ27JzW%2FVo6eaFVSlTz6lkBWxsK8lu3vorS%2BOuW4VZW6z4PhK6viKR0WZkNJukTM2W97e8B0FaJv47silQPDUF4zTKrOWIsdZ90mVU%2BnLORYT8q%2Fgge7LSsI7xXC1OatCPBQ7KMEEUZP%2BeovgEF2vsIqtWqRETovSM00AFYj0ZN6bYm2Ynq%2FM4bvQ7%2Bjjbl8DS80O9tizF%2B4fsD%2FB%2FEarE9kkrz%2Bwl8lqw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=2308cc5649a51369b3dfb653e4b4988410798d72fa9b750043a241c27689c699",
+      "file_size": 1371322,
+      "type": "video/mp4",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2019-06-22T08:41:41.792Z",
+  "allow_singular_disclosure_after": -197275116.0708203,
+  "singular_disclosure_allowed": true,
+  "vote_count": 9,
+  "voters": [
+    "ali",
+    "bb00x",
+    "tiago-danin",
+    "0xm1racle",
+    "destinedtohack",
+    "sypowicz",
+    "black03r",
+    "wischutz",
+    "amginelive"
+  ],
+  "severity": {
+    "rating": "critical",
+    "score": 9.6,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "low",
+      "user_interaction": "none",
+      "scope": "changed",
+      "confidentiality": "high",
+      "integrity": "high",
+      "availability": "none"
+    }
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
