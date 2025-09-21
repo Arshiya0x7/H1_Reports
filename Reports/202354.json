@@ -1,0 +1,124 @@
+{
+  "id": 202354,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yMDIzNTQ=",
+  "url": "https://hackerone.com/reports/202354",
+  "title": "Stored XSS / Bypassing .htaccess protection in http://nodebb.ubnt.com/",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2017-01-31T13:34:43.035Z",
+  "submitted_at": "2017-01-31T13:34:43.035Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "inhibitor181",
+    "url": "/inhibitor181",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/iK9ytFYT28QM6G5xrCaphqnv/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": true,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 800,
+    "url": "https://hackerone.com/ui",
+    "handle": "ui",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/fpqjzgms7de9639u414bw6vid1be/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/fpqjzgms7de9639u414bw6vid1be/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Ubiquiti Inc.",
+      "twitter_handle": "ubiquiti",
+      "website": "https://ui.com",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2017-09-28T07:23:26.659Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-08-29T07:23:24.206Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello,\n\nWhile I was looking at your renewn SSL certificated, I have noticed the following link : http://nodebb.ubnt.com/\n\nI have seen that this link was protected by htaccess password, but I have decided to run a nmap scan. By running the following :\n\n```\nsudo nmap -sSV -p- 104.131.159.88 -oA stage_ph -T4\n```\n\none of the open ports was this : `4567/tcp open   tram?`\n\nAnd, to my surprise the ip `104.131.159.88:4567`, as well as `http://nodebb.ubnt.com:4567/` were available from internet and unprotected.\n\nHere, I have found a nodeBB instance and I have managed to create a persisted XSS by using the  upload API, that does not properly sanitize the file names and automatically sets wrong mime types. \n\nNormally, it seems that the user is allowed to upload only images, but the stored XSS was possible by injecting malicious html in the exif data and changing the file name to .html.\n\nI have attached a video with the POC, as well as the exif image.\n\nI have not managed to RCE, but it is also worth noting that uploading the file with the .php extension and writing php content using exif IS possible.\n\n",
+  "weakness": {
+    "id": 60,
+    "name": "Cross-site Scripting (XSS) - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 156302,
+      "file_name": "exif.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/156/302/01e6a2517e0c9f93fb3c04654f9c34b2c8037818/exif.jpg?response-content-disposition=attachment%3B%20filename%3D%22exif.jpg%22%3B%20filename%2A%3DUTF-8%27%27exif.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUNXCE6YL%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T201731Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDTqjg3%2F60zMbBv7Y%2FmGhKkm3GmrH3kxkZindmKEbQ8BAIgU6oFyNOx91SPL1yh3n4qa6w6Suy2ZZsRH%2F3QXJ0zfn4qsQUIGxADGgwwMTM2MTkyNzQ4NDkiDDmfL9Egc9HEdTNjDSqOBVzAkKHHcqMcDpeuaSCjFaKNDIz39dvxYduW5YPZ0IWglk9GqF48bMAxZmKuQA3utmy7%2BghVmkw5X8X5YOVuhVC%2FIEHQWLg6fBSyn1VD7XpfAbi8YKmWpuMEV9y2NuxjzeAEkZMVHXz78FmNKUk0UzoScP214X3Hntvlj25GmNeFVDggCpnIYIRTjz6lyqIg8I2EgVq4GpB9oYlMVU5lMZCJ2PQJeJS0CIYvyw5HREPinKc2iLVK4Pe%2B0bNIc3yqCaou%2BrA%2BieCpmr8vnLCyrkO4jBVnoovtP%2Bum5CqxfGcxp5YAGXgLREEuFtc0nY5t%2BBHXF07Ihp9aZDosuEj6OeIrDDwpioycdp7eN1vwD9Sdkz0Lm%2FTaRgkdZEQ%2FS%2FruTs0g6rHlpf1wUX7M6LSFX3%2FXdKuM8euvRh1aCnO%2F92CT8PE62UW2bBcCNdFUJcSSfT0CguV0aEHXFW5vezs8jinBCZCON23nPquPbE%2F1bOLcOEsALR6hphFbJSMql%2BOf9CKwZfWN85hdzq12XFfFE8P9AX6BWgY9Vvosa%2BjXU4Qeg2OKVcVPqZsk6tx1UMgNrwKXdH2agiN%2FPI%2FIqh5ppaDbZuNYt1Y1hIND0IAYHmsyqLVMYhL04bpOYSqaRHQQXVrGNqJKnUwdvUdKDji0IopXg9onJ8gyQPbmWxpXje4%2Bda0FS1NwAORZ%2FLnPTV2ohOHSad6wkQAdRY36Lfz1HWkRzEzcDKu7I473kpLexahRvl1K8x6rUa6KmiV8bEGHkir9SOf1eA6rBw7EEcKSfZqgXMqC90rDheCMBfrF3wHKIedPYrx8SjwBJ%2B8BxXREYIzu2xl0nEUz22OOH%2Bm%2FG7QVetMxNW7qs66HudlmHjCR%2BsDGBjqxASjXXkC23Ath0pdbOUYJmJWIWkJn5jAOvzdFLAwsMJwbNPFkZ05jRfF0usEvjzSDaEBcgTKvP0V1ZxrUrWAPqlbxLQIh9MPO2wGpqUcMZvVRtnJD7WNgLR7l7%2Bky7LymGL1o8v9PX4sPAV81eXujmX0DUAiCCbP4HQlsB%2FXzw66%2Fc1N7l7voC4ygwYREKnPLgiox2ok2ZFma6zp721Pml0LO5ymAECII%2BKRajF%2F8ZgxK9w%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=f9d601d1590c78451ec0bfe92488b286bdb90a32699eb32287ddf63cb9bef382",
+      "file_size": 11515,
+      "type": "image/jpeg",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-09-28T07:23:24.237Z",
+  "allow_singular_disclosure_after": -251902446.8387246,
+  "singular_disclosure_allowed": true,
+  "vote_count": 9,
+  "voters": [
+    "jensec",
+    "bl4de",
+    "vijay_kumar",
+    "michan",
+    "r3y",
+    "eveeez",
+    "t4ym",
+    "mr_r3boot",
+    "spetr0x"
+  ],
+  "severity": {
+    "rating": "high",
+    "author_type": "User"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
