@@ -1,0 +1,120 @@
+{
+  "id": 766205,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC83NjYyMDU=",
+  "url": "https://hackerone.com/reports/766205",
+  "title": "csrf bypass using flash file + 307 redirect method at plugins endpoint",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2019-12-30T19:59:15.099Z",
+  "submitted_at": "2019-12-30T19:59:15.099Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "qotoz",
+    "url": "/qotoz",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTMzNzcyMSwicHVyIjoiYmxvYl9pZCJ9fQ==--b3334d7b41d1d98dd3c852524b4e019f02dc2531/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--2de8067d228529d65848a4eeed0bed0bb2531bc3/111.jpg"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 42368,
+    "url": "https://hackerone.com/stripo",
+    "handle": "stripo",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/042/368/5b1017d17427be6c8e05cbc95da27646bf45e925_original./235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/042/368/5b1017d17427be6c8e05cbc95da27646bf45e925_original./3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Stripo Inc",
+      "twitter_handle": "",
+      "website": "https://stripo.email",
+      "about": "Stripo is a lightweight and intuitive email template editor that lets users build professional looking and highly responsive email templates."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2020-02-10T08:38:16.876Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-02-08T22:42:26.783Z",
+  "team_member_agreed_on_going_public_at": "2020-02-10T08:38:16.797Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi Security team,\n\ni have found that the request sent to https://my.stripo.email/cabinet/stripeapi/v1/plugin/$userid$/plugins     don't have any protection against csrf attacks as the server only validates that the content type is application/json and this can be bypassed using the flash file + 307 redirect technique \n\n\nSteps To Reproduce:\n\n  1.  login to your account at https://my.stripo.email\n  2.  visit https://thehackerblog.com/crossdomain/\n  3.  use this link as php redirector https://testingsubdomain.000webhostapp.com/stripo.php\n  4.  in the request headers : Content-Type: application/json;charset=UTF-8\n  5. the payload\n\n```\n{\"email\":\"attacker@example.com\",\"name\":\"csrf poc\",\"webUrl\":\"csrf poc \"}\n```\n\n \n\n##Watch the network traffic from the network tab on the Devtools \n##and go back to and refresh the site you'll find all the application data have created\n\n\nall these steps would be integrated together and performed by the attacker's server\n\ni am attaching a poc video declaring the steps\n{F671826}\n\n##Supporting Material/References:\nhttp://www.geekboy.ninja/blog/exploiting-json-cross-site-request-forgery-csrf-using-flash/\nhttp://resources.infosecinstitute.com/bypassing-csrf-protections-fun-profit/#gref\nhttps://blog.cm2.pw/forging-content-type-header-with-flash/\n\n## Impact\n\nattacker can send request to create an application in behalf of user",
+  "weakness": {
+    "id": 45,
+    "name": "Cross-Site Request Forgery (CSRF)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 15,
+  "voters": [
+    "p1stachios",
+    "sourc7",
+    "abdellah29",
+    "renekroka",
+    "qotoz",
+    "t3k4",
+    "cryptographer",
+    "nafisaqil",
+    "demons_0786",
+    "lino-thomas",
+    "and 5 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 38702,
+    "asset_type": "URL",
+    "asset_identifier": "my.stripo.email",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
