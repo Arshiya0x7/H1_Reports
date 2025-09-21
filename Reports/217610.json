@@ -1,0 +1,120 @@
+{
+  "id": 217610,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yMTc2MTA=",
+  "url": "https://hackerone.com/reports/217610",
+  "title": "kh_put_iv SEGFAULT - mruby 1.2.0",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2017-04-01T07:14:38.590Z",
+  "submitted_at": "2017-04-01T07:14:38.590Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "ilsani",
+    "url": "/ilsani",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/034/984/3b77bc02e946405c4f4f77b7b678907d81f1946c_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 15668,
+    "url": "https://hackerone.com/shopify-scripts",
+    "handle": "shopify-scripts",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/015/668/ebbe467de8ef2fc936053593e1289e30f04c3b06_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/015/668/ebbe467de8ef2fc936053593e1289e30f04c3b06_original.jpg/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "shopify-scripts",
+      "twitter_handle": "",
+      "website": "",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2017-04-13T22:45:37.586Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-04-13T22:45:37.555Z",
+  "team_member_agreed_on_going_public_at": "2017-04-13T21:27:25.939Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "mruby v. 1.2.0 crashes in `kh_put_iv` function in `variable.c` file with a crafted input. I'm examining the bug in order to better understand the root cause of the issue.\n\nTest platform:\nLinux 4.2.0-1 SMP Debian 4.2.3-2 x86_64\n\nStacktrace:\n```\nProgram terminated with signal SIGSEGV, Segmentation fault.\n#0  0x000000000045329c in kh_put_iv (mrb=0x2744c10, h=0x2f2f3a7370747468, key=671, ret=0x0)\n    at /home/msani/wrk/security/code-review/shopify/mruby/src/mruby/src/variable.c:292\n292     KHASH_DEFINE(iv, mrb_sym, mrb_value, TRUE, kh_int_hash_func, kh_int_hash_equal)\n(gdb) backtrace \n#0  0x000000000045329c in kh_put_iv (mrb=0x2744c10, h=0x2f2f3a7370747468, key=671, ret=0x0)\n    at /home/msani/wrk/security/code-review/shopify/mruby/src/mruby/src/variable.c:292\n#1  0x0000000000459117 in iv_put (mrb=0x2744c10, t=0x2f2f3a7370747468, sym=671, val=...)\n    at /home/msani/wrk/security/code-review/shopify/mruby/src/mruby/src/variable.c:310\n#2  mrb_mod_cv_set (mrb=<optimized out>, c=<optimized out>, sym=<optimized out>, v=...)\n    at /home/msani/wrk/security/code-review/shopify/mruby/src/mruby/src/variable.c:838\n#3  0x000000000050e1e1 in mrb_vm_exec (mrb=<optimized out>, proc=<optimized out>, pc=<optimized out>)\n    at /home/msani/wrk/security/code-review/shopify/mruby/src/mruby/src/vm.c:979\n#4  0x000000000051f5bb in mrb_vm_run (proc=0x2746ef0, self=..., stack_keep=8, mrb=<optimized out>)\n    at /home/msani/wrk/security/code-review/shopify/mruby/src/mruby/src/vm.c:823\n#5  mrb_top_run (mrb=0x2744c10, proc=0x2746ef0, self=..., stack_keep=<optimized out>)\n    at /home/msani/wrk/security/code-review/shopify/mruby/src/mruby/src/vm.c:2614\n#6  0x00000000004d4f93 in mrb_load_exec (mrb=0x2744c10, p=<optimized out>, c=0x0)\n    at /home/msani/wrk/security/code-review/shopify/mruby/src/mruby/mrbgems/mruby-compiler/core/parse.y:5760\n#7  0x0000000000400c85 in main () at runtest.c:23\n(gdb) exploitable \n__main__:99: UserWarning: GDB v7.11 may not support required Python API\nDescription: Possible stack corruption\nShort description: PossibleStackCorruption (7/22)\nHash: 5696db2f9fc8b1e9b330173ee7ddc787.2627e5d3f14472e2e24f2d46a9038356\nExploitability Classification: EXPLOITABLE\nExplanation: GDB generated an error while unwinding the stack and/or the stack contained return addresses that were not mapped in the inferior's process address space and/or the stack pointer is pointing to a location outside the default stack region. These conditions likely indicate stack corruption, which is generally considered exploitable.\nOther tags: AccessViolation (21/22)\n\n```\n\nAttachment [1] is the crafted input.",
+  "bounty_amount": "800.0",
+  "formatted_bounty": "$800",
+  "weakness": {
+    "id": 2,
+    "name": "Memory Corruption - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 172696,
+      "file_name": "input.txt",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/172/696/921460591414a3e09c204cab6df709aa0445c15f/input.txt?response-content-disposition=attachment%3B%20filename%3D%22input.txt%22%3B%20filename%2A%3DUTF-8%27%27input.txt&response-content-type=text%2Fx-c%2B%2B&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ2672TXP5%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T225821Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIFBmwDDQUjrdjJhinf%2BPozodz2NBZ3ix0Y8C72gnYQ%2BwAiB1ZGS0We0mouO%2FzCEMLuto1WvU398SUNLLODhQNoXNFiqxBQgcEAMaDDAxMzYxOTI3NDg0OSIMhA3wwmG7UKJP9AAGKo4FbP9vJ5gC0u5tjxMKfJmGUvInEf1CNrVtkwLSCE8QLqbaBz5bhdVOMWP5KlwGVPiUtWYs7d77h6ZbeXNCEdBPXnpuS17139h2lSdad8KHRt5CbpY9SX66049DiMVxNA08uU8S1%2BYXH8XU3BGxlkmIBbe5aYq67U6MxsQZjp53Dj6WYqrjDDRntYWlHtbOQ4BbiMRfQlVh2tBNFnwj3Vwmau3IQBMLoqwAI6Or%2FcE1LJr0Oq%2BrX8IuLoy8VDmtY%2FBJYcLyArjgz9RQ7VYZbeOdHXdkI7GQ5DKYoN7T3X506ZanWbQUyKVRwNOhNrbT6VfVWP7x1EtHWLsT4vxQTR0PasMeyB9TSn4dHCQvuP7s9hlNF6zm0kjghZmtmaqQIg83FcxwCskYKt3LQuvlJdCVKg3%2BtK3hseuCEJ2p0HvfujAElfJS79p4DFvUVVVie%2Fpv1baDSDfVQjsHo6D%2BGgbNaVWaHEzvFOif8xb%2Fnw8Sg1cSQNhWk0bk8GiRgzSHrbYHLCMbFj2Cnf8nR2h4sm%2FQobzQsNQTE6tgGhcCaHDk2UAiyF5Ee6iPbonvuImIaZlEJ6yzRQD4uo9q7jcqdZi69MbxXF1QC8Rk9%2BeLctZ5lPveRRRQnpmPkCe9xpKlqM6H0JPk3RhV%2B0NR2t7h64akePhaOcmjg1jRrbi03vD4QvuIUPPm9p1cvn5k4HABpm3s5QWqWQr5MFv1hOSNiSK%2B04ToI5RB5iNbSTASQkzF7%2BZef2jrUVgzn5NO3op%2B0OJBRaMBHgQVaMe5xJUn0gK4UfgkBPq00LjqOeMYvBpW1JpKrTaWejkv0C%2F0jfcHOryQ53qfMWzA6uhkAUOsEmJ%2BkF%2BjTLZyQCs9XAuSSDBsMIeVwcYGOrIBgXU9lwrHyKH50udgPH%2BqkLge1TXo7aEsWD%2B0cJkrWkN2NGW7jdl2zNlZ7Nx%2FTdaKqZHglwKVTU1aS9vxMaFN0Vvp4Az5%2FX4PuNNDgCOaKVD9rKQHbR0Omu1NiPDVfv7sREi1GAtWsu%2Bz0iin4S%2BcvkCV26ke3DPe43AHO6Cjw7YWbbsqibZmbFzAfQ482l%2BkgOaZ6sdPNOfAubg6f7BxQtJRegFlN0XizYJKjRFDJAlRPw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=f3d38e33d348b56d27163990b1e6750f6cc8963bddc227446f18c3f87283da40",
+      "file_size": 301,
+      "type": "text/x-c++",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-05-13T21:27:25.981Z",
+  "allow_singular_disclosure_after": -263784655.8046195,
+  "singular_disclosure_allowed": true,
+  "vote_count": 3,
+  "voters": [
+    "eveeez",
+    "t4ym",
+    "spetr0x"
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
