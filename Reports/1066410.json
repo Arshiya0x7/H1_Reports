@@ -1,0 +1,141 @@
+{
+  "id": 1066410,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMDY2NDEw",
+  "url": "https://hackerone.com/reports/1066410",
+  "title": "Google API key leaks and security misconfiguration leads Open Redirect Vulnerability",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2020-12-25T20:35:58.259Z",
+  "submitted_at": "2020-12-25T20:35:58.491Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "br33z3",
+    "url": "/br33z3",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/PkkN675JhcBq317LCDghWkcn/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 43746,
+    "url": "https://hackerone.com/clario",
+    "handle": "clario",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/t3XRtv8dYQo3cRSYWh2iL7CE/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/t3XRtv8dYQo3cRSYWh2iL7CE/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Clario",
+      "twitter_handle": "",
+      "website": "https://clario.co/",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2021-04-01T20:09:30.321Z",
+  "bug_reporter_agreed_on_going_public_at": "2021-03-02T20:09:29.791Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nHello, when i search your targets and javascript files I found an googleapikey leaks in url = [https://account.clario.co/js/main.044af6485f6b0cd90809.js](https://account.clario.co/js/main.044af6485f6b0cd90809.js \"Url\").\nPart of the leak down below;\n``` \n'https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=AIzaSyAw-SpLHVTIP3IFEIkckCuEmIhnUrY9OrQ';\n```\n{F1129971}\n\nAfter that I do some research about that API key. I found how to use. This API shortening urls. API looks for key, company and regex rule for shortening urls.\nRef Link1 => [https://support.google.com/firebase/answer/9021429](https://support.google.com/firebase/answer/9021429 \"Url\")\nRef Link2 =>[https://firebase.google.com/docs/dynamic-links/rest](https://firebase.google.com/docs/dynamic-links/rest \"Url\")\n\nWhile I was trying to test regex I was figured out i can short urls that redirect users whatever I want because of wrong regex leads security misconfiguration.  Also I found urls shortening from ```https://lnk.clario.co/?link=[URLHERE]```. I found that endpoint from same javascript file.\nYou can type anydomain and any urls only thing you need to do is add ```/clario.co/``` path to your url.\n\nHere is an example PoC video; \n\n{F1130020}\n\nYou can redirect any website and any path to victims with that dynamic url.\n\n## Steps To Reproduce:\n[add details for how we can reproduce the issue]\n\n  1. Get API key from javascript file.\n  2. Find endpoint for shortening url from javascript file.\n  3. Use postman or another tool for creating short url.\n  4. Send url to victims. After that its up to your imagination :).\n\n## Supporting Material/References:\n[list any additional material (e.g. screenshots, logs, etc.)]\n\n## Impact\n\nShortened link looks legit because its coming from clairo.co when we are looks from the victims perspective. Because of this victims can click the link easily and redirect to malicious websites.",
+  "bounty_amount": "300.0",
+  "formatted_bounty": "$300",
+  "weakness": {
+    "id": 53,
+    "name": "Open Redirect"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1129971,
+      "file_name": "poc1.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/vuh8y429jqbq83j6xzjk9tfh0fgs?response-content-disposition=attachment%3B%20filename%3D%22poc1.png%22%3B%20filename%2A%3DUTF-8%27%27poc1.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQVNBPDR7O%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T032145Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIDSr2j0ANL%2FfAcmIbuIFEIi9OJ%2FVFZT8wrecZEVdmYHEAiEAgP3zlhzHVDlq%2BCJzOWJ3UUwbsLBCc%2FPD%2Ba0XriD4giYquwUI%2Bv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDMLk2GWuCcI%2BMVYOXSqPBd9luZyoHF9b%2BDdxp%2FY%2BFcX9%2Fc4eX8y870FeL1mI5z6xjbVHQwZad%2Bylag09vnTVGjL5XVWRtK196nvD5fcSaNU5%2B%2BSTqRBpb7DH%2Bda1FamYaWZ7x68jxRzoKwomxLPZcx7FzFrmt3JfiAO7%2BC6Bu4ktEJxsC8X5ZYCXLK9pbjCw3%2BjmPJ4x6L9YwNBcz3jWAB9ovqT4faEZKFeGree2ccVladldjw%2FwOEYS3mDD0yFI%2BZ8PlR9RxiMTbQW7LX7yi5I0r8sduHZl9INKIIiuBk1yyLeMtXXrnGZtEAdtcMlB2%2BiaP0PuUjKTktZywnpycqWd9748l61feLRE3xaj0BbSHouwQEvs5Tu3w3mwXuUDUP8Zbf2bkiCOKA7NwFAIKf2QguxHLWTnMLgl41tp1YDqxrkJ9EXcva212Slyrb7S2722tf92zgVj8iXtVAGD0fPo9ouf3iDz9Ck20pdK1J%2BsIdGifZwUPEBAlCIkKL0M1Eh3q2mHvnqPlLxKrFqiyGd2IlAOiZZq5tzQ50Y4n96Bf%2BmvRtPenDf0LlngGY3iH0liD0iQKLN9bW5GIg2B11Iy29hTboWNAFONqboYqWFvBqT8O9Lb7%2FcVy%2FheIZf0JJ6swTFEYqo0qLXFpqpX639a2FH9i9i3%2BaW1LWoOhIpsANTLrkud8OiiYaTywDVLZvKS32OX3jDm4n%2FjWaPGP6H767lCoKDmzaBPoRsykxYV2UOZ%2B2Nw3B%2F6O4Q4slp1Q03jgO9isFzBds1vuWuVwd8cX49erKNOLbyoe%2BrxWs0R48b6a7XDFHj3QHPoyPt726Y4V12nONi6Dh2K6Bp3S7YOla19XgsKYKEQRlPGAsOcIzb%2FpIJ%2B6fFVQ0TRt50wgZG9xgY6sQEw3KOjzD4f511fXPvvYjT8%2FU70VQ9yGcEGk4jeTchqUM%2BuL%2FTHWOge5DnafJzX0m8ZW%2BFm1XIfCGT%2B6YsL52OQudQlbs6zRMwxetinv2S%2Fb%2BBtg8Frn2uaiAKqDIC2S7%2FNZHaYNeszGbOb582XMHQeCXgStpFcaGFNyndoY3I8YxcqnEy9VXxBGcqObRH7XcG%2B%2F9www5LogunQ%2FfQ3BW%2F%2B7%2FakkNfttDxEyu%2BuYJWHgio%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=b233680b66ecf795be476bc8d168d80878f7a2547310c4cbeb97e5b1b935e698",
+      "file_size": 255112,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1130020,
+      "file_name": "PoC.webm",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/czvugolkcebaqae5at0tbgq3fuj7?response-content-disposition=attachment%3B%20filename%3D%22PoC.webm%22%3B%20filename%2A%3DUTF-8%27%27PoC.webm&response-content-type=video%2Fwebm&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQVNBPDR7O%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T032145Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIDSr2j0ANL%2FfAcmIbuIFEIi9OJ%2FVFZT8wrecZEVdmYHEAiEAgP3zlhzHVDlq%2BCJzOWJ3UUwbsLBCc%2FPD%2Ba0XriD4giYquwUI%2Bv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDMLk2GWuCcI%2BMVYOXSqPBd9luZyoHF9b%2BDdxp%2FY%2BFcX9%2Fc4eX8y870FeL1mI5z6xjbVHQwZad%2Bylag09vnTVGjL5XVWRtK196nvD5fcSaNU5%2B%2BSTqRBpb7DH%2Bda1FamYaWZ7x68jxRzoKwomxLPZcx7FzFrmt3JfiAO7%2BC6Bu4ktEJxsC8X5ZYCXLK9pbjCw3%2BjmPJ4x6L9YwNBcz3jWAB9ovqT4faEZKFeGree2ccVladldjw%2FwOEYS3mDD0yFI%2BZ8PlR9RxiMTbQW7LX7yi5I0r8sduHZl9INKIIiuBk1yyLeMtXXrnGZtEAdtcMlB2%2BiaP0PuUjKTktZywnpycqWd9748l61feLRE3xaj0BbSHouwQEvs5Tu3w3mwXuUDUP8Zbf2bkiCOKA7NwFAIKf2QguxHLWTnMLgl41tp1YDqxrkJ9EXcva212Slyrb7S2722tf92zgVj8iXtVAGD0fPo9ouf3iDz9Ck20pdK1J%2BsIdGifZwUPEBAlCIkKL0M1Eh3q2mHvnqPlLxKrFqiyGd2IlAOiZZq5tzQ50Y4n96Bf%2BmvRtPenDf0LlngGY3iH0liD0iQKLN9bW5GIg2B11Iy29hTboWNAFONqboYqWFvBqT8O9Lb7%2FcVy%2FheIZf0JJ6swTFEYqo0qLXFpqpX639a2FH9i9i3%2BaW1LWoOhIpsANTLrkud8OiiYaTywDVLZvKS32OX3jDm4n%2FjWaPGP6H767lCoKDmzaBPoRsykxYV2UOZ%2B2Nw3B%2F6O4Q4slp1Q03jgO9isFzBds1vuWuVwd8cX49erKNOLbyoe%2BrxWs0R48b6a7XDFHj3QHPoyPt726Y4V12nONi6Dh2K6Bp3S7YOla19XgsKYKEQRlPGAsOcIzb%2FpIJ%2B6fFVQ0TRt50wgZG9xgY6sQEw3KOjzD4f511fXPvvYjT8%2FU70VQ9yGcEGk4jeTchqUM%2BuL%2FTHWOge5DnafJzX0m8ZW%2BFm1XIfCGT%2B6YsL52OQudQlbs6zRMwxetinv2S%2Fb%2BBtg8Frn2uaiAKqDIC2S7%2FNZHaYNeszGbOb582XMHQeCXgStpFcaGFNyndoY3I8YxcqnEy9VXxBGcqObRH7XcG%2B%2F9www5LogunQ%2FfQ3BW%2F%2B7%2FakkNfttDxEyu%2BuYJWHgio%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=db15799a9bcacf405795c9160d4576c12913520c20f06fd53931918cea1f212a",
+      "file_size": 9130523,
+      "type": "video/webm",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2021-04-01T20:09:29.858Z",
+  "allow_singular_disclosure_after": -141117135.85781685,
+  "singular_disclosure_allowed": true,
+  "vote_count": 64,
+  "voters": [
+    "arist0phanes",
+    "battle_angel",
+    "th0roid",
+    "shreyaschavhan",
+    "ali",
+    "remonsec",
+    "spell1",
+    "2026",
+    "akashhamal0x01",
+    "0xelkomy",
+    "and 54 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "Team"
+  },
+  "structured_scope": {
+    "databaseId": 49103,
+    "asset_type": "URL",
+    "asset_identifier": "account.clario.co",
+    "max_severity": "none"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
