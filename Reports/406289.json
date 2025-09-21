@@ -1,0 +1,139 @@
+{
+  "id": 406289,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC80MDYyODk=",
+  "url": "https://hackerone.com/reports/406289",
+  "title": "Stored XSS on Broken Themes via filename",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2018-09-06T06:37:59.749Z",
+  "submitted_at": "2018-09-06T06:37:59.749Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "apapedulimu",
+    "url": "/apapedulimu",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/158/407/aeaf392e2bc7283dea36aa24392b2f2d1ceee72c_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": true,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 55,
+    "url": "https://hackerone.com/wordpress",
+    "handle": "wordpress",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/055/f114d1d31f904e3b903cd99a6cf566bb531f8401_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/055/f114d1d31f904e3b903cd99a6cf566bb531f8401_original.jpg/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "WordPress",
+      "twitter_handle": "wordpress",
+      "website": "https://wordpress.org/",
+      "about": "Beautiful sites of any kind."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2020-08-25T15:56:24.873Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-08-21T07:44:26.451Z",
+  "team_member_agreed_on_going_public_at": "2020-08-25T15:56:24.643Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi, I've found something here, \n\n##Description \nXSS Stored because filename of theme when broken, So when theme is broken, Wordpress will inform the name of  theme who has been broken which is the folder name of  theme and inform the error with description message.\n\n{F342862}\n\nLooks like the filename is reflected, on the `Name` of the detail broken themes. I try to rename the folder to malicious name ( payload : <img src=x onerror=alert(1)> ) and the payload it'll be execute.\n\n{F342863}\n\n##POC\n1. Upload theme\n1. Delete the style.css ( or you can make new folder on theme path with payload name )\n1.  Rename the folder to `<img src=x onerror=alert(1)>` \n1. See theme page. \n\n##Video \nhttps://youtu.be/IuJrcR_BoKo\n\n## Impact\n\nXSS will be execute , because the filename is stored on page without any filter, and this is possible to make stored XSS.\n\nIt'll be good to filter / encoding the illegal character, like wordpress do on themes upload.",
+  "weakness": {
+    "id": 62,
+    "name": "Cross-site Scripting (XSS) - Stored"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 342862,
+      "file_name": "Screen_Shot_2018-09-06_at_1.25.01_PM.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/342/862/f6ad93dd670a412e60cba25e823b2681ae20fe02/Screen_Shot_2018-09-06_at_1.25.01_PM.png?response-content-disposition=attachment%3B%20filename%3D%22Screen_Shot_2018-09-06_at_1.25.01_PM.png%22%3B%20filename%2A%3DUTF-8%27%27Screen_Shot_2018-09-06_at_1.25.01_PM.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWU6W3YR5%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T091552Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCICT0En%2BDp3YvkU5SZTMMxyrxZ7Ft1kjGs0IfO0I0AURKAiBzPKfBO1C%2B2pCTovANeKuAfSdy4RsfE1ELoIif4DmyFSqyBQgQEAMaDDAxMzYxOTI3NDg0OSIMMMUD2e96ZEe%2FBdbRKo8FIlyj3ImbR9P06VhgB6i5aYNVl6QUpN%2BFF7fdK3GXoPBqBe3RTAQT41ylUVef1%2B0Ull7xXvkcKxmySy5oHwtsW1W0C%2BryYu%2FkH0g7bnnrui%2B37bTv9q3NirU5lM1ouACBHYCXgh5cLxBZSzNZyz2uLBpkGvQOoKMt7nCSzfoogUx5KioZ0dCruLtwe6F08e8zDbtosxk9yBLWSnNd7CPWHfhgmB45eh0S1yTOY11mPDb1r%2FjlVEeJldaQx5hc439Ci9k1oQFbcGeM3mmRtheuudScCDfn1Tly8PE9TZLyKebcSjqSjReoxWyPxLvTaUCiX%2FicbsD3E%2BHE5xmVdPnPvPvLmUMUbVKbwMG2bHYGHi1HHpsz9Qxc5Ktat8vqwLEm53cQSFHducawN5aCs7Dona4hV5xmg5NeJ1Enco0X9RF0dRSLPhbyEaLZ%2B62tXVfi4zuGZaOVf416yhstpqu5PD3yxDpm%2ByMpNcpYXzvix519V%2BMrddrq6O%2BM1plTpZHvuqubpZ5CxNomzEIXXzswlsrDPYdqIacYQzjx76XObIQVjaReOIqFnsTOo1r3sTrBekl08DjWetk8bamlsWj9p9ppv9UWnMLwq7dfPspIBZFAKO6R1PtixRYbPD%2Ft4shblVUHq9BFfKWbTNq6b%2Bm%2BLhXQJZHI6EvvdbQhCurcb5VJlUt8KpPNdMeCsSGkmhEb3yIpqmZDxGs0FKfwyKK%2FeaMWoPlsVhHQBzTbncbZ5slJ7WUXC%2BjUaeqvPzpzfJmyNbQgYN5%2BJNPBldEoHyEDich4kebgeZEAjP7l4pY6CrqPzIJr5YJA3evbU8Yy4kOBrIzX6AQSk8%2FV%2BTkIH3j%2F5tXsfWwhAubCp%2FhLiIWVaDCpyr7GBjqyATq3IYcvNvIRPYX18R6%2BpLLs6exiiEC17bSLS95ViceA9Jj1Iuq4V5pxaCDvppKuMPH0olISPV7QXjgviGlfbNmpQh2jq32bnftPRkKD2Q3dVqJ8lDtIXP4Oz176Je1gOTGaC3TJJVi8%2BO2AS3GMhyJi1zbnAP0IvjuOu6%2F30CYDqkUDk%2Ff3y1XLjr8jyjdsUPthzw317AhVZSSN%2Fb5xXtI4%2BJLd6oxzZ1MpEy6coOiq2CA%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=7ed26622740d6ac12d5453c91c6b50111d559b49c560d60e2e20de04a8c5f6c8",
+      "file_size": 23112,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 342863,
+      "file_name": "Screen_Shot_2018-09-06_at_1.32.24_PM.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/342/863/6f8b9c5c3f9bd3f0e882e37f304bac3feeefd238/Screen_Shot_2018-09-06_at_1.32.24_PM.png?response-content-disposition=attachment%3B%20filename%3D%22Screen_Shot_2018-09-06_at_1.32.24_PM.png%22%3B%20filename%2A%3DUTF-8%27%27Screen_Shot_2018-09-06_at_1.32.24_PM.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWU6W3YR5%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T091552Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCICT0En%2BDp3YvkU5SZTMMxyrxZ7Ft1kjGs0IfO0I0AURKAiBzPKfBO1C%2B2pCTovANeKuAfSdy4RsfE1ELoIif4DmyFSqyBQgQEAMaDDAxMzYxOTI3NDg0OSIMMMUD2e96ZEe%2FBdbRKo8FIlyj3ImbR9P06VhgB6i5aYNVl6QUpN%2BFF7fdK3GXoPBqBe3RTAQT41ylUVef1%2B0Ull7xXvkcKxmySy5oHwtsW1W0C%2BryYu%2FkH0g7bnnrui%2B37bTv9q3NirU5lM1ouACBHYCXgh5cLxBZSzNZyz2uLBpkGvQOoKMt7nCSzfoogUx5KioZ0dCruLtwe6F08e8zDbtosxk9yBLWSnNd7CPWHfhgmB45eh0S1yTOY11mPDb1r%2FjlVEeJldaQx5hc439Ci9k1oQFbcGeM3mmRtheuudScCDfn1Tly8PE9TZLyKebcSjqSjReoxWyPxLvTaUCiX%2FicbsD3E%2BHE5xmVdPnPvPvLmUMUbVKbwMG2bHYGHi1HHpsz9Qxc5Ktat8vqwLEm53cQSFHducawN5aCs7Dona4hV5xmg5NeJ1Enco0X9RF0dRSLPhbyEaLZ%2B62tXVfi4zuGZaOVf416yhstpqu5PD3yxDpm%2ByMpNcpYXzvix519V%2BMrddrq6O%2BM1plTpZHvuqubpZ5CxNomzEIXXzswlsrDPYdqIacYQzjx76XObIQVjaReOIqFnsTOo1r3sTrBekl08DjWetk8bamlsWj9p9ppv9UWnMLwq7dfPspIBZFAKO6R1PtixRYbPD%2Ft4shblVUHq9BFfKWbTNq6b%2Bm%2BLhXQJZHI6EvvdbQhCurcb5VJlUt8KpPNdMeCsSGkmhEb3yIpqmZDxGs0FKfwyKK%2FeaMWoPlsVhHQBzTbncbZ5slJ7WUXC%2BjUaeqvPzpzfJmyNbQgYN5%2BJNPBldEoHyEDich4kebgeZEAjP7l4pY6CrqPzIJr5YJA3evbU8Yy4kOBrIzX6AQSk8%2FV%2BTkIH3j%2F5tXsfWwhAubCp%2FhLiIWVaDCpyr7GBjqyATq3IYcvNvIRPYX18R6%2BpLLs6exiiEC17bSLS95ViceA9Jj1Iuq4V5pxaCDvppKuMPH0olISPV7QXjgviGlfbNmpQh2jq32bnftPRkKD2Q3dVqJ8lDtIXP4Oz176Je1gOTGaC3TJJVi8%2BO2AS3GMhyJi1zbnAP0IvjuOu6%2F30CYDqkUDk%2Ff3y1XLjr8jyjdsUPthzw317AhVZSSN%2Fb5xXtI4%2BJLd6oxzZ1MpEy6coOiq2CA%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=fccb16cc0ff3d05e31a07560290aaf79b511e90f31135a9952c1c7a1331b6291",
+      "file_size": 238089,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2020-09-20T07:44:26.524Z",
+  "allow_singular_disclosure_after": -157858285.57889426,
+  "singular_disclosure_allowed": true,
+  "vote_count": 23,
+  "voters": [
+    "excavator",
+    "demonia",
+    "rugb",
+    "sa1tama0",
+    "0xrohadi",
+    "rioncool22",
+    "vsyour",
+    "h1-qualys-scan",
+    "s37h",
+    "diolonely",
+    "and 13 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "Team"
+  },
+  "structured_scope": {
+    "databaseId": 2750,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "WordPress Core",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
