@@ -1,0 +1,135 @@
+{
+  "id": 898614,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC84OTg2MTQ=",
+  "url": "https://hackerone.com/reports/898614",
+  "title": "DRb denial of service vulnerability",
+  "state": "Closed",
+  "substate": "informative",
+  "severity_rating": "none",
+  "readable_substate": "Informative",
+  "created_at": "2020-06-15T14:12:55.632Z",
+  "submitted_at": "2020-06-15T14:12:55.632Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "u75615",
+    "url": "/u75615",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 7724,
+    "url": "https://hackerone.com/ruby",
+    "handle": "ruby",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/007/724/bb067434deef370d6a0b16c2cbbc030b57c75e92_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/007/724/bb067434deef370d6a0b16c2cbbc030b57c75e92_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Ruby",
+      "twitter_handle": "",
+      "website": "https://www.ruby-lang.org",
+      "about": "A Programmer's Best Friend"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2021-03-07T11:47:29.955Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-06-19T04:27:25.519Z",
+  "team_member_agreed_on_going_public_at": "2021-03-07T11:47:29.844Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "It is possible to crash the DRb server by providing malformed input.\n\nBy following DRb example (https://ruby-doc.org/stdlib-2.7.0/libdoc/drb/rdoc/DRb.html#module-DRb-label-Server+code) it was created the simple server and client code (attached): \n* `drb_server.rb`\n* `drb_client.rb` (client code was modified to perform basic fuzzing of TCP payload)\n\nRunning both script results in crashing the drb_server.rb and producing core dump:\n```\n-- Ruby level backtrace information ----------------------------------------\n/home/user/.rbenv/versions/2.7.1/lib/ruby/2.7.0/drb/drb.rb:1730:in `block in main_loop'\n/home/user/.rbenv/versions/2.7.1/lib/ruby/2.7.0/drb/drb.rb:1730:in `loop'\n/home/user/.rbenv/versions/2.7.1/lib/ruby/2.7.0/drb/drb.rb:1734:in `block (2 levels) in main_loop'\n/home/user/.rbenv/versions/2.7.1/lib/ruby/2.7.0/drb/drb.rb:1641:in `perform'\n/home/user/.rbenv/versions/2.7.1/lib/ruby/2.7.0/drb/drb.rb:1677:in `setup_message'\n/home/user/.rbenv/versions/2.7.1/lib/ruby/2.7.0/drb/drb.rb:1665:in `init_with_client'\n/home/user/.rbenv/versions/2.7.1/lib/ruby/2.7.0/drb/drb.rb:931:in `recv_request'\n/home/user/.rbenv/versions/2.7.1/lib/ruby/2.7.0/drb/drb.rb:620:in `recv_request'\n/home/user/.rbenv/versions/2.7.1/lib/ruby/2.7.0/drb/drb.rb:1856:in `to_obj'\n/home/user/.rbenv/versions/2.7.1/lib/ruby/2.7.0/drb/drb.rb:1537:in `to_obj'\n/home/user/.rbenv/versions/2.7.1/lib/ruby/2.7.0/drb/drb.rb:366:in `to_obj'\n/home/user/.rbenv/versions/2.7.1/lib/ruby/2.7.0/drb/drb.rb:366:in `_id2ref'\n```\n\nThe crash occurs at https://github.com/ruby/ruby/blob/master/lib/drb/drb.rb#L366\n`./lib/drb/drb.rb#L366    ObjectSpace._id2ref(ref)`\n\n## Impact\n\nDoS of the DRb server is possible by injection of malicious input.",
+  "weakness": {
+    "id": 48,
+    "name": "Uncontrolled Resource Consumption"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 868795,
+      "file_name": "drb_client.rb",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/vawxJsif3Z5bxzS7d4ZEoLp8?response-content-disposition=attachment%3B%20filename%3D%22drb_client.rb%22%3B%20filename%2A%3DUTF-8%27%27drb_client.rb&response-content-type=application%2Fx-ruby&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQRF7EDD2V%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T034005Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIAKUSx4AVR6Yo%2BoLce9AWn%2FzVI8HMCPLZb4gnn294g%2BsAiBx8oECNICz%2BzBRFrizyd8dDtc4jIWcRFfmDhMuxItnpCq7BQj6%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIM5O6W0GpTA69uDQ3NKo8FRblGSszoXLGun1Ax6n%2BUEkO6vys3adgXtnrbH8%2Bb1EayA268zPa8azkcGIrJNBJP9wYcNPim2Q2jpAhAAMuenIvZoFVSD2SUjiHwLudCBmXNF0kDdHRwHW5NczYU%2B35TKwZb5r36PW9cYJd3K1CjOY5VHzug798OI5FqNzDuHTvjOquRFaxJtLSUO70FyQvRe919fcF7c4%2B%2F4ld3NMmaL8RHnOJ%2FvW0RYl6fM%2BcguohKAER7dFNGDbi2nfrg%2FnllulsZKbGZMCxp64fEpvhYramtPMdHLOy8rpg6TC4nDh5f7HMKNkO0J%2BlSTcpZODFq2K3ItkApN7Kfb37GUFyJAedfDxoWv0tjR2y60CX6OBpkz4IDnoDRfhqZA%2F7QBrgeOV%2FO1%2BqKqIRuwM9YARCy4CAgwVgMb99dReeXocMldZZ2wR25lk%2FysBXuHjUNhUiVH5QydPybZK39vResx4slUGXoXEW5E%2FhPwYjQEM5zeRm3vtGC4%2FyHcRmfvR3r%2Fh%2BFQpN46EP4IL7pbSV8h5hvpocZ1kf6PQ4pfCjtW0qpw5cHnD3IiFG7Z2ZVnAC1DWur7EsVNmKJSQXBQy9lAFDwy10lIxkTu8upohzcDADP%2BqwbFLjakdPnwjwuz8xP%2BfZ4n%2BUDA0fOu%2FfECJiiFjMzzpVYua2A7c0mCDbRtrblvhPdwgWQLYf%2FpBTHJE5HlxZZ1OngNY%2BAY73fom6JxsDqXbGLpk5JThX%2FzNey5L1hvfXblauyQGhmCkQxiHk1Gc%2BRldaZSuBEMAw98uw7r4Sxvru1%2BZxIPvlijnNAe6%2F0xVczyxfCClILPpd09%2FVIp6CrGbE4t8AMOxfJoMLNgMVDnJBT7yGg0t3Ud2HYckdYRTDdjr3GBjqyAfg7xGGQdlGrRtW3XkM5BeMDz8%2BHAHXBk7jV2zXwFI2T4Z7QUL99jwDDaffvVBPJBdCiCA19hRguz2Awu%2FVjTXryI4HqJWpnbhRQBA%2FEzZagRfUsXgV6CtM6eqBjKFWpbzPh5vIXy1rzK4WMJIPCcnJREZJ4Aps%2BvGY3u6lzZvE8ukUk4JaMFGgmSeATe1l%2BzdYGVP1RaQaxxOZNBtvOoI0OGByz3mQBOOiZWUdRRAoyAjE%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=e35f09ff11c8490bf5edf99dca0163cf10a7529b2af30715383d79b44e7b72d6",
+      "file_size": 968,
+      "type": "application/x-ruby",
+      "moderated": null
+    },
+    {
+      "id": 868796,
+      "file_name": "core_cli.txt",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/XYRqq3MSZaYMwRFoKSjsAX9C?response-content-disposition=attachment%3B%20filename%3D%22core_cli.txt%22%3B%20filename%2A%3DUTF-8%27%27core_cli.txt&response-content-type=text%2Fplain&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQRF7EDD2V%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T034005Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIAKUSx4AVR6Yo%2BoLce9AWn%2FzVI8HMCPLZb4gnn294g%2BsAiBx8oECNICz%2BzBRFrizyd8dDtc4jIWcRFfmDhMuxItnpCq7BQj6%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIM5O6W0GpTA69uDQ3NKo8FRblGSszoXLGun1Ax6n%2BUEkO6vys3adgXtnrbH8%2Bb1EayA268zPa8azkcGIrJNBJP9wYcNPim2Q2jpAhAAMuenIvZoFVSD2SUjiHwLudCBmXNF0kDdHRwHW5NczYU%2B35TKwZb5r36PW9cYJd3K1CjOY5VHzug798OI5FqNzDuHTvjOquRFaxJtLSUO70FyQvRe919fcF7c4%2B%2F4ld3NMmaL8RHnOJ%2FvW0RYl6fM%2BcguohKAER7dFNGDbi2nfrg%2FnllulsZKbGZMCxp64fEpvhYramtPMdHLOy8rpg6TC4nDh5f7HMKNkO0J%2BlSTcpZODFq2K3ItkApN7Kfb37GUFyJAedfDxoWv0tjR2y60CX6OBpkz4IDnoDRfhqZA%2F7QBrgeOV%2FO1%2BqKqIRuwM9YARCy4CAgwVgMb99dReeXocMldZZ2wR25lk%2FysBXuHjUNhUiVH5QydPybZK39vResx4slUGXoXEW5E%2FhPwYjQEM5zeRm3vtGC4%2FyHcRmfvR3r%2Fh%2BFQpN46EP4IL7pbSV8h5hvpocZ1kf6PQ4pfCjtW0qpw5cHnD3IiFG7Z2ZVnAC1DWur7EsVNmKJSQXBQy9lAFDwy10lIxkTu8upohzcDADP%2BqwbFLjakdPnwjwuz8xP%2BfZ4n%2BUDA0fOu%2FfECJiiFjMzzpVYua2A7c0mCDbRtrblvhPdwgWQLYf%2FpBTHJE5HlxZZ1OngNY%2BAY73fom6JxsDqXbGLpk5JThX%2FzNey5L1hvfXblauyQGhmCkQxiHk1Gc%2BRldaZSuBEMAw98uw7r4Sxvru1%2BZxIPvlijnNAe6%2F0xVczyxfCClILPpd09%2FVIp6CrGbE4t8AMOxfJoMLNgMVDnJBT7yGg0t3Ud2HYckdYRTDdjr3GBjqyAfg7xGGQdlGrRtW3XkM5BeMDz8%2BHAHXBk7jV2zXwFI2T4Z7QUL99jwDDaffvVBPJBdCiCA19hRguz2Awu%2FVjTXryI4HqJWpnbhRQBA%2FEzZagRfUsXgV6CtM6eqBjKFWpbzPh5vIXy1rzK4WMJIPCcnJREZJ4Aps%2BvGY3u6lzZvE8ukUk4JaMFGgmSeATe1l%2BzdYGVP1RaQaxxOZNBtvOoI0OGByz3mQBOOiZWUdRRAoyAjE%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=8c76b8790d340601a67fa3ca0276e8c51e74a3d99ed5ff2ffbf0d65d9ed0ae26",
+      "file_size": 27975,
+      "type": "text/plain",
+      "moderated": null
+    },
+    {
+      "id": 868797,
+      "file_name": "drb_server.rb",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/83DtsTvnzaGj3ugMXmKUqPYR?response-content-disposition=attachment%3B%20filename%3D%22drb_server.rb%22%3B%20filename%2A%3DUTF-8%27%27drb_server.rb&response-content-type=application%2Fx-ruby&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQRF7EDD2V%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T034005Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIAKUSx4AVR6Yo%2BoLce9AWn%2FzVI8HMCPLZb4gnn294g%2BsAiBx8oECNICz%2BzBRFrizyd8dDtc4jIWcRFfmDhMuxItnpCq7BQj6%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIM5O6W0GpTA69uDQ3NKo8FRblGSszoXLGun1Ax6n%2BUEkO6vys3adgXtnrbH8%2Bb1EayA268zPa8azkcGIrJNBJP9wYcNPim2Q2jpAhAAMuenIvZoFVSD2SUjiHwLudCBmXNF0kDdHRwHW5NczYU%2B35TKwZb5r36PW9cYJd3K1CjOY5VHzug798OI5FqNzDuHTvjOquRFaxJtLSUO70FyQvRe919fcF7c4%2B%2F4ld3NMmaL8RHnOJ%2FvW0RYl6fM%2BcguohKAER7dFNGDbi2nfrg%2FnllulsZKbGZMCxp64fEpvhYramtPMdHLOy8rpg6TC4nDh5f7HMKNkO0J%2BlSTcpZODFq2K3ItkApN7Kfb37GUFyJAedfDxoWv0tjR2y60CX6OBpkz4IDnoDRfhqZA%2F7QBrgeOV%2FO1%2BqKqIRuwM9YARCy4CAgwVgMb99dReeXocMldZZ2wR25lk%2FysBXuHjUNhUiVH5QydPybZK39vResx4slUGXoXEW5E%2FhPwYjQEM5zeRm3vtGC4%2FyHcRmfvR3r%2Fh%2BFQpN46EP4IL7pbSV8h5hvpocZ1kf6PQ4pfCjtW0qpw5cHnD3IiFG7Z2ZVnAC1DWur7EsVNmKJSQXBQy9lAFDwy10lIxkTu8upohzcDADP%2BqwbFLjakdPnwjwuz8xP%2BfZ4n%2BUDA0fOu%2FfECJiiFjMzzpVYua2A7c0mCDbRtrblvhPdwgWQLYf%2FpBTHJE5HlxZZ1OngNY%2BAY73fom6JxsDqXbGLpk5JThX%2FzNey5L1hvfXblauyQGhmCkQxiHk1Gc%2BRldaZSuBEMAw98uw7r4Sxvru1%2BZxIPvlijnNAe6%2F0xVczyxfCClILPpd09%2FVIp6CrGbE4t8AMOxfJoMLNgMVDnJBT7yGg0t3Ud2HYckdYRTDdjr3GBjqyAfg7xGGQdlGrRtW3XkM5BeMDz8%2BHAHXBk7jV2zXwFI2T4Z7QUL99jwDDaffvVBPJBdCiCA19hRguz2Awu%2FVjTXryI4HqJWpnbhRQBA%2FEzZagRfUsXgV6CtM6eqBjKFWpbzPh5vIXy1rzK4WMJIPCcnJREZJ4Aps%2BvGY3u6lzZvE8ukUk4JaMFGgmSeATe1l%2BzdYGVP1RaQaxxOZNBtvOoI0OGByz3mQBOOiZWUdRRAoyAjE%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=e57fbd304162ebb5004718ef15767b2ba5f9b088acc6f583a65fc7266b0b03fc",
+      "file_size": 351,
+      "type": "application/x-ruby",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 1,
+  "voters": [
+    "salahhasoneh"
+  ],
+  "severity": {
+    "rating": "none",
+    "author_type": "Team"
+  },
+  "structured_scope": {
+    "databaseId": 28212,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/ruby/ruby",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
