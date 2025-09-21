@@ -1,0 +1,139 @@
+{
+  "id": 856554,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC84NTY1NTQ=",
+  "url": "https://hackerone.com/reports/856554",
+  "title": "Stored XSS on the job page",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2020-04-22T18:25:31.838Z",
+  "submitted_at": "2020-04-22T18:25:31.838Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "mike12",
+    "url": "/mike12",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/gjcadqove6ip9fo45ljpkbax7fpc/c8a1698ff707a5e3e8a91a3484838363845daac68cb82c86d55c9e2d44d67b67"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 264,
+    "url": "https://hackerone.com/gitlab",
+    "handle": "gitlab",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/f0hovtq73f9ap815a0r1w42bocp4/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/f0hovtq73f9ap815a0r1w42bocp4/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "GitLab",
+      "twitter_handle": "gitlab",
+      "website": "https://about.gitlab.com",
+      "about": "A single application for the entire software development lifecycle."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2021-01-08T20:38:32.039Z",
+  "bug_reporter_agreed_on_going_public_at": "2021-01-08T20:38:31.985Z",
+  "team_member_agreed_on_going_public_at": "2020-09-08T13:42:00.466Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello Gitlab!\n\n### Steps to reproduce:\n1. Run Gitlab `docker run --detach --hostname gitlab.example.com --publish 443:443 --publish 80:80 --publish 22:22 --name gitlab gitlab/gitlab-ce:latest`\n2. Create a new project with README.md\n3. Go to Operations->Kubernetes\n\t1. Click on the \"Add Kubernetes cluster\" button\n\t2. Select the \"Add existing cluster\" tab\n\t3. Kubernetes cluster name: cluster-example\n\t4. API URL: https://google.com\n\t5. Service Token: token-example\n\t6. Uncheck the \"GitLab-managed cluster\" checkbox\n\t7. Click on the \"Add Kubernetes cluster\" button\n4. Add \".gitlab-ci.yml\" file to the repository (to the master branch)\n\n    ```\n    deploy:\n      stage: deploy\n      script:\n        - echo \"Example\"\n      environment:\n        name: production\n        url: https://google.com\n        kubernetes:\n          namespace: <img src=x onerror=alert(1)>\n      only:\n      - master\n    ```\n5. Go to CI/CD->Jobs and open the last job\n{F799680}\n{F799681}\n\n#### Vulnerable code\n\nAll vulnerable code is in one file [environments_block.vue](https://gitlab.com/gitlab-org/gitlab/-/blob/c2da59f0376ee8d99ce16100d5c481234bbf9f8a/app/assets/javascripts/jobs/components/environments_block.vue)\n\n1. [Line 125](https://gitlab.com/gitlab-org/gitlab/-/blob/c2da59f0376ee8d99ce16100d5c481234bbf9f8a/app/assets/javascripts/jobs/components/environments_block.vue#L125)\n2. [Line 156](https://gitlab.com/gitlab-org/gitlab/-/blob/c2da59f0376ee8d99ce16100d5c481234bbf9f8a/app/assets/javascripts/jobs/components/environments_block.vue#L156)\n3. [Line 251](https://gitlab.com/gitlab-org/gitlab/-/blob/c2da59f0376ee8d99ce16100d5c481234bbf9f8a/app/assets/javascripts/jobs/components/environments_block.vue#L251)\n4. And other places where `%{kubernetesNamespace}` is used\n\n## Impact\n\nAn attacker can:\n\n1. Perform any action within the application that a user can perform\n2. Steal sensitive user data\n3. Steal user's credentials",
+  "bounty_amount": "3000.0",
+  "formatted_bounty": "$3,000",
+  "weakness": {
+    "id": 62,
+    "name": "Cross-site Scripting (XSS) - Stored"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 799680,
+      "file_name": "1.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/YKE5piuPLADoG9Tb3Ung9H1A?response-content-disposition=attachment%3B%20filename%3D%221.png%22%3B%20filename%2A%3DUTF-8%27%271.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWU6W3YR5%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T074251Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCICT0En%2BDp3YvkU5SZTMMxyrxZ7Ft1kjGs0IfO0I0AURKAiBzPKfBO1C%2B2pCTovANeKuAfSdy4RsfE1ELoIif4DmyFSqyBQgQEAMaDDAxMzYxOTI3NDg0OSIMMMUD2e96ZEe%2FBdbRKo8FIlyj3ImbR9P06VhgB6i5aYNVl6QUpN%2BFF7fdK3GXoPBqBe3RTAQT41ylUVef1%2B0Ull7xXvkcKxmySy5oHwtsW1W0C%2BryYu%2FkH0g7bnnrui%2B37bTv9q3NirU5lM1ouACBHYCXgh5cLxBZSzNZyz2uLBpkGvQOoKMt7nCSzfoogUx5KioZ0dCruLtwe6F08e8zDbtosxk9yBLWSnNd7CPWHfhgmB45eh0S1yTOY11mPDb1r%2FjlVEeJldaQx5hc439Ci9k1oQFbcGeM3mmRtheuudScCDfn1Tly8PE9TZLyKebcSjqSjReoxWyPxLvTaUCiX%2FicbsD3E%2BHE5xmVdPnPvPvLmUMUbVKbwMG2bHYGHi1HHpsz9Qxc5Ktat8vqwLEm53cQSFHducawN5aCs7Dona4hV5xmg5NeJ1Enco0X9RF0dRSLPhbyEaLZ%2B62tXVfi4zuGZaOVf416yhstpqu5PD3yxDpm%2ByMpNcpYXzvix519V%2BMrddrq6O%2BM1plTpZHvuqubpZ5CxNomzEIXXzswlsrDPYdqIacYQzjx76XObIQVjaReOIqFnsTOo1r3sTrBekl08DjWetk8bamlsWj9p9ppv9UWnMLwq7dfPspIBZFAKO6R1PtixRYbPD%2Ft4shblVUHq9BFfKWbTNq6b%2Bm%2BLhXQJZHI6EvvdbQhCurcb5VJlUt8KpPNdMeCsSGkmhEb3yIpqmZDxGs0FKfwyKK%2FeaMWoPlsVhHQBzTbncbZ5slJ7WUXC%2BjUaeqvPzpzfJmyNbQgYN5%2BJNPBldEoHyEDich4kebgeZEAjP7l4pY6CrqPzIJr5YJA3evbU8Yy4kOBrIzX6AQSk8%2FV%2BTkIH3j%2F5tXsfWwhAubCp%2FhLiIWVaDCpyr7GBjqyATq3IYcvNvIRPYX18R6%2BpLLs6exiiEC17bSLS95ViceA9Jj1Iuq4V5pxaCDvppKuMPH0olISPV7QXjgviGlfbNmpQh2jq32bnftPRkKD2Q3dVqJ8lDtIXP4Oz176Je1gOTGaC3TJJVi8%2BO2AS3GMhyJi1zbnAP0IvjuOu6%2F30CYDqkUDk%2Ff3y1XLjr8jyjdsUPthzw317AhVZSSN%2Fb5xXtI4%2BJLd6oxzZ1MpEy6coOiq2CA%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=bd6b28d2d87091de1f5abb9a4c5f8566955985bdf87ecd2c8f65e7683fdb7885",
+      "file_size": 112535,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 799681,
+      "file_name": "2.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/g2NkBuUsf8naZa2dhy1Nezdo?response-content-disposition=attachment%3B%20filename%3D%222.png%22%3B%20filename%2A%3DUTF-8%27%272.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWU6W3YR5%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T074251Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCICT0En%2BDp3YvkU5SZTMMxyrxZ7Ft1kjGs0IfO0I0AURKAiBzPKfBO1C%2B2pCTovANeKuAfSdy4RsfE1ELoIif4DmyFSqyBQgQEAMaDDAxMzYxOTI3NDg0OSIMMMUD2e96ZEe%2FBdbRKo8FIlyj3ImbR9P06VhgB6i5aYNVl6QUpN%2BFF7fdK3GXoPBqBe3RTAQT41ylUVef1%2B0Ull7xXvkcKxmySy5oHwtsW1W0C%2BryYu%2FkH0g7bnnrui%2B37bTv9q3NirU5lM1ouACBHYCXgh5cLxBZSzNZyz2uLBpkGvQOoKMt7nCSzfoogUx5KioZ0dCruLtwe6F08e8zDbtosxk9yBLWSnNd7CPWHfhgmB45eh0S1yTOY11mPDb1r%2FjlVEeJldaQx5hc439Ci9k1oQFbcGeM3mmRtheuudScCDfn1Tly8PE9TZLyKebcSjqSjReoxWyPxLvTaUCiX%2FicbsD3E%2BHE5xmVdPnPvPvLmUMUbVKbwMG2bHYGHi1HHpsz9Qxc5Ktat8vqwLEm53cQSFHducawN5aCs7Dona4hV5xmg5NeJ1Enco0X9RF0dRSLPhbyEaLZ%2B62tXVfi4zuGZaOVf416yhstpqu5PD3yxDpm%2ByMpNcpYXzvix519V%2BMrddrq6O%2BM1plTpZHvuqubpZ5CxNomzEIXXzswlsrDPYdqIacYQzjx76XObIQVjaReOIqFnsTOo1r3sTrBekl08DjWetk8bamlsWj9p9ppv9UWnMLwq7dfPspIBZFAKO6R1PtixRYbPD%2Ft4shblVUHq9BFfKWbTNq6b%2Bm%2BLhXQJZHI6EvvdbQhCurcb5VJlUt8KpPNdMeCsSGkmhEb3yIpqmZDxGs0FKfwyKK%2FeaMWoPlsVhHQBzTbncbZ5slJ7WUXC%2BjUaeqvPzpzfJmyNbQgYN5%2BJNPBldEoHyEDich4kebgeZEAjP7l4pY6CrqPzIJr5YJA3evbU8Yy4kOBrIzX6AQSk8%2FV%2BTkIH3j%2F5tXsfWwhAubCp%2FhLiIWVaDCpyr7GBjqyATq3IYcvNvIRPYX18R6%2BpLLs6exiiEC17bSLS95ViceA9Jj1Iuq4V5pxaCDvppKuMPH0olISPV7QXjgviGlfbNmpQh2jq32bnftPRkKD2Q3dVqJ8lDtIXP4Oz176Je1gOTGaC3TJJVi8%2BO2AS3GMhyJi1zbnAP0IvjuOu6%2F30CYDqkUDk%2Ff3y1XLjr8jyjdsUPthzw317AhVZSSN%2Fb5xXtI4%2BJLd6oxzZ1MpEy6coOiq2CA%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=4353b46a66dfdd9c4a9c87e92db35cfd50621064fc9c65b537f396b2580be820",
+      "file_size": 117273,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 50,
+  "voters": [
+    "w31rd0",
+    "coldfish",
+    "mattberg",
+    "rook1337",
+    "ali",
+    "2026",
+    "eren",
+    "h4x0r_dz",
+    "f_m",
+    "0nlymohammed",
+    "and 40 more..."
+  ],
+  "severity": {
+    "rating": "high",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 39022,
+    "asset_type": "OTHER",
+    "asset_identifier": "Your Own GitLab Instance",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
