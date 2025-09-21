@@ -1,0 +1,124 @@
+{
+  "id": 355773,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zNTU3NzM=",
+  "url": "https://hackerone.com/reports/355773",
+  "title": "XSS on support.wordcamp.org in ajax-quote.php",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2018-05-21T23:10:18.324Z",
+  "submitted_at": "2018-05-21T23:10:18.324Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "mopman",
+    "url": "/mopman",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/012/220/8dcf3a0b05d59213207f4e2544f53991202f9f2a_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 55,
+    "url": "https://hackerone.com/wordpress",
+    "handle": "wordpress",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/055/f114d1d31f904e3b903cd99a6cf566bb531f8401_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/055/f114d1d31f904e3b903cd99a6cf566bb531f8401_original.jpg/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "WordPress",
+      "twitter_handle": "wordpress",
+      "website": "https://wordpress.org/",
+      "about": "Beautiful sites of any kind."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2018-07-23T15:06:06.875Z",
+  "bug_reporter_agreed_on_going_public_at": "2018-07-23T15:06:06.459Z",
+  "team_member_agreed_on_going_public_at": "2018-07-23T14:50:40.647Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi,\nThere is an XSS vulnerability in ajax-quote.php on http://support.wordcamp.org. It can be demonstrated with the attached POC - this needs to be run in Firefox to execute, as it's super basic and XSS Auditor will catch it (but with multiple parameters, even with one of them filtered, it's likely that one could be crafted that would work in Chrome, too).\n\nI would quite like to check out that SupportPress application in more detail, but it's quite hard to install :( Seems to not work out of the box for me - so for now, just an XSS.\n\n## Impact\n\nAn attacker who could trick an authenticated user into visiting their webpage/link could perform any action on behalf of that user. Cookie theft seems unlikely as, from a brief scan of the code (I can't login) I think it uses httponly on the important cookies.",
+  "weakness": {
+    "id": 61,
+    "name": "Cross-site Scripting (XSS) - Reflected"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 300207,
+      "file_name": "testpost.html",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/300/207/f390daf28ce1774c2b56fccf00b808192c584ad2/testpost.html?response-content-disposition=attachment%3B%20filename%3D%22testpost.html%22%3B%20filename%2A%3DUTF-8%27%27testpost.html&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYUNTABAY%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T173729Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDkYPHaT1AnVGGL0e%2BQJGh7AVnTXjMc9%2FiL8%2BH1Ba9bsgIgL8rlQ3PUPeX2jeJsLaZVEHtFtEAlthfGa7Ma97cE930qsQUIGhADGgwwMTM2MTkyNzQ4NDkiDEI5I7uCEqyR19YY6yqOBRIzxH%2FyaE3DdLVMZP1cfNmnMVf8kydytSE1xHTh9WnQsUIK2BnDlkORp7VX7Xc0LhmwJ8bxcgcXxipLFWhaJtaredBC6rNbTNADQsO9TmXOJlAeHi%2B%2B4Pb5rF%2FHQF37CZp8cbLcPzJgom4%2FRzSe9c98RJ2tyZzkW1CtpYRszeQBHk6K2qfjv7tb7n7Q7kJ1ErpDOM7RAcdIl2rc2OfsTP4U%2B0Jqx5P8H3ziPR3pdfhHWooBPxhjocv6tHweaBxWT5jMqK8bnXlqB67vjEvPTVEdB13Ev5DdAY25U94QBD3s0qS3Vztza93x%2F0HVKzt%2BO9Ap04VfWvWfZv9sPFk7Eo%2F7QfemWIoqwDn2MOyLja2zQx577IRbCPmaX%2B08nm%2FPQz%2FPiiwFOO78y0S6mSoD2bSEG1Bbi7fJwoc9l21JvEcMFt1%2BB45AoHQ%2BFgz8RpurVu43oSThhD2hmbyECgLok%2FDQ2XIw2nE0B8gsjgqE5dehA2sSdz%2B%2BOke26BrqlTRhLGDOICwXE1GEXnvUwjKcCATZuUbguZeTOd2kzvNLairXbfWW%2B2reevC1MZ2APR2NBgFGxQkLh9d3lmZbj3WGBALsLP4QlhyhvH5AK5NAe5Ru%2FQzfjg2mrLe672qZjn8QnKFUhtHfUaTVZJcMhBtz971l6DpmlEJZ6NmAh6SNBvt6r7MuoyB7txx1YxSmW8TsVG%2FTNOWEwefElw%2BP5o18R3hl0Ug7v41Lq7Ia%2BurK51yLYpakCCHanYr4ZnlX4E14WlSIAb1qyXhq1eRrzeNv2Y01y%2FbNFEuUnf2dzVLj3o3%2F24Ms4pKi2dP6iNcSrn0qmgthg5FsQYCGBlihdGFuJ82QAo3gJJ8bJ4Rnyl5NMjC83MDGBjqxAcJ3kw5DWZSbo%2FPE9Vy%2FDbWVTbfer2AO2C4t4l%2Bm80%2BWDDQEJjRdOFMUPCpU%2Bxngmiudr1SqnKIWBpIfAThEkLveoNU%2FJUKQQgl1Wn%2BADATOE7opRZmug6W%2F77LjYrJHbGwtiy0iZyeqQ9iVclyoAfpV1gy2Mt0zhaeN4TSFV78AwlpOX6DDIq9oTBK1lUuaAZUYyPXIC2K79sgXDVMn6W9I7KBqYFOmTtda2A0tahZ7mA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=29b28d12f4f60d32d5d797f07d2f3759a13ef2628fd25a84ff9052e608d60232",
+      "file_size": 308,
+      "type": "text/html",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2018-08-22T14:50:40.846Z",
+  "allow_singular_disclosure_after": -223526808.5611848,
+  "singular_disclosure_allowed": true,
+  "vote_count": 9,
+  "voters": [
+    "ali",
+    "ahiezer",
+    "michan",
+    "eveeez",
+    "mr-alienx-kurd",
+    "exception",
+    "cryptographer",
+    "sameull",
+    "nightwatch"
+  ],
+  "structured_scope": {
+    "databaseId": 2756,
+    "asset_type": "WILDCARD",
+    "asset_identifier": "*.wordcamp.org",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
