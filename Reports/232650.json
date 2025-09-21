@@ -1,0 +1,219 @@
+{
+  "id": 232650,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yMzI2NTA=",
+  "url": "https://hackerone.com/reports/232650",
+  "title": "Full Api Access and Run All Functions via Starbucks App",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2017-05-28T15:10:12.674Z",
+  "submitted_at": "2017-05-28T15:10:12.674Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "ynsy",
+    "url": "/ynsy",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/039/052/e630a49d05248226e8034e4bbf83b190cfc60ebd_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 1989,
+    "url": "https://hackerone.com/starbucks",
+    "handle": "starbucks",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/001/989/c9aa38cf3b1a91daa085d31e23d23f34cd1874df_original./235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/001/989/c9aa38cf3b1a91daa085d31e23d23f34cd1874df_original./3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Starbucks",
+      "twitter_handle": "Starbucks",
+      "website": "http://www.starbucks.com",
+      "about": "Premier purveyor of the finest coffee in the world, inspiring and nurturing the human spirit — one person, one cup and one neighborhood at a time."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2017-08-06T08:51:21.197Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-07-07T08:51:18.919Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "The tested application is Starbucks Turkey Android App. https://play.google.com/store/apps/details?id=com.starbucks.tr&hl=en \n\nAll these things are made without any login. I did not login the app.\n1. I tried to intercept traffic between starbucks app and server with burp suite. I could not be successful because of the ssl pinning. \n2. Before the unpinnig ssl, I look around the app's all screens.\n3. When i look at the messages tab i saw a proccess on my burp history. \n4. Application sent a request to https://crmproxy.protel.com.tr/api/v1/MobileInbox/Limit/20 this url and it took a response.\n5. I evaluated this request then i saw the Authorization: Basic QVBSTlhXTFpUUTo4NGY0NDlmMWYzOWEyMDUz token.\n6. I tried to reach this url via browser however, i couldnt because it wants to basic authentication and i tried the default password which comes to mind but i couldnt be successful. \n7. I remembered when there was a request on burp which has Authorization: Basic QVBSTlhXTFpUUTo4NGY0NDlmMWYzOWEyMDUz token and i tried to add this token in my all request while trying to access via browser.\n8. Bingoooo! It worked! I reach the https://crmproxy.protel.com.tr this api server and i looked around it then i found the api docs.\n9. Finally, i tried to sent all request in api docs, i was successful in all of them. \n\nI added to all screenshots below. If there is any question, i may answer them.\n\nThank you,\n\nYunus Y.",
+  "weakness": {
+    "id": 27,
+    "name": "Improper Authentication - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 188833,
+      "file_name": "starbucks_basic_authentication_is_needed.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/188/833/41998ab4529cd95dbbe0e29ff0b6d7e6071fe8d1/starbucks_basic_authentication_is_needed.png?response-content-disposition=attachment%3B%20filename%3D%22starbucks_basic_authentication_is_needed.png%22%3B%20filename%2A%3DUTF-8%27%27starbucks_basic_authentication_is_needed.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ2ZVXRWMB%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T211001Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDPJGfzMJPn%2FnHJrTg5TD8VJt7cc%2B7xt9arg9h87wjVTQIhAM%2B08WEUMC%2BUcx%2B2hdKE1ivgl69a2PFRDj0l1KQ35JOLKrIFCBoQAxoMMDEzNjE5Mjc0ODQ5Igxc6REi1pVr2zXPDYAqjwWCRNoXIU3Z8A9klwjX%2B4PXU5JMH4n3c4Xxyac%2FzcM4qEjGokM%2BodDuiCfV810H3RPNumOTmghuwpUtOqPiGZA0R6o4FfqXdVBJePjhoWFMZ5oyYhx8QoKT8PuzXNSA%2BpYbeLaQsOUGTAm7J75i0xTnBaL0Et8rpP3G3oZYzAU9OWGzkWuWo678fx%2F5oDeet6aguCO8%2FjDWAWiMPlN6oxA0Y4i8bURv5uhAbItXZl%2F0yhE2exJIDYuhibnmpFXE4%2Bh4OMBilIIaDJsskKaEvoRiBsP8PY5r9dUOPsiC2t1PrepaAylZRfjhQbU57g7kP%2BXv2Azc%2BaOC75t5dhupRUh3IutnzlkORL%2F9flfqfUwX%2Fn59Do8kRUtwAkCh3yRX10QjKZJ2ne4Iur3gmDYd7730ppAiYM1bJzBy64ccOil8x%2Bvg5kbFGNGzp9YfSc5ghFx%2BbloLgola%2Fni8oWJUsddymBwlOH1Nc1b8NaCF8sS543cl06BvyxFgTXcV%2BT1nYqmbNng7EacdyxDRA59wMe5EnLiHC9jf%2Fyed12tpPd7TuQum%2BZd5NMJ9l81o7GuQiV3Iwf7RfCipikpLdbEPrJ5KBz7N7ollSoHwBUmWFblws1uxvZ5ABLQCuLJXsIqDmwNZ8YeMo1Zl9PnApt6IBcXabJBIFW4QXgunB7XW%2FF8GEeBgWNPfJtR3gqYmZ4zNpydWJwwCQaxcSHzmhhIOe6NvN7K2ZLMO0i6h3M969d2ihazkodAbxBC8Qqi%2FO56M8pBcQ7RKERw1uOQVuOsUo00sLCOm9GI2vjoArqPsi2uqO8TymUrFN39ZbthQYfkk2QX3l30Kdtn%2F7or8XF7u2KLGun8MrTx9qKmP5rLywvEAMKbWwMYGOrAB5%2FUWgKr5RM0ekkakDndGCJIxQ1WUbxY2OhlZhi04RNqJLNUFscc5LCSsEv3VcDs9juIIgGNGSuS3aBOH06ehWLv8fV8Dci%2B0LfF%2Blop%2BQYN5P5q53wN%2FrQR837AV2pfRO9dOJarpcAoes%2B7W3iJxwKZRVrBcxvyyMt89kGzZLpab25bXG8Pp4OEOA%2FJOj1iBHT%2FNZPGiAkEIqPPujxC7I78QwyK2z%2BpF8s4ZRzTnxLc%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=b5ee4ad69dccd85483050304f2b4df792f06139e2c23889d589ca47e0006a4e7",
+      "file_size": 41747,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 188834,
+      "file_name": "starbucks_burp_request.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/188/834/a16170df44625ac372c5188ad2e06dd5d55bbce4/starbucks_burp_request.png?response-content-disposition=attachment%3B%20filename%3D%22starbucks_burp_request.png%22%3B%20filename%2A%3DUTF-8%27%27starbucks_burp_request.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ2ZVXRWMB%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T211001Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDPJGfzMJPn%2FnHJrTg5TD8VJt7cc%2B7xt9arg9h87wjVTQIhAM%2B08WEUMC%2BUcx%2B2hdKE1ivgl69a2PFRDj0l1KQ35JOLKrIFCBoQAxoMMDEzNjE5Mjc0ODQ5Igxc6REi1pVr2zXPDYAqjwWCRNoXIU3Z8A9klwjX%2B4PXU5JMH4n3c4Xxyac%2FzcM4qEjGokM%2BodDuiCfV810H3RPNumOTmghuwpUtOqPiGZA0R6o4FfqXdVBJePjhoWFMZ5oyYhx8QoKT8PuzXNSA%2BpYbeLaQsOUGTAm7J75i0xTnBaL0Et8rpP3G3oZYzAU9OWGzkWuWo678fx%2F5oDeet6aguCO8%2FjDWAWiMPlN6oxA0Y4i8bURv5uhAbItXZl%2F0yhE2exJIDYuhibnmpFXE4%2Bh4OMBilIIaDJsskKaEvoRiBsP8PY5r9dUOPsiC2t1PrepaAylZRfjhQbU57g7kP%2BXv2Azc%2BaOC75t5dhupRUh3IutnzlkORL%2F9flfqfUwX%2Fn59Do8kRUtwAkCh3yRX10QjKZJ2ne4Iur3gmDYd7730ppAiYM1bJzBy64ccOil8x%2Bvg5kbFGNGzp9YfSc5ghFx%2BbloLgola%2Fni8oWJUsddymBwlOH1Nc1b8NaCF8sS543cl06BvyxFgTXcV%2BT1nYqmbNng7EacdyxDRA59wMe5EnLiHC9jf%2Fyed12tpPd7TuQum%2BZd5NMJ9l81o7GuQiV3Iwf7RfCipikpLdbEPrJ5KBz7N7ollSoHwBUmWFblws1uxvZ5ABLQCuLJXsIqDmwNZ8YeMo1Zl9PnApt6IBcXabJBIFW4QXgunB7XW%2FF8GEeBgWNPfJtR3gqYmZ4zNpydWJwwCQaxcSHzmhhIOe6NvN7K2ZLMO0i6h3M969d2ihazkodAbxBC8Qqi%2FO56M8pBcQ7RKERw1uOQVuOsUo00sLCOm9GI2vjoArqPsi2uqO8TymUrFN39ZbthQYfkk2QX3l30Kdtn%2F7or8XF7u2KLGun8MrTx9qKmP5rLywvEAMKbWwMYGOrAB5%2FUWgKr5RM0ekkakDndGCJIxQ1WUbxY2OhlZhi04RNqJLNUFscc5LCSsEv3VcDs9juIIgGNGSuS3aBOH06ehWLv8fV8Dci%2B0LfF%2Blop%2BQYN5P5q53wN%2FrQR837AV2pfRO9dOJarpcAoes%2B7W3iJxwKZRVrBcxvyyMt89kGzZLpab25bXG8Pp4OEOA%2FJOj1iBHT%2FNZPGiAkEIqPPujxC7I78QwyK2z%2BpF8s4ZRzTnxLc%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=16fdc55e253f0bfbe6d99b8e313dd5e5c7e4b1baa715cc439787ea73fdc224a7",
+      "file_size": 54123,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 188835,
+      "file_name": "starbucks_request_repeated_in_burp.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/188/835/fb0cc656dabb433a9336b1b187550bdc3364b175/starbucks_request_repeated_in_burp.png?response-content-disposition=attachment%3B%20filename%3D%22starbucks_request_repeated_in_burp.png%22%3B%20filename%2A%3DUTF-8%27%27starbucks_request_repeated_in_burp.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ2ZVXRWMB%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T211001Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDPJGfzMJPn%2FnHJrTg5TD8VJt7cc%2B7xt9arg9h87wjVTQIhAM%2B08WEUMC%2BUcx%2B2hdKE1ivgl69a2PFRDj0l1KQ35JOLKrIFCBoQAxoMMDEzNjE5Mjc0ODQ5Igxc6REi1pVr2zXPDYAqjwWCRNoXIU3Z8A9klwjX%2B4PXU5JMH4n3c4Xxyac%2FzcM4qEjGokM%2BodDuiCfV810H3RPNumOTmghuwpUtOqPiGZA0R6o4FfqXdVBJePjhoWFMZ5oyYhx8QoKT8PuzXNSA%2BpYbeLaQsOUGTAm7J75i0xTnBaL0Et8rpP3G3oZYzAU9OWGzkWuWo678fx%2F5oDeet6aguCO8%2FjDWAWiMPlN6oxA0Y4i8bURv5uhAbItXZl%2F0yhE2exJIDYuhibnmpFXE4%2Bh4OMBilIIaDJsskKaEvoRiBsP8PY5r9dUOPsiC2t1PrepaAylZRfjhQbU57g7kP%2BXv2Azc%2BaOC75t5dhupRUh3IutnzlkORL%2F9flfqfUwX%2Fn59Do8kRUtwAkCh3yRX10QjKZJ2ne4Iur3gmDYd7730ppAiYM1bJzBy64ccOil8x%2Bvg5kbFGNGzp9YfSc5ghFx%2BbloLgola%2Fni8oWJUsddymBwlOH1Nc1b8NaCF8sS543cl06BvyxFgTXcV%2BT1nYqmbNng7EacdyxDRA59wMe5EnLiHC9jf%2Fyed12tpPd7TuQum%2BZd5NMJ9l81o7GuQiV3Iwf7RfCipikpLdbEPrJ5KBz7N7ollSoHwBUmWFblws1uxvZ5ABLQCuLJXsIqDmwNZ8YeMo1Zl9PnApt6IBcXabJBIFW4QXgunB7XW%2FF8GEeBgWNPfJtR3gqYmZ4zNpydWJwwCQaxcSHzmhhIOe6NvN7K2ZLMO0i6h3M969d2ihazkodAbxBC8Qqi%2FO56M8pBcQ7RKERw1uOQVuOsUo00sLCOm9GI2vjoArqPsi2uqO8TymUrFN39ZbthQYfkk2QX3l30Kdtn%2F7or8XF7u2KLGun8MrTx9qKmP5rLywvEAMKbWwMYGOrAB5%2FUWgKr5RM0ekkakDndGCJIxQ1WUbxY2OhlZhi04RNqJLNUFscc5LCSsEv3VcDs9juIIgGNGSuS3aBOH06ehWLv8fV8Dci%2B0LfF%2Blop%2BQYN5P5q53wN%2FrQR837AV2pfRO9dOJarpcAoes%2B7W3iJxwKZRVrBcxvyyMt89kGzZLpab25bXG8Pp4OEOA%2FJOj1iBHT%2FNZPGiAkEIqPPujxC7I78QwyK2z%2BpF8s4ZRzTnxLc%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=9b35de51f703c728efbd4a75c4f14d6f927550e6a0567dc7eb38446f909be33c",
+      "file_size": 68701,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 188837,
+      "file_name": "starbucks_api_docs_accessed.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/188/837/3a28e63d4c6a9911b5619b048b4840c0e0c91ed3/starbucks_api_docs_accessed.png?response-content-disposition=attachment%3B%20filename%3D%22starbucks_api_docs_accessed.png%22%3B%20filename%2A%3DUTF-8%27%27starbucks_api_docs_accessed.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ2ZVXRWMB%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T211001Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDPJGfzMJPn%2FnHJrTg5TD8VJt7cc%2B7xt9arg9h87wjVTQIhAM%2B08WEUMC%2BUcx%2B2hdKE1ivgl69a2PFRDj0l1KQ35JOLKrIFCBoQAxoMMDEzNjE5Mjc0ODQ5Igxc6REi1pVr2zXPDYAqjwWCRNoXIU3Z8A9klwjX%2B4PXU5JMH4n3c4Xxyac%2FzcM4qEjGokM%2BodDuiCfV810H3RPNumOTmghuwpUtOqPiGZA0R6o4FfqXdVBJePjhoWFMZ5oyYhx8QoKT8PuzXNSA%2BpYbeLaQsOUGTAm7J75i0xTnBaL0Et8rpP3G3oZYzAU9OWGzkWuWo678fx%2F5oDeet6aguCO8%2FjDWAWiMPlN6oxA0Y4i8bURv5uhAbItXZl%2F0yhE2exJIDYuhibnmpFXE4%2Bh4OMBilIIaDJsskKaEvoRiBsP8PY5r9dUOPsiC2t1PrepaAylZRfjhQbU57g7kP%2BXv2Azc%2BaOC75t5dhupRUh3IutnzlkORL%2F9flfqfUwX%2Fn59Do8kRUtwAkCh3yRX10QjKZJ2ne4Iur3gmDYd7730ppAiYM1bJzBy64ccOil8x%2Bvg5kbFGNGzp9YfSc5ghFx%2BbloLgola%2Fni8oWJUsddymBwlOH1Nc1b8NaCF8sS543cl06BvyxFgTXcV%2BT1nYqmbNng7EacdyxDRA59wMe5EnLiHC9jf%2Fyed12tpPd7TuQum%2BZd5NMJ9l81o7GuQiV3Iwf7RfCipikpLdbEPrJ5KBz7N7ollSoHwBUmWFblws1uxvZ5ABLQCuLJXsIqDmwNZ8YeMo1Zl9PnApt6IBcXabJBIFW4QXgunB7XW%2FF8GEeBgWNPfJtR3gqYmZ4zNpydWJwwCQaxcSHzmhhIOe6NvN7K2ZLMO0i6h3M969d2ihazkodAbxBC8Qqi%2FO56M8pBcQ7RKERw1uOQVuOsUo00sLCOm9GI2vjoArqPsi2uqO8TymUrFN39ZbthQYfkk2QX3l30Kdtn%2F7or8XF7u2KLGun8MrTx9qKmP5rLywvEAMKbWwMYGOrAB5%2FUWgKr5RM0ekkakDndGCJIxQ1WUbxY2OhlZhi04RNqJLNUFscc5LCSsEv3VcDs9juIIgGNGSuS3aBOH06ehWLv8fV8Dci%2B0LfF%2Blop%2BQYN5P5q53wN%2FrQR837AV2pfRO9dOJarpcAoes%2B7W3iJxwKZRVrBcxvyyMt89kGzZLpab25bXG8Pp4OEOA%2FJOj1iBHT%2FNZPGiAkEIqPPujxC7I78QwyK2z%2BpF8s4ZRzTnxLc%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=ed10c46587e1ff87258aed012e58da4d13d452b0246d49db523305e654a77dcf",
+      "file_size": 81273,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 188838,
+      "file_name": "starbucks_api_page_accessed.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/188/838/a593a9267e7466debe82e594f0d79f803495c03b/starbucks_api_page_accessed.png?response-content-disposition=attachment%3B%20filename%3D%22starbucks_api_page_accessed.png%22%3B%20filename%2A%3DUTF-8%27%27starbucks_api_page_accessed.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ2ZVXRWMB%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T211001Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDPJGfzMJPn%2FnHJrTg5TD8VJt7cc%2B7xt9arg9h87wjVTQIhAM%2B08WEUMC%2BUcx%2B2hdKE1ivgl69a2PFRDj0l1KQ35JOLKrIFCBoQAxoMMDEzNjE5Mjc0ODQ5Igxc6REi1pVr2zXPDYAqjwWCRNoXIU3Z8A9klwjX%2B4PXU5JMH4n3c4Xxyac%2FzcM4qEjGokM%2BodDuiCfV810H3RPNumOTmghuwpUtOqPiGZA0R6o4FfqXdVBJePjhoWFMZ5oyYhx8QoKT8PuzXNSA%2BpYbeLaQsOUGTAm7J75i0xTnBaL0Et8rpP3G3oZYzAU9OWGzkWuWo678fx%2F5oDeet6aguCO8%2FjDWAWiMPlN6oxA0Y4i8bURv5uhAbItXZl%2F0yhE2exJIDYuhibnmpFXE4%2Bh4OMBilIIaDJsskKaEvoRiBsP8PY5r9dUOPsiC2t1PrepaAylZRfjhQbU57g7kP%2BXv2Azc%2BaOC75t5dhupRUh3IutnzlkORL%2F9flfqfUwX%2Fn59Do8kRUtwAkCh3yRX10QjKZJ2ne4Iur3gmDYd7730ppAiYM1bJzBy64ccOil8x%2Bvg5kbFGNGzp9YfSc5ghFx%2BbloLgola%2Fni8oWJUsddymBwlOH1Nc1b8NaCF8sS543cl06BvyxFgTXcV%2BT1nYqmbNng7EacdyxDRA59wMe5EnLiHC9jf%2Fyed12tpPd7TuQum%2BZd5NMJ9l81o7GuQiV3Iwf7RfCipikpLdbEPrJ5KBz7N7ollSoHwBUmWFblws1uxvZ5ABLQCuLJXsIqDmwNZ8YeMo1Zl9PnApt6IBcXabJBIFW4QXgunB7XW%2FF8GEeBgWNPfJtR3gqYmZ4zNpydWJwwCQaxcSHzmhhIOe6NvN7K2ZLMO0i6h3M969d2ihazkodAbxBC8Qqi%2FO56M8pBcQ7RKERw1uOQVuOsUo00sLCOm9GI2vjoArqPsi2uqO8TymUrFN39ZbthQYfkk2QX3l30Kdtn%2F7or8XF7u2KLGun8MrTx9qKmP5rLywvEAMKbWwMYGOrAB5%2FUWgKr5RM0ekkakDndGCJIxQ1WUbxY2OhlZhi04RNqJLNUFscc5LCSsEv3VcDs9juIIgGNGSuS3aBOH06ehWLv8fV8Dci%2B0LfF%2Blop%2BQYN5P5q53wN%2FrQR837AV2pfRO9dOJarpcAoes%2B7W3iJxwKZRVrBcxvyyMt89kGzZLpab25bXG8Pp4OEOA%2FJOj1iBHT%2FNZPGiAkEIqPPujxC7I78QwyK2z%2BpF8s4ZRzTnxLc%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=e0a7f0e2d8c78feb1e4fb5ec7b922d88a63cdcf0ac1d4a640adb1b9599107820",
+      "file_size": 33591,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 188839,
+      "file_name": "starbucks_token_match_replace.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/188/839/53cdf0f901dd7eba5b0ee1aa9e2fe217028af813/starbucks_token_match_replace.png?response-content-disposition=attachment%3B%20filename%3D%22starbucks_token_match_replace.png%22%3B%20filename%2A%3DUTF-8%27%27starbucks_token_match_replace.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ2ZVXRWMB%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T211001Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDPJGfzMJPn%2FnHJrTg5TD8VJt7cc%2B7xt9arg9h87wjVTQIhAM%2B08WEUMC%2BUcx%2B2hdKE1ivgl69a2PFRDj0l1KQ35JOLKrIFCBoQAxoMMDEzNjE5Mjc0ODQ5Igxc6REi1pVr2zXPDYAqjwWCRNoXIU3Z8A9klwjX%2B4PXU5JMH4n3c4Xxyac%2FzcM4qEjGokM%2BodDuiCfV810H3RPNumOTmghuwpUtOqPiGZA0R6o4FfqXdVBJePjhoWFMZ5oyYhx8QoKT8PuzXNSA%2BpYbeLaQsOUGTAm7J75i0xTnBaL0Et8rpP3G3oZYzAU9OWGzkWuWo678fx%2F5oDeet6aguCO8%2FjDWAWiMPlN6oxA0Y4i8bURv5uhAbItXZl%2F0yhE2exJIDYuhibnmpFXE4%2Bh4OMBilIIaDJsskKaEvoRiBsP8PY5r9dUOPsiC2t1PrepaAylZRfjhQbU57g7kP%2BXv2Azc%2BaOC75t5dhupRUh3IutnzlkORL%2F9flfqfUwX%2Fn59Do8kRUtwAkCh3yRX10QjKZJ2ne4Iur3gmDYd7730ppAiYM1bJzBy64ccOil8x%2Bvg5kbFGNGzp9YfSc5ghFx%2BbloLgola%2Fni8oWJUsddymBwlOH1Nc1b8NaCF8sS543cl06BvyxFgTXcV%2BT1nYqmbNng7EacdyxDRA59wMe5EnLiHC9jf%2Fyed12tpPd7TuQum%2BZd5NMJ9l81o7GuQiV3Iwf7RfCipikpLdbEPrJ5KBz7N7ollSoHwBUmWFblws1uxvZ5ABLQCuLJXsIqDmwNZ8YeMo1Zl9PnApt6IBcXabJBIFW4QXgunB7XW%2FF8GEeBgWNPfJtR3gqYmZ4zNpydWJwwCQaxcSHzmhhIOe6NvN7K2ZLMO0i6h3M969d2ihazkodAbxBC8Qqi%2FO56M8pBcQ7RKERw1uOQVuOsUo00sLCOm9GI2vjoArqPsi2uqO8TymUrFN39ZbthQYfkk2QX3l30Kdtn%2F7or8XF7u2KLGun8MrTx9qKmP5rLywvEAMKbWwMYGOrAB5%2FUWgKr5RM0ekkakDndGCJIxQ1WUbxY2OhlZhi04RNqJLNUFscc5LCSsEv3VcDs9juIIgGNGSuS3aBOH06ehWLv8fV8Dci%2B0LfF%2Blop%2BQYN5P5q53wN%2FrQR837AV2pfRO9dOJarpcAoes%2B7W3iJxwKZRVrBcxvyyMt89kGzZLpab25bXG8Pp4OEOA%2FJOj1iBHT%2FNZPGiAkEIqPPujxC7I78QwyK2z%2BpF8s4ZRzTnxLc%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=f17cc3c8a472b4c8e440e4aa581aa71f643aecb76b8330b51e6aec0d0baaa093",
+      "file_size": 44154,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 188840,
+      "file_name": "starbucks_api_clients_.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/188/840/ac49f534ec335bb5df4e4865f709e1bbb728a78c/starbucks_api_clients_.png?response-content-disposition=attachment%3B%20filename%3D%22starbucks_api_clients_.png%22%3B%20filename%2A%3DUTF-8%27%27starbucks_api_clients_.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ2ZVXRWMB%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T211001Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDPJGfzMJPn%2FnHJrTg5TD8VJt7cc%2B7xt9arg9h87wjVTQIhAM%2B08WEUMC%2BUcx%2B2hdKE1ivgl69a2PFRDj0l1KQ35JOLKrIFCBoQAxoMMDEzNjE5Mjc0ODQ5Igxc6REi1pVr2zXPDYAqjwWCRNoXIU3Z8A9klwjX%2B4PXU5JMH4n3c4Xxyac%2FzcM4qEjGokM%2BodDuiCfV810H3RPNumOTmghuwpUtOqPiGZA0R6o4FfqXdVBJePjhoWFMZ5oyYhx8QoKT8PuzXNSA%2BpYbeLaQsOUGTAm7J75i0xTnBaL0Et8rpP3G3oZYzAU9OWGzkWuWo678fx%2F5oDeet6aguCO8%2FjDWAWiMPlN6oxA0Y4i8bURv5uhAbItXZl%2F0yhE2exJIDYuhibnmpFXE4%2Bh4OMBilIIaDJsskKaEvoRiBsP8PY5r9dUOPsiC2t1PrepaAylZRfjhQbU57g7kP%2BXv2Azc%2BaOC75t5dhupRUh3IutnzlkORL%2F9flfqfUwX%2Fn59Do8kRUtwAkCh3yRX10QjKZJ2ne4Iur3gmDYd7730ppAiYM1bJzBy64ccOil8x%2Bvg5kbFGNGzp9YfSc5ghFx%2BbloLgola%2Fni8oWJUsddymBwlOH1Nc1b8NaCF8sS543cl06BvyxFgTXcV%2BT1nYqmbNng7EacdyxDRA59wMe5EnLiHC9jf%2Fyed12tpPd7TuQum%2BZd5NMJ9l81o7GuQiV3Iwf7RfCipikpLdbEPrJ5KBz7N7ollSoHwBUmWFblws1uxvZ5ABLQCuLJXsIqDmwNZ8YeMo1Zl9PnApt6IBcXabJBIFW4QXgunB7XW%2FF8GEeBgWNPfJtR3gqYmZ4zNpydWJwwCQaxcSHzmhhIOe6NvN7K2ZLMO0i6h3M969d2ihazkodAbxBC8Qqi%2FO56M8pBcQ7RKERw1uOQVuOsUo00sLCOm9GI2vjoArqPsi2uqO8TymUrFN39ZbthQYfkk2QX3l30Kdtn%2F7or8XF7u2KLGun8MrTx9qKmP5rLywvEAMKbWwMYGOrAB5%2FUWgKr5RM0ekkakDndGCJIxQ1WUbxY2OhlZhi04RNqJLNUFscc5LCSsEv3VcDs9juIIgGNGSuS3aBOH06ehWLv8fV8Dci%2B0LfF%2Blop%2BQYN5P5q53wN%2FrQR837AV2pfRO9dOJarpcAoes%2B7W3iJxwKZRVrBcxvyyMt89kGzZLpab25bXG8Pp4OEOA%2FJOj1iBHT%2FNZPGiAkEIqPPujxC7I78QwyK2z%2BpF8s4ZRzTnxLc%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=65503c7bf925166440ad6a92b7307bc3a41db7aadb8eeb1252f4b492f9c5bf56",
+      "file_size": 90656,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 188842,
+      "file_name": "starbucks_customer_info.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/188/842/4e529f300d22b1210ebd5fea85d08f2aeb416ca1/starbucks_customer_info.png?response-content-disposition=attachment%3B%20filename%3D%22starbucks_customer_info.png%22%3B%20filename%2A%3DUTF-8%27%27starbucks_customer_info.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ2ZVXRWMB%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T211001Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDPJGfzMJPn%2FnHJrTg5TD8VJt7cc%2B7xt9arg9h87wjVTQIhAM%2B08WEUMC%2BUcx%2B2hdKE1ivgl69a2PFRDj0l1KQ35JOLKrIFCBoQAxoMMDEzNjE5Mjc0ODQ5Igxc6REi1pVr2zXPDYAqjwWCRNoXIU3Z8A9klwjX%2B4PXU5JMH4n3c4Xxyac%2FzcM4qEjGokM%2BodDuiCfV810H3RPNumOTmghuwpUtOqPiGZA0R6o4FfqXdVBJePjhoWFMZ5oyYhx8QoKT8PuzXNSA%2BpYbeLaQsOUGTAm7J75i0xTnBaL0Et8rpP3G3oZYzAU9OWGzkWuWo678fx%2F5oDeet6aguCO8%2FjDWAWiMPlN6oxA0Y4i8bURv5uhAbItXZl%2F0yhE2exJIDYuhibnmpFXE4%2Bh4OMBilIIaDJsskKaEvoRiBsP8PY5r9dUOPsiC2t1PrepaAylZRfjhQbU57g7kP%2BXv2Azc%2BaOC75t5dhupRUh3IutnzlkORL%2F9flfqfUwX%2Fn59Do8kRUtwAkCh3yRX10QjKZJ2ne4Iur3gmDYd7730ppAiYM1bJzBy64ccOil8x%2Bvg5kbFGNGzp9YfSc5ghFx%2BbloLgola%2Fni8oWJUsddymBwlOH1Nc1b8NaCF8sS543cl06BvyxFgTXcV%2BT1nYqmbNng7EacdyxDRA59wMe5EnLiHC9jf%2Fyed12tpPd7TuQum%2BZd5NMJ9l81o7GuQiV3Iwf7RfCipikpLdbEPrJ5KBz7N7ollSoHwBUmWFblws1uxvZ5ABLQCuLJXsIqDmwNZ8YeMo1Zl9PnApt6IBcXabJBIFW4QXgunB7XW%2FF8GEeBgWNPfJtR3gqYmZ4zNpydWJwwCQaxcSHzmhhIOe6NvN7K2ZLMO0i6h3M969d2ihazkodAbxBC8Qqi%2FO56M8pBcQ7RKERw1uOQVuOsUo00sLCOm9GI2vjoArqPsi2uqO8TymUrFN39ZbthQYfkk2QX3l30Kdtn%2F7or8XF7u2KLGun8MrTx9qKmP5rLywvEAMKbWwMYGOrAB5%2FUWgKr5RM0ekkakDndGCJIxQ1WUbxY2OhlZhi04RNqJLNUFscc5LCSsEv3VcDs9juIIgGNGSuS3aBOH06ehWLv8fV8Dci%2B0LfF%2Blop%2BQYN5P5q53wN%2FrQR837AV2pfRO9dOJarpcAoes%2B7W3iJxwKZRVrBcxvyyMt89kGzZLpab25bXG8Pp4OEOA%2FJOj1iBHT%2FNZPGiAkEIqPPujxC7I78QwyK2z%2BpF8s4ZRzTnxLc%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=d35c54e7a1a4dba87d0746d7a8171d386a5b0267e6e125c68c44c2a38a99a0d8",
+      "file_size": 108740,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 188844,
+      "file_name": "starbucks_trsancation.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/188/844/4ec742b22f6370619a719fa64873ee2bed2af07e/starbucks_trsancation.png?response-content-disposition=attachment%3B%20filename%3D%22starbucks_trsancation.png%22%3B%20filename%2A%3DUTF-8%27%27starbucks_trsancation.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ2ZVXRWMB%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T211001Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDPJGfzMJPn%2FnHJrTg5TD8VJt7cc%2B7xt9arg9h87wjVTQIhAM%2B08WEUMC%2BUcx%2B2hdKE1ivgl69a2PFRDj0l1KQ35JOLKrIFCBoQAxoMMDEzNjE5Mjc0ODQ5Igxc6REi1pVr2zXPDYAqjwWCRNoXIU3Z8A9klwjX%2B4PXU5JMH4n3c4Xxyac%2FzcM4qEjGokM%2BodDuiCfV810H3RPNumOTmghuwpUtOqPiGZA0R6o4FfqXdVBJePjhoWFMZ5oyYhx8QoKT8PuzXNSA%2BpYbeLaQsOUGTAm7J75i0xTnBaL0Et8rpP3G3oZYzAU9OWGzkWuWo678fx%2F5oDeet6aguCO8%2FjDWAWiMPlN6oxA0Y4i8bURv5uhAbItXZl%2F0yhE2exJIDYuhibnmpFXE4%2Bh4OMBilIIaDJsskKaEvoRiBsP8PY5r9dUOPsiC2t1PrepaAylZRfjhQbU57g7kP%2BXv2Azc%2BaOC75t5dhupRUh3IutnzlkORL%2F9flfqfUwX%2Fn59Do8kRUtwAkCh3yRX10QjKZJ2ne4Iur3gmDYd7730ppAiYM1bJzBy64ccOil8x%2Bvg5kbFGNGzp9YfSc5ghFx%2BbloLgola%2Fni8oWJUsddymBwlOH1Nc1b8NaCF8sS543cl06BvyxFgTXcV%2BT1nYqmbNng7EacdyxDRA59wMe5EnLiHC9jf%2Fyed12tpPd7TuQum%2BZd5NMJ9l81o7GuQiV3Iwf7RfCipikpLdbEPrJ5KBz7N7ollSoHwBUmWFblws1uxvZ5ABLQCuLJXsIqDmwNZ8YeMo1Zl9PnApt6IBcXabJBIFW4QXgunB7XW%2FF8GEeBgWNPfJtR3gqYmZ4zNpydWJwwCQaxcSHzmhhIOe6NvN7K2ZLMO0i6h3M969d2ihazkodAbxBC8Qqi%2FO56M8pBcQ7RKERw1uOQVuOsUo00sLCOm9GI2vjoArqPsi2uqO8TymUrFN39ZbthQYfkk2QX3l30Kdtn%2F7or8XF7u2KLGun8MrTx9qKmP5rLywvEAMKbWwMYGOrAB5%2FUWgKr5RM0ekkakDndGCJIxQ1WUbxY2OhlZhi04RNqJLNUFscc5LCSsEv3VcDs9juIIgGNGSuS3aBOH06ehWLv8fV8Dci%2B0LfF%2Blop%2BQYN5P5q53wN%2FrQR837AV2pfRO9dOJarpcAoes%2B7W3iJxwKZRVrBcxvyyMt89kGzZLpab25bXG8Pp4OEOA%2FJOj1iBHT%2FNZPGiAkEIqPPujxC7I78QwyK2z%2BpF8s4ZRzTnxLc%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=6d04743e2b7eccb1010b654521991edf380bd7256a3ed2a7fc79882ca8232cd5",
+      "file_size": 99927,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-08-06T08:51:18.953Z",
+  "allow_singular_disclosure_after": -256479522.95450562,
+  "singular_disclosure_allowed": true,
+  "vote_count": 28,
+  "voters": [
+    "zeroxyele",
+    "mohaned0101",
+    "cuso4",
+    "gamliel",
+    "muhammad_uwais",
+    "r3y",
+    "eveeez",
+    "lumbridge",
+    "marwan",
+    "exception",
+    "and 18 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "Team"
+  },
+  "structured_scope": {
+    "databaseId": 12995,
+    "asset_type": "OTHER",
+    "asset_identifier": "Other assets",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "id": 4984,
+      "category": "researcher",
+      "content": "When i tried to pentest the starbucks android app, i could not see the traffic between client and the server because of the SSL Pinning. \n\nFirst, i wanted to SSL Unpinning then continue the testing, however, i released that developers forgot to add /MobileInbox/ path for the ssl validation. (i dont know they forgot or leave it like that) \n\nCurrently, I had a request thanks to forgotten/leaving a path for ssl validation. When i have a directory, always i check the sub or parent directory because of that I tried to reach this link directly on browser but i faced a basic http authentication pop-up. There must be a problem because i have an access with burp, then i check the HTTP Headers bingo! there was a Authorization-Token. I added this token automatically when i request a link then second bingo i have an access directly on browser.\n\nNow try to digg sensitive things. I went to homepage and it directed me to /edgeapidoc/index/ . \nThere was a link on that page which /swagger/docs/v1/ . I hoped that was the documents of the API usage. Yeapp that was the documentation of the API usage. I saw all methods of the app, first thing which came in my mind, am i eligible to use this all of things. yeap i was :) \n\nI did not want to change anything on the server, because of that did not use any POST method. I just used almost all GET methods :D all of them were working such as, masked credit card values, api tokens, user informations etc.",
+      "updated_at": "2017-08-07T06:32:23.979Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 39052,
+        "username": "ynsy",
+        "name": "Yunus Yilmaz",
+        "bio": "Penetration Tester",
+        "cleared": false,
+        "verified": true,
+        "website": null,
+        "location": "Istanbul/Turkey",
+        "created_at": "2015-08-25T20:02:33.394Z",
+        "url": "https://hackerone.com/ynsy",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "hacker",
+        "profile_picture_urls": {
+          "small": "https://profile-photos.hackerone-user-content.com/variants/000/039/052/e630a49d05248226e8034e4bbf83b190cfc60ebd_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/000/039/052/e630a49d05248226e8034e4bbf83b190cfc60ebd_original.jpg/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a",
+          "xtralarge": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NTc5MCwicHVyIjoiYmxvYl9pZCJ9fQ==--ee9b021737ef7c3896c34dae606fad208d864f80/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJyZXNpemUiOiIyNjB4MjYwXHUwMDNlIn0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--cf3aeca803d1baf476958c689ca7b472a4cb54f1/Sherlock_S03E01_1080p_KISSTHEMGOODBYE_NET_1383.jpg"
+        }
+      }
+    }
+  ]
+}
