@@ -1,0 +1,136 @@
+{
+  "id": 899069,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC84OTkwNjk=",
+  "url": "https://hackerone.com/reports/899069",
+  "title": "Untrusted users able to run pending migrations in production",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2020-06-15T22:43:10.080Z",
+  "submitted_at": "2020-06-15T22:43:10.080Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "tenderlove",
+    "url": "/tenderlove",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/003/318/60d828744b5d16813ecbf975fdc453dc4a933f4f_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 22,
+    "url": "https://hackerone.com/rails",
+    "handle": "rails",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/022/5e2b46658c8b86bed62f574d8e1793f353cbbc63_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/022/5e2b46658c8b86bed62f574d8e1793f353cbbc63_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Ruby on Rails",
+      "twitter_handle": "rails",
+      "website": "http://rubyonrails.org/security",
+      "about": "Web development that doesn't hurt."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": true,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2020-8185"
+  ],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2020-07-24T20:07:32.367Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2020-06-24T20:07:05.888Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Untrusted users able to run pending migrations in production\n\nThere is a vulnerability in versions of Rails prior to 6.0.3.2 that allowed\nan untrusted user to run any pending migrations on a Rails app running in\nproduction.\n\nThis vulnerability has been assigned the CVE identifier CVE-2020-XXXX.\n\nVersions Affected:  6.0.0 < rails < 6.0.3.2\nNot affected:       Applications with `config.action_dispatch.show_exceptions = false` (this is not a default setting in production)\nFixed Versions:     rails >= 6.0.3.2\n\n\nReleases\n--------\n\nThe new release (6.0.3.2) is available in the regular locations.\n\nWorkarounds\n-----------\n\nUntil such time as the patch can be applied, application developers should\ndisable the ActionDispatch middleware in their production environment via\na line such as this one in their config/environment/production.rb:\n\nconfig.middleware.delete ActionDispatch::ActionableExceptions\n\nPatches\n-------\n\nAs mentioned, we are releasing the following patch for the 6.0 release\nseries:\n\n* 0001-6.0.3.1-Only-allow-ActionableErrors-if-show_detailed_excepti.patch\n\n\nCredits\n-------\n\nThis issue was discovered independently by Rafael França and Benoit Côté-Jodoin. \nThe patch above was provided by Rafael.\n\n## Impact\n\nUsing this issue, an attacker would be able to execute any migrations that \nare pending for a Rails app running in production mode. It is important to\nnote that an attacker is limited to running migrations the application \ndeveloper has already defined in their application and ones that have not\nalready ran.",
+  "weakness": {
+    "id": 48,
+    "name": "Uncontrolled Resource Consumption"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 869417,
+      "file_name": "0001-6.0.3.1-Only-allow-ActionableErrors-if-show_detailed_excepti.patch",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/jLFinEEY24crLxi8YnjUuyCp?response-content-disposition=attachment%3B%20filename%3D%220001-6.0.3.1-Only-allow-ActionableErrors-if-show_detailed_excepti.patch%22%3B%20filename%2A%3DUTF-8%27%270001-6.0.3.1-Only-allow-ActionableErrors-if-show_detailed_excepti.patch&response-content-type=text%2Fx-patch&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWYOZNPRR%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T094152Z&X-Amz-Expires=2055&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIHUb94qd%2BwbE1nDnLmYMvNhihYV8B4aSKhE0a5fiYycLAiEA8rvigSIsnJGMAs%2FAAVf%2BGs5%2FCSIpgafe1mG8nd3qgiQqugUI%2Ff%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDM7JItEWWYFJVSEX3yqOBWeASjubcH9qXyvIqIGsFPonQJrngPBqs4%2FeunxtBVvycFRMcC3q41LGNV7FlkfVFhn7AsNJsMcFTCR%2Bf0Z%2FrK98fW8VHAGXUU3T6FdVdh0UpxgvFO8pXsNWs901Rh6M%2FlMa4taUHhxiWzetjmB8nnOz2e5MEoYOoO684SAxt%2BZwL9JMhr9ntlAHTgaCvJMK31YV%2BOGa31YDdncbAFNIypBRFAVwUzdH0j45PuSjgsECaJ%2BfLTWfxX1XZszak%2FzFWx%2FG5PS4mOwxVXqfqPTK2h8%2FIe6yoMjIIyngYlFM3SXWo%2BppKR5tWtLvgU24PHgVXpHfPZMXY8PO2kLcLl%2BFHiXnhv8%2FWqKG1zVa2V8gdzQsjYF9%2BK91zv809dnTTN7YBX4JuKaBduLf8OHOHTCGF1zmSpWmapG%2BWnFXy6YsfvMPmR40YRtmHG1zCK1LDH9ruuYwjoHB%2BPqWaJVdBlEW%2BYcYqJd46Ap%2BY8zqqp%2Fy90Hn7syhYdvHUpmOsrONGBHGY1eEZW2gTWTvHDiXDTxfsl1iNushD47IKHcippvEzxSyegLjdjcqb87SoJN%2BN43gfZeJ4eKyQDI3aG0HnfZtFbJj%2BHUVer%2Ftg%2BQkswLeCKEgiCylywq6YgIzTKUNj1SUjZJ4O6VfrWfy1ZsWWtrNixQoxF5au0Ymtm2ex7Sr8a0cBDmo5%2BkX74aw4AtvLSLz4CWgeRk%2FxIRXeefy4GsZQIaht8PubTwsNd8Mt6ZX68Q8v8mqnLbNCB59HjBcMKptGX%2FrB67qQOBlbZOyXiinVLNH4rZV2%2FTNGas959P5crKly7I6rJvxs3aJcqz%2Bl2Touy36eP3ZTTuH6saoxXvc1Ua17RQORfvDaBLB3mq7vTCN873GBjqxAWmZOUb81xVKGGiakl%2BGcs5%2FeTs2MHC66wfkkC1qHxW10Pa6hp9fSIpHF5YM69xbf5BvsUF%2F5teoQsfu7zZh0HbEXgb%2BtiXSybJ9OI3WW7tn6nwfMLVD9y%2BfEVh8LnpEQOsXlZfhmrCxnF%2Blbaoe5iwsViMoy%2BEEwi2PM46yJ3aa0Izg9XtPQ9EjfDAtcvvuHrlaF%2FJV%2B9YbGhivIi%2B2FXnOft%2Fd2AMuYurhuigKde0lyA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=aeb21b71b55fe5151e428db03e481f70323c4f50626f3c19c769917ddf385764",
+      "file_size": 2728,
+      "type": "text/x-patch",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2020-07-24T20:07:05.969Z",
+  "allow_singular_disclosure_after": -162826486.3155245,
+  "singular_disclosure_allowed": true,
+  "vote_count": 3,
+  "voters": [
+    "ali",
+    "tinw",
+    "1nvok3r1729"
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 6.5,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "none",
+      "integrity": "low",
+      "availability": "low"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 160,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/rails/rails",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
