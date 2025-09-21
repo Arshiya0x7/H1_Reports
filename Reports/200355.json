@@ -1,0 +1,119 @@
+{
+  "id": 200355,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yMDAzNTU=",
+  "url": "https://hackerone.com/reports/200355",
+  "title": "MailPoet Newsletters <= 2.7.2 - Authenticated Reflected Cross-Site Scripting (XSS)",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2017-01-22T14:42:55.144Z",
+  "submitted_at": "2017-01-22T14:42:55.144Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "madrobot",
+    "url": "/madrobot",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/120/021/e46bd9e7f114fdea5bdfe2b5e0dfe8648045461f_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 2943,
+    "url": "https://hackerone.com/eternal",
+    "handle": "eternal",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/9525xdsq4bz7ubnoie172ssjv8ul/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/9525xdsq4bz7ubnoie172ssjv8ul/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Eternal",
+      "twitter_handle": "Zomato",
+      "website": "https://www.eternal.com",
+      "about": "Eternal is India’s largest new-age tech company by market cap, comprising of 4 businesses (as of now) – Zomato, Blinkit, District, & Hyperpure."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2017-06-17T17:58:38.886Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-05-18T17:58:21.662Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello __Team__\n\n__Abstract__:-\nA Cross-Site Scripting vulnerability was found in the MailPoet Newsletters plugin. This issue allows an attacker to perform a wide variety of actions, such as stealing Administrators' session tokens, or performing arbitrary actions on their behalf. In order to exploit this issue, the attacker has to lure/force a logged on WordPress Administrator into opening a URL provided by an attacker.\n\n__Introduction__:-\nThe MailPoet Newsletters plugin allows a WordPress administrator to create newsletters, automated emails, post notifications and autoresponders. A Cross-Site Scripting vulnerability was found in the MailPoet Newsletters plugin. This issue allows an attacker to perform a wide variety of actions, such as stealing Administrators' session tokens, or performing arbitrary actions on their behalf. In order to exploit this issue, the attacker has to lure/force a logged on WordPress Administrator into opening a URL provided by an attacker.\n\n__Proof of concept__:-\nHave an authenticated admin visit the URL:-\n\nhttps://business-blog.zomato.com//?wysija-page=1&controller=subscribers&action=wysija_outter&encodedForm=eyJmb3JtIjoiUHduIiwiYWZ0ZXJfd2lkZ2V0IjoiPHNjcmlwdD5hbGVydCgnWFNTJyk8L3NjcmlwdD4ifQ==\nThe encodedForm parameter is the base64 encoded string:\n{\"form\":\"Pwn\",\"after_widget\":\"<script>alert('XSS)</script>\"}\n\nA pop-up box should appear, meaning the JavaScript contained in the request_id request parameter was executed by the browser.\n\n{F154227}\n\n__Fix__:-\nThis issue is resolved in MailPoet Newsletters version 2.7.3.\n\n__Regards__,\nSanthosh",
+  "weakness": {
+    "id": 60,
+    "name": "Cross-site Scripting (XSS) - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 154227,
+      "file_name": "zomato_xss.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/154/227/0fe1d796653ea08dbe86e61bb89efd787c9e1322/zomato_xss.png?response-content-disposition=attachment%3B%20filename%3D%22zomato_xss.png%22%3B%20filename%2A%3DUTF-8%27%27zomato_xss.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4YHF5EHB%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T215008Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJFMEMCIFqNX39T%2FXCJhXUkbTX3lWx8BjPqVE8MnKgEzGKAKedeAh8dx5v6uHPjEk%2BCj1ZBqfgMzv%2FRNtdMS5lgFNUa32GFKrEFCBwQAxoMMDEzNjE5Mjc0ODQ5IgyhgfORnLRqY3GEXbQqjgWHdxllSIT1v7ozL1D563B3s5O9ppME84bDUJGGDi%2FctsJl6PItf3fupoMgly%2BkTvfb2jozfmh9mV82Kqp4iSDMuv3e7FKFmhbLBA6YSKPJdW3rIk6n4KIghj%2BdsH6bsNQuY1JxIlX2ZFqxoftDjH1cH9WWdy5w8azr7yDVYBl09F6ATbB493UmlGzdGQNRvdUgGq8XsJ1lZLvZEXkErLgzZd7SvkL%2FOo82Tqn11F3mw%2BOMSwpTgg8op2AmldjwgJe4CyLZhYriUIvRjGpA9sAnJL0AH9rUE%2BG87yIiPrUndpYtlh1Hvq4JxQ3rGLwxdCy3ScMpdlJqwog9YlWK6SAm4LFTwZybjjWvjU0TbynlPsZHapyntasFH0GrPhe3qHBfMwsFMkbCWFgoqx%2FuShmHW35zishdC6hc1dbVq6V7J4IC%2FNAa40woeXKdsnJDxwMZy3EYYDTuD%2F1Y2dWkmrROK6hhz4BDLx41pApZwDKMYbqdv0jytswxYRDwr%2B9j7Ca%2BO8%2FN4Zx7lWj5L7aDsr1NNuhIRrPGg8zEB8QLYXXV5X6xS%2BSIfRbcm29JOJ7%2Fa8JYhO6oFu4R%2F2oN3I7VRJfNDF5UixB7Zye6Xw8AbS1qEOxkzkypZIIn0f1l%2Bj4IPgf5%2BEnLB8NWzclNpQRclJviZl2aVnzDgB8J9RvFXtJjugsM3YoDeE%2F%2BSzeEtLdTQGy3L8WRXoEr3d15VxuZF2wX9NOiYHtel8GFpxCiGeRXO4oGgd3KT4EuN15tUqoR9ESrzIJ6O0kwAEX%2FU4prAw1u6QqyVOIJqRTdbzbC6jB%2BlkJXSAbA%2BKnhEgq9hDn4CNaHhbmd5yrSXuONjzc%2F%2B9BM6egXoLNPqd0aXIOy5mUwy43BxgY6swHRMbrsLgWKjiiaI7ot7fwXNzz7VF5aCF%2BXCd1qM%2BtvalLfUA6wxzmvlPsK6Uvp8pMk%2Fs8PG1rn4ZcdJ94EDxC0O636Z5A36vcUecw5uqrpX1JABFxT%2Be7Da%2BVq%2FkwnCL%2BQHPDHgJu9ZiHHUim6IRY78Qpu1mi4h3eEA5F7xpCa4MK6cNBtr%2F8mJRiVVhpocrBv%2Bv1aG1CCL60oc6WNadMp4yhkrXtSek0v%2BTAaxXRS08p3%2BQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=7f3e5cc7a8cb328ae41244e9c7b7fd70055c49aa268f712825e80b84e1329243",
+      "file_size": 163443,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-06-17T17:58:21.702Z",
+  "allow_singular_disclosure_after": -260769107.16024762,
+  "singular_disclosure_allowed": true,
+  "vote_count": 4,
+  "voters": [
+    "eveeez",
+    "japz",
+    "spetr0x",
+    "akshay_raj"
+  ],
+  "severity": {
+    "rating": "high",
+    "author_type": "User"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
