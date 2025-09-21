@@ -1,0 +1,131 @@
+{
+  "id": 1040047,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMDQwMDQ3",
+  "url": "https://hackerone.com/reports/1040047",
+  "title": "Email Verification bypass on signup",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2020-11-21T09:29:57.927Z",
+  "submitted_at": "2020-11-21T09:29:57.967Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "farhan0x00",
+    "url": "/farhan0x00",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/ixxya4qj74jolefvy6467bkp1wqj/65551465b0d18d952f306b2d0c5e69ed082a8c9bc5c9b7bec024e5edc01c00a5"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 111,
+    "url": "https://hackerone.com/automattic",
+    "handle": "automattic",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/111/7f89e1ea233f92916202521a069fdbfe9eced339_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/111/7f89e1ea233f92916202521a069fdbfe9eced339_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Automattic",
+      "twitter_handle": "",
+      "website": "https://automattic.com",
+      "about": "WordPress.com, WooCommerce, WordPress VIP, Jetpack, Beeper, Texts, Akismet, Gravatar, Crowdsignal, Tumblr and more!"
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2020-12-03T08:43:26.221Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-12-01T11:39:41.323Z",
+  "team_member_agreed_on_going_public_at": "2020-12-03T08:43:26.125Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nThis bug is related to wordpress.com. There is feature in wordpress.com which allow users to invite people. We have to enter email address to invite that particular person but the invite link and invite key is also available to the person who invited. This allow attackers to create the profile without having access to the email address and they can make account on behalf of any people who  is not already signed up in wordpress.com\n\n## Platform(s) Affected:\nwordpress.com\npublic-api.wordpress.com\n\n## Steps To Reproduce:\nThis issue can be reproduced by following these easy steps: \n* Login to your account on wordpress.com\n* Setup burpsuite proxy with browser.\n* Select your site and navigate to manage>people\n* Enter any email address which is not already registered in wordpress.com and invite\n* Open this url in browser: https://wordpress.com/people/invites/yoursite.wordpress.com   [change yoursite.wordpress.com with your site]\n* See the burp suite proxy tab and find the GET request to this endpoint [https://public-api.wordpress.com/rest/v1.1/sites/siteId_here/invites?http_envelope=1&status=all&number=100]     [there will be a number instead of siteId_here]\n* In response of this GET request you will see JSON which will be consisting of the details about the invitations sent and there you will find \"invite_key\" and \"link\".\n* Copy the link and open this in another browser.\n* You can create account on behalf of this email without having access to the email and email verification is bypassed :)\n\n**See the attached video for POC**\n\n## Mitigation:\nThis is the pure violation of secure design principles, this can be mitigated by just removing the [invite_key] and [link] from the response in [https://public-api.wordpress.com/rest/v1.1/sites/siteId_here/invites?http_envelope=1&status=all&number=100]. Because this invite key and link is the property of the person being invited, showing these creds to other people will result this type of issue.\n\n## Impact\n\nThis issue can be used to bypass email verification on signup. Attackers can create account on behalf on any person without having access to the email account. This issue is affecting integrity of the wordpress.com",
+  "weakness": {
+    "id": 57,
+    "name": "Violation of Secure Design Principles"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1088626,
+      "file_name": "wordpresscom-2020-11-21_01.21.40.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/yqqnv8ni0se62te3yyxnmot4ef2x?response-content-disposition=attachment%3B%20filename%3D%22wordpresscom-2020-11-21_01.21.40.mp4%22%3B%20filename%2A%3DUTF-8%27%27wordpresscom-2020-11-21_01.21.40.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4DN4LTGY%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T080638Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCICihLzHOdlSADeEpichrXt3bf6LTV5r9gNhRnZAQ7aR8AiBKR1Qv26nbfUEM8r1Rp2Vc9GLkWFTy%2FTqxu30gCBgy5yq7BQj9%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMiygkKuZi%2FsZvWlo2Ko8F6xjBVQbkdUd%2FhfhLOLS93Kb4P4nZMPGNAI5IAK89FQYNjAJzlsofB%2BhOxQRUt%2FAoA5oC7nhedr1rj5%2Fos7eOKh0jdrihAOKC32gvm84ad8WG48haE2VGPe1cXFpdR7KkRxOFMCW522Us3ipahWg5bCq94aM41c5HfjyHUoh9uqSroW9zJ%2FFaxIdK22%2BSw2uipc7R2k5mVqLi4T2mXpeZLddKvXN88iMvgbl4AtQj%2FBRfd4HazynTw6Qk8H0BYdgeRT1VMvBsyaxhqauI0375rOPEQks8%2BvFiBQFUdrZPy7BHSE%2B3eNDSImJh57o%2BqDLSBIpIv3%2BBCo%2BoX30B%2FdgKfvcAaK1g%2Bd3VGrbGF9ZJFOJRD3sHx4c2WkxDAZnY%2Bt66PxlTH%2Fu1qA%2FQ3ne3Lx37WOM0aPd8uuTVLeyFJZknltaex%2Bt3eUeboXnE5qgoyNVqNwJUdhudBZMVl3crMxd03MJxJTsvXpPZbqlDO%2B2VFUDdguQhBEkbUFHsT%2B1TP8ZzorxElNefOEmrdaJ%2B1uia%2BpzmUZq9b4Cl9dqTu0gjvdCEV0NJOW4OSa2xoHdq48LLTZJztij2QEb2DapFwIR3mwuMMicCcH8cZP704to7L%2FiF879GIRD21MLME1iTjuQJHCYix6VwjYk450HuKP3jdgNaSNwTks26LMvV%2FTcWo8C3%2BSNt5GUIOnI%2B7ZgvyVH0JWqCoxCL4fsrXqayBxRUVb3rzf9aLdkEROJm9ACoDNrOG1gFnm8c9RaI%2FThxJaMmYWuDTNEpX2gSEimhnOrD%2FgPOFC160582KLdSFyNb9p7%2FfHaCT6M0Hgpn1IlFfobFTvByP5ZSOYX7OFu2jhkCNyk88Uxgz6%2BwZNdeZvC%2BQjCQ8r3GBjqyAcBPGh29i5hcRNaDGazFaDRXfDximEQpFnSPbR8DkZcFWg%2Bz7YxJTqkmP8Q8fBlgq5JKpMlpgDSMKM2gYltBa93P4kzhCu569ev9olUyqR4%2FFRn47H%2F%2BpB%2BjXco8pc43i3ShVgw8DSAjI8iveajihwjdjO5A1ceLnRjXC2kxKe1hjwHUe0kztYdqydEvmfdRqub64sI0vHdZ7IPdN3eLGQ4Qm099%2F8asWtc9QJvekpJYPBg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=6080e65dddcb2d119a74e5e9406ee2fa3f0607867e8650b4d39b4355784f1368",
+      "file_size": 7223798,
+      "type": "video/mp4",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2020-12-31T11:39:41.410Z",
+  "allow_singular_disclosure_after": -149027216.7883004,
+  "singular_disclosure_allowed": true,
+  "vote_count": 123,
+  "voters": [
+    "tinmo",
+    "loaymorad",
+    "sw33tlie",
+    "bombon",
+    "fdeleite",
+    "mashoud1122",
+    "ayman3os",
+    "rook1337",
+    "yassinek3ch",
+    "t4r1k-b41",
+    "and 113 more..."
+  ],
+  "severity": {
+    "rating": "high",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 42402,
+    "asset_type": "WILDCARD",
+    "asset_identifier": "*.tumblr.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
