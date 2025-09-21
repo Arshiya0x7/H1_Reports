@@ -1,0 +1,129 @@
+{
+  "id": 1329434,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMzI5NDM0",
+  "url": "https://hackerone.com/reports/1329434",
+  "title": "Session Fixiation allow attacker to create new evil workspace without being logged in [ Insecure Session management  ]",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2021-09-03T07:17:25.730Z",
+  "submitted_at": "2021-09-03T07:17:25.801Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "basant0x01",
+    "url": "/basant0x01",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/oitzkkqb6ewiw41l2doc7lviei4w/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 47876,
+    "url": "https://hackerone.com/trycourier",
+    "handle": "trycourier",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/LCrkXfp5pSL93MLdoRJtGGuR/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/LCrkXfp5pSL93MLdoRJtGGuR/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Courier",
+      "twitter_handle": "trycourier",
+      "website": "https://www.courier.com",
+      "about": ""
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2021-09-16T17:32:06.627Z",
+  "bug_reporter_agreed_on_going_public_at": "2021-09-16T03:39:12.251Z",
+  "team_member_agreed_on_going_public_at": "2021-09-16T17:32:06.479Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello,\nHow are you, hope you are doing great in this pandemic.  While testing again for the session management related bugs in your application, i found some session related issue where evil person can easily create new workspace from victims account without being logged in, that mean the session of the account is not properly managed and not expiring properly. Once the attacker capture while creating new workspace account , it can be used even after workspace admin completely logged out from his account. \n\nI looked other place for similar issues but i'm getting 500 Server error which is great patch. \n\n```java script\nHTTP/2 500 Internal Server Error\nContent-Type: text/plain; charset=utf-8\nContent-Length: 21\nDate: Fri, 03 Sep 2021 06:33:49 GMT\nX-Amzn-Requestid: ece1b8ef-c45a-4ea8-955d-26e98e8a4308\nX-Amzn-Remapped-Content-Length: 21\nX-Amz-Apigw-Id: FEs4MGmEoAMF0ng=\nX-Amzn-Trace-Id: Root=1-6131c1cd-33c2fcec7004102e0f866113\nX-Cache: Error from cloudfront\nVia: 1.1 f796d609ac1c79ad0a05543b9f9cb557.cloudfront.net (CloudFront)\nX-Amz-Cf-Pop: MAA51-C2\nX-Amz-Cf-Id: g8M22dhNs2AUTGjA2Dx8yhgTt9x-SF3DXlcGK17Ac7I384cVyQtgkA==\n\nInternal Server Error\n```\nbut i think you missed something here to fix, We can easily create new workspace even after logged out from account, session still active and won't expiring properly and instantly. Which is definitely an issue and appeal you to fix :)\n\n#STEP TO REPRODUCE:\n[1]. First logged in to your account \n[2]. Fire up your burp-suite proxy and intercept the request while creating new workspace account\n[3]. Now send the intercepted request to the repeater and drop the intercepted request\n[4]. Click to the log out, and logged out from your account.\n[5]. go to the burp repeater and send previous intercepted request. Instead of getting 500 Server error you will get something like \n```java script\nHTTP/2 200 OK\nContent-Type: application/json\nContent-Length: 104\nDate: Fri, 03 Sep 2021 06:43:36 GMT\nX-Amzn-Requestid: 5111dd10-3f7a-461e-9b6b-8100ed580193\nAccess-Control-Allow-Origin: *\nStrict-Transport-Security: max-age=31536000;includeSubDomains;preload\nX-Amz-Apigw-Id: FEuTkFb_IAMF_Tw=\nX-Content-Type-Options: nosniff\nX-Amzn-Trace-Id: Root=1-6131c416-06e41869071723af5a7b685c\nAccess-Control-Allow-Credentials: true\nX-Cache: Miss from cloudfront\nVia: 1.1 4a092e2e376215eb2d400d6cdb1cd2e2.cloudfront.net (CloudFront)\nX-Amz-Cf-Pop: MAA51-C2\nX-Amz-Cf-Id: HmbTR1RX4OY8-CH-A2V_qJie5f2rv9NLu3E8iEUSDO6od1IN8O-g_Q==\n\n{\"id\":\"1860152f-3ce6-4dda-9ae6-77455cc498e6\",\"name\":\"EvilCorp\",\"welcomeTemplateId\":\"courier-quickstart\"}\n```\n\n#I have added a video poc for you so that you can replicate the steps properly and clearly without any difficulties. \n{F1435257}\n\n\n#Please let me know if you need any extra information in this  :) Thank you\n\n## Impact\n\nSessions are not expiring properly which creates session management issue and allow attacker to create new evil workplace without logged in.",
+  "weakness": {
+    "id": 47,
+    "name": "Session Fixation"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1435257,
+      "file_name": "__Session_Fixiation_Issue___Without_logged_in_there_is_possible_to_create_new_workplace.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/6fw329pc3svdcvzpnotrtqyt8mvw?response-content-disposition=attachment%3B%20filename%3D%22__Session_Fixiation_Issue___Without_logged_in_there_is_possible_to_create_new_workplace.mp4%22%3B%20filename%2A%3DUTF-8%27%27__Session_Fixiation_Issue___Without_logged_in_there_is_possible_to_create_new_workplace.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4KRJQQVC%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T013739Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH8aCXVzLXdlc3QtMiJGMEQCIF7R5Mt7JSPof0K6chg4SbFgQgddHMFZioadyM8kMMlwAiBWqqeP3tOV03nhklehQlHnXnLsnsqAJ9PwtKl1pjquDiq7BQj4%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIM6kjVyeBfb4ZcxuUAKo8Fp7sZ3pga46diDFBqXTN47NTco7LkV%2BAinfhxEdjcoFLxt%2FwO06oQI4diRpeLu4J7SIQH2piSIgIc5So%2Bcxu2p6WrHk4qp7gq8d3mNMsf9yCDfItXUcMkswz6rF3eY68PFTuf33TNODxyvSbyJ3Mxh6ZQ5vKklpPzWmXSHO9r7TiW9dJRPtV4%2B2b9LT47rcQnWrinDFbnrxT9bW0Ub4giLneR9FB009jq3j9KHzP1flRXRf9C5YSytjXCnYkI9zRONjMyuzM1jJRH35gbpu2Opf0piI7jxA5Ha8YzYEgrb0HF%2BoXdwNhkP%2F28yAEGrqrLVdvBt54T79eKuOzLHRqKbh2NZRQPMt7QAMCqXyvwMqkwyoGik3BhYOMcPh%2BbCeSGjOI%2B2WES2kBgi3LM0EDX9CZepNr1stOs9S9A%2BO8Q0IsgHCWwLaJPvBryQm20MCUUOA%2FGUrW3aojSqFzDnm2qYP87%2F67%2FMA6Jk%2Fg5byszx24Dn%2BjY19V5H%2FdtTuLms%2FrVZc1OPjAR8Y%2BKK1USBg2K6AodUXYjFD%2FkH1hbD6EYSPM%2B5FXMQCEQG13PBZIoJzYcHtlczHuCU%2FxecC4Db2aXPUWFOgDK3aXKs3tTgIJa1X3sWKPYZvNX1YOQwUkZVWfhHzCIAJgNbgeYOWA12FF44R7zNm5kTLdpyjw3A2ePm%2B%2BRxvQLfOlc5HCkzG7mJGR1jobsIVQ%2BzDc0WD5x%2FewWbhDHfhtOt%2FbdZamacThQKb4YMjwU6GQVEl8HUk1s8M8pi9UKgFdfvm84MWVxBoxEVky6kgbyZxIS67xMj95UXwPqBRmFwDDYQW%2FVy%2FOmIteQcXp9OBrn6hsui33vKIiI4rKO6NUI3ruy0uYW3DAzJDCD57zGBjqyAfFvAXPSA2Hv1C8%2FRs0xqubCuJacSoLfLCUs1DAKVjol6%2FOxcdMr8fgHkFu5ZbXKJIi8PSkgJozPqp5e6Zyx0HB94yBTQhBMHiywVKAAYYI3Nt483u4bQmFv7V5oyihiNyMiwrsXlyqkd%2FH2g6BfaBQOScUL9NZYboXi7l1yh501SAP6u63k%2F8cz%2BNxpFMpMnFZnkYuzw1kX5%2F1VKIIlJ4%2FUbROw%2FERwyKVcmmjlK8XqLyg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=0bfc2819b4bb44a2e823e82f81568e268884ee4d6d77a3c11e66540a1abe6564",
+      "file_size": 5178727,
+      "type": "video/mp4",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 11,
+  "voters": [
+    "pinkmeimei",
+    "alp",
+    "shreyaschavhan",
+    "run_win",
+    "shubham_srt",
+    "2026",
+    "0xwise",
+    "bb00x",
+    "virgo_0903",
+    "cai5ha0",
+    "and 1 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 44932,
+    "asset_type": "URL",
+    "asset_identifier": "api.trycourier.app",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
