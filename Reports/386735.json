@@ -1,0 +1,131 @@
+{
+  "id": 386735,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zODY3MzU=",
+  "url": "https://hackerone.com/reports/386735",
+  "title": "Login form on non-HTTPS page on http://stream.highwebmedia.com/auth/login/",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2018-07-25T17:19:17.962Z",
+  "submitted_at": "2018-07-25T17:19:17.962Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": true,
+    "username": "gujjuboy10x00",
+    "url": "/gujjuboy10x00",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 30475,
+    "url": "https://hackerone.com/chaturbate",
+    "handle": "chaturbate",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/030/475/178c32f60a890eb06ce5d698d44b3eafa35ccf8c_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/030/475/178c32f60a890eb06ce5d698d44b3eafa35ccf8c_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Chaturbate",
+      "twitter_handle": "chaturbate",
+      "website": "https://chaturbate.com",
+      "about": "The largest online adult cam site"
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2018-09-20T04:08:39.695Z",
+  "bug_reporter_agreed_on_going_public_at": "2018-09-20T04:08:39.563Z",
+  "team_member_agreed_on_going_public_at": "2018-09-19T22:23:03.274Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Dear Team,\n\n##Summary##\nA page on a http://stream.highwebmedia.com/auth/login/ is not fully protected by an SSL certificate. This could allow an attacker in a Man-in-the-Middle position to obtain usernames and passwords of users visiting the site.\n\nNote the warning in screenshot 1, firefox has identified that this page is not protected with an SSL certificate, therefore the username and password will be sent over a plaintext connection. In itself, this may be enough to put some users off using your page.\nOnce submit is pressed on the login, it appears as though the request is sent over a HTTPS connection (when seen through Burp Suite or Wireshark), which suggests that the page does protect the username and password with SSL/TLS, \n\n## Steps To Reproduce:\n  1. go to http://stream.highwebmedia.com/auth/login and setup wireshark \n  2. you can get username , password is in clear text\n\n##Mitigation\nIf any part of a site is required to be protected by SSL, the entire site should be protected by SSL. Ts this would stop the attack outlined above from working, as a certificate error would be displayed to the user.\nHTTP Strict Transport security could be used to mitigate this attack, which would tell all browsers not to allow a HTTP connection to this website.\n\n## Supporting Material/References:\nPlease find attachement\n\n## Impact\n\nIf a user were to visit this page from a public or shared network (eg, starbucks, airport, library, etc) and submit a comment, a malicious user on the same network would be able to obtain that users username and password by conducting a Man-in-the-Middle attack using sslstrip and wireshark.\n\nThis would allow the malicious user complete access to the user's account.",
+  "weakness": {
+    "id": 34,
+    "name": "Cleartext Transmission of Sensitive Information"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 324419,
+      "file_name": "login_clear.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/324/419/0d95107470e3f53c5b812ffb88bf6b47d9bf391b/login_clear.PNG?response-content-disposition=attachment%3B%20filename%3D%22login_clear.PNG%22%3B%20filename%2A%3DUTF-8%27%27login_clear.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWRXN4YJ4%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T171418Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCKSJ7z%2FnGUbwD2rJ9qWnLSfaKFXzxHahKSAiHzigSZ1QIhAOyuwjVb3eHsKCxxTw3uOPXSg7hoSksvDobcTvGhtUjsKrIFCBkQAxoMMDEzNjE5Mjc0ODQ5IgyLO1gsVVYHXGZdU5MqjwX1%2Bud6OLMOQ3ZPj2BI3bKxCqoWpaK10HorTUtaYQ99h7JlAHu5NpgnmAg%2BxvJ4AS6STgEkCPF2TV09h27mlp9FsfnT51zVxnx4j%2BcrY8L9hZ%2BRVQRBoW8yOx7A9k4PR5R1Zm9%2FVmzFJcN7L0FVtATKEK02cmxY84r6y0db13ZcrT7Zj4J62NiZicYcO3ETJnlzbxzTkUaHQkbEchAdBxOWbY2rr%2FwQc1NZoxm41JItkLOBhTF3XR%2BIKWROGWItGrHbZF0hUdayIbutyJfax8%2BcYWsfbWNy5W7WJaO6J8sURu%2B7BkkfoI%2BOtxURuHA%2FqgpBeapk7N%2BdXaQ7liDZX9iGz9W2GQfah0ei%2B9W0HiHaKQHZr%2FfuwNhzqnIx1j5ena1pZ4SFqlCTmI9wiG3chnSTK%2BlCmvCZ6F2wP51ljic6awcYriLzmyefFBSFBV7v7xqC1bD0AkLXZR99dAHPjq1RGR5fBPsKcMjxo0gZemDR73oGu7p79dO%2FMnkFnPxo1YGp53oEngDgbbboAsFUfo6tEW0fv7QGYE2wb7i67lDNRyoIEyY8m7xhJ25%2FOw%2Fa5b4YOgPgGtvqEU1eyTV9y9nyOQuULp0bHeohyBsxpXI8LUqIKpQ28mZOJX558ddFBaGMpaKLPPHweMWXdg57LWn0o1PzSEYrb7j2U1qMtQ3BEfIc0n9BtRjOrWqjApxbLTM5%2FwyNCL%2FeR3bt%2FoMLL7o1YGp%2ByNjrDQi7PSO%2F4GWq3B99zRc2gazPa4MGsAPYKkBqk8u1%2Ffro%2FYUv9I54rR2QMCJPlIzntrSwfH4cnZfLBni813Rui%2Bz6Fyn5Uq%2BSIh0yAxWpDH%2B5TeuuBCwkXBYHRHMBih%2BB3VxJhEougfjZMPbKwMYGOrABKynLqd5oL9Le3wdikvghbVcuhTpIqO%2BZ1e0%2BaSHZZmNQhiFLsN49hTRzZEldBSnknslMCaDEwpRIlSb4cgqqwgAmx%2Fo9DKYFl433BLR2zMBKY7Qs4JCJqz3oqiK9jPGsuh2ZSahOvi7K5DV0nhdZRLL0o7m935M68d216aN90Z5QHKwkLQSIMAVsR4lm32VnrwI0nfsp5LLXyN8%2B%2F%2BPlfglBhHyQRYfcQKR46vzHR%2FY%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=55e3b08b0005acea2bec2725ae2c1fa2fe47c8b57a2dd4df1237293e24def3b3",
+      "file_size": 86882,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2018-10-19T22:23:03.453Z",
+  "allow_singular_disclosure_after": -218487074.72278768,
+  "singular_disclosure_allowed": true,
+  "vote_count": 15,
+  "voters": [
+    "ali",
+    "sameerphad72",
+    "jackspa22ow",
+    "eveeez",
+    "pr0f0x01",
+    "japz",
+    "cryptographer",
+    "mefkan",
+    "robinx0xhood",
+    "0x08",
+    "and 5 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "Team"
+  },
+  "structured_scope": {
+    "databaseId": 11723,
+    "asset_type": "WILDCARD",
+    "asset_identifier": "*.highwebmedia.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
