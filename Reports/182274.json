@@ -1,0 +1,126 @@
+{
+  "id": 182274,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xODIyNzQ=",
+  "url": "https://hackerone.com/reports/182274",
+  "title": "Null pointer dereference due to TOCTTOU bug in mrb_time_initialize",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2016-11-15T13:01:54.580Z",
+  "submitted_at": "2016-11-15T13:01:54.580Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "raydot",
+    "url": "/raydot",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 15668,
+    "url": "https://hackerone.com/shopify-scripts",
+    "handle": "shopify-scripts",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/015/668/ebbe467de8ef2fc936053593e1289e30f04c3b06_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/015/668/ebbe467de8ef2fc936053593e1289e30f04c3b06_original.jpg/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "shopify-scripts",
+      "twitter_handle": "",
+      "website": "",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2017-01-15T19:56:05.964Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2016-12-16T19:55:50.385Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "mrb_time_initialize sets the data pointer to NULL before parsing function arguments. Parsing function arguments can call out to ruby code to call methods to do type coercion. If the type coercion method tries to access the time object it will dereference a NULL pointer.\n\nThe following snippet results in a native crash under mruby-engine:\n```\n$x = Time.new\nclass Tmp\n    def to_i\n        $x.mday\n    end\nend\n$x.initialize Tmp.new\n```\n\nAttached is a patch to mruby to fix this issue.",
+  "weakness": {
+    "id": 48,
+    "name": "Uncontrolled Resource Consumption"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 134831,
+      "file_name": "patch4.diff",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/134/831/68b941bcff7e923494ccbe34e844806d3ef81bee/patch4.diff?response-content-disposition=attachment%3B%20filename%3D%22patch4.diff%22%3B%20filename%2A%3DUTF-8%27%27patch4.diff&response-content-type=text%2Fx-diff&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ7ODI5DUD%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T235647Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIAH%2FHZ9XjrVEDNROIv%2FDHpSkuNQd%2BXyJ3PuXyBXrYvE7AiAgDjb10SdKGaOpJyNKeE36lJiqNQ%2Fa5nvzfwGaxi%2Fg9CqyBQggEAMaDDAxMzYxOTI3NDg0OSIMz7k1poLA3hIHqHeWKo8FmUA0qLVmhhMGpciZmIjzZty7cnFPQmYbavX7L9cMQLvUBS0MkLX2gvJwhjVCR6yhGematExpOYoEU6wUyc99mjsMM4NJEed2bTufFzTblokZi%2BRJqqatF8dFT6b4OyuEpXOj6DKIRlzPJ%2F8uLHjoRjZTlwL2MeK4ax96gbAQ%2FlnDdj6X2V9wTxPQcAN5%2BtsizRM3QQz6%2BPdNnbAqA%2FWr9ca4gJd5XP%2BoeJLdZNwWPpzWEDzPLyNVVONSp5EyUMdNcZzDIh5eXzw37ElpqaOeVnUj9vOV83YjuT%2BKYQ5SukCov6l69Fkc7orfgRfdS1I8DrOHGNOiFfp9qrtQNVVLj628TGc5%2FH933FPYl1iRenEnlsATIxKWj8bFO52KRAr09vx81vvV6nKPi8A%2FbTBJLpAQAsMqFhZJ9hPGNm8YLwfrOoB6en%2B0QvizewtN7CphjkqiNCvx2e4CwvszA6TFpe8akRCyyP7XKsDfZUSreAtxwnDCtNkYi7S1QslKTJ0FGVu9fO%2FxDhrHEifF8LISFvLPNqV5MrkCvdOCKk7y8l9BvOcEIB4kEEQBRpHBQzZrhNr3Sqno4bGIHzaHEu2YyfsVNmkyjtSEMDVRql61wvoseNkCXUCjOQ9%2BT1r%2BQ5yPoF8%2BozUS1gi9rRW0JNPEN4fpUJ4S8Bv8gajYxyBWz10UojTJJA2Wze9N%2Bs5pFxGD8i40xqMoSvJpUu12M4CJUzM0xlbuPlPw%2BSrRiMluLnHmajbAXCH6p7H1SS10E2fqxx0UWLIu%2Fw9R6ldND1uShNPf3tpFo1%2FzpF6JCkkOrOtbl8oOovXm1MWCWHQjyDCRqvCjsN5DHceDlx%2FRlqdzpO%2B%2BGtgYaW1HYFzWM7OGlDD3%2FsHGBjqyAdHYHvJleq3a87LxsCkHKQUPvlkJ%2F%2FIonjp1MjNVEqO4yM1dC0FvNIfI8cSa%2BEGNN6jhirGEI57RUOUTAjW3zI5K5Xp0S8vy2GUCJLiR6pEuPfVzor0YTlMy6sEKWWd3Dvf6DpZ55umwOb6wmujfoyRgQupWDRrXnXJYfv7pkEqcesTCr97W%2F5j%2BIU%2B99nSLln3ZN1Ko0JZI7c0RsvkYgoNkRE4ZC4k0R6oro1%2F4SThpjqA%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=03d8df473fcdc1dd33ba0cee1586925c059bead3bac9855f3a0c3d88ad746472",
+      "file_size": 812,
+      "type": "text/x-diff",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-01-15T19:55:50.428Z",
+  "allow_singular_disclosure_after": -273988856.61650467,
+  "singular_disclosure_allowed": true,
+  "vote_count": 15,
+  "voters": [
+    "yipman",
+    "mpz",
+    "eveeez",
+    "jackb898",
+    "0xradi",
+    "an0n-j",
+    "japz",
+    "secbughunter",
+    "spetr0x",
+    "0x7984",
+    "and 5 more..."
+  ],
+  "severity": {
+    "rating": "high",
+    "author_type": "Team"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
