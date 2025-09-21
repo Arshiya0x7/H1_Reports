@@ -1,0 +1,144 @@
+{
+  "id": 697055,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC82OTcwNTU=",
+  "url": "https://hackerone.com/reports/697055",
+  "title": "Worker container escape lead to arbitrary file reading in host machine [again]",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "critical",
+  "readable_substate": "Resolved",
+  "created_at": "2019-09-18T09:34:52.929Z",
+  "submitted_at": "2019-09-18T09:34:52.929Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "testanull",
+    "url": "/testanull",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/SF93KjfUXeXdWWFga4q3gwCa/c8a1698ff707a5e3e8a91a3484838363845daac68cb82c86d55c9e2d44d67b67"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 27264,
+    "url": "https://hackerone.com/semmle",
+    "handle": "semmle",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/027/264/8af1325fdaccc38beab4451ba68ace24623b248c_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/027/264/8af1325fdaccc38beab4451ba68ace24623b248c_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "disabled",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Semmle",
+      "twitter_handle": "semmle",
+      "website": "https://semmle.com",
+      "about": "Semmle's engineering analytics platform helps leading technology companies and open-source developers build secure, reliable software."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2019-10-21T01:32:16.250Z",
+  "bug_reporter_agreed_on_going_public_at": "2019-10-21T01:32:16.194Z",
+  "team_member_agreed_on_going_public_at": "2019-10-14T06:28:56.811Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nAfter a successful build, LGTM allow user to view the file list.\nBy default, only source code files and build config files are reserved (``lgtm.yml`` and ``.lgtm.yml``).\nIf there are both files in folder, LGTM will process ``lgtm.yml`` file and skip ``.lgtm.yml``, but it still keeps both of files in directory.\nBy making symlink to ``.lgtm.yml`` file, after successful build, it will point to HOST MACHINE file!\n\n## Steps To Reproduce:\n\n1. Create a simple project which LGTM can build successful.\nIn this report, I use this project (https://github.com/testanull/test11)\n2. Create file: ``lgtm.yml``  with a valid config content, for example:\n\n```\nextraction:\n  java:\n    index:\n      build_command:\n      - ./custom-build\n```\n\n3. Make a symlink point to a HOST MACHINE file/directory with name: ``.lgtm.yml``\n4. After successful build, ``.lgtm.yml`` file will contain the host machine file content!\n\n##PoC of reading ``/etc/passwd`` is attached below\n\n## Impact\n\nGive attacker ability to explore the host machine, expose more sensitive informations from it.",
+  "bounty_amount": "2000.0",
+  "formatted_bounty": "$2,000",
+  "weakness": {
+    "id": 75,
+    "name": "Privilege Escalation"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 585650,
+      "file_name": "docker_escape_read_passwd_2.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/6Uu9hMYFdnm1ndFRzyQkduBs?response-content-disposition=attachment%3B%20filename%3D%22docker_escape_read_passwd_2.PNG%22%3B%20filename%2A%3DUTF-8%27%27docker_escape_read_passwd_2.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQTNOGV7ZA%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T140158Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDBr4rjuktX2tVt4pAD8CjN7frBwjWfsYhqFlEprte2gAIhAJDL1IxreZkbnwPDdAB3ktF%2F%2FAbQwNhANlA5Qc53hwPzKrIFCBUQAxoMMDEzNjE5Mjc0ODQ5IgxEHQJ87TgWPbxaX6EqjwXBYs9QiE8vYqird8fNeXl23XrrZv%2FIegH1kHrOeVNdl8SgI71tCDd%2BwIktentCuPgvq9mlBBIeh%2FzqvPNd7J6sAc8sgiL6qgTlMc0NyIc%2BjXfiU4x4QR86IBEvJnP9NaFyxRoLXGjn4kfvQFBxKXfE3M0NJ6Ist1fakdk9DCQyBkE4UBCcTHXdJ2oWKbHyo9CDN70JC3%2FkGLTj3vnu%2FZF7Tp5gQnqREZ%2FuRjSrMc%2FefuZI%2Fiph8cv8IQkfZysyzEuNDM91hikY1067J2KWIXhf6JSJ7DVF86ZeJLfukfnyfvxil4TI6Vxns2VRI%2B5Oh1uHSXbLdXGujAmzcESxqcjwlmyl7Oa7%2F%2BMa%2F8fM52BcfckfcOZ%2Fp2Hlu6m%2BGvPnYq%2BUeJmy0mec3ATezAo21up25k6IZL8CiQBlcWayjAc74QTHhdDiHdoeV3%2F3XtIu%2FsmhVwC9%2BdeU8mVI1ZrBvsvc6z2zQgeoeBj%2BsTeyuCnOfWD5OodlLyWPdn7zjtRedTGACX4hBGMNONJvhp4HnRxoSyl1sjVrIxF0m6gu0eXekmO%2BfFtAxD0OXWFaq37qgHyQT6nmTgVmcxpHGd0nxcUrb4ArvT8TgGCzNwPoW2L8Y9WID45%2BFlu6Hs%2FDZXlciEul7ctCkJspP9v1vLrLsklLpsdu5BFMSTLw4iO9Q2bYzwZkv5d3zazC45eFWszopjQGrm9Oy2K94m4cLPmplVj4duun%2FW8XHQhrDkPts%2FudeU0sl%2FPOUIG%2FxifL65%2B3R2JGQq0vbwZ8GuJaK7yXo0yZWHPx7W3WpTv3ZQewIu6ZGdt%2Fi4fpAoH9LRassztHxynhYR2aeg4he5xehKof9JqZsz9Hn1I29l340U7NQvC5MPfZv8YGOrAB2Iv6Pp9XpkVN2RbDkZvL5NRkxU2pL5JZM6SSW3bMSJbOd%2FgGM2ASYwE3vgwDfWHTxzWS38tc3%2BXNYTaov01cA0k4BS0%2FmhbZiMMern3c3WKPUUuMRAuBYkfI4H%2F0KvCPZIo03aikPMl%2FbnTvb7ROOcRljaxHTkC8BB6aX%2BtbxWaqgdFVx%2B8CjK49gTh7D19Ddi4a0CmGy7QPNcvVqtHiI2lE%2BG8S8mutZdGolRBAsWc%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=c3ca1ec84239ca73b0038dfce1eeebfc0203d2cc2e3592a41df2cac247f9abe6",
+      "file_size": 97132,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2019-11-13T06:28:56.957Z",
+  "allow_singular_disclosure_after": -184836781.1714629,
+  "singular_disclosure_allowed": true,
+  "vote_count": 176,
+  "voters": [
+    "busf4ctor",
+    "dittyroma",
+    "p1stachios",
+    "zonduu",
+    "mashoud1122",
+    "base_64",
+    "dpt",
+    "kapytein",
+    "sameerphad72",
+    "chulian",
+    "and 166 more..."
+  ],
+  "severity": {
+    "rating": "critical",
+    "score": 9.3,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "local",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "none",
+      "scope": "changed",
+      "confidentiality": "high",
+      "integrity": "high",
+      "availability": "high"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 8552,
+    "asset_type": "URL",
+    "asset_identifier": "lgtm-com.pentesting.semmle.net",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
