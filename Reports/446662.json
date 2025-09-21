@@ -1,0 +1,122 @@
+{
+  "id": 446662,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC80NDY2NjI=",
+  "url": "https://hackerone.com/reports/446662",
+  "title": "Node.js HTTP/2 Large Settings Frame DoS",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2018-11-18T12:19:36.854Z",
+  "submitted_at": "2018-11-18T12:19:36.854Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "galgo",
+    "url": "/galgo",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 22984,
+    "url": "https://hackerone.com/nodejs",
+    "handle": "nodejs",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/022/984/e600648ace4a8553247bce967d461a030aa81d49_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/022/984/e600648ace4a8553247bce967d461a030aa81d49_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Node.js",
+      "twitter_handle": "nodejs",
+      "website": "https://nodejs.org",
+      "about": "The Node.js JavaScript Runtime"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2020-07-02T19:55:27.225Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2020-06-02T19:55:19.963Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi,\n \nI would like to report a vulnerability in the http2 module of Node.js. \n \nIn section 10.5 of the HTTP/2 RFC an attack is described where an attacker is sending large SETTINGS frames that includes many settings inside it. \nWe tested this scenario by opening many connections to the server and sending a SETTINGS frame with payload size of 14400 bytes and we were able to overload one CPU core with 100% usage with a single machine. \nAnother important thing to mention is that node doesn’t close the connection to the server after some time so the attacker is able to continue sending those large SETTINGS frames.\n\nThis was tested against Node version 8.11.3\nYou can the code that was used to start the http2 server and also the script that we used for attacking it attached.\n\n## Impact\n\nDenial of Service",
+  "weakness": {
+    "id": 48,
+    "name": "Uncontrolled Resource Consumption"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 377296,
+      "file_name": "Settings_Frame_DoS.zip",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/377/296/d11a5d3595166bcafd9b4b633cbe42c221ff269f/Settings_Frame_DoS.zip?response-content-disposition=attachment%3B%20filename%3D%22Settings_Frame_DoS.zip%22%3B%20filename%2A%3DUTF-8%27%27Settings_Frame_DoS.zip&response-content-type=application%2Fzip&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ2WWZYUZE%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T095741Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCRqk0eO9oH%2Bplizxyzx%2FLJhBcbbMt%2BjDN81JaDwsENNwIhAN%2B%2Bd6CkR1QaXEZMydNbSUCx8tX9w3hy89XcQzilqkVpKrIFCBEQAxoMMDEzNjE5Mjc0ODQ5Igyw9%2FDiBDT7EsK%2FYjUqjwVqf1BuadjYNhj3r8I9etGAHvbuIDcC8sBvz4G%2BXcQTROp4xRuESeCg3TAZcNjCZ90oIStP4t1O4OPE%2F%2F1SrQiKfDsHCLGDn4CxEIXoR3mi%2BaV90T59C9o8c25bbNj6cAbxx%2BhoVd89ABP7vyJTLTNDi9yK8YzPOLYLhNHGAVd10XUlyfqjTu1cBbSSLh8LkQsHI1LOrHc8tXMXZ8fmOMCvyiubp9IhgxvJ4kX5Yo%2B6KJu8QQcMHQxoB7Vn3lP3et3CwI%2B4SOcUrfPSQyfkuIOBkRmb%2FsVGCNSTn19fU1pBlvYfHdbjEeYO19uidCfx7HN7A7ZZi7ftGJWntaA09Un%2BeH%2FmDKZidMGtqzbi24HFFEW5%2FPsZUsolZypAiyvSUhTBWQRUDCHDtgpY1EyixR%2FEgr73xRuzMqf1NcWW0tSiEyAYOQ%2BzsZbAA7quAThL4oX777qQhTcIRFXrsEDiELSob5U68nmbv8O3hQUumOw%2BSTS5BvyGGyQh6evC6KO1nHB7D3roPAwC5nIp0bTP0HKqUAaKa8%2Bhb8Dlfxjcj4oW0Bn59Sov2cMvCZv5Kqim3iVpIOF6Ateo1V8FOW0m1s9tH1nCbeB24wcLuPHZxh6%2FlQ5EHkWAohuhNKB3wyaF4bXlX4v0%2F70ASUnyS9omX3NMYPhnINVaBGdQME8B49j6Vb3jwWSBuN%2BCfvRo1ls9aiJZ%2B7GIZupIx%2B68jqZquPsJlCfusBxENY4ovPLn2l34XzxJYmucHnQjoVYSzBivJh3AU4uTQAhji8FgkqdqSMvvZ242BlDZRMmDzZNQrGRQD29NvpdA8uEzN4udjHHkDCOozGHVEZRAu%2B0GwvgTS3PcXXeO7E%2FyJm58qHEL%2FHixMPrXvsYGOrAB69W0MEapsfXuZyWLw517oBSmkQS2uiK67IaCXuCwxylIzb0LflXeY2grH3SIt4n0ADWnyoBEL8si8uYbvGGQDJPJeaJG%2Fwfmc26pmf7%2BpQEPIWHMUwJS0SFo2kkWZ5Nf3uWQEjvID6c9vNE5%2FjCivzs%2B8WU0g%2BcguiJ3gO0g%2B59%2FheSuEdvPwjBLMs7E0FNr9BLVAmR2POoqtjpReE6qFRtNt1oSHc3m1vgIEoKv67s%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=11d8d549029fb2d1ace5b6cdf20a96ad0549d3218fd4f54296e6e7d32601d6da",
+      "file_size": 1385,
+      "type": "application/zip",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2020-07-02T19:55:20.056Z",
+  "allow_singular_disclosure_after": -164728941.2152469,
+  "singular_disclosure_allowed": true,
+  "vote_count": 2,
+  "voters": [
+    "beforedayone",
+    "aswin66"
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 666,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/nodejs/node",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
