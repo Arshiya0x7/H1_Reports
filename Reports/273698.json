@@ -1,0 +1,171 @@
+{
+  "id": 273698,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yNzM2OTg=",
+  "url": "https://hackerone.com/reports/273698",
+  "title": "Unauthorized Access to Protected Tweets via niche.co API",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2017-10-02T05:59:23.608Z",
+  "submitted_at": "2017-10-02T05:59:23.608Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "eidelweiss",
+    "url": "/eidelweiss",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/043/045/a03bc1f5a9e614fb1a5a53156b5903fead7e43a3_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 61,
+    "url": "https://hackerone.com/x",
+    "handle": "x",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/ikx4ept298unt534kpz4am2bd4zs/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/ikx4ept298unt534kpz4am2bd4zs/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "X / xAI",
+      "twitter_handle": "XSecurity",
+      "website": "https://x.com",
+      "about": "X helps you create and share ideas and information instantly, without barriers."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2017-11-02T23:57:47.831Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-10-26T17:12:49.411Z",
+  "team_member_agreed_on_going_public_at": "2017-11-02T23:57:47.614Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello,\n\n**Summary:**\nNormally If user __(victim)__ set to private / protect their tweets in setting Tweet privacy, other people/user will not able to see their recent or their pass status/twits when they visit his/her __(victim)__ profile. people only can see their __(victim)__ profile images and information about __how many tweet already post by that user__ , __how many followers and following by that account__ and __how many likes__ etc etc. but i found a way to view the protected tweets from other user who protect their tweets.\n\n\n**Description:** \nin your policy i see there is new domain add as in scope target , and the domain is `niche.co` .\nthere is some condition needed to success reproduce this vulnerability:\n1. the __victim__ need to connect their twitter account with `niche.co`\n2. use the `niche.co` API to Access the Protected Tweets\n\n## Steps To Reproduce:\n_victim side_\n * victim account is `https://twitter.com/dummysystems`\n  * lets say the victim already set to protect his/her tweets via `https://twitter.com/settings/safety`\n{F225673}\n  * now when other user try to visit victim profile it will look like this\n{F225670}\n  * now visit `https://www.niche.co/get-started` and chose twitter , allow and or Authorize Niche to use your account and complete the rest (including confirming your email address).\n\n_attacker side_\n  1. attacker no need to have twitter account and or no need to have `Niche` account here , this made the severity is high\n  1. just visit `https://www.niche.co/api/v1/users/[victim_twitter_account]` ( in this case the victim is https://www.niche.co/api/v1/users/dummysystems , the attacker will show some important information disclosure regarding the victim account\n   {F225668}\n  1. scroll down the page till you see something like this `/users/52667/posts?accounts=162059`\n  {F225669}\n  1. and open it, so the full URI will become `https://www.niche.co/api/v1//users/52667/posts?accounts=162059`\n  1. and BOOM! the attacker now have Access to Protected Tweets from victim account.\n{F225671}\n{F225672}\n\n**noted**\nto follow the rules, I use my own account as the __victim__, so there is no other / real account has been compromised.\n\n\nRegards,",
+  "weakness": {
+    "id": 46,
+    "name": "Privacy Violation"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 225668,
+      "file_name": "twitter_nichi_api_user.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/225/668/16dfcf481ccbb0b6515672232e933421bf346c0c/twitter_nichi_api_user.jpg?response-content-disposition=attachment%3B%20filename%3D%22twitter_nichi_api_user.jpg%22%3B%20filename%2A%3DUTF-8%27%27twitter_nichi_api_user.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWNAVQAE5%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T194702Z&X-Amz-Expires=562&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIDXG8q7VRdTP631MKmZ4fvttzAAv5lCyYMYNV784kGZjAiEAhv%2BV9Mg5xs9Q4zCmYFH6om2UWIbqTxOXrpZ%2B2%2FbDzXUqsgUIFxADGgwwMTM2MTkyNzQ4NDkiDIGZ8kKbAh%2F%2FPWaDsiqPBYhP8pm4XnRFxjp804kA9dz%2FChkMoeCRo09H5RRxUKWuL3Hht7UB8pviq0Ph1K%2FHTcmGwh93q4Ayukv4kY%2BcdKeSYjRmw7cMDjaogAMTIMitBxFdtPgjmRnaKyJaPF0A%2F6UzCpRMz8FumQa21icnzynw9cJSd6wSMqfRakvCMB%2Be5Z%2BkIjhcACm5f3POul28BVznGYgXSXTovo3lOSWBFyZX17ClfGQEYehe8I7VG8F35pVjCkxwqEzP144HMVnkdtpsIyAVOG7WPcwm0KOJIx%2BKhAfImQT8dkW2AAtqfv4kvgvcZEnUS2Kp5DyxNy7WA5M3rPHLk8%2FzfcC%2Fnukmx2PtTkeoP2CAS9%2F0pP2jZb1sFPGq8QGv8dP55JjbbblQxg9HaySXhO4AXDI4tFgfvmEtNBuLfgEN%2FEv66OQjA1SyZR0XnbI4MlhOXGkCl51AQKDXhKM593ZzKaqxWdkRWKbQOUM4Ha%2FX2mtuuAp4%2BfbSGJfHy82Wd80nfR4NnZMYIVEJbDh%2FOIK0VuA9qGn60PMdaDoYFrvfD3WDulA7eKHmb1IhiKFTRB3j7%2FgAuvWEb0NbOL2jpPScBL3zDV8xE%2Fvpkmj43tE4Fh1oTcU6fcE6gsUrEtO9Mo%2F1WYnTC%2Bnk60PuuAWuwhxBmcLoLPHCgBoxbByWS%2ByB9HY4ykbUqFeZugpyHXiCRsojTioWXw5L7M9o8vSnDryl%2FD3%2BDaZp2c0LCWnQy6%2B4DRQGXou85vQgzUF6aJDkiZyH9H%2FxDiew0JWB8vX9aEAwOZlcRETdgrACRgiiHY%2Bfaljot3%2Fmdn7CReK7PfRAN82qHWcr9U6NyHZzgmsTiQgkwHX07UrlU%2BzftbSlgIhPu%2F%2BYSFfdWNIwjPu%2FxgY6sQFxUOygixf0qUsgG%2FoVgsW28C5CvqIZyDpjPSKJhur1%2BBEZTfeh7FuHjp6tNQHenSwpHhoXwkfsxw4BvOxv%2B3ofBVdTjcQRLA4pXbur3BVLK%2FVGkeDfwJqLBZAGws1RhaqQPVp1EFpm0n3qwn3SoKfRKGCIXopjlcwH0Ard%2FdpHuLMYOvSLKY5oBhl%2FK35lY2n6pQMWBiSvhUOEy6JlIg5pzKInsUfJ3kz84TanaiOhAKg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=46fd89c409b56679c405c17e2fd9dbbe23a21ea9aa98f0c3c7b32a2f29f15c56",
+      "file_size": 76206,
+      "type": "image/jpeg",
+      "moderated": null
+    },
+    {
+      "id": 225669,
+      "file_name": "twitter_nichi_api_user_post.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/225/669/01488f24f99e5c35b2c12b4cb8e7d3b184bb1cf0/twitter_nichi_api_user_post.jpg?response-content-disposition=attachment%3B%20filename%3D%22twitter_nichi_api_user_post.jpg%22%3B%20filename%2A%3DUTF-8%27%27twitter_nichi_api_user_post.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWNAVQAE5%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T194702Z&X-Amz-Expires=562&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIDXG8q7VRdTP631MKmZ4fvttzAAv5lCyYMYNV784kGZjAiEAhv%2BV9Mg5xs9Q4zCmYFH6om2UWIbqTxOXrpZ%2B2%2FbDzXUqsgUIFxADGgwwMTM2MTkyNzQ4NDkiDIGZ8kKbAh%2F%2FPWaDsiqPBYhP8pm4XnRFxjp804kA9dz%2FChkMoeCRo09H5RRxUKWuL3Hht7UB8pviq0Ph1K%2FHTcmGwh93q4Ayukv4kY%2BcdKeSYjRmw7cMDjaogAMTIMitBxFdtPgjmRnaKyJaPF0A%2F6UzCpRMz8FumQa21icnzynw9cJSd6wSMqfRakvCMB%2Be5Z%2BkIjhcACm5f3POul28BVznGYgXSXTovo3lOSWBFyZX17ClfGQEYehe8I7VG8F35pVjCkxwqEzP144HMVnkdtpsIyAVOG7WPcwm0KOJIx%2BKhAfImQT8dkW2AAtqfv4kvgvcZEnUS2Kp5DyxNy7WA5M3rPHLk8%2FzfcC%2Fnukmx2PtTkeoP2CAS9%2F0pP2jZb1sFPGq8QGv8dP55JjbbblQxg9HaySXhO4AXDI4tFgfvmEtNBuLfgEN%2FEv66OQjA1SyZR0XnbI4MlhOXGkCl51AQKDXhKM593ZzKaqxWdkRWKbQOUM4Ha%2FX2mtuuAp4%2BfbSGJfHy82Wd80nfR4NnZMYIVEJbDh%2FOIK0VuA9qGn60PMdaDoYFrvfD3WDulA7eKHmb1IhiKFTRB3j7%2FgAuvWEb0NbOL2jpPScBL3zDV8xE%2Fvpkmj43tE4Fh1oTcU6fcE6gsUrEtO9Mo%2F1WYnTC%2Bnk60PuuAWuwhxBmcLoLPHCgBoxbByWS%2ByB9HY4ykbUqFeZugpyHXiCRsojTioWXw5L7M9o8vSnDryl%2FD3%2BDaZp2c0LCWnQy6%2B4DRQGXou85vQgzUF6aJDkiZyH9H%2FxDiew0JWB8vX9aEAwOZlcRETdgrACRgiiHY%2Bfaljot3%2Fmdn7CReK7PfRAN82qHWcr9U6NyHZzgmsTiQgkwHX07UrlU%2BzftbSlgIhPu%2F%2BYSFfdWNIwjPu%2FxgY6sQFxUOygixf0qUsgG%2FoVgsW28C5CvqIZyDpjPSKJhur1%2BBEZTfeh7FuHjp6tNQHenSwpHhoXwkfsxw4BvOxv%2B3ofBVdTjcQRLA4pXbur3BVLK%2FVGkeDfwJqLBZAGws1RhaqQPVp1EFpm0n3qwn3SoKfRKGCIXopjlcwH0Ard%2FdpHuLMYOvSLKY5oBhl%2FK35lY2n6pQMWBiSvhUOEy6JlIg5pzKInsUfJ3kz84TanaiOhAKg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=5163452ef831015238c901680474ef4cc715562d69c73d92d5d56eedf633fb02",
+      "file_size": 101049,
+      "type": "image/jpeg",
+      "moderated": null
+    },
+    {
+      "id": 225670,
+      "file_name": "twitter_private.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/225/670/8cd7faa0052787e32ee223e2a57018117d2af076/twitter_private.jpg?response-content-disposition=attachment%3B%20filename%3D%22twitter_private.jpg%22%3B%20filename%2A%3DUTF-8%27%27twitter_private.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWNAVQAE5%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T194702Z&X-Amz-Expires=562&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIDXG8q7VRdTP631MKmZ4fvttzAAv5lCyYMYNV784kGZjAiEAhv%2BV9Mg5xs9Q4zCmYFH6om2UWIbqTxOXrpZ%2B2%2FbDzXUqsgUIFxADGgwwMTM2MTkyNzQ4NDkiDIGZ8kKbAh%2F%2FPWaDsiqPBYhP8pm4XnRFxjp804kA9dz%2FChkMoeCRo09H5RRxUKWuL3Hht7UB8pviq0Ph1K%2FHTcmGwh93q4Ayukv4kY%2BcdKeSYjRmw7cMDjaogAMTIMitBxFdtPgjmRnaKyJaPF0A%2F6UzCpRMz8FumQa21icnzynw9cJSd6wSMqfRakvCMB%2Be5Z%2BkIjhcACm5f3POul28BVznGYgXSXTovo3lOSWBFyZX17ClfGQEYehe8I7VG8F35pVjCkxwqEzP144HMVnkdtpsIyAVOG7WPcwm0KOJIx%2BKhAfImQT8dkW2AAtqfv4kvgvcZEnUS2Kp5DyxNy7WA5M3rPHLk8%2FzfcC%2Fnukmx2PtTkeoP2CAS9%2F0pP2jZb1sFPGq8QGv8dP55JjbbblQxg9HaySXhO4AXDI4tFgfvmEtNBuLfgEN%2FEv66OQjA1SyZR0XnbI4MlhOXGkCl51AQKDXhKM593ZzKaqxWdkRWKbQOUM4Ha%2FX2mtuuAp4%2BfbSGJfHy82Wd80nfR4NnZMYIVEJbDh%2FOIK0VuA9qGn60PMdaDoYFrvfD3WDulA7eKHmb1IhiKFTRB3j7%2FgAuvWEb0NbOL2jpPScBL3zDV8xE%2Fvpkmj43tE4Fh1oTcU6fcE6gsUrEtO9Mo%2F1WYnTC%2Bnk60PuuAWuwhxBmcLoLPHCgBoxbByWS%2ByB9HY4ykbUqFeZugpyHXiCRsojTioWXw5L7M9o8vSnDryl%2FD3%2BDaZp2c0LCWnQy6%2B4DRQGXou85vQgzUF6aJDkiZyH9H%2FxDiew0JWB8vX9aEAwOZlcRETdgrACRgiiHY%2Bfaljot3%2Fmdn7CReK7PfRAN82qHWcr9U6NyHZzgmsTiQgkwHX07UrlU%2BzftbSlgIhPu%2F%2BYSFfdWNIwjPu%2FxgY6sQFxUOygixf0qUsgG%2FoVgsW28C5CvqIZyDpjPSKJhur1%2BBEZTfeh7FuHjp6tNQHenSwpHhoXwkfsxw4BvOxv%2B3ofBVdTjcQRLA4pXbur3BVLK%2FVGkeDfwJqLBZAGws1RhaqQPVp1EFpm0n3qwn3SoKfRKGCIXopjlcwH0Ard%2FdpHuLMYOvSLKY5oBhl%2FK35lY2n6pQMWBiSvhUOEy6JlIg5pzKInsUfJ3kz84TanaiOhAKg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=e7e03dd9c1b23e5bc9ee2640a5540ac6a5df2962f8b94919fc9a3bf56926d862",
+      "file_size": 92329,
+      "type": "image/jpeg",
+      "moderated": null
+    },
+    {
+      "id": 225671,
+      "file_name": "twitter_private_tweet_expose.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/225/671/423e5c04e61d36e6f35deffe81332d14d379743f/twitter_private_tweet_expose.jpg?response-content-disposition=attachment%3B%20filename%3D%22twitter_private_tweet_expose.jpg%22%3B%20filename%2A%3DUTF-8%27%27twitter_private_tweet_expose.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWNAVQAE5%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T194702Z&X-Amz-Expires=562&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIDXG8q7VRdTP631MKmZ4fvttzAAv5lCyYMYNV784kGZjAiEAhv%2BV9Mg5xs9Q4zCmYFH6om2UWIbqTxOXrpZ%2B2%2FbDzXUqsgUIFxADGgwwMTM2MTkyNzQ4NDkiDIGZ8kKbAh%2F%2FPWaDsiqPBYhP8pm4XnRFxjp804kA9dz%2FChkMoeCRo09H5RRxUKWuL3Hht7UB8pviq0Ph1K%2FHTcmGwh93q4Ayukv4kY%2BcdKeSYjRmw7cMDjaogAMTIMitBxFdtPgjmRnaKyJaPF0A%2F6UzCpRMz8FumQa21icnzynw9cJSd6wSMqfRakvCMB%2Be5Z%2BkIjhcACm5f3POul28BVznGYgXSXTovo3lOSWBFyZX17ClfGQEYehe8I7VG8F35pVjCkxwqEzP144HMVnkdtpsIyAVOG7WPcwm0KOJIx%2BKhAfImQT8dkW2AAtqfv4kvgvcZEnUS2Kp5DyxNy7WA5M3rPHLk8%2FzfcC%2Fnukmx2PtTkeoP2CAS9%2F0pP2jZb1sFPGq8QGv8dP55JjbbblQxg9HaySXhO4AXDI4tFgfvmEtNBuLfgEN%2FEv66OQjA1SyZR0XnbI4MlhOXGkCl51AQKDXhKM593ZzKaqxWdkRWKbQOUM4Ha%2FX2mtuuAp4%2BfbSGJfHy82Wd80nfR4NnZMYIVEJbDh%2FOIK0VuA9qGn60PMdaDoYFrvfD3WDulA7eKHmb1IhiKFTRB3j7%2FgAuvWEb0NbOL2jpPScBL3zDV8xE%2Fvpkmj43tE4Fh1oTcU6fcE6gsUrEtO9Mo%2F1WYnTC%2Bnk60PuuAWuwhxBmcLoLPHCgBoxbByWS%2ByB9HY4ykbUqFeZugpyHXiCRsojTioWXw5L7M9o8vSnDryl%2FD3%2BDaZp2c0LCWnQy6%2B4DRQGXou85vQgzUF6aJDkiZyH9H%2FxDiew0JWB8vX9aEAwOZlcRETdgrACRgiiHY%2Bfaljot3%2Fmdn7CReK7PfRAN82qHWcr9U6NyHZzgmsTiQgkwHX07UrlU%2BzftbSlgIhPu%2F%2BYSFfdWNIwjPu%2FxgY6sQFxUOygixf0qUsgG%2FoVgsW28C5CvqIZyDpjPSKJhur1%2BBEZTfeh7FuHjp6tNQHenSwpHhoXwkfsxw4BvOxv%2B3ofBVdTjcQRLA4pXbur3BVLK%2FVGkeDfwJqLBZAGws1RhaqQPVp1EFpm0n3qwn3SoKfRKGCIXopjlcwH0Ard%2FdpHuLMYOvSLKY5oBhl%2FK35lY2n6pQMWBiSvhUOEy6JlIg5pzKInsUfJ3kz84TanaiOhAKg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=35d82370ed2e5b98d0c4964509434a4bff25de7f6d253f807f0effabb0f379c5",
+      "file_size": 613892,
+      "type": "image/jpeg",
+      "moderated": null
+    },
+    {
+      "id": 225672,
+      "file_name": "twitter_private_tweet_expose2.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/225/672/ad453a8931b0942d21cf7b1c96587161c49f32da/twitter_private_tweet_expose2.jpg?response-content-disposition=attachment%3B%20filename%3D%22twitter_private_tweet_expose2.jpg%22%3B%20filename%2A%3DUTF-8%27%27twitter_private_tweet_expose2.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWNAVQAE5%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T194702Z&X-Amz-Expires=562&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIDXG8q7VRdTP631MKmZ4fvttzAAv5lCyYMYNV784kGZjAiEAhv%2BV9Mg5xs9Q4zCmYFH6om2UWIbqTxOXrpZ%2B2%2FbDzXUqsgUIFxADGgwwMTM2MTkyNzQ4NDkiDIGZ8kKbAh%2F%2FPWaDsiqPBYhP8pm4XnRFxjp804kA9dz%2FChkMoeCRo09H5RRxUKWuL3Hht7UB8pviq0Ph1K%2FHTcmGwh93q4Ayukv4kY%2BcdKeSYjRmw7cMDjaogAMTIMitBxFdtPgjmRnaKyJaPF0A%2F6UzCpRMz8FumQa21icnzynw9cJSd6wSMqfRakvCMB%2Be5Z%2BkIjhcACm5f3POul28BVznGYgXSXTovo3lOSWBFyZX17ClfGQEYehe8I7VG8F35pVjCkxwqEzP144HMVnkdtpsIyAVOG7WPcwm0KOJIx%2BKhAfImQT8dkW2AAtqfv4kvgvcZEnUS2Kp5DyxNy7WA5M3rPHLk8%2FzfcC%2Fnukmx2PtTkeoP2CAS9%2F0pP2jZb1sFPGq8QGv8dP55JjbbblQxg9HaySXhO4AXDI4tFgfvmEtNBuLfgEN%2FEv66OQjA1SyZR0XnbI4MlhOXGkCl51AQKDXhKM593ZzKaqxWdkRWKbQOUM4Ha%2FX2mtuuAp4%2BfbSGJfHy82Wd80nfR4NnZMYIVEJbDh%2FOIK0VuA9qGn60PMdaDoYFrvfD3WDulA7eKHmb1IhiKFTRB3j7%2FgAuvWEb0NbOL2jpPScBL3zDV8xE%2Fvpkmj43tE4Fh1oTcU6fcE6gsUrEtO9Mo%2F1WYnTC%2Bnk60PuuAWuwhxBmcLoLPHCgBoxbByWS%2ByB9HY4ykbUqFeZugpyHXiCRsojTioWXw5L7M9o8vSnDryl%2FD3%2BDaZp2c0LCWnQy6%2B4DRQGXou85vQgzUF6aJDkiZyH9H%2FxDiew0JWB8vX9aEAwOZlcRETdgrACRgiiHY%2Bfaljot3%2Fmdn7CReK7PfRAN82qHWcr9U6NyHZzgmsTiQgkwHX07UrlU%2BzftbSlgIhPu%2F%2BYSFfdWNIwjPu%2FxgY6sQFxUOygixf0qUsgG%2FoVgsW28C5CvqIZyDpjPSKJhur1%2BBEZTfeh7FuHjp6tNQHenSwpHhoXwkfsxw4BvOxv%2B3ofBVdTjcQRLA4pXbur3BVLK%2FVGkeDfwJqLBZAGws1RhaqQPVp1EFpm0n3qwn3SoKfRKGCIXopjlcwH0Ard%2FdpHuLMYOvSLKY5oBhl%2FK35lY2n6pQMWBiSvhUOEy6JlIg5pzKInsUfJ3kz84TanaiOhAKg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=2dc61ec3323607632ac012b463e566c4120e039fde090212de8411fbcc9c570a",
+      "file_size": 608786,
+      "type": "image/jpeg",
+      "moderated": null
+    },
+    {
+      "id": 225673,
+      "file_name": "twitter_setting_safety.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/225/673/03d7a64643dccba1575aa6ff164403847e317c9a/twitter_setting_safety.jpg?response-content-disposition=attachment%3B%20filename%3D%22twitter_setting_safety.jpg%22%3B%20filename%2A%3DUTF-8%27%27twitter_setting_safety.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWNAVQAE5%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T194702Z&X-Amz-Expires=562&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIDXG8q7VRdTP631MKmZ4fvttzAAv5lCyYMYNV784kGZjAiEAhv%2BV9Mg5xs9Q4zCmYFH6om2UWIbqTxOXrpZ%2B2%2FbDzXUqsgUIFxADGgwwMTM2MTkyNzQ4NDkiDIGZ8kKbAh%2F%2FPWaDsiqPBYhP8pm4XnRFxjp804kA9dz%2FChkMoeCRo09H5RRxUKWuL3Hht7UB8pviq0Ph1K%2FHTcmGwh93q4Ayukv4kY%2BcdKeSYjRmw7cMDjaogAMTIMitBxFdtPgjmRnaKyJaPF0A%2F6UzCpRMz8FumQa21icnzynw9cJSd6wSMqfRakvCMB%2Be5Z%2BkIjhcACm5f3POul28BVznGYgXSXTovo3lOSWBFyZX17ClfGQEYehe8I7VG8F35pVjCkxwqEzP144HMVnkdtpsIyAVOG7WPcwm0KOJIx%2BKhAfImQT8dkW2AAtqfv4kvgvcZEnUS2Kp5DyxNy7WA5M3rPHLk8%2FzfcC%2Fnukmx2PtTkeoP2CAS9%2F0pP2jZb1sFPGq8QGv8dP55JjbbblQxg9HaySXhO4AXDI4tFgfvmEtNBuLfgEN%2FEv66OQjA1SyZR0XnbI4MlhOXGkCl51AQKDXhKM593ZzKaqxWdkRWKbQOUM4Ha%2FX2mtuuAp4%2BfbSGJfHy82Wd80nfR4NnZMYIVEJbDh%2FOIK0VuA9qGn60PMdaDoYFrvfD3WDulA7eKHmb1IhiKFTRB3j7%2FgAuvWEb0NbOL2jpPScBL3zDV8xE%2Fvpkmj43tE4Fh1oTcU6fcE6gsUrEtO9Mo%2F1WYnTC%2Bnk60PuuAWuwhxBmcLoLPHCgBoxbByWS%2ByB9HY4ykbUqFeZugpyHXiCRsojTioWXw5L7M9o8vSnDryl%2FD3%2BDaZp2c0LCWnQy6%2B4DRQGXou85vQgzUF6aJDkiZyH9H%2FxDiew0JWB8vX9aEAwOZlcRETdgrACRgiiHY%2Bfaljot3%2Fmdn7CReK7PfRAN82qHWcr9U6NyHZzgmsTiQgkwHX07UrlU%2BzftbSlgIhPu%2F%2BYSFfdWNIwjPu%2FxgY6sQFxUOygixf0qUsgG%2FoVgsW28C5CvqIZyDpjPSKJhur1%2BBEZTfeh7FuHjp6tNQHenSwpHhoXwkfsxw4BvOxv%2B3ofBVdTjcQRLA4pXbur3BVLK%2FVGkeDfwJqLBZAGws1RhaqQPVp1EFpm0n3qwn3SoKfRKGCIXopjlcwH0Ard%2FdpHuLMYOvSLKY5oBhl%2FK35lY2n6pQMWBiSvhUOEy6JlIg5pzKInsUfJ3kz84TanaiOhAKg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=b68dec64ea1aa18403a78d32f78787b529ea669a121547939dbaff331d9e7c8e",
+      "file_size": 109683,
+      "type": "image/jpeg",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-11-25T17:12:49.505Z",
+  "allow_singular_disclosure_after": -246854052.94313338,
+  "singular_disclosure_allowed": true,
+  "vote_count": 22,
+  "voters": [
+    "jensec",
+    "spam404",
+    "jub0bs",
+    "skavans",
+    "dilawer",
+    "bobo_ka",
+    "abdilahrf_",
+    "r3y",
+    "eveeez",
+    "pr0f0x01",
+    "and 12 more..."
+  ],
+  "severity": {
+    "rating": "high",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 1062,
+    "asset_type": "WILDCARD",
+    "asset_identifier": "*.twitter.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
