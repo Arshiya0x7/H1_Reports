@@ -1,0 +1,155 @@
+{
+  "id": 503922,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC81MDM5MjI=",
+  "url": "https://hackerone.com/reports/503922",
+  "title": "Open redirect on the https://tt.hboeck.de",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2019-03-01T17:47:36.835Z",
+  "submitted_at": "2019-03-01T17:47:36.835Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "zophi",
+    "url": "/zophi",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NDgwMjIsInB1ciI6ImJsb2JfaWQifX0=--693eaf62171b71a18b1e844086151dec329fd044/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--2de8067d228529d65848a4eeed0bed0bb2531bc3/ava.jpg"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 30278,
+    "url": "https://hackerone.com/hannob",
+    "handle": "hannob",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NzQyNTgsInB1ciI6ImJsb2JfaWQifX0=--17551179046e358db89580820048674d0f970df4/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--a4d91faed3dff6024dfc1a7b7f8ccc6b45e38396/open-uri20180625-9169-fahww2",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/030/278/97035f061f6de55a9362b39edae4f5948bda6735_original./3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Hanno's projects",
+      "twitter_handle": "hanno",
+      "website": "https://hboeck.de/",
+      "about": "Personal web projects from Hanno Böck."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2019-03-03T16:24:37.830Z",
+  "bug_reporter_agreed_on_going_public_at": "2019-03-03T16:24:37.755Z",
+  "team_member_agreed_on_going_public_at": "2019-03-03T09:46:40.061Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi Team!\n\nTesting request:\n`POST /public.php?return=%2F HTTP/1.1\nHost: tt.hboeck.de\n...........\nop=login&login={….}&password={...}&profile=0`\n\nVulnerable parameter: `return`\n\nMethod: `POST` -> `GET` -> OK\n\nPOC:\n`https://tt.hboeck.de/public.php?return=http%3a%2f%2fevil.com%2f&op=login&login=password=&profile=0`\n\n## Impact\n\nUser can be redirect to malicious site.",
+  "weakness": {
+    "id": 53,
+    "name": "Open Redirect"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 433676,
+      "file_name": "redir.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/433/676/5f6a3e2677a7d240a0b293abea7f24ba53edd712/redir.jpg?response-content-disposition=attachment%3B%20filename%3D%22redir.jpg%22%3B%20filename%2A%3DUTF-8%27%27redir.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQVEJIXONP%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T160341Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIH8AfdM1IKkiBfUEz%2FBO7LFjez%2BUQDg01sIrpsf4EUcBAiBSpVIGQhH6dvIVEdS013E3d77NSPuZ6tkJqUiut1d5ayqxBQgXEAMaDDAxMzYxOTI3NDg0OSIM5KKvvFo%2FqCzdKYojKo4F1%2BxUKjmtoEnCcoIjJvK408ALZil4QNP4qd%2B9SxE2nN4XJtMsRrYo337HtrFn5oO%2FaZ%2Fo7msCxdECjjQnR%2B%2BiOIRw47xO%2BN%2BroD4eFU0Lis8VXL7dneMK0%2FZKVqVB%2BC9tGiRF8jr69GjaOncBp0t%2BX3cMNxBXvRLz3bKIbAg4La2IjqOjzgBTnn%2BIQ3Yhe4BZXvg3RG5sRY2fxBARtQlU7dKqtW6H02iITGdunmfJ1IT%2B3XU2w03%2FcST6rc293dotAdvtrqi681dI6SPYP5SZFsFaToGOXjSXYCaiYNylKPtCRLxqaQMRG5TQX9%2ByCCOVPymZiYFyP%2BNOadkXnUbMb2eQoJYrzOSkfeHj2bWS3RmbO0DRT%2Ff3P4edxF6mtA4y5a5Rbb9QQmxfvt2CB%2B9H4K0szePZZxL3RAcHqBhvq60iVi2HG9fbJX6X9KRmIe60IihzAb8bPagbeh9aJD2NPOr97NdRsEOyoTZVTVqJq3dZTERme2wlhIVMu5zrFQmWXEFknB4fS17jS5t8TKS4KTjVFpEZmE7fMH738HaaBGO4Vg2iNfyjYzLcWfZx%2FUbEXuG1t98I6yBnAESEHAv346Q0BPQr%2Bz87XrCSQdjmWab9zu6ALnBNaKQo4GsSmEixRTkV%2BfZTJFbhc6J1kQlOqv5S36YxT%2B7%2FW3YfSFHXiDLqoNDDaFU6Xrxf4B3AZla5abRXGNVFTHsf6qhKV9VxT%2BVVeQn%2FdCSZGarNUggIqacMenhuAX0nJZEiqxIEeJsJkkM%2BdIXSTEfPjpuSr4EgWjzOTshSC70x%2BG3z5Xy9Rg0898Dqo9%2B6bgq2Y6eUlND5h9YFj2B6tvh%2FxxMTFsGZpgowwHabY0dQaABJE0FHMIWMwMYGOrIB%2FnjXTbo03i5xP3rcMU3bObaCEWOYTy%2F50Ggf7zk3XIOVnx9L4WAz0%2BkC4QuUVgTdg4m3vSVaCadxQKgpnOARKNEU7hiIdSjWNWsznEUhz3m0VcGL8VLeBZxihvQtGtDTEtGjHNLS%2FKP80xsNti6GBmErPMO5xp0uYHZmDW87sx6pMfyUJD3jZY9hW1E%2BtCtsgwzAj7%2FoAV6Xj647N%2F89fogX1xb57jhfm0OpuwqOUaJLQw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=1f908bcb490fe99c72ac98010b2effdda7963adaecd1fb54b87d4102ef3339a1",
+      "file_size": 115336,
+      "type": "image/jpeg",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2019-04-02T09:46:40.123Z",
+  "allow_singular_disclosure_after": -204272221.72385323,
+  "singular_disclosure_allowed": true,
+  "vote_count": 25,
+  "voters": [
+    "mashoud1122",
+    "ali",
+    "sameerphad72",
+    "tess",
+    "healdb",
+    "term1nal",
+    "khizer47",
+    "martijn",
+    "mandark",
+    "avasdream",
+    "and 15 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 11139,
+    "asset_type": "URL",
+    "asset_identifier": "invalid.hboeck.de",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "id": 14451,
+      "category": "team",
+      "content": "Reporter discovered an open redirect in an installation of tt-rss (Tiny Tiny RSS).\n\nWhile low impact, it was a valid issue. It's been reported to the tt-rss project and fixed there:\nhttps://git.tt-rss.org/fox/tt-rss/commit/c68ac04020d85a296c784de18f8def3f365f9f6a",
+      "updated_at": "2019-03-03T09:44:34.585Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 20918,
+        "username": "hanno",
+        "name": "Hanno Böck",
+        "bio": "",
+        "cleared": false,
+        "verified": false,
+        "website": "https://hboeck.de/",
+        "location": "",
+        "created_at": "2015-04-21T23:34:53.960Z",
+        "url": "https://hackerone.com/hanno",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "company",
+        "profile_picture_urls": {
+          "small": "https://profile-photos.hackerone-user-content.com/variants/000/020/918/74da560ef66bf8cc239e219843444b441a7dfac6_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/000/020/918/74da560ef66bf8cc239e219843444b441a7dfac6_original.jpg/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a",
+          "xtralarge": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NDczOSwicHVyIjoiYmxvYl9pZCJ9fQ==--c164dc1c464f2a8705869e46ab4026219ff5fa9f/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJyZXNpemUiOiIyNjB4MjYwXHUwMDNlIn0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--cf3aeca803d1baf476958c689ca7b472a4cb54f1/hanno.jpg"
+        }
+      }
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
