@@ -1,0 +1,169 @@
+{
+  "id": 1004833,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMDA0ODMz",
+  "url": "https://hackerone.com/reports/1004833",
+  "title": "Cross-site Scripting (XSS) - DOM - iqcard.informatica.com",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2020-10-10T21:10:57.716Z",
+  "submitted_at": "2020-10-10T21:10:57.854Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "d0lfx",
+    "url": "/d0lfx",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/j59dw1uexmo5to277ipd6gya4drw/c8a1698ff707a5e3e8a91a3484838363845daac68cb82c86d55c9e2d44d67b67"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 453,
+    "url": "https://hackerone.com/informatica",
+    "handle": "informatica",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/6yxveqohTKjQLQyJm5Xv7Eye/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/6yxveqohTKjQLQyJm5Xv7Eye/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Informatica",
+      "twitter_handle": "informatica",
+      "website": "https://www.informatica.com/",
+      "about": "Informatica Corporation is the world’s number one independent provider of data integration software."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2020-10-13T09:22:13.451Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-10-12T20:55:23.238Z",
+  "team_member_agreed_on_going_public_at": "2020-10-13T09:22:13.358Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello all\n\nI found a DOM based XSS at iqcard.informatica.com\n\n# Description\n\nAfter finding the path **iqcard.informatica.com/pub/fujitsu/fm3v2/player/attach.html**. I noticed that the code inside attach.html was vulnerable to DOM XSS, due to the fact of the javascript *document.location function. search*. The code below illustrates the code contained in the attach.html file\n\n```\n<HTML>\n<HEAD>\n<SCRIPT>\nfunction GetAttach()\n{\n\tvar strSearch = document.location.search\n\tstrSearch = strSearch.substring(1)\n\t\n\tdocument.location.replace(strSearch)\n}\n</SCRIPT>\n</HEAD>\n<BODY onload='GetAttach()'>\n\n\n</BODY>\n</HTML>\n```\nAs can be seen through the code above, the variable * strSearch * receives everything that comes from the URL after the character? and then insert it into the function *document.location.replace ()*. Through this scenario we have some possibilities.\n\n1 - We can direct the user to any page we want for example:\n\n```\nhttps://iqcard.informatica.com/pub/fujitsu/fm3v2/player/attach.html?evil.com\n```\n\n\n2 - We can run a DOM Based XSS, running the javascript schema, javascript: alert (1);\n\n```\nhttps://iqcard.informatica.com/pub/fujitsu/fm3v2/player/attach.html?javascript:alert(1)\n```\n\n\n# PoC \n\nI uploaded a video and an image.\n\n## Impact\n\nAn attacker can redirect a user to a malicious page or execute XSS attacks against users of the application or use that domain as a phishing vector to attack other users of informatica.com",
+  "weakness": {
+    "id": 63,
+    "name": "Cross-site Scripting (XSS) - DOM"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1030784,
+      "file_name": "xss_03.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/5Ly453X7KgDVGkhhPAbzDs9B?response-content-disposition=attachment%3B%20filename%3D%22xss_03.png%22%3B%20filename%2A%3DUTF-8%27%27xss_03.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6BUINIA7%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T084755Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQC%2BZthqetx2sYvk5flV%2B4ullL1qpu8SCbabmro3z3bbywIgWYlIMV%2B6FUb%2BTGJm%2BEaotptUep9S9656WlFEiRyVllsquwUI%2Ff%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDHwalTtqDeQ1l%2BPo6CqPBTS9MjwAKuzBO10OiRfpOYYqAQaxkNfbAJvTFd5KU6p6WzRIpqT4hzlI8VhpQkBEdFgwVavKkSXQzD%2BO%2FUloaT42YaflOEh0JOfpGfPFRpLqz%2Fr2MghJonM1vsrmP37dJSj6Tc8E3eVLGjqZK3kEtP5GtWr5yhobRq9Y9Cy2bwekNvMW2xxEQyyogAsQHZrHOeDLCqKygH1Xv%2BmXsPA1vo1%2FPjXS0fGE7%2F9zo5%2BO%2BAd4laRphBm6n9IWZ%2B6FvwbH2xQIZnNVGj3UR0NxmdYTdTysXGxto0t4grhXKgoQdZDy8k1uSo6nY5myfi%2BIsay32sXvLW0rbaMj9HOc2KtmTuslZJssVxyBQISIVJNni1L9F6BxnpqNIZcsFyUbuJDMh6%2F%2BQrWLGrcUXuU3rjLFFTv5gb0GcQpVP5pmlgmqbVwc4An4TcWEj8eTGgEhVyYLU%2FxHCSKLS06efmL3Tmmqmc0zzuKgC95aCV6fjI4nYeDbqGgxlV3QAPUQjZ%2F7TQa9%2BSNwd8jTo5q%2ByKuq%2BdcKwGWF4mhEoEnQ4ZpvMIyyih8fuAIU8La8ka2J6Ltp%2BpQIdj3QTafU0lHkff%2B7SKuNe3Pwj30bDnAZmgWT%2BADOBY%2FMI4aubXCKI25zs6p%2Bqp4Tu4vF7pv8w5u5d0i1sT%2BdFMv1pEpw42ERGmc3h4ascBBUAPbZnHyuRn8eDr1W0cI%2B%2FnxN7ltBP9geKer2S91N%2BDqNd0xdHpE0vwsOEWXbgVlkJ9SLRDCG7ZBPz%2FAqmqUVQxjShqwpSrNX28kkLE6Czn68I5Qd2kllilkdlzsNeqaySc%2BK8fU0eChYoyOluM5w1u0nAe3RxIjge9%2FOQjMtaAV7ca%2B8KMu%2FULoiFuTE8fswweu9xgY6sQEpW17fj7I6F10aYrpSEScqbNmCrBF52CxvX4uUHutdUoZqooJOL8Hl71qx%2BDWXPAnER%2B%2B3WqM1yGAOkQB8gZoiGU9No9wDRLLXEqv70ndooW6egLwu%2FvGVTnAsnXQu7qdUYPv80VSVjn4jp2A3IuXR%2FbhwrxEObgTrAisxB9dYZdrIkDl1gaQXI19KHI%2FD0OQzBCV%2F%2FAT8ltvXojLO0BqiBpT%2Fv1ZMKD1Jmo0IlbyrHK0%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=e3a17a8347137a00b457873d8c5f49f2d76ebc8aaeee1bbb845a5b1c65b3a52b",
+      "file_size": 22388,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1030789,
+      "file_name": "poc_redir.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/AsJLTnCG7MrZbkrwjXjgpsst?response-content-disposition=attachment%3B%20filename%3D%22poc_redir.mp4%22%3B%20filename%2A%3DUTF-8%27%27poc_redir.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6BUINIA7%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T084755Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQC%2BZthqetx2sYvk5flV%2B4ullL1qpu8SCbabmro3z3bbywIgWYlIMV%2B6FUb%2BTGJm%2BEaotptUep9S9656WlFEiRyVllsquwUI%2Ff%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDHwalTtqDeQ1l%2BPo6CqPBTS9MjwAKuzBO10OiRfpOYYqAQaxkNfbAJvTFd5KU6p6WzRIpqT4hzlI8VhpQkBEdFgwVavKkSXQzD%2BO%2FUloaT42YaflOEh0JOfpGfPFRpLqz%2Fr2MghJonM1vsrmP37dJSj6Tc8E3eVLGjqZK3kEtP5GtWr5yhobRq9Y9Cy2bwekNvMW2xxEQyyogAsQHZrHOeDLCqKygH1Xv%2BmXsPA1vo1%2FPjXS0fGE7%2F9zo5%2BO%2BAd4laRphBm6n9IWZ%2B6FvwbH2xQIZnNVGj3UR0NxmdYTdTysXGxto0t4grhXKgoQdZDy8k1uSo6nY5myfi%2BIsay32sXvLW0rbaMj9HOc2KtmTuslZJssVxyBQISIVJNni1L9F6BxnpqNIZcsFyUbuJDMh6%2F%2BQrWLGrcUXuU3rjLFFTv5gb0GcQpVP5pmlgmqbVwc4An4TcWEj8eTGgEhVyYLU%2FxHCSKLS06efmL3Tmmqmc0zzuKgC95aCV6fjI4nYeDbqGgxlV3QAPUQjZ%2F7TQa9%2BSNwd8jTo5q%2ByKuq%2BdcKwGWF4mhEoEnQ4ZpvMIyyih8fuAIU8La8ka2J6Ltp%2BpQIdj3QTafU0lHkff%2B7SKuNe3Pwj30bDnAZmgWT%2BADOBY%2FMI4aubXCKI25zs6p%2Bqp4Tu4vF7pv8w5u5d0i1sT%2BdFMv1pEpw42ERGmc3h4ascBBUAPbZnHyuRn8eDr1W0cI%2B%2FnxN7ltBP9geKer2S91N%2BDqNd0xdHpE0vwsOEWXbgVlkJ9SLRDCG7ZBPz%2FAqmqUVQxjShqwpSrNX28kkLE6Czn68I5Qd2kllilkdlzsNeqaySc%2BK8fU0eChYoyOluM5w1u0nAe3RxIjge9%2FOQjMtaAV7ca%2B8KMu%2FULoiFuTE8fswweu9xgY6sQEpW17fj7I6F10aYrpSEScqbNmCrBF52CxvX4uUHutdUoZqooJOL8Hl71qx%2BDWXPAnER%2B%2B3WqM1yGAOkQB8gZoiGU9No9wDRLLXEqv70ndooW6egLwu%2FvGVTnAsnXQu7qdUYPv80VSVjn4jp2A3IuXR%2FbhwrxEObgTrAisxB9dYZdrIkDl1gaQXI19KHI%2FD0OQzBCV%2F%2FAT8ltvXojLO0BqiBpT%2Fv1ZMKD1Jmo0IlbyrHK0%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=1e57b6ce4c970c867b47db063fdb9c2d2e6e54a6dbe346ef2d79b6729c7b35fb",
+      "file_size": 1968761,
+      "type": "video/mp4",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2020-11-11T20:55:23.286Z",
+  "allow_singular_disclosure_after": -153316351.98207337,
+  "singular_disclosure_allowed": true,
+  "vote_count": 26,
+  "voters": [
+    "d0lfx",
+    "ali",
+    "nightm4re",
+    "pinch",
+    "dracoludio",
+    "artkulak",
+    "mcdave",
+    "hshdsec",
+    "majidhussien",
+    "whistlepig2020",
+    "and 16 more..."
+  ],
+  "severity": {
+    "rating": "high",
+    "score": 8.4,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "local",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "high",
+      "integrity": "high",
+      "availability": "high"
+    }
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "id": 24843,
+      "category": "team",
+      "content": "Researcher identified an aged DNS A record pointing to an IP address not owned by Informatica. Analysis showed that the DNS record was not in use for some time and was removed. ",
+      "updated_at": "2020-10-13T09:22:07.316Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 582228,
+        "username": "nheffernan",
+        "name": "Niall Heffernan",
+        "bio": null,
+        "cleared": false,
+        "verified": false,
+        "website": null,
+        "location": null,
+        "created_at": "2019-04-15T10:34:20.268Z",
+        "url": "https://hackerone.com/nheffernan",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "company",
+        "profile_picture_urls": {
+          "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png",
+          "medium": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png",
+          "xtralarge": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+        }
+      }
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
