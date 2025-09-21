@@ -1,0 +1,130 @@
+{
+  "id": 503208,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC81MDMyMDg=",
+  "url": "https://hackerone.com/reports/503208",
+  "title": "Access Violation Reading EXPLOITABLE_0228",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2019-02-28T04:23:21.147Z",
+  "submitted_at": "2019-02-28T04:23:21.147Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "biewuxz",
+    "url": "/biewuxz",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 36863,
+    "url": "https://hackerone.com/vlc_h1c",
+    "handle": "vlc_h1c",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/036/863/7e335b4fc788d5e608b72fe2eebbf92f7cd7980d_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/036/863/7e335b4fc788d5e608b72fe2eebbf92f7cd7980d_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "VLC (European Commission - DIGIT)",
+      "twitter_handle": "",
+      "website": "http://ec.europa.eu",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2019-5460"
+  ],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2019-07-24T00:13:12.871Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2019-07-24T00:12:37.792Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "1\tBasic info of application\n1.1\tInfo of application\nApplication NamevVLC media player for Windows\nApplication Versionv4.0.0-dev Otto Chriek\nDownload Address:  http://nightlies.videolan.org/\nTesting OS:  Windows 8\n\n2\tInfo of test file\n2.1\tTest file info\nNormal file name:\tnormal.mkv\nNormal file type:  \tMKV(Matroska file)\nNormal file MD5:  \t46D9C3E247FF3C528EBDF18C19F3458B\nCrash file name:  \tcrash.mkv\nCrash file type:  \tMKV(Matroska file)\nCrash file MD5:  \t5CF35EEF33C024BF49A039A17D85A3AA\n\n2.2\tCrash file info\nReplace a piece of data with 0x00 padding, from offset 0xfd41 to offset 0xfda4, the comparison of two files: diff.png.\n \nDescription of crash file:\nUsing MKVToolNix tool to parse the crash file, the mutation data triggering crash is located at:\nSegment->Cluster->Simple Block->Frame section.\nThe Track Number equal to 2, indicating that this SimpleBlock is audio. And matroska does not have a detailed description of the mutated Frame data. (https://www.matroska.org/technical/specs/index.html#simpleblock_structure)。\n You can see it here: block.png, block-data.png.\n \n\n3\tInfo of test\n3.1\tDescription of test\nRun VLC media player, try to play crash.mkv file, program crash and an error pop-up. \n3.2\tDescription of debug\nLoading VLC debugging with WinDbg, below is the debug info and stack backtrace.\nThe key point to crash may be: libfaad_plugin+0x2b9d.\nFirst chance exceptions are reported before any exception handling.\nThis exception may be expected and handled.\n*** ERROR: Symbol file could not be found.  Defaulted to export symbols for C:\\Program Files\\VideoLAN\\VLC\\plugins\\codec\\libfaad_plugin.dll - \n*** ERROR: Symbol file could not be found.  Defaulted to export symbols for C:\\Program Files\\VideoLAN\\VLC\\libvlccore.dll - \nlibfaad_plugin+0x2b9d:\n000007f9`0fbf2b9d 47893499        mov     dword ptr [r9+r11*4],r14d ds:00000000`51d6c048=????????\n0:030> kP\nChild-SP          RetAddr           Call Site\n00000000`5eebfb30 000007f9`12a0ca94 libfaad_plugin+0x2b9d\n00000000`5eebfcc0 000007f9`12a0c888 libvlccore!input_Control+0x34a4\n00000000`5eebfd10 000007f9`12a0cc94 libvlccore!input_Control+0x3298\n00000000`5eebfdd0 000007f9`12a7acf6 libvlccore!input_Control+0x36a4\n*** ERROR: Symbol file could not be found.  Defaulted to export symbols for C:\\Windows\\system32\\msvcrt.dll - \n00000000`5eebfec0 000007f9`2810707b libvlccore!vlc_rand_bytes+0xa46\n00000000`5eebff00 000007f9`28125e6d msvcrt!isspace+0x5b\n*** ERROR: Symbol file could not be found.  Defaulted to export symbols for C:\\Windows\\system32\\KERNEL32.DLL - \n00000000`5eebff30 000007f9`261b167e msvcrt!beginthreadex+0x13d\n00000000`5eebff60 000007f9`28cfc3f1 KERNEL32!BaseThreadInitThunk+0x1a\n00000000`5eebff90 00000000`00000000 ntdll!RtlUserThreadStart+0x21\n\n4\tFile list\n4.1\tFile list\nNormal file:\tnormal.mkv\nCrash file:\tcrash.mkv\ncomparison of two files:\tdiff.png\nMKVToolNix:\tblock.png, block_data.png\nWhole Windbg log:\t x64dug_info.txt\n\n\nAll files, logs are in the attachment, and the decompression password is：vL(@BwX2#ozZB\n\n## Impact\n\nThis is not just a simple crash, it's possible to read or write memory data.",
+  "bounty_amount": "1135.32",
+  "formatted_bounty": "$1,135.32",
+  "weakness": {
+    "id": 49,
+    "name": "Double Free"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 432695,
+      "file_name": "Access_Violation_Reading_EXPLOITABLE_0228.rar",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/432/695/18c208335ef9165a878681b1d8066a6929a16bca/Access_Violation_Reading_EXPLOITABLE_0228.rar?response-content-disposition=attachment%3B%20filename%3D%22Access_Violation_Reading_EXPLOITABLE_0228.rar%22%3B%20filename%2A%3DUTF-8%27%27Access_Violation_Reading_EXPLOITABLE_0228.rar&response-content-type=application%2Fx-rar&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQTNOGV7ZA%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T150535Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDBr4rjuktX2tVt4pAD8CjN7frBwjWfsYhqFlEprte2gAIhAJDL1IxreZkbnwPDdAB3ktF%2F%2FAbQwNhANlA5Qc53hwPzKrIFCBUQAxoMMDEzNjE5Mjc0ODQ5IgxEHQJ87TgWPbxaX6EqjwXBYs9QiE8vYqird8fNeXl23XrrZv%2FIegH1kHrOeVNdl8SgI71tCDd%2BwIktentCuPgvq9mlBBIeh%2FzqvPNd7J6sAc8sgiL6qgTlMc0NyIc%2BjXfiU4x4QR86IBEvJnP9NaFyxRoLXGjn4kfvQFBxKXfE3M0NJ6Ist1fakdk9DCQyBkE4UBCcTHXdJ2oWKbHyo9CDN70JC3%2FkGLTj3vnu%2FZF7Tp5gQnqREZ%2FuRjSrMc%2FefuZI%2Fiph8cv8IQkfZysyzEuNDM91hikY1067J2KWIXhf6JSJ7DVF86ZeJLfukfnyfvxil4TI6Vxns2VRI%2B5Oh1uHSXbLdXGujAmzcESxqcjwlmyl7Oa7%2F%2BMa%2F8fM52BcfckfcOZ%2Fp2Hlu6m%2BGvPnYq%2BUeJmy0mec3ATezAo21up25k6IZL8CiQBlcWayjAc74QTHhdDiHdoeV3%2F3XtIu%2FsmhVwC9%2BdeU8mVI1ZrBvsvc6z2zQgeoeBj%2BsTeyuCnOfWD5OodlLyWPdn7zjtRedTGACX4hBGMNONJvhp4HnRxoSyl1sjVrIxF0m6gu0eXekmO%2BfFtAxD0OXWFaq37qgHyQT6nmTgVmcxpHGd0nxcUrb4ArvT8TgGCzNwPoW2L8Y9WID45%2BFlu6Hs%2FDZXlciEul7ctCkJspP9v1vLrLsklLpsdu5BFMSTLw4iO9Q2bYzwZkv5d3zazC45eFWszopjQGrm9Oy2K94m4cLPmplVj4duun%2FW8XHQhrDkPts%2FudeU0sl%2FPOUIG%2FxifL65%2B3R2JGQq0vbwZ8GuJaK7yXo0yZWHPx7W3WpTv3ZQewIu6ZGdt%2Fi4fpAoH9LRassztHxynhYR2aeg4he5xehKof9JqZsz9Hn1I29l340U7NQvC5MPfZv8YGOrAB2Iv6Pp9XpkVN2RbDkZvL5NRkxU2pL5JZM6SSW3bMSJbOd%2FgGM2ASYwE3vgwDfWHTxzWS38tc3%2BXNYTaov01cA0k4BS0%2FmhbZiMMern3c3WKPUUuMRAuBYkfI4H%2F0KvCPZIo03aikPMl%2FbnTvb7ROOcRljaxHTkC8BB6aX%2BtbxWaqgdFVx%2B8CjK49gTh7D19Ddi4a0CmGy7QPNcvVqtHiI2lE%2BG8S8mutZdGolRBAsWc%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=50e881a25fe9f81b2a4e7f6ffab30c6ad788222d3140ef61665779e696109345",
+      "file_size": 426986,
+      "type": "application/x-rar",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2019-08-23T00:12:37.864Z",
+  "allow_singular_disclosure_after": -191947977.60108396,
+  "singular_disclosure_allowed": true,
+  "vote_count": 77,
+  "voters": [
+    "kapytein",
+    "rubberyduck",
+    "ali",
+    "sameerphad72",
+    "mik317",
+    "nich",
+    "qtros",
+    "bobo_ka",
+    "rubyman",
+    "ismailsenturk",
+    "and 67 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "Team"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
