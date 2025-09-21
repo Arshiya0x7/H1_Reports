@@ -1,0 +1,131 @@
+{
+  "id": 222667,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yMjI2Njc=",
+  "url": "https://hackerone.com/reports/222667",
+  "title": "Possible SSRF in email server settings(SMTP mode)",
+  "state": "Closed",
+  "substate": "informative",
+  "severity_rating": "medium",
+  "readable_substate": "Informative",
+  "created_at": "2017-04-21T04:40:14.878Z",
+  "submitted_at": "2017-04-21T04:40:14.878Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": true,
+    "username": "xifengweiyu",
+    "url": "/xifengweiyu",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13291,
+    "url": "https://hackerone.com/nextcloud",
+    "handle": "nextcloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Nextcloud",
+      "twitter_handle": "nextclouders",
+      "website": "https://nextcloud.com",
+      "about": "Access, share and protect your files, calendars, contacts, communication & more at home and in your enterprise."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2017-05-15T14:28:12.484Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-05-15T12:48:35.425Z",
+  "team_member_agreed_on_going_public_at": "2017-05-15T14:28:12.442Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Description:\nvul address `https://demo.nextcloud.com/xxx/settings/admin/additional`,when you change `smtp server address` ,you will get some different hints.\n\nReproduce steps:\n\n1.Go to `https://demo.nextcloud.com/xxx/settings/admin/additional`,choose `SMTP` mode\n\n2.Set server address to \"172.17.1.0`,then you will get screenshot(nextcloud1.png),it means not on the same network segment\n\n3.Set server address to \"172.17.0.0`,then you will get screenshot(nextcloud2.png),it means the address not exists or doesn't open any port to access\n\n4.Set server address to \"172.17.0.1` and port to empty,then the test email will send successfully!\nit means this host exists and opens a smtp port\n\n5.Set server address to \"172.17.0.1` and port to `22`,then you will get screenshot(nextcloud3.png),it means the address exists,but can not access to the port\n",
+  "weakness": {
+    "id": 68,
+    "name": "Server-Side Request Forgery (SSRF)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 177777,
+      "file_name": "nextcloud1.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/177/777/d61b40fed98e75ec82975bbd0793da769056e2f4/nextcloud1.png?response-content-disposition=attachment%3B%20filename%3D%22nextcloud1.png%22%3B%20filename%2A%3DUTF-8%27%27nextcloud1.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYVEPNVVO%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T223341Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIH3Q83xAbniH2JoS%2Fnk9%2FZD8tyLpso4Dec4l6DWZCKO5AiEAyQpzqU7%2FlW2ndwWGqf%2FJ95mFnAteskE7ynBnC51SlXgqsgUIGxADGgwwMTM2MTkyNzQ4NDkiDDHYm5Txil0cDu4aPyqPBUBfikDmbB%2BJ%2FP4rKgn3BcgU2qxeoT9aQgdho8cZ4%2F4qtqLQfQfKdePQ3fr4WKKDFRWW1qfbgXP5DO7VS0usuKFh3oHyuUbX3TqsbO%2B70aC0mNHBVTNvCWOHqUkvloQBY6olw3dMpKxXIeQt6PMgcFN0E8qC46QMNA7YCdgKHQLjzVB4IliHXHcXxhFBlqYsRAKwPo%2BukO99Ff6DBpdzpUmjuupYOWPaSO0cos0gJIP7HJp5n%2Fnm%2BNoRc%2FeogjxeOCY%2B0nU4YJzSifSC1%2FNlh8hHA4VQm%2BnEg23fAmjAwzULby36j0sru%2FL%2B3HEoArc%2FWq9TCR5jCqnpZLU3YppFxe43lH82DxAsAGUbp65KijXkx9f4mGeRGZ%2FQAWqWv0oRVLknJov93SBMs2h6KPmI0IKUykY4yMILNv%2BS58yX%2BS2bMzeiM8l4NPHRxlg99Bt8uyRsEx4bm6KuHjCYj0Mw%2B5Riir3D8cjw8QBKkseuzj0eYFbmhEuN%2BCVWZd55ZxW%2B0VtVzs0gaeI4FFOLfuNsLCl71ajsV%2F6jq4YGpLDyFCPfS9Wq6y5AeY86qbgOVmnmGdehhK2ABn5bedul8DFKES%2Fj5Ub3Ju271yvcsv8NLYQyRd0yErtRGlJ%2B%2FKWPfUvwtgEN3ttoQO7drQ9TjeaqbAopbkiGaqBDkRlgUQeOcag1U3aZfTL7fCzF3WepJdd6j8QAcs31YegxqSHpOm%2BJ%2BXAUuYfBrtsfRkhDSt3DGf7y15OGPazf7lyTfZTVdJJc3EY2exuZoMttj2h5hXp7PgrPCr4xJ6pVArUPguFO4Iw8ubJIwmai29%2FUs%2BKBUUBgU%2BJ0wRGVYibZzVoobcDSmRy7NFYUhJA97QjKMLAY%2F5swzPfAxgY6sQHHQpwFA84S4T77OHWfyBg2xyyUfplOWh%2Fx6kDGO%2BCjP3Qf8PI6jRUldvQzxy7JUvxgBPcc%2FxjtHXYY5CCYSrw1sMfRaInktrIzGiMKV6NbhxZQP1U%2FcxoCsV62hvhR%2FdXZQcJ9r69YZNvbFKC9NkO%2BrTGVH%2ByC0wGLkvhDEADbeKeFdQyjNCm%2FGYk4KME0fENRhjPKpZpng04ZFncyRxhuF3yNEJ7bGrch2rw2rX8Hw44%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=196279df849c6be7dad5b039155410f50ff2512e8e2019bd46608f3308a41e78",
+      "file_size": 126120,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 177778,
+      "file_name": "nextcloud2.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/177/778/cc457b5050a982467d0f731f22a905c3518e2f59/nextcloud2.png?response-content-disposition=attachment%3B%20filename%3D%22nextcloud2.png%22%3B%20filename%2A%3DUTF-8%27%27nextcloud2.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYVEPNVVO%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T223341Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIH3Q83xAbniH2JoS%2Fnk9%2FZD8tyLpso4Dec4l6DWZCKO5AiEAyQpzqU7%2FlW2ndwWGqf%2FJ95mFnAteskE7ynBnC51SlXgqsgUIGxADGgwwMTM2MTkyNzQ4NDkiDDHYm5Txil0cDu4aPyqPBUBfikDmbB%2BJ%2FP4rKgn3BcgU2qxeoT9aQgdho8cZ4%2F4qtqLQfQfKdePQ3fr4WKKDFRWW1qfbgXP5DO7VS0usuKFh3oHyuUbX3TqsbO%2B70aC0mNHBVTNvCWOHqUkvloQBY6olw3dMpKxXIeQt6PMgcFN0E8qC46QMNA7YCdgKHQLjzVB4IliHXHcXxhFBlqYsRAKwPo%2BukO99Ff6DBpdzpUmjuupYOWPaSO0cos0gJIP7HJp5n%2Fnm%2BNoRc%2FeogjxeOCY%2B0nU4YJzSifSC1%2FNlh8hHA4VQm%2BnEg23fAmjAwzULby36j0sru%2FL%2B3HEoArc%2FWq9TCR5jCqnpZLU3YppFxe43lH82DxAsAGUbp65KijXkx9f4mGeRGZ%2FQAWqWv0oRVLknJov93SBMs2h6KPmI0IKUykY4yMILNv%2BS58yX%2BS2bMzeiM8l4NPHRxlg99Bt8uyRsEx4bm6KuHjCYj0Mw%2B5Riir3D8cjw8QBKkseuzj0eYFbmhEuN%2BCVWZd55ZxW%2B0VtVzs0gaeI4FFOLfuNsLCl71ajsV%2F6jq4YGpLDyFCPfS9Wq6y5AeY86qbgOVmnmGdehhK2ABn5bedul8DFKES%2Fj5Ub3Ju271yvcsv8NLYQyRd0yErtRGlJ%2B%2FKWPfUvwtgEN3ttoQO7drQ9TjeaqbAopbkiGaqBDkRlgUQeOcag1U3aZfTL7fCzF3WepJdd6j8QAcs31YegxqSHpOm%2BJ%2BXAUuYfBrtsfRkhDSt3DGf7y15OGPazf7lyTfZTVdJJc3EY2exuZoMttj2h5hXp7PgrPCr4xJ6pVArUPguFO4Iw8ubJIwmai29%2FUs%2BKBUUBgU%2BJ0wRGVYibZzVoobcDSmRy7NFYUhJA97QjKMLAY%2F5swzPfAxgY6sQHHQpwFA84S4T77OHWfyBg2xyyUfplOWh%2Fx6kDGO%2BCjP3Qf8PI6jRUldvQzxy7JUvxgBPcc%2FxjtHXYY5CCYSrw1sMfRaInktrIzGiMKV6NbhxZQP1U%2FcxoCsV62hvhR%2FdXZQcJ9r69YZNvbFKC9NkO%2BrTGVH%2ByC0wGLkvhDEADbeKeFdQyjNCm%2FGYk4KME0fENRhjPKpZpng04ZFncyRxhuF3yNEJ7bGrch2rw2rX8Hw44%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=1e2803bccd531fab49e75dc215888f4f41e58975bc2f5fdebf69d0bbaab88757",
+      "file_size": 129065,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 177779,
+      "file_name": "nextcloud3.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/177/779/a612705d0c90dea5475534700f8ac59f788b5bf0/nextcloud3.png?response-content-disposition=attachment%3B%20filename%3D%22nextcloud3.png%22%3B%20filename%2A%3DUTF-8%27%27nextcloud3.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYVEPNVVO%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T223341Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIH3Q83xAbniH2JoS%2Fnk9%2FZD8tyLpso4Dec4l6DWZCKO5AiEAyQpzqU7%2FlW2ndwWGqf%2FJ95mFnAteskE7ynBnC51SlXgqsgUIGxADGgwwMTM2MTkyNzQ4NDkiDDHYm5Txil0cDu4aPyqPBUBfikDmbB%2BJ%2FP4rKgn3BcgU2qxeoT9aQgdho8cZ4%2F4qtqLQfQfKdePQ3fr4WKKDFRWW1qfbgXP5DO7VS0usuKFh3oHyuUbX3TqsbO%2B70aC0mNHBVTNvCWOHqUkvloQBY6olw3dMpKxXIeQt6PMgcFN0E8qC46QMNA7YCdgKHQLjzVB4IliHXHcXxhFBlqYsRAKwPo%2BukO99Ff6DBpdzpUmjuupYOWPaSO0cos0gJIP7HJp5n%2Fnm%2BNoRc%2FeogjxeOCY%2B0nU4YJzSifSC1%2FNlh8hHA4VQm%2BnEg23fAmjAwzULby36j0sru%2FL%2B3HEoArc%2FWq9TCR5jCqnpZLU3YppFxe43lH82DxAsAGUbp65KijXkx9f4mGeRGZ%2FQAWqWv0oRVLknJov93SBMs2h6KPmI0IKUykY4yMILNv%2BS58yX%2BS2bMzeiM8l4NPHRxlg99Bt8uyRsEx4bm6KuHjCYj0Mw%2B5Riir3D8cjw8QBKkseuzj0eYFbmhEuN%2BCVWZd55ZxW%2B0VtVzs0gaeI4FFOLfuNsLCl71ajsV%2F6jq4YGpLDyFCPfS9Wq6y5AeY86qbgOVmnmGdehhK2ABn5bedul8DFKES%2Fj5Ub3Ju271yvcsv8NLYQyRd0yErtRGlJ%2B%2FKWPfUvwtgEN3ttoQO7drQ9TjeaqbAopbkiGaqBDkRlgUQeOcag1U3aZfTL7fCzF3WepJdd6j8QAcs31YegxqSHpOm%2BJ%2BXAUuYfBrtsfRkhDSt3DGf7y15OGPazf7lyTfZTVdJJc3EY2exuZoMttj2h5hXp7PgrPCr4xJ6pVArUPguFO4Iw8ubJIwmai29%2FUs%2BKBUUBgU%2BJ0wRGVYibZzVoobcDSmRy7NFYUhJA97QjKMLAY%2F5swzPfAxgY6sQHHQpwFA84S4T77OHWfyBg2xyyUfplOWh%2Fx6kDGO%2BCjP3Qf8PI6jRUldvQzxy7JUvxgBPcc%2FxjtHXYY5CCYSrw1sMfRaInktrIzGiMKV6NbhxZQP1U%2FcxoCsV62hvhR%2FdXZQcJ9r69YZNvbFKC9NkO%2BrTGVH%2ByC0wGLkvhDEADbeKeFdQyjNCm%2FGYk4KME0fENRhjPKpZpng04ZFncyRxhuF3yNEJ7bGrch2rw2rX8Hw44%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=2ed50bf2775099e6a510a7411acbd14a7af023845b7a27c3d2c1b299df40873e",
+      "file_size": 126742,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 2,
+  "voters": [
+    "spetr0x",
+    "destinedtohack"
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
