@@ -1,0 +1,148 @@
+{
+  "id": 1019891,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMDE5ODkx",
+  "url": "https://hackerone.com/reports/1019891",
+  "title": "Named pipe connection inteception",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2020-10-27T12:35:10.345Z",
+  "submitted_at": "2020-10-27T12:35:10.399Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "gabriel_sztejnworcel",
+    "url": "/gabriel_sztejnworcel",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 8724,
+    "url": "https://hackerone.com/mariadb",
+    "handle": "mariadb",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/008/724/6a67872926e894490b4fdc36cd6a3f59e300616b_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/008/724/6a67872926e894490b4fdc36cd6a3f59e300616b_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "MariaDB",
+      "twitter_handle": "mariadb_org",
+      "website": "https://mariadb.org",
+      "about": "MariaDB is a high performance, open source database that helps the world's busiest websites deliver more content, faster."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2020-12-17T23:24:05.745Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2020-11-17T23:23:59.691Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "With MariaDB running on Windows, when local clients connect to the server over named pipes, it's possible for an unprivileged user with an ability to run code on the server machine to intercept the named pipe connection and act as a man-in-the-middle, gaining access to all the data passed between the client and the server, and getting the ability to run arbitrary SQL commands on behalf of the connected user.\n\nOn Windows, MariaDB allows local clients to connect to the server over named pipes. Unfortunately, when creating the named pipe server, the security descriptor is not set correctly, and as a result every user on the system can create pipe server instances. This allows for the following attack scenario:\n1.\tThe attacker creates a pipe server instance and waits for a client to connect to it.\n2.\tOnce a client is connected, the attacker connects to the real pipe server instance as a client.\n3.\tAt this point, the attacker is connected to the legitimate client and server, and can pass the messages back and forth, reading the messages (as they are passed in clear text) and possibly changing the messages.\n\nPlease see the attached report and POC tool for more information.\n\n## Impact\n\n- All the SQL requests/responses from the intercepted connection\n- Ability to run SQL commands",
+  "weakness": {
+    "id": 65,
+    "name": "Business Logic Errors"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1053642,
+      "file_name": "Vulnerability_Report.docx",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/HrpbAkSNiz75Q7FutAPqNXBC?response-content-disposition=attachment%3B%20filename%3D%22Vulnerability_Report.docx%22%3B%20filename%2A%3DUTF-8%27%27Vulnerability_Report.docx&response-content-type=application%2Fvnd.openxmlformats-officedocument.wordprocessingml.document&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ7EFYLNR6%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T075748Z&X-Amz-Expires=693&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIGGunS%2B6SSV3Yqj0crS0DiYF7rN1VkrXnFVjtBARy248AiBrfvtl9XSwVnMFmFz65y1XngQZqJbg0oHquDyfqaonWyq6BQj7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMPudCBXIgfBQG%2BW0RKo4FHDQJmYx4cxWbehdyzFA90l9kmARBjaIDTsBnXXvKq9I0G38Zyl5Ckpxo8ezUNDxDsAsxXDhndmmbk8pcG2Fx5rVkkIVqH344qgZMOgRmDwpCmlOO%2Bb8J00QeK7nLSwYfLwwCTOI84h7E4CiRkXB3QOPPbfB%2Fb%2Bj%2BhON2McT%2FarZTgREOd355xqNKXRkEEpNOB3hOxgl6qUp88qNkdHULmWqE5AmvDcCr0dWa41nGD4nL1VqtZrTwi0AdRVpokkGl0kT3l0Opv8%2F5A2f%2FcNaX6tPNwTtI%2F%2FYmlMPkFg5a%2Fs6aGw%2F%2Bt1KWlVGavfxFO%2BX1oO%2ByMGs1S1X%2BvAEwd3xiulDQ7WXa%2BGlfDEtgDURFEYtnYwJN1z0BYPP8f%2BP8sSGDiwQ7mrFWT9g%2BYTkiuVPKI3eUNGzeHetgqtm9vzA6g5Z2itfIv%2BRx7i7DRX6dDaMND5PKyL82iHPOGNuiXXV3uGCxLRy9MM2vhrk0m27wrfRAbsD828Z17UM69ph5jC%2FDdw%2FvfkYs%2Bsfn8KPtX1gx1QBrs1%2BBiMSBInwY%2BJmS19hgM7eTKL07Lcysh3i086pOTetQk4DF1iL7RFFW0djs07eKJrb1F6JooK2CBGZI7RnJFcy1JOnUwNrkV0Vr5PPN%2FSUjTUtx1nhZJbgkfMYnwsrZb%2BOXjGgSFCuDsT7GDTUQfrIpnWbZOATsXr%2FCe161osQJ74Vuocb88mrP5nBV9oUlrbRXYw2q5AnY8nBxiGfqhhhtxI7tmDEdAKBuaaN1GdIM36GTFlrlK6UQE10ItpcgP1%2FQhkMPQIwybFcktHuXYx55M7x814dI73cRgL0U4KZ9R%2F9KbUvlIT%2BMXRkZnyWD5IWCIkZjMNIObd%2FLMOS0vcYGOrIBxoxQrybRUYTbtY4BAeO4X0pNp%2Bkf9Bns0zKns7Qpv2AuHgqy36uPmP3BsOMTM7jma1hcJIppynNFTt8cHIvvpeWERRuFUyYK6DBtQ56%2B3QvZsQfnPIPD8sqphM6a2EiguwLYjWZt1w33ucVeUDg3Oq%2BQyEiWteA9I2CN0zx0kJHlLmFfXCQy%2BiKIe2PLdWN8GkMox%2BYQugo%2FNTnowmI0ubYYMcNmSTfyg7vGfC6KHM7T4w%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=efe141e7d9d22acb35ab48f26d4afb756bc1f0fb8b302df892d271d56a60d859",
+      "file_size": 348821,
+      "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "moderated": null
+    },
+    {
+      "id": 1053644,
+      "file_name": "tool.zip",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/MSoUb5yiFRnzc2JDjUEXfyKA?response-content-disposition=attachment%3B%20filename%3D%22tool.zip%22%3B%20filename%2A%3DUTF-8%27%27tool.zip&response-content-type=application%2Fzip&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ7EFYLNR6%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T075748Z&X-Amz-Expires=693&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIGGunS%2B6SSV3Yqj0crS0DiYF7rN1VkrXnFVjtBARy248AiBrfvtl9XSwVnMFmFz65y1XngQZqJbg0oHquDyfqaonWyq6BQj7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMPudCBXIgfBQG%2BW0RKo4FHDQJmYx4cxWbehdyzFA90l9kmARBjaIDTsBnXXvKq9I0G38Zyl5Ckpxo8ezUNDxDsAsxXDhndmmbk8pcG2Fx5rVkkIVqH344qgZMOgRmDwpCmlOO%2Bb8J00QeK7nLSwYfLwwCTOI84h7E4CiRkXB3QOPPbfB%2Fb%2Bj%2BhON2McT%2FarZTgREOd355xqNKXRkEEpNOB3hOxgl6qUp88qNkdHULmWqE5AmvDcCr0dWa41nGD4nL1VqtZrTwi0AdRVpokkGl0kT3l0Opv8%2F5A2f%2FcNaX6tPNwTtI%2F%2FYmlMPkFg5a%2Fs6aGw%2F%2Bt1KWlVGavfxFO%2BX1oO%2ByMGs1S1X%2BvAEwd3xiulDQ7WXa%2BGlfDEtgDURFEYtnYwJN1z0BYPP8f%2BP8sSGDiwQ7mrFWT9g%2BYTkiuVPKI3eUNGzeHetgqtm9vzA6g5Z2itfIv%2BRx7i7DRX6dDaMND5PKyL82iHPOGNuiXXV3uGCxLRy9MM2vhrk0m27wrfRAbsD828Z17UM69ph5jC%2FDdw%2FvfkYs%2Bsfn8KPtX1gx1QBrs1%2BBiMSBInwY%2BJmS19hgM7eTKL07Lcysh3i086pOTetQk4DF1iL7RFFW0djs07eKJrb1F6JooK2CBGZI7RnJFcy1JOnUwNrkV0Vr5PPN%2FSUjTUtx1nhZJbgkfMYnwsrZb%2BOXjGgSFCuDsT7GDTUQfrIpnWbZOATsXr%2FCe161osQJ74Vuocb88mrP5nBV9oUlrbRXYw2q5AnY8nBxiGfqhhhtxI7tmDEdAKBuaaN1GdIM36GTFlrlK6UQE10ItpcgP1%2FQhkMPQIwybFcktHuXYx55M7x814dI73cRgL0U4KZ9R%2F9KbUvlIT%2BMXRkZnyWD5IWCIkZjMNIObd%2FLMOS0vcYGOrIBxoxQrybRUYTbtY4BAeO4X0pNp%2Bkf9Bns0zKns7Qpv2AuHgqy36uPmP3BsOMTM7jma1hcJIppynNFTt8cHIvvpeWERRuFUyYK6DBtQ56%2B3QvZsQfnPIPD8sqphM6a2EiguwLYjWZt1w33ucVeUDg3Oq%2BQyEiWteA9I2CN0zx0kJHlLmFfXCQy%2BiKIe2PLdWN8GkMox%2BYQugo%2FNTnowmI0ubYYMcNmSTfyg7vGfC6KHM7T4w%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=1b9bd345a52711c77ab05dc7e61308c2105a0fd9cb9578e6fee2a14efae9a402",
+      "file_size": 8910,
+      "type": "application/zip",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2020-12-17T23:23:59.761Z",
+  "allow_singular_disclosure_after": -150194028.7404665,
+  "singular_disclosure_allowed": true,
+  "vote_count": 9,
+  "voters": [
+    "ali",
+    "thalaivar304",
+    "mohaned0101",
+    "majorisc",
+    "demonia",
+    "ozdivmondz",
+    "frank-hacker2000",
+    "futilitymethod",
+    "mhmoud22"
+  ],
+  "severity": {
+    "rating": "high",
+    "score": 7.8,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "local",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "required",
+      "scope": "unchanged",
+      "confidentiality": "high",
+      "integrity": "high",
+      "availability": "high"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 10335,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "MariaDB Server & Connectors - Access control bypass",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
