@@ -1,0 +1,116 @@
+{
+  "id": 215967,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yMTU5Njc=",
+  "url": "https://hackerone.com/reports/215967",
+  "title": "SIGABRT in mrb_debug_info_append_file",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2017-03-25T08:15:59.018Z",
+  "submitted_at": "2017-03-25T08:15:59.018Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "ston3",
+    "url": "/ston3",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 15668,
+    "url": "https://hackerone.com/shopify-scripts",
+    "handle": "shopify-scripts",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/015/668/ebbe467de8ef2fc936053593e1289e30f04c3b06_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/015/668/ebbe467de8ef2fc936053593e1289e30f04c3b06_original.jpg/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "shopify-scripts",
+      "twitter_handle": "",
+      "website": "",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2017-05-13T21:29:43.335Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2017-04-13T21:29:35.784Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "PoC\n-------------------\n\nThe following code triggers the bug (attached as test_mrb_debug_info_append_file.rb):\n\n\ti\"\"do\"\".+end\n\nmirb\n-------------------\n\n\tx@x:~/Desktop/test/mruby/bin$ ./mirb test_mrb_debug_info_append_file.rb \n\tmirb - Embeddable Interactive Ruby Shell\n\n\tmirb: /home/x/Desktop/test/mruby/src/debug.c:136: mrb_debug_info_append_file: Assertion `irep->lines' failed.\n\tAborted\n\nBacktrace - mirb\n-------------------\n\n\tx@x:~/Desktop/test/mruby/bin$ gdb -q ./mirb\n\tReading symbols from ./mirb...done.\n\t(gdb) r test_mrb_debug_info_append_file.rb \n\tStarting program: /home/x/Desktop/test/mruby/bin/mirb test_mrb_debug_info_append_file.rb\n\tmirb - Embeddable Interactive Ruby Shell\n\n\tmirb: /home/x/Desktop/test/mruby/src/debug.c:136: mrb_debug_info_append_file: Assertion `irep->lines' failed.\n\n\tProgram received signal SIGABRT, Aborted.\n\t0x00007ffff7744f79 in __GI_raise (sig=sig@entry=6) at ../nptl/sysdeps/unix/sysv/linux/raise.c:56\n\t56\t../nptl/sysdeps/unix/sysv/linux/raise.c: No such file or directory.\n\t(gdb) bt\n\t#0  0x00007ffff7744f79 in __GI_raise (sig=sig@entry=6) at ../nptl/sysdeps/unix/sysv/linux/raise.c:56\n\t#1  0x00007ffff7748388 in __GI_abort () at abort.c:89\n\t#2  0x00007ffff773de36 in __assert_fail_base (fmt=0x7ffff788f718 \"%s%s%s:%u: %s%sAssertion `%s' failed.\\n%n\", assertion=assertion@entry=0x48dbda \"irep->lines\", file=file@entry=0x48d9c0 \"/home/x/Desktop/test/mruby/src/debug.c\", \n\t\tline=line@entry=136, function=function@entry=0x48dc50 <__PRETTY_FUNCTION__.3492> \"mrb_debug_info_append_file\") at assert.c:92\n\t#3  0x00007ffff773dee2 in __GI___assert_fail (assertion=0x48dbda \"irep->lines\", file=0x48d9c0 \"/home/x/Desktop/test/mruby/src/debug.c\", line=136, function=0x48dc50 <__PRETTY_FUNCTION__.3492> \"mrb_debug_info_append_file\") at assert.c:101\n\t#4  0x0000000000456bc0 in mrb_debug_info_append_file (mrb=0x6b0010, irep=0x71fd50, start_pos=0, end_pos=0) at /home/x/Desktop/test/mruby/src/debug.c:136\n\t#5  0x0000000000440f51 in scope_finish (s=0x71bec0) at /home/x/Desktop/test/mruby/mrbgems/mruby-compiler/core/codegen.c:2877\n\t#6  0x0000000000438242 in lambda_body (s=0x71bec0, tree=0x70e40c, blk=1) at /home/x/Desktop/test/mruby/mrbgems/mruby-compiler/core/codegen.c:725\n\t#7  0x000000000043a756 in codegen (s=0x715c80, tree=0x70e424, val=1) at /home/x/Desktop/test/mruby/mrbgems/mruby-compiler/core/codegen.c:1397\n\t#8  0x0000000000438ac1 in gen_call (s=0x715c80, tree=0x70e288, name=0, sp=0, val=1, safe=0) at /home/x/Desktop/test/mruby/mrbgems/mruby-compiler/core/codegen.c:895\n\t#9  0x000000000043b37f in codegen (s=0x715c80, tree=0x70e2e8, val=1) at /home/x/Desktop/test/mruby/mrbgems/mruby-compiler/core/codegen.c:1585\n\t#10 0x0000000000439e84 in codegen (s=0x715c80, tree=0x70e224, val=1) at /home/x/Desktop/test/mruby/mrbgems/mruby-compiler/core/codegen.c:1271\n\t#11 0x00000000004382be in scope_body (s=0x711db0, tree=0x70e46c, val=0) at /home/x/Desktop/test/mruby/mrbgems/mruby-compiler/core/codegen.c:737\n\t#12 0x000000000043b34b in codegen (s=0x711db0, tree=0x70e46c, val=0) at /home/x/Desktop/test/mruby/mrbgems/mruby-compiler/core/codegen.c:1580\n\t#13 0x00000000004413ef in mrb_generate_code (mrb=0x6b0010, p=0x70dec0) at /home/x/Desktop/test/mruby/mrbgems/mruby-compiler/core/codegen.c:2984\n\t#14 0x0000000000402af5 in main (argc=2, argv=0x7fffffffdf28) at /home/x/Desktop/test/mruby/mrbgems/mruby-bin-mirb/tools/mirb/mirb.c:537\n\nmruby\n-------------------\n\n\tx@x:~/Desktop/test/mruby/bin$ ./mruby test_mrb_debug_info_append_file.rb \n\tmruby: /home/x/Desktop/test/mruby/src/debug.c:136: mrb_debug_info_append_file: Assertion `irep->lines' failed.\n\tAborted\n\nBacktrace - mruby\n-------------------\n\n\tx@x:~/Desktop/test/mruby/bin$ gdb -q ./mruby\n\tReading symbols from ./mruby...done.\n\t(gdb) r test_mrb_debug_info_append_file.rb \n\tStarting program: /home/x/Desktop/test/mruby/bin/mruby test_mrb_debug_info_append_file.rb\n\tmruby: /home/x/Desktop/test/mruby/src/debug.c:136: mrb_debug_info_append_file: Assertion `irep->lines' failed.\n\n\tProgram received signal SIGABRT, Aborted.\n\t0x00007ffff7744f79 in __GI_raise (sig=sig@entry=6) at ../nptl/sysdeps/unix/sysv/linux/raise.c:56\n\t56\t../nptl/sysdeps/unix/sysv/linux/raise.c: No such file or directory.\n\t(gdb) bt\n\t#0  0x00007ffff7744f79 in __GI_raise (sig=sig@entry=6) at ../nptl/sysdeps/unix/sysv/linux/raise.c:56\n\t#1  0x00007ffff7748388 in __GI_abort () at abort.c:89\n\t#2  0x00007ffff773de36 in __assert_fail_base (fmt=0x7ffff788f718 \"%s%s%s:%u: %s%sAssertion `%s' failed.\\n%n\", assertion=assertion@entry=0x48bcea \"irep->lines\", file=file@entry=0x48bad0 \"/home/x/Desktop/test/mruby/src/debug.c\", \n\t\tline=line@entry=136, function=function@entry=0x48bd60 <__PRETTY_FUNCTION__.3492> \"mrb_debug_info_append_file\") at assert.c:92\n\t#3  0x00007ffff773dee2 in __GI___assert_fail (assertion=0x48bcea \"irep->lines\", file=0x48bad0 \"/home/x/Desktop/test/mruby/src/debug.c\", line=136, function=0x48bd60 <__PRETTY_FUNCTION__.3492> \"mrb_debug_info_append_file\") at assert.c:101\n\t#4  0x0000000000448b7f in mrb_debug_info_append_file (mrb=0x6af010, irep=0x71ee80, start_pos=0, end_pos=0) at /home/x/Desktop/test/mruby/src/debug.c:136\n\t#5  0x000000000045ada9 in scope_finish (s=0x71aff0) at /home/x/Desktop/test/mruby/mrbgems/mruby-compiler/core/codegen.c:2877\n\t#6  0x000000000045209a in lambda_body (s=0x71aff0, tree=0x70d52c, blk=1) at /home/x/Desktop/test/mruby/mrbgems/mruby-compiler/core/codegen.c:725\n\t#7  0x00000000004545ae in codegen (s=0x714db0, tree=0x70d544, val=1) at /home/x/Desktop/test/mruby/mrbgems/mruby-compiler/core/codegen.c:1397\n\t#8  0x0000000000452919 in gen_call (s=0x714db0, tree=0x70d3a8, name=0, sp=0, val=1, safe=0) at /home/x/Desktop/test/mruby/mrbgems/mruby-compiler/core/codegen.c:895\n\t#9  0x00000000004551d7 in codegen (s=0x714db0, tree=0x70d408, val=1) at /home/x/Desktop/test/mruby/mrbgems/mruby-compiler/core/codegen.c:1585\n\t#10 0x0000000000453cdc in codegen (s=0x714db0, tree=0x70d344, val=1) at /home/x/Desktop/test/mruby/mrbgems/mruby-compiler/core/codegen.c:1271\n\t#11 0x0000000000452116 in scope_body (s=0x710ee0, tree=0x70d58c, val=0) at /home/x/Desktop/test/mruby/mrbgems/mruby-compiler/core/codegen.c:737\n\t#12 0x00000000004551a3 in codegen (s=0x710ee0, tree=0x70d58c, val=0) at /home/x/Desktop/test/mruby/mrbgems/mruby-compiler/core/codegen.c:1580\n\t#13 0x000000000045b247 in mrb_generate_code (mrb=0x6af010, p=0x70cfe0) at /home/x/Desktop/test/mruby/mrbgems/mruby-compiler/core/codegen.c:2984\n\t#14 0x0000000000438ce0 in mrb_load_exec (mrb=0x6af010, p=0x70cfe0, c=0x70bbf0) at /home/x/Desktop/test/mruby/mrbgems/mruby-compiler/core/parse.y:5737\n\t#15 0x0000000000438f23 in mrb_load_file_cxt (mrb=0x6af010, f=0x70cbe0, c=0x70bbf0) at /home/x/Desktop/test/mruby/mrbgems/mruby-compiler/core/parse.y:5769\n\t#16 0x0000000000402415 in main (argc=2, argv=0x7fffffffdf28) at /home/x/Desktop/test/mruby/mrbgems/mruby-bin-mruby/tools/mruby/mruby.c:227\n\n\t\nSandbox\n-------------------\n\n\tx@x:~/Desktop/test/mruby/bin$ ../../mruby-engine/bin/sandbox test_mrb_debug_info_append_file.rb \n\truby: /home/x/Desktop/test/mruby-engine/ext/mruby_engine/mruby/src/debug.c:136: mrb_debug_info_append_file: Assertion `irep->lines' failed.\n\tAborted\n\nSystem information\n-------------------\n\n\tSHA hash - 051e40c0493f2de332f5439e3230c9fe6958bf1a\n\tLinux 14.04 x86_64\n\tgcc version 4.8.4\n\t",
+  "weakness": {
+    "id": 2,
+    "name": "Memory Corruption - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 171131,
+      "file_name": "test_mrb_debug_info_append_file.rb",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/171/131/612a6ced315244609c8ccf470ea9bfa6a93a1405/test_mrb_debug_info_append_file.rb?response-content-disposition=attachment%3B%20filename%3D%22test_mrb_debug_info_append_file.rb%22%3B%20filename%2A%3DUTF-8%27%27test_mrb_debug_info_append_file.rb&response-content-type=text%2Fplain&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQU6ESQMEE%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T223452Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQC4TIuyG4oEIFOm3SUTvK%2B3ZK1Qzkw5vPZpFQ2eEhdxPAIhALpmL%2BplVbuOVRoV2k3HfZPlAbkKrVV0RRY4%2F6pmgzUQKrIFCB4QAxoMMDEzNjE5Mjc0ODQ5IgwxRjHx2cOSB574QQsqjwVvzwimbZTEd4O%2FrcNl%2FSD3H5XXqpviY3JfCvonbNQyPo2HR%2BdrW0ZhOetnVHY2aphxRgvSbcGZyKOecYooapl6l4VKS1YUCTDGqc%2BXR06xzFKHNSLYcIrUU3UkNUqmgWZ8X0LLwKu4Sx6txTTGBcy49iQH%2BgKb24uvFbz6%2BoCtGD0mFCgxDcCfPXfkoqstgJeT55VArgWDPtAM68z2nCv8C%2F7KzjDBfnCtjqGJLczfxoNATy0DL2f0DqBKMMcQ8R15tvakucd8JUgp0vVyN7lRLIm3bJ37%2Fe3K7wPZJ%2BXW1thxdqAWuQkZC6wQIvS%2FZS1YcFZ0eL6PkrLRMsWZcSuo3Cdv8G2Sj1YuegU%2BN95CUSvsxEQo1zqeKUxzlN7%2BR0RRGk7qfqOef7LZAbWpU7foPaVK%2FxEfXsTgXVmUFdYOi3cqYyBTBU4liADHzCWhC0pOdBDyXKlGjFd6zmXQ7gNgEOMgYWvLBO0hUJM0zx8sr23pudAmAIKl6Nr4Z1DCyw1Zm6oVGxxaK8HWTmCWsAPBe4PfgG2HvNYNWUKlTAD753QYN8HIXi26qcoGmJlI2zd7KFNCkOGQ4M%2BnhRfmPBVrxtu0RbT8Nh6Pzd4UxOA7ttexvmJp4F8%2BhlzwQqmorBiDS5gK7AHbKqPH0TsaJ16wRtNZOtyAmZEFxEwMi90kq98FGXX91EbNObq%2BAOvg9lRASl%2FZs1jRprMvQTsQFxvJYlnYQvlL87w3%2B9oeQUKAHV0kJ4pR1K9MPtYICWWya%2B%2Blxy0FOjSGUTm4BHpJoFdi1RcegvL1VKrx%2BlWqcXYf1frs2dKG7GkSvLM6f5VXQxcdQOpXoZkTQPUD7xSXiI1m8Eh%2BbeTVwtDqX1sQ0tcGMNbVwcYGOrABvFQh0ck7xMikFaf354iMwrKTPzmn%2BHwyLdye6RarruEilECwhqeNyksYGG06%2FMbb2Y3a65jazA5Ql6rp4NmWmIavGwfThDQww4gAxxA2g7r9N%2F7RQ3dikjYjTkCu%2FAhFXYOZI1liBoND2M9v8y%2BTW3II8tW0sy5GWnnRCpyAyvkgqb9hm%2BvS86cj8Yi%2Fy3VBv7c8Svh5TFXW7i9smhy5%2B5oI5bxHrroK0wGMRGAXscQ%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=fe8628939b790f5fb16cebcb8872af211ba08710acb80dbee1fdec3a8a4e0d89",
+      "file_size": 12,
+      "type": "text/plain",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-05-13T21:29:35.834Z",
+  "allow_singular_disclosure_after": -263783116.71923098,
+  "singular_disclosure_allowed": true,
+  "vote_count": 6,
+  "voters": [
+    "apapedulimu",
+    "eveeez",
+    "linkks",
+    "spetr0x",
+    "pkhadka",
+    "miles527"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
