@@ -1,0 +1,153 @@
+{
+  "id": 220903,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yMjA5MDM=",
+  "url": "https://hackerone.com/reports/220903",
+  "title": "Authenticated Cross-site Scripting in Template Name",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2017-04-14T02:10:04.808Z",
+  "submitted_at": "2017-04-14T02:10:04.808Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "zurke",
+    "url": "/zurke",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/002/196/e8a53aaddc9bf0c1a36bb97691c35c553a18a62f_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 55,
+    "url": "https://hackerone.com/wordpress",
+    "handle": "wordpress",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/055/f114d1d31f904e3b903cd99a6cf566bb531f8401_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/055/f114d1d31f904e3b903cd99a6cf566bb531f8401_original.jpg/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "WordPress",
+      "twitter_handle": "wordpress",
+      "website": "https://wordpress.org/",
+      "about": "Beautiful sites of any kind."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2017-11-18T15:26:23.050Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-10-19T15:26:20.826Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "###Explanation\nDuring my research on latest WordPress I found that `$file_description`  and `$description` from `wp-admin/theme-editor.php`  are not filtering name of the template allowing attacker to do XSS attack.\n\n```\n...\n\t\t$file_description = get_file_description( $filename );\n\n\t\tif ( $filename !== basename( $absolute_filename ) || $file_description !== $filename ) {\n\t\t\t$file_description .= '<br /><span class=\"nonessential\">(' . $filename . ')</span>';\n\n\t\t}\n\n\t\tif ( $absolute_filename === $file ) {\n\t\t\t$file_description = '<span class=\"highlight\">' . $file_description . '</span>';\n\n\t\t}\n\n\t\t$previous_file_type = $file_type;\n?>\n\t\t<li><a href=\"theme-editor.php?file=<?php echo urlencode( $filename ) ?>&amp;theme=<?php echo urlencode( $stylesheet ) ?>\"><?php echo $file_description; ?></a></li>\n<?php\n\tendforeach;\n?>\n```\nFrom this code we can see that `$file_description = get_file_description( $filename );` is getting declared and later on under <li><a> tags template name is printed on the page `...<?php echo $file_description; ?></a></li>`\n\n`$file_description` variable should be filtered before displayed to the user. For example using `htmlspecialchars()` function (example:  F175759 )\n\nHowever, if victim click on the file that contain XSS payload, XSS will be executed because `$description = get_file_description( $relative_file );` is displaying name of the active file you are editing.\n\n###Steps to replicate\n1. Go to Appearance > Editor\n2. Select file you want to edit (don't select files that already have name - Archives, Theme Footer for example). I used \"back-compat.php\" F175758\n3. At the very top of the file add following comment:\n```/* Template Name: <script>confirm(document.cookie);</script> */``` Like this: F175758\n4. Click on Update File.\n5. XSS Popup will be prompted. F175757\n\n###Technology used: \nGoogle Chrome 57.0.2987.133 (64-bit) - Latest",
+  "weakness": {
+    "id": 62,
+    "name": "Cross-site Scripting (XSS) - Stored"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 175757,
+      "file_name": "Wordpress_1.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/175/757/76774aabff1b7d779c0c93fa67532048e38abdba/Wordpress_1.png?response-content-disposition=attachment%3B%20filename%3D%22Wordpress_1.png%22%3B%20filename%2A%3DUTF-8%27%27Wordpress_1.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ2ZVXRWMB%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T193137Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDPJGfzMJPn%2FnHJrTg5TD8VJt7cc%2B7xt9arg9h87wjVTQIhAM%2B08WEUMC%2BUcx%2B2hdKE1ivgl69a2PFRDj0l1KQ35JOLKrIFCBoQAxoMMDEzNjE5Mjc0ODQ5Igxc6REi1pVr2zXPDYAqjwWCRNoXIU3Z8A9klwjX%2B4PXU5JMH4n3c4Xxyac%2FzcM4qEjGokM%2BodDuiCfV810H3RPNumOTmghuwpUtOqPiGZA0R6o4FfqXdVBJePjhoWFMZ5oyYhx8QoKT8PuzXNSA%2BpYbeLaQsOUGTAm7J75i0xTnBaL0Et8rpP3G3oZYzAU9OWGzkWuWo678fx%2F5oDeet6aguCO8%2FjDWAWiMPlN6oxA0Y4i8bURv5uhAbItXZl%2F0yhE2exJIDYuhibnmpFXE4%2Bh4OMBilIIaDJsskKaEvoRiBsP8PY5r9dUOPsiC2t1PrepaAylZRfjhQbU57g7kP%2BXv2Azc%2BaOC75t5dhupRUh3IutnzlkORL%2F9flfqfUwX%2Fn59Do8kRUtwAkCh3yRX10QjKZJ2ne4Iur3gmDYd7730ppAiYM1bJzBy64ccOil8x%2Bvg5kbFGNGzp9YfSc5ghFx%2BbloLgola%2Fni8oWJUsddymBwlOH1Nc1b8NaCF8sS543cl06BvyxFgTXcV%2BT1nYqmbNng7EacdyxDRA59wMe5EnLiHC9jf%2Fyed12tpPd7TuQum%2BZd5NMJ9l81o7GuQiV3Iwf7RfCipikpLdbEPrJ5KBz7N7ollSoHwBUmWFblws1uxvZ5ABLQCuLJXsIqDmwNZ8YeMo1Zl9PnApt6IBcXabJBIFW4QXgunB7XW%2FF8GEeBgWNPfJtR3gqYmZ4zNpydWJwwCQaxcSHzmhhIOe6NvN7K2ZLMO0i6h3M969d2ihazkodAbxBC8Qqi%2FO56M8pBcQ7RKERw1uOQVuOsUo00sLCOm9GI2vjoArqPsi2uqO8TymUrFN39ZbthQYfkk2QX3l30Kdtn%2F7or8XF7u2KLGun8MrTx9qKmP5rLywvEAMKbWwMYGOrAB5%2FUWgKr5RM0ekkakDndGCJIxQ1WUbxY2OhlZhi04RNqJLNUFscc5LCSsEv3VcDs9juIIgGNGSuS3aBOH06ehWLv8fV8Dci%2B0LfF%2Blop%2BQYN5P5q53wN%2FrQR837AV2pfRO9dOJarpcAoes%2B7W3iJxwKZRVrBcxvyyMt89kGzZLpab25bXG8Pp4OEOA%2FJOj1iBHT%2FNZPGiAkEIqPPujxC7I78QwyK2z%2BpF8s4ZRzTnxLc%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=7a08f5d4d3ba7618ae95f675ba484230b25b3267d78fdfadd4b06536fc8b7832",
+      "file_size": 92466,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 175758,
+      "file_name": "Wordpress_2.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/175/758/1a089e1196f783390fdfef948789635acc3012f2/Wordpress_2.png?response-content-disposition=attachment%3B%20filename%3D%22Wordpress_2.png%22%3B%20filename%2A%3DUTF-8%27%27Wordpress_2.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ2ZVXRWMB%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T193137Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDPJGfzMJPn%2FnHJrTg5TD8VJt7cc%2B7xt9arg9h87wjVTQIhAM%2B08WEUMC%2BUcx%2B2hdKE1ivgl69a2PFRDj0l1KQ35JOLKrIFCBoQAxoMMDEzNjE5Mjc0ODQ5Igxc6REi1pVr2zXPDYAqjwWCRNoXIU3Z8A9klwjX%2B4PXU5JMH4n3c4Xxyac%2FzcM4qEjGokM%2BodDuiCfV810H3RPNumOTmghuwpUtOqPiGZA0R6o4FfqXdVBJePjhoWFMZ5oyYhx8QoKT8PuzXNSA%2BpYbeLaQsOUGTAm7J75i0xTnBaL0Et8rpP3G3oZYzAU9OWGzkWuWo678fx%2F5oDeet6aguCO8%2FjDWAWiMPlN6oxA0Y4i8bURv5uhAbItXZl%2F0yhE2exJIDYuhibnmpFXE4%2Bh4OMBilIIaDJsskKaEvoRiBsP8PY5r9dUOPsiC2t1PrepaAylZRfjhQbU57g7kP%2BXv2Azc%2BaOC75t5dhupRUh3IutnzlkORL%2F9flfqfUwX%2Fn59Do8kRUtwAkCh3yRX10QjKZJ2ne4Iur3gmDYd7730ppAiYM1bJzBy64ccOil8x%2Bvg5kbFGNGzp9YfSc5ghFx%2BbloLgola%2Fni8oWJUsddymBwlOH1Nc1b8NaCF8sS543cl06BvyxFgTXcV%2BT1nYqmbNng7EacdyxDRA59wMe5EnLiHC9jf%2Fyed12tpPd7TuQum%2BZd5NMJ9l81o7GuQiV3Iwf7RfCipikpLdbEPrJ5KBz7N7ollSoHwBUmWFblws1uxvZ5ABLQCuLJXsIqDmwNZ8YeMo1Zl9PnApt6IBcXabJBIFW4QXgunB7XW%2FF8GEeBgWNPfJtR3gqYmZ4zNpydWJwwCQaxcSHzmhhIOe6NvN7K2ZLMO0i6h3M969d2ihazkodAbxBC8Qqi%2FO56M8pBcQ7RKERw1uOQVuOsUo00sLCOm9GI2vjoArqPsi2uqO8TymUrFN39ZbthQYfkk2QX3l30Kdtn%2F7or8XF7u2KLGun8MrTx9qKmP5rLywvEAMKbWwMYGOrAB5%2FUWgKr5RM0ekkakDndGCJIxQ1WUbxY2OhlZhi04RNqJLNUFscc5LCSsEv3VcDs9juIIgGNGSuS3aBOH06ehWLv8fV8Dci%2B0LfF%2Blop%2BQYN5P5q53wN%2FrQR837AV2pfRO9dOJarpcAoes%2B7W3iJxwKZRVrBcxvyyMt89kGzZLpab25bXG8Pp4OEOA%2FJOj1iBHT%2FNZPGiAkEIqPPujxC7I78QwyK2z%2BpF8s4ZRzTnxLc%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=c56b221deda3f330bd5e57199d234d4cc66f21a9144717b67e146712b758aa88",
+      "file_size": 172290,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 175759,
+      "file_name": "Wordpress_3.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/175/759/cf3d9e476255edcfc539e411d223ccff37ecf147/Wordpress_3.png?response-content-disposition=attachment%3B%20filename%3D%22Wordpress_3.png%22%3B%20filename%2A%3DUTF-8%27%27Wordpress_3.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ2ZVXRWMB%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T193137Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDPJGfzMJPn%2FnHJrTg5TD8VJt7cc%2B7xt9arg9h87wjVTQIhAM%2B08WEUMC%2BUcx%2B2hdKE1ivgl69a2PFRDj0l1KQ35JOLKrIFCBoQAxoMMDEzNjE5Mjc0ODQ5Igxc6REi1pVr2zXPDYAqjwWCRNoXIU3Z8A9klwjX%2B4PXU5JMH4n3c4Xxyac%2FzcM4qEjGokM%2BodDuiCfV810H3RPNumOTmghuwpUtOqPiGZA0R6o4FfqXdVBJePjhoWFMZ5oyYhx8QoKT8PuzXNSA%2BpYbeLaQsOUGTAm7J75i0xTnBaL0Et8rpP3G3oZYzAU9OWGzkWuWo678fx%2F5oDeet6aguCO8%2FjDWAWiMPlN6oxA0Y4i8bURv5uhAbItXZl%2F0yhE2exJIDYuhibnmpFXE4%2Bh4OMBilIIaDJsskKaEvoRiBsP8PY5r9dUOPsiC2t1PrepaAylZRfjhQbU57g7kP%2BXv2Azc%2BaOC75t5dhupRUh3IutnzlkORL%2F9flfqfUwX%2Fn59Do8kRUtwAkCh3yRX10QjKZJ2ne4Iur3gmDYd7730ppAiYM1bJzBy64ccOil8x%2Bvg5kbFGNGzp9YfSc5ghFx%2BbloLgola%2Fni8oWJUsddymBwlOH1Nc1b8NaCF8sS543cl06BvyxFgTXcV%2BT1nYqmbNng7EacdyxDRA59wMe5EnLiHC9jf%2Fyed12tpPd7TuQum%2BZd5NMJ9l81o7GuQiV3Iwf7RfCipikpLdbEPrJ5KBz7N7ollSoHwBUmWFblws1uxvZ5ABLQCuLJXsIqDmwNZ8YeMo1Zl9PnApt6IBcXabJBIFW4QXgunB7XW%2FF8GEeBgWNPfJtR3gqYmZ4zNpydWJwwCQaxcSHzmhhIOe6NvN7K2ZLMO0i6h3M969d2ihazkodAbxBC8Qqi%2FO56M8pBcQ7RKERw1uOQVuOsUo00sLCOm9GI2vjoArqPsi2uqO8TymUrFN39ZbthQYfkk2QX3l30Kdtn%2F7or8XF7u2KLGun8MrTx9qKmP5rLywvEAMKbWwMYGOrAB5%2FUWgKr5RM0ekkakDndGCJIxQ1WUbxY2OhlZhi04RNqJLNUFscc5LCSsEv3VcDs9juIIgGNGSuS3aBOH06ehWLv8fV8Dci%2B0LfF%2Blop%2BQYN5P5q53wN%2FrQR837AV2pfRO9dOJarpcAoes%2B7W3iJxwKZRVrBcxvyyMt89kGzZLpab25bXG8Pp4OEOA%2FJOj1iBHT%2FNZPGiAkEIqPPujxC7I78QwyK2z%2BpF8s4ZRzTnxLc%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=ecfdce2589d225414a4d6b91b03783b68576b20d9d5ea2af765bb50fefadde16",
+      "file_size": 13584,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-11-18T15:26:20.890Z",
+  "allow_singular_disclosure_after": -247464316.94220966,
+  "singular_disclosure_allowed": true,
+  "vote_count": 15,
+  "voters": [
+    "jokebookservice1",
+    "jensec",
+    "ali",
+    "r3y",
+    "eveeez",
+    "cr4xerbik4sh",
+    "sup3r-b0y",
+    "japz",
+    "tanzanian__hacker",
+    "babusec",
+    "and 5 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 6.1,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "local",
+      "attack_complexity": "low",
+      "privileges_required": "high",
+      "user_interaction": "required",
+      "scope": "unchanged",
+      "confidentiality": "low",
+      "integrity": "high",
+      "availability": "high"
+    }
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
