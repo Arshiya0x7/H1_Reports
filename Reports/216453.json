@@ -1,0 +1,137 @@
+{
+  "id": 216453,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yMTY0NTM=",
+  "url": "https://hackerone.com/reports/216453",
+  "title": "Unfiltered `class` attribute in markdown code",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2017-03-27T16:26:59.771Z",
+  "submitted_at": "2017-03-27T16:26:59.771Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "chalker",
+    "url": "/chalker",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/068/907/abd483931dad2c93e376707dd59719cc277309cd_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 264,
+    "url": "https://hackerone.com/gitlab",
+    "handle": "gitlab",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/f0hovtq73f9ap815a0r1w42bocp4/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/f0hovtq73f9ap815a0r1w42bocp4/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "GitLab",
+      "twitter_handle": "gitlab",
+      "website": "https://about.gitlab.com",
+      "about": "A single application for the entire software development lifecycle."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2017-04-13T14:46:15.472Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2017-04-06T04:08:03.765Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "This affects merge request/issue comments and probably other parts of the user interface.\n\nI am demonstrating PoCs on GitLab.com itself, as they don't affect anything outside of my test repo, which is private. It could be used to execute some js actions by contructing content that uses the pre-existing attached event handlers (for example, `onclick`), but I am not sure how far could that go — I have not reviewed that, the mentioned issues are already pretty bad.\n\nThis could be used to make some issue/merge request pages inaccessible, to forge page content and potentially forge or hide other users comments in the thread.\n\n## PoC 1 — full-size message\nDemo: https://gitlab.com/ChALkeR/my-private-test-project/issues/2\n```html\n<pre class=\"zen-backdrop fullscreen sherlock-line-samples-table center\">\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<img src=\"https://about.gitlab.com/images/press/logo/wm_no_bg.svg\" width=\"500\">\n<h2>Hello there! Something has gone wrong, we are working on it.</h2>\n<h3>In the meantime, play a game with us at <a href=\"http://example.com/\">example.com</a>.</h3>\n</pre>\n```\n\n## PoC 2 — basic JavaScript\n\nDemo: https://gitlab.com/ChALkeR/my-private-test-project/issues/3\n```html\n<pre class=\"js-details-expand\">click me</pre>\n<pre class=\"js-details-content hide\">foo</pre>\n```\n\nThere is a significant amout of onlick event listeners that are bound using just the classname, so it is possible to do some basic stuff with just classes and might be possible to execute more complex actions.\n\nI have not reviewed all instances in the JS where the classnames are used, that is irrelevant to fixing this issue.\n\n## Suggested fix\nBoth of the following should be applied:\n * Filter `class` attributes (higher priority).\n * Make sure that user content couldn't be displayed outside of the bounding box, e.g. by applying `oveflow:hidden` (lower priority).",
+  "weakness": {
+    "id": 63,
+    "name": "Cross-site Scripting (XSS) - DOM"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 171563,
+      "file_name": "Spectacle.F20349.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/171/563/15d32a32e6251277b34b284ddf547b2bbb76cace/Spectacle.F20349.png?response-content-disposition=attachment%3B%20filename%3D%22Spectacle.F20349.png%22%3B%20filename%2A%3DUTF-8%27%27Spectacle.F20349.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4GJ2ROIL%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T225939Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQD0W7F4vO0UCBthyZruglTnaMLL2D%2BlpzRcOIFAoqqA9AIhAJYrz2xd4yyJKAes3b6N6LKT2TKvHQa%2FJkzT720joYdTKrEFCB0QAxoMMDEzNjE5Mjc0ODQ5IgzfN%2BSfV0Oofpv1rxcqjgVALN05pr9kfUmq5NzR%2BXPH2E7waVVIQfZxs5L5sL1QegxQ3576AGtfSRVku%2F7y5cmDmxwuU9Hc4ydYL0c49Fo%2BUxK10JbYqRR5NTrq4Zgq%2FgA8qM71dUd2wvcA82uIdUXEepKBBBhC5d0g0LCLyr1JYGo7%2BW8Be1JsbForWL5QEClhr36lEJXjZQekKnzsXUEeFN9171GjITzbl7aiMx2dtrtuEaosH%2Fi%2B0AMvyqw7UmXcifqz8DajJS2HItH0Zlcb7MY1CqA27%2ByvfVX4PV9XzB1P3TEYexJO1SFTbY9j3dTq9G6yW%2B0iMSHmuZvBHStBHXqSKx5tqrVz8uY8a9jMo7wb36d2RkS6VukVn69AeCfz1QyfoZhroqrfwkNsrbbSDPN5bmj9kGrUs3tmTNE432CeD1lxn2AXbxk%2B1dqfO85IoSvT5FVrU6zBeY%2BDkQKrYJklTLwBevIZq6pEcSCan1voai%2F7BXYSeaM6QbQkCUgNh%2BdX8EXWL%2FRvj%2FdPqe%2BdQkkWgzFzwk9WplKXBYUwBwDHb8x8YOKstQleRq56Zi0NVNBN4AxNqN0ChHMyOvzhb6E9wuoNGyeol%2F7tCi3N1uwKPUF2vTncBRxc71QAd2IwHG1qLvNYitvSuGFHyothcx3FfQUWpx1eL1UibwqEbKvdrDUJ6kjagUkiNrVLUDKyKRmf%2FvhMkWhBpxkguw7VXQpNTaWy%2BMyWRqP1zLhJfHMA5g7agRXGsjcTfEx7S0VqHIUtziS0G0aV1Ie%2F3H5rLExUWY2SbuzqLdhuKRW8a9%2BlhO1SJTEbjI3GTXz1SVvK3CODEK49RoBG5iHnZSDKFbp%2F%2Br039%2FGlU5mauYS4ZZsnbQJ7hmPXbz1NTGgwtrHBxgY6sAFvIdF9EY1o%2FPUSUYtR%2Bz4SyMOOR0q6L3F0ASR5y%2BgOxFzpgHI0vgQ0SA6ZXIHov%2FlNnjSa1n3iTjOUEubhBn0%2BR1rHjgPQu2KPuEctsa91atMd74QKiMuVPwi62WNbjuVR9XJwfhHPrLzqReei2iDt1RN2zsrjF%2BpP67qmOcbpXL1Fgkp6tg4Ks2dVrKOs9%2F%2FHlbkr9aDiZsi%2B%2BRbusBydX4aE%2Fdr3ojIww6Pc4jWiqw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=6c5bfee84451bcc2b3c6f879768d162474457dcb029d11c3c5b2e9553a21bce1",
+      "file_size": 95460,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-05-06T04:08:03.824Z",
+  "allow_singular_disclosure_after": -264451895.69685152,
+  "singular_disclosure_allowed": true,
+  "vote_count": 11,
+  "voters": [
+    "apapedulimu",
+    "edoverflow",
+    "muhammad_uwais",
+    "haxta4ok00",
+    "eveeez",
+    "m7mdharoun",
+    "linkks",
+    "spetr0x",
+    "pratikx99",
+    "hkr",
+    "and 1 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 5.4,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "low",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "none",
+      "integrity": "low",
+      "availability": "low"
+    }
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
