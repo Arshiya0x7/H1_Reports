@@ -1,0 +1,116 @@
+{
+  "id": 224379,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yMjQzNzk=",
+  "url": "https://hackerone.com/reports/224379",
+  "title": "session id missing secure flag - Hosted Website",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2017-04-27T15:17:42.858Z",
+  "submitted_at": "2017-04-27T15:17:42.858Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "pavanw3b",
+    "url": "/pavanw3b",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/038/280/46fd940624527eb674a6bbc0c1affe8448757fed_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 19468,
+    "url": "https://hackerone.com/weblate",
+    "handle": "weblate",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/019/468/71eb3827ae9f2a388f27bd4b7eefd20bc3ac813c_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/019/468/71eb3827ae9f2a388f27bd4b7eefd20bc3ac813c_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Weblate",
+      "twitter_handle": "WeblateOrg",
+      "website": "https://weblate.org/",
+      "about": "Weblate is a libre software web-based continuous localization system"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2017-05-17T16:31:11.951Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-05-17T16:31:11.912Z",
+  "team_member_agreed_on_going_public_at": "2017-05-17T14:12:03.064Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hey folks,\n\nLooks like the `sessionid` cookie handles session id but misses `Secure` flag. Cookies without this flag will transmitted over unencrypted channel and let's the man in the middle attackers to grab the value.\n\n### Attack Vector\n- Attacker passes a http:// hosted website link\n- Victim clicks the link\n- Browser passes the session cookie over http\n- MITIM attacker gets the value and take over the account\nWith the #224287, this made more simpler.\n\n### Suggested Fix\nSet the Secure flag true for the session id and any other sensitive cookies.\n\nExample h1 reports:\nhttps://hackerone.com/reports/58679\nhttps://hackerone.com/reports/6877",
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 180050,
+      "file_name": "Screen_Shot_2017-04-27_at_8.40.13_PM.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/180/050/44814e28c2d1bb7d90030537f3e90cd92bc2a2e3/Screen_Shot_2017-04-27_at_8.40.13_PM.png?response-content-disposition=attachment%3B%20filename%3D%22Screen_Shot_2017-04-27_at_8.40.13_PM.png%22%3B%20filename%2A%3DUTF-8%27%27Screen_Shot_2017-04-27_at_8.40.13_PM.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXKNKRHBY%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T222558Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCEc22pcC%2BybA3buId9xp31C%2FDWB46nHXRyc5eAwsp8tQIhANFr6qr9YIuzAFGQmNMMg55WmCEkocY3F7HJ%2F9lgE6ocKrIFCB4QAxoMMDEzNjE5Mjc0ODQ5Igy05%2FdlwzgfqmFe6D0qjwW9L8RIrcZMzyZna%2FbU64vaBYMnSm0joOzHJdx%2BnsSaFqCII%2FeEvmBhNsynJX6QNGQu%2FLdixx2WU11Q8FLcfw4gE49CchPj3XSEG1znp0%2BEw9nnbGIUZHUYoVX8ZyzKG3n4kMBd%2BRd15siCgjw6X3kjDH99wjoSNy5z1iKR9De0lZF9xbbx8FGBV%2BRQp5qLpMqKXtBt7%2FraQBuPpMNQbZx3DpEwWqHvYRVtiHWkYjQgaOUkYOfJtpoDobhpCxu5%2B%2BAK%2BTg53QwpG32%2FNWTj7V%2Fl%2BQUHwrwNk8xx0eZi78%2Fz3A2Xc3q4C8l19TVrqf9Be3IXNQdSiD3nA0MlV4j6i1zzoNvq9tjo8LYmFSVtN0wbo59M3Y8IGBOF0NfuSegYRcB6PsAVVS%2B2y4sjvjkmxyEvG1ob9KPPujSbhV43fqM9WTXW1dszP6GAa5vq2BwAuMPzYrD04Sk%2Fq3wzcM37RTPZhX8d6mlxPBn%2BxyHQAgEwIT03EPxINin9ZAyjuJLkzmFHF%2Fk%2BLVE1GVXZCy2BhyFAF9r6EMF09J1zevTNDAanb2Sq8yB7jLsLo84%2FWXHUYYNSCS%2BYYoRJAn9lPlCV5vVRfUCnE2Kmul3maQ7AS6M7G%2FtzpLfYgsH6eSU8nDIzf25PO9GNLDZ9ppaEKK4hRuw22Rqgy8FAJEhm4ClnLUn4gANtLlQSDztFFYB6K8Nneb6FvJmZ33oWv9Msk341%2FiTw6GV0xUi%2B7AuqKqdKtiJk3AiebqGly6zx0gWo%2FeMohToAaquQYtSjZh0NrW1gL3fVXYDjL7bLwAwbsC42w%2Bd%2Ft9LSkdOXiSnQGAN0CY3A%2Fm%2FRDrEXGf%2BU9sDs9eshzuGO2brNstPKlASHnRychsWjMO7KwcYGOrABjSA9Z8wNEh1OyiSou4AZHGztK3MDCo20qPZaWtimQEKcrE%2FoAF9GTG70VqJSkY46%2BszVl9vtbqnwEprnB4pY4px1%2BENPr44MkW0jCUUDdEFylTElbwvvV%2Bu7gq1%2BjyntLXy3%2BuSnHcpauBe5gEzGVzvr5BOfT8WwLVOEmbNRPV8fnUa3W09QXaS4OmCEx3ciLquuh9X7l0np3aU48CIOwbSwQ%2FKTPlfEUUlYC%2Bu5Xsg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=06e1f8151398ea0486531cceeda5fcecabebe24c807051032a627e5201982839",
+      "file_size": 18743,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-06-16T14:12:03.107Z",
+  "allow_singular_disclosure_after": -260871235.4162063,
+  "singular_disclosure_allowed": true,
+  "vote_count": 5,
+  "voters": [
+    "shubham_srt",
+    "eveeez",
+    "m7mdharoun",
+    "pavanw3b",
+    "spetr0x"
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "User"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
