@@ -1,0 +1,129 @@
+{
+  "id": 146336,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNDYzMzY=",
+  "url": "https://hackerone.com/reports/146336",
+  "title": "XSS vulnerable parameter in a location hash",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-06-22T00:31:15.340Z",
+  "submitted_at": "2016-06-22T00:31:15.340Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "virtualhunter",
+    "url": "/virtualhunter",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/052/708/b5875aa5a0697c2e10bf492467cc239e882c7a49_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 69,
+    "url": "https://hackerone.com/slack",
+    "handle": "slack",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/069/683fee312381bc46cadc7ea1950abc87944d12c3_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/069/683fee312381bc46cadc7ea1950abc87944d12c3_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Slack",
+      "twitter_handle": "slackhq",
+      "website": "https://slack.com",
+      "about": "All your team communication in one place, instantly searchable, and available wherever you go."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2019-10-16T09:47:48.170Z",
+  "bug_reporter_agreed_on_going_public_at": "2019-09-16T09:47:39.369Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi!\n\nThere is a vulnerability on your pages, using convertro.\n\nVulnerable parameter from location hash (cvo_sid1), used in your live.js to call convertro code without sanitizing. On the convertro side it is sanitized, but with help of this parameter you could push another parameter (typ), that leads to generating malformed javascript answer with XSS injection ability. Like this : cvo_sid1=111\\u0026;typ=[code injection] , where \\u0026; is an ampersand symbol.\nSee screenshots below.\nThere is a restriction on a semicolon use, so i replaced it with %3b.\n\nTo reproduce vulnerability, you could try this safe example:\nhttps://slack.com/is#?cvo_sid1=111\\u0026;typ=55577]\")%3balert(document.cookie)%3b//\n\nThis vulnerability provides a great opportunity for victim to lose not only cookies, but also control over the account after stealth forwarding to porposely generated link like this. I think, you know ;)",
+  "weakness": {
+    "id": 60,
+    "name": "Cross-site Scripting (XSS) - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 100875,
+      "file_name": "slack1.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/100/875/274d9a48441ad6393ca382dc81f1d2c8c11e5c9d/slack1.jpg?response-content-disposition=attachment%3B%20filename%3D%22slack1.jpg%22%3B%20filename%2A%3DUTF-8%27%27slack1.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZV74VCZZ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T140447Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIHpm0NZ%2B6WrtgXK%2BnoMSqL2CJxcURQaZeFwjN55ga9S8AiAItJWoqpkLQuOtVcjDxvaF4agx2gaEaXcxFc%2FrzCAQMCqyBQgVEAMaDDAxMzYxOTI3NDg0OSIMdmPuTYPj8trBh9BuKo8F9WyppnmtrkU5yc6c6jXSgIJCNgk93enYjdvzoGFLkYqy9%2BwG%2BJn%2FOu1N0nXqt4n1G4E7Tn909upKAlhj4Wj99lztZaLGdSLzmtXiyLxMfHUs3KlQ5Q%2BPi66sdl8dTvvWDnq1ouXjeUkKQdMmYBJEJBespKt6wuq3BYDyh9EzmNv%2BkTzD3vgsGIvfn%2FAsmYYNtNhOwMAPJah%2BKv5%2BnZTHO3x11oAFIz7WNuEr0sj7jmRdNVava9XcXmne1qR0q%2F7DIhtcG3qppDGvwqmgac6M9Ry1YfbhogDEaG8SqZUUXGBDcKRrMvWMpmQilgOo%2FFOMfgpaZMSRE1xEz%2BGIq4V6FKp9TgBNHtjhsNw2smcwuTg3CVSHboQl01RKF1FFySCaH3dFJxC1%2F%2FPdUJMC%2FiAkljB7DGnWzYod%2FuA8Nk7s9ZGjpHabEwCLUqzKod3qaGCVOtSBhId3qMDqXc1mQdn2K4czjSAQTYlm2oy5J8eQhqHdfO8KuERoSLcBl%2FZ7bSvD2%2Be215mYOWBhPt5rH%2FNSRO4uNNmxNIjhezuKmzqsiY57SsBlIPWw9NZmlI2dP6I64zp035QSKBGGRkWiRGPXWP3%2B9Nq2DqtsM4MACuWZgWCM0t2xX27omtkm41RyuldDgDqIxCLvc4rhiwd0s4yOKa8TbQCFKYMaxsb80zxhaFrLT82Rs9Z7%2FEU7c7X0l9K52h6WJ8lYKZ9gO8NLaY8WHwoRHXxYVI%2BIRwkmD1dD%2FdLHQ9a7JG3c%2FCyJup8%2FnREuPBtD0MYQUf82w1kX1tEDMuwimMG5%2B1KZzonA%2FLft%2B3aq9Kk4YSDgeR%2FLPRjv9UGdIR0pnNtIxZ2P5SRIPJqDQJgcFhlZ6DB4DkbOx4pvMDCIzL%2FGBjqyATXm9iUd485L1CfLKXVqRIIYUlj7EN3%2FT9xfmrpbB%2B4MQXg2i%2FGW3KqftTIw29H4h3W1fm4qO5JO0VK2Hnnm0GCL6eAQ%2BCThRSHtxSGAJR7FdKbEsiR2PXYedq9kZtO3GHHb8Mbz2FJ6RHod0cgErfDEutE2b6ypKwAgkMIKHj%2Bu9Xne%2BlECMrBWWD6jQVkcAJQ%2By6Qxlw2GQrJGy8EvU4QYI5AGSGdZ8MNzYW%2F2nYvdaXY%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=6c20c24bcca70ecd9ef96e275ac1f9281e00b732d11a85c892ade2463e27b35d",
+      "file_size": 187681,
+      "type": "image/jpeg",
+      "moderated": null
+    },
+    {
+      "id": 100876,
+      "file_name": "slack2.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/100/876/ea786da4f2b5449c82485cfa6b1fcbe730bf7124/slack2.jpg?response-content-disposition=attachment%3B%20filename%3D%22slack2.jpg%22%3B%20filename%2A%3DUTF-8%27%27slack2.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZV74VCZZ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T140447Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIHpm0NZ%2B6WrtgXK%2BnoMSqL2CJxcURQaZeFwjN55ga9S8AiAItJWoqpkLQuOtVcjDxvaF4agx2gaEaXcxFc%2FrzCAQMCqyBQgVEAMaDDAxMzYxOTI3NDg0OSIMdmPuTYPj8trBh9BuKo8F9WyppnmtrkU5yc6c6jXSgIJCNgk93enYjdvzoGFLkYqy9%2BwG%2BJn%2FOu1N0nXqt4n1G4E7Tn909upKAlhj4Wj99lztZaLGdSLzmtXiyLxMfHUs3KlQ5Q%2BPi66sdl8dTvvWDnq1ouXjeUkKQdMmYBJEJBespKt6wuq3BYDyh9EzmNv%2BkTzD3vgsGIvfn%2FAsmYYNtNhOwMAPJah%2BKv5%2BnZTHO3x11oAFIz7WNuEr0sj7jmRdNVava9XcXmne1qR0q%2F7DIhtcG3qppDGvwqmgac6M9Ry1YfbhogDEaG8SqZUUXGBDcKRrMvWMpmQilgOo%2FFOMfgpaZMSRE1xEz%2BGIq4V6FKp9TgBNHtjhsNw2smcwuTg3CVSHboQl01RKF1FFySCaH3dFJxC1%2F%2FPdUJMC%2FiAkljB7DGnWzYod%2FuA8Nk7s9ZGjpHabEwCLUqzKod3qaGCVOtSBhId3qMDqXc1mQdn2K4czjSAQTYlm2oy5J8eQhqHdfO8KuERoSLcBl%2FZ7bSvD2%2Be215mYOWBhPt5rH%2FNSRO4uNNmxNIjhezuKmzqsiY57SsBlIPWw9NZmlI2dP6I64zp035QSKBGGRkWiRGPXWP3%2B9Nq2DqtsM4MACuWZgWCM0t2xX27omtkm41RyuldDgDqIxCLvc4rhiwd0s4yOKa8TbQCFKYMaxsb80zxhaFrLT82Rs9Z7%2FEU7c7X0l9K52h6WJ8lYKZ9gO8NLaY8WHwoRHXxYVI%2BIRwkmD1dD%2FdLHQ9a7JG3c%2FCyJup8%2FnREuPBtD0MYQUf82w1kX1tEDMuwimMG5%2B1KZzonA%2FLft%2B3aq9Kk4YSDgeR%2FLPRjv9UGdIR0pnNtIxZ2P5SRIPJqDQJgcFhlZ6DB4DkbOx4pvMDCIzL%2FGBjqyATXm9iUd485L1CfLKXVqRIIYUlj7EN3%2FT9xfmrpbB%2B4MQXg2i%2FGW3KqftTIw29H4h3W1fm4qO5JO0VK2Hnnm0GCL6eAQ%2BCThRSHtxSGAJR7FdKbEsiR2PXYedq9kZtO3GHHb8Mbz2FJ6RHod0cgErfDEutE2b6ypKwAgkMIKHj%2Bu9Xne%2BlECMrBWWD6jQVkcAJQ%2By6Qxlw2GQrJGy8EvU4QYI5AGSGdZ8MNzYW%2F2nYvdaXY%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=8ea7e3dd8bc2fa988b284e8f56c03c4062b60a17910d514f4114f901fe7c7d30",
+      "file_size": 199285,
+      "type": "image/jpeg",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2019-10-16T09:47:39.451Z",
+  "allow_singular_disclosure_after": -187244227.89516708,
+  "singular_disclosure_allowed": true,
+  "vote_count": 451,
+  "voters": [
+    "env",
+    "cxzer0",
+    "nohats",
+    "k0z3r0",
+    "lyinq",
+    "angu_",
+    "orange303",
+    "w31rd0",
+    "mashoud1122",
+    "base_64",
+    "and 441 more..."
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
