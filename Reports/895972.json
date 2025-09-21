@@ -1,0 +1,150 @@
+{
+  "id": 895972,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC84OTU5NzI=",
+  "url": "https://hackerone.com/reports/895972",
+  "title": "Limited LFI",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2020-06-11T10:43:44.905Z",
+  "submitted_at": "2020-06-11T10:43:44.905Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "mariuszdeepsec",
+    "url": "/mariuszdeepsec",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/igjv9amx078skf5c5qdub4uq8gqj/c8a1698ff707a5e3e8a91a3484838363845daac68cb82c86d55c9e2d44d67b67"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 50592,
+    "url": "https://hackerone.com/gsa_bbp",
+    "handle": "gsa_bbp",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/iyPFgzbsX86VXw5wJHyfPg9s/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/iyPFgzbsX86VXw5wJHyfPg9s/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "GSA Bounty",
+      "twitter_handle": null,
+      "website": "http://gsa.gov",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2020-07-09T01:13:41.082Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-07-08T09:52:50.432Z",
+  "team_member_agreed_on_going_public_at": "2020-07-09T01:13:40.964Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nDue to improper parameter sensitization  local file inclusion is possible. LFI is limited as we were not able to truncate the end of string.\n\n## Description:\nApplication root is located at \n/var/www/dashboard/new/public\n\nDue to URL Manipulation we are able to raed file from \n/var/www/dashboard/new/\nWhich should not be allowed.\n\nBelow we present function Index in Docs class -> parameter $page is set in URL  in below example \"..%2fREADME\" \nPath is constructed as follow $docs_path = $docs_path . $page . '.md'; then file is read in file_get_contents and returned in application GUI.\nLFI is limited due to  \" . '.md';\" part, but may be bypassed in futures, we have not found a way to bypass it thats why the risk was set to low. In case of bugs combination , PHP bugs etc.. in future this may be escalated. User should  not control any part of \"file_get_contents\" function\n```\n public function index($page = 'main')\n    {\n\n        $data = array();\n\n        $docs_path = ($this->config->item('docs_path')) ? $this->config->item('docs_path') : 'https://raw.githubusercontent.com/GSA/project-open-data-dashboard/master/documentation/';\n        $docs_path = $docs_path . $page . '.md';\n        $docs = @file_get_contents($docs_path);\n```\n\n## Steps To Reproduce:\n1. Read file from main root by calling URL:\nhttps://labs.data.gov/dashboard/Docs/index/..%2fREADME\n\n## POC\n\nFile README.md not exists in our current dir.\nF863983\n\nFile README.md can be read due to LFI\nhttps://labs.data.gov/dashboard/Docs/index/..%2fREADME\nF863984\n\nConfirmation:\nFile exact as:\nhttps://github.com/GSA/project-open-data-dashboard/blob/master/README.md\n\n## Impact\n\nUser have ability to control part of @file_get_contents function. This type of usage may lead to critical file read. In this scenario, we did not bypass the hardcoded ext so files was limited to \".md\" and low risk was set.  This should be corrected in case of future PHP bugs, if attacker will truncate the .ext part any file read will be allowed.",
+  "bounty_amount": "300.0",
+  "formatted_bounty": "$300",
+  "weakness": {
+    "id": 71,
+    "name": "Remote File Inclusion"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 863983,
+      "file_name": "Zrzut_ekranu_2020-06-11_o_12.36.29.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/oSPa2d3QMjiPc6CfumzSLEgy?response-content-disposition=attachment%3B%20filename%3D%22Zrzut_ekranu_2020-06-11_o_12.36.29.png%22%3B%20filename%2A%3DUTF-8%27%27Zrzut_ekranu_2020-06-11_o_12.36.29.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZH76EG24%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T095337Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIn%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDlYQcXA%2B1KpfCRxxir97Lqzk5%2FdlK9dyfiJVg7mtn%2FgQIhAPYSa5YTcSo6Zu85c3S7GR1jtnitBZFYJOFIwIMI6DTUKrIFCBIQAxoMMDEzNjE5Mjc0ODQ5Igxuj3uowh%2Bwhgxw%2B94qjwVea%2FcfpygKKCFnSB1FGSiiu2N0qyCuaUN8%2FgoyAPsMwsCp%2Biav2qiHK1Yu8pZFtR0IbPaEdIN%2FjbJ4d4W49bNLvjOKZmQ0Svs8ozybsuVcqtuGPUnm9iJbxXN%2FLycmpRBMQNFv26%2FCO3lod20BdgQsHDM1jVxj2BrIZRv7yDj9baXlE%2BveDucLGcMidR6aDYzWTGN%2FgIibLtetdlalR1MtAm%2FFwcxmipe6AwqcBcpGpxg5oqAnS3%2FyIdAWCTI3fuBS57qW9M5NThNS5YrrtMDoHS1cmMxzqEa0gin88X3KjdLpXFaWcxD0L6xi146RgOLDKoiczgdNWduJ%2FqUzzD3l9mK3rVCeCatsK6G%2FzgUQZoh1Z7rpAjS3Yzmb3BbG5dp%2BLN7aTBXot9ah4nIrfRA5OmN3IsYAnjgs5%2F3qEwJi2WJ0yWOvqI0C0lzrn4zdnya4nmgTaciFdFwpWD12j5ZbBIYOzxGydYv%2FYPvslgrIvzSA3jPKBZsKgSkaJiJFWP674BnkPN2uKTj6nbNsQaJtDv9towkx9Alk9MiGmopbURgFCWYzAb8C767zzNcOHgL884Qwkc1PZ%2F5XQJh%2BhnzmIeclkXd4mKmKT2%2BtNNESwPKklj2NhbW6OamVFnAYr8mENwQuuAErGWaHCtcmjuTYESQZbdY5kvdRWCW0XD5HPbYa7K9K%2F6udqdg5kxU%2FAr1uol6L0sz5uBHVSeZ5fykRP52mneX9avywOZ13CslXv4av85nAANvum83KiNFwxftfLY5xRG9UO8ujc2Uch8pyBSIN0ioxvCCxIjL9pX9LijHKjAQmr41%2BGruOy7BFdUiHkZJFS01Dw2qRur%2BMJq4MsW4ardgqDCG7giHWTysbMNDtvsYGOrABYVbMsfMzmKMCK88PGXNSXdcyhw1NWvyyFnSulxORw%2BeVioaGWvH5IC2661tHgTr5yBqnfPuACHM1A%2B5PSiHhwgCzErBWhX9%2BpaJ8zFqgNy7ytKGqyL0U30eGy1kWa9n2kPDQa8xvh0wXWcnM1sdzszx13KDF3%2BN8qM030o2cBBlpzq1mOb3UZmN5XYdkpjtZpre6nfpJZB%2FUvVKrDMfqtg%2BsAWHRDjcWn01KROJ%2B9%2BM%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=e64538c39fc2660b234bb893a4b886b55b0250b6dd1e050907a5fcd994a73408",
+      "file_size": 82313,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 863984,
+      "file_name": "Zrzut_ekranu_2020-06-11_o_12.37.51.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/sjMeHm6xFPmbqruDM4LrKbx8?response-content-disposition=attachment%3B%20filename%3D%22Zrzut_ekranu_2020-06-11_o_12.37.51.png%22%3B%20filename%2A%3DUTF-8%27%27Zrzut_ekranu_2020-06-11_o_12.37.51.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZH76EG24%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T095337Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIn%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDlYQcXA%2B1KpfCRxxir97Lqzk5%2FdlK9dyfiJVg7mtn%2FgQIhAPYSa5YTcSo6Zu85c3S7GR1jtnitBZFYJOFIwIMI6DTUKrIFCBIQAxoMMDEzNjE5Mjc0ODQ5Igxuj3uowh%2Bwhgxw%2B94qjwVea%2FcfpygKKCFnSB1FGSiiu2N0qyCuaUN8%2FgoyAPsMwsCp%2Biav2qiHK1Yu8pZFtR0IbPaEdIN%2FjbJ4d4W49bNLvjOKZmQ0Svs8ozybsuVcqtuGPUnm9iJbxXN%2FLycmpRBMQNFv26%2FCO3lod20BdgQsHDM1jVxj2BrIZRv7yDj9baXlE%2BveDucLGcMidR6aDYzWTGN%2FgIibLtetdlalR1MtAm%2FFwcxmipe6AwqcBcpGpxg5oqAnS3%2FyIdAWCTI3fuBS57qW9M5NThNS5YrrtMDoHS1cmMxzqEa0gin88X3KjdLpXFaWcxD0L6xi146RgOLDKoiczgdNWduJ%2FqUzzD3l9mK3rVCeCatsK6G%2FzgUQZoh1Z7rpAjS3Yzmb3BbG5dp%2BLN7aTBXot9ah4nIrfRA5OmN3IsYAnjgs5%2F3qEwJi2WJ0yWOvqI0C0lzrn4zdnya4nmgTaciFdFwpWD12j5ZbBIYOzxGydYv%2FYPvslgrIvzSA3jPKBZsKgSkaJiJFWP674BnkPN2uKTj6nbNsQaJtDv9towkx9Alk9MiGmopbURgFCWYzAb8C767zzNcOHgL884Qwkc1PZ%2F5XQJh%2BhnzmIeclkXd4mKmKT2%2BtNNESwPKklj2NhbW6OamVFnAYr8mENwQuuAErGWaHCtcmjuTYESQZbdY5kvdRWCW0XD5HPbYa7K9K%2F6udqdg5kxU%2FAr1uol6L0sz5uBHVSeZ5fykRP52mneX9avywOZ13CslXv4av85nAANvum83KiNFwxftfLY5xRG9UO8ujc2Uch8pyBSIN0ioxvCCxIjL9pX9LijHKjAQmr41%2BGruOy7BFdUiHkZJFS01Dw2qRur%2BMJq4MsW4ardgqDCG7giHWTysbMNDtvsYGOrABYVbMsfMzmKMCK88PGXNSXdcyhw1NWvyyFnSulxORw%2BeVioaGWvH5IC2661tHgTr5yBqnfPuACHM1A%2B5PSiHhwgCzErBWhX9%2BpaJ8zFqgNy7ytKGqyL0U30eGy1kWa9n2kPDQa8xvh0wXWcnM1sdzszx13KDF3%2BN8qM030o2cBBlpzq1mOb3UZmN5XYdkpjtZpre6nfpJZB%2FUvVKrDMfqtg%2BsAWHRDjcWn01KROJ%2B9%2BM%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=7aa3fa0483765326d83a2c6e4a87abf6cfa4004dd6e3fb6d10b542ba0149ee35",
+      "file_size": 672057,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 48,
+  "voters": [
+    "loaymorad",
+    "lones",
+    "mashoud1122",
+    "base_64",
+    "shreyaschavhan",
+    "rook1337",
+    "tess",
+    "itsbing0o",
+    "sudi",
+    "its_afolic",
+    "and 38 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 5.5,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "required",
+      "scope": "unchanged",
+      "confidentiality": "low",
+      "integrity": "low",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 81476,
+    "asset_type": "URL",
+    "asset_identifier": "labs.data.gov",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
