@@ -1,0 +1,136 @@
+{
+  "id": 288950,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yODg5NTA=",
+  "url": "https://hackerone.com/reports/288950",
+  "title": "Additional bypass allows SSRF for internal netblocks",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2017-11-09T20:38:47.190Z",
+  "submitted_at": "2017-11-09T20:38:47.190Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "edoverflow",
+    "url": "/edoverflow",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/116/374/9a3cf4d62b2f507a0d33808aacbad863ec4455ac_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13,
+    "url": "https://hackerone.com/security",
+    "handle": "security",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/013/fa942b9b1cbf4faf37482bf68458e1195aab9c02_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/013/fa942b9b1cbf4faf37482bf68458e1195aab9c02_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "HackerOne",
+      "twitter_handle": "Hacker0x01",
+      "website": "https://hackerone.com",
+      "about": "Vulnerability disclosure should be safe, transparent, and rewarding."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2017-0909"
+  ],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2017-11-16T20:15:03.956Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-11-16T20:11:25.670Z",
+  "team_member_agreed_on_going_public_at": "2017-11-16T20:15:03.608Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "It turns out there is another bypass in the `private_address_check` gem. The gem does not include 0.0.0.0 in the exclusion list in the first place.\n\n```\nirb(main):001:0> require 'private_address_check'\n=> true\nirb(main):002:0> PrivateAddressCheck.private_address?(\"0.0.0.0\")\n=> false\n```\n\nI was able to bypass your filter by using http://0.0.0.0:22/ as you can see below:\n\n{F238151}\n\nPlease find a hotfix for this issue attached to this report: {F238152}. The author of the gem has been notified and should hopefully provide a proper fix very soon.\n\n",
+  "weakness": {
+    "id": 68,
+    "name": "Server-Side Request Forgery (SSRF)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 238151,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/238/151/53c60281c1f3de1c2368b7b5d03bf975ad94b090/image.png?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4NBYFOQ4%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T193318Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDUOkW2FzFC6pm%2FNX1XaXFOMoMH%2Bp4H2WUiPJZqY%2BanwgIhAJFQ%2FlQr6I%2B0XtQDeMC2oBzuFsDrw8mLPnzuXsmpbd1PKrIFCBoQAxoMMDEzNjE5Mjc0ODQ5Igyr7Rw5YRF0HZ7fR%2FYqjwW5Qd1a9sJiEkY%2B%2F3zgLJW1Urm240ouIXC%2Fgaxrdjh7p08XzP5hiWBzZJbdK8F0ucj7xdDtBM%2FwJEuTALPEVPodKNXLuo2iPiEfHLn6Mi044F%2B1kIUP0JUBECpklZXKfr1UYZwdUZr01mZv3kz%2FI3%2Fqn1w0AiWtbTG08ENHN%2BgPlNoi7FWCS6Su3fwHpMyve8Ws3n2ItTFL8KJU%2BDuMyVs7WA3fUYoB5SyTJtEeuJyq7xUt%2FIEq46i9%2B3R%2FZuXRS9MXDvEwJSenc7BovdJbkmrfHrNXldVgLVXfRDoI7rfzQg9kpiyZL%2FNtqP0eLFtwnOssULBgqtvcj8gS6xZol0yOSvzTatcqbdFaUBjUyLwnCyvalzYWpBG8iJ0hIsnKdVxgyOfm3eG%2FyMp0l2ze37ns7D2G42ReaM27z6o9MLu2%2FaXchNsGsACQUmyJzmQeaWkLKsN3t0CV1a4ikXVBJoKuSvE1Ow1COmF4Ga2gQGRvxhSKkmd%2BwqpMtiudIH2qoRrFAy9vYiLw3rNmj6PmurdKVSc5IQ9UNxuMF3Oody6yS5NDAZXXQXaG4wJ%2BdokigS90AYqlv9ISgI3CuNe08R9v67hxFBTRFYlkffzzWXjA55E3n%2FfB%2FfsKdvyOHus%2F4b%2B5ykH2GacB7nF7oaycS%2FIwvab5cWW5NKoEsiYhqg1qFqW%2F767vijcT54G9RDk99KaoL7RvH0XjSJZLGBH3ysF1apVxsziRJxMaqOdC92Psjzq17fzztkjL8IRjSu%2FmDkVRJoSg65hwJO7nyBDpZLnqoU4SyQXKhceVVzzVxrAvs1ULMjCrCNy8LLJuVpp4aVfgQBSuPISCgGpnNgRyRUBAEOg1IWUPYdUw49OAMQllMLXPwMYGOrABAWXJLzknPNalVhXK%2BCD1xQTo7%2FG%2F8w2hhdtgVQygVnyY5d%2BT9T7ud5%2BbdHuudRmYgmMmSjNEMp22ujihBkD%2Bff5FvQTNjj6uaoBxOVIT0HovM5Q%2FMD8whEgbTG5c7Z1wEG2nZEC1OV%2FfqWEtb5RMBmE5z0FRma6AYAY7IShPFPHfGzVOzU%2BB7oLUVCqVPJZZlTdn%2FX1dBFkKtdV4f1XLR%2BgKj30YXP3LHhQ1daucH9g%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=3df89a24de22bbcec1cd9100c8dfeb79f83684a2a57c5443f6d915f34619efd5",
+      "file_size": 117613,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 238152,
+      "file_name": "private_address_check.rb.patch",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/238/152/ea4833f4e1c70289dd4abaa1daa1e213e5a83a6f/private_address_check.rb.patch?response-content-disposition=attachment%3B%20filename%3D%22private_address_check.rb.patch%22%3B%20filename%2A%3DUTF-8%27%27private_address_check.rb.patch&response-content-type=text%2Fx-ruby&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4NBYFOQ4%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T193318Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDUOkW2FzFC6pm%2FNX1XaXFOMoMH%2Bp4H2WUiPJZqY%2BanwgIhAJFQ%2FlQr6I%2B0XtQDeMC2oBzuFsDrw8mLPnzuXsmpbd1PKrIFCBoQAxoMMDEzNjE5Mjc0ODQ5Igyr7Rw5YRF0HZ7fR%2FYqjwW5Qd1a9sJiEkY%2B%2F3zgLJW1Urm240ouIXC%2Fgaxrdjh7p08XzP5hiWBzZJbdK8F0ucj7xdDtBM%2FwJEuTALPEVPodKNXLuo2iPiEfHLn6Mi044F%2B1kIUP0JUBECpklZXKfr1UYZwdUZr01mZv3kz%2FI3%2Fqn1w0AiWtbTG08ENHN%2BgPlNoi7FWCS6Su3fwHpMyve8Ws3n2ItTFL8KJU%2BDuMyVs7WA3fUYoB5SyTJtEeuJyq7xUt%2FIEq46i9%2B3R%2FZuXRS9MXDvEwJSenc7BovdJbkmrfHrNXldVgLVXfRDoI7rfzQg9kpiyZL%2FNtqP0eLFtwnOssULBgqtvcj8gS6xZol0yOSvzTatcqbdFaUBjUyLwnCyvalzYWpBG8iJ0hIsnKdVxgyOfm3eG%2FyMp0l2ze37ns7D2G42ReaM27z6o9MLu2%2FaXchNsGsACQUmyJzmQeaWkLKsN3t0CV1a4ikXVBJoKuSvE1Ow1COmF4Ga2gQGRvxhSKkmd%2BwqpMtiudIH2qoRrFAy9vYiLw3rNmj6PmurdKVSc5IQ9UNxuMF3Oody6yS5NDAZXXQXaG4wJ%2BdokigS90AYqlv9ISgI3CuNe08R9v67hxFBTRFYlkffzzWXjA55E3n%2FfB%2FfsKdvyOHus%2F4b%2B5ykH2GacB7nF7oaycS%2FIwvab5cWW5NKoEsiYhqg1qFqW%2F767vijcT54G9RDk99KaoL7RvH0XjSJZLGBH3ysF1apVxsziRJxMaqOdC92Psjzq17fzztkjL8IRjSu%2FmDkVRJoSg65hwJO7nyBDpZLnqoU4SyQXKhceVVzzVxrAvs1ULMjCrCNy8LLJuVpp4aVfgQBSuPISCgGpnNgRyRUBAEOg1IWUPYdUw49OAMQllMLXPwMYGOrABAWXJLzknPNalVhXK%2BCD1xQTo7%2FG%2F8w2hhdtgVQygVnyY5d%2BT9T7ud5%2BbdHuudRmYgmMmSjNEMp22ujihBkD%2Bff5FvQTNjj6uaoBxOVIT0HovM5Q%2FMD8whEgbTG5c7Z1wEG2nZEC1OV%2FfqWEtb5RMBmE5z0FRma6AYAY7IShPFPHfGzVOzU%2BB7oLUVCqVPJZZlTdn%2FX1dBFkKtdV4f1XLR%2BgKj30YXP3LHhQ1daucH9g%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=de563049ec5cbb44c956b33b877b93ffa50d1934653cecab26214f13310cf956",
+      "file_size": 781,
+      "type": "text/x-ruby",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-12-16T20:11:25.871Z",
+  "allow_singular_disclosure_after": -245028112.1932302,
+  "singular_disclosure_allowed": true,
+  "vote_count": 19,
+  "voters": [
+    "troubleshooter",
+    "asad0x01_",
+    "ysx",
+    "eveeez",
+    "khalidamin",
+    "khizer47",
+    "kuyschi",
+    "sa1tama0",
+    "0xradi",
+    "cr4xerbik4sh",
+    "and 9 more..."
+  ],
+  "structured_scope": {
+    "databaseId": 3,
+    "asset_type": "URL",
+    "asset_identifier": "hackerone.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
