@@ -1,0 +1,123 @@
+{
+  "id": 410087,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC80MTAwODc=",
+  "url": "https://hackerone.com/reports/410087",
+  "title": "Expose user IP if TOR crashs",
+  "state": "Closed",
+  "substate": "informative",
+  "readable_substate": "Informative",
+  "created_at": "2018-09-15T13:52:30.148Z",
+  "submitted_at": "2018-09-15T13:52:30.148Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "rbcafe",
+    "url": "/rbcafe",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/uft7o1wpafGAE3ASGWGc39AL/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 1800,
+    "url": "https://hackerone.com/torproject",
+    "handle": "torproject",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/001/800/6e575d0a9127b91e83833cf4a9e6be6e8b30cbc3_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/001/800/6e575d0a9127b91e83833cf4a9e6be6e8b30cbc3_original.jpg/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Tor",
+      "twitter_handle": "torproject",
+      "website": "https://www.torproject.org/",
+      "about": "Anonymity Online"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2018-09-21T07:19:11.740Z",
+  "bug_reporter_agreed_on_going_public_at": "2018-09-20T14:18:10.894Z",
+  "team_member_agreed_on_going_public_at": "2018-09-21T07:19:11.684Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Greetings,\n\nI have noticed that for unpredictable reason a TOR relay can exposes the IP of an user. I noticed this by going to the server http://195.176.3.24/ and getting information about the headers. I arrived to this header who is : \"X-Your-Address-Is\" . \n\nHow :\n--\n\n- So I went to this tor-relay without being with TOR.\n- My IP was shown inside the X-Your-Address-Is\n- Then I go to this tor-relay with being with TOR.\n- A Tor IP was shown inside the X-Your-Address-Is\n\n{F346664}\n\nThen :\n--\n\nI noticed upon this that there was a clear pattern, so I tried to search more information on Shodan exposing information :\n\n- The url for the search was : https://www.shodan.io/search?query=%22Address%22+Content-Encoding%3A+identity\n- I obtained servers \n- The X-Your-Address-Is was clearly exposed indicating IPS. \n\n{F346661}\n\nExpectation :\n--\n\nThe TOR relay should be able to distinguish a non-tor-ip from a tor-ip. It should not be possible to leak IP user information if the user is not clearly within a TOR session.\n\nBest regards\n\n@Rbcafe\n\n## Impact\n\n- Expose an IP if  TOR crash for unexpected reason. \n- There is no security net if TOR crashes.",
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 346661,
+      "file_name": "shodan.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/346/661/1baab15aeca59ab7731ca7379b207aae027792a3/shodan.png?response-content-disposition=attachment%3B%20filename%3D%22shodan.png%22%3B%20filename%2A%3DUTF-8%27%27shodan.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ7TY53NAO%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T171305Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJD%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIEXkR1lg621bE17cu%2Fl3fXwdZqc3ohK8RLoUW6neTOnUAiEA1hVcNDQ0HwLz92IFS%2BgVT485kbOVACCMZOb9uO2j69oqsQUIGRADGgwwMTM2MTkyNzQ4NDkiDLnpL0YhLpymbc6hLiqOBV1CaTmkhcUZlzYsktvfJWg%2Fm1RG06rbDZybD1fxzCGn3wbF4jjjJUQ2ScgmEFpzTl1Q3AqXLGOli0TDRTqN2rNHVDdk4bU9V5M%2FeBVdBo4qrt0f5je9X3fGbikIf26eWeEKLG3EhEqFK2lAUZmV5315nncfTk6hoszJHkQ8sRjDlN2HS9TtXTryF61OFTtRVjJNTH%2BLtNyV9BtIJQn%2F4BxNCnlGbsixm2CKXEaiC8CXDcYojRSbHDKW7Ynd%2BssAEjCFrYz5xQb5%2F9WDmBLkZLsp0RZpFKEuTO%2FsxE8MZ53IetZilewLtTExCRLi4yVWvd6RKr9z%2Bg38vAoLhkIRJrh1Pnoc4muTfSuaNqR2zPwuqRRpQExXPBLZs2Dqho2td7D7D59nhiLMBwoeQFq4toyGBQeFp1loI2ba2KWA27Ojs5Xy%2FNhd3CtKtQeCeoC0sTvfmZgUDu236C%2B2Cd%2FPkiNKuO0VXWq5SmNbmS%2BDDcaZSgyT2Ck2tu8LfLeYvCB6UjYC5SqpGoJ%2BBhN6Yj2o57WPXYo3yw8Za7dxfzDLusTZLfTNCXg%2FKga55KcTAusLwlnLEkCSqFGv8YSDe%2F7ANND2JHh505IlqbZg7nNadcE%2Fn5uhBqfdHzfoMEWLwtDA7cvwEB0GGxv%2FZ8j7tHIIajXdhkWblxZroQGISMj6R%2BcF0ynatCZQ%2Fnl%2FmMLA%2BtAnjy6LxZrFxJTL8ehsF48BaqaMPWtTFY0489glRg%2B%2BTCBrMRND4%2BWnJ7%2Fc7ldXTCwGQsEqO0sHuX3SDIfa4KqORwxQfFf1JJIU%2B2%2FTnEu3ZOKwCrvKT6%2Fl%2B6ujUKNDXnXQJSWA1z%2FYyX99rBlKWt0JXX7B4l%2F4R69pcDKn16ZcgjD6ycDGBjqxAXAuX6Omt6PkikjdkxQ2Y2mRMR65OggU4DqSRgS2wUwGnciOVqgDnaca3BCcAJ%2BmMGOYDkGFsgFv89LcJ%2FH6%2Fq6ggTPzdb%2B9jO69O1SyqbRuJbfu%2BuhDWmWaIgUrRddktOFe%2FFZgznaOMgpq1Hb2Ktm%2FqrF85hbzPR%2B1oVZR5hU%2BjyTSBXUExbJ0qdus2cJ%2FmUIVFrnuCqJHUn1yOziH5zT45%2B%2B9%2FMz7i%2BFiDiPI%2BsEnuw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=1e2afc9b9aec8268151b31e37df55f5df9fea399897df3771a13d41540cbb552",
+      "file_size": 311553,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 346664,
+      "file_name": "term.mov",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/346/664/3fb1f5bcd5aff64955910fb21badf10459935159/term.mov?response-content-disposition=attachment%3B%20filename%3D%22term.mov%22%3B%20filename%2A%3DUTF-8%27%27term.mov&response-content-type=video%2Fquicktime&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ7TY53NAO%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T171305Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJD%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIEXkR1lg621bE17cu%2Fl3fXwdZqc3ohK8RLoUW6neTOnUAiEA1hVcNDQ0HwLz92IFS%2BgVT485kbOVACCMZOb9uO2j69oqsQUIGRADGgwwMTM2MTkyNzQ4NDkiDLnpL0YhLpymbc6hLiqOBV1CaTmkhcUZlzYsktvfJWg%2Fm1RG06rbDZybD1fxzCGn3wbF4jjjJUQ2ScgmEFpzTl1Q3AqXLGOli0TDRTqN2rNHVDdk4bU9V5M%2FeBVdBo4qrt0f5je9X3fGbikIf26eWeEKLG3EhEqFK2lAUZmV5315nncfTk6hoszJHkQ8sRjDlN2HS9TtXTryF61OFTtRVjJNTH%2BLtNyV9BtIJQn%2F4BxNCnlGbsixm2CKXEaiC8CXDcYojRSbHDKW7Ynd%2BssAEjCFrYz5xQb5%2F9WDmBLkZLsp0RZpFKEuTO%2FsxE8MZ53IetZilewLtTExCRLi4yVWvd6RKr9z%2Bg38vAoLhkIRJrh1Pnoc4muTfSuaNqR2zPwuqRRpQExXPBLZs2Dqho2td7D7D59nhiLMBwoeQFq4toyGBQeFp1loI2ba2KWA27Ojs5Xy%2FNhd3CtKtQeCeoC0sTvfmZgUDu236C%2B2Cd%2FPkiNKuO0VXWq5SmNbmS%2BDDcaZSgyT2Ck2tu8LfLeYvCB6UjYC5SqpGoJ%2BBhN6Yj2o57WPXYo3yw8Za7dxfzDLusTZLfTNCXg%2FKga55KcTAusLwlnLEkCSqFGv8YSDe%2F7ANND2JHh505IlqbZg7nNadcE%2Fn5uhBqfdHzfoMEWLwtDA7cvwEB0GGxv%2FZ8j7tHIIajXdhkWblxZroQGISMj6R%2BcF0ynatCZQ%2Fnl%2FmMLA%2BtAnjy6LxZrFxJTL8ehsF48BaqaMPWtTFY0489glRg%2B%2BTCBrMRND4%2BWnJ7%2Fc7ldXTCwGQsEqO0sHuX3SDIfa4KqORwxQfFf1JJIU%2B2%2FTnEu3ZOKwCrvKT6%2Fl%2B6ujUKNDXnXQJSWA1z%2FYyX99rBlKWt0JXX7B4l%2F4R69pcDKn16ZcgjD6ycDGBjqxAXAuX6Omt6PkikjdkxQ2Y2mRMR65OggU4DqSRgS2wUwGnciOVqgDnaca3BCcAJ%2BmMGOYDkGFsgFv89LcJ%2FH6%2Fq6ggTPzdb%2B9jO69O1SyqbRuJbfu%2BuhDWmWaIgUrRddktOFe%2FFZgznaOMgpq1Hb2Ktm%2FqrF85hbzPR%2B1oVZR5hU%2BjyTSBXUExbJ0qdus2cJ%2FmUIVFrnuCqJHUn1yOziH5zT45%2B%2B9%2FMz7i%2BFiDiPI%2BsEnuw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=8c35239b8d32023fdb3a4fd3aaa9c051c011cf27d9d88db2f2521c39fe67b023",
+      "file_size": 12037598,
+      "type": "video/quicktime",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 11,
+  "voters": [
+    "ali",
+    "sameerphad72",
+    "eveeez",
+    "cryptographer",
+    "rbcafe",
+    "0x08",
+    "4amhunter",
+    "brandonsaldan",
+    "jatacheers",
+    "gaurav869",
+    "and 1 more..."
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
