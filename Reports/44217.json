@@ -1,0 +1,126 @@
+{
+  "id": 44217,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC80NDIxNw==",
+  "url": "https://hackerone.com/reports/44217",
+  "title": "Application XSS filter function Bypass may allow Multiple stored XSS",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2015-01-18T10:18:23.387Z",
+  "submitted_at": "2015-01-18T10:18:23.387Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "securityidiots",
+    "url": "/securityidiots",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/015/651/6b855209ff953c324d792a42e83f85b355e296cb_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 56,
+    "url": "https://hackerone.com/vimeo",
+    "handle": "vimeo",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/056/c3188aa0fc4a95fd486b5ee1f4b2d0b90da111d3_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/056/c3188aa0fc4a95fd486b5ee1f4b2d0b90da111d3_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Vimeo",
+      "twitter_handle": "vimeo",
+      "website": "https://vimeo.com",
+      "about": "Make life worth watching"
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2015-06-28T15:50:24.029Z",
+  "bug_reporter_agreed_on_going_public_at": "2015-05-29T15:50:03.272Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi,\r\n\r\nAs i analysed the application behavior and the security structure, i found out that the application is using \"Greedy XSS Regex filter\" against XSS and removes any the whole string from '<' to '>'. So i tried some basic bypass which allowed me to insert tags and other characters into the string.\r\n\r\nHere is the the payload:\r\n<%0crameset%20src=''> \r\n\r\nNow if we see the whole application is using same filter against XSS which makes this bypass to be universally working on nearly all the input fields, which means we can say an attacker can successfully bypass and enter XSS payload in database but when the string prints in the frontend there is another filter, which encode all html entities before printing.\r\n\r\nNice but now enough as many of the inputs could in the below condition will end up with a successful XSS exploitation.\r\n1. Input under javascript.\r\n2. Any string not properly encoded before printing.\r\n3. JSON output with HTML headers.\r\n\r\nI have already reported some issues in vimeo where input injected directly into javascript and do not need any html characters, another issue of JSON output with HTML headers. \r\n\r\nBelow you can see both reports:\r\nhttps://hackerone.com/reports/43934\r\nhttps://hackerone.com/reports/44215\r\n\r\nIn the first screenshot you can see profile update request where i updates my profile and injected those HTML characters, in second screenshot you can see it injected in the response as stored XSS.",
+  "weakness": {
+    "id": 60,
+    "name": "Cross-site Scripting (XSS) - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 27291,
+      "file_name": "1.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/027/291/7903324a132a49983c17a10bf5f1839dcea86cdc/1.png?response-content-disposition=attachment%3B%20filename%3D%221.png%22%3B%20filename%2A%3DUTF-8%27%271.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQRADLPHK%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T235433Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCMH60KA5c4oFROILJwlX3Ga3MXZ%2FQYQNX3He4P5AJMdgIhAI1hDx7ub27XNNWCp9HinTwvcqA3lEjxIkGOcLj5rQdFKrIFCB8QAxoMMDEzNjE5Mjc0ODQ5IgwzTtfMSrvLyCvpHrQqjwVnNPlGyR9vDw9obrVNS%2BqlNiaOm1yKVdRt9eI2V9ijVIU4hWJbOx4hIxz86ScjOUQlGsiaOs11KHUGfXtmvvAyPDcyRpacF7YO35qUeUn89mDbuvMsMUUqi%2Fg0xt%2BgbrkEfTNE2vyco49KctdEDPRlf7xnUNpINkPfc5CDxO63v6Qsgwz2aGbUVxflVUQzNe%2F383gzFqvOOe%2BOGNhvLk%2BNgrzwEIN3LiP%2FiYekCZ4Qrh%2Fxxuci6dOTgAhLOf6MRUcuvxk6gm0ZS5skBr1i2fiuLtXeIgyFGOz8WZzKDiqqlrYriAqXDaGjQk%2Bin7HJgX5kxvnMGeTbFktcAwaYCgVUxO5Ym2fM8ZRXozh6w9YKEMc3RrSrAi6kWHkkASDlUDtX%2BF5grXWFiI8S7CakKIYBEnIQRPSqg6hyXvWdOSQ4ZerDQ1Y6NQOqTgPFatWsyOkG9ERqS3xzTB9gZgOeF74fTMBENik7tMmqI%2BFFIcSpepc4nQwZI0hz%2FqdlpcOdcOTkqHEWPjh3TnYFNDPbQm0fsUuMn0EWVCLWw%2F%2FI6qF4RHh93vzm5k%2FyOHNxipVwG0%2BNmF3zggUdvVKx1ON5TDQdPEsG5jogYX087LX9LEIasKhqrkeAaXKRrVaNAOV7jchLC9nPF2cIhTy6TbrhE3Yi0Frp07aG5MDXpT50qAyY%2BRiuTxivHLg4YrgoG31j%2B%2BbuzySwasYcrbRBQN0n0fRLi7st4FH7EyWGt7GpqR9D67XF7F%2F0NK1vXMfbdJto0BEH1od2%2F5H7%2FiGGVFGQJp5RwxgDxqR1UKirZ%2B6Fz0PdAbtPDiefAwx4UWektN2H60isdmgT7x0YAj6meGJzRDCNBCoOmk9Pmi5CJvyIlOKCMPLYwcYGOrABt29w%2BchhXAbUvsBJ081b1qwI3Qr3DqIbHu2OwZtqPAzHrJBXZha0Ycdhe59%2Bt8CDw%2FsA%2B38YO5%2B0krzIm9WZ%2FnDtSasuAbtBBfnoyUYehj4EyqQAZI5j6mW6tXDsJVQi%2FXJ8WhIuCrUgy0s1Cnt2ISgPimsuYS8ZPl7NcXHJ%2BaXeh8QEThxgZdkZUMeUu8CmOlqiAiieTQ6lHVUqjskhMyWo0H%2BeogQ1O%2FJWH6WO0TE%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=0e4315859e1c2da029962dfd81d05ac0369064506360e7dd19e09eeb2d2c506f",
+      "file_size": 56986,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 27292,
+      "file_name": "2.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/027/292/21a28db1a5002c0f15c809764c5b39a7d4202c21/2.png?response-content-disposition=attachment%3B%20filename%3D%222.png%22%3B%20filename%2A%3DUTF-8%27%272.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQRADLPHK%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T235433Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCMH60KA5c4oFROILJwlX3Ga3MXZ%2FQYQNX3He4P5AJMdgIhAI1hDx7ub27XNNWCp9HinTwvcqA3lEjxIkGOcLj5rQdFKrIFCB8QAxoMMDEzNjE5Mjc0ODQ5IgwzTtfMSrvLyCvpHrQqjwVnNPlGyR9vDw9obrVNS%2BqlNiaOm1yKVdRt9eI2V9ijVIU4hWJbOx4hIxz86ScjOUQlGsiaOs11KHUGfXtmvvAyPDcyRpacF7YO35qUeUn89mDbuvMsMUUqi%2Fg0xt%2BgbrkEfTNE2vyco49KctdEDPRlf7xnUNpINkPfc5CDxO63v6Qsgwz2aGbUVxflVUQzNe%2F383gzFqvOOe%2BOGNhvLk%2BNgrzwEIN3LiP%2FiYekCZ4Qrh%2Fxxuci6dOTgAhLOf6MRUcuvxk6gm0ZS5skBr1i2fiuLtXeIgyFGOz8WZzKDiqqlrYriAqXDaGjQk%2Bin7HJgX5kxvnMGeTbFktcAwaYCgVUxO5Ym2fM8ZRXozh6w9YKEMc3RrSrAi6kWHkkASDlUDtX%2BF5grXWFiI8S7CakKIYBEnIQRPSqg6hyXvWdOSQ4ZerDQ1Y6NQOqTgPFatWsyOkG9ERqS3xzTB9gZgOeF74fTMBENik7tMmqI%2BFFIcSpepc4nQwZI0hz%2FqdlpcOdcOTkqHEWPjh3TnYFNDPbQm0fsUuMn0EWVCLWw%2F%2FI6qF4RHh93vzm5k%2FyOHNxipVwG0%2BNmF3zggUdvVKx1ON5TDQdPEsG5jogYX087LX9LEIasKhqrkeAaXKRrVaNAOV7jchLC9nPF2cIhTy6TbrhE3Yi0Frp07aG5MDXpT50qAyY%2BRiuTxivHLg4YrgoG31j%2B%2BbuzySwasYcrbRBQN0n0fRLi7st4FH7EyWGt7GpqR9D67XF7F%2F0NK1vXMfbdJto0BEH1od2%2F5H7%2FiGGVFGQJp5RwxgDxqR1UKirZ%2B6Fz0PdAbtPDiefAwx4UWektN2H60isdmgT7x0YAj6meGJzRDCNBCoOmk9Pmi5CJvyIlOKCMPLYwcYGOrABt29w%2BchhXAbUvsBJ081b1qwI3Qr3DqIbHu2OwZtqPAzHrJBXZha0Ycdhe59%2Bt8CDw%2FsA%2B38YO5%2B0krzIm9WZ%2FnDtSasuAbtBBfnoyUYehj4EyqQAZI5j6mW6tXDsJVQi%2FXJ8WhIuCrUgy0s1Cnt2ISgPimsuYS8ZPl7NcXHJ%2BaXeh8QEThxgZdkZUMeUu8CmOlqiAiieTQ6lHVUqjskhMyWo0H%2BeogQ1O%2FJWH6WO0TE%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=e37bbd577cfff369cd02826be614a1a73627f1b53f6472574136c4301fb8a65a",
+      "file_size": 65879,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2015-06-28T15:50:04.097Z",
+  "allow_singular_disclosure_after": -322992269.82138044,
+  "singular_disclosure_allowed": true,
+  "vote_count": 8,
+  "voters": [
+    "mpz",
+    "eveeez",
+    "vulnh0lic",
+    "japz",
+    "shivammusic",
+    "spetr0x",
+    "shahmeer-amir",
+    "destinedtohack"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
