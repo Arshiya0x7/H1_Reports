@@ -1,0 +1,153 @@
+{
+  "id": 1430405,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNDMwNDA1",
+  "url": "https://hackerone.com/reports/1430405",
+  "title": "Dependency repository hijacking aka Repo Jacking from GitHub repo rubygems/bundler-site & rubygems/bundler.github.io + bundler.io docs",
+  "state": "Closed",
+  "substate": "informative",
+  "severity_rating": "medium",
+  "readable_substate": "Informative",
+  "created_at": "2021-12-18T16:53:44.146Z",
+  "submitted_at": "2021-12-18T16:53:44.211Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "akincibor",
+    "url": "/akincibor",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/3wkfgrjwedbw4ue1qslsfp8o0kfx/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 8212,
+    "url": "https://hackerone.com/rubygems",
+    "handle": "rubygems",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/008/212/e65eca09896d23bc029c08d3147a79a48ec1ee2f_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/008/212/e65eca09896d23bc029c08d3147a79a48ec1ee2f_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "RubyGems",
+      "twitter_handle": "rubygems_status",
+      "website": "https://rubygems.org",
+      "about": "RubyGems.org is the Ruby community’s gem hosting service."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2021-12-19T11:12:13.915Z",
+  "bug_reporter_agreed_on_going_public_at": "2021-12-19T09:30:55.646Z",
+  "team_member_agreed_on_going_public_at": "2021-12-19T11:12:13.840Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Dependency repository hijacking (aka repo jacking) is an obscure supply chain vulnerability, conceptually similar to subdomain takeover. When the linked repository owner changes their username, it becomes immediately available to be re-registered by anyone. This means that any project that linked back to the original repository URL has now become vulnerable to remote code injection through dependency hijacking. A malicious attacker can register the old GitHub username, recreate the repository, and use it to serve malicious code to any project that depends on it.\n\n# Step to produce PoC\n\n1. Go to https://bundler.io/v2.2/guides/bundler_plugins.html\n2. At the bottom, you will see: \"Example Plugins\"\n\n{F1551051}\n\n3. Click here [kddeisz/bundler-console](https://github.com/kddeisz/bundler-console), you will see the Takeover message.\n\n{F1551052}\n\n* Real repo address: https://github.com/kddnewton/bundler-console\n\n# Remediation\n\nI found a total of 12 places where this url is located and should be updated ASAP:\n\n{F1551049}\n\n* https://github.com/rubygems/bundler-site/blob/2ac68c38cf9b0ff620a24cc5defc28325b3908d5/data/known_plugins.yml at line 5\n* https://github.com/rubygems/bundler-site/blob/2ac68c38cf9b0ff620a24cc5defc28325b3908d5/source/v1.16/guides/bundler_plugins.html.haml at line 222\n* https://github.com/rubygems/bundler-site/blob/2ac68c38cf9b0ff620a24cc5defc28325b3908d5/source/v1.17/guides/bundler_plugins.html.haml at line 222\n* https://github.com/rubygems/bundler-site/blob/2ac68c38cf9b0ff620a24cc5defc28325b3908d5/source/v2.0/guides/bundler_plugins.html.haml at line 222\n* https://github.com/rubygems/bundler-site/blob/2ac68c38cf9b0ff620a24cc5defc28325b3908d5/source/v2.1/guides/bundler_plugins.html.haml at line 236\n* https://github.com/rubygems/bundler-site/blob/2ac68c38cf9b0ff620a24cc5defc28325b3908d5/source/v2.2/guides/bundler_plugins.html.haml at line 236\n* https://github.com/rubygems/bundler.github.io/blob/4dbdb8aa82bf034474d1c58a18563e31f541100d/guides/bundler_plugins.html at line 376\n* https://github.com/rubygems/bundler.github.io/blob/4dbdb8aa82bf034474d1c58a18563e31f541100d/v1.6/guides/bundler_plugins.html at line 359\n* https://github.com/rubygems/bundler.github.io/blob/4dbdb8aa82bf034474d1c58a18563e31f541100d/v1.7/guides/bundler_plugins.html at line 359\n* https://github.com/rubygems/bundler.github.io/blob/4dbdb8aa82bf034474d1c58a18563e31f541100d/v2.0/guides/bundler_plugins.html at line 365\n* https://github.com/rubygems/bundler.github.io/blob/4dbdb8aa82bf034474d1c58a18563e31f541100d/v2.1/guides/bundler_plugins.html at line 377\n* https://github.com/rubygems/bundler.github.io/blob/4dbdb8aa82bf034474d1c58a18563e31f541100d/v2.2/guides/bundler_plugins.html at line 377\n\n## Impact\n\nAs an attacker, I can host malicious content on the compromised Github repository. I can also host an SDK or malware, which the user will think is part of the plugins as it is referenced in your documentation, which can lead to an RCE for users referring to your documentation.",
+  "weakness": {
+    "id": 53,
+    "name": "Open Redirect"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1551049,
+      "file_name": "Capture_d__cran_2021-12-18___15.41.51.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/dumcvk6178kal15z9wa1p2fzji7x?response-content-disposition=attachment%3B%20filename%3D%22Capture_d__cran_2021-12-18___15.41.51.png%22%3B%20filename%2A%3DUTF-8%27%27Capture_d__cran_2021-12-18___15.41.51.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQTNWJHDVM%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T004805Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH8aCXVzLXdlc3QtMiJHMEUCIDGz6%2F6GxJTN1j63kuIPQDFi0Z6l452T45IZEZVZeHLBAiEAgDpr%2FRvQoIILcvv7MwWroCWX473kfExlhy%2FgJ%2ByZhnoqugUI%2BP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDJj5Q0j6T%2BAE%2Bz1UEyqOBdEVHEGaYUFT77thaSeZ6lKuJx8gi8FbcjBI2Ev6W2bJikwG8i2f%2BLhfXtT8Wn6kQKK6r4qNQ5SDB2Z4EQGfwcYmIt%2FFaciFcWL%2Bxu4%2F05%2BXVM5OtOJx1PLjgQ%2BDycwNtYgXbZT2TDOMA9nIa2OGin8LX5LSqq%2FS%2BhtJpYTH9zkOX6pH1dTLcMX7i8Cl6tLJq4KoCFfLbvHAbbf38tjPybS180DjMntuHFLz8fok5V926%2FWU7i%2FlTqEFQVfBx0AZB5HVUubHCbacSD9vAHe1hrYVznFnGjfwcjo5C1u%2BUBOe5C3uQbElRl6IcpbTf9sAh%2FDO%2BffzrjtX8GAdFSfa9NP%2BWNlt3fzXpwdEWHBa%2B8DP%2FVzHjPcWLHdiLUy8udAUOsMpwZFX1nJwiztCuiSWEPB3ZUSk7OjJ2IfQoVJhPy9itkC5jyKeyCtZLfT2KP8wjGypWDIAbOLGrfuGliOE6fpqCbTyiaASClcPIk%2B6BS7iOOhlSkzBXitO0ydQ3xE1LrPKMNzPE7IY3VjC4UMXcrjMtOoJlb2GzEGJwTA5I844GPMcIFqLXHGMBQchEkmaQLXV90%2BiH%2BavSAmEkBsQte7p1L0piNPLvWy26VTRv0zAunIhiIHUzzbyv46Qcu%2F0ALXAaogeN9P2ekamzZupOwXlRzFEL3ro1Fage9iC20iQrc%2FB9TIvCwFe0mNUfEeDDd5gS%2F5Lo3npsU6FIcB%2B3eS1cR2bkbP%2B1UHOr6Z3yTIB76QQA6Vzt46huBwumifRqGYs83zkqNXeo%2F3%2FndfE%2BxwxZjwYk5o5PbBdgGy2cIicegneBs1LxbhDaVvizWYD0mdP7Qi6KYSFcw99DqSf9QSjMWMnSePG4zH9fiy3TTCm37zGBjqxAUpMBuGythxomliFM35sYIuU7hw6OO%2Builn%2B1UcAyhIahoaFoTfor4YPfstlBI5VoJpCB4N81qnH%2BEqpp0uWvgeNv%2F6iXjwb5ocnc1UhF3lgHhDQhiDGjeivhjJHvD14Zw4wWzyAc2nJqVsHSXM%2B3y5Ys7QCOJktLQ8E2fYeD6DVtRj8RgeBDBNhii1cOJtTQ7lnu6R8VDCcYymSZnUdyHVIQ09vt5TcE%2BsSympU3%2B0liQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=a71584485db5f1f601b2c94e54f19379edb0ec8c977f8c01426a97396374f6ba",
+      "file_size": 319840,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1551050,
+      "file_name": "Capture_d__cran_2021-12-18___17.39.00.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/em0d1pneppxvf85kj7arz2zosdnf?response-content-disposition=attachment%3B%20filename%3D%22Capture_d__cran_2021-12-18___17.39.00.png%22%3B%20filename%2A%3DUTF-8%27%27Capture_d__cran_2021-12-18___17.39.00.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQTNWJHDVM%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T004805Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH8aCXVzLXdlc3QtMiJHMEUCIDGz6%2F6GxJTN1j63kuIPQDFi0Z6l452T45IZEZVZeHLBAiEAgDpr%2FRvQoIILcvv7MwWroCWX473kfExlhy%2FgJ%2ByZhnoqugUI%2BP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDJj5Q0j6T%2BAE%2Bz1UEyqOBdEVHEGaYUFT77thaSeZ6lKuJx8gi8FbcjBI2Ev6W2bJikwG8i2f%2BLhfXtT8Wn6kQKK6r4qNQ5SDB2Z4EQGfwcYmIt%2FFaciFcWL%2Bxu4%2F05%2BXVM5OtOJx1PLjgQ%2BDycwNtYgXbZT2TDOMA9nIa2OGin8LX5LSqq%2FS%2BhtJpYTH9zkOX6pH1dTLcMX7i8Cl6tLJq4KoCFfLbvHAbbf38tjPybS180DjMntuHFLz8fok5V926%2FWU7i%2FlTqEFQVfBx0AZB5HVUubHCbacSD9vAHe1hrYVznFnGjfwcjo5C1u%2BUBOe5C3uQbElRl6IcpbTf9sAh%2FDO%2BffzrjtX8GAdFSfa9NP%2BWNlt3fzXpwdEWHBa%2B8DP%2FVzHjPcWLHdiLUy8udAUOsMpwZFX1nJwiztCuiSWEPB3ZUSk7OjJ2IfQoVJhPy9itkC5jyKeyCtZLfT2KP8wjGypWDIAbOLGrfuGliOE6fpqCbTyiaASClcPIk%2B6BS7iOOhlSkzBXitO0ydQ3xE1LrPKMNzPE7IY3VjC4UMXcrjMtOoJlb2GzEGJwTA5I844GPMcIFqLXHGMBQchEkmaQLXV90%2BiH%2BavSAmEkBsQte7p1L0piNPLvWy26VTRv0zAunIhiIHUzzbyv46Qcu%2F0ALXAaogeN9P2ekamzZupOwXlRzFEL3ro1Fage9iC20iQrc%2FB9TIvCwFe0mNUfEeDDd5gS%2F5Lo3npsU6FIcB%2B3eS1cR2bkbP%2B1UHOr6Z3yTIB76QQA6Vzt46huBwumifRqGYs83zkqNXeo%2F3%2FndfE%2BxwxZjwYk5o5PbBdgGy2cIicegneBs1LxbhDaVvizWYD0mdP7Qi6KYSFcw99DqSf9QSjMWMnSePG4zH9fiy3TTCm37zGBjqxAUpMBuGythxomliFM35sYIuU7hw6OO%2Builn%2B1UcAyhIahoaFoTfor4YPfstlBI5VoJpCB4N81qnH%2BEqpp0uWvgeNv%2F6iXjwb5ocnc1UhF3lgHhDQhiDGjeivhjJHvD14Zw4wWzyAc2nJqVsHSXM%2B3y5Ys7QCOJktLQ8E2fYeD6DVtRj8RgeBDBNhii1cOJtTQ7lnu6R8VDCcYymSZnUdyHVIQ09vt5TcE%2BsSympU3%2B0liQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=f508878a473b080a35ba62602292989dfb7e9cfba99a970b271041f4c9b77610",
+      "file_size": 731466,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1551051,
+      "file_name": "Capture_d__cran_2021-12-18___17.44.55.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/0npz8ev7mwao3qk2swbp5x24q9w2?response-content-disposition=attachment%3B%20filename%3D%22Capture_d__cran_2021-12-18___17.44.55.png%22%3B%20filename%2A%3DUTF-8%27%27Capture_d__cran_2021-12-18___17.44.55.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQTNWJHDVM%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T004805Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH8aCXVzLXdlc3QtMiJHMEUCIDGz6%2F6GxJTN1j63kuIPQDFi0Z6l452T45IZEZVZeHLBAiEAgDpr%2FRvQoIILcvv7MwWroCWX473kfExlhy%2FgJ%2ByZhnoqugUI%2BP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDJj5Q0j6T%2BAE%2Bz1UEyqOBdEVHEGaYUFT77thaSeZ6lKuJx8gi8FbcjBI2Ev6W2bJikwG8i2f%2BLhfXtT8Wn6kQKK6r4qNQ5SDB2Z4EQGfwcYmIt%2FFaciFcWL%2Bxu4%2F05%2BXVM5OtOJx1PLjgQ%2BDycwNtYgXbZT2TDOMA9nIa2OGin8LX5LSqq%2FS%2BhtJpYTH9zkOX6pH1dTLcMX7i8Cl6tLJq4KoCFfLbvHAbbf38tjPybS180DjMntuHFLz8fok5V926%2FWU7i%2FlTqEFQVfBx0AZB5HVUubHCbacSD9vAHe1hrYVznFnGjfwcjo5C1u%2BUBOe5C3uQbElRl6IcpbTf9sAh%2FDO%2BffzrjtX8GAdFSfa9NP%2BWNlt3fzXpwdEWHBa%2B8DP%2FVzHjPcWLHdiLUy8udAUOsMpwZFX1nJwiztCuiSWEPB3ZUSk7OjJ2IfQoVJhPy9itkC5jyKeyCtZLfT2KP8wjGypWDIAbOLGrfuGliOE6fpqCbTyiaASClcPIk%2B6BS7iOOhlSkzBXitO0ydQ3xE1LrPKMNzPE7IY3VjC4UMXcrjMtOoJlb2GzEGJwTA5I844GPMcIFqLXHGMBQchEkmaQLXV90%2BiH%2BavSAmEkBsQte7p1L0piNPLvWy26VTRv0zAunIhiIHUzzbyv46Qcu%2F0ALXAaogeN9P2ekamzZupOwXlRzFEL3ro1Fage9iC20iQrc%2FB9TIvCwFe0mNUfEeDDd5gS%2F5Lo3npsU6FIcB%2B3eS1cR2bkbP%2B1UHOr6Z3yTIB76QQA6Vzt46huBwumifRqGYs83zkqNXeo%2F3%2FndfE%2BxwxZjwYk5o5PbBdgGy2cIicegneBs1LxbhDaVvizWYD0mdP7Qi6KYSFcw99DqSf9QSjMWMnSePG4zH9fiy3TTCm37zGBjqxAUpMBuGythxomliFM35sYIuU7hw6OO%2Builn%2B1UcAyhIahoaFoTfor4YPfstlBI5VoJpCB4N81qnH%2BEqpp0uWvgeNv%2F6iXjwb5ocnc1UhF3lgHhDQhiDGjeivhjJHvD14Zw4wWzyAc2nJqVsHSXM%2B3y5Ys7QCOJktLQ8E2fYeD6DVtRj8RgeBDBNhii1cOJtTQ7lnu6R8VDCcYymSZnUdyHVIQ09vt5TcE%2BsSympU3%2B0liQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=381e267120432447ff45336daca327a5e77864823a63f4b7c538992ab3ca0b31",
+      "file_size": 331824,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1551052,
+      "file_name": "Capture_d__cran_2021-12-18___17.45.19.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/e4ac6zf1s9duifzdukkag3jl53ja?response-content-disposition=attachment%3B%20filename%3D%22Capture_d__cran_2021-12-18___17.45.19.png%22%3B%20filename%2A%3DUTF-8%27%27Capture_d__cran_2021-12-18___17.45.19.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQTNWJHDVM%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T004805Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH8aCXVzLXdlc3QtMiJHMEUCIDGz6%2F6GxJTN1j63kuIPQDFi0Z6l452T45IZEZVZeHLBAiEAgDpr%2FRvQoIILcvv7MwWroCWX473kfExlhy%2FgJ%2ByZhnoqugUI%2BP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDJj5Q0j6T%2BAE%2Bz1UEyqOBdEVHEGaYUFT77thaSeZ6lKuJx8gi8FbcjBI2Ev6W2bJikwG8i2f%2BLhfXtT8Wn6kQKK6r4qNQ5SDB2Z4EQGfwcYmIt%2FFaciFcWL%2Bxu4%2F05%2BXVM5OtOJx1PLjgQ%2BDycwNtYgXbZT2TDOMA9nIa2OGin8LX5LSqq%2FS%2BhtJpYTH9zkOX6pH1dTLcMX7i8Cl6tLJq4KoCFfLbvHAbbf38tjPybS180DjMntuHFLz8fok5V926%2FWU7i%2FlTqEFQVfBx0AZB5HVUubHCbacSD9vAHe1hrYVznFnGjfwcjo5C1u%2BUBOe5C3uQbElRl6IcpbTf9sAh%2FDO%2BffzrjtX8GAdFSfa9NP%2BWNlt3fzXpwdEWHBa%2B8DP%2FVzHjPcWLHdiLUy8udAUOsMpwZFX1nJwiztCuiSWEPB3ZUSk7OjJ2IfQoVJhPy9itkC5jyKeyCtZLfT2KP8wjGypWDIAbOLGrfuGliOE6fpqCbTyiaASClcPIk%2B6BS7iOOhlSkzBXitO0ydQ3xE1LrPKMNzPE7IY3VjC4UMXcrjMtOoJlb2GzEGJwTA5I844GPMcIFqLXHGMBQchEkmaQLXV90%2BiH%2BavSAmEkBsQte7p1L0piNPLvWy26VTRv0zAunIhiIHUzzbyv46Qcu%2F0ALXAaogeN9P2ekamzZupOwXlRzFEL3ro1Fage9iC20iQrc%2FB9TIvCwFe0mNUfEeDDd5gS%2F5Lo3npsU6FIcB%2B3eS1cR2bkbP%2B1UHOr6Z3yTIB76QQA6Vzt46huBwumifRqGYs83zkqNXeo%2F3%2FndfE%2BxwxZjwYk5o5PbBdgGy2cIicegneBs1LxbhDaVvizWYD0mdP7Qi6KYSFcw99DqSf9QSjMWMnSePG4zH9fiy3TTCm37zGBjqxAUpMBuGythxomliFM35sYIuU7hw6OO%2Builn%2B1UcAyhIahoaFoTfor4YPfstlBI5VoJpCB4N81qnH%2BEqpp0uWvgeNv%2F6iXjwb5ocnc1UhF3lgHhDQhiDGjeivhjJHvD14Zw4wWzyAc2nJqVsHSXM%2B3y5Ys7QCOJktLQ8E2fYeD6DVtRj8RgeBDBNhii1cOJtTQ7lnu6R8VDCcYymSZnUdyHVIQ09vt5TcE%2BsSympU3%2B0liQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=67a30e0fd509f86c0bf5263311951bc729d36d1dde1393ebf91f9ce72da18c2d",
+      "file_size": 1037908,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 12,
+  "voters": [
+    "p4n7h3rx",
+    "pacmanx",
+    "h4x0r_dz",
+    "spaghettisec",
+    "nynan",
+    "khizer47",
+    "brucebauer",
+    "preewo",
+    "meispi",
+    "secfung",
+    "and 2 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 2043,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/rubygems/rubygems",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
