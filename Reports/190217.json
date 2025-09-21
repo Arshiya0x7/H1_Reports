@@ -1,0 +1,119 @@
+{
+  "id": 190217,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xOTAyMTc=",
+  "url": "https://hackerone.com/reports/190217",
+  "title": "[marketplace.informatica.com] Profile stored XSS",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2016-12-10T22:21:44.175Z",
+  "submitted_at": "2016-12-10T22:21:44.175Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "s_p_q_r",
+    "url": "/s_p_q_r",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/032/547/1d8b3feccf1a8281a2285cdbfc482aaf3b046b22_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 453,
+    "url": "https://hackerone.com/informatica",
+    "handle": "informatica",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/6yxveqohTKjQLQyJm5Xv7Eye/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/6yxveqohTKjQLQyJm5Xv7Eye/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Informatica",
+      "twitter_handle": "informatica",
+      "website": "https://www.informatica.com/",
+      "about": "Informatica Corporation is the world’s number one independent provider of data integration software."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2017-04-19T17:39:07.985Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-03-20T17:38:58.366Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "The user name and lastname are inserted into JS with quotes non-escaped:\n\n```javascript\nvar pageNameDTM = \"%name% %lastname%\".replace(/[^a-zA-Z0-9 ]/g, \"\").replace(/  +/g, \" \");\n```\n\n**PoC:**\n\n1. Log into your account\n2. Set your name and lastname to **\"-alert(document.domain)-\"**\n3. Open your profile page https://marketplace.informatica.com/people/%email% from another account\n\nThe script will be executed:\n\n{F142515}",
+  "weakness": {
+    "id": 60,
+    "name": "Cross-site Scripting (XSS) - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 142515,
+      "file_name": "inf_mp_xss.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/142/515/805296262ca4afd6a3ed311bfeda3ab3490d9bd2/inf_mp_xss.png?response-content-disposition=attachment%3B%20filename%3D%22inf_mp_xss.png%22%3B%20filename%2A%3DUTF-8%27%27inf_mp_xss.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ7PF6H2AL%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T225403Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIBoQzH7Sg5LJNdI%2BygGEs0svdwzRYCjeVjSo2x8LBUonAiEA4CFm9oTjtsmKT7rgo9Uqg%2FWc0eiWC8BR%2FKGF0wI3NOoqsQUIHhADGgwwMTM2MTkyNzQ4NDkiDPCdrqaIIceXZACRlCqOBQ45plVu%2FOsLkYB6kAtPyYrDxzk4PMovf0zTIEvmzYihAywXkkwe4S65QfWz3w8AXgNUaPu50QAVsvJfn99fui1ArssRiMgQ6nyENmmC6Rto85LZfbuq%2BuxI7GyIWFadak0j4JJhqqLeLec93s8C68SXj7F1CoyCZBeTIfdEXkqvK7n73nZ5ru1wGSNNf772NXeLXgPJLbanmZ9PxxCgvvcJMzYlptArlPR7dvtvt0BNzO4pjEKE9cwA9%2BCLMhx45tB1%2Bw%2BB3oTsl4mTu%2BAUx36uDQW3jSdqe0SbQtuPwaoQTFVX35lpomhPFie%2Bt77SAdLlOLZke3wmFl70OnHDm6K%2FOszk1nbQeT9kQyNphTJFFl2Bsx%2BCbekmWHPaYCLfJ8juu04KkUbhTMGo1HM4I3N49oM6ZXpednKf3FLel%2Bla9hPANGSt9EOM%2Bk1gu5U4Rn2uZlSzvrfN4eKt4Wpj8EDtvG54ve%2FP8ZaBkLAfoJYqU9aagk%2BYBRwo0GRoFPCa8PgTIisSaHvtMviwZaEA1pc4KOJVFhFm4scMi8zIp6%2FxLSEwyLklSPaJav8pzfdyZ8qwPzimIgxLBuwX0Lt4jXz229unCLej4hQu0OjdUG%2B4kgGEFjWDXvrw%2BDtZW1njKcfxTUGpyuOK6e3KrozfGJnw1l120E2M4opDlPbZN%2FqxJ4MhmjB9gH0q6l7iLnYJxGYfZ%2BaKvBLqP1bnzkZJLydORPJt7wly5wXLoiP%2BWq%2BVr8UZgB9Yv9xsAzb6uMx%2FwBqPOelEuJCk4J3PloeYiLrQiIHegp0QHG52FwQNbIlOo4m9j34rEawsVcNKyoFiTrsCVD41IMaBR%2BonACeicsAdmP%2FXrLa2%2FeYknG3u4jD9yMHGBjqxAafvTr%2BYdGCePzU3pNNlnLCuDJKyKefwwMk7%2FVefhdjV%2FxgQwAJfb4v3l%2B0fFq3G8sOcIdYGoDmxMX6KwwFGYWtfKzGwGWi8coY9IyKfoZ3Z0j%2BUSQTMiBLlSQOzjHrEf41ypuZiSyU5Gty8iycVEWNVeGto8A0SV9fr%2BuE46I79ZzZipR%2FNI9%2FJGCVgmk4AcQnslUvCRAja%2FrrxKXaa7kyuHO%2FFnv5Fe03gkJRZqhqKIg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=516923e294b775335bc9d57cd38751ccd0d09f6aaea6b40504f33f9ff23ea8f9",
+      "file_size": 41241,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-04-19T17:38:58.418Z",
+  "allow_singular_disclosure_after": -265871704.87070638,
+  "singular_disclosure_allowed": true,
+  "vote_count": 4,
+  "voters": [
+    "mpz",
+    "eveeez",
+    "sumit7",
+    "spetr0x"
+  ],
+  "severity": {
+    "rating": "high",
+    "author_type": "Team"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
