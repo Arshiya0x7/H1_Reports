@@ -1,0 +1,133 @@
+{
+  "id": 794395,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC83OTQzOTU=",
+  "url": "https://hackerone.com/reports/794395",
+  "title": "No Rate Limit On forgot Password Leading To Massive Email Flooding",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2020-02-12T10:51:28.854Z",
+  "submitted_at": "2020-02-12T10:51:28.854Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "el_chapo",
+    "url": "/el_chapo",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6Nzg0NjI2LCJwdXIiOiJibG9iX2lkIn19--5715a76fc8147448ca0368afe1119ccc8804f72c/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--2de8067d228529d65848a4eeed0bed0bb2531bc3/IMG_20200111_180256_783.jpg"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 43727,
+    "url": "https://hackerone.com/companyhub",
+    "handle": "companyhub",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NjU5ODk1LCJwdXIiOiJibG9iX2lkIn19--87121d1692f58f593e085e7fa2f6a0ff893c18d1/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--a4d91faed3dff6024dfc1a7b7f8ccc6b45e38396/logo",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/K8rYFFTS3mKSMXSGkM4VVtw2/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "CompanyHub",
+      "twitter_handle": "CompanyHubCRM",
+      "website": "http://companyhub.com",
+      "about": ""
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2020-02-25T09:58:48.316Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-02-25T09:52:05.018Z",
+  "team_member_agreed_on_going_public_at": "2020-02-25T09:58:48.242Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\n\nNo rate limit check on forgot password which can lead to mass mailing and spamming of users and possible employees\nA little bit about Rate Limit:\nA rate limiting algorithm is used to check if the user session (or IP-address) has to be limited based on the information in the session cache.\nIn case a client made too many requests within a given timeframe, HTTP-Servers can respond with status code 429: Too Many Requests or you can include a captcha to limit request.\n\n## Browsers Verified In:\nfirefox (Linux system)\n\n## Steps To Reproduce:\n1.Go to https://accounts.companyhub.com/auth/credentials/forgotpassword\n\nintercept the request with burpsuite\n\n\n\nPOST /a/forgot-password HTTP/1.1\nHost: accounts.companyhub.com\nUser-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101 Firefox/68.0\nAccept: */*\nAccept-Language: en-US,en;q=0.§5§\nAccept-Encoding: gzip, deflate\nReferer: https://accounts.companyhub.com/auth/credentials/forgotpassword\nContent-Type: application/x-www-form-urlencoded; charset=UTF-8\nX-Requested-With: XMLHttpRequest\nContent-Length: 30\nConnection: close\nCookie: __cfduid=df9a10acb0ed6c3beb1b456f31191d0381581499643; _ga=GA1.2.1112499432.1581499640; _gid=GA1.2.2026149887.1581499640; _fbp=fb.1.1581499643165.621914857; _fs=2989895d-637f-4b63-bc3b-b3b5ceb33acf; _vwo_uuid_v2=D5757B6FC071256FD467820472A6D965A|f925869832a8407414983209a1daab5c; _hjid=bda621b0-e531-45fb-993f-9ac81e3a7ae8; intercom-id-twdxtxyf=abf22278-1e30-4465-bd01-12a10502a7c1; intercom-session-twdxtxyf=cnNEd3Q0eDVDdTZmc28wVzF4ZUhweWdUWlc5MlFNZnJZcW9hb1lVUUxDTEF6cTgvdThLT2pzQ2lOcmlXNVJ3YS0tOXhOWnF0aGFDUFc4OFVubUkvUFBEUT09--5b7b04d1c0de01fa7e67a15878dd03e06fa495c7; ch_terms_accepted=true; CompanySize=3; .ch_lang=en; _vis_opt_s=1%7C; utm_source=app.companyhub.com; utm_content=%2F; __resolution=1280%7C772; __remember_me=true; _gali=txtEmail; _gat=1\n\nEmail=apugodspower%40gmail.com\n\n#Now you Send This Request To Intruder And Repeat It 100+ Times By Fixing Any Arbitrary Payload Which Does No Effect On Request So I Choose Accept-Language: en-US,en;q=0.$5$\n\n4.Now You Will Get 200 ok Status Code & 100+(Depending on how many u wish to send) Email In Your INBOX\nSee It Is Resulting In Mass Mailing Or Email Bombing To Your Users Which Is Bad For Business Impact\n\n\n## Supporting Material/References:\nScreenshots POC is applied below\n\n#below is poc i got 71 mail which can bring huge business impact on customers\n\n## Impact\n\nIf You Are Using Any Email Service Software API Or Some Tool Which Charges You For Email sent This Type Of Attack Can Result You In Financial Lose And It Can Also Slow Down Your Services, It Can cause huge mails In Sent Mail Of Users, Affected By This Vulnerability They Can Stop Applying for a career in your company",
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 714041,
+      "file_name": "HUB_POC.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/CAkE4UYPV1AgG6dUJ4BeRfiD?response-content-disposition=attachment%3B%20filename%3D%22HUB_POC.png%22%3B%20filename%2A%3DUTF-8%27%27HUB_POC.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQACXHSS4%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T122042Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDXRxo5zHpRt3ZYoenJ1wd5JkJ1NBujQ%2BLJAzF85PgA4gIgG8P8%2BYTN%2B6LK3LM2x%2BQsJbsbKJ3XlF%2BgWjt8CO7wqw0qsgUIFRADGgwwMTM2MTkyNzQ4NDkiDPMRaLfxVYuzcejcByqPBYsP1GpgsQNCDwEj7s2ooDqZfTFIhmfXHzhnkAKYMZ6JKsMj%2FyCHRggO9kolqojogIgII2B%2Fpzw7htnWmV2d%2FFbHE9WmkbkKSW9tmwKM8V2SwcWeT42e2sPftwmfmuIRnT88rlN2UxIf2%2Bye%2F6PXyq94y0rCVHdZ00hmGUcHuxLSx7Hky%2FYBvUPB3PBQ12gIcvx7s2bdvavvHSI9E2cp7t3ANfDQwt%2Fg1UeszKImi0NFvr8y201sI%2FoKXbv49qIpkA1A%2F%2F99HZE%2B0OQEbRRSAMqhuxfG32PyQUHAhhZs2hcl6XWz%2F3MM%2F%2FscnTPIXpEU3QEtqMN4XwsuqdR%2FigvbraW1MuAGufP3vBd5AGTCtp49hb8Bx0FV6kVQdZVzV0L4M2pqqwlOTfeLRwdx5%2FUhexV59JeWHlO%2BTVCof2IcMLMwN6jys3Mnk5L0VeTKiqO820qFc8UdL3JcUT0tG%2F4S7ip1wQvG5xZ1dmtVJt6N2m5daSpmCer2TCkou8LlZ0qRSYTKQ6SiXQTs0q9WpDBJmhdHkP1A4zqfGZ3BLlO0mhF7cx79e2934UNro8M5irr9s5xtgij6DQUFDPvDLXbAXaTVjYd1ylrOByBT2vvWfcxLONeP17kQ5FLhpdm3E%2BpvMewO9BJi2tA7dZwgFolH98Cvwvu9fixFNLmOVo3dJV8ZOMr%2FnBXH70Ndj7KbjgsemH05aAaA86qVPKxRXgV%2FTFlx5OHox%2FKxUCRbyORTNnURe7JdSM16fHIGTYZdAdpcd4xdP4k7kzdobMK8KrWIH5UrimidhxmZ9bu9DNFt%2FyMpzAEXCoYSUY1til%2FkewRpbxDTmKiz7uB%2Biou1Aauv6qEgjsu7%2Fgb7SWEGE5ufSnUw6sK%2FxgY6sQF5Kk5TmB2V6LdEC6pSpNvzOH1fucPURtQpsz5uxo6Iq4nJ4584p%2F0o%2BtJYLUdylV93CoJ9tEMUF8bqMBeEKLaEkRfyctibov9LR64Zox6VOfJOfvfCTmktsfATzhP527cPTYxwvAK2OxeuHmsPTXWcoNbnSBxv27j54e9IDm8edP0S4frvZlDWwxQTp0TgQBgZvX7ZRClpIzfszIfPtAR9Us8IBiXbZ9d4EdmHUDKKXTQ%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=51d437e168bad630491589b0b29f983a02030e6ffcf0b46adab2ecb2b919e229",
+      "file_size": 102985,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 714042,
+      "file_name": "POCHUB.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/6VCK2THhkT8PNB8cPWcp92RY?response-content-disposition=attachment%3B%20filename%3D%22POCHUB.png%22%3B%20filename%2A%3DUTF-8%27%27POCHUB.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQACXHSS4%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T122042Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDXRxo5zHpRt3ZYoenJ1wd5JkJ1NBujQ%2BLJAzF85PgA4gIgG8P8%2BYTN%2B6LK3LM2x%2BQsJbsbKJ3XlF%2BgWjt8CO7wqw0qsgUIFRADGgwwMTM2MTkyNzQ4NDkiDPMRaLfxVYuzcejcByqPBYsP1GpgsQNCDwEj7s2ooDqZfTFIhmfXHzhnkAKYMZ6JKsMj%2FyCHRggO9kolqojogIgII2B%2Fpzw7htnWmV2d%2FFbHE9WmkbkKSW9tmwKM8V2SwcWeT42e2sPftwmfmuIRnT88rlN2UxIf2%2Bye%2F6PXyq94y0rCVHdZ00hmGUcHuxLSx7Hky%2FYBvUPB3PBQ12gIcvx7s2bdvavvHSI9E2cp7t3ANfDQwt%2Fg1UeszKImi0NFvr8y201sI%2FoKXbv49qIpkA1A%2F%2F99HZE%2B0OQEbRRSAMqhuxfG32PyQUHAhhZs2hcl6XWz%2F3MM%2F%2FscnTPIXpEU3QEtqMN4XwsuqdR%2FigvbraW1MuAGufP3vBd5AGTCtp49hb8Bx0FV6kVQdZVzV0L4M2pqqwlOTfeLRwdx5%2FUhexV59JeWHlO%2BTVCof2IcMLMwN6jys3Mnk5L0VeTKiqO820qFc8UdL3JcUT0tG%2F4S7ip1wQvG5xZ1dmtVJt6N2m5daSpmCer2TCkou8LlZ0qRSYTKQ6SiXQTs0q9WpDBJmhdHkP1A4zqfGZ3BLlO0mhF7cx79e2934UNro8M5irr9s5xtgij6DQUFDPvDLXbAXaTVjYd1ylrOByBT2vvWfcxLONeP17kQ5FLhpdm3E%2BpvMewO9BJi2tA7dZwgFolH98Cvwvu9fixFNLmOVo3dJV8ZOMr%2FnBXH70Ndj7KbjgsemH05aAaA86qVPKxRXgV%2FTFlx5OHox%2FKxUCRbyORTNnURe7JdSM16fHIGTYZdAdpcd4xdP4k7kzdobMK8KrWIH5UrimidhxmZ9bu9DNFt%2FyMpzAEXCoYSUY1til%2FkewRpbxDTmKiz7uB%2Biou1Aauv6qEgjsu7%2Fgb7SWEGE5ufSnUw6sK%2FxgY6sQF5Kk5TmB2V6LdEC6pSpNvzOH1fucPURtQpsz5uxo6Iq4nJ4584p%2F0o%2BtJYLUdylV93CoJ9tEMUF8bqMBeEKLaEkRfyctibov9LR64Zox6VOfJOfvfCTmktsfATzhP527cPTYxwvAK2OxeuHmsPTXWcoNbnSBxv27j54e9IDm8edP0S4frvZlDWwxQTp0TgQBgZvX7ZRClpIzfszIfPtAR9Us8IBiXbZ9d4EdmHUDKKXTQ%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=45a267062b69fae9b1429c1b539e9d3e4b8f90b011d3f53a892c4eebefc6de0f",
+      "file_size": 178953,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 19,
+  "voters": [
+    "he4am",
+    "a_d_a_m",
+    "rook1337",
+    "salna_kuruvi",
+    "pr0f0x01",
+    "sa1tama0",
+    "bb00x",
+    "okido1",
+    "el_chapo",
+    "haruto",
+    "and 9 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 38713,
+    "asset_type": "WILDCARD",
+    "asset_identifier": "*.companyhub.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
