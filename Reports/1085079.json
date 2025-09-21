@@ -1,0 +1,139 @@
+{
+  "id": 1085079,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMDg1MDc5",
+  "url": "https://hackerone.com/reports/1085079",
+  "title": "No Limit on Email Subscription",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2021-01-23T06:20:54.681Z",
+  "submitted_at": "2021-01-23T06:20:54.741Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "thecyberjerry",
+    "url": "/thecyberjerry",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/qojzalrbe8syhxu1z752g1xit8lf/c8a1698ff707a5e3e8a91a3484838363845daac68cb82c86d55c9e2d44d67b67"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 46502,
+    "url": "https://hackerone.com/openmage",
+    "handle": "openmage",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/gYnpB5DCwUGoEGsybkejTQgs/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/gYnpB5DCwUGoEGsybkejTQgs/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "OpenMage",
+      "twitter_handle": "OpenMageProject",
+      "website": "https://www.openmage.org/",
+      "about": "A community-driven fork of Magento CE"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2021-09-04T07:05:58.295Z",
+  "bug_reporter_agreed_on_going_public_at": "2021-08-05T07:05:49.261Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nHello Madison\nAs I have Found a Business Logic Error which cause unlimited amount of Newsletter Subscription as you can see in the image i have provided \n\n## Steps To Reproduce:\n\n1. Open Burpsuite and set the proxy and intercept on.\n\n2.Then Go to https://demo.openmage.org/ and enter the Email you want to Bomb and press subscribe... (Make sure Burp Intercept is ON)\n\n3.Then press enter and you burp has captured a request looks like this\n\n\nPOST /newsletter/subscriber/new/ HTTP/1.1\nHost: demo.openmage.org\nUser-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\nAccept-Language: en-US,en;q=0.5\nAccept-Encoding: gzip, deflate\nContent-Type: application/x-www-form-urlencoded\nContent-Length: 28\nOrigin: https://demo.openmage.org\nConnection: close\nReferer: https://demo.openmage.org/\nUpgrade-Insecure-Requests: 1\n\nemail=deyidi6330%401adir.com\n\n4.Now right click on request and click send to intruder.\n5.Now remove the cookies here i have already removed that and at Accept-Language Header Select the 5 and click on Add § Now 5 will look like this §5§ and now in Payload tab select payload type Null Payloads and Select Generate Payloads set it to 50....\n\nAnd after that click on Start Attack\n\nYou will see you are getting unlimited amount of  NewsLetter Subscription Emails\n\nYou Also can see about this on this report #1047124\n\n## Impact\n\nAn Attacker Can Send Bulk Emails and Many Emails and in Emails He can inject Infected XSS which can captures USER SESSION TOKEN",
+  "weakness": {
+    "id": 120,
+    "name": "Allocation of Resources Without Limits or Throttling"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1168749,
+      "file_name": "Screenshot_from_2021-01-23_11-32-11.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/2rkgat7f1veno1iup4triu6sj4ti?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_from_2021-01-23_11-32-11.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_from_2021-01-23_11-32-11.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQURJER4JF%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T014401Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH8aCXVzLXdlc3QtMiJHMEUCIQCxCHubCAopuS5sT1c622J7mKsRjnVdN1TDoD9qZ6mC4gIga9rswNKd0tEdR3vF%2BaUY9%2F4iBI2o6amy8bPqGGq0HRAquwUI%2BP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDBV1E3M8E%2FTNNrDtsiqPBRzpIXhojQmU%2BFN0yP83HsenKpA2bf1qN92n8R562AwW0Y6INtXm9SFutk7QWG1pn2DH2l9rrKWGsmHVi7MAWNlsMv%2FKOE73CF2j6ywpIFTZODJ3tFS0NPG2RzY2ePz1FAwCsAW%2B32pyFdIpnawn2FJf6E0nzEdw%2FjqEP1%2FYLBSxVhUyxTWBmV55BjTCQdv%2FQ6fWgvcE3gNzPgyWTTreLm5H5e3uNSW54iiSLvca3HIEAKB9GX%2BSVpcsJaeDT03yc9WTkQ7v4%2BxF9aCQMkjZnQuEVdhOcr4RTQKWJbWd%2FBGfbAwvmuiCR2%2FjNQzN%2FGUyO8Rlz0XmSvLlWmjbakVuYB%2FGsp20Cz%2BjBNOrITj2DZwCl1EQY%2FXqpXNzFfulARmpmFyJGabsni%2BxiG7hnmLX0LVSdUpzH2KZDC8EBfFeKZX29UNnyGpAd0tTVMK2mq%2FjSiXj%2FBjLJSpgpV8EtfsA4zaw6ioNWpg8covYBxrxMS2WHr6NMifoBSqeRLi1Lxj9I2GAEuY%2F6WkO3QQyrl7EpFma2aGP8RN7K4avSM05F3wzDdztP8LSeNtXMCXD4kYdtSv8cCz0xIfXMxf3rhrU95M6Sz1THj%2Fc2DDrtKsYfE3HRrUefmOw0gBVl1LJSkQ3PnPhYDK7nTkWdtn4%2Fv5ZkYY9eGLaYdQ2MQQ0QPrwpiZcVBsI1s9it9lH3ytoEGhUUUHFzrT5zshPAKZeitEsDAAeWgqndG3qvavIo0BNUZhycNsKopaXIas94Fhr%2BKlX%2FwN%2B6a3SbkHkQVfK0723zCh8n%2FVKOUajLzrlgJfFLOfvsM%2BHZiuAW2l9PhWua4DVDRn0x7gk%2BJ2pSvnH6e5NW2Hd%2FQC%2BvAaL4fAuCr4O%2FUow99S8xgY6sQFlLDO%2Byl7F6dSnUhdT%2BvvUwfN1PIJyhdgMSMSt%2Ba8Lc%2FH5bw4ztyomzacDRvhZwdJA18WnmLlXlcCvV4ME7TrhoXAPu7%2BrD7GOwXd5tKxKivbK48g7CO7vXxi8uEaulROEQ0uN31SC3nFIqKLjeAWwhkwORnBJozLu9UekkcrPu9aW9B5on7n%2Ff9Rj%2FGxt7nfBYbmj0MqK8UI5%2Bd6XsaT3jF7wNrelKIF6jIUoLNYFGVM%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=675571fa0989943f085204ca99613281a079eadd565aad02b6762bc4e19feba2",
+      "file_size": 91909,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1168750,
+      "file_name": "Screenshot_from_2021-01-23_11-30-21.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/5iq1orsqcvhen3z2ixd1hq2bxkc8?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_from_2021-01-23_11-30-21.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_from_2021-01-23_11-30-21.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQURJER4JF%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T014401Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH8aCXVzLXdlc3QtMiJHMEUCIQCxCHubCAopuS5sT1c622J7mKsRjnVdN1TDoD9qZ6mC4gIga9rswNKd0tEdR3vF%2BaUY9%2F4iBI2o6amy8bPqGGq0HRAquwUI%2BP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDBV1E3M8E%2FTNNrDtsiqPBRzpIXhojQmU%2BFN0yP83HsenKpA2bf1qN92n8R562AwW0Y6INtXm9SFutk7QWG1pn2DH2l9rrKWGsmHVi7MAWNlsMv%2FKOE73CF2j6ywpIFTZODJ3tFS0NPG2RzY2ePz1FAwCsAW%2B32pyFdIpnawn2FJf6E0nzEdw%2FjqEP1%2FYLBSxVhUyxTWBmV55BjTCQdv%2FQ6fWgvcE3gNzPgyWTTreLm5H5e3uNSW54iiSLvca3HIEAKB9GX%2BSVpcsJaeDT03yc9WTkQ7v4%2BxF9aCQMkjZnQuEVdhOcr4RTQKWJbWd%2FBGfbAwvmuiCR2%2FjNQzN%2FGUyO8Rlz0XmSvLlWmjbakVuYB%2FGsp20Cz%2BjBNOrITj2DZwCl1EQY%2FXqpXNzFfulARmpmFyJGabsni%2BxiG7hnmLX0LVSdUpzH2KZDC8EBfFeKZX29UNnyGpAd0tTVMK2mq%2FjSiXj%2FBjLJSpgpV8EtfsA4zaw6ioNWpg8covYBxrxMS2WHr6NMifoBSqeRLi1Lxj9I2GAEuY%2F6WkO3QQyrl7EpFma2aGP8RN7K4avSM05F3wzDdztP8LSeNtXMCXD4kYdtSv8cCz0xIfXMxf3rhrU95M6Sz1THj%2Fc2DDrtKsYfE3HRrUefmOw0gBVl1LJSkQ3PnPhYDK7nTkWdtn4%2Fv5ZkYY9eGLaYdQ2MQQ0QPrwpiZcVBsI1s9it9lH3ytoEGhUUUHFzrT5zshPAKZeitEsDAAeWgqndG3qvavIo0BNUZhycNsKopaXIas94Fhr%2BKlX%2FwN%2B6a3SbkHkQVfK0723zCh8n%2FVKOUajLzrlgJfFLOfvsM%2BHZiuAW2l9PhWua4DVDRn0x7gk%2BJ2pSvnH6e5NW2Hd%2FQC%2BvAaL4fAuCr4O%2FUow99S8xgY6sQFlLDO%2Byl7F6dSnUhdT%2BvvUwfN1PIJyhdgMSMSt%2Ba8Lc%2FH5bw4ztyomzacDRvhZwdJA18WnmLlXlcCvV4ME7TrhoXAPu7%2BrD7GOwXd5tKxKivbK48g7CO7vXxi8uEaulROEQ0uN31SC3nFIqKLjeAWwhkwORnBJozLu9UekkcrPu9aW9B5on7n%2Ff9Rj%2FGxt7nfBYbmj0MqK8UI5%2Bd6XsaT3jF7wNrelKIF6jIUoLNYFGVM%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=946c6d2f1e478f8a04adc35faa4a9074f15040cd797523bee9578588c2930532",
+      "file_size": 218268,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2021-09-04T07:05:49.313Z",
+  "allow_singular_disclosure_after": -127679892.49170256,
+  "singular_disclosure_allowed": true,
+  "vote_count": 11,
+  "voters": [
+    "run_win",
+    "akashhamal0x01",
+    "pr0f0x01",
+    "thecyberjerry",
+    "kishor735690",
+    "0xkr4k3n",
+    "meispi",
+    "z0rox",
+    "mimilove_exe",
+    "mcncyo",
+    "and 1 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "Team"
+  },
+  "structured_scope": {
+    "databaseId": 57961,
+    "asset_type": "URL",
+    "asset_identifier": "demo.openmage.org",
+    "max_severity": "medium"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
