@@ -1,0 +1,156 @@
+{
+  "id": 737042,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC83MzcwNDI=",
+  "url": "https://hackerone.com/reports/737042",
+  "title": "Password token leak via Host header",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2019-11-13T18:56:19.002Z",
+  "submitted_at": "2019-11-13T18:56:19.002Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "aishkendle",
+    "url": "/aishkendle",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/nXpGV7wVrN1Mj5SsUXousNSg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 42368,
+    "url": "https://hackerone.com/stripo",
+    "handle": "stripo",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/042/368/5b1017d17427be6c8e05cbc95da27646bf45e925_original./235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/042/368/5b1017d17427be6c8e05cbc95da27646bf45e925_original./3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Stripo Inc",
+      "twitter_handle": "",
+      "website": "https://stripo.email",
+      "about": "Stripo is a lightweight and intuitive email template editor that lets users build professional looking and highly responsive email templates."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2019-12-19T13:01:38.710Z",
+  "bug_reporter_agreed_on_going_public_at": "2019-12-18T15:00:05.820Z",
+  "team_member_agreed_on_going_public_at": "2019-12-19T13:01:38.631Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "#Password token leak via Host header\n--------------\n\n##Vulnerability Description:\nToken will be leaked by the Server to that third party site and that token can be used by third parties to reset the password and take over the account & directly login in your account\n\n##Steps To Reproduce:\n\n1) Send reset password link to your email address.\n2)Now go to email, turn burp suite intercept on and click on reset password link. Check for the requests having the token in referrer and host as third party website. And copy the link\n3)Now turn intercept off and reset the password.(with that link)\n4)Now reset the password.\n\n#POC:\nImages Uploaded\n\n## Impact\n\n#Impact\n\nIt allows the person who has control of particular site to change the user's password (CSRF attack), because this person knows reset password token of the user.",
+  "weakness": {
+    "id": 57,
+    "name": "Violation of Secure Design Principles"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 633556,
+      "file_name": "Screenshot_from_2019-11-14_00-22-22.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/u4GZZcnDYEXtyXD422KfssdR?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_from_2019-11-14_00-22-22.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_from_2019-11-14_00-22-22.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQTTMJ4VL%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T125722Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCyFQFT04wZrDhzCVQhTIePvQ5xBEB1KfjuULZnnuW68gIhAMmsmF6b6dEQT07rctw%2BtTCMDbA0zl6QGdT9HNXhQ12dKrIFCBQQAxoMMDEzNjE5Mjc0ODQ5Igw%2BJKoTAqPOS8l%2FZ0kqjwVSrZx1LH2VIgx4yRTONTSFfE%2Bz44kCcpmaLgcpxvx%2BWS48cziuoW2yiDQuDFciJg0BiHCWKTTJbWkbI4%2FBgCLDVMEDaFIp3uQnrp9npik2cpJqFqWO%2FvKSCaH4ffXh3ENu0omU4AHIwsgvMELa26FvTdNSWERJSc%2FkGuB%2FIcm5uWZG%2FG9OvPA1MnvMAmYgpf1zcPKulpneHMl8Oz5S9IlGk3F0Us%2FrbfRKwVm7KO%2FCCsRbCqzd6lVPVynAfGqK1ATMbE294Ot%2BDFnMoR5SnHh6qAEHC0lmgmUhYg%2B8ZLSO%2F3sZcekIhbac7gVN5M4mIQnCIZiCv%2Bz9QZ4GG8IUS%2FEgS4%2BcGGbOXvzW%2Bx2jZXsFnbFNyFmS3%2FP1uibP1S0vgnyc0HSvC3VJbjW5e4bZvjML5mw%2Bfb7HxRtxaq0IjhFBxQCEWhIZRgYXLIgHHruox6M%2BQpSGNWcXnD4zCNL89V84mWvBMTDvpEySLcbdS%2FO1sCZrL0DpyGsnCttSWHrrBjV%2FttHGxh0m0OLn8%2Fet%2BYctd332ls8umYj4UZ3LIrnrT2ifdi14VZFB48TE8esvLpjbfu%2FC%2BKKrxE7ixfYVurNGpmNBf5S3k0KU8ra9bRnlBOp2ECWVTr5VYmH7S60gkSwR17zoGkU1rxwZidW4cfLhMri4%2BgUdflmxc2qr1oAKNmC01abFbyEjtk5tDmRUzv5GZHlx5P0Ms0R8yORUpE9l3RcVKesy8GM0%2FreKM6UidHqCQX8onF2M%2BrSdYKUPXuin1C9BheQG6WuCHJs0a3JR8sd2CI3ZrgCSCq6DVWhUG3Y2JvqbKvtrpJTmNKstYsgCSbp61A8BHLhQ8i6Dk0IenFmkCaZD7D5BlnVSXo7LMO24v8YGOrABpQPnpP70Y8Z2RBWKtzxGvTj89XOJf0k1xT1Z%2B%2BqY6CQd2jdSge%2FSbo9G0Y%2ByE3dswSuY3hbwmaqeFeaicxJaR%2BnvTd6IEq3bO5w0YhSVIVSL4wNw5Cy5zPxi8%2B%2BW5Pw0g37jJkNfiw1vKjT1P066K5JbRKO%2FgIUjX%2FObfX5yvc2cnHaJFQS5UC8ep%2FakAxjxtCY5AGFst5kZYbkD0wPhorUOVmjw2ZBA1lwOqf%2BWpys%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=8562b0edba95c55dcdcd817f7bc7eb074030643d57acb83508f1b9a3e0995e95",
+      "file_size": 44127,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 633557,
+      "file_name": "Screenshot_from_2019-11-14_00-21-53.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/R8qMA7Dt5pgHC8ruAez5VLbD?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_from_2019-11-14_00-21-53.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_from_2019-11-14_00-21-53.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQTTMJ4VL%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T125722Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCyFQFT04wZrDhzCVQhTIePvQ5xBEB1KfjuULZnnuW68gIhAMmsmF6b6dEQT07rctw%2BtTCMDbA0zl6QGdT9HNXhQ12dKrIFCBQQAxoMMDEzNjE5Mjc0ODQ5Igw%2BJKoTAqPOS8l%2FZ0kqjwVSrZx1LH2VIgx4yRTONTSFfE%2Bz44kCcpmaLgcpxvx%2BWS48cziuoW2yiDQuDFciJg0BiHCWKTTJbWkbI4%2FBgCLDVMEDaFIp3uQnrp9npik2cpJqFqWO%2FvKSCaH4ffXh3ENu0omU4AHIwsgvMELa26FvTdNSWERJSc%2FkGuB%2FIcm5uWZG%2FG9OvPA1MnvMAmYgpf1zcPKulpneHMl8Oz5S9IlGk3F0Us%2FrbfRKwVm7KO%2FCCsRbCqzd6lVPVynAfGqK1ATMbE294Ot%2BDFnMoR5SnHh6qAEHC0lmgmUhYg%2B8ZLSO%2F3sZcekIhbac7gVN5M4mIQnCIZiCv%2Bz9QZ4GG8IUS%2FEgS4%2BcGGbOXvzW%2Bx2jZXsFnbFNyFmS3%2FP1uibP1S0vgnyc0HSvC3VJbjW5e4bZvjML5mw%2Bfb7HxRtxaq0IjhFBxQCEWhIZRgYXLIgHHruox6M%2BQpSGNWcXnD4zCNL89V84mWvBMTDvpEySLcbdS%2FO1sCZrL0DpyGsnCttSWHrrBjV%2FttHGxh0m0OLn8%2Fet%2BYctd332ls8umYj4UZ3LIrnrT2ifdi14VZFB48TE8esvLpjbfu%2FC%2BKKrxE7ixfYVurNGpmNBf5S3k0KU8ra9bRnlBOp2ECWVTr5VYmH7S60gkSwR17zoGkU1rxwZidW4cfLhMri4%2BgUdflmxc2qr1oAKNmC01abFbyEjtk5tDmRUzv5GZHlx5P0Ms0R8yORUpE9l3RcVKesy8GM0%2FreKM6UidHqCQX8onF2M%2BrSdYKUPXuin1C9BheQG6WuCHJs0a3JR8sd2CI3ZrgCSCq6DVWhUG3Y2JvqbKvtrpJTmNKstYsgCSbp61A8BHLhQ8i6Dk0IenFmkCaZD7D5BlnVSXo7LMO24v8YGOrABpQPnpP70Y8Z2RBWKtzxGvTj89XOJf0k1xT1Z%2B%2BqY6CQd2jdSge%2FSbo9G0Y%2ByE3dswSuY3hbwmaqeFeaicxJaR%2BnvTd6IEq3bO5w0YhSVIVSL4wNw5Cy5zPxi8%2B%2BW5Pw0g37jJkNfiw1vKjT1P066K5JbRKO%2FgIUjX%2FObfX5yvc2cnHaJFQS5UC8ep%2FakAxjxtCY5AGFst5kZYbkD0wPhorUOVmjw2ZBA1lwOqf%2BWpys%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=000a09d06dd6f7f8ae89d36818a45b152d0fa215c305d8289189b33dd812c23d",
+      "file_size": 24324,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 633558,
+      "file_name": "Screenshot_from_2019-11-14_00-22-37.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/tUVMd3KrkSNZdeSKMH2xjcke?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_from_2019-11-14_00-22-37.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_from_2019-11-14_00-22-37.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQTTMJ4VL%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T125722Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCyFQFT04wZrDhzCVQhTIePvQ5xBEB1KfjuULZnnuW68gIhAMmsmF6b6dEQT07rctw%2BtTCMDbA0zl6QGdT9HNXhQ12dKrIFCBQQAxoMMDEzNjE5Mjc0ODQ5Igw%2BJKoTAqPOS8l%2FZ0kqjwVSrZx1LH2VIgx4yRTONTSFfE%2Bz44kCcpmaLgcpxvx%2BWS48cziuoW2yiDQuDFciJg0BiHCWKTTJbWkbI4%2FBgCLDVMEDaFIp3uQnrp9npik2cpJqFqWO%2FvKSCaH4ffXh3ENu0omU4AHIwsgvMELa26FvTdNSWERJSc%2FkGuB%2FIcm5uWZG%2FG9OvPA1MnvMAmYgpf1zcPKulpneHMl8Oz5S9IlGk3F0Us%2FrbfRKwVm7KO%2FCCsRbCqzd6lVPVynAfGqK1ATMbE294Ot%2BDFnMoR5SnHh6qAEHC0lmgmUhYg%2B8ZLSO%2F3sZcekIhbac7gVN5M4mIQnCIZiCv%2Bz9QZ4GG8IUS%2FEgS4%2BcGGbOXvzW%2Bx2jZXsFnbFNyFmS3%2FP1uibP1S0vgnyc0HSvC3VJbjW5e4bZvjML5mw%2Bfb7HxRtxaq0IjhFBxQCEWhIZRgYXLIgHHruox6M%2BQpSGNWcXnD4zCNL89V84mWvBMTDvpEySLcbdS%2FO1sCZrL0DpyGsnCttSWHrrBjV%2FttHGxh0m0OLn8%2Fet%2BYctd332ls8umYj4UZ3LIrnrT2ifdi14VZFB48TE8esvLpjbfu%2FC%2BKKrxE7ixfYVurNGpmNBf5S3k0KU8ra9bRnlBOp2ECWVTr5VYmH7S60gkSwR17zoGkU1rxwZidW4cfLhMri4%2BgUdflmxc2qr1oAKNmC01abFbyEjtk5tDmRUzv5GZHlx5P0Ms0R8yORUpE9l3RcVKesy8GM0%2FreKM6UidHqCQX8onF2M%2BrSdYKUPXuin1C9BheQG6WuCHJs0a3JR8sd2CI3ZrgCSCq6DVWhUG3Y2JvqbKvtrpJTmNKstYsgCSbp61A8BHLhQ8i6Dk0IenFmkCaZD7D5BlnVSXo7LMO24v8YGOrABpQPnpP70Y8Z2RBWKtzxGvTj89XOJf0k1xT1Z%2B%2BqY6CQd2jdSge%2FSbo9G0Y%2ByE3dswSuY3hbwmaqeFeaicxJaR%2BnvTd6IEq3bO5w0YhSVIVSL4wNw5Cy5zPxi8%2B%2BW5Pw0g37jJkNfiw1vKjT1P066K5JbRKO%2FgIUjX%2FObfX5yvc2cnHaJFQS5UC8ep%2FakAxjxtCY5AGFst5kZYbkD0wPhorUOVmjw2ZBA1lwOqf%2BWpys%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=17878ab80eb5483070f8e7a1be44805fc0938934ccfd78ec8a35e19d21ed5df5",
+      "file_size": 111008,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 15,
+  "voters": [
+    "rook1337",
+    "sameerphad72",
+    "sa1tama0",
+    "0xm1racle",
+    "nafisaqil",
+    "rutik346",
+    "armansameer",
+    "amr4l44",
+    "virajchatane",
+    "0xkenzo",
+    "and 5 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 4.6,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "low",
+      "user_interaction": "required",
+      "scope": "unchanged",
+      "confidentiality": "low",
+      "integrity": "none",
+      "availability": "low"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 38702,
+    "asset_type": "URL",
+    "asset_identifier": "my.stripo.email",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
