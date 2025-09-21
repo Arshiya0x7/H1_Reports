@@ -1,0 +1,131 @@
+{
+  "id": 1085743,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMDg1NzQz",
+  "url": "https://hackerone.com/reports/1085743",
+  "title": "No error thrown when IDOR attempted while editing address",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2021-01-24T05:06:42.239Z",
+  "submitted_at": "2021-01-24T05:06:42.298Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "merbin",
+    "url": "/merbin",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NjE4ODY2MywicHVyIjoiYmxvYl9pZCJ9fQ==--f52bcdbf7336048337a85f587e27918ec32e196b/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--a4d91faed3dff6024dfc1a7b7f8ccc6b45e38396/Screenshot%202024-07-26%20at%2010.57.01%E2%80%AFAM.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 46502,
+    "url": "https://hackerone.com/openmage",
+    "handle": "openmage",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/gYnpB5DCwUGoEGsybkejTQgs/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/gYnpB5DCwUGoEGsybkejTQgs/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "OpenMage",
+      "twitter_handle": "OpenMageProject",
+      "website": "https://www.openmage.org/",
+      "about": "A community-driven fork of Magento CE"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2021-04-26T05:45:45.249Z",
+  "bug_reporter_agreed_on_going_public_at": "2021-03-27T05:45:44.678Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\ndemo.openmage.org application having features to add, edit and delete addresses. When a user tries to edit the address of another user, the server adds a new address with a new id on the attacker's account. By sending it to an intruder, an attacker may cause Dos.\n\n## Steps To Reproduce:\n\n  1. Create two user accounts demo.openmage.org with different emails\n  2. Add addresses on both accounts\n  3. Edit the address on account 1 and capture the request on burp and send it to the repeater\n  4. Replace the ID of the address on both GET request and referee header with the ID of the address of the account 2\n  5. Submit the request, Now you can see a new address is added on account 1 with a new ID.\n(here, when an attacker try to edit the address of another user, the server should not create new address)\n  6. Now Send the same request to intruder with the id of the address of the victim, and set payload as null byte\n  7. Start attack with min 60 threads\n  8. Now you can see many addresses is added on user account 1. and soon you will see 503 Error code\n\n## Supporting Material/References:\n\n\n  * {F1169693}\n\n## Impact\n\n* It may cause  Dos",
+  "weakness": {
+    "id": 145,
+    "name": "Misconfiguration"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1169693,
+      "file_name": "Kazam_screencast_00000.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/gauornw72y5dxy83t9ipu6g35ce9?response-content-disposition=attachment%3B%20filename%3D%22Kazam_screencast_00000.mp4%22%3B%20filename%2A%3DUTF-8%27%27Kazam_screencast_00000.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYXA2JSSL%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T030830Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH4aCXVzLXdlc3QtMiJHMEUCIQC9JgjrvVUHLexbFFv1tEgfY61VXBaWjZG5Y1kCBeTTRwIgN4w9WZOIFqxTGgZtblXFHwLNndfRzCx7%2FtF990wpwqAquwUI9%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDFQQKMJ34gpArjRt1yqPBfsavkZG4y0a4%2B%2B6zExz7sIfTEiWsrYLUFI%2B2rH%2FMqEC5JKgvwN34AGHEcsJ6FYUyKBDyQvrKwNlUx1Dv6e69ooLk9%2FMwiE22BIdReSXJuRdc56g5VV0%2B4RAAjWzaggh5VSlobr4TGZcr0VEAJBljJ9xv71OuyL4%2FJspexJlmcgTHUxdCQYBOnAacgW8c4FLQXZqhY%2BJE%2BnGI7EuKx6E%2F5k0JEXErJOsVu0LtxE4wNrOwhGWzV%2BIA7BAkZvD9dd655%2BFzwD0nID%2FN36wizb6FRNXOsX93t%2Fm0wyHunGcvNKYfYDumcaKrR6mWgQeCDll%2BMomNPzEU6WUVdw%2BGKnckwUQVkrHCCeNAkqeL6LI6WiixgaTnnRaDOKz78g5QbTAy4a2kaywzuDPi6QHuRLZj3calmuqJQsHUJoQGsjexurUfZFmj0C1zz0lcAO48Dk888Ke2DdpvqUxJiY48beUl3v5B%2BnA8MRoQHTNMbyykk%2FuGKeiyFN54LUX7Q9aZXTV9fCu1f7DQKASWyWyRFdh4jLvHjKpSKwgNGJ2RJN7UrTRWO4WFfHLdNtyd2HpmT6TKv8DdOGpepARtBExTdU0w%2FstYcBn5e8bOgzUy9ujlcXJzBmvVgncLf1wK2d1LpCURcjpvoETmc3jpEmrnGDCKOSAy51TQTGSlqCXXwNApBTB2F2g6dI2dFi0T4YT08nbH0NFt2NhbnxBWyQlfRpRuRxA00gmv68Y8fRcn4GfP2Ur83OwMCndv4YUWq9jrRjeeKgC0PWX5yLbw5nflu7UVQGVfR0Ct2MPqcXfxmETgsh8jtV92SNqz0URr5eEN%2F7pTkS8skAfG1lo%2F13vu0OHsjVncbEMZ5ICBvJjyrWbPNkwlci8xgY6sQG%2B8Sed1scznEQp2l1oRVJoEoysZ8Uqp8zg1M3o42tyMwi%2BhBVuG%2FXGy1juWBwLBOTkdns%2BN3JdhwQnI3%2B%2FR6eHLGUyPB5xgieePV4Rj3%2FJ33lTbVxkHrvkIPdi%2Bp8jfQZJuyKwz6kN5IR%2FlR6OFVtN2oUwkN00DbVY%2FTZSaZcu%2BFRFJwNsFITbZqHpWyLk40OOFMeXoemxRC2JZzw380gA7oh3tqKilPIQfcSPzDvqOoo%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=ba65d7f6f1149ef48a408dd3bd10723d83924feb560ee208ff4d36d5825c2316",
+      "file_size": 8074664,
+      "type": "video/mp4",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2021-04-26T05:45:44.738Z",
+  "allow_singular_disclosure_after": -139008165.54814434,
+  "singular_disclosure_allowed": true,
+  "vote_count": 32,
+  "voters": [
+    "arist0phanes",
+    "sw33tlie",
+    "battle_angel",
+    "mattberg",
+    "yassinek3ch",
+    "ali",
+    "akashhamal0x01",
+    "n1ghtmar3_2421",
+    "demonia",
+    "sa1tama0",
+    "and 22 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 57961,
+    "asset_type": "URL",
+    "asset_identifier": "demo.openmage.org",
+    "max_severity": "medium"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
