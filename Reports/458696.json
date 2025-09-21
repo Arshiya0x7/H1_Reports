@@ -1,0 +1,139 @@
+{
+  "id": 458696,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC80NTg2OTY=",
+  "url": "https://hackerone.com/reports/458696",
+  "title": "xmlrpc.php is enabled - Nextcloud",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2018-12-07T17:23:40.923Z",
+  "submitted_at": "2018-12-07T17:23:40.923Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "19823520128192113114",
+    "url": "/19823520128192113114",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/sb1u6h55aluecf9ygfzcsa8vmskq/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13291,
+    "url": "https://hackerone.com/nextcloud",
+    "handle": "nextcloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Nextcloud",
+      "twitter_handle": "nextclouders",
+      "website": "https://nextcloud.com",
+      "about": "Access, share and protect your files, calendars, contacts, communication & more at home and in your enterprise."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2020-03-01T13:20:04.659Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2020-01-31T13:20:02.272Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi Nextcloud Team,\n\nSummary: An attacker can devise a XML request to list all the methods that are enabled on the server. Replace Get with POST request and add method call in the request.\n\nTo reproduce the vulnerability you need to use Firefox browser and Burpsuite\n\n    Open: https://nextcloud.com/xmlrpc.php.\n\nThis URL is publicly accessible, thus confirming the presence of the vulnerability. Proceed further in order to get request/response for above vulnerability.\n\n    Capture the Get method in burpsuite tool\n\n    Send the Get method in repeater tab.\n\n    As \"XML-RPC server accepts POST requests only\" write POST instead of GET in Request window.\n\n    Write the method list command below for Post request in Request window like:\n\n<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<methodCall>\n<methodName>system.listMethods</methodName>\n<params></params>\n</methodCall>\n\n    We will get all the available methods for https://nextcloud.com/xmlrpc.php\n\nRegards\njaimaakali\n\n## Impact\n\nUnauthorized Access",
+  "weakness": {
+    "id": 26,
+    "name": "Improper Access Control - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 387065,
+      "file_name": "Screenshot_from_2018-12-07_14-54-23.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/387/065/e978cc22b7aacb102726d71203cbeb85d0a61aac/Screenshot_from_2018-12-07_14-54-23.png?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_from_2018-12-07_14-54-23.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_from_2018-12-07_14-54-23.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ7T5KMRTS%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T121637Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIn%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCdByAlf6v%2FQ0ap2s%2FgPpuwm0FFlSX92CFK%2FGxsauyG3gIhAOe05VoaoTc2M7mEEWBwLQkQx3vRhLP3XabyDIjAi%2FNnKrIFCBIQAxoMMDEzNjE5Mjc0ODQ5Igyr6lN%2B3QL4xoKN0o4qjwVWuX%2BJvqv2Lg3ddeOAGjhYJtpIoziCf7%2BD7CAudPw4UDmTubGQJ8czIzmulz5X6WyPbS7UsZ9tfUdU%2BNUUOOzPfT5hk6SV3ZoF8ciImYQgq%2FBbAHUFEcULq9bojkm5ChwGfcJmfZGpt4cObleidIkCZIvKYPR6XL7YYgdkED677m0zCqR%2BGgWlTl%2BzggMW%2Bkc3ih9wzwed4l2%2ByZ6pkEM%2BTvIvtgZYSGoCIAoio%2FaUF57qEtMAgqWU7K7bLwDbyF2Tp1qrVMjO1DrC9nL%2BDzoQFH6LgkvI1M4KiURWn6DzlhPGga3yjBXoab6QWZDAf9nZpswOdXuoPhKec7Xt97wyh9x2yFKt8Le1DzW7HzlxOq%2F1XC8p4svn0VehT2UHecIR90%2FNLVlgqhlLHistMXicuMFxnyI96EqF02edz6Zp0OXq9o%2BPKF5R%2FwnPrYdpyWKpRP1kL03nhhh3FyzMwXQyl%2BmjDKLKSmFSDK4KQLfMTlF1uzuh4NpBq1lRAzSyyArEfc0L2byl6lT6fjnKINH%2BMVR%2BvVHX5%2FI80CdW6Fhz%2Bu%2BCWE2PxZyF0n9G1c5M4lDfoZzi1t8w9A4rBbjj2Al7ByDZ78ZC%2BOCWmGMWutIvT9KDCzWEsbUZTrCfkxmg1UV%2BLobeIP0r43NLFbzJmyUho1sflVjHBxdA8iv5IWMEHtBJpWBWHwE6M8UbSp2tpinLQNB7p4hMqMd%2BU9BOX5UO%2FCrCgczN%2B3V7iu%2BzWBBc1YiQB%2B6Njg8C46HWKi7od3a2HMV5yFSXkokf9%2BprilJJth44Rb8I0ziQT1eVokANFW3W51yI1Bh%2Bqzxkv6kUAWQYSYTcwmaLY1hhPdYXachZgtTJ5jxBaYAJ4A8K%2Ba6qMKyDv8YGOrABM%2FeAo8tEh5RitXx%2FpMtyvLfozvTypL%2FT7fliSF9NilTN1AL8WTp5s3rdsEU7LTgsMlwb9jMvBhWXocHoqTQVa67qZBlmWiDmkamVHcclNKhJTqfaQw%2BRVr8xDVyfDn8lcefv%2F6PaareP5XqbKA4ZSjhPKFkTi8qsxZsK7XQzAXeLFmdCrhHikdldaI42ejn%2BKiyuAXBrqNCBnOMxwl5ceZZttuZzRhuPxpzfJP%2BXDDY%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=6c58ed1bb27bc478625eb73c33dc20a41606214cd4a45423689205f5c1077f0b",
+      "file_size": 88200,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 387066,
+      "file_name": "Screenshot_from_2018-12-07_14-54-39.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/387/066/873eea09c61d5de173b205e9d10dc745c4a2aeb2/Screenshot_from_2018-12-07_14-54-39.png?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_from_2018-12-07_14-54-39.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_from_2018-12-07_14-54-39.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ7T5KMRTS%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T121637Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIn%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCdByAlf6v%2FQ0ap2s%2FgPpuwm0FFlSX92CFK%2FGxsauyG3gIhAOe05VoaoTc2M7mEEWBwLQkQx3vRhLP3XabyDIjAi%2FNnKrIFCBIQAxoMMDEzNjE5Mjc0ODQ5Igyr6lN%2B3QL4xoKN0o4qjwVWuX%2BJvqv2Lg3ddeOAGjhYJtpIoziCf7%2BD7CAudPw4UDmTubGQJ8czIzmulz5X6WyPbS7UsZ9tfUdU%2BNUUOOzPfT5hk6SV3ZoF8ciImYQgq%2FBbAHUFEcULq9bojkm5ChwGfcJmfZGpt4cObleidIkCZIvKYPR6XL7YYgdkED677m0zCqR%2BGgWlTl%2BzggMW%2Bkc3ih9wzwed4l2%2ByZ6pkEM%2BTvIvtgZYSGoCIAoio%2FaUF57qEtMAgqWU7K7bLwDbyF2Tp1qrVMjO1DrC9nL%2BDzoQFH6LgkvI1M4KiURWn6DzlhPGga3yjBXoab6QWZDAf9nZpswOdXuoPhKec7Xt97wyh9x2yFKt8Le1DzW7HzlxOq%2F1XC8p4svn0VehT2UHecIR90%2FNLVlgqhlLHistMXicuMFxnyI96EqF02edz6Zp0OXq9o%2BPKF5R%2FwnPrYdpyWKpRP1kL03nhhh3FyzMwXQyl%2BmjDKLKSmFSDK4KQLfMTlF1uzuh4NpBq1lRAzSyyArEfc0L2byl6lT6fjnKINH%2BMVR%2BvVHX5%2FI80CdW6Fhz%2Bu%2BCWE2PxZyF0n9G1c5M4lDfoZzi1t8w9A4rBbjj2Al7ByDZ78ZC%2BOCWmGMWutIvT9KDCzWEsbUZTrCfkxmg1UV%2BLobeIP0r43NLFbzJmyUho1sflVjHBxdA8iv5IWMEHtBJpWBWHwE6M8UbSp2tpinLQNB7p4hMqMd%2BU9BOX5UO%2FCrCgczN%2B3V7iu%2BzWBBc1YiQB%2B6Njg8C46HWKi7od3a2HMV5yFSXkokf9%2BprilJJth44Rb8I0ziQT1eVokANFW3W51yI1Bh%2Bqzxkv6kUAWQYSYTcwmaLY1hhPdYXachZgtTJ5jxBaYAJ4A8K%2Ba6qMKyDv8YGOrABM%2FeAo8tEh5RitXx%2FpMtyvLfozvTypL%2FT7fliSF9NilTN1AL8WTp5s3rdsEU7LTgsMlwb9jMvBhWXocHoqTQVa67qZBlmWiDmkamVHcclNKhJTqfaQw%2BRVr8xDVyfDn8lcefv%2F6PaareP5XqbKA4ZSjhPKFkTi8qsxZsK7XQzAXeLFmdCrhHikdldaI42ejn%2BKiyuAXBrqNCBnOMxwl5ceZZttuZzRhuPxpzfJP%2BXDDY%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=414740de827afca0f1e298d620c637ad23e21d9731ee8dd44779160e7d65acec",
+      "file_size": 158021,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2020-03-01T13:20:02.420Z",
+  "allow_singular_disclosure_after": -175388194.97029057,
+  "singular_disclosure_allowed": true,
+  "vote_count": 17,
+  "voters": [
+    "loaymorad",
+    "a_d_a_m",
+    "sameerphad72",
+    "shubham_srt",
+    "2026",
+    "ankitsingh",
+    "0nlymohammed",
+    "19823520128192113114",
+    "ronb1996",
+    "sabindhungel315",
+    "and 7 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 56,
+    "asset_type": "URL",
+    "asset_identifier": "nextcloud.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
