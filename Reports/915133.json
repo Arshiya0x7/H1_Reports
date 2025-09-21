@@ -1,0 +1,126 @@
+{
+  "id": 915133,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC85MTUxMzM=",
+  "url": "https://hackerone.com/reports/915133",
+  "title": "IDOR at 'media_code' when addings media to questions",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2020-07-04T03:53:42.237Z",
+  "submitted_at": "2020-07-04T03:53:42.237Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "bugra",
+    "url": "/bugra",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/343/105/470c1fd0c4915f1fa9e9376053d0c1ba8af260b7_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": true,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 111,
+    "url": "https://hackerone.com/automattic",
+    "handle": "automattic",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/111/7f89e1ea233f92916202521a069fdbfe9eced339_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/111/7f89e1ea233f92916202521a069fdbfe9eced339_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Automattic",
+      "twitter_handle": "",
+      "website": "https://automattic.com",
+      "about": "WordPress.com, WooCommerce, WordPress VIP, Jetpack, Beeper, Texts, Akismet, Gravatar, Crowdsignal, Tumblr and more!"
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2020-11-18T14:22:27.150Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-11-18T02:56:51.004Z",
+  "team_member_agreed_on_going_public_at": "2020-11-18T14:22:27.056Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nHi team,\nWhen you add a question to your survey and click `Save`, it sends this request :\n{F893416}\n\nIn this request, `media_code` is vulnerable for IDOR. If you change it to any media ID, you will see it on your question. \nAnd these IDs are sequential. So you can access to any user's media contents. \n\n## Steps To Reproduce:\n\n  1. Create a survey\n  1. Add any question like `Free Text` and open your proxy program\n  1. Click to question and click `Save` \n  1. Your proxy program will catch the request\n  1. Change the `media_code` parameter's value to a 7 digit number. Like `2013124` (my media content)\n  1. Send the request, you will see the victim's media.\n\n## Impact\n\nAccess to user's media contents\n\nThanks,\nBugra",
+  "weakness": {
+    "id": 55,
+    "name": "Insecure Direct Object Reference (IDOR)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 893416,
+      "file_name": "request.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/c1YMpzjmwGQy4vWrje1qexzd?response-content-disposition=attachment%3B%20filename%3D%22request.PNG%22%3B%20filename%2A%3DUTF-8%27%27request.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ7JGCQ73Q%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T081818Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIGuEROGHgHigu%2FcrXhrsmeRahtJPHwSdkT4TG03ss%2F0BAiEAhj%2FoACrybaaalK4%2BxyNYfDiVbzZRjbiQSUIF6D5Sdd8quwUI%2Ff%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDOukdweJWaggjeo%2B1iqPBYfsJOE7BwzMCWeZffGBQH5Gse8qL2uUEpeqaPWTiZpkI3jZ%2F6f0d07%2BDb%2BhJiiSJWaYw0AosyE0tIAsxnTpDmnUlrYL0ldomtLWCUwLBURyHj7M1%2F%2BVtFTto3qKQ%2FLfy3WnBqJsARGuZPhYuljKQa2QkmRR0uz%2FTZLh999D66BjCldxAVygTiXek4BkWV%2F%2FURFjMX8RDMI0zK0nKoEFQOyKEgZV24P27LdS%2FM4VOdoXDGWcvhYsgPtzR9a0SvTWThPUxyv79QntTT3qoS2OkdFDhk1jQMHEFQgURzg4Sewe07cHPNvQzpl5xroc7tMB75nm3RJ7nGwzVob5vlkPfvFSlbmdyHZmr9jtrQbdEKKZ41XWMTOc1Ol0Z2XSWcQZXzpPSdO9z6hT1687WPS%2Bv7gX55youjc4nde3C1pzgcFZXhq00LPuk%2BmVNC%2BdFpvrUyCsvkUC%2FL8gkdS%2BxhT1Amo5UgRVZEH41tfILYESgwhsbwNtRCQi7P42p%2BMqLRDGjpDCZccf226Tqhok3zuqQBI0YNHCjTZcxXSjzlOSXNwde%2FcfoJ%2BuFIY1kl011XPgDUvhm2i8DFCYySNBs8fgFdPLadoa6YcaCyhaAWQgS3tsF4nOcinbj0xXzqtJyq11uMQOd6AsRPWuCmLN9rN%2B8tb%2BXTZwJ%2FB5dQ72wchdzwUjKEeea%2BdWytgI1x3wJNm7sEdeX1gWgt%2Fw32Qk6IgnfPcszAcqWACgJbPiYvd4Nmwa5378vlx94Z8BUQ2dn4l5BuCwtAeFy3%2B8Z3CGev%2B4HPV42hM16u7Llkvu8%2FAYVAYb4liYWM3%2BsFWU8%2BkFUGDbW1Zu9VfQ7%2BvEyw2KSHsbWDavI5EfZT8vyNCUmhnVPGUw5O%2B9xgY6sQF33VnAXizN7gs2WOJLhVzgM2mN%2FMUBBCofeLUo6BnDXg0HGQbZ2oPnuSeP2o99EN4%2BOSFTXfePFNAI3K7iqLWJvgRZz84hFBP%2BQuepSlt8t2sFpyaCDPI4b2u10qUcKUbcQ5DcfbJJ3ipwJGWeCOhX4BHPYt8h4otYHga7lhg%2F6xGp5Sq8jGAzfeFF1pXuh9NwDn39QtOfQEdWVe7h3R5ZtUg%2FTS%2FtiRtyE2Go4bsEXXk%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=ce2eb35a0e5f2e0d8dfc895a7860f14a6233290adb8195efbcfc2ddb5f5d6a33",
+      "file_size": 29242,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2020-12-18T02:56:51.123Z",
+  "allow_singular_disclosure_after": -150182487.80464756,
+  "singular_disclosure_allowed": true,
+  "vote_count": 19,
+  "voters": [
+    "taha",
+    "xploiterr",
+    "bombon",
+    "m0chan",
+    "shreyaschavhan",
+    "th4nu_0x0",
+    "aporlorxl23",
+    "try_to_hac",
+    "can",
+    "ilovechickennoodles",
+    "and 9 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
