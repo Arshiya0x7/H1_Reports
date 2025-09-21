@@ -1,0 +1,142 @@
+{
+  "id": 118582,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMTg1ODI=",
+  "url": "https://hackerone.com/reports/118582",
+  "title": "CSV Injection at the CSV export feature",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2016-02-24T20:06:33.317Z",
+  "submitted_at": "2016-02-24T20:06:33.317Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "niemand_sec",
+    "url": "/niemand_sec",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/ut262lw3htocwly7hludk3biinzk/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": true,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13,
+    "url": "https://hackerone.com/security",
+    "handle": "security",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/013/fa942b9b1cbf4faf37482bf68458e1195aab9c02_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/013/fa942b9b1cbf4faf37482bf68458e1195aab9c02_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "HackerOne",
+      "twitter_handle": "Hacker0x01",
+      "website": "https://hackerone.com",
+      "about": "Vulnerability disclosure should be safe, transparent, and rewarding."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2019-04-08T19:03:12.316Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2019-04-08T19:02:40.964Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi there, I have find a way to bypass the mitigation done in [#72785](https://hackerone.com/reports/72785) and [#111192](https://hackerone.com/reports/111192).\n\n\nWhat happens if an attacker creates a Ticket with the Tittle `\":\";-3+3+cmd|' /C calc'!D2`. The ; will break the field making excel think that there are two fields. Although, you are using \"\" to encapsulate a field and , to separate them, its possible to break one field in two.\n\nNormal case:\n`118470,333333,open,new,Denial of Service,2016-02-24 17:43:52 UTC,,,,,,perra,,no,,`\n\nCase where the field is splitted:\n`118555,\"'\"\":\"\";-3+3+cmd|' /C calc'!D2\",open,new,\"Design Issue,Missing Best Practice\",2016-02-24 19:31:14 UTC,,,,,,perra,,no,,`\n\nOnce the CSV is create excel will ignore the \" and split the field into two by taking into account the ;.\n\nI have tried in:\n\n* Excel Office 2013 on W8.1\n* Excel Office 2016 on windows 10\nIn all cases the code got executed. \n\n\nI attach one picture with the executed code.\n\nTo Reproduce the issue:\n\n1- Create a Ticket with the following name `\":\";-3+3+cmd|' /C calc'!D2`. \n2- Export it to CSV\n3- Open the CSV. Check attached picture to see the executed code.\n\n\nIf you have further question do not hesitate to ask me.\n\nBest,\n███████\n",
+  "weakness": {
+    "id": 58,
+    "name": "Command Injection - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 75196,
+      "file_name": "alert.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/075/196/11f964dcd4929c115f3368438fc484e1c35bc770/alert.png?response-content-disposition=attachment%3B%20filename%3D%22alert.png%22%3B%20filename%2A%3DUTF-8%27%27alert.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ3BMH67TU%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T154823Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIFljCnxBRm4k3mDOCNsZVf17QtNFYCYfznQ9MVhsJmuuAiBbOK8n3QO%2BoA%2BcJOaPEjuo2OnpQxXeGtV5gblrabFkdCqyBQgVEAMaDDAxMzYxOTI3NDg0OSIMu%2FDXvvg9fcRigun4Ko8Fb5ZIEjeevQoEG0l2BV%2BGWxg8S5ceOIpi9Vj5rzWvu%2FU8ULagtSQacHoYerVTS2w5mxb8q2eMyDWfB3WNcZp2jYoblOAOjGDkxFv0UfNMGU5qBv8audlGkD9bBj7k%2BPMh1elv8KOf5TSPS1TQgzoRPT1X5zf%2BUitErQDeos7hOVB27j0jmNUSU%2F62uqEpN5zzc4JDV6qPsWi%2B3MT7xqLVxQJaxMs0BkmYUNt%2BmDm6e8GkmRyyDXloQWuPJgbGwFgpcx1lE%2FdqBKny4rF9VApD%2Bs3l6I0ljLykB%2BCAK%2ByAA2z9BvFFoIk%2FxFSOlqls4xp47H51RxUBx5QVAlzxlLSqqtF07ygbOI3nWSDkXBRBh71ODGwtYPklYcAy%2BN1JIBRkTSB7P%2FApcdK%2F2HJmJmi3mNdO8DjUSAXt%2B6xrNOM7xjPuxOtz0db7fZdSmKKXvxlxi%2FTAaoM9F%2BJZ%2FGncN9cCvXkZHfTe4DQMnxULaVvxM40oXz7SvblcQoTgQTDcLUck%2BJiDf9fMLCu8HBz%2BOUAJggeTTLzasHSrySGvIpMTBuffvnBnnVa29Mm7K2WlV5wJE0i2vDjyh%2FZ8ERYD2u7%2BpaWooSen17bTtOgBA8rpw8Ca%2BBBCzBGJ4Jnv%2F7Vg5I0t6bT1RKrC%2B7ruuT8oH02SYFfBbc0AVE3YoRZ4c%2F81%2Bve3MDQo93OTxMwPyuEph5zyT%2F0uL36Kog%2FL0%2FHDLWxDoqCho4dyn8yODfz3VOrE5u7jsSac%2FAVh9AlbPuCB5Fz0%2F0dBqb2vPihtVHnRr1%2BaD8HcuNsV6UwuWtYjabks5SXoSh4sDkBV0QjqYgyQT%2F2xrYwkHJGgNRZg7X%2B0GQB2W6JfoK%2Bk8n6dhdDh9N%2BC%2FTCr1b%2FGBjqyAVVK9luJ2DpE2HH7QULrpYu01A8Fm4WvVccUWw3poFTPvtokByojqV9CgizgRjo2wHFdocvJ4lpbjnQjjxMkbJLK%2FW9qfA7eVQzSnDC7HGaYVsiUekGk4%2BmwXx7iMvjgYSnBoKWAaBqd3fRqTEW4g3lhzi7lOpTLcWZp60Ya9y2Gr9bjvLCe2g89bmHm9cxzB7H7SDaXF159IthNc4CVFX2TMwhNV%2BaVJ6D%2B6UC7%2Bp%2FLkJ8%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=286a8cd958a4a6ed8a45c0f6896d7436c8856287e5c369ffa6ed7e485d4c39fc",
+      "file_size": 14885,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2019-05-08T19:02:41.074Z",
+  "allow_singular_disclosure_after": -201127541.94433257,
+  "singular_disclosure_allowed": true,
+  "vote_count": 13,
+  "voters": [
+    "loaymorad",
+    "ali",
+    "henrychen",
+    "2026",
+    "javo",
+    "sa1tama0",
+    "smodnix",
+    "silv3rpoision",
+    "f0rtr3ss",
+    "kero_magdy",
+    "and 3 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "score": 2.0,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "high",
+      "privileges_required": "high",
+      "user_interaction": "required",
+      "scope": "unchanged",
+      "confidentiality": "none",
+      "integrity": "low",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 3,
+    "asset_type": "URL",
+    "asset_identifier": "hackerone.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
