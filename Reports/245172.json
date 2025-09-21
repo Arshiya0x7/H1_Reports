@@ -1,0 +1,169 @@
+{
+  "id": 245172,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yNDUxNzI=",
+  "url": "https://hackerone.com/reports/245172",
+  "title": "Double Stored Cross-Site scripting in the admin panel",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2017-07-01T20:03:24.854Z",
+  "submitted_at": "2017-07-01T20:03:24.854Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "sp1d3rs",
+    "url": "/sp1d3rs",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/079/690/6853ada3e124bdd8616b1be752223b558de38195_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": true,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 50592,
+    "url": "https://hackerone.com/gsa_bbp",
+    "handle": "gsa_bbp",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/iyPFgzbsX86VXw5wJHyfPg9s/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/iyPFgzbsX86VXw5wJHyfPg9s/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "GSA Bounty",
+      "twitter_handle": null,
+      "website": "http://gsa.gov",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2017-09-05T20:10:18.621Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-09-04T18:02:43.564Z",
+  "team_member_agreed_on_going_public_at": "2017-09-05T20:10:18.568Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "##Description\nHello. I discovered a Stored XSS attack vector in the `Custom Domain` field\n\n##POC & Reproduction steps\n1. Login to the federalist and go to the some instance `http://localhost:1337/sites/<siteid>/settings`\n2. Fill the `Custom Domain` field by the\n```\njavascript:alert(document.domain)\n```\nand `Demo domain`\n```\njavascript:alert(document.domain);\n```\n(it cannot be the same so we bypass the check by adding `;`)\n\n3. Save and press `View Website` button. You will be XSSed.\n{F199337}\n{F199336}\n4) Go to the `http://localhost:1337/sites/<siteid>/published` - and press view on the demo site to test second Stored XSS\n{F199338}\n\n##The impact\nThe XSS requires user interaction (e.g. clicking the button). But still, it is a bad thing. Anyone who gain access here, can conduct stored XSS attack against other admins.\n\n##The root cause & suggested fix\nThe input fields not sanitized properly - it should allow only alphanumeric characters, and dots.\n",
+  "weakness": {
+    "id": 62,
+    "name": "Cross-site Scripting (XSS) - Stored"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 199336,
+      "file_name": "test3.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/199/336/833583a12bd4ffd505793a470cb58314f2dd5584/test3.PNG?response-content-disposition=attachment%3B%20filename%3D%22test3.PNG%22%3B%20filename%2A%3DUTF-8%27%27test3.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ36FHA3KA%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T203515Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIG1S0ssCWZV4FkXmwkS8sigWx6%2FJ%2FqrQHPg%2BPzz8o9yIAiEAnVffzbfX9SaEBGp5A%2BcKy3yjSRHvFWb1ok2jQh9nsIIqsQUIHBADGgwwMTM2MTkyNzQ4NDkiDKIIUOn2GJQY%2FeQ3TCqOBTO6URIucDh%2FJoPTjzUgszYc9zDEATqZAYiQmFcbNVDiuUU8zi11siRpZQDXOBAf%2Fb0YmWbVfDsAYlPosip3NHQjKw4Wl00CJ8%2BPi1mAvOx2VneQiX7pRgQ42J%2F95VimwcJANLF23SJAzktrJtfD0Xnr8qTxKg0qyJ3wUgHNA87imOIoZ4MTfrC678qru7CWEkGnbbpyzIZxpzt2Ka70pWWQOklQhdCvKVmMS6oWwdBmcChXchQWtyt3QJ3DDPj5lnkqnDOq%2F5U7CFuhIecraQTCY%2BFFyRL3IkvJyw6wZwIUFQ3TvaCHVgjwamaEBTzpc1ZFPIIxrj2Zr%2Bq4kQuxmlSZoKExma91q28Udj4r1m%2FmUbBUHHwpEQPWEaCcQRjgL7tXAMAE7rmxaw3tHt%2B4Qn%2BU6VW7KHNZLAAzCsAymva0XSVu7Qy%2FLC6P1Ob8D87Rj13OSAC98rCsQGBQHsaVCfc5ue8CcsN2KEqfCOGFuZRrRom%2B2iEBF2RqQOT2zp6S4aBVV%2FTrNQWfEhLc%2BV%2BaUAYari6ZXzFoX%2BDLAjJZ%2Bq6BfB0XtlrACNSFQZ9SLbn%2BN5DvZluE5FPjAFBh9OW0jnZmFUQqZJSQi5GDdE7Uv2QKl0hjztYIbxmnd1NSb3lcc2xV6q7ZFk4IHcV%2BMv%2FxRKrgsiCxbm7fM3zvJu2bDCYHCI9FL5DWv3fcAfj6FIk%2BljFG7TLvT%2BG1UGfPs2qL46kyV179qJHZJpyk1%2B92N4SLcW66%2B%2B%2F11OLpYEne8o03O355U0XxxHwrTqf96Of4CYV7mEElIKNONzBLaIzDlhYgMtN72xIuvxDwB97fhB3fG4IONGdwChncDzksE9BhiGMQyFIcMLvGOFgpKy0ELDDdmMHGBjqxAdZYv8n%2FFbAIFvoBVRmhPTdZI5HkhBy8tAx4l0KYyV9wYpMa7%2BV%2BA%2FEblQOLFO5WR%2ByYzxNrNRy9Yg24%2BnfEZy5kmHSfwiYrD2u507Ce8pUTbcf9lIwT0kVknJn1ejflBZv99kF0X335l%2F3SbJ1hDBF%2BGyQWuE%2FimmUp1N0FyiGCtc7U3%2BCL71mF%2B%2B6k4sVoiVqf7GJQ1MqKhhkYuUsFMBV5stEH1lhCR0scKGFoNM6pog%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=a67a189e5fc19604a69e647d1e00dff5e5b1e0ebcf3adae6507631b711b31625",
+      "file_size": 35089,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 199337,
+      "file_name": "test2s.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/199/337/f683c455db713eea0b408f785796df24c5e0599f/test2s.PNG?response-content-disposition=attachment%3B%20filename%3D%22test2s.PNG%22%3B%20filename%2A%3DUTF-8%27%27test2s.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ36FHA3KA%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T203515Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIG1S0ssCWZV4FkXmwkS8sigWx6%2FJ%2FqrQHPg%2BPzz8o9yIAiEAnVffzbfX9SaEBGp5A%2BcKy3yjSRHvFWb1ok2jQh9nsIIqsQUIHBADGgwwMTM2MTkyNzQ4NDkiDKIIUOn2GJQY%2FeQ3TCqOBTO6URIucDh%2FJoPTjzUgszYc9zDEATqZAYiQmFcbNVDiuUU8zi11siRpZQDXOBAf%2Fb0YmWbVfDsAYlPosip3NHQjKw4Wl00CJ8%2BPi1mAvOx2VneQiX7pRgQ42J%2F95VimwcJANLF23SJAzktrJtfD0Xnr8qTxKg0qyJ3wUgHNA87imOIoZ4MTfrC678qru7CWEkGnbbpyzIZxpzt2Ka70pWWQOklQhdCvKVmMS6oWwdBmcChXchQWtyt3QJ3DDPj5lnkqnDOq%2F5U7CFuhIecraQTCY%2BFFyRL3IkvJyw6wZwIUFQ3TvaCHVgjwamaEBTzpc1ZFPIIxrj2Zr%2Bq4kQuxmlSZoKExma91q28Udj4r1m%2FmUbBUHHwpEQPWEaCcQRjgL7tXAMAE7rmxaw3tHt%2B4Qn%2BU6VW7KHNZLAAzCsAymva0XSVu7Qy%2FLC6P1Ob8D87Rj13OSAC98rCsQGBQHsaVCfc5ue8CcsN2KEqfCOGFuZRrRom%2B2iEBF2RqQOT2zp6S4aBVV%2FTrNQWfEhLc%2BV%2BaUAYari6ZXzFoX%2BDLAjJZ%2Bq6BfB0XtlrACNSFQZ9SLbn%2BN5DvZluE5FPjAFBh9OW0jnZmFUQqZJSQi5GDdE7Uv2QKl0hjztYIbxmnd1NSb3lcc2xV6q7ZFk4IHcV%2BMv%2FxRKrgsiCxbm7fM3zvJu2bDCYHCI9FL5DWv3fcAfj6FIk%2BljFG7TLvT%2BG1UGfPs2qL46kyV179qJHZJpyk1%2B92N4SLcW66%2B%2B%2F11OLpYEne8o03O355U0XxxHwrTqf96Of4CYV7mEElIKNONzBLaIzDlhYgMtN72xIuvxDwB97fhB3fG4IONGdwChncDzksE9BhiGMQyFIcMLvGOFgpKy0ELDDdmMHGBjqxAdZYv8n%2FFbAIFvoBVRmhPTdZI5HkhBy8tAx4l0KYyV9wYpMa7%2BV%2BA%2FEblQOLFO5WR%2ByYzxNrNRy9Yg24%2BnfEZy5kmHSfwiYrD2u507Ce8pUTbcf9lIwT0kVknJn1ejflBZv99kF0X335l%2F3SbJ1hDBF%2BGyQWuE%2FimmUp1N0FyiGCtc7U3%2BCL71mF%2B%2B6k4sVoiVqf7GJQ1MqKhhkYuUsFMBV5stEH1lhCR0scKGFoNM6pog%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=7d33011f33106deefd2d38ce333427f52df7d2098571a069ce9220aba8f2ab43",
+      "file_size": 162309,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 199338,
+      "file_name": "test23.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/199/338/cfa1039b14357ed1ad750d7ebc1a65b0d00a5b5e/test23.PNG?response-content-disposition=attachment%3B%20filename%3D%22test23.PNG%22%3B%20filename%2A%3DUTF-8%27%27test23.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ36FHA3KA%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T203515Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIG1S0ssCWZV4FkXmwkS8sigWx6%2FJ%2FqrQHPg%2BPzz8o9yIAiEAnVffzbfX9SaEBGp5A%2BcKy3yjSRHvFWb1ok2jQh9nsIIqsQUIHBADGgwwMTM2MTkyNzQ4NDkiDKIIUOn2GJQY%2FeQ3TCqOBTO6URIucDh%2FJoPTjzUgszYc9zDEATqZAYiQmFcbNVDiuUU8zi11siRpZQDXOBAf%2Fb0YmWbVfDsAYlPosip3NHQjKw4Wl00CJ8%2BPi1mAvOx2VneQiX7pRgQ42J%2F95VimwcJANLF23SJAzktrJtfD0Xnr8qTxKg0qyJ3wUgHNA87imOIoZ4MTfrC678qru7CWEkGnbbpyzIZxpzt2Ka70pWWQOklQhdCvKVmMS6oWwdBmcChXchQWtyt3QJ3DDPj5lnkqnDOq%2F5U7CFuhIecraQTCY%2BFFyRL3IkvJyw6wZwIUFQ3TvaCHVgjwamaEBTzpc1ZFPIIxrj2Zr%2Bq4kQuxmlSZoKExma91q28Udj4r1m%2FmUbBUHHwpEQPWEaCcQRjgL7tXAMAE7rmxaw3tHt%2B4Qn%2BU6VW7KHNZLAAzCsAymva0XSVu7Qy%2FLC6P1Ob8D87Rj13OSAC98rCsQGBQHsaVCfc5ue8CcsN2KEqfCOGFuZRrRom%2B2iEBF2RqQOT2zp6S4aBVV%2FTrNQWfEhLc%2BV%2BaUAYari6ZXzFoX%2BDLAjJZ%2Bq6BfB0XtlrACNSFQZ9SLbn%2BN5DvZluE5FPjAFBh9OW0jnZmFUQqZJSQi5GDdE7Uv2QKl0hjztYIbxmnd1NSb3lcc2xV6q7ZFk4IHcV%2BMv%2FxRKrgsiCxbm7fM3zvJu2bDCYHCI9FL5DWv3fcAfj6FIk%2BljFG7TLvT%2BG1UGfPs2qL46kyV179qJHZJpyk1%2B92N4SLcW66%2B%2B%2F11OLpYEne8o03O355U0XxxHwrTqf96Of4CYV7mEElIKNONzBLaIzDlhYgMtN72xIuvxDwB97fhB3fG4IONGdwChncDzksE9BhiGMQyFIcMLvGOFgpKy0ELDDdmMHGBjqxAdZYv8n%2FFbAIFvoBVRmhPTdZI5HkhBy8tAx4l0KYyV9wYpMa7%2BV%2BA%2FEblQOLFO5WR%2ByYzxNrNRy9Yg24%2BnfEZy5kmHSfwiYrD2u507Ce8pUTbcf9lIwT0kVknJn1ejflBZv99kF0X335l%2F3SbJ1hDBF%2BGyQWuE%2FimmUp1N0FyiGCtc7U3%2BCL71mF%2B%2B6k4sVoiVqf7GJQ1MqKhhkYuUsFMBV5stEH1lhCR0scKGFoNM6pog%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=a936f6762a2031d9ff40e1f111d1ef0789da72b74d9758b77d30093d1cdb8955",
+      "file_size": 91799,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 15,
+  "voters": [
+    "riramar",
+    "bl4de",
+    "spam404",
+    "cuso4",
+    "edoverflow",
+    "whitesector",
+    "r3y",
+    "eveeez",
+    "mr_r3boot",
+    "test_universe",
+    "and 5 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 81507,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/18f/federalist",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "id": 5266,
+      "category": "researcher",
+      "content": "*Thanks to the 18F team for the great experience, fast fix and the bounty!*\n\nThis report describes two simple stored XSS vectors in the Federalist control panel using pseudoprotocols like `javascript:`\nIssue was fixed by implementing URL validation.\n\n##References\n[Running Federalist locally](https://federalist-docs.18f.gov/pages/how-federalist-works/running-federalist-locally/ \"Running Federalist locally\")",
+      "updated_at": "2017-09-05T19:54:20.807Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 79690,
+        "username": "sp1d3rs",
+        "name": "Eugene Yakovchuk",
+        "bio": "The world tried to catch me, but it couldn't.",
+        "cleared": true,
+        "verified": true,
+        "website": "https://r1p.xyz",
+        "location": "Canada",
+        "created_at": "2016-05-23T03:07:23.595Z",
+        "url": "https://hackerone.com/sp1d3rs",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "hacker",
+        "profile_picture_urls": {
+          "small": "https://profile-photos.hackerone-user-content.com/variants/000/079/690/6853ada3e124bdd8616b1be752223b558de38195_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/000/079/690/6853ada3e124bdd8616b1be752223b558de38195_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c",
+          "xtralarge": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTM0NzcsInB1ciI6ImJsb2JfaWQifX0=--c8bb3853d9462d00bf85e988a9d33579e71c0b82/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJyZXNpemUiOiIyNjB4MjYwXHUwMDNlIn0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--c155082ce6f9751dcb29cd6ea061a7e4d7329577/z.png"
+        }
+      }
+    }
+  ]
+}
