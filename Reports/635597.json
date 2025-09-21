@@ -1,0 +1,141 @@
+{
+  "id": 635597,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC82MzU1OTc=",
+  "url": "https://hackerone.com/reports/635597",
+  "title": "Wrong Interpretation of URL encoded characters, showing different punny code leads to redirection on different domain",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2019-07-04T12:19:54.553Z",
+  "submitted_at": "2019-07-04T12:19:54.553Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "mr_edwards",
+    "url": "/mr_edwards",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/067/860/c4b005c6ce54203402e5bef359437411fd994419_original.jpeg/c8a1698ff707a5e3e8a91a3484838363845daac68cb82c86d55c9e2d44d67b67"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 61,
+    "url": "https://hackerone.com/x",
+    "handle": "x",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/ikx4ept298unt534kpz4am2bd4zs/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/ikx4ept298unt534kpz4am2bd4zs/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "X / xAI",
+      "twitter_handle": "XSecurity",
+      "website": "https://x.com",
+      "about": "X helps you create and share ideas and information instantly, without barriers."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2019-08-26T16:55:39.330Z",
+  "bug_reporter_agreed_on_going_public_at": "2019-08-18T07:50:01.074Z",
+  "team_member_agreed_on_going_public_at": "2019-08-26T16:55:39.215Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "##Summary:\nThere is wrong interpretation of URL encoded characters at `https://twitter.com/safety/unsafe_link_warning` endpoint which could lead to different location then what is supposed to.\n\nAlthough it shows warning but doesn't show warning about punny code characters.\n\n##Description:\nOn following characters:\n\n```\n%E2%80%AE - RTLO Character\n%E2%80%8E - LEFT-TO-RIGHT MARK\n%E2%80%91 - Non breaking hyphen\n%E2%80%A9 - PARAGRAPH SEPARATOR\n%E2%80%AA 0 Right-to-left embedding\n```\nInterpretation of these characters is different but when we click continue button it will redirect you to some other location.\n\n## Steps To Reproduce:\n\n1. Go to following URL: https://twitter.com/safety/unsafe_link_warning?unsafe_link=https%3A%2F%2F%E2%80%AEmoc.rettiwt\n2. You will see that its showing : https://twitter.com\n\n{F522041}\n\nBut originally you will be redirected to https://xn--moc-4t7s.rettiwt/ when you click continue button.\n\n##Argument:\n> But it is not possible to have TLD 'rettiwt'.\n* counter:\nWe can have URL as follows:\n```\nhttps://twitter.com/safety/unsafe_link_warning?unsafe_link=https%3A%2F%2F%E2%80%AEmoc.rettiwt.com\n```\n\n{F522042}\n\n\n\n## Supporting Material/References:\n\n  * screenshots.\n\n## Impact\n\nWrong location redirection.",
+  "bounty_amount": "560.0",
+  "formatted_bounty": "$560",
+  "weakness": {
+    "id": 53,
+    "name": "Open Redirect"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 522041,
+      "file_name": "Screenshot_from_2019-06-21_15-13-58.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/522/041/507057707670ea247960784e8e409876f4662fa2/Screenshot_from_2019-06-21_15-13-58.png?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_from_2019-06-21_15-13-58.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_from_2019-06-21_15-13-58.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUGYXUPS3%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T145232Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCwIAvmOv4w%2B4UievyIjT9W9diCvrH4kfNWO8qEFYjlbwIhAPbbzN5sQ7g06VPALW0LiObnUDpFUEodUMbivgwErLB0KrEFCBYQAxoMMDEzNjE5Mjc0ODQ5IgxalQrWOaLbompCcQgqjgUsqIBUylMwN%2FnNcfkbd64VhlDbnlyGMHDkw3isEnWxpoUHAeIOkeS6Q9l6cDuV7hhXpBymFhcb9bp65SbsEb7j98UfZu4UmfsHSwazwJyYIhnhfgjxXae51nWR9j3nYOpjDvG5k1Z%2BUgTSry5AY7bqJDJ1lWdEVFGVX%2Ba%2FtIjSbYCLHEire8lIKDNWL6nt%2B5CTtVm4XoFurIkG3iVgu3SOQ5ayHYFUjHGngk3B3U2SoCdndOSOjV%2Bbls687WQGR9Pa317h7gMbugxjuDIfMVRWBZQxBALZjCaFDaPZO05HWfjOJ8y6dUfGp6LX860xVsfabVldWzhM5tRm%2Fwinjszwx7T4IIfeAYukeg7c0Bc%2BSDSy8gdeuoV20%2BO7CKjMId6Rpoka2bDT8w1dDlpCy5EOX%2BjRgsrNOpt7kPGOMQxpW%2FxSYtqBUGOnL9cw6TyDOmLYbN2rzxar7NNd3ecl9KLUQ277w0fC3vFZYIjjQRfA9%2BFLH6YLp%2FRAhwgaOMfW4icNf%2BXRitp8iHE9SgZmbxBzLzEGLFr%2BIdAmJfu5GzzLISD3ZuCCXMnLwz0H3frzCqmb0MGTA2Iv%2F9xDIkSVPugL3KZf9WVEwNWwxEwxMnrEC7BIqSOkc%2FPszAyKc43gTM%2B9RqHNGeTSOnDSkCqRtwV%2Bw0GXqn5KZM6jGmyxrxyJj3yZSXuAsO%2FQmFP%2BzaIgCFbyrO2fwfqjiHz1vdAJYhxj1WQ82bYxKcy4oqVfJQayQPtgExd%2Fqd85OauFvgP8O772S3BaZk4HTeXrqYnFOdOrKKfGhAAiVYRTXu%2BmQE9XBaqqQQAdy6Lfgr4mnpHWTUyr9ptoeBISbybyedw94rimQH1Cog6coBkwnn5Govcwieq%2FxgY6sAFc%2BfO0t7klqfy2jQRzyBYAzxL%2FknTvvj9qQ7OaUQN%2FwGNJ91rcj9Kjb%2BvgcRNykkQY3pQGfR5JAxgu7wxAAFzb9U91Zk7tW0XgwBUxmWGDHfNtxWtiTjpu0VqoJ8GlvaGjrC1Kr%2FrUjjDaRUPnXlRJdc3GcrRkEsXSFYvhoIyQslvMw%2B6r3SE%2BcWQqNXj0Org1zsR3g6v0jhhMCmVoKVJJroMdzQZFLaTLnS23pytPpA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=8fadf04192d47d7e05e98d106b48482f6e8dbf25600af88b0f69d47b97538246",
+      "file_size": 118351,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 522042,
+      "file_name": "Screenshot_from_2019-07-02_09-18-24.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/522/042/0af1940f69eac2e93694b656c26464353c3373ab/Screenshot_from_2019-07-02_09-18-24.png?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_from_2019-07-02_09-18-24.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_from_2019-07-02_09-18-24.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUGYXUPS3%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T145232Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCwIAvmOv4w%2B4UievyIjT9W9diCvrH4kfNWO8qEFYjlbwIhAPbbzN5sQ7g06VPALW0LiObnUDpFUEodUMbivgwErLB0KrEFCBYQAxoMMDEzNjE5Mjc0ODQ5IgxalQrWOaLbompCcQgqjgUsqIBUylMwN%2FnNcfkbd64VhlDbnlyGMHDkw3isEnWxpoUHAeIOkeS6Q9l6cDuV7hhXpBymFhcb9bp65SbsEb7j98UfZu4UmfsHSwazwJyYIhnhfgjxXae51nWR9j3nYOpjDvG5k1Z%2BUgTSry5AY7bqJDJ1lWdEVFGVX%2Ba%2FtIjSbYCLHEire8lIKDNWL6nt%2B5CTtVm4XoFurIkG3iVgu3SOQ5ayHYFUjHGngk3B3U2SoCdndOSOjV%2Bbls687WQGR9Pa317h7gMbugxjuDIfMVRWBZQxBALZjCaFDaPZO05HWfjOJ8y6dUfGp6LX860xVsfabVldWzhM5tRm%2Fwinjszwx7T4IIfeAYukeg7c0Bc%2BSDSy8gdeuoV20%2BO7CKjMId6Rpoka2bDT8w1dDlpCy5EOX%2BjRgsrNOpt7kPGOMQxpW%2FxSYtqBUGOnL9cw6TyDOmLYbN2rzxar7NNd3ecl9KLUQ277w0fC3vFZYIjjQRfA9%2BFLH6YLp%2FRAhwgaOMfW4icNf%2BXRitp8iHE9SgZmbxBzLzEGLFr%2BIdAmJfu5GzzLISD3ZuCCXMnLwz0H3frzCqmb0MGTA2Iv%2F9xDIkSVPugL3KZf9WVEwNWwxEwxMnrEC7BIqSOkc%2FPszAyKc43gTM%2B9RqHNGeTSOnDSkCqRtwV%2Bw0GXqn5KZM6jGmyxrxyJj3yZSXuAsO%2FQmFP%2BzaIgCFbyrO2fwfqjiHz1vdAJYhxj1WQ82bYxKcy4oqVfJQayQPtgExd%2Fqd85OauFvgP8O772S3BaZk4HTeXrqYnFOdOrKKfGhAAiVYRTXu%2BmQE9XBaqqQQAdy6Lfgr4mnpHWTUyr9ptoeBISbybyedw94rimQH1Cog6coBkwnn5Govcwieq%2FxgY6sAFc%2BfO0t7klqfy2jQRzyBYAzxL%2FknTvvj9qQ7OaUQN%2FwGNJ91rcj9Kjb%2BvgcRNykkQY3pQGfR5JAxgu7wxAAFzb9U91Zk7tW0XgwBUxmWGDHfNtxWtiTjpu0VqoJ8GlvaGjrC1Kr%2FrUjjDaRUPnXlRJdc3GcrRkEsXSFYvhoIyQslvMw%2B6r3SE%2BcWQqNXj0Org1zsR3g6v0jhhMCmVoKVJJroMdzQZFLaTLnS23pytPpA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=517ee41dec3e287662de53587d65b482bd1e82b3ca8660cb93fb9bfed9eb05e6",
+      "file_size": 113324,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2019-09-17T07:50:01.128Z",
+  "allow_singular_disclosure_after": -189759751.5627324,
+  "singular_disclosure_allowed": true,
+  "vote_count": 37,
+  "voters": [
+    "virenpawar",
+    "mashoud1122",
+    "flawwan",
+    "ali",
+    "sameerphad72",
+    "spam404",
+    "s_p_q_r",
+    "mik317",
+    "thalaivar304",
+    "tulswani",
+    "and 27 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 1062,
+    "asset_type": "WILDCARD",
+    "asset_identifier": "*.twitter.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
