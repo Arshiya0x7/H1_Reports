@@ -1,0 +1,154 @@
+{
+  "id": 916704,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC85MTY3MDQ=",
+  "url": "https://hackerone.com/reports/916704",
+  "title": "Access control missing while viewing the attachments in the \"All boards\"",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2020-07-06T13:35:40.906Z",
+  "submitted_at": "2020-07-06T13:35:40.906Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "dpx01",
+    "url": "/dpx01",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13291,
+    "url": "https://hackerone.com/nextcloud",
+    "handle": "nextcloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Nextcloud",
+      "twitter_handle": "nextclouders",
+      "website": "https://nextcloud.com",
+      "about": "Access, share and protect your files, calendars, contacts, communication & more at home and in your enterprise."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2020-8235"
+  ],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2020-09-29T12:38:59.226Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-09-29T12:38:59.172Z",
+  "team_member_agreed_on_going_public_at": "2020-09-28T09:18:51.497Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "The vulnerability lies in the \"view attachment\" of the tasks . When a user uploads the file to the Task, the attachment is given a numeric number and is increased +1 on further uploads. It is easy for any user to view and download all the files uploaded to the tasks by any user. The access is not controlled with the session or csrf token.\n\nSteps to Reproduce:\n1. Connect to the server login with user A and visit the webpage. I used the provider \"us.cloudamo.com\"\n2. Visit https://us.cloudamo.com/apps/deck and create a task.\n3. Upload any file to the attachments and capture the request. The request will looks like \"https://us.cloudamo.com/apps/deck/cards/8420/attachment/30\" where 30 is the ID of the uploaded attachment. \n4. Login with  user B and access the URL and you should be able to view the attachment of user A.\n5. Since the attachment IDs are numerical number with poor entropy can be easily brute-forced and  one can get all the uploaded attachments by all the users of the particular  provider.\n\n## Impact\n\nUnauthorized user can view and download the files of other users. This may leak the sensitive information of users.",
+  "bounty_amount": "150.0",
+  "formatted_bounty": "$150",
+  "weakness": {
+    "id": 55,
+    "name": "Insecure Direct Object Reference (IDOR)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 896401,
+      "file_name": "IDOR_01.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/zDAhSpEz3mpiujKMyMFeqUj8?response-content-disposition=attachment%3B%20filename%3D%22IDOR_01.png%22%3B%20filename%2A%3DUTF-8%27%27IDOR_01.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYK7ATSFQ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T085620Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIC7yxXUtk3HxV4yvt7jRSHP7uprUkys3ID0xn9hXdAKcAiA%2B%2FxB7WEFKBr6dOBuFuSRYXBzfDwWDpyKGFL%2F%2FhfElPCq6BQj9%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMBI1fLYPPBIEp4O1fKo4FYotapSKM4r04blscEhSgnTQEH%2BozFlGz%2FChVYioPsxU5tpmTalO%2BC705zJkcBfhigxJVnbo5S7yjHIDqA%2BEhl7M0WFAlz5v7hwPqcjlyEUtWCA7z98a4kugYrj%2BmI8RAa%2FXTtUL%2BWqTQGDYR6LizXVkGdQau3nI8XtUdBZ22jioIeHdPVm9Rbeb3KNoDlLHVa6H6fw5Ca78LCLRMpRy%2FlP%2Ba%2BgtFUIj5Yp37aVrDg17ZGxHletP9Klt7XHegkCuzBJdWJDsTo5MRpaG2b4rb%2FmZHTQyK63F8VBVv89n6PiHgoTzfmxrMQqHktabBlQjnfJKQAlvUICsLe6BjlhsPf0Vu0TQ9sj6pFijWVzvnkF87U7HVw0IKxPFim8AkQF2wEkvEuNSe7HaAyRW94v8XBozaYv5lnuKq9T1SWRtjlst1MW5OwTZKueTUVo7%2BudQkztwP1bRnMAQFbxfR4BWy25r3XXTvv1qBBz0p2gdEImSGUcyMa%2FSA2CUY0ff82LPRyCHx%2FrpH8Cvp3lPSQ0zmfzbFzuFVE8jGsRWkx9KmyaEuwFr7fnd8peEtiBDAIwDQf2FlhWBnLEkTTXEFicPVYhZ9RothqqzukcKN6ev%2FJJCwFPb20JsnAXnHPKidB2yKzgxyR%2BrQlokeDw9KWIDlMDOhNbj%2BNSpNtj0Tvk4RKKEPRSq7JMBB%2FbxaJadnq5xjeptOHiDjZvvxymcsBFv%2BRTJ4ql7gLQo%2FJN3ODiFDyBHrpq0Kra3qd3T6JSBwQpcNQKb2VsaQM%2FILEtMqFwLYqXR6UOyHhzn87tq7nuaujQjptAVXQl05sOV64Mj9nolfFR4WC%2Bp5hjFE5yl2LFwjlwI49%2FMNXcGZfwn4%2BEGXMJ7qvcYGOrIBPsp8xVCCBaMEPTDHeQCJ5YYnbYhTAbMSCN8umtkiq14%2BbhdPMneY3tLeO%2By8qiM2sfX%2BN3RA62%2BMU%2Fd2Mo3kopSe1%2FVmxd7BWE2RnNIkX%2BAy4e%2BkYo%2BPG1XCngwC3SdLtkMKYTa%2BqEuAt%2BpEzbRjylNMWBcrCunptL8xEruEcoMzneQJ7nH2UquxT613kUKgyRxaZ0qOkzZdANIzSMRqEIXJPMXzwzokF30jOy9Co8Uwpw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=d4cfda391edd1f40e5445264e9da50906c89b103c4d616242bb2bf3ffacac298",
+      "file_size": 95314,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 896402,
+      "file_name": "IDOR_02.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/1DYXEGjkP2AcLFk4dTrWbtk6?response-content-disposition=attachment%3B%20filename%3D%22IDOR_02.png%22%3B%20filename%2A%3DUTF-8%27%27IDOR_02.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYK7ATSFQ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T085620Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIC7yxXUtk3HxV4yvt7jRSHP7uprUkys3ID0xn9hXdAKcAiA%2B%2FxB7WEFKBr6dOBuFuSRYXBzfDwWDpyKGFL%2F%2FhfElPCq6BQj9%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMBI1fLYPPBIEp4O1fKo4FYotapSKM4r04blscEhSgnTQEH%2BozFlGz%2FChVYioPsxU5tpmTalO%2BC705zJkcBfhigxJVnbo5S7yjHIDqA%2BEhl7M0WFAlz5v7hwPqcjlyEUtWCA7z98a4kugYrj%2BmI8RAa%2FXTtUL%2BWqTQGDYR6LizXVkGdQau3nI8XtUdBZ22jioIeHdPVm9Rbeb3KNoDlLHVa6H6fw5Ca78LCLRMpRy%2FlP%2Ba%2BgtFUIj5Yp37aVrDg17ZGxHletP9Klt7XHegkCuzBJdWJDsTo5MRpaG2b4rb%2FmZHTQyK63F8VBVv89n6PiHgoTzfmxrMQqHktabBlQjnfJKQAlvUICsLe6BjlhsPf0Vu0TQ9sj6pFijWVzvnkF87U7HVw0IKxPFim8AkQF2wEkvEuNSe7HaAyRW94v8XBozaYv5lnuKq9T1SWRtjlst1MW5OwTZKueTUVo7%2BudQkztwP1bRnMAQFbxfR4BWy25r3XXTvv1qBBz0p2gdEImSGUcyMa%2FSA2CUY0ff82LPRyCHx%2FrpH8Cvp3lPSQ0zmfzbFzuFVE8jGsRWkx9KmyaEuwFr7fnd8peEtiBDAIwDQf2FlhWBnLEkTTXEFicPVYhZ9RothqqzukcKN6ev%2FJJCwFPb20JsnAXnHPKidB2yKzgxyR%2BrQlokeDw9KWIDlMDOhNbj%2BNSpNtj0Tvk4RKKEPRSq7JMBB%2FbxaJadnq5xjeptOHiDjZvvxymcsBFv%2BRTJ4ql7gLQo%2FJN3ODiFDyBHrpq0Kra3qd3T6JSBwQpcNQKb2VsaQM%2FILEtMqFwLYqXR6UOyHhzn87tq7nuaujQjptAVXQl05sOV64Mj9nolfFR4WC%2Bp5hjFE5yl2LFwjlwI49%2FMNXcGZfwn4%2BEGXMJ7qvcYGOrIBPsp8xVCCBaMEPTDHeQCJ5YYnbYhTAbMSCN8umtkiq14%2BbhdPMneY3tLeO%2By8qiM2sfX%2BN3RA62%2BMU%2Fd2Mo3kopSe1%2FVmxd7BWE2RnNIkX%2BAy4e%2BkYo%2BPG1XCngwC3SdLtkMKYTa%2BqEuAt%2BpEzbRjylNMWBcrCunptL8xEruEcoMzneQJ7nH2UquxT613kUKgyRxaZ0qOkzZdANIzSMRqEIXJPMXzwzokF30jOy9Co8Uwpw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=9d6cfa1de97f42ac60dd4015f2985cfc477e40ca6b7dc8d0d80da75011c0bea6",
+      "file_size": 67733,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2020-10-28T09:18:51.584Z",
+  "allow_singular_disclosure_after": -154568248.59199086,
+  "singular_disclosure_allowed": true,
+  "vote_count": 18,
+  "voters": [
+    "shreyaschavhan",
+    "ali",
+    "zeroxyele",
+    "dpx01",
+    "sheerwood",
+    "alaa-atwa",
+    "dileepkr234",
+    "nataniem",
+    "rethvol",
+    "imtrex",
+    "and 8 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 6.5,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "low",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "high",
+      "integrity": "none",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 13,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "nextcloud/server",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
