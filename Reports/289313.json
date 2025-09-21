@@ -1,0 +1,148 @@
+{
+  "id": 289313,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yODkzMTM=",
+  "url": "https://hackerone.com/reports/289313",
+  "title": "[gem server] Stored XSS via crafted JavaScript URL inclusion in Gemspec",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2017-11-10T23:06:18.960Z",
+  "submitted_at": "2017-11-10T23:06:18.960Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": true,
+    "username": "ysx",
+    "url": "/ysx",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 8212,
+    "url": "https://hackerone.com/rubygems",
+    "handle": "rubygems",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/008/212/e65eca09896d23bc029c08d3147a79a48ec1ee2f_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/008/212/e65eca09896d23bc029c08d3147a79a48ec1ee2f_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "RubyGems",
+      "twitter_handle": "rubygems_status",
+      "website": "https://rubygems.org",
+      "about": "RubyGems.org is the Ruby community’s gem hosting service."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2018-02-22T06:30:28.542Z",
+  "bug_reporter_agreed_on_going_public_at": "2018-02-22T06:30:28.430Z",
+  "team_member_agreed_on_going_public_at": "2018-02-22T03:35:37.054Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi,\n\nA JavaScript URL injection in the `homepage` field within a Gemspec file can be leveraged to achieve stored XSS on the default `gem server` web interface, referenced [here](http://guides.rubygems.org/run-your-own-gem-server/).\n\n> When you install RubyGems, it adds the gem server command to your system. This is the fastest way to start hosting gems.\n\nAs such, a carefully crafted Ruby gem can be installed to exploit this vulnerability against the [gem server](https://github.com/rubygems/rubygems/blob/master/lib/rubygems/server.rb).\n\n## Prerequisite steps\n\nFirst, please create a new Gemspec file (e.g. \"securitytest.gemspec\") with the following contents:\n\n```\nGem::Specification.new do |s|\n  s.name = 'securitytest'\n  s.version = '0.1.0'\n  s.date = '2017-11-10'\n  s.summary = \"This is a proof-of-concept gem\"\n    s.description = \"Select the WWW hyperlink.\"\n    s.authors = [\"Author Name\"]\n  s.homepage = 'javascript:confirm(document.domain)'\nend\n```\n\nAfter saving this Gemspec file, please execute `gem build securitytest.gemspec` and locate the resultant Gem file ahead of the following steps.\n\n## Steps to reproduce\n\n1. Please install the newly created Gem (\"securitytest-0.1.0.gem\") on your system.\n2. Next, execute `gem server` to launch the built-in hosting interface.\n3. Access the RubyGems Documentation Index via the applicable port.\n4. Finally, locate the `securitytest` gem and select the `[www]` link to execute the JavaScript payload.\n\n### Supporting evidence\n\n{F238563}\n\nPlease let me know if you require any additional information regarding this issue.\n\nThanks\n\nYasin",
+  "weakness": {
+    "id": 62,
+    "name": "Cross-site Scripting (XSS) - Stored"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 238563,
+      "file_name": "Gem_Server_XSS.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/238/563/ee12dce3f2edf3f1b0cca43d789fa92ace56d893/Gem_Server_XSS.png?response-content-disposition=attachment%3B%20filename%3D%22Gem_Server_XSS.png%22%3B%20filename%2A%3DUTF-8%27%27Gem_Server_XSS.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ5LN55DNP%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T185146Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDqnV9MFpAr7oKEryDHs1O0twjSVMYLK8eNF8EkT1vxnQIgVOwzSfe37nohm%2FMwmw4sgO7W5B8p4prsSLXzyJ%2FFJJQqsgUIGxADGgwwMTM2MTkyNzQ4NDkiDEIEXJje03hplTZCGyqPBWKc3HA0GkdQ9OG2kHl0s8VXxkTDVVDMhayYwnVqoza7ZQbCZOoGr%2FS3YBYOPp6W3Wl2gLMaT68HHLRTewTP2OunOJNvu5gwOeLr2RFCtNgshK%2FOdJU%2F838xm6N2fTG%2BZpCVrTddhTr63NeBClQIGK1olr%2BMzEO25uDBIO2X5HWzfoncTO2TGtZ97h3vCm0tk5sa%2Fwb2JRNzYzMwM0GKZ8l9xBEbdxKoXoE8%2B1FsER3lnf9kXIWvrLvTz8PwW87IP6IEyRFzIsMRRmRlKDTwI78uNwhAOW1SGMoxHUUP6khj%2FANSANuCZ%2FEgYgw6G2j1kK7uEZLmb57mvwZWgR83Ewxa4SOhnvucwD5lK6NuJw13WjxCggh8k70qCl3C9XvIQheOc4iZJ2r%2FPIn%2BU2HTCbwrFTZxHIz5DBux91Ft%2BIu9IhemSKimuzxufhkDN%2FauMGJBYvA%2F8MEkCnLW6ROrSPmbfnZuKSZCbrbGa1FZtGiZuMTUeFJg6liTfnxj%2Fxx3fAk8tGYcTku9fGQvgpjX6708EK1VkB5VXJjOH0BS1XQHocnUUbwCvKctFYzfTU6FPkUwshbJNs36LivTSI6jphpGIIDooa7MHK7CEBvYrAmRak9MNgJ9bIN2noHe5Ua7B7haNuxZJ4LgmdvVZhg0RPGxdlx2JT16nCthZ5a5peO%2FGsRuKR36gGc9R7reb4v2nA%2BxiuAssCekvDvvVHLRCNjKntmZyaCLG5q%2BiBPmOmr%2BmBpudnIFrGvAlLb5EEM9lu5GYNvg%2Fm63QOA%2BTFAbRPGpR5wSRq8dcPSDiq3v6Bz0zbkvebcSKXUbx%2FFsz%2BZACDdaeU6%2BWOMFOinY5DySO2ktqK9HbAUGWa3wY8t8Ys8wo%2FzAxgY6sQFtwsrOIuab%2BZaZIVn5aWZbiSrT%2BsA4ZPra9Helrkxc7ZYKaZGVwf7zNAFSS6sO%2FxKLaorqf2LXKA1kKr0FMQPMdrL3jxq53G4QtJ2tpmN4GzffquGqVEIJk3%2BOqMplCRgEmDyIfz5F%2BR8HbaHbKLCiY1P0peG91BTqXQG%2BmWnhGMeCRjKMQao8OvUbYeV3j3rzvXCg0kl%2F09lUWm2HnMiehv0aewcZNaDP2%2BCYfCV7aP0%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=a6188f563ef18ef2834f99028a8f6c8dbca12f6101e7d0a73405daabbf6015f9",
+      "file_size": 57029,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2018-03-24T03:35:37.164Z",
+  "allow_singular_disclosure_after": -236618168.84250006,
+  "singular_disclosure_allowed": true,
+  "vote_count": 4,
+  "voters": [
+    "eveeez",
+    "japz",
+    "mandark",
+    "03813136"
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 2043,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/rubygems/rubygems",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "id": 6670,
+      "category": "researcher",
+      "content": "A JavaScript URL injection in the `homepage` field of a Gemspec file can lead to stored XSS within the `gem server` web UI. A similar issue was identified in the [Gem in a Box](https://snyk.io/vuln/SNYK-RUBY-GEMINABOX-20444) and [Gemirro](https://snyk.io/vuln/SNYK-RUBY-GEMIRRO-20445) gems.",
+      "updated_at": "2018-02-22T08:13:32.801Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 47082,
+        "username": "ysx",
+        "name": "",
+        "bio": "",
+        "cleared": false,
+        "verified": false,
+        "website": "",
+        "location": "",
+        "created_at": "2015-12-20T12:11:13.354Z",
+        "url": "https://hackerone.com/ysx",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "hacker",
+        "profile_picture_urls": {
+          "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png",
+          "medium": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png",
+          "xtralarge": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+        }
+      }
+    }
+  ]
+}
