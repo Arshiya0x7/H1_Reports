@@ -1,0 +1,139 @@
+{
+  "id": 297359,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yOTczNTk=",
+  "url": "https://hackerone.com/reports/297359",
+  "title": "No Rate Limit in email leads to huge Mass mailings",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2017-12-12T20:57:12.709Z",
+  "submitted_at": "2017-12-12T20:57:12.709Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "trabajoduro_2",
+    "url": "/trabajoduro_2",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 61,
+    "url": "https://hackerone.com/x",
+    "handle": "x",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/ikx4ept298unt534kpz4am2bd4zs/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/ikx4ept298unt534kpz4am2bd4zs/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "X / xAI",
+      "twitter_handle": "XSecurity",
+      "website": "https://x.com",
+      "about": "X helps you create and share ideas and information instantly, without barriers."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2018-06-01T22:36:20.502Z",
+  "bug_reporter_agreed_on_going_public_at": "2018-05-11T08:23:31.550Z",
+  "team_member_agreed_on_going_public_at": "2018-06-01T22:36:20.396Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi Team,\n\nI have found a logical flaw(NOT DoS) in the website 'https://app.mopub.com/' \n\n\n1.Use Burp Suite and capture below request upon navigation to *Code integration*\n2.Click on Send button after entering email address in the input field of 'Enter one or more email addresses and we'll send you links to the integration instructions for this ad unit.'\n{code}\nPOST /web-client/api/ad-units/email-instructions HTTP/1.1\nHost: app.mopub.com\nUser-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0\nAccept: */*\nAccept-Language: en-US,en;q=0.5\nAccept-Encoding: gzip, deflate\nReferer: https://app.mopub.com/ad-unit?key=█████████&showIntegration=true\nContent-Type: application/json\nx-csrftoken: █████████\nContent-Length: 88\nCookie: _ga=████; _gid=███; csrftoken=███; mp_mixpanel__c=8; sessionid=████████; mp_c99579c4804fba6b8aeed7a911581652_mixpanel=%7B%22distinct_id%22%3A%20%22405f9ac1ce5749abb6092834819b3ec4%22%2C%22accountKey%22%3A%20%22748a6b56971b4bdf94ea73e4cc35e93f%22%2C%22accessLevel%22%3A%20%22member%22%2C%22%24initial_referrer%22%3A%20%22https%3A%2F%2Fwww.mopub.com%2Fget-started%2F%22%2C%22%24initial_referring_domain%22%3A%20%22www.mopub.com%22%7D\nConnection: close\n\n{\"addresses\":[\"§████@mailinator.com§\"],\"key\":\"███\"}\n{code}\n3.Send the captured request to INtruder and repeat the request in loop\n4.Observe that email box is flooded with MoPub ad unit integration instructions\n\nRemediation:\nRate limiting should be implemented\n\nRegards\nAkhil Kakkireni\n\n## Impact\n\nE-mail bombs hack may create Denial of service (DoS) conditions against your e-mail software and even your network and Internet connection by taking up a large amount of bandwidth and, sometimes, requiring large amounts of storage space",
+  "weakness": {
+    "id": 65,
+    "name": "Business Logic Errors"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 246270,
+      "file_name": "hackerone-Mopub.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/246/270/a1254a95ed4d7e6ed5d400b4f7c5206286694853/hackerone-Mopub.jpg?response-content-disposition=attachment%3B%20filename%3D%22hackerone-Mopub.jpg%22%3B%20filename%2A%3DUTF-8%27%27hackerone-Mopub.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQVEJIXONP%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T175957Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIH8AfdM1IKkiBfUEz%2FBO7LFjez%2BUQDg01sIrpsf4EUcBAiBSpVIGQhH6dvIVEdS013E3d77NSPuZ6tkJqUiut1d5ayqxBQgXEAMaDDAxMzYxOTI3NDg0OSIM5KKvvFo%2FqCzdKYojKo4F1%2BxUKjmtoEnCcoIjJvK408ALZil4QNP4qd%2B9SxE2nN4XJtMsRrYo337HtrFn5oO%2FaZ%2Fo7msCxdECjjQnR%2B%2BiOIRw47xO%2BN%2BroD4eFU0Lis8VXL7dneMK0%2FZKVqVB%2BC9tGiRF8jr69GjaOncBp0t%2BX3cMNxBXvRLz3bKIbAg4La2IjqOjzgBTnn%2BIQ3Yhe4BZXvg3RG5sRY2fxBARtQlU7dKqtW6H02iITGdunmfJ1IT%2B3XU2w03%2FcST6rc293dotAdvtrqi681dI6SPYP5SZFsFaToGOXjSXYCaiYNylKPtCRLxqaQMRG5TQX9%2ByCCOVPymZiYFyP%2BNOadkXnUbMb2eQoJYrzOSkfeHj2bWS3RmbO0DRT%2Ff3P4edxF6mtA4y5a5Rbb9QQmxfvt2CB%2B9H4K0szePZZxL3RAcHqBhvq60iVi2HG9fbJX6X9KRmIe60IihzAb8bPagbeh9aJD2NPOr97NdRsEOyoTZVTVqJq3dZTERme2wlhIVMu5zrFQmWXEFknB4fS17jS5t8TKS4KTjVFpEZmE7fMH738HaaBGO4Vg2iNfyjYzLcWfZx%2FUbEXuG1t98I6yBnAESEHAv346Q0BPQr%2Bz87XrCSQdjmWab9zu6ALnBNaKQo4GsSmEixRTkV%2BfZTJFbhc6J1kQlOqv5S36YxT%2B7%2FW3YfSFHXiDLqoNDDaFU6Xrxf4B3AZla5abRXGNVFTHsf6qhKV9VxT%2BVVeQn%2FdCSZGarNUggIqacMenhuAX0nJZEiqxIEeJsJkkM%2BdIXSTEfPjpuSr4EgWjzOTshSC70x%2BG3z5Xy9Rg0898Dqo9%2B6bgq2Y6eUlND5h9YFj2B6tvh%2FxxMTFsGZpgowwHabY0dQaABJE0FHMIWMwMYGOrIB%2FnjXTbo03i5xP3rcMU3bObaCEWOYTy%2F50Ggf7zk3XIOVnx9L4WAz0%2BkC4QuUVgTdg4m3vSVaCadxQKgpnOARKNEU7hiIdSjWNWsznEUhz3m0VcGL8VLeBZxihvQtGtDTEtGjHNLS%2FKP80xsNti6GBmErPMO5xp0uYHZmDW87sx6pMfyUJD3jZY9hW1E%2BtCtsgwzAj7%2FoAV6Xj647N%2F89fogX1xb57jhfm0OpuwqOUaJLQw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=7f03f444b4f3fe6f1ab87862a6ac529671e6754bae0029f204e60be5ed1bfed1",
+      "file_size": 169674,
+      "type": "image/jpeg",
+      "moderated": null
+    },
+    {
+      "id": 246271,
+      "file_name": "hackerone-Mopub2.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/246/271/a6437a99327dc864b288350bdc7618d51fdff656/hackerone-Mopub2.jpg?response-content-disposition=attachment%3B%20filename%3D%22hackerone-Mopub2.jpg%22%3B%20filename%2A%3DUTF-8%27%27hackerone-Mopub2.jpg&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQVEJIXONP%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T175957Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIH8AfdM1IKkiBfUEz%2FBO7LFjez%2BUQDg01sIrpsf4EUcBAiBSpVIGQhH6dvIVEdS013E3d77NSPuZ6tkJqUiut1d5ayqxBQgXEAMaDDAxMzYxOTI3NDg0OSIM5KKvvFo%2FqCzdKYojKo4F1%2BxUKjmtoEnCcoIjJvK408ALZil4QNP4qd%2B9SxE2nN4XJtMsRrYo337HtrFn5oO%2FaZ%2Fo7msCxdECjjQnR%2B%2BiOIRw47xO%2BN%2BroD4eFU0Lis8VXL7dneMK0%2FZKVqVB%2BC9tGiRF8jr69GjaOncBp0t%2BX3cMNxBXvRLz3bKIbAg4La2IjqOjzgBTnn%2BIQ3Yhe4BZXvg3RG5sRY2fxBARtQlU7dKqtW6H02iITGdunmfJ1IT%2B3XU2w03%2FcST6rc293dotAdvtrqi681dI6SPYP5SZFsFaToGOXjSXYCaiYNylKPtCRLxqaQMRG5TQX9%2ByCCOVPymZiYFyP%2BNOadkXnUbMb2eQoJYrzOSkfeHj2bWS3RmbO0DRT%2Ff3P4edxF6mtA4y5a5Rbb9QQmxfvt2CB%2B9H4K0szePZZxL3RAcHqBhvq60iVi2HG9fbJX6X9KRmIe60IihzAb8bPagbeh9aJD2NPOr97NdRsEOyoTZVTVqJq3dZTERme2wlhIVMu5zrFQmWXEFknB4fS17jS5t8TKS4KTjVFpEZmE7fMH738HaaBGO4Vg2iNfyjYzLcWfZx%2FUbEXuG1t98I6yBnAESEHAv346Q0BPQr%2Bz87XrCSQdjmWab9zu6ALnBNaKQo4GsSmEixRTkV%2BfZTJFbhc6J1kQlOqv5S36YxT%2B7%2FW3YfSFHXiDLqoNDDaFU6Xrxf4B3AZla5abRXGNVFTHsf6qhKV9VxT%2BVVeQn%2FdCSZGarNUggIqacMenhuAX0nJZEiqxIEeJsJkkM%2BdIXSTEfPjpuSr4EgWjzOTshSC70x%2BG3z5Xy9Rg0898Dqo9%2B6bgq2Y6eUlND5h9YFj2B6tvh%2FxxMTFsGZpgowwHabY0dQaABJE0FHMIWMwMYGOrIB%2FnjXTbo03i5xP3rcMU3bObaCEWOYTy%2F50Ggf7zk3XIOVnx9L4WAz0%2BkC4QuUVgTdg4m3vSVaCadxQKgpnOARKNEU7hiIdSjWNWsznEUhz3m0VcGL8VLeBZxihvQtGtDTEtGjHNLS%2FKP80xsNti6GBmErPMO5xp0uYHZmDW87sx6pMfyUJD3jZY9hW1E%2BtCtsgwzAj7%2FoAV6Xj647N%2F89fogX1xb57jhfm0OpuwqOUaJLQw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=6dc9fdce1cb7f69580e863e0fe1123a1e6d58fdf45c3ac2bbd5e1c569c77f4d3",
+      "file_size": 216996,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2018-06-10T08:23:31.612Z",
+  "allow_singular_disclosure_after": -229858586.08348408,
+  "singular_disclosure_allowed": true,
+  "vote_count": 19,
+  "voters": [
+    "jokebookservice1",
+    "ali",
+    "shubham_srt",
+    "thalaivar304",
+    "safehacker_2715",
+    "mohaned0101",
+    "homai",
+    "eveeez",
+    "lordjerry0x01",
+    "pr0f0x01",
+    "and 9 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 1074,
+    "asset_type": "URL",
+    "asset_identifier": "mopub.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
