@@ -1,0 +1,136 @@
+{
+  "id": 278191,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yNzgxOTE=",
+  "url": "https://hackerone.com/reports/278191",
+  "title": "Listing of Amazon S3 Bucket accessible to any amazon authenticated user (metrics.pscp.tv)",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2017-10-17T12:58:16.375Z",
+  "submitted_at": "2017-10-17T12:58:16.375Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "segumarc",
+    "url": "/segumarc",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/205/a085ac40e591a1aa005102dd66e2c6a4ac011176_original.jpg/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 61,
+    "url": "https://hackerone.com/x",
+    "handle": "x",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/ikx4ept298unt534kpz4am2bd4zs/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/ikx4ept298unt534kpz4am2bd4zs/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "X / xAI",
+      "twitter_handle": "XSecurity",
+      "website": "https://x.com",
+      "about": "X helps you create and share ideas and information instantly, without barriers."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2017-11-19T18:39:49.558Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-10-20T18:39:35.175Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "**Summary:** \nIt's possible to get a listing of every files in the S3 bucket metrics.pscp.tv\n\n**Description:** \nThe problem is using the AWS command line, it's possible to get a listing of files in the Amazon S3 Bucket with an AWS authentication. See screenshot F230035. \n\nThis user authentication is easy to get and it's free from Amazon. \n\nThe good news is that the ACL on the files are set the way that's impossible at moment to create, remove or download any file from the bucket using my authentication.\n\nA secure amazon S3 bucket would show Access Denied like the hackerone-attachements bucket in screenshot F230036\n\n## Steps To Reproduce:\nWith the AWS command line installed and configured :\n```\naws s3 ls s3://metrics.pscp.tv\n```\n## Impact: \nThis give more information about your buckets to an attacker that are looking to attack you. \n\nAlso, considering that it's possible to set the wrong ACL on a file that you may upload and may be confidential in the bucket, a secure bucket will remove the possibly to access it without a proper authentication. \n\n\n",
+  "bounty_amount": "140.0",
+  "formatted_bounty": "$140",
+  "weakness": {
+    "id": 18,
+    "name": "Information Disclosure"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 230035,
+      "file_name": "Aws_ls_metrics.pscp.tv.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/230/035/c4ee53682a1100bfffb96d4cf4ea520934b73523/Aws_ls_metrics.pscp.tv.PNG?response-content-disposition=attachment%3B%20filename%3D%22Aws_ls_metrics.pscp.tv.PNG%22%3B%20filename%2A%3DUTF-8%27%27Aws_ls_metrics.pscp.tv.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQTOIM5R7P%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T193127Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIFGZGtMhnBUlxBs0Q6xDc9lDV9y8HWzMJ2bjC%2FrpW%2FpqAiBve6zg%2FZZIj60e%2FeSI5w7qTiUU26H9NCXKzxhM%2BbRE5SqxBQgaEAMaDDAxMzYxOTI3NDg0OSIMEUlYAyp0h9L3wQ9aKo4FMUcDgO5gjwxOipwupwBRUf2BBhxv%2F4hTBe8JstrP466mz0IXKy%2BHz%2FM7Jo%2BNuZjRxWSZIwBxYvT8my0U1tIobDIjPe6BsQ8%2F7UE4v0sPcnVtHs6COalqs38BFAspOeUh5ttSDEzGEl2oC9iGZQFBvKn2LkiRWXz8vJFJTItp4K0EvAbPn1gNYTFHIBmI2%2FtP4zza2DC0gcXlajSyIEfwojkqqk67mYc3Uagmo7OuuE8W0uYA79sNmo4wwlrn7l6nR69O5yu4wOVEH1hLHH1pOU7rjmOLfJjC9NAiZzHYjCir0BnkSGsCNi3jw3oj75qn5KBUVIC8gpYSfJEhq21d9wsaz6gMZVOTY78OdJ6O1ROL54%2FMvbQxkuMl6tXTK1SNDjTW%2BPyzXSfiAEj3yOCeNRAfzhdxvmS7F5pxshCTcNrl77tsLmHLh84pviIDAWhY5TJaRJF0q%2BgYMPtoX%2FCAOhCWK2wCsopb9UTk8d4alqxuZc%2F%2FviOzy1nXmGLq9P4qwlpnUmXoVmbT929zNsbNiLB5H5vnoQYWYt1biZqsgZ3DbyeVa5VqxAAkBJ0qbwp4kDMH1%2BPnX0We4VXHgkXynyorTPNYhXaJE2l%2BhKMvmSlZ%2B%2Fkx9omVbnc4B4fcJ%2BHR0CBboTvwjdBQNDqqcSv6QhBNRCXix%2FEzCfZ77SQmbKvMdbmya0yR37oO2YAJEG0ioCfGcVglEpb0vaUcZuR9FzkX8zUjT3ArWf41uVOrueZ7oNDLDIhfVGZJ3U1aHPSsdpOKLTIufTHCOH%2BR%2FcwbbtPp27RyjqAqanzJkG2Sy8ET2Ecdat7HkgnsnrfzBNLo881qRik6cp5zA5bOrECDbfkVthJV4y5ujnFNSYrdMJLkwMYGOrIBPkzZm71uQ%2FNGUQjCULM7lAZJ8euSJWafoAbfr%2FB8pcAe7dn05uP5qQzqGji3r3tpDCc6XYpvhx%2BECT7nBuJXf87t7GpIzCkjX8nuzXELFv98hxwJe5SrELLz2c8ulwnklhD4rRyoMLwrdzJeuh8oS18ylKiQBVsTyyalkmpWSrXDiIWXVgKcnuWGL9R3WHwWeIdH%2FH65jrPAxdG2xYyfUbNyK7T2NeM%2F0wHEMVcf%2Boyowg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=06d22e887d0f664fe8bb25c7710209860a70dba8ecdf8fd410137dd2d675894e",
+      "file_size": 8831,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 230036,
+      "file_name": "aws_ls_hackerone-attachements.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/230/036/20d3d2f935fc0504c78c64ee2708cafffbddd5a4/aws_ls_hackerone-attachements.PNG?response-content-disposition=attachment%3B%20filename%3D%22aws_ls_hackerone-attachements.PNG%22%3B%20filename%2A%3DUTF-8%27%27aws_ls_hackerone-attachements.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQTOIM5R7P%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T193127Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIFGZGtMhnBUlxBs0Q6xDc9lDV9y8HWzMJ2bjC%2FrpW%2FpqAiBve6zg%2FZZIj60e%2FeSI5w7qTiUU26H9NCXKzxhM%2BbRE5SqxBQgaEAMaDDAxMzYxOTI3NDg0OSIMEUlYAyp0h9L3wQ9aKo4FMUcDgO5gjwxOipwupwBRUf2BBhxv%2F4hTBe8JstrP466mz0IXKy%2BHz%2FM7Jo%2BNuZjRxWSZIwBxYvT8my0U1tIobDIjPe6BsQ8%2F7UE4v0sPcnVtHs6COalqs38BFAspOeUh5ttSDEzGEl2oC9iGZQFBvKn2LkiRWXz8vJFJTItp4K0EvAbPn1gNYTFHIBmI2%2FtP4zza2DC0gcXlajSyIEfwojkqqk67mYc3Uagmo7OuuE8W0uYA79sNmo4wwlrn7l6nR69O5yu4wOVEH1hLHH1pOU7rjmOLfJjC9NAiZzHYjCir0BnkSGsCNi3jw3oj75qn5KBUVIC8gpYSfJEhq21d9wsaz6gMZVOTY78OdJ6O1ROL54%2FMvbQxkuMl6tXTK1SNDjTW%2BPyzXSfiAEj3yOCeNRAfzhdxvmS7F5pxshCTcNrl77tsLmHLh84pviIDAWhY5TJaRJF0q%2BgYMPtoX%2FCAOhCWK2wCsopb9UTk8d4alqxuZc%2F%2FviOzy1nXmGLq9P4qwlpnUmXoVmbT929zNsbNiLB5H5vnoQYWYt1biZqsgZ3DbyeVa5VqxAAkBJ0qbwp4kDMH1%2BPnX0We4VXHgkXynyorTPNYhXaJE2l%2BhKMvmSlZ%2B%2Fkx9omVbnc4B4fcJ%2BHR0CBboTvwjdBQNDqqcSv6QhBNRCXix%2FEzCfZ77SQmbKvMdbmya0yR37oO2YAJEG0ioCfGcVglEpb0vaUcZuR9FzkX8zUjT3ArWf41uVOrueZ7oNDLDIhfVGZJ3U1aHPSsdpOKLTIufTHCOH%2BR%2FcwbbtPp27RyjqAqanzJkG2Sy8ET2Ecdat7HkgnsnrfzBNLo881qRik6cp5zA5bOrECDbfkVthJV4y5ujnFNSYrdMJLkwMYGOrIBPkzZm71uQ%2FNGUQjCULM7lAZJ8euSJWafoAbfr%2FB8pcAe7dn05uP5qQzqGji3r3tpDCc6XYpvhx%2BECT7nBuJXf87t7GpIzCkjX8nuzXELFv98hxwJe5SrELLz2c8ulwnklhD4rRyoMLwrdzJeuh8oS18ylKiQBVsTyyalkmpWSrXDiIWXVgKcnuWGL9R3WHwWeIdH%2FH65jrPAxdG2xYyfUbNyK7T2NeM%2F0wHEMVcf%2Boyowg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=050b98b84ce8c1576903ffca2cab6fc1a56c643dcf1dfa51af41b84a757372b8",
+      "file_size": 3356,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-11-19T18:39:35.281Z",
+  "allow_singular_disclosure_after": -247366312.274787,
+  "singular_disclosure_allowed": true,
+  "vote_count": 36,
+  "voters": [
+    "pimgux",
+    "ola0",
+    "jensec",
+    "robd4k",
+    "emitrani",
+    "harrymg",
+    "michan",
+    "apapedulimu",
+    "ysx",
+    "a4r0n3",
+    "and 26 more..."
+  ],
+  "structured_scope": {
+    "databaseId": 1065,
+    "asset_type": "WILDCARD",
+    "asset_identifier": "*.pscp.tv",
+    "max_severity": "none"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
