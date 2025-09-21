@@ -1,0 +1,142 @@
+{
+  "id": 481532,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC80ODE1MzI=",
+  "url": "https://hackerone.com/reports/481532",
+  "title": "heap-use-after-free (READ of size 8) in main()",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2019-01-17T17:27:05.196Z",
+  "submitted_at": "2019-01-17T17:27:05.196Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "geeknik",
+    "url": "/geeknik",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/7xfGZCKCxUuGLYGfuUZM3XyY/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 36864,
+    "url": "https://hackerone.com/putty_h1c",
+    "handle": "putty_h1c",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6Nzc3NjksInB1ciI6ImJsb2JfaWQifX0=--7a1c714283731433b7e903ce4b0f50abe3e6c183/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--a4d91faed3dff6024dfc1a7b7f8ccc6b45e38396/PuTTY_icon_128px.png",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/036/864/2391b6ba38d30ce95133befbf8f31851c7874a32_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "PuTTY (European Commission - DIGIT)",
+      "twitter_handle": "",
+      "website": "http://ec.europa.eu",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2019-11-03T16:42:50.258Z",
+  "bug_reporter_agreed_on_going_public_at": "2019-10-04T16:42:48.441Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "**Summary:** \nAfter downloading putty-0.70-2019-01-17.53747ad.tar.gz, I compiled it on Debian 9 with Clang-8.0.0 and AddressSanitizer and while trying to extract a public key from a crafted key, I triggered a heap-use-after-free in main().\n\n**Description:** [add more details about this vulnerability]\n\n## Steps To Reproduce:\n\n1. Compile putty without GTK and with AddressSanitizer.\n```\nCC=clang CXX=clang++ CFLAGS=-fsanitize=address CXXFLAGS=-fsanitize=address ./configure --without-gtk && make --j2\n```\n\n2. `./puttygen -L test0025.ppk`\n\n```\n==24482==ERROR: AddressSanitizer: heap-use-after-free on address 0x604000000018 at pc 0x0000004f9271 bp 0x7ffe82ceee30 sp 0x7ffe82ceee28\nREAD of size 8 at 0x604000000018 thread T0\n    #0 0x4f9270 in main /root/putty-0.70-2019-01-17.53747ad/cmdgen.c:979:45\n    #1 0x7f019934a2e0 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x202e0)\n    #2 0x41db89 in _start (/root/putty-0.70-2019-01-17.53747ad/puttygen+0x41db89)\n\n0x604000000018 is located 8 bytes inside of 48-byte region [0x604000000010,0x604000000040)\nfreed by thread T0 here:\n    #0 0x4c5fb2 in __interceptor_free /b/swarming/w/ir/kitchen-workdir/src/third_party/llvm/compiler-rt/lib/asan/asan_malloc_linux.cc:124:3\n    #1 0x4f7e68 in main /root/putty-0.70-2019-01-17.53747ad/cmdgen.c:819:21\n    #2 0x7f019934a2e0 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x202e0)\n\npreviously allocated by thread T0 here:\n    #0 0x4c6333 in malloc /b/swarming/w/ir/kitchen-workdir/src/third_party/llvm/compiler-rt/lib/asan/asan_malloc_linux.cc:146:3\n    #1 0x51971d in safemalloc /root/putty-0.70-2019-01-17.53747ad/memory.c:23:6\n    #2 0x5bf67f in strbuf_new /root/putty-0.70-2019-01-17.53747ad/utils.c:431:31\n    #3 0x4f7a4e in main /root/putty-0.70-2019-01-17.53747ad/cmdgen.c:809:28\n    #4 0x7f019934a2e0 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x202e0)\n\nSUMMARY: AddressSanitizer: heap-use-after-free /root/putty-0.70-2019-01-17.53747ad/cmdgen.c:979:45 in main\n```\n\n## Supporting Material/References:\n\n  * List any additional material (e.g. screenshots, logs, etc.)\n\n## Impact\n\n1) The use of previously freed memory may corrupt valid data, if the memory area in question has been allocated and used properly elsewhere.  \n\n2) If chunk consolidation occurs after the use of previously freed data, the process may crash when invalid data is used as chunk information. \n\n3) If malicious data is entered before chunk consolidation can take place, it may be possible to take advantage of a write-what-where primitive to execute arbitrary code.",
+  "weakness": {
+    "id": 50,
+    "name": "Use After Free"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 408097,
+      "file_name": "test0025.ppk.gz",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/408/097/95a8ab350c13ec1162d97d0d3a5bfeb15c72fd82/test0025.ppk.gz?response-content-disposition=attachment%3B%20filename%3D%22test0025.ppk.gz%22%3B%20filename%2A%3DUTF-8%27%27test0025.ppk.gz&response-content-type=application%2Fgzip&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZV74VCZZ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T135502Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIHpm0NZ%2B6WrtgXK%2BnoMSqL2CJxcURQaZeFwjN55ga9S8AiAItJWoqpkLQuOtVcjDxvaF4agx2gaEaXcxFc%2FrzCAQMCqyBQgVEAMaDDAxMzYxOTI3NDg0OSIMdmPuTYPj8trBh9BuKo8F9WyppnmtrkU5yc6c6jXSgIJCNgk93enYjdvzoGFLkYqy9%2BwG%2BJn%2FOu1N0nXqt4n1G4E7Tn909upKAlhj4Wj99lztZaLGdSLzmtXiyLxMfHUs3KlQ5Q%2BPi66sdl8dTvvWDnq1ouXjeUkKQdMmYBJEJBespKt6wuq3BYDyh9EzmNv%2BkTzD3vgsGIvfn%2FAsmYYNtNhOwMAPJah%2BKv5%2BnZTHO3x11oAFIz7WNuEr0sj7jmRdNVava9XcXmne1qR0q%2F7DIhtcG3qppDGvwqmgac6M9Ry1YfbhogDEaG8SqZUUXGBDcKRrMvWMpmQilgOo%2FFOMfgpaZMSRE1xEz%2BGIq4V6FKp9TgBNHtjhsNw2smcwuTg3CVSHboQl01RKF1FFySCaH3dFJxC1%2F%2FPdUJMC%2FiAkljB7DGnWzYod%2FuA8Nk7s9ZGjpHabEwCLUqzKod3qaGCVOtSBhId3qMDqXc1mQdn2K4czjSAQTYlm2oy5J8eQhqHdfO8KuERoSLcBl%2FZ7bSvD2%2Be215mYOWBhPt5rH%2FNSRO4uNNmxNIjhezuKmzqsiY57SsBlIPWw9NZmlI2dP6I64zp035QSKBGGRkWiRGPXWP3%2B9Nq2DqtsM4MACuWZgWCM0t2xX27omtkm41RyuldDgDqIxCLvc4rhiwd0s4yOKa8TbQCFKYMaxsb80zxhaFrLT82Rs9Z7%2FEU7c7X0l9K52h6WJ8lYKZ9gO8NLaY8WHwoRHXxYVI%2BIRwkmD1dD%2FdLHQ9a7JG3c%2FCyJup8%2FnREuPBtD0MYQUf82w1kX1tEDMuwimMG5%2B1KZzonA%2FLft%2B3aq9Kk4YSDgeR%2FLPRjv9UGdIR0pnNtIxZ2P5SRIPJqDQJgcFhlZ6DB4DkbOx4pvMDCIzL%2FGBjqyATXm9iUd485L1CfLKXVqRIIYUlj7EN3%2FT9xfmrpbB%2B4MQXg2i%2FGW3KqftTIw29H4h3W1fm4qO5JO0VK2Hnnm0GCL6eAQ%2BCThRSHtxSGAJR7FdKbEsiR2PXYedq9kZtO3GHHb8Mbz2FJ6RHod0cgErfDEutE2b6ypKwAgkMIKHj%2Bu9Xne%2BlECMrBWWD6jQVkcAJQ%2By6Qxlw2GQrJGy8EvU4QYI5AGSGdZ8MNzYW%2F2nYvdaXY%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=caf8d7561aa71e9c98ae2103e8be8f1bc7943460bf665f76faf2d91d77bfada9",
+      "file_size": 55,
+      "type": "application/gzip",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2019-11-03T16:42:48.494Z",
+  "allow_singular_disclosure_after": -185663534.03085238,
+  "singular_disclosure_allowed": true,
+  "vote_count": 22,
+  "voters": [
+    "angu_",
+    "ali",
+    "savitar0x01",
+    "asad0x01_",
+    "hackingmommies",
+    "geeknik",
+    "hackerfantastic",
+    "cryptographer",
+    "mrowl1337",
+    "b73772bded7541989b54f6a",
+    "and 12 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "score": 3.1,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "high",
+      "privileges_required": "none",
+      "user_interaction": "required",
+      "scope": "unchanged",
+      "confidentiality": "none",
+      "integrity": "none",
+      "availability": "low"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 18792,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://www.chiark.greenend.org.uk/~sgtatham/putty/",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
