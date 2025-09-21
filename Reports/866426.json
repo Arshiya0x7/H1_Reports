@@ -1,0 +1,148 @@
+{
+  "id": 866426,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC84NjY0MjY=",
+  "url": "https://hackerone.com/reports/866426",
+  "title": "Reflected XSS on https://apps.topcoder.com/wiki/",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2020-05-05T13:41:27.348Z",
+  "submitted_at": "2020-05-05T13:41:27.348Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "meryem0x",
+    "url": "/meryem0x",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/q8pmp3uer62m3i1t769rk6x9trwe/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 43330,
+    "url": "https://hackerone.com/lab45",
+    "handle": "lab45",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/uss17aubpsiag1df5tlp5mriefid/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/uss17aubpsiag1df5tlp5mriefid/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "disabled",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Lab45",
+      "twitter_handle": "",
+      "website": "http://wipro.com/lab45",
+      "about": ""
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2020-05-12T13:48:28.035Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-05-12T09:00:42.971Z",
+  "team_member_agreed_on_going_public_at": "2020-05-12T13:48:27.938Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nHi :)  A reflected XSS occurs on https://apps.topcoder.com/wiki/plugins/tinymce/wysiwyg-insertlink.action when creating wiki pages.\n\n## Steps To Reproduce:\n\nA user can create wiki page on https://apps.topcoder.com/wiki/pages/createpage.action?spaceKey=tcwiki. A url can be inserted this page. When you click `Insert/Edit url` https://apps.topcoder.com/wiki/plugins/tinymce/wysiwyg-insertlink.action?draftType=page&spaceKey=tcwiki&currentspace=tcwiki&formname=createpageform&fieldname=wysiwygcontent&alias= page opens. You can change `alias` parameter and add `tooltip` parameter with JS codes. If a victim opens this url, XSS will execute. \n\nPoC:\nhttps://apps.topcoder.com/wiki/plugins/tinymce/wysiwyg-insertlink.action?draftType=page&spaceKey=tcwiki&currentspace=tcwiki&formname=createpageform&fieldname=wysiwygcontent&alias=as%22%3E%3Cimg%20src=x%20onerror=alert(document.domain)%3E&tooltip=as%22%3E%3Cimg%20src=X%20onerror=alert(document.cookie)%3E\n\n{F816079}\n{F816080}\n\n## Impact\n\nXSS can use to steal cookies or to run arbitrary code on victim's browser.",
+  "weakness": {
+    "id": 61,
+    "name": "Cross-site Scripting (XSS) - Reflected"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 816079,
+      "file_name": "document_cookie.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/pkwv6ykMbposp8XL64GwEomJ?response-content-disposition=attachment%3B%20filename%3D%22document_cookie.png%22%3B%20filename%2A%3DUTF-8%27%27document_cookie.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUSK2VYH5%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T113401Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCFrCxdL93Lf%2FbL6om0DM%2FlYKpTQ6gDQMQJ9hYvgP5dwwIgL7xHbYmrcsl%2B%2BtVo0MkjCCA27EolsI%2BxKy1dEasrBVAqsQUIFBADGgwwMTM2MTkyNzQ4NDkiDINyrMtutciL3NTb1CqOBRDCxppe%2FDST7HhBxQjSAwq9e7IPEJEL%2BWZsP7BIgIM1LFviOBmkbEJAjaK5BrMHVFu9dAv%2FZQk%2FlXwSrjTHx8VD65pbvThXFpsPw4%2BEwkoo9NqqUM8Oa1lPyXsoIGvN7VfgmtHLdxMDMWMunRKuBRSnTepD4cyTWFl0ZvAJuZNH%2BPwT9Qp13QOQOrMIG7UuBr3hEp%2F9zTuofo%2Bq3CFusDR5VNL%2FYbJd7jJhg8ccq1knQbd7IcTjUZ%2BIhKoHdTGyktB24FRz9BfNSTScMrzJKbygYbozfiRbsMFcoflOuVBRK4XREt4beT0cYSu3qPN9Ct%2FUeVtKpz5AmeWpMoxE5JwMA5URJtq2aAP5WX3%2Bj0hiZqpdeHNL6nyIqZyKTK3fRff8OEGul98c%2BboCfp%2BRuSs3kCusetniuOYh6ChAk5ZSHeSo0oQKPQsvTlz5C9OykYUz%2F1XAVx%2BDgLM3JkzIRTUQMA4BbAZ2kgTgGxm6ECyspsowo%2FDgzqdMIvmgk1Ktn%2BSCJkSH91Ydxnme6nIuuSAXXLPvb2U9%2FSYPiyPCiyxId5HKZiluTS%2Bo20UYlpj2lddgr0j8MUE73OByEECHoT15c8N9CMAZBxuRx8QZPGjrtMr3vW6ouy%2F9NaXu3gfkkCKw8gvxBt4shrjLShY2RhST416y1CgaNJF0woFVP%2B7hku%2FGvi%2FBuO%2FOHhnuaOUHcLivD%2FPX8ujT418e6L5Nf0BgV6yjEN7HFi6fVWNrbi%2F477IHk7ITY3lOKWfGsqZV%2FSCPCO0LlOPu287JobA8bu8VB%2F9w2Q026YCP%2Bsm3EB7yDu%2BWstwIZCGSQCBqY0ah7itdAtMm8Ys5rp%2BHjvqHzK3bbl59ukN9%2FYcfpQFZMTDKo7%2FGBjqxAXmkCu%2BxVPamGt0hqmxBHyIUXfmfoUo0Bum8aI0%2FkrJnohpLZjrjnqnovenmc7VfnKUq8xtJdeoYsGtY78yWXkI2VSrky7x%2B%2B6oxDo2HsmRiXO2lyP5Y8lE%2FXjZbG6SXNECA8JNV32HhhpbgtRMz746fStdfEOze0FOc5iH4gPqTIsO%2Fow5GzJFbq8KC%2BL8Y%2BAYwZ0zc3YUkyIuYRdYLbqjptEwIme41FOYIbEUK1VFj7Q%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=55a595da5cc0e10e2d2f346806c9415d6d1ae1f79336590121bc8a1ce3ba5583",
+      "file_size": 94826,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 816080,
+      "file_name": "document_domain.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/XbLLerNEqsnKkMVmLcnBmR2f?response-content-disposition=attachment%3B%20filename%3D%22document_domain.png%22%3B%20filename%2A%3DUTF-8%27%27document_domain.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUSK2VYH5%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T113401Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCFrCxdL93Lf%2FbL6om0DM%2FlYKpTQ6gDQMQJ9hYvgP5dwwIgL7xHbYmrcsl%2B%2BtVo0MkjCCA27EolsI%2BxKy1dEasrBVAqsQUIFBADGgwwMTM2MTkyNzQ4NDkiDINyrMtutciL3NTb1CqOBRDCxppe%2FDST7HhBxQjSAwq9e7IPEJEL%2BWZsP7BIgIM1LFviOBmkbEJAjaK5BrMHVFu9dAv%2FZQk%2FlXwSrjTHx8VD65pbvThXFpsPw4%2BEwkoo9NqqUM8Oa1lPyXsoIGvN7VfgmtHLdxMDMWMunRKuBRSnTepD4cyTWFl0ZvAJuZNH%2BPwT9Qp13QOQOrMIG7UuBr3hEp%2F9zTuofo%2Bq3CFusDR5VNL%2FYbJd7jJhg8ccq1knQbd7IcTjUZ%2BIhKoHdTGyktB24FRz9BfNSTScMrzJKbygYbozfiRbsMFcoflOuVBRK4XREt4beT0cYSu3qPN9Ct%2FUeVtKpz5AmeWpMoxE5JwMA5URJtq2aAP5WX3%2Bj0hiZqpdeHNL6nyIqZyKTK3fRff8OEGul98c%2BboCfp%2BRuSs3kCusetniuOYh6ChAk5ZSHeSo0oQKPQsvTlz5C9OykYUz%2F1XAVx%2BDgLM3JkzIRTUQMA4BbAZ2kgTgGxm6ECyspsowo%2FDgzqdMIvmgk1Ktn%2BSCJkSH91Ydxnme6nIuuSAXXLPvb2U9%2FSYPiyPCiyxId5HKZiluTS%2Bo20UYlpj2lddgr0j8MUE73OByEECHoT15c8N9CMAZBxuRx8QZPGjrtMr3vW6ouy%2F9NaXu3gfkkCKw8gvxBt4shrjLShY2RhST416y1CgaNJF0woFVP%2B7hku%2FGvi%2FBuO%2FOHhnuaOUHcLivD%2FPX8ujT418e6L5Nf0BgV6yjEN7HFi6fVWNrbi%2F477IHk7ITY3lOKWfGsqZV%2FSCPCO0LlOPu287JobA8bu8VB%2F9w2Q026YCP%2Bsm3EB7yDu%2BWstwIZCGSQCBqY0ah7itdAtMm8Ys5rp%2BHjvqHzK3bbl59ukN9%2FYcfpQFZMTDKo7%2FGBjqxAXmkCu%2BxVPamGt0hqmxBHyIUXfmfoUo0Bum8aI0%2FkrJnohpLZjrjnqnovenmc7VfnKUq8xtJdeoYsGtY78yWXkI2VSrky7x%2B%2B6oxDo2HsmRiXO2lyP5Y8lE%2FXjZbG6SXNECA8JNV32HhhpbgtRMz746fStdfEOze0FOc5iH4gPqTIsO%2Fow5GzJFbq8KC%2BL8Y%2BAYwZ0zc3YUkyIuYRdYLbqjptEwIme41FOYIbEUK1VFj7Q%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=7ba781bd1429cf86912e4b019190a2f238adb721fe42cb854aa61a27469412e5",
+      "file_size": 80163,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 12,
+  "voters": [
+    "taha",
+    "rook1337",
+    "xsky",
+    "mik317",
+    "sa1tama0",
+    "sharontlin",
+    "horacy",
+    "impr0bable",
+    "kariyenas",
+    "badbrain",
+    "and 2 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 5.4,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "required",
+      "scope": "unchanged",
+      "confidentiality": "low",
+      "integrity": "low",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 37578,
+    "asset_type": "URL",
+    "asset_identifier": "apps.topcoder.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
