@@ -1,0 +1,139 @@
+{
+  "id": 764243,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC83NjQyNDM=",
+  "url": "https://hackerone.com/reports/764243",
+  "title": "API - Amazon S3 bucket misconfiguration",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2019-12-25T02:31:24.148Z",
+  "submitted_at": "2019-12-25T02:31:24.148Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "c37m",
+    "url": "/c37m",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/KrAqw24Wr2Js9AL9KuRnM7vX/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 41881,
+    "url": "https://hackerone.com/bcm",
+    "handle": "bcm",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6ODAyMzEsInB1ciI6ImJsb2JfaWQifX0=--34b7442d639d4950cf35066f0bbf7a48c59ebf54/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--a4d91faed3dff6024dfc1a7b7f8ccc6b45e38396/100_logo_2_copy_38_20x.png",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/041/881/942a0196aba739f0c60f967235fea7dee78efb21_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "disabled",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "BCM Messenger",
+      "twitter_handle": "BCM_SOCIAL",
+      "website": "https://bcm-im.com",
+      "about": "Born for the freedom of communication"
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2020-04-14T23:54:07.670Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-03-15T23:54:07.524Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Dear, BCM Messenger \n##Description\nMy discovering was starting from com.bcm.messenger,\nFirst, i trace what application send and receive from the network so i use [Frida tool](https://www.frida.re) to [bypass SSL pinning](https://medium.com/@buff3r/root-detection-ssl-pinning-bypass-with-frida-framework-31769d31723a),\nThen i was able to trace application  http traffic, and since API data is not encrypted and there's nothing protect API such as token... \nthat's make the `API Opened to public` .\n\nSo in this point : \nhttp://47.52.75.65:8080//v1/attachments/s3/upload_certification application send demand to upload image (profile image )\n Api respond with : \n```json\n{\"downloadUrl\":\"https://d3v5qmgpw891au.cloudfront.net/profile/1CDfyqYQfPRs2m1a1VSMaD89GZ63Mwu78N/7a6998d3f4ab421e9619627b33f1ce6b\",\"fields\":[{\"key\":\"key\",\"value\":\"profile/1CDfyqYQfPRs2m1a1VSMaD89GZ63Mwu78N/7a6998d3f4ab421e9619627b33f1ce6b\"},{\"key\":\"X-Amz-Credential\",\"value\":\"AKIA3NG2JXZC3SY2WNXE/20191225/ap-east-1/s3/aws4_request\"},{\"key\":\"X-Amz-Date\",\"value\":\"20191225T002608Z\"},{\"key\":\"X-Amz-Algorithm\",\"value\":\"AWS4-HMAC-SHA256\"},{\"key\":\"Policy\",\"value\":\"eyAiZXhwaXJhdGlvbiI6ICIyMDE5LTEyLTI1VDAwOjU2OjA4LjAwMFoiLAogICJjb25kaXRpb25zIjogWwogICAgeyJidWNrZXQiOiAiYmNtLWhrIn0sCiAgICBbImVxIiwgIiRrZXkiLCAicHJvZmlsZS8xQ0RmeXFZUWZQUnMybTFhMVZTTWFEODlHWjYzTXd1NzhOLzdhNjk5OGQzZjRhYjQyMWU5NjE5NjI3YjMzZjFjZTZiIl0sCiAgICBbImNvbnRlbnQtbGVuZ3RoLXJhbmdlIiwgMSwgNjcxMDg4NjRdLAogICAgeyJ4LWFtei1jcmVkZW50aWFsIjogIkFLSUEzTkcySlhaQzNTWTJXTlhFLzIwMTkxMjI1L2FwLWVhc3QtMS9zMy9hd3M0X3JlcXVlc3QifSwKICAgIHsieC1hbXotYWxnb3JpdGhtIjogIkFXUzQtSE1BQy1TSEEyNTYifSwKICAgIHsieC1hbXotZGF0ZSI6ICIyMDE5MTIyNVQwMDI2MDhaIiB9CiAgXQp9\"},{\"key\":\"X-Amz-Signature\",\"value\":\"dc4f9003a5613f72ee7b13154deaa503dcc23eb233d6fb651e12b907926f86ce\"}],\"postUrl\":\"https://bcm-hk.s3.ap-east-1.amazonaws.com/\"}\n```\nSo as you can see, the bucket name is bcm-hk with <access-key-id> = `AKIA3NG2JXZC3SY2WNXE` \n\nBy this json data  we can upload any file with any size to this bucket for (current user) .\n \n##PoC :\nI Write a Python3 script ( {F668054} ) make the upload file fast and easy :\nUSAGE : `python aws.py filename`\n\n\nChose any file with any size , the file will uploaded and encoded with base65 \nRequirement : requests,json,base64,mimetypes,sys \n{F668052}\n\nFile saved in : \nhttps://bcm-hk.s3.ap-east-1.amazonaws.com/profile%2F14HXhz8Aef9NnH1Ubvwb5gEXUebzZjtEem%2F23a3ca622f9d4e52bc69387451580ae8\n\n## Impact\n\n## Risk : \nSince the registration is free, and no limit of how much account can be opened from one user (no email check , no phone check ...)  attacker or ATTACKERS  find this bucket as free cloud service they will upload what they want and share they files using your resources (in groups,in their communities  ... ) so you will get fake users or hackers.\n\n\n\nBest regards ,\nMohamed Slamat\nm.slamat@outlook.com",
+  "weakness": {
+    "id": 26,
+    "name": "Improper Access Control - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 668052,
+      "file_name": "poc_IC_bcm.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/uzm7L5p6VHtqsGos7Li9vYrW?response-content-disposition=attachment%3B%20filename%3D%22poc_IC_bcm.png%22%3B%20filename%2A%3DUTF-8%27%27poc_IC_bcm.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXEMCGF7V%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T114805Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIDJ0R0FIUWNadNhIXrBswxcyWtYC2ErX5%2FMw4e4rKIhxAiBgYiPT8g9Sd80gDbf7Q6XhVWo%2FAZwvWTlbFW32peJe7iqyBQgUEAMaDDAxMzYxOTI3NDg0OSIMj%2F%2FqbskhHlY891UYKo8F9X8FgKR%2BdgScCVoNxLcUXnyuV9C7H1r6PT%2FDPN5T6iJLh70OLGbhqG9KnSHefC%2FiJ9c68eQiZbqqvzbu9CpIB0k9DZQLqncFtW8sfgOZmYqfYYQscSEmiWT34fxbneN9wdywJ6810jmYHYb3AAOgrwuaztFCXfVcqven2HU154jBPoe%2BKdSsK4WkhC82NLd8nXGRqT6ryTHo115CPsxFjjrNG%2BnH5assJbt76uGsWXeL%2BuJuhqAYCTPPhQFn%2BIPgOG3uhMlMqjUHl9EXk07YEiv5y1Yt0RY1Mc9kVVv9jQVzEr%2Blv5GropQc2DBAYW8NCY3n4CV2H%2B3DZUv3s%2FX55WjttruaU59sown00UpV66e5%2Bpq%2BIoUiRiSARTTra%2Fm5nUzAZ%2BtEwenVqnLDb0qdYfJXXDOD3Fx36g8cK1gjo7CIHwEmZgME%2BWwd7SpZ40fDEZLd6UmiXE%2B%2FhMMdnt2327Jun7Prw%2FEKBruqQzAufTd9bS2CVX2PzlzlNaIZo8RvRAG2L%2BD5lZNZZeZz4DsPpm2DGJA3HarZXeGPwDrBARUrjg9TlD4byVJ48wkFZ5PqgfUfChaq306xDlb%2F6w%2F7i%2BsTl7zDjtNrbO9xTgJxB68ilwhiqxGOgW%2Ff1FR3yQVcppvhvnSNX1PI4xyQFJ%2FKZf01DFcNcv7s%2Fj7DJf2Uhg4gAlTyB%2BIlOQFAeLhqMcYazcFRZJ%2FahwCoLOsNKIc5cAPxsR1823kkfiu2dmL0eSwEMp5KzHrYzd2l%2F9ynqUq2R2pWku1sBx7FnebuufT6xv2DXR7OY%2BKLzE2GP2Sg9G1N7K9DJ5iqF%2FYR62UQ15Zua61uJjYQ6im7TDuyk%2F%2Bi5fErLwuV7oYKpd56XDzlLDDltb%2FGBjqyARCASLpmov%2FsoOzfzpNZtXdrE091tx3OjzI0fviYyAXd74P82XakOR0p%2F%2FImwKJs2j6A0chyQH4E2ElOwW7GfQHGxUSG18mvKeaQBgN3VNrOJox%2Fg8WteLtgAVsyuCjibMwM%2BE4iE7sxGYGS1GEluM1KVEb6WRd6MN1RkttphQdbdOqJGu753%2F4a8c44N%2B8xJBTx8dd1jstjUlGY9lKTcW5wU43perJp9%2FsJ8uHkbrYwCK8%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=5507b5c254996d516293b749d7ec354d5ed07ed9c220a5d741157a1fc086d8b7",
+      "file_size": 86786,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 668054,
+      "file_name": "aws.py",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/2D7hjDeWL9vMqsQuHLckHnvH?response-content-disposition=attachment%3B%20filename%3D%22aws.py%22%3B%20filename%2A%3DUTF-8%27%27aws.py&response-content-type=text%2Fx-python&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXEMCGF7V%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T114805Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIDJ0R0FIUWNadNhIXrBswxcyWtYC2ErX5%2FMw4e4rKIhxAiBgYiPT8g9Sd80gDbf7Q6XhVWo%2FAZwvWTlbFW32peJe7iqyBQgUEAMaDDAxMzYxOTI3NDg0OSIMj%2F%2FqbskhHlY891UYKo8F9X8FgKR%2BdgScCVoNxLcUXnyuV9C7H1r6PT%2FDPN5T6iJLh70OLGbhqG9KnSHefC%2FiJ9c68eQiZbqqvzbu9CpIB0k9DZQLqncFtW8sfgOZmYqfYYQscSEmiWT34fxbneN9wdywJ6810jmYHYb3AAOgrwuaztFCXfVcqven2HU154jBPoe%2BKdSsK4WkhC82NLd8nXGRqT6ryTHo115CPsxFjjrNG%2BnH5assJbt76uGsWXeL%2BuJuhqAYCTPPhQFn%2BIPgOG3uhMlMqjUHl9EXk07YEiv5y1Yt0RY1Mc9kVVv9jQVzEr%2Blv5GropQc2DBAYW8NCY3n4CV2H%2B3DZUv3s%2FX55WjttruaU59sown00UpV66e5%2Bpq%2BIoUiRiSARTTra%2Fm5nUzAZ%2BtEwenVqnLDb0qdYfJXXDOD3Fx36g8cK1gjo7CIHwEmZgME%2BWwd7SpZ40fDEZLd6UmiXE%2B%2FhMMdnt2327Jun7Prw%2FEKBruqQzAufTd9bS2CVX2PzlzlNaIZo8RvRAG2L%2BD5lZNZZeZz4DsPpm2DGJA3HarZXeGPwDrBARUrjg9TlD4byVJ48wkFZ5PqgfUfChaq306xDlb%2F6w%2F7i%2BsTl7zDjtNrbO9xTgJxB68ilwhiqxGOgW%2Ff1FR3yQVcppvhvnSNX1PI4xyQFJ%2FKZf01DFcNcv7s%2Fj7DJf2Uhg4gAlTyB%2BIlOQFAeLhqMcYazcFRZJ%2FahwCoLOsNKIc5cAPxsR1823kkfiu2dmL0eSwEMp5KzHrYzd2l%2F9ynqUq2R2pWku1sBx7FnebuufT6xv2DXR7OY%2BKLzE2GP2Sg9G1N7K9DJ5iqF%2FYR62UQ15Zua61uJjYQ6im7TDuyk%2F%2Bi5fErLwuV7oYKpd56XDzlLDDltb%2FGBjqyARCASLpmov%2FsoOzfzpNZtXdrE091tx3OjzI0fviYyAXd74P82XakOR0p%2F%2FImwKJs2j6A0chyQH4E2ElOwW7GfQHGxUSG18mvKeaQBgN3VNrOJox%2Fg8WteLtgAVsyuCjibMwM%2BE4iE7sxGYGS1GEluM1KVEb6WRd6MN1RkttphQdbdOqJGu753%2F4a8c44N%2B8xJBTx8dd1jstjUlGY9lKTcW5wU43perJp9%2FsJ8uHkbrYwCK8%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=edd1d06577a5c6165e1b7e3b3a5bb9fe47d858b13d234e3bce47af4472887ede",
+      "file_size": 2940,
+      "type": "text/x-python",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2020-04-14T23:54:07.610Z",
+  "allow_singular_disclosure_after": -171546837.62769616,
+  "singular_disclosure_allowed": true,
+  "vote_count": 35,
+  "voters": [
+    "tinmo",
+    "a_d_a_m",
+    "ali",
+    "bl4de",
+    "2026",
+    "sl4x",
+    "pacmanx",
+    "mohaned0101",
+    "brumens",
+    "i5nipe",
+    "and 25 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "Team"
+  },
+  "structured_scope": {
+    "databaseId": 35498,
+    "asset_type": "GOOGLE_PLAY_APP_ID",
+    "asset_identifier": "com.bcm.messenger",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
