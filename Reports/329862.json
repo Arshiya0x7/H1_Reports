@@ -1,0 +1,125 @@
+{
+  "id": 329862,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMjk4NjI=",
+  "url": "https://hackerone.com/reports/329862",
+  "title": "Stored xss in shop name @ lp.reverb.com",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2018-03-26T04:04:28.168Z",
+  "submitted_at": "2018-03-26T04:04:28.168Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "sandeep_hodkasia",
+    "url": "/sandeep_hodkasia",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/139/321/dca5655df274e0366c3890839bc37f00232116f6_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 3094,
+    "url": "https://hackerone.com/reverb",
+    "handle": "reverb",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/003/094/b7238acaca15ddb329cf25e69c687352247aece5_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/003/094/b7238acaca15ddb329cf25e69c687352247aece5_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "disabled",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Reverb.com",
+      "twitter_handle": "reverb",
+      "website": "https://sandbox.reverb.com",
+      "about": "The best place for musicians to buy and sell the gear they use to create the music they love."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2018-10-01T12:47:19.119Z",
+  "bug_reporter_agreed_on_going_public_at": "2018-09-01T12:47:15.087Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "hello team,\n\nThere is a stored xss in lp.reverb.com.\nAttacker can inject malicious script into server while adding shop name as `lll\"></script><script>alert('xss');</script>`.\nExploit: https://lp.reverb.com/shops/faniyos-boutique/listings\n\nSteps to reproduce:\n1. Navogate to https://reverb.com/my/lp_shop/edit\n2. Change your lp shop name to this: lll\"></script><script>alert('xss')</script>\n3. Save the changes.\n4. View your lp shop.\n\nFix:\nSanitise the given input in the backend and encode the special characters.\n\nThanks,\nSandeep\n\n## Impact\n\nAttack can save malicious script directly into the server. Malicious script can be used to gain users session.\n\nThe hacker selected the **Cross-site Scripting (XSS) - Stored** weakness. This vulnerability type requires contextual information from the hacker. They provided the following answers:\n\n**URL**\nhttps://lp.reverb.com/shops/faniyos-boutique/listings\n\n**Verified**\nYes\n\n",
+  "weakness": {
+    "id": 62,
+    "name": "Cross-site Scripting (XSS) - Stored"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 278684,
+      "file_name": "Screen_Shot_2018-03-26_at_9.33.45_AM.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/278/684/6bf638f61bf0172d1ce2c0121ed3bb58f204a591/Screen_Shot_2018-03-26_at_9.33.45_AM.png?response-content-disposition=attachment%3B%20filename%3D%22Screen_Shot_2018-03-26_at_9.33.45_AM.png%22%3B%20filename%2A%3DUTF-8%27%27Screen_Shot_2018-03-26_at_9.33.45_AM.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQVEJIXONP%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T170528Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIH8AfdM1IKkiBfUEz%2FBO7LFjez%2BUQDg01sIrpsf4EUcBAiBSpVIGQhH6dvIVEdS013E3d77NSPuZ6tkJqUiut1d5ayqxBQgXEAMaDDAxMzYxOTI3NDg0OSIM5KKvvFo%2FqCzdKYojKo4F1%2BxUKjmtoEnCcoIjJvK408ALZil4QNP4qd%2B9SxE2nN4XJtMsRrYo337HtrFn5oO%2FaZ%2Fo7msCxdECjjQnR%2B%2BiOIRw47xO%2BN%2BroD4eFU0Lis8VXL7dneMK0%2FZKVqVB%2BC9tGiRF8jr69GjaOncBp0t%2BX3cMNxBXvRLz3bKIbAg4La2IjqOjzgBTnn%2BIQ3Yhe4BZXvg3RG5sRY2fxBARtQlU7dKqtW6H02iITGdunmfJ1IT%2B3XU2w03%2FcST6rc293dotAdvtrqi681dI6SPYP5SZFsFaToGOXjSXYCaiYNylKPtCRLxqaQMRG5TQX9%2ByCCOVPymZiYFyP%2BNOadkXnUbMb2eQoJYrzOSkfeHj2bWS3RmbO0DRT%2Ff3P4edxF6mtA4y5a5Rbb9QQmxfvt2CB%2B9H4K0szePZZxL3RAcHqBhvq60iVi2HG9fbJX6X9KRmIe60IihzAb8bPagbeh9aJD2NPOr97NdRsEOyoTZVTVqJq3dZTERme2wlhIVMu5zrFQmWXEFknB4fS17jS5t8TKS4KTjVFpEZmE7fMH738HaaBGO4Vg2iNfyjYzLcWfZx%2FUbEXuG1t98I6yBnAESEHAv346Q0BPQr%2Bz87XrCSQdjmWab9zu6ALnBNaKQo4GsSmEixRTkV%2BfZTJFbhc6J1kQlOqv5S36YxT%2B7%2FW3YfSFHXiDLqoNDDaFU6Xrxf4B3AZla5abRXGNVFTHsf6qhKV9VxT%2BVVeQn%2FdCSZGarNUggIqacMenhuAX0nJZEiqxIEeJsJkkM%2BdIXSTEfPjpuSr4EgWjzOTshSC70x%2BG3z5Xy9Rg0898Dqo9%2B6bgq2Y6eUlND5h9YFj2B6tvh%2FxxMTFsGZpgowwHabY0dQaABJE0FHMIWMwMYGOrIB%2FnjXTbo03i5xP3rcMU3bObaCEWOYTy%2F50Ggf7zk3XIOVnx9L4WAz0%2BkC4QuUVgTdg4m3vSVaCadxQKgpnOARKNEU7hiIdSjWNWsznEUhz3m0VcGL8VLeBZxihvQtGtDTEtGjHNLS%2FKP80xsNti6GBmErPMO5xp0uYHZmDW87sx6pMfyUJD3jZY9hW1E%2BtCtsgwzAj7%2FoAV6Xj647N%2F89fogX1xb57jhfm0OpuwqOUaJLQw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=b92096729ad38eb9340e691e8c8c2a11c885398151d9aaa99edee0be0503e34e",
+      "file_size": 94301,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2018-10-01T12:47:15.182Z",
+  "allow_singular_disclosure_after": -220076293.55689937,
+  "singular_disclosure_allowed": true,
+  "vote_count": 10,
+  "voters": [
+    "ali",
+    "sameerphad72",
+    "thalaivar304",
+    "whitesector",
+    "eveeez",
+    "anandpingsafe",
+    "oddfuturex",
+    "sandeep_hodkasia",
+    "cryptographer",
+    "jatacheers"
+  ],
+  "severity": {
+    "rating": "high",
+    "author_type": "User"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
