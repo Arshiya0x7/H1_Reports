@@ -1,0 +1,137 @@
+{
+  "id": 480883,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC80ODA4ODM=",
+  "url": "https://hackerone.com/reports/480883",
+  "title": "Stack overflow in XML Parsing",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2019-01-16T11:03:23.213Z",
+  "submitted_at": "2019-01-16T11:03:23.213Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "ammm",
+    "url": "/ammm",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTY5MDksInB1ciI6ImJsb2JfaWQifX0=--3eda23593f9878da5e745315aa8d784a460df3d0/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--a4d91faed3dff6024dfc1a7b7f8ccc6b45e38396/FotoAntonio.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 36721,
+    "url": "https://hackerone.com/notepad-plus-plus",
+    "handle": "notepad-plus-plus",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6Nzc3MDUsInB1ciI6ImJsb2JfaWQifX0=--2ca2357f301fa5575a76366238f71e27e3ddfe36/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--a4d91faed3dff6024dfc1a7b7f8ccc6b45e38396/open-uri20181218-17572-foz24g",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/036/721/b8be93879279f14a49e5051a1a2794575fb1f3f8_original./3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "disabled",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Notepad++",
+      "twitter_handle": "notepad_plus",
+      "website": "https://notepad-plus-plus.org",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2019-08-25T12:50:13.333Z",
+  "bug_reporter_agreed_on_going_public_at": "2019-07-26T12:50:12.426Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "**Summary:** \n\nA stack buffer overflow vulnerability has been detected in XML parsing functionality  on Notepad++.\n\nThat's due to the fact that _invisibleEditView.getText function doesn't check buffer boundaries.\n\n**Description:** \nVulnerability src file: notepad-plus-plus/PowerEditor/src/Notepad_plus.cpp\nVulnerability line: line 1008\nVariable affected: char encodingStr[128];\nFunction that overflows buffer: _invisibleEditView.getText\n\n## Steps To Reproduce:\n\n  1. Create a .xml file with a correct XML format\n  2. Introduce a big XML field that overflows \"encodingStr\" buffer.\n  3. Open the file with Notepad++ and application should crash.\n\n## Supporting Material/References:\n\n  * BoF_example1.xml -> Exploit example\n\n## Impact\n\nAn attacker could create a malicious .xml file that triggers a stack buffer overflow on victim machine.\n\nYou only need to open attached .xml file example with Notepad++ to reproduce the exploit.",
+  "weakness": {
+    "id": 4,
+    "name": "Stack Overflow"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 407247,
+      "file_name": "BoF_Example1.xml",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/407/247/d33f5c4346a468e7ebc04e8d8a14c40f5261faa7/BoF_Example1.xml?response-content-disposition=attachment%3B%20filename%3D%22BoF_Example1.xml%22%3B%20filename%2A%3DUTF-8%27%27BoF_Example1.xml&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXH3IJ7M2%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T145303Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCmTN%2BvZcEFOamV0Kg8ZJ4ZxIvtcAOCyN2sQtXu9gL4BAIgFUd6qrFnO5TOJAxy7WY1pXtDVyW%2FtooSmtiO9RTHu8UqsQUIFRADGgwwMTM2MTkyNzQ4NDkiDC1Wp%2F3SwOPbRAuuxSqOBcNtuKGMZbO9qIc7GMcE%2F8JdLTMg1N3s89C0FYD8cHLkyrK9DZb4wQZ0Qx%2B%2FPvNAp6gkecweUHJhNibW59it0oZPn50ncqsxwetmpsOGO2gsUId8lI5I8NlXMo1QIUmQgdp95jxdkuXIFNeEqERTWy7Y8JMjoVPglw7kGxObClqZuxapxy%2FU%2FlTOpsh2Y6QUmhobAbDn1weImZdTqE%2BGNZbLB4swr5K7YMgZdhnrnhNKSQQWOvuhsu86TqsICbyL%2B%2B6HVTwpi0uFYSLbgId5h57LTAPskSE2leo%2FooZbDb7ozFHsT27L2bfXfNwa58NRoDwR5lI%2BqHoOTtxW0peKh3GzHtAYbkGSIxOab98d1YU1IYCgNe60AaUhfuFvX21qTItpTZjR7vIAhJ0SSZyqCz%2BJ%2BMga%2BdzPGJE9Jm2%2FVrR6XCTzgK2UFrTyC3fnRbHy5bgHs%2Bz9Y5iejYtmpQPmhTu7le%2Br1w78OhgzdqYD%2F%2Bn02PHHq6VM57QjcLmtaFpTbN%2B9WeKCHnG92Q1nJJvr%2FEawcnOYbtTjlvVvLDv5%2FpggzxVZOQvLOu9o0CdLw18a11d7TJegeDpHYHaI7ij0PBVxXESim5wQSxHQa2S6ZRyBj%2B0zF8xoMibRorSRmDLlEo42jSN2sQ%2BE7bt1yMGe9fBQexEP2aaVpcj4o17M4e%2FVgEi5kK8dVeeE8qxwJgTCu2t%2FuXdXJhYoAKEad6CwiDZVGIdxSxldTULy7H5b%2Fy84GQpUhe%2FeeYGje5viO7O1OKXWpOpVuHn%2BT6VJ5ewZ6R7MjE3BerIgPSAmbDZ%2FNPJN0IqvjcUTck4fBYNrvLbt0OJ2Nl9c3k67FWZ%2BtTFlCCXN98b8R%2F1D9E2CHd82rjD207%2FGBjqxAYgJC3SrIcWSgXMuw%2FprXbX0JnjDjFZ6rNP1n%2BL4G3zbvE5D%2B1rv8pDAjz9ogSPQFV297aM4%2Fnnf6c4Id8aU8x9VTjlc3THODgd5oYEYaoBHqLtWouDpm7p%2BU3O7gLEBuKy2e4%2Fpf1AmMYVjGfoynPb5zpA9kAZtEaJ2zETyM6%2Fh3rHyexd9a8lW7ulQ0vX4CXJSH1sd3qk4s9zUhHtowsaRknU2A50CXgZH9gCJjlaGBw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=0af51dcba8cdef9ae09a478f13dfb6ffea5b5c7286fd6d461a223dd10354414a",
+      "file_size": 119650,
+      "type": "application/xml",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2019-08-25T12:50:12.593Z",
+  "allow_singular_disclosure_after": -191728971.00259918,
+  "singular_disclosure_allowed": true,
+  "vote_count": 98,
+  "voters": [
+    "sp1d3rs",
+    "p1stachios",
+    "mashoud1122",
+    "b1gb1t",
+    "un4gi",
+    "ali",
+    "sameerphad72",
+    "bl4de",
+    "spam404",
+    "dhakal_ananda",
+    "and 88 more..."
+  ],
+  "severity": {
+    "rating": "high",
+    "score": 8.1,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "required",
+      "scope": "unchanged",
+      "confidentiality": "high",
+      "integrity": "high",
+      "availability": "none"
+    }
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
