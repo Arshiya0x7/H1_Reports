@@ -1,0 +1,139 @@
+{
+  "id": 980511,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC85ODA1MTE=",
+  "url": "https://hackerone.com/reports/980511",
+  "title": "A staff member with no permissions can edit Store Customer Email",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2020-09-12T07:24:44.117Z",
+  "submitted_at": "2020-09-12T07:24:44.376Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "ash_nz",
+    "url": "/ash_nz",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/QkvsUwLu3hoeUg5dKxPjdSei/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 1382,
+    "url": "https://hackerone.com/shopify",
+    "handle": "shopify",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Shopify",
+      "twitter_handle": "",
+      "website": "https://www.shopify.com",
+      "about": "Shopify is a multi-channel commerce platform that helps people sell online, in-store, and everywhere in between."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2020-10-22T18:41:03.511Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-10-22T18:41:03.409Z",
+  "team_member_agreed_on_going_public_at": "2020-10-09T21:57:44.906Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Impact\nA staff member with no permissions can edit a store `Customer email` which they have no access to. This is the email that the store customers will see when emailing them.\n\n## Details\n`emailSenderConfigurationUpdate` is an undocumented GraphQL API that will allows a malicious staff member in a store to update the `Customer Email`. This email configuration can be found in the general settings in your store. The following screenshot shows the details.\n██████████\n\nTo reproduce this finding you will need two accounts in your store. One is the Owner and the other is an account that you invite as a staff member with no permissions. The following screenshot shows the accounts setup.\n{F985090}\n{F985089}\n\n1. login as the Staff user and send the following mutation GraphQL request.\n\n```http\nPOST /admin/internal/web/graphql/core HTTP/1.1\nCookie: [REDACTED]\naccept: application/json\nX-CSRF-Token: [REDACTED]\nContent-Type: application/json\nUser-Agent: PostmanRuntime/7.26.5\nPostman-Token: 082760e7-3dac-481e-8741-50cb2cc61617\nHost: [YOUR-DOMAIN].myshopify.com\nAccept-Encoding: gzip, deflate\nConnection: close\nContent-Length: 346\n\n{\"query\":\"\\r\\nmutation emailSenderConfigurationUpdate ($input:EmailSenderConfigurationUpdateInput!){  emailSenderConfigurationUpdate(input:$input) {\\r\\n    emailSenderConfiguration{\\r\\n        id\\r\\n    }\\r\\n\\r\\nuserErrors {\\r\\n    field\\r\\n    message\\r\\n}\\r\\n}\\r\\n}\",\"variables\":{\n  \"input\":{\n      \"senderEmail\":\"███\"\n  }\n}}\n```\n2. Login with the Owner account and check the `Store details`,the `Customer email` should be updated with the new email address.\n\n## Impact\n\nA staff member with no permissions can edit a store `Customer email` which they have no access to. This is the email that the store customers will see when emailing them.",
+  "bounty_amount": "1500.0",
+  "formatted_bounty": "$1,500",
+  "weakness": {
+    "id": 55,
+    "name": "Insecure Direct Object Reference (IDOR)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 985089,
+      "file_name": "permissions.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/vhVwJ8zMr7ov4LwBJ7m86Dce?response-content-disposition=attachment%3B%20filename%3D%22permissions.PNG%22%3B%20filename%2A%3DUTF-8%27%27permissions.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQROZBLAGE%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T084322Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDcxIVdbf73l0UyPkhytCXQuCCZ556ldY9O9DVrDiiPYwIhAIQi89OzhXnxt4VmuD1AN%2FfISqOKKmGLYb43uu1bSJU4KrIFCBEQAxoMMDEzNjE5Mjc0ODQ5IgwKLrxR4GYcq%2Bxh%2FtYqjwXb0wGjLYDmzBSV87fTvkjusJovIAcpV9gf9KaGvzuZcMiisMIH3KYi%2BGmLj23misc5me3umAQh4Guku3amOrVZyxY0PggelkuoXxyYv5b012zS4bmenjfX8c%2Fu9o76jh4P5fOuqAzBzyiUbcrVedNsjD7KdZoS9ROGFmBY6tmf5CF8cTWD7SFJcNykQO37Cwe%2FrG4g%2BKPqfzNsd4xTKOCuxlB%2BRZ2dFnAG%2FMKtL86b9koEzi3EGOYvEb2MKTVs6HBLB33aPSvU9s8aLAYwv3asj7XhRInf10DA55VlGf00p%2FOKpS3nfn1WhgEWRNo9EVCJyMnubFqm1P%2FJwb6Rfc5lxXokWUrr0hVFInSS8Wm%2FxsJ%2FmFfVAURyyst1QSYoldugv2tOOggirqtv64lSWb6DbWfX93tIMrc3le7z1iWJaR0Gu09M5RZOrs1Eq2Snq%2BULBLJ6pzK9qwHMCGsVDvk35Y%2B9eACDwmLIoj3paRE4qpUED%2F2IO9AjcVHptQsJiaUlIYqRrBaYDOlLdkhoCOTjJiqXl5Q9ryXzEYlApYkiTAAeIqjOhdBNRs7P7HEhqxeTMr0kekdGKPvMntI7xK%2BXiSl6Q4%2BglVMUe9J%2FTcD1Kf4hKqqsVNCZUQa1fjxVV8FbVvBU2S9vHqf6B6%2BWzRzJc97%2BLmyecbEoVc80f8D5R3Kl7Px0gXSrpaHyz94GDfYlXH8c1uKzveeZA4ikSzpger9xrAglXII04feceK99wm5albNk9TBg0pykmzs1L%2BN2eWa7RbDGqv1H1Z6lvZdNCa8ajv%2FLP4zwx1m8OVHvhhT8g4LQUKLEG8D8C0wrWdy5EOlCOgHGtN7RP17tUSqdMZIg9IKKPwUTtCMXI2dCMJvRvsYGOrABZc6b2GZTpoTKOK4VNmEH87TVe%2BoM4DDT4YC641Rbhe0tziYV%2B%2BNnXEwwncFCUCNv2Og9fJf7cc1IA4jS3fmE982c2yoWKABwqrxW%2BZXwnYzr59fh72L%2FHFeGvXFSaRyS5QbBVvQ8Vr7%2BPl7yUNP4m%2BHDkBqhW5V8RAYqdRTZAOxAoolx3ZxS8gs18Pd1EqKKhqR78i%2BICPbWI01GNvDF17a0gKGlfaB6X5eDyMrezd8%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=bb5e8bebdcc1ccd0846fbb11d4600e8572421314920a9ec9fbb86b2b3ce311cf",
+      "file_size": 27958,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 985090,
+      "file_name": "accounts.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/rgNuZunHGFZLQBm4gHhmXWJQ?response-content-disposition=attachment%3B%20filename%3D%22accounts.PNG%22%3B%20filename%2A%3DUTF-8%27%27accounts.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQROZBLAGE%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T084322Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDcxIVdbf73l0UyPkhytCXQuCCZ556ldY9O9DVrDiiPYwIhAIQi89OzhXnxt4VmuD1AN%2FfISqOKKmGLYb43uu1bSJU4KrIFCBEQAxoMMDEzNjE5Mjc0ODQ5IgwKLrxR4GYcq%2Bxh%2FtYqjwXb0wGjLYDmzBSV87fTvkjusJovIAcpV9gf9KaGvzuZcMiisMIH3KYi%2BGmLj23misc5me3umAQh4Guku3amOrVZyxY0PggelkuoXxyYv5b012zS4bmenjfX8c%2Fu9o76jh4P5fOuqAzBzyiUbcrVedNsjD7KdZoS9ROGFmBY6tmf5CF8cTWD7SFJcNykQO37Cwe%2FrG4g%2BKPqfzNsd4xTKOCuxlB%2BRZ2dFnAG%2FMKtL86b9koEzi3EGOYvEb2MKTVs6HBLB33aPSvU9s8aLAYwv3asj7XhRInf10DA55VlGf00p%2FOKpS3nfn1WhgEWRNo9EVCJyMnubFqm1P%2FJwb6Rfc5lxXokWUrr0hVFInSS8Wm%2FxsJ%2FmFfVAURyyst1QSYoldugv2tOOggirqtv64lSWb6DbWfX93tIMrc3le7z1iWJaR0Gu09M5RZOrs1Eq2Snq%2BULBLJ6pzK9qwHMCGsVDvk35Y%2B9eACDwmLIoj3paRE4qpUED%2F2IO9AjcVHptQsJiaUlIYqRrBaYDOlLdkhoCOTjJiqXl5Q9ryXzEYlApYkiTAAeIqjOhdBNRs7P7HEhqxeTMr0kekdGKPvMntI7xK%2BXiSl6Q4%2BglVMUe9J%2FTcD1Kf4hKqqsVNCZUQa1fjxVV8FbVvBU2S9vHqf6B6%2BWzRzJc97%2BLmyecbEoVc80f8D5R3Kl7Px0gXSrpaHyz94GDfYlXH8c1uKzveeZA4ikSzpger9xrAglXII04feceK99wm5albNk9TBg0pykmzs1L%2BN2eWa7RbDGqv1H1Z6lvZdNCa8ajv%2FLP4zwx1m8OVHvhhT8g4LQUKLEG8D8C0wrWdy5EOlCOgHGtN7RP17tUSqdMZIg9IKKPwUTtCMXI2dCMJvRvsYGOrABZc6b2GZTpoTKOK4VNmEH87TVe%2BoM4DDT4YC641Rbhe0tziYV%2B%2BNnXEwwncFCUCNv2Og9fJf7cc1IA4jS3fmE982c2yoWKABwqrxW%2BZXwnYzr59fh72L%2FHFeGvXFSaRyS5QbBVvQ8Vr7%2BPl7yUNP4m%2BHDkBqhW5V8RAYqdRTZAOxAoolx3ZxS8gs18Pd1EqKKhqR78i%2BICPbWI01GNvDF17a0gKGlfaB6X5eDyMrezd8%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=10377be57f28b820dcabc3c3a2c8d672b912edabcfe5b2c84f9145a61626eb83",
+      "file_size": 18237,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 67,
+  "voters": [
+    "loaymorad",
+    "holsick",
+    "whitewhale-dmb",
+    "drsniper",
+    "xploiterr",
+    "battle_angel",
+    "alejandroar",
+    "shreyaschavhan",
+    "ali",
+    "gofunc",
+    "and 57 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "Team"
+  },
+  "structured_scope": {
+    "databaseId": 413,
+    "asset_type": "URL",
+    "asset_identifier": "your-store.myshopify.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
