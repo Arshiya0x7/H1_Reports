@@ -1,0 +1,124 @@
+{
+  "id": 173501,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNzM1MDE=",
+  "url": "https://hackerone.com/reports/173501",
+  "title": "Stored XSS on Admin Access Page - Email field",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2016-10-02T11:36:03.419Z",
+  "submitted_at": "2016-10-02T11:36:03.419Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "pavanw3b",
+    "url": "/pavanw3b",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/038/280/46fd940624527eb674a6bbc0c1affe8448757fed_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 2367,
+    "url": "https://hackerone.com/revive_adserver",
+    "handle": "revive_adserver",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/002/367/4f47a5b4a364515d4bbdc17550d67ea5415363cd_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/002/367/4f47a5b4a364515d4bbdc17550d67ea5415363cd_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Revive Adserver",
+      "twitter_handle": "revive_adserver",
+      "website": "https://www.revive-adserver.com",
+      "about": "Revive Adserver is a free open source ad serving system"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2017-08-02T05:58:41.882Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-07-03T05:58:27.041Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "\"Cricetinae\" :)\n\n###Short Description\n\nThe **Email** field is not sanitized on **Inventory > Admin Access** page resulting in to Stored Cross-Site Scripting vulnerability.\n\n###Vulnerability Details\n\nCross-Site Scripting issue let's one to run a javascript of choice. It helps most of the client side risks including but not limited to phishing, temporary deface, browser key-logger and others. Exploitation frameworks like BeEF eases the offensive attack.\n\nStored XSS is more risky than the reflected ones because of the fact that the malicious script is persisted across. It can affect all the time and all the users who has the access to the page.\n\n### Attack Vector\nAs this is a stored XSS, the attack vector lies in one user phishing other users. If there are multiple administrators, one admin can get a javascript backdoor on another admin's browser.\n\n### Steps to Reproduce\nTo effectively illustrate one user affect another user, please create 2 admin accounts and follow the below instruction:\n* Login as `admin1`. Navigate to **Preferences** *>* **Change E-mail**\n* Enter the current password and `admin1@example.com<script>alert('xss');</script>` for *Email address* field. Save and logout\n* Login as `admin2`. \n* Navigate to **Inventory** *>* **Admin Access** and notice the alert box.\n\nAttached screenshot for a reference.\n\n### Test Environment Details\nVersion: Latest as on Oct 2: revive-adserver-4.0.0 downloaded from the official source\nSetup type: local\nBrowser: Firefox 47.0\nOS: Mac OS X\n\n\nCheers,\nPavan",
+  "weakness": {
+    "id": 60,
+    "name": "Cross-site Scripting (XSS) - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 124872,
+      "file_name": "Screen_Shot_2016-10-02_at_4.47.08_PM.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/124/872/d047e46089900edc3865ffee8a6a98d8b50c37fa/Screen_Shot_2016-10-02_at_4.47.08_PM.png?response-content-disposition=attachment%3B%20filename%3D%22Screen_Shot_2016-10-02_at_4.47.08_PM.png%22%3B%20filename%2A%3DUTF-8%27%27Screen_Shot_2016-10-02_at_4.47.08_PM.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ2672TXP5%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T211117Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIFBmwDDQUjrdjJhinf%2BPozodz2NBZ3ix0Y8C72gnYQ%2BwAiB1ZGS0We0mouO%2FzCEMLuto1WvU398SUNLLODhQNoXNFiqxBQgcEAMaDDAxMzYxOTI3NDg0OSIMhA3wwmG7UKJP9AAGKo4FbP9vJ5gC0u5tjxMKfJmGUvInEf1CNrVtkwLSCE8QLqbaBz5bhdVOMWP5KlwGVPiUtWYs7d77h6ZbeXNCEdBPXnpuS17139h2lSdad8KHRt5CbpY9SX66049DiMVxNA08uU8S1%2BYXH8XU3BGxlkmIBbe5aYq67U6MxsQZjp53Dj6WYqrjDDRntYWlHtbOQ4BbiMRfQlVh2tBNFnwj3Vwmau3IQBMLoqwAI6Or%2FcE1LJr0Oq%2BrX8IuLoy8VDmtY%2FBJYcLyArjgz9RQ7VYZbeOdHXdkI7GQ5DKYoN7T3X506ZanWbQUyKVRwNOhNrbT6VfVWP7x1EtHWLsT4vxQTR0PasMeyB9TSn4dHCQvuP7s9hlNF6zm0kjghZmtmaqQIg83FcxwCskYKt3LQuvlJdCVKg3%2BtK3hseuCEJ2p0HvfujAElfJS79p4DFvUVVVie%2Fpv1baDSDfVQjsHo6D%2BGgbNaVWaHEzvFOif8xb%2Fnw8Sg1cSQNhWk0bk8GiRgzSHrbYHLCMbFj2Cnf8nR2h4sm%2FQobzQsNQTE6tgGhcCaHDk2UAiyF5Ee6iPbonvuImIaZlEJ6yzRQD4uo9q7jcqdZi69MbxXF1QC8Rk9%2BeLctZ5lPveRRRQnpmPkCe9xpKlqM6H0JPk3RhV%2B0NR2t7h64akePhaOcmjg1jRrbi03vD4QvuIUPPm9p1cvn5k4HABpm3s5QWqWQr5MFv1hOSNiSK%2B04ToI5RB5iNbSTASQkzF7%2BZef2jrUVgzn5NO3op%2B0OJBRaMBHgQVaMe5xJUn0gK4UfgkBPq00LjqOeMYvBpW1JpKrTaWejkv0C%2F0jfcHOryQ53qfMWzA6uhkAUOsEmJ%2BkF%2BjTLZyQCs9XAuSSDBsMIeVwcYGOrIBgXU9lwrHyKH50udgPH%2BqkLge1TXo7aEsWD%2B0cJkrWkN2NGW7jdl2zNlZ7Nx%2FTdaKqZHglwKVTU1aS9vxMaFN0Vvp4Az5%2FX4PuNNDgCOaKVD9rKQHbR0Omu1NiPDVfv7sREi1GAtWsu%2Bz0iin4S%2BcvkCV26ke3DPe43AHO6Cjw7YWbbsqibZmbFzAfQ482l%2BkgOaZ6sdPNOfAubg6f7BxQtJRegFlN0XizYJKjRFDJAlRPw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=e0cb49fe0f7321fb4bbfede20dbfb8948b89064880a7295231c88b9d10f99874",
+      "file_size": 70150,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-08-02T05:58:27.077Z",
+  "allow_singular_disclosure_after": -256835570.75905323,
+  "singular_disclosure_allowed": true,
+  "vote_count": 9,
+  "voters": [
+    "shubham_srt",
+    "gamliel",
+    "eveeez",
+    "mr-alienx-kurd",
+    "pavanw3b",
+    "sumit7",
+    "spetr0x",
+    "spylegion",
+    "zeroinfected"
+  ],
+  "severity": {
+    "rating": "high",
+    "author_type": "User"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
