@@ -1,0 +1,164 @@
+{
+  "id": 365853,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zNjU4NTM=",
+  "url": "https://hackerone.com/reports/365853",
+  "title": "Subdomain Takeover - https://competition.shopify.com/",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2018-06-14T04:26:21.517Z",
+  "submitted_at": "2018-06-14T04:26:21.517Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "llt4l",
+    "url": "/llt4l",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/115/050/dd41353b86a297dcf97b9c8d79f53442c653972d_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 1382,
+    "url": "https://hackerone.com/shopify",
+    "handle": "shopify",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Shopify",
+      "twitter_handle": "",
+      "website": "https://www.shopify.com",
+      "about": "Shopify is a multi-channel commerce platform that helps people sell online, in-store, and everywhere in between."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2018-06-19T03:35:19.055Z",
+  "bug_reporter_agreed_on_going_public_at": "2018-06-19T03:35:18.965Z",
+  "team_member_agreed_on_going_public_at": "2018-06-18T15:58:23.040Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Dear Shopify Security Team,\n\nThe Shopify.com subdomain competition.shopify.com was vulnerable to a subdomain takeover as it was pointing to an unclaimed Heroku service through the CNAME competition.shopify.com.herokudns.com, while the custom domain 'competition.shopify.com' was unclaimed in Heroku.\n\nTo prevent an attacker from claiming the domain and using it for malicious purposes, and also as a proof of concept, I have claimed the domain in Heroku and uploaded a proof of concept, which you can view here: https://competition.shopify.com/329a01fddb5a552265170b02c579c85f.html (I've also redirected visitors of the index page to https://shopify.com)\n\nTo fix the issue, there are two possible solutions. If you would like to re-start using Heroku with this domain, I can remove the custom domain from my Heroku app. Otherwise you may choose to delete the entry from your DNS servers, which will also fix the problem.\n\n## Impact\n\nI don't think I need to go into the security implications of a malicious attacker hijacking the domain, but here are a few possible attacks that could be performed if a malicious attacker were to hijack the domain:\n* The ability for an attacker to execute JavaScript to steal user cookies and/or using the site as an endpoint for browser exploitation.\n* Using the subdomain as a fool-proof phishing site (stealing Shopify customer/employee credentials). SSL has also been enabled, giving end users more trust of the site.\n* Defacement of the website, or deployment of a fake site, such as a fake Shopify competition that harvests customer credit card details.\n* Spreading of malware, or use of the domain as a C2 server.\n\nI look forward to hearing back from your team.\n\nRegards,\nt4",
+  "weakness": {
+    "id": 75,
+    "name": "Privilege Escalation"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 308786,
+      "file_name": "competition.shopify.com.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/308/786/411de37fa009356f2880fa0abe1efae25cb22d95/competition.shopify.com.png?response-content-disposition=attachment%3B%20filename%3D%22competition.shopify.com.png%22%3B%20filename%2A%3DUTF-8%27%27competition.shopify.com.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZX27AZWF%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T174934Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIHRX0Q0MNSw0vdqJdQpgQjnFxJzvrl3%2FZv1dkmTkztyhAiEAoruevQPHhOJ%2BNKUjxRePB5FDlenQfNR%2Bj5FlKYF9bWAqsQUIFhADGgwwMTM2MTkyNzQ4NDkiDK1W%2BTl4fbwOpdGV%2BCqOBSKw2SEWiUFkS%2FKixfbpNzV5hpXG2UZAtjfIi1d798vnoMF7e4FrYQvNHJFISmcTadGzxfWWb0l30VlzYXvmHXfz5FIEyqaAco05756ND7aH2punq7JeVh%2B%2FCgA3dZ2WEWVO3yBhGjNRs8Crzu6Fj953KWrwhaRbaKX699fX3SZp2yVsoklzDlaTX6XHNAV1CxK4Kbmgt1NI8NOmjncIVMyyWKJvczLNT63q%2B%2BD1k1SKMW1D%2FnEHkg5uAum4Gv76B%2Fd5uNmdxegupDBrg0BWTfX8H1iRVmSJyGNuV15uEKliPO%2BaMicGXnMPF5U%2BY51VZA%2BKtuu549lV0OXIl1kDR9WTATAiKoML6f0M7k1nRcC2ngjl75JrAe3rjuxIkxAVBIm7fqQKRxGnBfPZgX0ukgiA5HkHRXeU7aywq5f13iCJC7%2FEUdBQUGkjElddpY1cYBwrtnWxeQWw2tZWDQh8eascc7VEsnlIHLvXex5ok185nBfd1AP3FAyD2Z6fU5Ew4S9B5D85Gfxf928KGokRoRReaHOcuX1F6Vh2sywHUaNSfW2rWakRLjmj2n2KRYi9JqPu%2B79XXjYI%2BNkD0XZa9f8b9T51LvedWN%2BTRtm37J1MczDzo762xQvMMqPvlomscmay5Bi2POCB%2FMYu7k1rnaOExERX3B%2FtoitQq0zqUBCF4BIyWWwVWPnPwAM3m5J3g5NgyBVdPN0n44KQHU3aXv8%2B5GwQP2lFkCDNFrcmXOi1e3RWZpCGwFP%2Fi0%2FD7LdKg1T9xOx9JeorqTKz64JZb4bTdSgLYP2LJkKD9m4VAMAYxP23yCzABtuw0O6ucYuqEkp90mQS5YSTGThKAEfcoykSnoN4AQuQD2GnMjTmuDDp6b%2FGBjqxAd8LRIrc%2BduVkXSHJd0yPruIgcs2mmWVMiek9kvBvcHISoRH7IAQ60Bpstvmq2%2BXMrbhBdG5VTC%2FKRqcMUAbDKpzfHnYkhJRtvXTxk3i7FzMalhNrtyaGV51qJs0fc0zJMRXiZYNFrwF4fuR2dMedTpRJkTySdxbq0jQpL7RuasS9Y1SV9grO9m6IhB0UIZ%2BlkYfyZS2Ht70HgCvNzKxUzo52c9AUIwNrj%2BFUphQ7cNncw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=71310763b142a4989ee1551c4e5682ab87de2b05cbe59468d9ce8cc81dd86dcc",
+      "file_size": 75786,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 45,
+  "voters": [
+    "jokebookservice1",
+    "drsniper",
+    "otuken",
+    "0xacb",
+    "ali",
+    "shazadsadiq",
+    "flashdisk",
+    "savitar0x01",
+    "harrymg",
+    "dmatrix",
+    "and 35 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 5.3,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "none",
+      "integrity": "low",
+      "availability": "low"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 10202,
+    "asset_type": "WILDCARD",
+    "asset_identifier": "*.shopify.com",
+    "max_severity": "medium"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "id": 7715,
+      "category": "team",
+      "content": "@llt4l discovered a dangling CNAME pointed to Heroku which allowed them to claim `competition.shopify.com`. We removed the DNS entry immediately and took the extra time to review and clean up some other records. As a result, we awarded an extra $250 on top of the typical $500 bounty.",
+      "updated_at": "2018-06-19T03:47:48.630Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 175526,
+        "username": "shopify-peteryaworski",
+        "name": "Peter Yaworski",
+        "bio": "",
+        "cleared": false,
+        "verified": false,
+        "website": null,
+        "location": "",
+        "created_at": "2017-06-13T14:40:59.020Z",
+        "url": "https://hackerone.com/shopify-peteryaworski",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "company",
+        "profile_picture_urls": {
+          "small": "https://profile-photos.hackerone-user-content.com/variants/000/175/526/7ba4844078e290c91c4c46a345b4f9e7666f3ed4_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/000/175/526/7ba4844078e290c91c4c46a345b4f9e7666f3ed4_original.jpg/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a",
+          "xtralarge": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MjYwMDQsInB1ciI6ImJsb2JfaWQifX0=--9107c0a581421900ec9077ccbdf70c2c5004273f/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJyZXNpemUiOiIyNjB4MjYwXHUwMDNlIn0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--cf3aeca803d1baf476958c689ca7b472a4cb54f1/profile.jpg"
+        }
+      }
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
