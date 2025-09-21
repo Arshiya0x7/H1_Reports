@@ -1,0 +1,128 @@
+{
+  "id": 867133,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC84NjcxMzM=",
+  "url": "https://hackerone.com/reports/867133",
+  "title": "Stored XSS on https://apps.topcoder.com/wiki/pages/editpage.action",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2020-05-06T12:15:53.497Z",
+  "submitted_at": "2020-05-06T12:15:53.497Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "meryem0x",
+    "url": "/meryem0x",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/q8pmp3uer62m3i1t769rk6x9trwe/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 43330,
+    "url": "https://hackerone.com/lab45",
+    "handle": "lab45",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/uss17aubpsiag1df5tlp5mriefid/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/uss17aubpsiag1df5tlp5mriefid/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "disabled",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Lab45",
+      "twitter_handle": "",
+      "website": "http://wipro.com/lab45",
+      "about": ""
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2020-05-12T13:37:08.626Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-05-12T08:58:02.228Z",
+  "team_member_agreed_on_going_public_at": "2020-05-12T13:37:08.523Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nHi :) There is a stored XSS on wiki pages and it executes when editing page.\n\n## Steps To Reproduce:\nAfter I submitted #867125, i realized that the vote macro causes stored XSS on wiki edit page. \nA user can edit wiki pages on https://apps.topcoder.com/wiki/pages/editpage.action?pageId=. Users can insert macros to pages. Vote macro is vulnerable to XSS. \n\nGo to a wiki page, edit it and type\n\n```\n{vote:What is your favorite vulnerability?}\nRCE\nSSRF\nXSS\"><img src=X onerror=alert(document.domain)>\n{vote}\n```\nand save it. When an other user edit this page, XSS will execute.\n\nPoC:\nhttps://apps.topcoder.com/wiki/pages/editpage.action?pageId=165871793\n{F817588}\n\nNote: This only works to signed-in users. Because unauthorized users cannot edit pages. I think there is a mistake on https://apps.topcoder.com/wiki/login.action now. If you encounter an error, you can login on main site (https://accounts.topcoder.com/member) then try.\n\n## Impact\n\nXSS can use to steal cookies or to run arbitrary code on victim's browser.",
+  "weakness": {
+    "id": 62,
+    "name": "Cross-site Scripting (XSS) - Stored"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 817588,
+      "file_name": "2020-05-06_15-09-02_ekran_g_r_nt_s_.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/jFXGdF3SqS7fWLBERNEvWC4s?response-content-disposition=attachment%3B%20filename%3D%222020-05-06_15-09-02_ekran_g_r_nt_s_.png%22%3B%20filename%2A%3DUTF-8%27%272020-05-06_15-09-02_ekran_g_r_nt_s_.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4E3YHULU%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T113513Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIn%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQD27rxmKncxQHhku1gLeJUK%2FBunEp%2Foqe27XZ49V6qmvQIhANYXenTaBiv5rKYFNzJaOHiZ0XAWcdgjDQ2VZLQgdEhqKrEFCBIQAxoMMDEzNjE5Mjc0ODQ5IgzmgOoIarLU%2FIa%2F3YAqjgXD2YNIpO8kBBWNWDMaIGLnu2xcFoTVvyzqCqxoxuCn3X66%2Fb8dAoQp3vQUD3TM%2BD66m3vcmLhdqmeHlLMdgcGEePCK%2Bslo951oI%2FivIg60W%2FJt9Z6xfafgg66NygBfDNK9tkxP0iKwwxpPuPD4YI%2FuKvt12ft%2FkRwWBM7M9Z47jDbubEwxtoAuK747xkBxCnj%2BRvJCxzKjCwWA7Ob%2Ft3w6waIxDMbvIFJ5w4Epm%2BYr3%2B6NgJwuAtK4aWlpelU3WVxMFtByER5Mg2c5jiffb6eo%2Bfco9BBf1xBrexvC9utizauOw1UHYkfW4cyqPAuxnYV1fqo0K36H94rkT8Tqzw44nd5hXFeugZzCL%2FPvZ2%2BageUmM01nnHRhpR%2BJmnSNMeRVAtZiEW%2F98qIHcXmY7FjNUesiDSzmcVa4DM%2Fys%2BGXw%2BxdzIdHfAC9zZNVBCFme2aQDqS43ySHpuxyBB4v5GeSiApqmplu5tYyAg5Oh4onhgr2f6VgEQciuubXf1K9ysnblPVzlMBIqn9rfubiqdbtNmooImUfXNJIs2xBhtKM4%2B1SYqeIpOjlDDqeKNi0xuzmY2L4KxJebwfn6CVGI35syvg%2B5rrTKkGXjXtqrxScYpKuf0n1FoposcosbTSdbr%2BH56pU%2BUpSklvIzdyWBczIGibJKevuKO6BNB7s3gtrLlao%2BpdhYEgp3pFfd5XM20KeKyNZKV%2FmjRtonhbrb%2FoG8%2FiGtW%2FBgwp36b0rulseNtHDdWiu22yg4vMxjwiLbWP6h%2FA%2B3Wbd5GyCK7Gsa3kCgfCncnQaI20Nb6FYnyyJRWDqc52UhcAp%2F3AoU1NPIWSCmgVxtZfIPlqxLBKFo4j%2BMlWXH3XEBnz%2BZjLHX0swhYC%2FxgY6sAHPpEcSqjzdX1PFYDvDmjEHYIcuK1dmAyMPebox4X5x2hxgonOQgIYU2TTvA6lU9PuYWo472OfJ8PlEgxkiO8qj08k5uYCfyl1s4Ge35azFAq2XmXvelF%2Fqwa%2BEdmKn3n9ZeNPnC1mVyw5TN9FQhm3nE4cUq%2BsWcvhxdMi%2B5lq67XaLn8%2F57QUxM6PGhrEBWziMnOSMvL8CbV%2FshU6b7NHV8eTxAVnVaqnDg9%2FYlhYzow%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=e6bdc29925c895c04bae214fa37672b671550182ed1576931d29580d5ae1678e",
+      "file_size": 166115,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 10,
+  "voters": [
+    "taha",
+    "laz0rde",
+    "xsky",
+    "mik317",
+    "sa1tama0",
+    "kotakinabalu123",
+    "holdittight",
+    "r4sk0ln1k0v",
+    "glamorous_noob",
+    "mohamedhaji-1"
+  ],
+  "severity": {
+    "rating": "high",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 37578,
+    "asset_type": "URL",
+    "asset_identifier": "apps.topcoder.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
