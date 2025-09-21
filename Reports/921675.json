@@ -1,0 +1,155 @@
+{
+  "id": 921675,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC85MjE2NzU=",
+  "url": "https://hackerone.com/reports/921675",
+  "title": "Uncontrolled Search Path Element allows DLL hijacking for priv esc to SYSTEM",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2020-07-12T19:45:31.302Z",
+  "submitted_at": "2020-07-12T19:45:31.302Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "dawouw",
+    "url": "/dawouw",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MzQzODMsInB1ciI6ImJsb2JfaWQifX0=--2bffd442e238d9cc48dbafa5dd130845898cf735/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--2de8067d228529d65848a4eeed0bed0bb2531bc3/IMG_4040_-_HeadShot-square.jpg"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 374,
+    "url": "https://hackerone.com/glasswire",
+    "handle": "glasswire",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/374/13d3682f5d09f12442bfa7e74e96c1ded88562a7_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/374/13d3682f5d09f12442bfa7e74e96c1ded88562a7_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "GlassWire",
+      "twitter_handle": "glasswire",
+      "website": "http://www.glasswire.com",
+      "about": "GlassWire helps protect your computer and privacy by monitoring your network activity."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2021-06-04T13:56:55.896Z",
+  "bug_reporter_agreed_on_going_public_at": "2021-05-05T13:56:52.832Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "GlassWire contains a DLL hijacking vulnerability that could allow an authenticated attacker to execute arbitrary code on the targeted system. The vulnerability exists due to GlassWire loading DLL files from the PATH environment variable without verification. The machine should have at least one writable PATH directory for the privilege escalation to work (e.g. having Python, Java, etc. installed).\nNine different DLL's are loaded by the GlassWire Service (GWCtlSrv.exe) as SYSTEM. \nOne DLL is loaded by the GUI (GlassWire.exe) as the currently logged in user.\n\nClass: Privilege Escalation [CAPEC-233]\nClass: Uncontrolled Search Path Element [CWE-427]\n\n**Affected Product**\nGlassWire 2.2.210.0\n\n**Proof of Concept**\nUsually, Python is prepended to the PATH environment (Path=C:\\Python38\\Scripts\\;C:\\Python38\\;..). For my ease and workflow, I prepended my folder to it (C:\\Dima\\;). Place the [x86 DLL](https://secret.club/2020/04/23/directory-deletion-shell.html) in one of the writable folder paths.\n\n\n*C:\\Program Files (x86)\\GlassWire\\GWCtlSrv.exe*\nGlassWire (32bit) loads the following DLLs during boot as SYSTEM:\n- swift.dll\n- CSUNSAPI.dll\n- nfhwcrhk.dll\n- SureWareHook.dll\n- aep.dll\n- nfhwcrhk.dll\n- atasi.dll\n- nuronssl.dll\n- ubsec.dll\n\n{F904704}\n{F904728}\n\n\n*C:\\Program Files (x86)\\GlassWire\\GlassWire.exe*\nGlasswire GUI (32bit) loads the following DLL after user logon as the current user:\n- Wtsapi32.dll.dll\n\n{F904730}\n\n\nI hope this helps. Please let me know if you require more information.\n\nKind regards,\nDima van de Wouw\n[Outflank](https://outflank.nl/)\n\n## Impact\n\nSuccessful exploitation of the GlassWire service allows an attacker to gain SYSTEM privileges and inject into the GlassWire service process at boot.\nSuccessful exploitation of the GlassWire GUI allows a user to gain persistence. On shared machines, this would allow a user to move laterally to sessions of other users.",
+  "bounty_amount": "250.0",
+  "formatted_bounty": "$250",
+  "weakness": {
+    "id": 75,
+    "name": "Privilege Escalation"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 904704,
+      "file_name": "GlassWire1.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/QJGKrhoabXq4u1UcKycbQJMa?response-content-disposition=attachment%3B%20filename%3D%22GlassWire1.png%22%3B%20filename%2A%3DUTF-8%27%27GlassWire1.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ35T6K4IF%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T024136Z&X-Amz-Expires=3380&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH0aCXVzLXdlc3QtMiJHMEUCIQDPEAvaZ%2FvLeuRoaLfLXdA6mmt8NeE4EcHMdEnKiQYxBAIgQAcR7QaOvsWqFUoty3eI9NBYZ9edyOn035ycgCkKuWwqugUI9v%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDJbxesrBYe2kzIoHRyqOBcinJjA8aAlm%2Bnvs4nWgO3kcLGwKWP5isvckwVvjix03%2B1XZ3O1hBseTxJ5o79VmQtVbCVHNop1oSaebb0Y%2FIBB31Zt%2FJ3tqNSSpoaADaLyP06r8cJJcf%2B6O9gf6Tfz5o%2BxsVcCm10hyrLmxoEjB7JcIJbJkNbTdPOMRXTv6GNta22Qh%2FhCA8HfxLnJohYN1tHs06Fw84zZxZgFfoi%2F%2BpF1YBf%2BigqM9iRmLbRalo4ueuaA1Oclt9ovcTPq5L8e3qmDekZwQOuQVgSJvMc%2BQWFyC14JJRA%2Fx4uRc9MdCBwEwBVwZOLh5PldpQl2jUhs5ST7UkCNpFfGqxKITQg1xsyKbpu6JmKWcXV951x%2BIjsfvGQkMBL13OQYbo%2FDBY%2Fy5zVsZZ0WpTojg5bVdppmVn%2FjTtzOrpf%2B%2BVYHD7EGdVb5HkeiRpN43gCHJ4snOdrd7UinO5O6gKWEqcOVn%2FZjiCo8IVqrZ6asbJkPD5vtbcfdZPwv4abHGyC651WavF1cOEnyJqxd0gz6IqleLZrSz2kntoisyN40PCMqYBIQ8RYxntGtqvxATlSIEslv4EkgyrkGkL9bcNePvbTccSxUP%2Bo8%2FyHOVtKWpXu%2FphJhIcdO1XzB4kZcd4x%2BGi2FADPz32SmIatRtdDC6vE%2FjMCScFaMvUeKfU5wHSffSk6TDyGCLlQzf5VyyhTzlDRIJeZOJFE7h%2Biuqf1SFkp%2FUbA7TLcJ5shBQJr2QKU6q%2Fnjdlnn%2B95PGhqbrTYmL4TtK0ZtXaka76ZaWo0sWdAg6IoPzcHyy9l3DiveHaLsZTefPenK2stD%2B5QpgpfTzbKf%2FvDd0Hyc3nAWvIkQrJUT6FoBwJ%2B%2FyNjSp21H%2FvxuMMOCwyDCss7zGBjqxAfNFlg7BnOWu2lX%2Fx3HSk3PERI%2FQdO2VFtK4FpK06GICCytDslgE9kzLlsEfs1kcNEO447iWMAjBsJPvUcGfEvmEWMYacCxlNw2SmfUP9%2FEwlQ2uofGYc5klI2uwBY7ykPvx0kA6fh1kOMY1h%2Btv%2Blrshwzi78hWKf83FJn4T2%2Fd%2FFsGrE5EhqR96Vtccl%2BXucm67xB81IRw4ruJmKA1muxa5hWLQryQ0MY3%2B%2FRPbsaiIg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=d67145c44748af6ec8bc37dcdaddd4651125b5d74f9553f4f89461c9a693a5cb",
+      "file_size": 11156,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 904728,
+      "file_name": "GlassWire2.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/2jknS85WFM4RcgGMX64CRGzL?response-content-disposition=attachment%3B%20filename%3D%22GlassWire2.png%22%3B%20filename%2A%3DUTF-8%27%27GlassWire2.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ35T6K4IF%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T024136Z&X-Amz-Expires=3380&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH0aCXVzLXdlc3QtMiJHMEUCIQDPEAvaZ%2FvLeuRoaLfLXdA6mmt8NeE4EcHMdEnKiQYxBAIgQAcR7QaOvsWqFUoty3eI9NBYZ9edyOn035ycgCkKuWwqugUI9v%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDJbxesrBYe2kzIoHRyqOBcinJjA8aAlm%2Bnvs4nWgO3kcLGwKWP5isvckwVvjix03%2B1XZ3O1hBseTxJ5o79VmQtVbCVHNop1oSaebb0Y%2FIBB31Zt%2FJ3tqNSSpoaADaLyP06r8cJJcf%2B6O9gf6Tfz5o%2BxsVcCm10hyrLmxoEjB7JcIJbJkNbTdPOMRXTv6GNta22Qh%2FhCA8HfxLnJohYN1tHs06Fw84zZxZgFfoi%2F%2BpF1YBf%2BigqM9iRmLbRalo4ueuaA1Oclt9ovcTPq5L8e3qmDekZwQOuQVgSJvMc%2BQWFyC14JJRA%2Fx4uRc9MdCBwEwBVwZOLh5PldpQl2jUhs5ST7UkCNpFfGqxKITQg1xsyKbpu6JmKWcXV951x%2BIjsfvGQkMBL13OQYbo%2FDBY%2Fy5zVsZZ0WpTojg5bVdppmVn%2FjTtzOrpf%2B%2BVYHD7EGdVb5HkeiRpN43gCHJ4snOdrd7UinO5O6gKWEqcOVn%2FZjiCo8IVqrZ6asbJkPD5vtbcfdZPwv4abHGyC651WavF1cOEnyJqxd0gz6IqleLZrSz2kntoisyN40PCMqYBIQ8RYxntGtqvxATlSIEslv4EkgyrkGkL9bcNePvbTccSxUP%2Bo8%2FyHOVtKWpXu%2FphJhIcdO1XzB4kZcd4x%2BGi2FADPz32SmIatRtdDC6vE%2FjMCScFaMvUeKfU5wHSffSk6TDyGCLlQzf5VyyhTzlDRIJeZOJFE7h%2Biuqf1SFkp%2FUbA7TLcJ5shBQJr2QKU6q%2Fnjdlnn%2B95PGhqbrTYmL4TtK0ZtXaka76ZaWo0sWdAg6IoPzcHyy9l3DiveHaLsZTefPenK2stD%2B5QpgpfTzbKf%2FvDd0Hyc3nAWvIkQrJUT6FoBwJ%2B%2FyNjSp21H%2FvxuMMOCwyDCss7zGBjqxAfNFlg7BnOWu2lX%2Fx3HSk3PERI%2FQdO2VFtK4FpK06GICCytDslgE9kzLlsEfs1kcNEO447iWMAjBsJPvUcGfEvmEWMYacCxlNw2SmfUP9%2FEwlQ2uofGYc5klI2uwBY7ykPvx0kA6fh1kOMY1h%2Btv%2Blrshwzi78hWKf83FJn4T2%2Fd%2FFsGrE5EhqR96Vtccl%2BXucm67xB81IRw4ruJmKA1muxa5hWLQryQ0MY3%2B%2FRPbsaiIg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=682f0a3152789439de58e1f1ab6df14fa44358fb732bb18411fbabca8e0dab1a",
+      "file_size": 19772,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 904730,
+      "file_name": "GlassWireU.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/WxnsVnmarH1yFvs9eMPeymo1?response-content-disposition=attachment%3B%20filename%3D%22GlassWireU.png%22%3B%20filename%2A%3DUTF-8%27%27GlassWireU.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ35T6K4IF%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T024136Z&X-Amz-Expires=3380&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH0aCXVzLXdlc3QtMiJHMEUCIQDPEAvaZ%2FvLeuRoaLfLXdA6mmt8NeE4EcHMdEnKiQYxBAIgQAcR7QaOvsWqFUoty3eI9NBYZ9edyOn035ycgCkKuWwqugUI9v%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDJbxesrBYe2kzIoHRyqOBcinJjA8aAlm%2Bnvs4nWgO3kcLGwKWP5isvckwVvjix03%2B1XZ3O1hBseTxJ5o79VmQtVbCVHNop1oSaebb0Y%2FIBB31Zt%2FJ3tqNSSpoaADaLyP06r8cJJcf%2B6O9gf6Tfz5o%2BxsVcCm10hyrLmxoEjB7JcIJbJkNbTdPOMRXTv6GNta22Qh%2FhCA8HfxLnJohYN1tHs06Fw84zZxZgFfoi%2F%2BpF1YBf%2BigqM9iRmLbRalo4ueuaA1Oclt9ovcTPq5L8e3qmDekZwQOuQVgSJvMc%2BQWFyC14JJRA%2Fx4uRc9MdCBwEwBVwZOLh5PldpQl2jUhs5ST7UkCNpFfGqxKITQg1xsyKbpu6JmKWcXV951x%2BIjsfvGQkMBL13OQYbo%2FDBY%2Fy5zVsZZ0WpTojg5bVdppmVn%2FjTtzOrpf%2B%2BVYHD7EGdVb5HkeiRpN43gCHJ4snOdrd7UinO5O6gKWEqcOVn%2FZjiCo8IVqrZ6asbJkPD5vtbcfdZPwv4abHGyC651WavF1cOEnyJqxd0gz6IqleLZrSz2kntoisyN40PCMqYBIQ8RYxntGtqvxATlSIEslv4EkgyrkGkL9bcNePvbTccSxUP%2Bo8%2FyHOVtKWpXu%2FphJhIcdO1XzB4kZcd4x%2BGi2FADPz32SmIatRtdDC6vE%2FjMCScFaMvUeKfU5wHSffSk6TDyGCLlQzf5VyyhTzlDRIJeZOJFE7h%2Biuqf1SFkp%2FUbA7TLcJ5shBQJr2QKU6q%2Fnjdlnn%2B95PGhqbrTYmL4TtK0ZtXaka76ZaWo0sWdAg6IoPzcHyy9l3DiveHaLsZTefPenK2stD%2B5QpgpfTzbKf%2FvDd0Hyc3nAWvIkQrJUT6FoBwJ%2B%2FyNjSp21H%2FvxuMMOCwyDCss7zGBjqxAfNFlg7BnOWu2lX%2Fx3HSk3PERI%2FQdO2VFtK4FpK06GICCytDslgE9kzLlsEfs1kcNEO447iWMAjBsJPvUcGfEvmEWMYacCxlNw2SmfUP9%2FEwlQ2uofGYc5klI2uwBY7ykPvx0kA6fh1kOMY1h%2Btv%2Blrshwzi78hWKf83FJn4T2%2Fd%2FFsGrE5EhqR96Vtccl%2BXucm67xB81IRw4ruJmKA1muxa5hWLQryQ0MY3%2B%2FRPbsaiIg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=127f4a164bf1b0ca78d8ae3fd254be8f2a687dcabc2097e6f23b8a7c4d803412",
+      "file_size": 16396,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2021-06-04T13:56:52.942Z",
+  "allow_singular_disclosure_after": -135607483.57814932,
+  "singular_disclosure_allowed": true,
+  "vote_count": 50,
+  "voters": [
+    "osman1337",
+    "nopurposeinlife",
+    "mainteemoforfun",
+    "ali",
+    "tess",
+    "anupamas01",
+    "akashhamal0x01",
+    "f_m",
+    "dionysios_of_sirakusa",
+    "0nlymohammed",
+    "and 40 more..."
+  ],
+  "severity": {
+    "rating": "high",
+    "score": 7.0,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "local",
+      "attack_complexity": "high",
+      "privileges_required": "low",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "high",
+      "integrity": "high",
+      "availability": "high"
+    }
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
