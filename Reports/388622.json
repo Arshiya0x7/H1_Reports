@@ -1,0 +1,155 @@
+{
+  "id": 388622,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zODg2MjI=",
+  "url": "https://hackerone.com/reports/388622",
+  "title": "Subdomain takeover on wfmnarptpc.starbucks.com",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2018-07-30T22:20:33.463Z",
+  "submitted_at": "2018-07-30T22:20:33.463Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "0xpatrik",
+    "url": "/0xpatrik",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/PB6Ser89s4PYXAMkpC66nbdo/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 1989,
+    "url": "https://hackerone.com/starbucks",
+    "handle": "starbucks",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/001/989/c9aa38cf3b1a91daa085d31e23d23f34cd1874df_original./235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/001/989/c9aa38cf3b1a91daa085d31e23d23f34cd1874df_original./3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Starbucks",
+      "twitter_handle": "Starbucks",
+      "website": "http://www.starbucks.com",
+      "about": "Premier purveyor of the finest coffee in the world, inspiring and nurturing the human spirit — one person, one cup and one neighborhood at a time."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2018-08-09T21:09:10.902Z",
+  "bug_reporter_agreed_on_going_public_at": "2018-08-03T03:54:41.643Z",
+  "team_member_agreed_on_going_public_at": "2018-08-09T21:09:10.480Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello,\n\nthis is pretty serious security issue in some context, so please act as fast as possible.\n\nOverview:\nOne of the starbucks.com subdomains is pointing to Azure, which has unclaimed CNAME record. ANYONE is able to own starbucks.com subdomain at the moment.\n\nThis vulnerability is called subdomain takeover. You can read more about it here:\n\nhttps://0xpatrik.com/subdomain-takeover-basics/\n\nDetails:\nwfmnarptpc.starbucks.com has CNAME to s00149tmppcrpt.trafficmanager.net. However, s00149tmppcrpt.trafficmanager.net is not registered in Azure cloud anymore and thus can be registered by anyone. After registering the TrafficManager Profile in Azure portal, the person doing so has full control over content on wfmnarptpc.starbucks.com.\n\nPoC:\nhttp://wfmnarptpc.starbucks.com/poc.html\n\n Mitigation:\nRemove the CNAME record from starbucks.com DNS zone completely.\nClaim it back in Azure portal after I release it\nRegards,\n\nPatrik Hudak\n\n## Impact\n\nSubdomain takeover is abused for several purposes:\n\nMalware distribution\nPhishing / Spear phishing\nXSS\nAuthentication bypass\n...\nList goes on and on. Since some certificate authorities (Let's Encrypt) require only domain verification, SSL certificate can be easily generated.",
+  "weakness": {
+    "id": 75,
+    "name": "Privilege Escalation"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 326554,
+      "file_name": "Screen_Shot_2018-07-31_at_00.19.53.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/326/554/b48a033bdde923485cd413390893a01b8db6b7bb/Screen_Shot_2018-07-31_at_00.19.53.png?response-content-disposition=attachment%3B%20filename%3D%22Screen_Shot_2018-07-31_at_00.19.53.png%22%3B%20filename%2A%3DUTF-8%27%27Screen_Shot_2018-07-31_at_00.19.53.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ2ZVXRWMB%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T173042Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDPJGfzMJPn%2FnHJrTg5TD8VJt7cc%2B7xt9arg9h87wjVTQIhAM%2B08WEUMC%2BUcx%2B2hdKE1ivgl69a2PFRDj0l1KQ35JOLKrIFCBoQAxoMMDEzNjE5Mjc0ODQ5Igxc6REi1pVr2zXPDYAqjwWCRNoXIU3Z8A9klwjX%2B4PXU5JMH4n3c4Xxyac%2FzcM4qEjGokM%2BodDuiCfV810H3RPNumOTmghuwpUtOqPiGZA0R6o4FfqXdVBJePjhoWFMZ5oyYhx8QoKT8PuzXNSA%2BpYbeLaQsOUGTAm7J75i0xTnBaL0Et8rpP3G3oZYzAU9OWGzkWuWo678fx%2F5oDeet6aguCO8%2FjDWAWiMPlN6oxA0Y4i8bURv5uhAbItXZl%2F0yhE2exJIDYuhibnmpFXE4%2Bh4OMBilIIaDJsskKaEvoRiBsP8PY5r9dUOPsiC2t1PrepaAylZRfjhQbU57g7kP%2BXv2Azc%2BaOC75t5dhupRUh3IutnzlkORL%2F9flfqfUwX%2Fn59Do8kRUtwAkCh3yRX10QjKZJ2ne4Iur3gmDYd7730ppAiYM1bJzBy64ccOil8x%2Bvg5kbFGNGzp9YfSc5ghFx%2BbloLgola%2Fni8oWJUsddymBwlOH1Nc1b8NaCF8sS543cl06BvyxFgTXcV%2BT1nYqmbNng7EacdyxDRA59wMe5EnLiHC9jf%2Fyed12tpPd7TuQum%2BZd5NMJ9l81o7GuQiV3Iwf7RfCipikpLdbEPrJ5KBz7N7ollSoHwBUmWFblws1uxvZ5ABLQCuLJXsIqDmwNZ8YeMo1Zl9PnApt6IBcXabJBIFW4QXgunB7XW%2FF8GEeBgWNPfJtR3gqYmZ4zNpydWJwwCQaxcSHzmhhIOe6NvN7K2ZLMO0i6h3M969d2ihazkodAbxBC8Qqi%2FO56M8pBcQ7RKERw1uOQVuOsUo00sLCOm9GI2vjoArqPsi2uqO8TymUrFN39ZbthQYfkk2QX3l30Kdtn%2F7or8XF7u2KLGun8MrTx9qKmP5rLywvEAMKbWwMYGOrAB5%2FUWgKr5RM0ekkakDndGCJIxQ1WUbxY2OhlZhi04RNqJLNUFscc5LCSsEv3VcDs9juIIgGNGSuS3aBOH06ehWLv8fV8Dci%2B0LfF%2Blop%2BQYN5P5q53wN%2FrQR837AV2pfRO9dOJarpcAoes%2B7W3iJxwKZRVrBcxvyyMt89kGzZLpab25bXG8Pp4OEOA%2FJOj1iBHT%2FNZPGiAkEIqPPujxC7I78QwyK2z%2BpF8s4ZRzTnxLc%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=777f2efb4e58862374da2c028f58b95b6d4eaf6e38906f30ed63e199ddc4ef41",
+      "file_size": 16342,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2018-09-02T03:54:41.862Z",
+  "allow_singular_disclosure_after": -222615361.0850277,
+  "singular_disclosure_allowed": true,
+  "vote_count": 88,
+  "voters": [
+    "0xpatrik",
+    "taha",
+    "kashsec",
+    "badf00d",
+    "checkm50",
+    "vavkamil",
+    "p1stachios",
+    "muon4",
+    "ali",
+    "michiel",
+    "and 78 more..."
+  ],
+  "severity": {
+    "rating": "high",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 13008,
+    "asset_type": "OTHER",
+    "asset_identifier": "Other non domain specific items",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "id": 9758,
+      "category": "researcher",
+      "content": "Subdomain takeover possible on one of Starbucks's subdomain. The subdomain pointed to Microsoft Azure Traffic Manager which was no longer registered under Azure.\n\nDetailed write-up: https://0xpatrik.com/subdomain-takeover-starbucks-ii/",
+      "updated_at": "2018-08-10T23:30:40.732Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 165612,
+        "username": "0xpatrik",
+        "name": "Patrik Hudak",
+        "bio": "(Automation x AI)²",
+        "cleared": false,
+        "verified": false,
+        "website": "https://0xpatrik.com",
+        "location": "",
+        "created_at": "2017-05-06T21:13:08.252Z",
+        "url": "https://hackerone.com/0xpatrik",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "hacker",
+        "profile_picture_urls": {
+          "small": "https://profile-photos.hackerone-user-content.com/variants/PB6Ser89s4PYXAMkpC66nbdo/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/PB6Ser89s4PYXAMkpC66nbdo/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a",
+          "xtralarge": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6OTMxMjYzLCJwdXIiOiJibG9iX2lkIn19--e80f361780cd2a926fb392904d3505f225686b69/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJyZXNpemUiOiIyNjB4MjYwXHUwMDNlIn0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--cf3aeca803d1baf476958c689ca7b472a4cb54f1/IMG_6789.jpg"
+        }
+      }
+    }
+  ]
+}
