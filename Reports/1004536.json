@@ -1,0 +1,158 @@
+{
+  "id": 1004536,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMDA0NTM2",
+  "url": "https://hackerone.com/reports/1004536",
+  "title": "Reset password cookie leads to account takeover",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2020-10-10T11:20:25.267Z",
+  "submitted_at": "2020-10-10T11:20:25.328Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "homai",
+    "url": "/homai",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/9l0jsejqqr9oom5kb9qzwnu6t7wu/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 19468,
+    "url": "https://hackerone.com/weblate",
+    "handle": "weblate",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/019/468/71eb3827ae9f2a388f27bd4b7eefd20bc3ac813c_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/019/468/71eb3827ae9f2a388f27bd4b7eefd20bc3ac813c_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Weblate",
+      "twitter_handle": "WeblateOrg",
+      "website": "https://weblate.org/",
+      "about": "Weblate is a libre software web-based continuous localization system"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2020-10-12T12:16:42.379Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-10-12T12:16:42.324Z",
+  "team_member_agreed_on_going_public_at": "2020-10-12T12:14:27.743Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi\n\nThere are 3 issues on this report lead to account takeover. \n\n1- When the user requests a reset password link, server sends a link for the user via email, whenever the user click on the link for the first time redirects to ***Reset password page*** but if the user close browser or tab and click again on the link the user will redirect to the wrong address `https://hosted.weblate.org/accounts/login` and receives the following error:\n\n{F1030242}\n\n#Remediation:\n==The reset password link should always redirect the user to the reset password page.==\n\n2- If the user tries to login the account couldn't log in with the current password and receives the following error:\n\n{F1030244}\n\n#Remediation:\n==The user should access to her/his account after clicking on the reset password link, it might remember the current password and the user doesn't need to change password==\n\nThe above issues are logic issue but at the end leads to account takeover.\n\n3- When the user request for reset password link, if click on the link and close the reset password page after clicking on the link redirects to the wrong address and couldn't log in via the current password.\nAfter clicking on reset password link a cookie stores in the browser and remain for hours\n\n{F1030251}\n\nIf the user uses a shared computer or someone access on the user's computer can go to the [Forgotten your password page](https://hosted.weblate.org/accounts/reset/) and change the user password.\n\n#Remediation:\n==1- The user should always redirect to correct link after clicking on the reset password link.\n2- The cookie remain for hours on the computer, decreasing cookie expiration can decrease account takeover risk.==\n\n\nFor more clarification, please watch the following video:\n\n████\n\nIf you have any questions, please let me know.\n\nKnid regards.\n\n## Impact\n\nA combination of wrong redirection on reset password link and cookie expiration time can lead to account takeover.",
+  "weakness": {
+    "id": 97,
+    "name": "Reliance on Cookies without Validation and Integrity Checking in a Security Decision"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1030242,
+      "file_name": "error1.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/whKUPyQ3GHD6o7fC4iXnaTdt?response-content-disposition=attachment%3B%20filename%3D%22error1.png%22%3B%20filename%2A%3DUTF-8%27%27error1.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQROZBLAGE%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T084836Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDcxIVdbf73l0UyPkhytCXQuCCZ556ldY9O9DVrDiiPYwIhAIQi89OzhXnxt4VmuD1AN%2FfISqOKKmGLYb43uu1bSJU4KrIFCBEQAxoMMDEzNjE5Mjc0ODQ5IgwKLrxR4GYcq%2Bxh%2FtYqjwXb0wGjLYDmzBSV87fTvkjusJovIAcpV9gf9KaGvzuZcMiisMIH3KYi%2BGmLj23misc5me3umAQh4Guku3amOrVZyxY0PggelkuoXxyYv5b012zS4bmenjfX8c%2Fu9o76jh4P5fOuqAzBzyiUbcrVedNsjD7KdZoS9ROGFmBY6tmf5CF8cTWD7SFJcNykQO37Cwe%2FrG4g%2BKPqfzNsd4xTKOCuxlB%2BRZ2dFnAG%2FMKtL86b9koEzi3EGOYvEb2MKTVs6HBLB33aPSvU9s8aLAYwv3asj7XhRInf10DA55VlGf00p%2FOKpS3nfn1WhgEWRNo9EVCJyMnubFqm1P%2FJwb6Rfc5lxXokWUrr0hVFInSS8Wm%2FxsJ%2FmFfVAURyyst1QSYoldugv2tOOggirqtv64lSWb6DbWfX93tIMrc3le7z1iWJaR0Gu09M5RZOrs1Eq2Snq%2BULBLJ6pzK9qwHMCGsVDvk35Y%2B9eACDwmLIoj3paRE4qpUED%2F2IO9AjcVHptQsJiaUlIYqRrBaYDOlLdkhoCOTjJiqXl5Q9ryXzEYlApYkiTAAeIqjOhdBNRs7P7HEhqxeTMr0kekdGKPvMntI7xK%2BXiSl6Q4%2BglVMUe9J%2FTcD1Kf4hKqqsVNCZUQa1fjxVV8FbVvBU2S9vHqf6B6%2BWzRzJc97%2BLmyecbEoVc80f8D5R3Kl7Px0gXSrpaHyz94GDfYlXH8c1uKzveeZA4ikSzpger9xrAglXII04feceK99wm5albNk9TBg0pykmzs1L%2BN2eWa7RbDGqv1H1Z6lvZdNCa8ajv%2FLP4zwx1m8OVHvhhT8g4LQUKLEG8D8C0wrWdy5EOlCOgHGtN7RP17tUSqdMZIg9IKKPwUTtCMXI2dCMJvRvsYGOrABZc6b2GZTpoTKOK4VNmEH87TVe%2BoM4DDT4YC641Rbhe0tziYV%2B%2BNnXEwwncFCUCNv2Og9fJf7cc1IA4jS3fmE982c2yoWKABwqrxW%2BZXwnYzr59fh72L%2FHFeGvXFSaRyS5QbBVvQ8Vr7%2BPl7yUNP4m%2BHDkBqhW5V8RAYqdRTZAOxAoolx3ZxS8gs18Pd1EqKKhqR78i%2BICPbWI01GNvDF17a0gKGlfaB6X5eDyMrezd8%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=204335c7616eaf036217e466f254988b073d07c913c6d4a5d9ee698e75006ad1",
+      "file_size": 44499,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1030244,
+      "file_name": "error2.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/qHkrNUzv5pJT625ZTFnSSu5M?response-content-disposition=attachment%3B%20filename%3D%22error2.png%22%3B%20filename%2A%3DUTF-8%27%27error2.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQROZBLAGE%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T084836Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDcxIVdbf73l0UyPkhytCXQuCCZ556ldY9O9DVrDiiPYwIhAIQi89OzhXnxt4VmuD1AN%2FfISqOKKmGLYb43uu1bSJU4KrIFCBEQAxoMMDEzNjE5Mjc0ODQ5IgwKLrxR4GYcq%2Bxh%2FtYqjwXb0wGjLYDmzBSV87fTvkjusJovIAcpV9gf9KaGvzuZcMiisMIH3KYi%2BGmLj23misc5me3umAQh4Guku3amOrVZyxY0PggelkuoXxyYv5b012zS4bmenjfX8c%2Fu9o76jh4P5fOuqAzBzyiUbcrVedNsjD7KdZoS9ROGFmBY6tmf5CF8cTWD7SFJcNykQO37Cwe%2FrG4g%2BKPqfzNsd4xTKOCuxlB%2BRZ2dFnAG%2FMKtL86b9koEzi3EGOYvEb2MKTVs6HBLB33aPSvU9s8aLAYwv3asj7XhRInf10DA55VlGf00p%2FOKpS3nfn1WhgEWRNo9EVCJyMnubFqm1P%2FJwb6Rfc5lxXokWUrr0hVFInSS8Wm%2FxsJ%2FmFfVAURyyst1QSYoldugv2tOOggirqtv64lSWb6DbWfX93tIMrc3le7z1iWJaR0Gu09M5RZOrs1Eq2Snq%2BULBLJ6pzK9qwHMCGsVDvk35Y%2B9eACDwmLIoj3paRE4qpUED%2F2IO9AjcVHptQsJiaUlIYqRrBaYDOlLdkhoCOTjJiqXl5Q9ryXzEYlApYkiTAAeIqjOhdBNRs7P7HEhqxeTMr0kekdGKPvMntI7xK%2BXiSl6Q4%2BglVMUe9J%2FTcD1Kf4hKqqsVNCZUQa1fjxVV8FbVvBU2S9vHqf6B6%2BWzRzJc97%2BLmyecbEoVc80f8D5R3Kl7Px0gXSrpaHyz94GDfYlXH8c1uKzveeZA4ikSzpger9xrAglXII04feceK99wm5albNk9TBg0pykmzs1L%2BN2eWa7RbDGqv1H1Z6lvZdNCa8ajv%2FLP4zwx1m8OVHvhhT8g4LQUKLEG8D8C0wrWdy5EOlCOgHGtN7RP17tUSqdMZIg9IKKPwUTtCMXI2dCMJvRvsYGOrABZc6b2GZTpoTKOK4VNmEH87TVe%2BoM4DDT4YC641Rbhe0tziYV%2B%2BNnXEwwncFCUCNv2Og9fJf7cc1IA4jS3fmE982c2yoWKABwqrxW%2BZXwnYzr59fh72L%2FHFeGvXFSaRyS5QbBVvQ8Vr7%2BPl7yUNP4m%2BHDkBqhW5V8RAYqdRTZAOxAoolx3ZxS8gs18Pd1EqKKhqR78i%2BICPbWI01GNvDF17a0gKGlfaB6X5eDyMrezd8%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=8d054ec9f2906ae2981d123b0649d9bfc0dd17b35db9c8f9184f2cf43e11f045",
+      "file_size": 139519,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1030251,
+      "file_name": "cookie.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/NGkLsET6Pj3BXQyNhzFt2GyM?response-content-disposition=attachment%3B%20filename%3D%22cookie.png%22%3B%20filename%2A%3DUTF-8%27%27cookie.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQROZBLAGE%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T084836Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDcxIVdbf73l0UyPkhytCXQuCCZ556ldY9O9DVrDiiPYwIhAIQi89OzhXnxt4VmuD1AN%2FfISqOKKmGLYb43uu1bSJU4KrIFCBEQAxoMMDEzNjE5Mjc0ODQ5IgwKLrxR4GYcq%2Bxh%2FtYqjwXb0wGjLYDmzBSV87fTvkjusJovIAcpV9gf9KaGvzuZcMiisMIH3KYi%2BGmLj23misc5me3umAQh4Guku3amOrVZyxY0PggelkuoXxyYv5b012zS4bmenjfX8c%2Fu9o76jh4P5fOuqAzBzyiUbcrVedNsjD7KdZoS9ROGFmBY6tmf5CF8cTWD7SFJcNykQO37Cwe%2FrG4g%2BKPqfzNsd4xTKOCuxlB%2BRZ2dFnAG%2FMKtL86b9koEzi3EGOYvEb2MKTVs6HBLB33aPSvU9s8aLAYwv3asj7XhRInf10DA55VlGf00p%2FOKpS3nfn1WhgEWRNo9EVCJyMnubFqm1P%2FJwb6Rfc5lxXokWUrr0hVFInSS8Wm%2FxsJ%2FmFfVAURyyst1QSYoldugv2tOOggirqtv64lSWb6DbWfX93tIMrc3le7z1iWJaR0Gu09M5RZOrs1Eq2Snq%2BULBLJ6pzK9qwHMCGsVDvk35Y%2B9eACDwmLIoj3paRE4qpUED%2F2IO9AjcVHptQsJiaUlIYqRrBaYDOlLdkhoCOTjJiqXl5Q9ryXzEYlApYkiTAAeIqjOhdBNRs7P7HEhqxeTMr0kekdGKPvMntI7xK%2BXiSl6Q4%2BglVMUe9J%2FTcD1Kf4hKqqsVNCZUQa1fjxVV8FbVvBU2S9vHqf6B6%2BWzRzJc97%2BLmyecbEoVc80f8D5R3Kl7Px0gXSrpaHyz94GDfYlXH8c1uKzveeZA4ikSzpger9xrAglXII04feceK99wm5albNk9TBg0pykmzs1L%2BN2eWa7RbDGqv1H1Z6lvZdNCa8ajv%2FLP4zwx1m8OVHvhhT8g4LQUKLEG8D8C0wrWdy5EOlCOgHGtN7RP17tUSqdMZIg9IKKPwUTtCMXI2dCMJvRvsYGOrABZc6b2GZTpoTKOK4VNmEH87TVe%2BoM4DDT4YC641Rbhe0tziYV%2B%2BNnXEwwncFCUCNv2Og9fJf7cc1IA4jS3fmE982c2yoWKABwqrxW%2BZXwnYzr59fh72L%2FHFeGvXFSaRyS5QbBVvQ8Vr7%2BPl7yUNP4m%2BHDkBqhW5V8RAYqdRTZAOxAoolx3ZxS8gs18Pd1EqKKhqR78i%2BICPbWI01GNvDF17a0gKGlfaB6X5eDyMrezd8%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=283350bac8cc07c7c75d55d52a95ff17ce17b49bb202df2f23cd611fd9fa15a9",
+      "file_size": 216616,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2020-11-11T12:14:27.892Z",
+  "allow_singular_disclosure_after": -153347648.8295612,
+  "singular_disclosure_allowed": true,
+  "vote_count": 37,
+  "voters": [
+    "loaymorad",
+    "ali",
+    "2026",
+    "pr0f0x01",
+    "exception",
+    "sheerwood",
+    "mis_berry",
+    "dj_virus",
+    "0xparth",
+    "linusiar",
+    "and 27 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 6.3,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "local",
+      "attack_complexity": "high",
+      "privileges_required": "none",
+      "user_interaction": "required",
+      "scope": "changed",
+      "confidentiality": "low",
+      "integrity": "high",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 171,
+    "asset_type": "URL",
+    "asset_identifier": "hosted.weblate.org",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
