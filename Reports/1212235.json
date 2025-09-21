@@ -1,0 +1,139 @@
+{
+  "id": 1212235,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMjEyMjM1",
+  "url": "https://hackerone.com/reports/1212235",
+  "title": "Reflected XSS on dailydeals.mtn.co.za",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2021-05-28T19:27:15.402Z",
+  "submitted_at": "2021-05-28T19:27:15.449Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "musab_alharany",
+    "url": "/musab_alharany",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/a1xpfszimmbkcjnhlupf1br5j1ow/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 41919,
+    "url": "https://hackerone.com/mtn_group",
+    "handle": "mtn_group",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/4e6ikuxrt34g8b14w2bk53c6vyry/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/4e6ikuxrt34g8b14w2bk53c6vyry/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "MTN Group",
+      "twitter_handle": "",
+      "website": "https://www.mtn.com/",
+      "about": ""
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2021-12-24T08:49:47.377Z",
+  "bug_reporter_agreed_on_going_public_at": "2021-11-24T08:49:46.671Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello MTN Team.\ni found Reflected XSS on``` https://dailydeals.mtn.co.za/index.cfm?GO=DEALS```  vi ```cpID``` parameter with POST method \n\n## Steps To Reproduce:\n1. Intercept the https://dailydeals.mtn.co.za/index.cfm?GO=DEALS \n2. Change Method to POST\n3. Add empty line after last header\n4. Write this code \n>category_id=7&cpID=1%22%3e%20%3cimg%20src%3da%20onerror%3dalert(\"XSS\")%3e<!--\n\n{F1319085}\n5. Sent the Request.\n6. Right Click on response area, then Click on ```Show response in browser```\n7. copy the link, and put it on browser use BurpSuite as proxy \n8. press the Enter key, then you will see the ```XSS``` on your browser\n{F1319086}\n\n## Impact\n\nattacker can convinces a victim to visit a URL then he can:\n1. steal users cookies\n2. redirect the user to malicious website",
+  "weakness": {
+    "id": 61,
+    "name": "Cross-site Scripting (XSS) - Reflected"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1319085,
+      "file_name": "request.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/xk3ka6wtjcvq26pha9496ilfrjk4?response-content-disposition=attachment%3B%20filename%3D%22request.jpg%22%3B%20filename%2A%3DUTF-8%27%27request.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4KRJQQVC%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T004612Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH8aCXVzLXdlc3QtMiJGMEQCIF7R5Mt7JSPof0K6chg4SbFgQgddHMFZioadyM8kMMlwAiBWqqeP3tOV03nhklehQlHnXnLsnsqAJ9PwtKl1pjquDiq7BQj4%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIM6kjVyeBfb4ZcxuUAKo8Fp7sZ3pga46diDFBqXTN47NTco7LkV%2BAinfhxEdjcoFLxt%2FwO06oQI4diRpeLu4J7SIQH2piSIgIc5So%2Bcxu2p6WrHk4qp7gq8d3mNMsf9yCDfItXUcMkswz6rF3eY68PFTuf33TNODxyvSbyJ3Mxh6ZQ5vKklpPzWmXSHO9r7TiW9dJRPtV4%2B2b9LT47rcQnWrinDFbnrxT9bW0Ub4giLneR9FB009jq3j9KHzP1flRXRf9C5YSytjXCnYkI9zRONjMyuzM1jJRH35gbpu2Opf0piI7jxA5Ha8YzYEgrb0HF%2BoXdwNhkP%2F28yAEGrqrLVdvBt54T79eKuOzLHRqKbh2NZRQPMt7QAMCqXyvwMqkwyoGik3BhYOMcPh%2BbCeSGjOI%2B2WES2kBgi3LM0EDX9CZepNr1stOs9S9A%2BO8Q0IsgHCWwLaJPvBryQm20MCUUOA%2FGUrW3aojSqFzDnm2qYP87%2F67%2FMA6Jk%2Fg5byszx24Dn%2BjY19V5H%2FdtTuLms%2FrVZc1OPjAR8Y%2BKK1USBg2K6AodUXYjFD%2FkH1hbD6EYSPM%2B5FXMQCEQG13PBZIoJzYcHtlczHuCU%2FxecC4Db2aXPUWFOgDK3aXKs3tTgIJa1X3sWKPYZvNX1YOQwUkZVWfhHzCIAJgNbgeYOWA12FF44R7zNm5kTLdpyjw3A2ePm%2B%2BRxvQLfOlc5HCkzG7mJGR1jobsIVQ%2BzDc0WD5x%2FewWbhDHfhtOt%2FbdZamacThQKb4YMjwU6GQVEl8HUk1s8M8pi9UKgFdfvm84MWVxBoxEVky6kgbyZxIS67xMj95UXwPqBRmFwDDYQW%2FVy%2FOmIteQcXp9OBrn6hsui33vKIiI4rKO6NUI3ruy0uYW3DAzJDCD57zGBjqyAfFvAXPSA2Hv1C8%2FRs0xqubCuJacSoLfLCUs1DAKVjol6%2FOxcdMr8fgHkFu5ZbXKJIi8PSkgJozPqp5e6Zyx0HB94yBTQhBMHiywVKAAYYI3Nt483u4bQmFv7V5oyihiNyMiwrsXlyqkd%2FH2g6BfaBQOScUL9NZYboXi7l1yh501SAP6u63k%2F8cz%2BNxpFMpMnFZnkYuzw1kX5%2F1VKIIlJ4%2FUbROw%2FERwyKVcmmjlK8XqLyg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=13b2749bf4ae397e38c2e111a320dc11cb34ab42e50d8580de866d51d1c262cd",
+      "file_size": 146485,
+      "type": "image/jpeg",
+      "moderated": null
+    },
+    {
+      "id": 1319086,
+      "file_name": "xss-POC.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/5muiadxzi1m9sw9hfd6gexknlm6v?response-content-disposition=attachment%3B%20filename%3D%22xss-POC.jpg%22%3B%20filename%2A%3DUTF-8%27%27xss-POC.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4KRJQQVC%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T004612Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH8aCXVzLXdlc3QtMiJGMEQCIF7R5Mt7JSPof0K6chg4SbFgQgddHMFZioadyM8kMMlwAiBWqqeP3tOV03nhklehQlHnXnLsnsqAJ9PwtKl1pjquDiq7BQj4%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIM6kjVyeBfb4ZcxuUAKo8Fp7sZ3pga46diDFBqXTN47NTco7LkV%2BAinfhxEdjcoFLxt%2FwO06oQI4diRpeLu4J7SIQH2piSIgIc5So%2Bcxu2p6WrHk4qp7gq8d3mNMsf9yCDfItXUcMkswz6rF3eY68PFTuf33TNODxyvSbyJ3Mxh6ZQ5vKklpPzWmXSHO9r7TiW9dJRPtV4%2B2b9LT47rcQnWrinDFbnrxT9bW0Ub4giLneR9FB009jq3j9KHzP1flRXRf9C5YSytjXCnYkI9zRONjMyuzM1jJRH35gbpu2Opf0piI7jxA5Ha8YzYEgrb0HF%2BoXdwNhkP%2F28yAEGrqrLVdvBt54T79eKuOzLHRqKbh2NZRQPMt7QAMCqXyvwMqkwyoGik3BhYOMcPh%2BbCeSGjOI%2B2WES2kBgi3LM0EDX9CZepNr1stOs9S9A%2BO8Q0IsgHCWwLaJPvBryQm20MCUUOA%2FGUrW3aojSqFzDnm2qYP87%2F67%2FMA6Jk%2Fg5byszx24Dn%2BjY19V5H%2FdtTuLms%2FrVZc1OPjAR8Y%2BKK1USBg2K6AodUXYjFD%2FkH1hbD6EYSPM%2B5FXMQCEQG13PBZIoJzYcHtlczHuCU%2FxecC4Db2aXPUWFOgDK3aXKs3tTgIJa1X3sWKPYZvNX1YOQwUkZVWfhHzCIAJgNbgeYOWA12FF44R7zNm5kTLdpyjw3A2ePm%2B%2BRxvQLfOlc5HCkzG7mJGR1jobsIVQ%2BzDc0WD5x%2FewWbhDHfhtOt%2FbdZamacThQKb4YMjwU6GQVEl8HUk1s8M8pi9UKgFdfvm84MWVxBoxEVky6kgbyZxIS67xMj95UXwPqBRmFwDDYQW%2FVy%2FOmIteQcXp9OBrn6hsui33vKIiI4rKO6NUI3ruy0uYW3DAzJDCD57zGBjqyAfFvAXPSA2Hv1C8%2FRs0xqubCuJacSoLfLCUs1DAKVjol6%2FOxcdMr8fgHkFu5ZbXKJIi8PSkgJozPqp5e6Zyx0HB94yBTQhBMHiywVKAAYYI3Nt483u4bQmFv7V5oyihiNyMiwrsXlyqkd%2FH2g6BfaBQOScUL9NZYboXi7l1yh501SAP6u63k%2F8cz%2BNxpFMpMnFZnkYuzw1kX5%2F1VKIIlJ4%2FUbROw%2FERwyKVcmmjlK8XqLyg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=c350d2fcdabbbee9211bf10b5a3a875586bb902db7cefcf3963e285a8d8a1553",
+      "file_size": 85702,
+      "type": "image/jpeg",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2021-12-24T08:49:46.742Z",
+  "allow_singular_disclosure_after": -118079785.92536932,
+  "singular_disclosure_allowed": true,
+  "vote_count": 19,
+  "voters": [
+    "hunter0x000",
+    "shreyaschavhan",
+    "0xmr_b4rayz",
+    "tess",
+    "akashhamal0x01",
+    "musab_alharany",
+    "h4x0r_dz",
+    "spaghettisec",
+    "zero_or_1",
+    "011alsanosi",
+    "and 9 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 34307,
+    "asset_type": "URL",
+    "asset_identifier": "mtn.co.za",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
