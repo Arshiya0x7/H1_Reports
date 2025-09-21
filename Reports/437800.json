@@ -1,0 +1,157 @@
+{
+  "id": 437800,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC80Mzc4MDA=",
+  "url": "https://hackerone.com/reports/437800",
+  "title": "Passive mixed content issues on the site https://*.fanduel.com",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2018-11-09T04:07:37.704Z",
+  "submitted_at": "2018-11-09T04:07:37.704Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "mobius07",
+    "url": "/mobius07",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MjA4MjcsInB1ciI6ImJsb2JfaWQifX0=--803f2bd290e48a5461da288652044f8b9455ce95/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--2de8067d228529d65848a4eeed0bed0bb2531bc3/xcontent_2374p__econet_ru.jpg.pagespeed.ic.lWHbgRa72v.jpg"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 34753,
+    "url": "https://hackerone.com/fanduel",
+    "handle": "fanduel",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/034/753/fb82abbf1d8b062d7f840860527522f14c586041_original./235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/034/753/fb82abbf1d8b062d7f840860527522f14c586041_original./3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "FanDuel",
+      "twitter_handle": "FanDuel",
+      "website": "https://fanduel.com",
+      "about": "FanDuel is the premier mobile gaming company in the US, from America’s #1 Sportsbook to leading in iGaming, horse racing, and daily fantasy sports.  "
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2018-12-21T13:03:17.552Z",
+  "bug_reporter_agreed_on_going_public_at": "2018-11-21T13:03:14.769Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "**Hello.**\n\n**Summary:**\n\nWhile browsing the sites https://www.fanduel.com and https://subscriptionapi.fanduel.com found a mixed content error on the site with HTTPS.\nThis error is located at https://www.fanduel.com/press and https://subscriptionapi.fanduel.com/press. Image are uploaded to the site via HTTP.\n* Code: `<div class=\"post-image\"><img src=\"http://medivetbiologics.com/wp-content/uploads/2015/04/Orlando-Sentinel-logo.png\" alt=\"\"></div>`\n\n**Description:**\n\nPassive mixed content is content sent over HTTP that is contained on the HTTPS page, but which can not change other parts of the page. For example, an attacker can replace a picture sent via HTTP with obscene content or a message to the user. The attacker can also view the activity of the user, observing which images are sent to the user. Knowing which pictures the user downloads, an attacker can figure out which pages the user is visiting.\nActive mixed content has access to the entire DOM tree or part of it. This type can change the behavior of a page protected by HTTPS, and, theoretically, steal passwords from the user. Unlike passive content, the active is much more vulnerable.\nIn the case of active mixed content, the attacker can intercept the request by writing unwanted JavaScript code there, capable of stealing user personal data or installing dangerous software using vulnerabilities in plug-ins.\nThe risk associated with active content does not depend on the type of site and how valuable the user enters on it. The page can contain both publicly available information and data that is available only after authorization. Even if the page is public and does not contain any valuable data, with the help of active content, an attacker can redirect a user to other pages and steal cookies from there.\n\n## Steps To Reproduce:\n\n  1. Open any browser (Chrome, Opera etc).\n  1. Follow this links https://www.fanduel.com/press and https://subscriptionapi.fanduel.com/press.\n  1. View Developer Tools `Ctrl + Shift + I` (besides Internet Explorer - `F12`).\n  1. Open the Console tab - there will be a warning that there are mixed content on the page.\n\n## Supporting Material/References:\n\n  * Screenshots - F372905, F372904, F372907, F372906.\n  * https://resources.infosecinstitute.com/https-mixed-content-vulnerability/\n\nSincerely, Vyacheslav.\n\n## Impact\n\nIf the HTTPS page includes content retrieved through regular, cleartext HTTP, then the connection is only partially encrypted. The unencrypted content is accessible to sniffers.\n\nA man-in-the-middle attacker can intercept the request and also rewrite the response to include malicious or deceptive content. This content can be used to steal the user's credentials, acquire sensitive data about the user, or attempt to install malware on the user's system (by leveraging vulnerabilities in the browser or its plugins, for example), and therefore the connection is not safeguarded anymore.",
+  "bounty_amount": "100.0",
+  "formatted_bounty": "$100",
+  "weakness": {
+    "id": 30,
+    "name": "Man-in-the-Middle"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 372904,
+      "file_name": "Mozilla_subscriptionapi.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/372/904/d50dc0635c1d620311dabd625cc9969dbae19b58/Mozilla_subscriptionapi.jpg?response-content-disposition=attachment%3B%20filename%3D%22Mozilla_subscriptionapi.jpg%22%3B%20filename%2A%3DUTF-8%27%27Mozilla_subscriptionapi.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQVAVA5ZNL%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T162607Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDuFYhxnP4mzo4L0%2B7kqQ6N5etYT6dMnGah5Y60Q1e9HQIgMHo4f4OXTr%2FiGUyrh26FIAGUedw96ojyYXFSBjpwx%2FsqsgUIFhADGgwwMTM2MTkyNzQ4NDkiDG1bbDfVvDIiokD6liqPBb6X64zv8cOnzKdfizKM3DQbCcc0OjQEOYfqSAr9jolx2KibzOaeRlAUJlji5M46nmOFVdRlFrkn0sfTq%2B2dfcnHJyjhJpuWHVjb99KypugOvJz26ON5xtYo4xzGAc0YXxnADapFPZCdLnZYiMZNnwwuMlrIX22IeRCvUnV42zhPlhUbRbZnWNuGU9WNm%2B56a%2BGiv05OinHovt5YDmYoy9j4C54QrrO6lv%2F6UVjFoGPrBMYY9nPEmDXgv9ZqmjObL5SnfhDTMVBQg%2FHjK8wnowAAQcNklW%2Bs1XHmf47NM5WCxlfp9%2Bz6xyNEbtM7ywJysVWc5yf%2FQ3XGZqVGMM2jvj3aBkOVCCZmcP%2FSng9TFJ0Knv8XGUXbXjvPK0tc2zAi%2BCJEAjMjS08KYoFTayaUniPOp8fCcs9Be5EegzuDlSkPj%2BvJH4NyxP%2B0IPhkulazwyHDnHKM7cSE2BEAue9dOSjd2DWpHEHN%2FVRg60u10TMnBTGDsnTK6IZwMPzZ%2BWo81eXQfuJgNyNpjgoODvr0STD0y0QntcjUJGtbPuuxEGV3fwnfKP4Wm4nCwMb6Wna3t%2FTuQLayr4XRRsBZtgmaoarnT10bkPeZ59R4jtaktSFmwSybzyNL6uVNtAwgCyG1wQri3K1suPkipnmkkBAqZQxUOPONHIXMJ%2FoHIUfSYecqgXURZk%2BH6sEy4e0R77r9mWOzAF4v4Twi2JHxQvehLCbkLn85uVMzW3ctjJoFSOovitCleMtVg3uv%2B0Qjfx2Pe5zPEqUVrwPJbdKVzztB19Y4K4m7KaxkLIVzpPwP2LlLaxcVBaQ6uJrDde309Q25ExC5844Epx3haU26Z60utq2QIUaZp5xTcRO1DZxwmocw1vW%2FxgY6sQGfpGjCWVd5wI2KZKFnHmU%2FY8Y%2BHtyOBhcXKcsS8auSYlaybwTWjJ3WL6TMYWjNgPUFWVhtSHo4iABvau2ICxR2%2F1i8OXcSGpGKBOgz0rxV%2BS%2B1AFk0gJhKfJQbgR8ig1fQwPtSSS8G5EOohRpDrwUb17e%2BIVcGuToxdVm7fWQ%2Bo6eTGnPz8ZUcv%2B3ArX%2FPq5kiF6tZ82olx6T96LTNBfU4W6cZDIMDoB5jA%2F5s77nbtcg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=a37c9e463847e00b62a644cf92c465e4e49de1680385148a8de60b21577cf0a7",
+      "file_size": 191531,
+      "type": "image/jpeg",
+      "moderated": null
+    },
+    {
+      "id": 372905,
+      "file_name": "Mozilla_www.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/372/905/bf4f1413df412f5291b82ce405a66f2283f3f981/Mozilla_www.jpg?response-content-disposition=attachment%3B%20filename%3D%22Mozilla_www.jpg%22%3B%20filename%2A%3DUTF-8%27%27Mozilla_www.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQVAVA5ZNL%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T162607Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDuFYhxnP4mzo4L0%2B7kqQ6N5etYT6dMnGah5Y60Q1e9HQIgMHo4f4OXTr%2FiGUyrh26FIAGUedw96ojyYXFSBjpwx%2FsqsgUIFhADGgwwMTM2MTkyNzQ4NDkiDG1bbDfVvDIiokD6liqPBb6X64zv8cOnzKdfizKM3DQbCcc0OjQEOYfqSAr9jolx2KibzOaeRlAUJlji5M46nmOFVdRlFrkn0sfTq%2B2dfcnHJyjhJpuWHVjb99KypugOvJz26ON5xtYo4xzGAc0YXxnADapFPZCdLnZYiMZNnwwuMlrIX22IeRCvUnV42zhPlhUbRbZnWNuGU9WNm%2B56a%2BGiv05OinHovt5YDmYoy9j4C54QrrO6lv%2F6UVjFoGPrBMYY9nPEmDXgv9ZqmjObL5SnfhDTMVBQg%2FHjK8wnowAAQcNklW%2Bs1XHmf47NM5WCxlfp9%2Bz6xyNEbtM7ywJysVWc5yf%2FQ3XGZqVGMM2jvj3aBkOVCCZmcP%2FSng9TFJ0Knv8XGUXbXjvPK0tc2zAi%2BCJEAjMjS08KYoFTayaUniPOp8fCcs9Be5EegzuDlSkPj%2BvJH4NyxP%2B0IPhkulazwyHDnHKM7cSE2BEAue9dOSjd2DWpHEHN%2FVRg60u10TMnBTGDsnTK6IZwMPzZ%2BWo81eXQfuJgNyNpjgoODvr0STD0y0QntcjUJGtbPuuxEGV3fwnfKP4Wm4nCwMb6Wna3t%2FTuQLayr4XRRsBZtgmaoarnT10bkPeZ59R4jtaktSFmwSybzyNL6uVNtAwgCyG1wQri3K1suPkipnmkkBAqZQxUOPONHIXMJ%2FoHIUfSYecqgXURZk%2BH6sEy4e0R77r9mWOzAF4v4Twi2JHxQvehLCbkLn85uVMzW3ctjJoFSOovitCleMtVg3uv%2B0Qjfx2Pe5zPEqUVrwPJbdKVzztB19Y4K4m7KaxkLIVzpPwP2LlLaxcVBaQ6uJrDde309Q25ExC5844Epx3haU26Z60utq2QIUaZp5xTcRO1DZxwmocw1vW%2FxgY6sQGfpGjCWVd5wI2KZKFnHmU%2FY8Y%2BHtyOBhcXKcsS8auSYlaybwTWjJ3WL6TMYWjNgPUFWVhtSHo4iABvau2ICxR2%2F1i8OXcSGpGKBOgz0rxV%2BS%2B1AFk0gJhKfJQbgR8ig1fQwPtSSS8G5EOohRpDrwUb17e%2BIVcGuToxdVm7fWQ%2Bo6eTGnPz8ZUcv%2B3ArX%2FPq5kiF6tZ82olx6T96LTNBfU4W6cZDIMDoB5jA%2F5s77nbtcg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=dbe7961a447947e1fdbb8a8ae4936108b5e9dae7d1515f188d01a97fb2987162",
+      "file_size": 188517,
+      "type": "image/jpeg",
+      "moderated": null
+    },
+    {
+      "id": 372906,
+      "file_name": "Chrome_subscriptionapi.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/372/906/628f7d6ce933d5b2cef3001f5edf8c3d961ce764/Chrome_subscriptionapi.jpg?response-content-disposition=attachment%3B%20filename%3D%22Chrome_subscriptionapi.jpg%22%3B%20filename%2A%3DUTF-8%27%27Chrome_subscriptionapi.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQVAVA5ZNL%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T162607Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDuFYhxnP4mzo4L0%2B7kqQ6N5etYT6dMnGah5Y60Q1e9HQIgMHo4f4OXTr%2FiGUyrh26FIAGUedw96ojyYXFSBjpwx%2FsqsgUIFhADGgwwMTM2MTkyNzQ4NDkiDG1bbDfVvDIiokD6liqPBb6X64zv8cOnzKdfizKM3DQbCcc0OjQEOYfqSAr9jolx2KibzOaeRlAUJlji5M46nmOFVdRlFrkn0sfTq%2B2dfcnHJyjhJpuWHVjb99KypugOvJz26ON5xtYo4xzGAc0YXxnADapFPZCdLnZYiMZNnwwuMlrIX22IeRCvUnV42zhPlhUbRbZnWNuGU9WNm%2B56a%2BGiv05OinHovt5YDmYoy9j4C54QrrO6lv%2F6UVjFoGPrBMYY9nPEmDXgv9ZqmjObL5SnfhDTMVBQg%2FHjK8wnowAAQcNklW%2Bs1XHmf47NM5WCxlfp9%2Bz6xyNEbtM7ywJysVWc5yf%2FQ3XGZqVGMM2jvj3aBkOVCCZmcP%2FSng9TFJ0Knv8XGUXbXjvPK0tc2zAi%2BCJEAjMjS08KYoFTayaUniPOp8fCcs9Be5EegzuDlSkPj%2BvJH4NyxP%2B0IPhkulazwyHDnHKM7cSE2BEAue9dOSjd2DWpHEHN%2FVRg60u10TMnBTGDsnTK6IZwMPzZ%2BWo81eXQfuJgNyNpjgoODvr0STD0y0QntcjUJGtbPuuxEGV3fwnfKP4Wm4nCwMb6Wna3t%2FTuQLayr4XRRsBZtgmaoarnT10bkPeZ59R4jtaktSFmwSybzyNL6uVNtAwgCyG1wQri3K1suPkipnmkkBAqZQxUOPONHIXMJ%2FoHIUfSYecqgXURZk%2BH6sEy4e0R77r9mWOzAF4v4Twi2JHxQvehLCbkLn85uVMzW3ctjJoFSOovitCleMtVg3uv%2B0Qjfx2Pe5zPEqUVrwPJbdKVzztB19Y4K4m7KaxkLIVzpPwP2LlLaxcVBaQ6uJrDde309Q25ExC5844Epx3haU26Z60utq2QIUaZp5xTcRO1DZxwmocw1vW%2FxgY6sQGfpGjCWVd5wI2KZKFnHmU%2FY8Y%2BHtyOBhcXKcsS8auSYlaybwTWjJ3WL6TMYWjNgPUFWVhtSHo4iABvau2ICxR2%2F1i8OXcSGpGKBOgz0rxV%2BS%2B1AFk0gJhKfJQbgR8ig1fQwPtSSS8G5EOohRpDrwUb17e%2BIVcGuToxdVm7fWQ%2Bo6eTGnPz8ZUcv%2B3ArX%2FPq5kiF6tZ82olx6T96LTNBfU4W6cZDIMDoB5jA%2F5s77nbtcg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=a788e5796d20dfffa6c2256ac93d79b8506b1ea80c4fca681428401dbc3d57db",
+      "file_size": 148627,
+      "type": "image/jpeg",
+      "moderated": null
+    },
+    {
+      "id": 372907,
+      "file_name": "Chrome_www.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/372/907/4f4257365a3318bd857d56b5281682f508b45975/Chrome_www.jpg?response-content-disposition=attachment%3B%20filename%3D%22Chrome_www.jpg%22%3B%20filename%2A%3DUTF-8%27%27Chrome_www.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQVAVA5ZNL%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T162607Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDuFYhxnP4mzo4L0%2B7kqQ6N5etYT6dMnGah5Y60Q1e9HQIgMHo4f4OXTr%2FiGUyrh26FIAGUedw96ojyYXFSBjpwx%2FsqsgUIFhADGgwwMTM2MTkyNzQ4NDkiDG1bbDfVvDIiokD6liqPBb6X64zv8cOnzKdfizKM3DQbCcc0OjQEOYfqSAr9jolx2KibzOaeRlAUJlji5M46nmOFVdRlFrkn0sfTq%2B2dfcnHJyjhJpuWHVjb99KypugOvJz26ON5xtYo4xzGAc0YXxnADapFPZCdLnZYiMZNnwwuMlrIX22IeRCvUnV42zhPlhUbRbZnWNuGU9WNm%2B56a%2BGiv05OinHovt5YDmYoy9j4C54QrrO6lv%2F6UVjFoGPrBMYY9nPEmDXgv9ZqmjObL5SnfhDTMVBQg%2FHjK8wnowAAQcNklW%2Bs1XHmf47NM5WCxlfp9%2Bz6xyNEbtM7ywJysVWc5yf%2FQ3XGZqVGMM2jvj3aBkOVCCZmcP%2FSng9TFJ0Knv8XGUXbXjvPK0tc2zAi%2BCJEAjMjS08KYoFTayaUniPOp8fCcs9Be5EegzuDlSkPj%2BvJH4NyxP%2B0IPhkulazwyHDnHKM7cSE2BEAue9dOSjd2DWpHEHN%2FVRg60u10TMnBTGDsnTK6IZwMPzZ%2BWo81eXQfuJgNyNpjgoODvr0STD0y0QntcjUJGtbPuuxEGV3fwnfKP4Wm4nCwMb6Wna3t%2FTuQLayr4XRRsBZtgmaoarnT10bkPeZ59R4jtaktSFmwSybzyNL6uVNtAwgCyG1wQri3K1suPkipnmkkBAqZQxUOPONHIXMJ%2FoHIUfSYecqgXURZk%2BH6sEy4e0R77r9mWOzAF4v4Twi2JHxQvehLCbkLn85uVMzW3ctjJoFSOovitCleMtVg3uv%2B0Qjfx2Pe5zPEqUVrwPJbdKVzztB19Y4K4m7KaxkLIVzpPwP2LlLaxcVBaQ6uJrDde309Q25ExC5844Epx3haU26Z60utq2QIUaZp5xTcRO1DZxwmocw1vW%2FxgY6sQGfpGjCWVd5wI2KZKFnHmU%2FY8Y%2BHtyOBhcXKcsS8auSYlaybwTWjJ3WL6TMYWjNgPUFWVhtSHo4iABvau2ICxR2%2F1i8OXcSGpGKBOgz0rxV%2BS%2B1AFk0gJhKfJQbgR8ig1fQwPtSSS8G5EOohRpDrwUb17e%2BIVcGuToxdVm7fWQ%2Bo6eTGnPz8ZUcv%2B3ArX%2FPq5kiF6tZ82olx6T96LTNBfU4W6cZDIMDoB5jA%2F5s77nbtcg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=ee4059ea6943e3644fc90827d4845fd3b44181a846f30bb3789269cf50283323",
+      "file_size": 145756,
+      "type": "image/jpeg",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2018-12-21T13:03:14.863Z",
+  "allow_singular_disclosure_after": -213074572.3724519,
+  "singular_disclosure_allowed": true,
+  "vote_count": 29,
+  "voters": [
+    "ali",
+    "sameerphad72",
+    "h1bountyoverflow",
+    "mik317",
+    "2026",
+    "thalaivar304",
+    "savitar0x01",
+    "mobius07",
+    "smelt",
+    "cyberunit",
+    "and 19 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 16177,
+    "asset_type": "WILDCARD",
+    "asset_identifier": "*.fanduel.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
