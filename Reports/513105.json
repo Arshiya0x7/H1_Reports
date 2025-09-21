@@ -1,0 +1,143 @@
+{
+  "id": 513105,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC81MTMxMDU=",
+  "url": "https://hackerone.com/reports/513105",
+  "title": "CSP : Inline scripts can be inserted",
+  "state": "Closed",
+  "substate": "informative",
+  "severity_rating": "medium",
+  "readable_substate": "Informative",
+  "created_at": "2019-03-21T11:00:24.913Z",
+  "submitted_at": "2019-03-21T11:00:24.913Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "darkdude",
+    "url": "/darkdude",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/520/303/5f9f704ac212eba55dabcff3e2919fcee25b5127_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 27264,
+    "url": "https://hackerone.com/semmle",
+    "handle": "semmle",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/027/264/8af1325fdaccc38beab4451ba68ace24623b248c_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/027/264/8af1325fdaccc38beab4451ba68ace24623b248c_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "disabled",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Semmle",
+      "twitter_handle": "semmle",
+      "website": "https://semmle.com",
+      "about": "Semmle's engineering analytics platform helps leading technology companies and open-source developers build secure, reliable software."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2019-03-21T17:39:43.596Z",
+  "bug_reporter_agreed_on_going_public_at": "2019-03-21T15:36:09.000Z",
+  "team_member_agreed_on_going_public_at": "2019-03-21T17:39:43.490Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Vulnerable URL:- https://lgtm-com.pentesting.semmle.net/\n\n#Summery\nContent Security Policy (CSP) is a client-side security model which allows developers to specify where different types of resources should be loaded, executed and embedded from. With CSP you can instruct the browser only to load javascript resources from a specific domain as well as block inline javascript running on the website. This is very helpful against XSS since most attacks requires inline javascript.\n\n#Issue detail\nThe configuration removes the XSS sandboxing feature of Content Security Policy.\nThe 'unsafe-inline' directive allows scripts to be inserted inline in the HTML page. An attacker will be able to use script html tag (<script>...</script>) or event handlers (onload, onerror, ...) to load malicious scripts.\n\n#Weak configuration \nscript-src: 'unsafe-inline'\n\n#Brup Responce\nHTTP/1.1 200 OK\nX-Content-Type-Options: nosniff\nX-Frame-Options: SAMEORIGIN\nX-XSS-Protection: 1; mode=block; report=https://lgtm-com.pentesting.semmle.net/browser_report/\nContent-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://www.gravatar.com https://img.shields.io; object-src 'none'; connect-src 'self' https://storage.googleapis.com; font-src 'self'; media-src 'self'; manifest-src 'self'; frame-src https://www.youtube.com; report-uri https://lgtm-com.pentesting.semmle.net/browser_report/; report-to https://lgtm-com.pentesting.semmle.net/browser_report/\nReferrer-Policy: same-origin\nStrict-Transport-Security: max-age=31536000; includeSubDomains\nX-Deploy-Time: 1553109264000\nContent-Type: text/html;charset=utf-8\nX-UA-Compatible: IE=edge\nX-Cloud-Trace-Context: b1a4900e9ad24c8d5eca45b4c3acc726;o=1\nVary: Accept-Encoding\nDate: Thu, 21 Mar 2019 07:06:31 GMT\nServer: Google Frontend\nCache-Control: private\nConnection: close\nContent-Length: 11525\n\n#Refrences\nhttps://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/script-src\nhttp://www.html5rocks.com/en/tutorials/security/content-security-policy/\nhttps://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage\nhttps://speakerdeck.com/mikispag/making-csp-great-again-michele-spagnuolo-and-lukas-weichselbaum\nhttps://dubell.io/exploiting-weak-content-security-policy-csp-rules-for-fun-and-profit/\nhttps://www.netsparker.com/web-vulnerability-scanner/vulnerabilities/content-security-policy-csp-not-implemented/\nhttps://www.netsparker.com/blog/web-security/content-security-policy/\n\n## Impact\n\nThere is no direct impact of not implementing CSP on your website. However, if your website is vulnerable to a Cross-site Scripting attack CSP can prevent successful exploitation of that vulnerability. By not implementing CSP you’ll be missing out this extra layer of security.",
+  "weakness": {
+    "id": 60,
+    "name": "Cross-site Scripting (XSS) - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 449142,
+      "file_name": "Capture1.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/449/142/710eab5cb73b5db3ddaeba116238c156cd158a4f/Capture1.PNG?response-content-disposition=attachment%3B%20filename%3D%22Capture1.PNG%22%3B%20filename%2A%3DUTF-8%27%27Capture1.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXKE6YM6U%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T155839Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDt4L48uRbifTFdEoFd5NtoUorejmdczUj3Ph8voAE1jAIgTgQg5M1Ntyl3amKMDTbsCSxHDqmlNDE1kOghMsSLJkMqsgUIFxADGgwwMTM2MTkyNzQ4NDkiDJxi5ydRI8Zf7QmznSqPBc0a%2B2pQmy0QVrYuNOA0yNsZA0EX9kJ7VzgcobKznfPop9LN6Yr2z4RcdpmTHe7bIdrv7RGgv%2Fal0ELDi7aabZr7CPcthBmffb84hnBIoDbzgkRyXPAZcSwJEYAk83IqKNYX3qgO5ubZvR0A52FKHDUwAXUKVvOco%2Fg85PbW68mQ3Hzi26b03BNbI9VYnf%2F681vTWkJ7VElk7IVAyZ6FgwftAVaVXzZaYueN7%2BWw4xHOQEa15e%2Bo0PcclsDrLKygXl45bl29k7VLEpfuDgdRYXRxAepDysk7Fs%2FAvsmFoyA6O3Gcls7MvHg4UUvxglDdpRUtzrW2aiEE%2FIiPtdIsRq3iJ5F7yfgwQQwXdmiozX5lrIJfqfn%2FbCzEG2HH72NNLNwYDv3dHFR7IpJYdG8AZk8bmUtYGnZLBgNbd15xdZlftz7RLasWtvioLEzPmC3TvPkoXyaygYdxha%2BpwwfiO4XhJJ80%2BvWAgA3B%2F8Da9mnG73gWKaT69P3MQ0v%2F%2Big7uPpPnVJbhTCBZ8LHFGdVfLkAFbCzvVZgW3pGHJxGSGVfFsFdfo%2FqLUITrjFi7C5cjKAyrpAjxE8k0fJvtSLEmvJEcF1Lb%2F4N%2B%2BJ2bJ6kXevSQGvDjbZqe%2FNOEnZNN9rUTUHVCF3tBWhJ7htr7PTIyxguQ5%2FQdNlmqasPfRYjUrGtaMUcL7g87%2BJIrhMtQY%2FkiI0%2BGTdTAtjIXIJapJJ4si%2FB%2FA96VqEZzJBmR9kxkFqFVPOdmnsqzlWypMRJUSPF2Jj%2FzbRkIUnDfS6LS6CCk7%2BMf7NC10pVOxHPs5EBalSDgIMbM7sMpfnUZU7qifGTDEhRLcdkKBc3C26b3pmtXqsnjbRKlpi8OhfZ401kj4wwoY%2FAxgY6sQE9jmhH95D7GwDQPOZgc74SwnoOV%2Fg%2BIpnglNXdntkXYldw0Ucs3HF6BzS%2FHmCtvK%2BEWfi%2Bq%2BBcQ6MqEJ43K6CD2E7GsLl56SI5TcOq3DR1MgDvzPiAYDTuVmHfTZkfJHnfJZFe6qBg67d2mBe7U4OAJ55F8zP3slEoczL0FtiCU1YvRkkBbL1c%2F8MjEeb%2F5V5E6icFpTq1c%2F8IsSkgDUiSWDT416YYw0LdcVroDWfFveI%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=d1a1dcdc12e99e42c4923c28c5b0c5735086caa42a3e78f5a624a118e7d5f4e4",
+      "file_size": 13157,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 449143,
+      "file_name": "Capture.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/449/143/77b09ece77e030ae872f76fd69b67855e1078d37/Capture.PNG?response-content-disposition=attachment%3B%20filename%3D%22Capture.PNG%22%3B%20filename%2A%3DUTF-8%27%27Capture.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXKE6YM6U%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T155839Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDt4L48uRbifTFdEoFd5NtoUorejmdczUj3Ph8voAE1jAIgTgQg5M1Ntyl3amKMDTbsCSxHDqmlNDE1kOghMsSLJkMqsgUIFxADGgwwMTM2MTkyNzQ4NDkiDJxi5ydRI8Zf7QmznSqPBc0a%2B2pQmy0QVrYuNOA0yNsZA0EX9kJ7VzgcobKznfPop9LN6Yr2z4RcdpmTHe7bIdrv7RGgv%2Fal0ELDi7aabZr7CPcthBmffb84hnBIoDbzgkRyXPAZcSwJEYAk83IqKNYX3qgO5ubZvR0A52FKHDUwAXUKVvOco%2Fg85PbW68mQ3Hzi26b03BNbI9VYnf%2F681vTWkJ7VElk7IVAyZ6FgwftAVaVXzZaYueN7%2BWw4xHOQEa15e%2Bo0PcclsDrLKygXl45bl29k7VLEpfuDgdRYXRxAepDysk7Fs%2FAvsmFoyA6O3Gcls7MvHg4UUvxglDdpRUtzrW2aiEE%2FIiPtdIsRq3iJ5F7yfgwQQwXdmiozX5lrIJfqfn%2FbCzEG2HH72NNLNwYDv3dHFR7IpJYdG8AZk8bmUtYGnZLBgNbd15xdZlftz7RLasWtvioLEzPmC3TvPkoXyaygYdxha%2BpwwfiO4XhJJ80%2BvWAgA3B%2F8Da9mnG73gWKaT69P3MQ0v%2F%2Big7uPpPnVJbhTCBZ8LHFGdVfLkAFbCzvVZgW3pGHJxGSGVfFsFdfo%2FqLUITrjFi7C5cjKAyrpAjxE8k0fJvtSLEmvJEcF1Lb%2F4N%2B%2BJ2bJ6kXevSQGvDjbZqe%2FNOEnZNN9rUTUHVCF3tBWhJ7htr7PTIyxguQ5%2FQdNlmqasPfRYjUrGtaMUcL7g87%2BJIrhMtQY%2FkiI0%2BGTdTAtjIXIJapJJ4si%2FB%2FA96VqEZzJBmR9kxkFqFVPOdmnsqzlWypMRJUSPF2Jj%2FzbRkIUnDfS6LS6CCk7%2BMf7NC10pVOxHPs5EBalSDgIMbM7sMpfnUZU7qifGTDEhRLcdkKBc3C26b3pmtXqsnjbRKlpi8OhfZ401kj4wwoY%2FAxgY6sQE9jmhH95D7GwDQPOZgc74SwnoOV%2Fg%2BIpnglNXdntkXYldw0Ucs3HF6BzS%2FHmCtvK%2BEWfi%2Bq%2BBcQ6MqEJ43K6CD2E7GsLl56SI5TcOq3DR1MgDvzPiAYDTuVmHfTZkfJHnfJZFe6qBg67d2mBe7U4OAJ55F8zP3slEoczL0FtiCU1YvRkkBbL1c%2F8MjEeb%2F5V5E6icFpTq1c%2F8IsSkgDUiSWDT416YYw0LdcVroDWfFveI%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=221662960eca57fa4b049e2f00abac5a4e159e8d41eb5e106ced8ae874cbb6a5",
+      "file_size": 77934,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 449144,
+      "file_name": "Capture2.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/449/144/d948c4d7c8ff8b1f83b4fcdc2b5f1a2f43c725e3/Capture2.PNG?response-content-disposition=attachment%3B%20filename%3D%22Capture2.PNG%22%3B%20filename%2A%3DUTF-8%27%27Capture2.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXKE6YM6U%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T155839Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDt4L48uRbifTFdEoFd5NtoUorejmdczUj3Ph8voAE1jAIgTgQg5M1Ntyl3amKMDTbsCSxHDqmlNDE1kOghMsSLJkMqsgUIFxADGgwwMTM2MTkyNzQ4NDkiDJxi5ydRI8Zf7QmznSqPBc0a%2B2pQmy0QVrYuNOA0yNsZA0EX9kJ7VzgcobKznfPop9LN6Yr2z4RcdpmTHe7bIdrv7RGgv%2Fal0ELDi7aabZr7CPcthBmffb84hnBIoDbzgkRyXPAZcSwJEYAk83IqKNYX3qgO5ubZvR0A52FKHDUwAXUKVvOco%2Fg85PbW68mQ3Hzi26b03BNbI9VYnf%2F681vTWkJ7VElk7IVAyZ6FgwftAVaVXzZaYueN7%2BWw4xHOQEa15e%2Bo0PcclsDrLKygXl45bl29k7VLEpfuDgdRYXRxAepDysk7Fs%2FAvsmFoyA6O3Gcls7MvHg4UUvxglDdpRUtzrW2aiEE%2FIiPtdIsRq3iJ5F7yfgwQQwXdmiozX5lrIJfqfn%2FbCzEG2HH72NNLNwYDv3dHFR7IpJYdG8AZk8bmUtYGnZLBgNbd15xdZlftz7RLasWtvioLEzPmC3TvPkoXyaygYdxha%2BpwwfiO4XhJJ80%2BvWAgA3B%2F8Da9mnG73gWKaT69P3MQ0v%2F%2Big7uPpPnVJbhTCBZ8LHFGdVfLkAFbCzvVZgW3pGHJxGSGVfFsFdfo%2FqLUITrjFi7C5cjKAyrpAjxE8k0fJvtSLEmvJEcF1Lb%2F4N%2B%2BJ2bJ6kXevSQGvDjbZqe%2FNOEnZNN9rUTUHVCF3tBWhJ7htr7PTIyxguQ5%2FQdNlmqasPfRYjUrGtaMUcL7g87%2BJIrhMtQY%2FkiI0%2BGTdTAtjIXIJapJJ4si%2FB%2FA96VqEZzJBmR9kxkFqFVPOdmnsqzlWypMRJUSPF2Jj%2FzbRkIUnDfS6LS6CCk7%2BMf7NC10pVOxHPs5EBalSDgIMbM7sMpfnUZU7qifGTDEhRLcdkKBc3C26b3pmtXqsnjbRKlpi8OhfZ401kj4wwoY%2FAxgY6sQE9jmhH95D7GwDQPOZgc74SwnoOV%2Fg%2BIpnglNXdntkXYldw0Ucs3HF6BzS%2FHmCtvK%2BEWfi%2Bq%2BBcQ6MqEJ43K6CD2E7GsLl56SI5TcOq3DR1MgDvzPiAYDTuVmHfTZkfJHnfJZFe6qBg67d2mBe7U4OAJ55F8zP3slEoczL0FtiCU1YvRkkBbL1c%2F8MjEeb%2F5V5E6icFpTq1c%2F8IsSkgDUiSWDT416YYw0LdcVroDWfFveI%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=a1cb7b0e7b6522cc3bc79100c73e08bc184421dd1cc0e60d919c66733ac3b7f6",
+      "file_size": 66019,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 9,
+  "voters": [
+    "healdb",
+    "khizer47",
+    "cryptographer",
+    "bhataasim",
+    "darkdude",
+    "shunwan",
+    "bhataasim4",
+    "reddmist",
+    "glorsword"
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 8552,
+    "asset_type": "URL",
+    "asset_identifier": "lgtm-com.pentesting.semmle.net",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
