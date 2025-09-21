@@ -1,0 +1,119 @@
+{
+  "id": 859136,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC84NTkxMzY=",
+  "url": "https://hackerone.com/reports/859136",
+  "title": "Malicious apps can crash Nextcloud Android client by sending malformed intents ",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2020-04-25T11:05:52.815Z",
+  "submitted_at": "2020-04-25T11:05:52.815Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "bigbug",
+    "url": "/bigbug",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/193/109/585fd367d9fe6feb8fb35840fdadb04d16004b0b_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13291,
+    "url": "https://hackerone.com/nextcloud",
+    "handle": "nextcloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Nextcloud",
+      "twitter_handle": "nextclouders",
+      "website": "https://nextcloud.com",
+      "about": "Access, share and protect your files, calendars, contacts, communication & more at home and in your enterprise."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2021-32694"
+  ],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2021-06-17T10:50:12.335Z",
+  "bug_reporter_agreed_on_going_public_at": "2021-06-17T10:50:12.221Z",
+  "team_member_agreed_on_going_public_at": "2021-06-17T10:30:36.326Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Not sure if this can be tracked as a security issue, but this definitely calls for a code change. This can be classified into Denial of Service category attack and can seriously hamper user experience. \n\nAsset: Nexcloud Android Client (com.nextcloud.client)\nVersion: 3.11.1 (latest)\n\n###_Details_ \n\nThe Nextcloud android app registers a deeplink `nc://login` that is handled by the `com.owncloud.android.authentication.ModifiedAuthenticatorActivity` class as seen in AndroidManifest file.\n\nThe above mentioned class implements `AuthenticatorActivity` class in order to handle incoming deeplinks.\n\nIt is seen that the method `parseLoginDataUrl` does not handle exception correctly crashing the Nextcloud app.  \n\nmalicious apps can thus crash the nextcloud client by sending following data in intent : `nc://login`. \n\nADB payload:\n\n```\nadb shell am start -a \"android.intent.action.VIEW\" -c \"android.intent.category.DEFAULT\" -n \"com.nextcloud.client/com.owncloud.android.authentication.ModifiedAuthenticatorActivity\" -d \"nc://login\"\n```\n\nAttaching video PoC\n{F803256}\n\n## Impact\n\n1. Malicious apps can crash the nextcloud android client to cause a denial of service attack.",
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 803256,
+      "file_name": "nextcloud_intent_crash.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/5qGGFJz1HsP5FXhWtkCkY7AB?response-content-disposition=attachment%3B%20filename%3D%22nextcloud_intent_crash.mp4%22%3B%20filename%2A%3DUTF-8%27%27nextcloud_intent_crash.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ5ZD344UZ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T023314Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQC4QrsNeqCBKCIpEIE6ihUGlSiA5xY3BevT887NZAQ6OwIhAIAvZNICqRefM4OtRbGn35UJpciL62EJCsNKlnrnUx6BKroFCPv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5IgxkpXgblsX64%2BA6a3sqjgVrpKoe671ChVQYYxEkJZP5lRDMtDxTM40E3RYgaucLG8MCczKGMsVA6Ad65a9vAr9ErzZeSTr65ZUdmML%2F2I5B2DIkVS0iFAZngID0kvZgwv%2B4Zt52MnD4BO6qN8zUZYsPx%2B%2FONoOJXMmqiy%2BgozGN484j%2FtiMdRidIgWE9BKlwFDAKNHqyoVOAvmbBrbIhXM9%2B1Sg7tiZIYRM1SNnBZRDJZJwi5UR%2B7SLXu0wjVLlTHwU%2FHLDJMITKMlPEBik%2B2PgyzErIZZixJNUjIdbjiQPJXN%2FODRM081EiCzRnTmgXsyh9GtxhC7H3VK8dFLvKKAr0gwiWFHtvNiD5qhrS%2BGo%2F2%2FtH5rVQ3HR10v8dht8YOqNAQn7lC457i9AcwK41eKo61CyIZusF%2FaisDqYZBP7cwp6YwqtO7zesFcKXNkMvdgl3AmcO3Z7gsAGPcSqo0DUCELaZ3sttZ4F0T4BhGEIq0k2lfM67qbIsupHvNnHRA4rBVJDEEirQCzWv4sYsOwtht9aWTg7A%2Bhj%2B0f7eqzFDQAOT8Jk6XgH41cB%2BrspVurOrFdsT1iLt%2FxN%2Fnl65aYFXRf3I2vPvkWlcxPxOxQ07tXlgmrhRGOpndgakHP2Qrhe08%2Ft5a7qbluGyYdkPvLPt%2BL5nTDoap6L0b%2F877pMGPT1upDu8vFIZn6FHUzBegVk8uGjfYarJbu74X9V9OV91kPJFF0HNgqaZ0UzZjg%2F%2BvBO64oJZAcD153UZMlcmg8d6eZnMDoC2ElhQXuquCvC5hF9n7KWk796Xk2p97br7mLYoqlMwfAmJ3tzsYYFlk%2FL%2BQMOaCzFBv%2FvF7OGJ%2B2fyV%2Bi0iJeWI7wInoa7fPb2JHQPylmMd9u4Y3kKlAw38G9xgY6sAG5ve0BIvFvQLvHJCYf4uKbEfbwPFqCvwzeGAOTOIZVsjlSAuTLp5LdMOoyB44TylW2vVfNtvKicSCXrS3DY3pMMoV5oW%2B%2FjdCnzjnTuRtjSUw5wJ7O7BJWkS20Q4R8S4ncpaAyXxUBTWqeJSouiy3e1%2FP%2BehER%2BVE%2BMq%2BSfGubI68N2SkrLhG70xj%2FmOplMkMvJxWiC7GKD3FuiY2f38pPDjVUhPeOldfXvxm9wD80cQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=854d212b5c9f3114fd8aaa98b2d34108906f0dff47d119dd6f8b13617171157f",
+      "file_size": 1400634,
+      "type": "video/mp4",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2021-07-17T10:30:36.461Z",
+  "allow_singular_disclosure_after": -131904158.12035176,
+  "singular_disclosure_allowed": true,
+  "vote_count": 6,
+  "voters": [
+    "demonia",
+    "cryptographer",
+    "ekgaribadmi",
+    "meispi",
+    "sandip5x05",
+    "snarkywolf"
+  ],
+  "structured_scope": {
+    "databaseId": 1,
+    "asset_type": "GOOGLE_PLAY_APP_ID",
+    "asset_identifier": "com.nextcloud.client",
+    "max_severity": "medium"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
