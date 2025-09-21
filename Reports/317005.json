@@ -1,0 +1,158 @@
+{
+  "id": 317005,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMTcwMDU=",
+  "url": "https://hackerone.com/reports/317005",
+  "title": "Subdomain Takeover due to unclaimed domain pointing to AWS",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2018-02-17T01:29:54.029Z",
+  "submitted_at": "2018-02-17T01:29:54.029Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "zephrfish",
+    "url": "/zephrfish",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/tpurqiphz65lpdcpnqemedj5jbyd/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 50592,
+    "url": "https://hackerone.com/gsa_bbp",
+    "handle": "gsa_bbp",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/iyPFgzbsX86VXw5wJHyfPg9s/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/iyPFgzbsX86VXw5wJHyfPg9s/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "GSA Bounty",
+      "twitter_handle": null,
+      "website": "http://gsa.gov",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2019-08-26T18:58:39.212Z",
+  "bug_reporter_agreed_on_going_public_at": "2018-05-29T18:52:35.316Z",
+  "team_member_agreed_on_going_public_at": "2019-08-26T18:58:39.096Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "**Note: I know this is on an out of scope domain, however felt it should still be raised as it was the only subdomain of data.gov to be vulnerable.**\n\n## Issue Details\n\nThe consultant identified that subdomain `https://18f.domains.api.data.gov/` is pointing to `dn9rrjaiux2m0.cloudfront.net` via a DNS CNAME record. When browsing to the subdomain an AWS cloudflare error is displayed.\n\nThe subdomain \"https://18f.domains.api.data.gov/\" was (and still is) a CNAME pointing to a AWS Cloudfront CDN server (depending on your location, the latter will resolve differently):\n\n```\n nslookup  18f.domains.api.data.gov\nServer:         213.186.33.99\nAddress:        213.186.33.99#53\n\nNon-authoritative answer:\n18f.domains.api.data.gov        canonical name = dn9rrjaiux2m0.cloudfront.net.\nName:   dn9rrjaiux2m0.cloudfront.net\nAddress: 52.85.89.116\nName:   dn9rrjaiux2m0.cloudfront.net\nAddress: 52.85.89.87\nName:   dn9rrjaiux2m0.cloudfront.net\nAddress: 52.85.89.105\nName:   dn9rrjaiux2m0.cloudfront.net\nAddress: 52.85.89.202\nName:   dn9rrjaiux2m0.cloudfront.net\nAddress: 52.85.89.145\nName:   dn9rrjaiux2m0.cloudfront.net\nAddress: 52.85.89.21\nName:   dn9rrjaiux2m0.cloudfront.net\nAddress: 52.85.89.64\nName:   dn9rrjaiux2m0.cloudfront.net\nAddress: 52.85.89.161\nName:   dn9rrjaiux2m0.cloudfront.net\nAddress: 2600:9000:2045:d000:3:f914:5e00:93a1\nName:   dn9rrjaiux2m0.cloudfront.net\nAddress: 2600:9000:2045:6600:3:f914:5e00:93a1\nName:   dn9rrjaiux2m0.cloudfront.net\nAddress: 2600:9000:2045:6400:3:f914:5e00:93a1\nName:   dn9rrjaiux2m0.cloudfront.net\nAddress: 2600:9000:2045:5000:3:f914:5e00:93a1\nName:   dn9rrjaiux2m0.cloudfront.net\nAddress: 2600:9000:2045:be00:3:f914:5e00:93a1\nName:   dn9rrjaiux2m0.cloudfront.net\nAddress: 2600:9000:2045:c400:3:f914:5e00:93a1\nName:   dn9rrjaiux2m0.cloudfront.net\nAddress: 2600:9000:2045:4400:3:f914:5e00:93a1\nName:   dn9rrjaiux2m0.cloudfront.net\nAddress: 2600:9000:2045:7000:3:f914:5e00:93a1\n\n```\n\nHowever, the hostname  was not claimed any more on Cloudfront, resulting in a Cloudfront error page when visiting the subdomain before the takeover.\n\nSubsequently, a new Amazon Cloudfront CDN endpoint was created and linked to an attacker-controlled origin server. For the new Cloudfront CDN endpoint, `18f.domains.api.data.gov` was designated as hostname successfully:\n\n{F264221}\n\nThis concluded the subdomain takeover:\n\n{F264222}\n\n## Risk Breakdown\n- Risk: High\n- Difficulty to Exploit: Medium\n- CVSS3 Score: 7.7 AV:N/AC:L/PR:N/UI:N/S:C/C:L/I:L/A:L/E:P/RL:O/RC:R\n\n## Affected URLs\n\n- 18f.domains.api.data.gov\n\n## Attack Scenario\n\n1. TTS starts using a new service, eg an external Support Ticketing-service, in this case aws.\n2. TTS points a subdomain to the Support Ticketing-service, eg 18f.domains.api.data.gov\n3. TTS stops using this service but does not remove the subdomain redirection pointing to the ticketing system.\n4. Attacker signs up for the Service and claims the domain as theirs. No verification is done by the Service Provider, and the DNS-setup is already correctly setup.\n5. Attacker can now build a complete clone of the real site, add a login form, redirect the user, steal credentials (e.g. admin accounts), cookies and/or completely destroy business credibility for your company.\n\n## Recommendation\nThe most effective way to remediate this issue would be to remove the DNS entry entirely however if this is not possible, consider pointing the DNS entry at a redirect of some description to prevent potential hostile take over.\n\n## Impact\n\nSub-domain take over attacks can happen when a company creates a dns entry that points to a third party service, however forgets about the third party application leaving it vulnerable to be hijacked by another party. Hackers can claim subdomains with the help of external services. This attack is practically non-traceable.",
+  "bounty_amount": "150.0",
+  "formatted_bounty": "$150",
+  "weakness": {
+    "id": 17,
+    "name": "Off-by-one Error"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 264221,
+      "file_name": "claimed_sub.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/264/221/ce5a45d20881e7dc3409c19c38abadf97b4c06cd/claimed_sub.png?response-content-disposition=attachment%3B%20filename%3D%22claimed_sub.png%22%3B%20filename%2A%3DUTF-8%27%27claimed_sub.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQ7UPNDVG%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T145222Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQD%2FdYg8YfwvWiXy6svYJjKl%2FURKGGduuyVIXyYnoiQaLAIgR3w8yXR6ttmnDSwkbH9cCkxMI%2BSZ1jcS%2FlplDEs%2Bd2cqsgUIFhADGgwwMTM2MTkyNzQ4NDkiDJ6foeQbMNarjQZudSqPBeub2YNA0aLW68Fxu%2Fiqcgj%2FRpzrTyA4g9%2Bf7fVuhMb3XNCzZKtpMQyTtmxYZMTQnpndXDGRRTsmbGUpgNSBTRViz6CRI4BGWJKlWbxstCkbpJFvDPajIUwdnwVlYlNKtWouyaYOEce6x%2BLDj5O8Wc9RS8idg9NHzFwyUldTT4ptrBVMqj%2FMtnklXxiD85fvqqpEcWrSvjo9nd8kE3KN4GT%2BgSugnwKs%2BSKgQUEJhUkTJ3UH4dfU5JFabHtUdC78b3wWnoV%2BtToSrnI%2FnTlzVZJR2Sz2MNJ%2BeVJW9K1ODYTOOU0EJUwpjT4vQbWZxSczV9jVgDwYaiLFYwOky%2BLMPsJhWEamVFLWGfk9UVPvr3PZBg5vChguJ8iZVzvvPlYGyWYHo%2Fl%2B4WrH6YnaDf0QuphrRelXpi4ADYtnozrquyNAklExELHY6uvmMIhhtTtsCEESYAmTfps%2B6ulWcQKGfxYOXIIfjK2Em0LzLN5WGYOYhm1KsODCRBYf9id7gqX4nMgfm2pvwKK2HoeP1eFsOfdNPINvhlcwguOyhAIKhwp2NLd6TjF2VpNjbyWk56hcRedvCpQ%2BaaEYLjU%2FVVAHZuEVWDMhj89OtAn9BsLbgJ2tcu%2FpEKB%2FPG6jumWZ4my7O%2Baqh57JM2MxoS3XCd%2FMAp8hfeQ0aoD3NKssb2ma4CtJXL%2F5dr5siaje5bqzR89o5E2adB5HPphy2deyXbD3illcrUvzS29TQLZrYHubh7%2BZzEYCQriP3h9Nsl9NOtMglLIMAGu%2FzAgbLsdOKIO3%2BJRDxBxgXOBjUc4dexLHc6efO2YHVFf3tU6mJmXxcEWPaMn4AHxQuPud6NGSno97Fo0U8qWhAD%2FSfHRQ7CHFUG4wid2%2FxgY6sQF1SxCB1MKmO8w658nr1QXWUnFS59VR6HRM%2FvtudGCwB%2FUN%2BH7jgWVrclpqrHJLjLmbfAHeOAwUQVBQEaO8icCnoIzhSOv8JLbKZ32PEcTWutetuRRcnPGz6Ggqq%2BhIRRnqR3AW0OZR9v26H6DMI6yk%2BxOP%2FTiayARYd1UAqfeaiGnUGpb7BAUaeqGW8fXW%2BjRzpTvKAnBwAwPiJHt9wnRduyw5FQkItU9IPxIyGxaqEt4%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=e83a44f2ce83a6813bf0e2ba4917d545420acd1f1a9e6626f3dd0e2a1c20c6ed",
+      "file_size": 39235,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 264222,
+      "file_name": "zephrfish_h1_takeover.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/264/222/4f76dd1b20f8e680fcbdac53441db3bbffe6601a/zephrfish_h1_takeover.png?response-content-disposition=attachment%3B%20filename%3D%22zephrfish_h1_takeover.png%22%3B%20filename%2A%3DUTF-8%27%27zephrfish_h1_takeover.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQ7UPNDVG%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T145222Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQD%2FdYg8YfwvWiXy6svYJjKl%2FURKGGduuyVIXyYnoiQaLAIgR3w8yXR6ttmnDSwkbH9cCkxMI%2BSZ1jcS%2FlplDEs%2Bd2cqsgUIFhADGgwwMTM2MTkyNzQ4NDkiDJ6foeQbMNarjQZudSqPBeub2YNA0aLW68Fxu%2Fiqcgj%2FRpzrTyA4g9%2Bf7fVuhMb3XNCzZKtpMQyTtmxYZMTQnpndXDGRRTsmbGUpgNSBTRViz6CRI4BGWJKlWbxstCkbpJFvDPajIUwdnwVlYlNKtWouyaYOEce6x%2BLDj5O8Wc9RS8idg9NHzFwyUldTT4ptrBVMqj%2FMtnklXxiD85fvqqpEcWrSvjo9nd8kE3KN4GT%2BgSugnwKs%2BSKgQUEJhUkTJ3UH4dfU5JFabHtUdC78b3wWnoV%2BtToSrnI%2FnTlzVZJR2Sz2MNJ%2BeVJW9K1ODYTOOU0EJUwpjT4vQbWZxSczV9jVgDwYaiLFYwOky%2BLMPsJhWEamVFLWGfk9UVPvr3PZBg5vChguJ8iZVzvvPlYGyWYHo%2Fl%2B4WrH6YnaDf0QuphrRelXpi4ADYtnozrquyNAklExELHY6uvmMIhhtTtsCEESYAmTfps%2B6ulWcQKGfxYOXIIfjK2Em0LzLN5WGYOYhm1KsODCRBYf9id7gqX4nMgfm2pvwKK2HoeP1eFsOfdNPINvhlcwguOyhAIKhwp2NLd6TjF2VpNjbyWk56hcRedvCpQ%2BaaEYLjU%2FVVAHZuEVWDMhj89OtAn9BsLbgJ2tcu%2FpEKB%2FPG6jumWZ4my7O%2Baqh57JM2MxoS3XCd%2FMAp8hfeQ0aoD3NKssb2ma4CtJXL%2F5dr5siaje5bqzR89o5E2adB5HPphy2deyXbD3illcrUvzS29TQLZrYHubh7%2BZzEYCQriP3h9Nsl9NOtMglLIMAGu%2FzAgbLsdOKIO3%2BJRDxBxgXOBjUc4dexLHc6efO2YHVFf3tU6mJmXxcEWPaMn4AHxQuPud6NGSno97Fo0U8qWhAD%2FSfHRQ7CHFUG4wid2%2FxgY6sQF1SxCB1MKmO8w658nr1QXWUnFS59VR6HRM%2FvtudGCwB%2FUN%2BH7jgWVrclpqrHJLjLmbfAHeOAwUQVBQEaO8icCnoIzhSOv8JLbKZ32PEcTWutetuRRcnPGz6Ggqq%2BhIRRnqR3AW0OZR9v26H6DMI6yk%2BxOP%2FTiayARYd1UAqfeaiGnUGpb7BAUaeqGW8fXW%2BjRzpTvKAnBwAwPiJHt9wnRduyw5FQkItU9IPxIyGxaqEt4%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=70e50956e2900ca7507e12e0f5b114057ed2f127ebede147ab6d67612d5363fe",
+      "file_size": 6420,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 17,
+  "voters": [
+    "cxzer0",
+    "sameerphad72",
+    "munsiwoo",
+    "mik317",
+    "lumbridge",
+    "cryptographer",
+    "0x08",
+    "cheatcode",
+    "pylang",
+    "antoniocampos",
+    "and 7 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "Team"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "id": 181878,
+      "category": "researcher",
+      "content": "This type of vulnerability has been patched. It's no longer possible to take over CNAME via Cloudfront without control of the DNS.\n\nRead here for more information:https://blog.zsec.uk/subdomainhijack/ ",
+      "updated_at": "2022-08-08T11:24:05.438Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 37729,
+        "username": "zephrfish",
+        "name": "PhishyZephr",
+        "bio": "Attack and Defensive Researcher",
+        "cleared": false,
+        "verified": false,
+        "website": "https://blog.zsec.uk/",
+        "location": "Scotland, UK",
+        "created_at": "2015-08-03T11:11:10.313Z",
+        "url": "https://hackerone.com/zephrfish",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "hacker",
+        "profile_picture_urls": {
+          "small": "https://profile-photos.hackerone-user-content.com/variants/tpurqiphz65lpdcpnqemedj5jbyd/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/tpurqiphz65lpdcpnqemedj5jbyd/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a",
+          "xtralarge": "https://profile-photos.hackerone-user-content.com/variants/tpurqiphz65lpdcpnqemedj5jbyd/4ac84fbe897190579a137d0cf55152b233cdd4f9984435bd80ef67e5e51a0586"
+        }
+      }
+    }
+  ]
+}
