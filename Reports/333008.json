@@ -1,0 +1,139 @@
+{
+  "id": 333008,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMzMwMDg=",
+  "url": "https://hackerone.com/reports/333008",
+  "title": "Persistent XSS in https://sandbox.reverb.com/item/",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2018-04-03T20:49:11.135Z",
+  "submitted_at": "2018-04-03T20:49:11.135Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "bigshaq",
+    "url": "/bigshaq",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/237/280/5980a2efdbaac92c70aca72693147dfaf53f7bba_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 3094,
+    "url": "https://hackerone.com/reverb",
+    "handle": "reverb",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/003/094/b7238acaca15ddb329cf25e69c687352247aece5_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/003/094/b7238acaca15ddb329cf25e69c687352247aece5_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "disabled",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Reverb.com",
+      "twitter_handle": "reverb",
+      "website": "https://sandbox.reverb.com",
+      "about": "The best place for musicians to buy and sell the gear they use to create the music they love."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2018-05-06T16:08:07.519Z",
+  "bug_reporter_agreed_on_going_public_at": "2018-04-06T16:07:46.422Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "# Description\nI found a Persistent XSS in a listing page. The flaw is in the SoundCloud link that the listing owner can attach(The parameter is called *product[soundcloud_link_attributes][link]*). There's no encoding on the user input and it looks like there's only client-side validation.\n\n# PoC\nThe payload:\n```\nhttps://soundcloud.com/rich-the-kid/sets/the-world-is-yours-15?fuzzing\" onload=alert(document.domain) x=\"\n```\nIf you try to put this payload straight into the \"Edit Listing\" page it'll give you the following error:\n```\nhttps://sandbox.reverb.com/listings/[YOUR_LISTING_ID]/edit\n```\n{F281627}\n\nBut it looks like there's only client side validation, when I tried to enter a valid link:\n```\nhttps://soundcloud.com/rich-the-kid/sets/the-world-is-yours-15\n```\nI got no error message(because it was a valid link)\nBut when I clicked \"Save & Review Listing\", intercepted the request and tampered the *product[soundcloud_link_attributes][link]* parameter's value to:\n```\nhttps://soundcloud.com/rich-the-kid/sets/the-world-is-yours-15?fuzzing\" onload=alert(document.domain) x=\"\n```\nIt updated successfully and because there's no encoding on this input parameter - it allowed me to inject javascript code that'll be stored on my listing page.\n{F281640}\n\nPoC Video: https://youtu.be/Y-8W422hLOw\n\n## Impact\n\nAn attacker can:\n* Perform a defacement on every possible store in the website (all he need is a single click from the victim)\n* Deny future access from any other shop owner that access this listing(with the self-PXSS that i reported 2 days ago: https://hackerone.com/reports/331725 )\n*  Perform operations in the application on behalf of the victim\n\nThe hacker selected the **Cross-site Scripting (XSS) - Stored** weakness. This vulnerability type requires contextual information from the hacker. They provided the following answers:\n\n**URL**\nhttps://sandbox.reverb.com/item/\n\n**Verified**\nYes\n\n",
+  "weakness": {
+    "id": 62,
+    "name": "Cross-site Scripting (XSS) - Stored"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 281627,
+      "file_name": "pxss1.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/281/627/4a3d732deac14520637f00e5133f3243a6f774c7/pxss1.png?response-content-disposition=attachment%3B%20filename%3D%22pxss1.png%22%3B%20filename%2A%3DUTF-8%27%27pxss1.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ7TY53NAO%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T181427Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJD%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIEXkR1lg621bE17cu%2Fl3fXwdZqc3ohK8RLoUW6neTOnUAiEA1hVcNDQ0HwLz92IFS%2BgVT485kbOVACCMZOb9uO2j69oqsQUIGRADGgwwMTM2MTkyNzQ4NDkiDLnpL0YhLpymbc6hLiqOBV1CaTmkhcUZlzYsktvfJWg%2Fm1RG06rbDZybD1fxzCGn3wbF4jjjJUQ2ScgmEFpzTl1Q3AqXLGOli0TDRTqN2rNHVDdk4bU9V5M%2FeBVdBo4qrt0f5je9X3fGbikIf26eWeEKLG3EhEqFK2lAUZmV5315nncfTk6hoszJHkQ8sRjDlN2HS9TtXTryF61OFTtRVjJNTH%2BLtNyV9BtIJQn%2F4BxNCnlGbsixm2CKXEaiC8CXDcYojRSbHDKW7Ynd%2BssAEjCFrYz5xQb5%2F9WDmBLkZLsp0RZpFKEuTO%2FsxE8MZ53IetZilewLtTExCRLi4yVWvd6RKr9z%2Bg38vAoLhkIRJrh1Pnoc4muTfSuaNqR2zPwuqRRpQExXPBLZs2Dqho2td7D7D59nhiLMBwoeQFq4toyGBQeFp1loI2ba2KWA27Ojs5Xy%2FNhd3CtKtQeCeoC0sTvfmZgUDu236C%2B2Cd%2FPkiNKuO0VXWq5SmNbmS%2BDDcaZSgyT2Ck2tu8LfLeYvCB6UjYC5SqpGoJ%2BBhN6Yj2o57WPXYo3yw8Za7dxfzDLusTZLfTNCXg%2FKga55KcTAusLwlnLEkCSqFGv8YSDe%2F7ANND2JHh505IlqbZg7nNadcE%2Fn5uhBqfdHzfoMEWLwtDA7cvwEB0GGxv%2FZ8j7tHIIajXdhkWblxZroQGISMj6R%2BcF0ynatCZQ%2Fnl%2FmMLA%2BtAnjy6LxZrFxJTL8ehsF48BaqaMPWtTFY0489glRg%2B%2BTCBrMRND4%2BWnJ7%2Fc7ldXTCwGQsEqO0sHuX3SDIfa4KqORwxQfFf1JJIU%2B2%2FTnEu3ZOKwCrvKT6%2Fl%2B6ujUKNDXnXQJSWA1z%2FYyX99rBlKWt0JXX7B4l%2F4R69pcDKn16ZcgjD6ycDGBjqxAXAuX6Omt6PkikjdkxQ2Y2mRMR65OggU4DqSRgS2wUwGnciOVqgDnaca3BCcAJ%2BmMGOYDkGFsgFv89LcJ%2FH6%2Fq6ggTPzdb%2B9jO69O1SyqbRuJbfu%2BuhDWmWaIgUrRddktOFe%2FFZgznaOMgpq1Hb2Ktm%2FqrF85hbzPR%2B1oVZR5hU%2BjyTSBXUExbJ0qdus2cJ%2FmUIVFrnuCqJHUn1yOziH5zT45%2B%2B9%2FMz7i%2BFiDiPI%2BsEnuw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=b43480a5dffe842e78ca54a6f2ad331d8ca3e6660719b8d143e2024238f0187c",
+      "file_size": 8533,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 281640,
+      "file_name": "alert.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/281/640/940f3510440dd344d4f236dd6ed1210c623fd2cf/alert.png?response-content-disposition=attachment%3B%20filename%3D%22alert.png%22%3B%20filename%2A%3DUTF-8%27%27alert.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ7TY53NAO%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T181427Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJD%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIEXkR1lg621bE17cu%2Fl3fXwdZqc3ohK8RLoUW6neTOnUAiEA1hVcNDQ0HwLz92IFS%2BgVT485kbOVACCMZOb9uO2j69oqsQUIGRADGgwwMTM2MTkyNzQ4NDkiDLnpL0YhLpymbc6hLiqOBV1CaTmkhcUZlzYsktvfJWg%2Fm1RG06rbDZybD1fxzCGn3wbF4jjjJUQ2ScgmEFpzTl1Q3AqXLGOli0TDRTqN2rNHVDdk4bU9V5M%2FeBVdBo4qrt0f5je9X3fGbikIf26eWeEKLG3EhEqFK2lAUZmV5315nncfTk6hoszJHkQ8sRjDlN2HS9TtXTryF61OFTtRVjJNTH%2BLtNyV9BtIJQn%2F4BxNCnlGbsixm2CKXEaiC8CXDcYojRSbHDKW7Ynd%2BssAEjCFrYz5xQb5%2F9WDmBLkZLsp0RZpFKEuTO%2FsxE8MZ53IetZilewLtTExCRLi4yVWvd6RKr9z%2Bg38vAoLhkIRJrh1Pnoc4muTfSuaNqR2zPwuqRRpQExXPBLZs2Dqho2td7D7D59nhiLMBwoeQFq4toyGBQeFp1loI2ba2KWA27Ojs5Xy%2FNhd3CtKtQeCeoC0sTvfmZgUDu236C%2B2Cd%2FPkiNKuO0VXWq5SmNbmS%2BDDcaZSgyT2Ck2tu8LfLeYvCB6UjYC5SqpGoJ%2BBhN6Yj2o57WPXYo3yw8Za7dxfzDLusTZLfTNCXg%2FKga55KcTAusLwlnLEkCSqFGv8YSDe%2F7ANND2JHh505IlqbZg7nNadcE%2Fn5uhBqfdHzfoMEWLwtDA7cvwEB0GGxv%2FZ8j7tHIIajXdhkWblxZroQGISMj6R%2BcF0ynatCZQ%2Fnl%2FmMLA%2BtAnjy6LxZrFxJTL8ehsF48BaqaMPWtTFY0489glRg%2B%2BTCBrMRND4%2BWnJ7%2Fc7ldXTCwGQsEqO0sHuX3SDIfa4KqORwxQfFf1JJIU%2B2%2FTnEu3ZOKwCrvKT6%2Fl%2B6ujUKNDXnXQJSWA1z%2FYyX99rBlKWt0JXX7B4l%2F4R69pcDKn16ZcgjD6ycDGBjqxAXAuX6Omt6PkikjdkxQ2Y2mRMR65OggU4DqSRgS2wUwGnciOVqgDnaca3BCcAJ%2BmMGOYDkGFsgFv89LcJ%2FH6%2Fq6ggTPzdb%2B9jO69O1SyqbRuJbfu%2BuhDWmWaIgUrRddktOFe%2FFZgznaOMgpq1Hb2Ktm%2FqrF85hbzPR%2B1oVZR5hU%2BjyTSBXUExbJ0qdus2cJ%2FmUIVFrnuCqJHUn1yOziH5zT45%2B%2B9%2FMz7i%2BFiDiPI%2BsEnuw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=ea7ab3d11e6c149a9535c141e27a96c251dc07693d75ca3bb58f08fab3ffd7b0",
+      "file_size": 43805,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2018-05-06T16:07:46.515Z",
+  "allow_singular_disclosure_after": -232855601.15147015,
+  "singular_disclosure_allowed": true,
+  "vote_count": 36,
+  "voters": [
+    "kiyell",
+    "smither",
+    "depthpz",
+    "mashoud1122",
+    "muon4",
+    "magicsam",
+    "flashdisk",
+    "thalaivar304",
+    "savitar0x01",
+    "dilawer",
+    "and 26 more..."
+  ],
+  "severity": {
+    "rating": "high",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 6416,
+    "asset_type": "URL",
+    "asset_identifier": "sandbox.reverb.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
