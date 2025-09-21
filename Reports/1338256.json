@@ -1,0 +1,126 @@
+{
+  "id": 1338256,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMzM4MjU2",
+  "url": "https://hackerone.com/reports/1338256",
+  "title": "No server side check on terms of service page which leads to bypass",
+  "state": "Closed",
+  "substate": "duplicate",
+  "severity_rating": "medium",
+  "readable_substate": "Duplicate",
+  "created_at": "2021-09-13T10:00:17.476Z",
+  "submitted_at": "2021-09-13T10:00:17.746Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "hackipy",
+    "url": "/hackipy",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/58qq914q2r1og0cksyojvm1wqq3p/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13428,
+    "url": "https://hackerone.com/acronis",
+    "handle": "acronis",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/e54TDdWdgLKsH3h1oFpK26bq/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/e54TDdWdgLKsH3h1oFpK26bq/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Acronis",
+      "twitter_handle": "Acronis",
+      "website": "https://www.acronis.com",
+      "about": "Complete integrated cybersecurity and data protection for MSPs and IT teams"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2021-10-05T09:19:47.972Z",
+  "bug_reporter_agreed_on_going_public_at": "2021-09-20T08:11:45.146Z",
+  "team_member_agreed_on_going_public_at": "2021-10-05T09:19:47.822Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi team,\nI have found that there is no server side check implemented on the \"Acronis Terms of Service and Privacy Statement\" Page that is shown after filling the registration form which results in bypassing it without even accepting it.\n\nSteps To Reproduce:\n\n  1. Register as a new user by filling out the form.\n  2. After that a new page will open it will require the user to check the box otherwise the button will remain disabled.\n  3. Right click on the button choose inspect element.\n  4. Find the button tag and remove the attribute \"disabled=disabled\" and \"is-disabled\" from the class.\n  5. Now press enter and close the inspect element.\n  6. As you can see the button is now enabled you can click on it and it will take you to your account.\n\nRecommendations:\n\n A server side check must be implemented here so that if an attacker or a scammer bypasses the client side validation using inspect element the server \n will validate the action and give an error based upon it preventing the attacker from going to the next page.\n\nPOC video attached!\n\nThanks.\n\n## Impact\n\nThis bug has a very straight forward impact. Lack of server side check here will lead the attacker bypass the page easily and register as a legitimate user. The server will have no clue if the person registering had accepted the terms of service and privacy statement or not.",
+  "weakness": {
+    "id": 102,
+    "name": "Client-Side Enforcement of Server-Side Security"
+  },
+  "original_report_id": 741004,
+  "original_report_url": "https://hackerone.com/reports/741004",
+  "attachments": [
+    {
+      "id": 1446213,
+      "file_name": "acronis_pp_bypass.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/9pqeo538vpfigj5gwnxbuvx73lxj?response-content-disposition=attachment%3B%20filename%3D%22acronis_pp_bypass.mp4%22%3B%20filename%2A%3DUTF-8%27%27acronis_pp_bypass.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQURJER4JF%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T012955Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH8aCXVzLXdlc3QtMiJHMEUCIQCxCHubCAopuS5sT1c622J7mKsRjnVdN1TDoD9qZ6mC4gIga9rswNKd0tEdR3vF%2BaUY9%2F4iBI2o6amy8bPqGGq0HRAquwUI%2BP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDBV1E3M8E%2FTNNrDtsiqPBRzpIXhojQmU%2BFN0yP83HsenKpA2bf1qN92n8R562AwW0Y6INtXm9SFutk7QWG1pn2DH2l9rrKWGsmHVi7MAWNlsMv%2FKOE73CF2j6ywpIFTZODJ3tFS0NPG2RzY2ePz1FAwCsAW%2B32pyFdIpnawn2FJf6E0nzEdw%2FjqEP1%2FYLBSxVhUyxTWBmV55BjTCQdv%2FQ6fWgvcE3gNzPgyWTTreLm5H5e3uNSW54iiSLvca3HIEAKB9GX%2BSVpcsJaeDT03yc9WTkQ7v4%2BxF9aCQMkjZnQuEVdhOcr4RTQKWJbWd%2FBGfbAwvmuiCR2%2FjNQzN%2FGUyO8Rlz0XmSvLlWmjbakVuYB%2FGsp20Cz%2BjBNOrITj2DZwCl1EQY%2FXqpXNzFfulARmpmFyJGabsni%2BxiG7hnmLX0LVSdUpzH2KZDC8EBfFeKZX29UNnyGpAd0tTVMK2mq%2FjSiXj%2FBjLJSpgpV8EtfsA4zaw6ioNWpg8covYBxrxMS2WHr6NMifoBSqeRLi1Lxj9I2GAEuY%2F6WkO3QQyrl7EpFma2aGP8RN7K4avSM05F3wzDdztP8LSeNtXMCXD4kYdtSv8cCz0xIfXMxf3rhrU95M6Sz1THj%2Fc2DDrtKsYfE3HRrUefmOw0gBVl1LJSkQ3PnPhYDK7nTkWdtn4%2Fv5ZkYY9eGLaYdQ2MQQ0QPrwpiZcVBsI1s9it9lH3ytoEGhUUUHFzrT5zshPAKZeitEsDAAeWgqndG3qvavIo0BNUZhycNsKopaXIas94Fhr%2BKlX%2FwN%2B6a3SbkHkQVfK0723zCh8n%2FVKOUajLzrlgJfFLOfvsM%2BHZiuAW2l9PhWua4DVDRn0x7gk%2BJ2pSvnH6e5NW2Hd%2FQC%2BvAaL4fAuCr4O%2FUow99S8xgY6sQFlLDO%2Byl7F6dSnUhdT%2BvvUwfN1PIJyhdgMSMSt%2Ba8Lc%2FH5bw4ztyomzacDRvhZwdJA18WnmLlXlcCvV4ME7TrhoXAPu7%2BrD7GOwXd5tKxKivbK48g7CO7vXxi8uEaulROEQ0uN31SC3nFIqKLjeAWwhkwORnBJozLu9UekkcrPu9aW9B5on7n%2Ff9Rj%2FGxt7nfBYbmj0MqK8UI5%2Bd6XsaT3jF7wNrelKIF6jIUoLNYFGVM%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=bacb893f3ab69fe7a8ba2f1bef38c886e93811a3349e8bdca8af4d84c44b007e",
+      "file_size": 3054555,
+      "type": "video/mp4",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 8,
+  "voters": [
+    "pacmanx",
+    "khizer47",
+    "panckazzz",
+    "mrk39340",
+    "darius00292",
+    "andrei_goodguy",
+    "whocare712",
+    "its_me_krish"
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 50774,
+    "asset_type": "URL",
+    "asset_identifier": "account.acronis.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
