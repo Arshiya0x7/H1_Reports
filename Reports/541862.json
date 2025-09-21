@@ -1,0 +1,155 @@
+{
+  "id": 541862,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC81NDE4NjI=",
+  "url": "https://hackerone.com/reports/541862",
+  "title": "Open redirect protection (https://www.pixiv.net/jump.php) is broken for novels",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2019-04-18T08:43:04.308Z",
+  "submitted_at": "2019-04-18T08:43:04.308Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "katsuragicsl",
+    "url": "/katsuragicsl",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/385/523/11fda6d1089df67737ec4fdb3aeb5136c587a230_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 29446,
+    "url": "https://hackerone.com/pixiv",
+    "handle": "pixiv",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/zwZW6NWs5m7fkL6SV9jkncqW/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/zwZW6NWs5m7fkL6SV9jkncqW/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "pixiv",
+      "twitter_handle": "pixiv",
+      "website": "https://www.pixiv.net",
+      "about": "Online community platform for creators all over the world."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2019-10-01T08:41:50.990Z",
+  "bug_reporter_agreed_on_going_public_at": "2019-09-22T09:43:35.944Z",
+  "team_member_agreed_on_going_public_at": "2019-10-01T08:41:50.913Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\n\nI found that pixiv has a open redirect protection, any external link in illustration is converted to `https://www.pixiv.net/jump.php?<link provided by user>`. For example `https://i3mx4usociis8twimpcu2ty0erkh86.burpcollaborator.net/abc` in `https://www.pixiv.net/member_illust.php?mode=medium&illust_id=74148892` is converted to `https://www.pixiv.net/jump.php?https%3A%2F%2Fi3mx4usociis8twimpcu2ty0erkh86.burpcollaborator.net%2Fabc`. See the attachment \"illust.png\".\n\nHowever, that is not true for novels. Links in novel is shown to be converted to `jump.php` link in preview (see attachment \"preview.png\") but they actually aren't. See `https://www.pixiv.net/novel/show.php?id=109971051` and \"novel.png\" for an example. \n\nSince the \"jump.php\" protection mechanism is working for illusts and the preview of novels, I think lacking this protection for novels is not an intended behavior.\n\n## Steps To Reproduce:\n\n  1. Add a novel\n  2. Choose \"Add URL\" and edit the content to something like `[[jumpuri:https://pixiv.net/ > https://i3mx4usociis8twimpcu2ty0erkh86.burpcollaborator.net/abc]]`\n  3. Save\n  4. You will see a link in the novel which reads `https://pixiv.net/` but actually it is `https://i3mx4usociis8twimpcu2ty0erkh86.burpcollaborator.net/abc`. See `https://www.pixiv.net/novel/show.php?id=10997105` for your reference.\n\n## Impact\n\nFaking users to the wrong site",
+  "bounty_amount": "200.0",
+  "formatted_bounty": "$200",
+  "weakness": {
+    "id": 53,
+    "name": "Open Redirect"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 471348,
+      "file_name": "novel.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/471/348/e9577ed93981e028040d7a6c469394e729378484/novel.png?response-content-disposition=attachment%3B%20filename%3D%22novel.png%22%3B%20filename%2A%3DUTF-8%27%27novel.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWNAVQAE5%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T143339Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIDXG8q7VRdTP631MKmZ4fvttzAAv5lCyYMYNV784kGZjAiEAhv%2BV9Mg5xs9Q4zCmYFH6om2UWIbqTxOXrpZ%2B2%2FbDzXUqsgUIFxADGgwwMTM2MTkyNzQ4NDkiDIGZ8kKbAh%2F%2FPWaDsiqPBYhP8pm4XnRFxjp804kA9dz%2FChkMoeCRo09H5RRxUKWuL3Hht7UB8pviq0Ph1K%2FHTcmGwh93q4Ayukv4kY%2BcdKeSYjRmw7cMDjaogAMTIMitBxFdtPgjmRnaKyJaPF0A%2F6UzCpRMz8FumQa21icnzynw9cJSd6wSMqfRakvCMB%2Be5Z%2BkIjhcACm5f3POul28BVznGYgXSXTovo3lOSWBFyZX17ClfGQEYehe8I7VG8F35pVjCkxwqEzP144HMVnkdtpsIyAVOG7WPcwm0KOJIx%2BKhAfImQT8dkW2AAtqfv4kvgvcZEnUS2Kp5DyxNy7WA5M3rPHLk8%2FzfcC%2Fnukmx2PtTkeoP2CAS9%2F0pP2jZb1sFPGq8QGv8dP55JjbbblQxg9HaySXhO4AXDI4tFgfvmEtNBuLfgEN%2FEv66OQjA1SyZR0XnbI4MlhOXGkCl51AQKDXhKM593ZzKaqxWdkRWKbQOUM4Ha%2FX2mtuuAp4%2BfbSGJfHy82Wd80nfR4NnZMYIVEJbDh%2FOIK0VuA9qGn60PMdaDoYFrvfD3WDulA7eKHmb1IhiKFTRB3j7%2FgAuvWEb0NbOL2jpPScBL3zDV8xE%2Fvpkmj43tE4Fh1oTcU6fcE6gsUrEtO9Mo%2F1WYnTC%2Bnk60PuuAWuwhxBmcLoLPHCgBoxbByWS%2ByB9HY4ykbUqFeZugpyHXiCRsojTioWXw5L7M9o8vSnDryl%2FD3%2BDaZp2c0LCWnQy6%2B4DRQGXou85vQgzUF6aJDkiZyH9H%2FxDiew0JWB8vX9aEAwOZlcRETdgrACRgiiHY%2Bfaljot3%2Fmdn7CReK7PfRAN82qHWcr9U6NyHZzgmsTiQgkwHX07UrlU%2BzftbSlgIhPu%2F%2BYSFfdWNIwjPu%2FxgY6sQFxUOygixf0qUsgG%2FoVgsW28C5CvqIZyDpjPSKJhur1%2BBEZTfeh7FuHjp6tNQHenSwpHhoXwkfsxw4BvOxv%2B3ofBVdTjcQRLA4pXbur3BVLK%2FVGkeDfwJqLBZAGws1RhaqQPVp1EFpm0n3qwn3SoKfRKGCIXopjlcwH0Ard%2FdpHuLMYOvSLKY5oBhl%2FK35lY2n6pQMWBiSvhUOEy6JlIg5pzKInsUfJ3kz84TanaiOhAKg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=0a3cbce3c0b5eff36791f35dfc4fbe0261e8ed2652417c8f4765553b55ce10f0",
+      "file_size": 101445,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 471349,
+      "file_name": "illust.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/471/349/ea5343dd64f42f1a1d44bca81636fe89e3c258b8/illust.png?response-content-disposition=attachment%3B%20filename%3D%22illust.png%22%3B%20filename%2A%3DUTF-8%27%27illust.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWNAVQAE5%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T143339Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIDXG8q7VRdTP631MKmZ4fvttzAAv5lCyYMYNV784kGZjAiEAhv%2BV9Mg5xs9Q4zCmYFH6om2UWIbqTxOXrpZ%2B2%2FbDzXUqsgUIFxADGgwwMTM2MTkyNzQ4NDkiDIGZ8kKbAh%2F%2FPWaDsiqPBYhP8pm4XnRFxjp804kA9dz%2FChkMoeCRo09H5RRxUKWuL3Hht7UB8pviq0Ph1K%2FHTcmGwh93q4Ayukv4kY%2BcdKeSYjRmw7cMDjaogAMTIMitBxFdtPgjmRnaKyJaPF0A%2F6UzCpRMz8FumQa21icnzynw9cJSd6wSMqfRakvCMB%2Be5Z%2BkIjhcACm5f3POul28BVznGYgXSXTovo3lOSWBFyZX17ClfGQEYehe8I7VG8F35pVjCkxwqEzP144HMVnkdtpsIyAVOG7WPcwm0KOJIx%2BKhAfImQT8dkW2AAtqfv4kvgvcZEnUS2Kp5DyxNy7WA5M3rPHLk8%2FzfcC%2Fnukmx2PtTkeoP2CAS9%2F0pP2jZb1sFPGq8QGv8dP55JjbbblQxg9HaySXhO4AXDI4tFgfvmEtNBuLfgEN%2FEv66OQjA1SyZR0XnbI4MlhOXGkCl51AQKDXhKM593ZzKaqxWdkRWKbQOUM4Ha%2FX2mtuuAp4%2BfbSGJfHy82Wd80nfR4NnZMYIVEJbDh%2FOIK0VuA9qGn60PMdaDoYFrvfD3WDulA7eKHmb1IhiKFTRB3j7%2FgAuvWEb0NbOL2jpPScBL3zDV8xE%2Fvpkmj43tE4Fh1oTcU6fcE6gsUrEtO9Mo%2F1WYnTC%2Bnk60PuuAWuwhxBmcLoLPHCgBoxbByWS%2ByB9HY4ykbUqFeZugpyHXiCRsojTioWXw5L7M9o8vSnDryl%2FD3%2BDaZp2c0LCWnQy6%2B4DRQGXou85vQgzUF6aJDkiZyH9H%2FxDiew0JWB8vX9aEAwOZlcRETdgrACRgiiHY%2Bfaljot3%2Fmdn7CReK7PfRAN82qHWcr9U6NyHZzgmsTiQgkwHX07UrlU%2BzftbSlgIhPu%2F%2BYSFfdWNIwjPu%2FxgY6sQFxUOygixf0qUsgG%2FoVgsW28C5CvqIZyDpjPSKJhur1%2BBEZTfeh7FuHjp6tNQHenSwpHhoXwkfsxw4BvOxv%2B3ofBVdTjcQRLA4pXbur3BVLK%2FVGkeDfwJqLBZAGws1RhaqQPVp1EFpm0n3qwn3SoKfRKGCIXopjlcwH0Ard%2FdpHuLMYOvSLKY5oBhl%2FK35lY2n6pQMWBiSvhUOEy6JlIg5pzKInsUfJ3kz84TanaiOhAKg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=64e457d43a4c8b7e6cae564dd5c7c8d5e5df0fd3904565acb913167a7524f9c8",
+      "file_size": 228656,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 471350,
+      "file_name": "preview.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/471/350/d87ad500325c81ba727e03fbca506edd7e8d89e5/preview.png?response-content-disposition=attachment%3B%20filename%3D%22preview.png%22%3B%20filename%2A%3DUTF-8%27%27preview.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWNAVQAE5%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T143339Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIDXG8q7VRdTP631MKmZ4fvttzAAv5lCyYMYNV784kGZjAiEAhv%2BV9Mg5xs9Q4zCmYFH6om2UWIbqTxOXrpZ%2B2%2FbDzXUqsgUIFxADGgwwMTM2MTkyNzQ4NDkiDIGZ8kKbAh%2F%2FPWaDsiqPBYhP8pm4XnRFxjp804kA9dz%2FChkMoeCRo09H5RRxUKWuL3Hht7UB8pviq0Ph1K%2FHTcmGwh93q4Ayukv4kY%2BcdKeSYjRmw7cMDjaogAMTIMitBxFdtPgjmRnaKyJaPF0A%2F6UzCpRMz8FumQa21icnzynw9cJSd6wSMqfRakvCMB%2Be5Z%2BkIjhcACm5f3POul28BVznGYgXSXTovo3lOSWBFyZX17ClfGQEYehe8I7VG8F35pVjCkxwqEzP144HMVnkdtpsIyAVOG7WPcwm0KOJIx%2BKhAfImQT8dkW2AAtqfv4kvgvcZEnUS2Kp5DyxNy7WA5M3rPHLk8%2FzfcC%2Fnukmx2PtTkeoP2CAS9%2F0pP2jZb1sFPGq8QGv8dP55JjbbblQxg9HaySXhO4AXDI4tFgfvmEtNBuLfgEN%2FEv66OQjA1SyZR0XnbI4MlhOXGkCl51AQKDXhKM593ZzKaqxWdkRWKbQOUM4Ha%2FX2mtuuAp4%2BfbSGJfHy82Wd80nfR4NnZMYIVEJbDh%2FOIK0VuA9qGn60PMdaDoYFrvfD3WDulA7eKHmb1IhiKFTRB3j7%2FgAuvWEb0NbOL2jpPScBL3zDV8xE%2Fvpkmj43tE4Fh1oTcU6fcE6gsUrEtO9Mo%2F1WYnTC%2Bnk60PuuAWuwhxBmcLoLPHCgBoxbByWS%2ByB9HY4ykbUqFeZugpyHXiCRsojTioWXw5L7M9o8vSnDryl%2FD3%2BDaZp2c0LCWnQy6%2B4DRQGXou85vQgzUF6aJDkiZyH9H%2FxDiew0JWB8vX9aEAwOZlcRETdgrACRgiiHY%2Bfaljot3%2Fmdn7CReK7PfRAN82qHWcr9U6NyHZzgmsTiQgkwHX07UrlU%2BzftbSlgIhPu%2F%2BYSFfdWNIwjPu%2FxgY6sQFxUOygixf0qUsgG%2FoVgsW28C5CvqIZyDpjPSKJhur1%2BBEZTfeh7FuHjp6tNQHenSwpHhoXwkfsxw4BvOxv%2B3ofBVdTjcQRLA4pXbur3BVLK%2FVGkeDfwJqLBZAGws1RhaqQPVp1EFpm0n3qwn3SoKfRKGCIXopjlcwH0Ard%2FdpHuLMYOvSLKY5oBhl%2FK35lY2n6pQMWBiSvhUOEy6JlIg5pzKInsUfJ3kz84TanaiOhAKg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=5e40fb425d0523910d8f7d2e277e512528ca4097335da949522c26db4f8729b8",
+      "file_size": 30402,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 471351,
+      "file_name": "edit.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/471/351/3bf451aaf6c903dc0254d2d6323bb974941f1d28/edit.png?response-content-disposition=attachment%3B%20filename%3D%22edit.png%22%3B%20filename%2A%3DUTF-8%27%27edit.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWNAVQAE5%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T143339Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIDXG8q7VRdTP631MKmZ4fvttzAAv5lCyYMYNV784kGZjAiEAhv%2BV9Mg5xs9Q4zCmYFH6om2UWIbqTxOXrpZ%2B2%2FbDzXUqsgUIFxADGgwwMTM2MTkyNzQ4NDkiDIGZ8kKbAh%2F%2FPWaDsiqPBYhP8pm4XnRFxjp804kA9dz%2FChkMoeCRo09H5RRxUKWuL3Hht7UB8pviq0Ph1K%2FHTcmGwh93q4Ayukv4kY%2BcdKeSYjRmw7cMDjaogAMTIMitBxFdtPgjmRnaKyJaPF0A%2F6UzCpRMz8FumQa21icnzynw9cJSd6wSMqfRakvCMB%2Be5Z%2BkIjhcACm5f3POul28BVznGYgXSXTovo3lOSWBFyZX17ClfGQEYehe8I7VG8F35pVjCkxwqEzP144HMVnkdtpsIyAVOG7WPcwm0KOJIx%2BKhAfImQT8dkW2AAtqfv4kvgvcZEnUS2Kp5DyxNy7WA5M3rPHLk8%2FzfcC%2Fnukmx2PtTkeoP2CAS9%2F0pP2jZb1sFPGq8QGv8dP55JjbbblQxg9HaySXhO4AXDI4tFgfvmEtNBuLfgEN%2FEv66OQjA1SyZR0XnbI4MlhOXGkCl51AQKDXhKM593ZzKaqxWdkRWKbQOUM4Ha%2FX2mtuuAp4%2BfbSGJfHy82Wd80nfR4NnZMYIVEJbDh%2FOIK0VuA9qGn60PMdaDoYFrvfD3WDulA7eKHmb1IhiKFTRB3j7%2FgAuvWEb0NbOL2jpPScBL3zDV8xE%2Fvpkmj43tE4Fh1oTcU6fcE6gsUrEtO9Mo%2F1WYnTC%2Bnk60PuuAWuwhxBmcLoLPHCgBoxbByWS%2ByB9HY4ykbUqFeZugpyHXiCRsojTioWXw5L7M9o8vSnDryl%2FD3%2BDaZp2c0LCWnQy6%2B4DRQGXou85vQgzUF6aJDkiZyH9H%2FxDiew0JWB8vX9aEAwOZlcRETdgrACRgiiHY%2Bfaljot3%2Fmdn7CReK7PfRAN82qHWcr9U6NyHZzgmsTiQgkwHX07UrlU%2BzftbSlgIhPu%2F%2BYSFfdWNIwjPu%2FxgY6sQFxUOygixf0qUsgG%2FoVgsW28C5CvqIZyDpjPSKJhur1%2BBEZTfeh7FuHjp6tNQHenSwpHhoXwkfsxw4BvOxv%2B3ofBVdTjcQRLA4pXbur3BVLK%2FVGkeDfwJqLBZAGws1RhaqQPVp1EFpm0n3qwn3SoKfRKGCIXopjlcwH0Ard%2FdpHuLMYOvSLKY5oBhl%2FK35lY2n6pQMWBiSvhUOEy6JlIg5pzKInsUfJ3kz84TanaiOhAKg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=9186f30f108684b8fcb8f049bb119376d6ce33e186b26f876a9f504bb9753f9a",
+      "file_size": 22788,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 41,
+  "voters": [
+    "birdbird314",
+    "trieulieuf9",
+    "ali",
+    "sameerphad72",
+    "dhakal_ananda",
+    "2026",
+    "mouhamadlrx",
+    "0x478",
+    "seeu",
+    "exception",
+    "and 31 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 12025,
+    "asset_type": "URL",
+    "asset_identifier": "www.pixiv.net",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
