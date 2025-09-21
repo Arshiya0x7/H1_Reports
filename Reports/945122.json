@@ -1,0 +1,150 @@
+{
+  "id": 945122,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC85NDUxMjI=",
+  "url": "https://hackerone.com/reports/945122",
+  "title": "Arbitrary file creation via symlink attack on syncagentsrv (Acronis Sync Agent Service)",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2020-07-28T13:49:59.664Z",
+  "submitted_at": "2020-07-28T13:49:59.664Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "adr",
+    "url": "/adr",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/tz82pUkLYHa2wb4pGnrdCbRb/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13428,
+    "url": "https://hackerone.com/acronis",
+    "handle": "acronis",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/e54TDdWdgLKsH3h1oFpK26bq/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/e54TDdWdgLKsH3h1oFpK26bq/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Acronis",
+      "twitter_handle": "Acronis",
+      "website": "https://www.acronis.com",
+      "about": "Complete integrated cybersecurity and data protection for MSPs and IT teams"
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2021-03-16T09:45:40.740Z",
+  "bug_reporter_agreed_on_going_public_at": "2021-02-19T11:27:55.881Z",
+  "team_member_agreed_on_going_public_at": "2021-03-16T09:45:40.557Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "# Issue class description\nArbitrary file creation is a vulnerability that allows attacker to create file in arbitrary location within filesystem. This includes protected directories, such as C:\\Windows, C:\\windows\\system32 and \"C:\\Program Files\". If in addition, attacker has control over the file content, it is possible to create DLL file which will be loaded by known operating system components and will result in Privilege Elevation to Local System (the highest level of privileges on local Windows system).\n\nThere are many known paths for this attacks, e.g. every desktop version of Windows will periodically run \"schedule\" service. The service will try to load non-existing library named WptsExtensions.dll. If attacker manages to plant custom version of this library, the code will be executed with highest privileges and can be used to add new administrative user or start reverse shell. The issue can be force by triggering system reboot as well. More details can be found here: https://itm4n.github.io/windows-dll-hijacking-clarified/\n\nTo perform this attack, typically we need privileged process that blindly follows symlinks (reparse points), without verifying destination. NTFS symlinks require extra privileges, but attacker can use other kind of symlinks: directory junctions mixed with object directory symlinks. The ready to use solution is hosted on Google's Project Zero's github: https://github.com/googleprojectzero/symboliclink-testing-tools\n\nCreateSymlink.exe binary used in this attack originates from this source and can be downloaded to reproduce the attack.\n\n# Affected software\nFollowing True Image installer was used:\n{F926995}\n\nThe vulnerable service is syncagentsrv (\"C:\\Program Files (x86)\\Common Files\\Acronis\\SyncAgent\\syncagentsrv.exe\")\n\nWhen service is running, it logs information into C:\\ProgramData\\Acronis\\SyncAgent\\logs\\syncagent.log file. The file is not exclusively opened, nor protected, and can be deleted at any time. The C:\\ProgramData\\Acronis\\SyncAgent\\logs\\ directory remains empty, thus can be transformed into directoy junction and symlink.\n\nOnce new entry is added to the log, the write operation will follow the symlink and write into arbitrary location. Attacker also controls the name of resulting file. The resulting file grants full control to EVERYONE, hence it is trivial to replace its content with custom code. \n\n{F927005}\n\nThe attack has been confirmed on my local system (when proper libraries were targeted) and I was able to elevate privileges.\n\n# Steps to reproduce\n1. Delete C:\\ProgramData\\Acronis\\SyncAgent\\logs\\syncagent.log file. Make sure that directory is now empty.\n2. Use following command to create symlink: `CreateSymlink.exe C:\\ProgramData\\Acronis\\SyncAgent\\logs\\syncagent.log C:\\Windows\\system32\\WptsExtensions.dll`\n3. Wait for data to be written into the log or force it by triggering system reboot. After the reboot verify successful file creation.\n4. Replace new file content (C:\\Windows\\system32\\WptsExtensions.dll) with custom DLL functionality - e.g. adding administrative user or spawning remote shell connection.\n5. Reboot again to trigger Windows Scheduler loading new dll.\n\n## Impact\n\nLow privileged user can overwrite any file in the system (this could lead to DoS) or create arbitrary files anywhere on the system. By creating arbitrary DLL, then replacing its content with custom code, user can elevate privileges up to Local System (the highest Windows privilege).",
+  "weakness": {
+    "id": 75,
+    "name": "Privilege Escalation"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 926995,
+      "file_name": "TrueImage.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/pT547inJoTbSHjmHf5ADeDgZ?response-content-disposition=attachment%3B%20filename%3D%22TrueImage.png%22%3B%20filename%2A%3DUTF-8%27%27TrueImage.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZMM2IS4X%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T033245Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH8aCXVzLXdlc3QtMiJHMEUCIE3W%2BfkPnkvQo2PVunSCwpKMZWZNDvLvYKKzRLKTzHaAAiEA98uU5vml2pJvB%2B9yhsMPkOS9QEpFMvMDv7779RyhXhcqugUI%2BP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDFJFP3F%2FXe9D18Ar%2BiqOBc0XI0ce3tW4%2FGFmcAipTwTZD0rxscFwZ6NV6yZSii%2BjJfGbV9xqu7yEyQaoeBq%2FRYV0bupS%2BFZePzrihGH3YPwp9nDQnUAnnnAzHv345NDpKxVsDMtr2i0fP65TBEZySfCdPY%2FqfZLxPeSy5cl4HClVsRDLidcaqpS2dTeFAlL7B11v6V6l335iPXyR3VMqdOeouxhPl7jfikOdGJshmGb76G5FU4Faoe6AkF7Xu4kxia3xAyMqRePU6YZTdm8P2NHPYqlTLX667d%2FUnvla%2BN4xen9Sj2CFph75JEW9CnSERF74ogp3ZVSSCb2c7mI0qErkPSJQn%2FZg1eE7%2FYazCIRp7q83KLMSwmvzUK37NjqSA%2FoE7OOi9rw9F5fdKeSUtCnIWr8mYODmuigDdMSgcFMX5GP9ivUXEiXnqZkfK%2FZTPLKJ3iR42sB6vs7kLxaNkFum4VqDxMu4GRZv41a5Ha5jYpcHG%2FA18eJ6fl%2BZ%2Bzru3yLjHg%2BoYXspNILw8KH%2FO5X0TMl14aVpsURXU3URZXeKRlstEwVLhNja%2FkBgqlY6L%2F3TkkV2k%2FmXf%2B8%2FUN81bh9AObo%2F5GBDn2rS%2F%2FYOYwEKilz%2BJck5ZK9hZlX3DX158tjxjz2b4NjkypvDGbUvyv3vSRCQwEj8hpR9QsjX6MnoGHNo4JHw57lznWYNkTdGXzMnvxLjIH8ZD%2BwLURgUjeNoYKhueOW4U1fZy3ZAWlQHnRhnBjFnvX6p3vwJ%2F%2Fjb3glMn0mnRJwSDt3g5mfoSN3tryRrGQaTrCOSZPy7nvsayy6YgDPILzPllr4mNLaglfLz8zqm3F2No%2F52io%2FCORsGh43evGyGIsPHDArmzEQDGiS8C6xKyNZ8dg4O4DCJ6bzGBjqxARuMIBlCp7AG0J0bw5KHhXcfv6j6G%2BO0AvqVcWNRl648cENx8zlX5AsNkMsTic6d5PtPdpoYgQs0F00gj6VnYdG4glR7elyFxCw%2Futr9DXbFEiKabd7G%2B5y5%2FlSh%2FwQ1JcxDHMF4Um2608GWTlkfsqqz4JaAFvEim3izzMZ351hht0YorluUb9IR6nnUgLIaDWdQhWLt0p7cQF7WPf2tuA6YXn8WE5TVMD%2BWvMaHQjqJZg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=9f489403cad82e8df113119067fbeaffbc2b362c449e21b922bfe86d82d4152e",
+      "file_size": 14987,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 927005,
+      "file_name": "dll.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/wJSfS2QSrqgu2MWG1hDXWFBi?response-content-disposition=attachment%3B%20filename%3D%22dll.png%22%3B%20filename%2A%3DUTF-8%27%27dll.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZMM2IS4X%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T033245Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH8aCXVzLXdlc3QtMiJHMEUCIE3W%2BfkPnkvQo2PVunSCwpKMZWZNDvLvYKKzRLKTzHaAAiEA98uU5vml2pJvB%2B9yhsMPkOS9QEpFMvMDv7779RyhXhcqugUI%2BP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDFJFP3F%2FXe9D18Ar%2BiqOBc0XI0ce3tW4%2FGFmcAipTwTZD0rxscFwZ6NV6yZSii%2BjJfGbV9xqu7yEyQaoeBq%2FRYV0bupS%2BFZePzrihGH3YPwp9nDQnUAnnnAzHv345NDpKxVsDMtr2i0fP65TBEZySfCdPY%2FqfZLxPeSy5cl4HClVsRDLidcaqpS2dTeFAlL7B11v6V6l335iPXyR3VMqdOeouxhPl7jfikOdGJshmGb76G5FU4Faoe6AkF7Xu4kxia3xAyMqRePU6YZTdm8P2NHPYqlTLX667d%2FUnvla%2BN4xen9Sj2CFph75JEW9CnSERF74ogp3ZVSSCb2c7mI0qErkPSJQn%2FZg1eE7%2FYazCIRp7q83KLMSwmvzUK37NjqSA%2FoE7OOi9rw9F5fdKeSUtCnIWr8mYODmuigDdMSgcFMX5GP9ivUXEiXnqZkfK%2FZTPLKJ3iR42sB6vs7kLxaNkFum4VqDxMu4GRZv41a5Ha5jYpcHG%2FA18eJ6fl%2BZ%2Bzru3yLjHg%2BoYXspNILw8KH%2FO5X0TMl14aVpsURXU3URZXeKRlstEwVLhNja%2FkBgqlY6L%2F3TkkV2k%2FmXf%2B8%2FUN81bh9AObo%2F5GBDn2rS%2F%2FYOYwEKilz%2BJck5ZK9hZlX3DX158tjxjz2b4NjkypvDGbUvyv3vSRCQwEj8hpR9QsjX6MnoGHNo4JHw57lznWYNkTdGXzMnvxLjIH8ZD%2BwLURgUjeNoYKhueOW4U1fZy3ZAWlQHnRhnBjFnvX6p3vwJ%2F%2Fjb3glMn0mnRJwSDt3g5mfoSN3tryRrGQaTrCOSZPy7nvsayy6YgDPILzPllr4mNLaglfLz8zqm3F2No%2F52io%2FCORsGh43evGyGIsPHDArmzEQDGiS8C6xKyNZ8dg4O4DCJ6bzGBjqxARuMIBlCp7AG0J0bw5KHhXcfv6j6G%2BO0AvqVcWNRl648cENx8zlX5AsNkMsTic6d5PtPdpoYgQs0F00gj6VnYdG4glR7elyFxCw%2Futr9DXbFEiKabd7G%2B5y5%2FlSh%2FwQ1JcxDHMF4Um2608GWTlkfsqqz4JaAFvEim3izzMZ351hht0YorluUb9IR6nnUgLIaDWdQhWLt0p7cQF7WPf2tuA6YXn8WE5TVMD%2BWvMaHQjqJZg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=03c24c0ea0bbebeb60a8d5a44ae4c5252b7207a3ed5737c7dc5c4403c9d0cd25",
+      "file_size": 108398,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2021-03-21T11:27:55.953Z",
+  "allow_singular_disclosure_after": -142099489.19917005,
+  "singular_disclosure_allowed": true,
+  "vote_count": 37,
+  "voters": [
+    "mr-medi",
+    "foobar7",
+    "ali",
+    "tess",
+    "h4x0r_dz",
+    "f_m",
+    "demonia",
+    "0xwise",
+    "sa1tama0",
+    "securityforever",
+    "and 27 more..."
+  ],
+  "severity": {
+    "rating": "high",
+    "score": 8.7,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "local",
+      "attack_complexity": "low",
+      "privileges_required": "low",
+      "user_interaction": "none",
+      "scope": "changed",
+      "confidentiality": "high",
+      "integrity": "high",
+      "availability": "high"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 50772,
+    "asset_type": "DOWNLOADABLE_EXECUTABLES",
+    "asset_identifier": "Acronis Cyber Protect Home Office (formerly Acronis True Image)",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
