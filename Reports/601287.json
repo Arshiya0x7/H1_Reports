@@ -1,0 +1,145 @@
+{
+  "id": 601287,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC82MDEyODc=",
+  "url": "https://hackerone.com/reports/601287",
+  "title": "Vulnerability Name: Host Header Injection Redirect",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2019-06-05T21:31:56.720Z",
+  "submitted_at": "2019-06-05T21:31:56.720Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "jatingupta",
+    "url": "/jatingupta",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NTM0ODMsInB1ciI6ImJsb2JfaWQifX0=--05acf5d45b379d410eb1cb0e96cdff8a0438c985/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--a4d91faed3dff6024dfc1a7b7f8ccc6b45e38396/download.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 21801,
+    "url": "https://hackerone.com/wakatime",
+    "handle": "wakatime",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/6t1wy3jbq9kayjwvqbnymavxizfx/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/6t1wy3jbq9kayjwvqbnymavxizfx/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "WakaTime",
+      "twitter_handle": "wakatime",
+      "website": "https://wakatime.com",
+      "about": "Automated metrics about your programming from text editor plugins."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2019-09-02T21:10:11.953Z",
+  "bug_reporter_agreed_on_going_public_at": "2019-09-02T09:50:48.899Z",
+  "team_member_agreed_on_going_public_at": "2019-09-02T21:10:11.874Z",
+  "comments_closed?": true,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Vulnerability Description: \nOpen redirection is sometimes used as a part of phishing attacks that confuse visitors about which web site they are visiting.\n\nRemediation:\nIf possible, the application should avoid incorporating user-controllable data into redirection targets. In many cases, this behavior can be avoided in two ways:\nRemove the redirection function from the application, and replace links to it with direct links to the relevant target URLs.\nMaintain a server-side list of all URLs that are permitted for redirection. Instead of passing the target URL as a parameter to the redirector, pass an index into this list.\n\nVulnerable URL:\n https://wakatime.com/settings/account?apikeyrefresh=true\n\nPayload: \" X-Forwarded-Host: bing.com \"\n\nHow to reproduce this vulnerability:\n1.\tOpen this URL \" https://wakatime.com/settings/account?apikeyrefresh=true \" and send it to the repeater in burp suite.\n2.\tadd the payload to the header request and forward the request.\n3.\tIt will directly redirect to bing.com\n\n## Impact\n\nImpact:\nWhenever a user visits this URL, it will redirect them to site.com. It is used in phishing attacks.",
+  "weakness": {
+    "id": 53,
+    "name": "Open Redirect"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 503130,
+      "file_name": "WakaTime_Open_Redirection.rtf",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/503/130/6fd9ab87941f72c0c79500e1bba0183fadd983ad/WakaTime_Open_Redirection.rtf?response-content-disposition=attachment%3B%20filename%3D%22WakaTime_Open_Redirection.rtf%22%3B%20filename%2A%3DUTF-8%27%27WakaTime_Open_Redirection.rtf&response-content-type=text%2Frtf&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6AKSZDHS%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T144714Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCEHr6%2FITuA6i9MnGcSFvq0tSxJ%2BdxYNvgtGx9sVCpP0gIgQvA1Ky%2Fhd1hV8yUECKBBqd31%2F4qe78yUbG%2F1unOewWIqsQUIFRADGgwwMTM2MTkyNzQ4NDkiDMXcgCZzTCKH5ST3jCqOBWRl979CFVq%2B%2BT6ECmkSm23zy6aqef%2FvmEN9I18qMIC7V7J7DuyPMyzAZ3X3pPZQAGkDUC06OTAyWbbSGAmbJdxwW3q0X32PYTaEJBA1Fu8cY6Ys%2B1haz%2BDQfi%2F0GBm0liKZvpKgdRgYxGW3Kr0w0UMbBGTg%2F40XuOgVSS1P%2FEtCVkRZC0vHd%2B4T3PrVhh2TIL3f%2FZ24ghM0kJsZ9pjAf5foLXRrSe4qaLWl7Qem73y4XhXf1dNhPUzuFF3dlbPtfHzmknEa%2BSA5e9usC6Z%2FQyKB16GrxH8qLBpU6p1vHWObQVs4pJhQrPJ7KZjeCwfo1jLQL0nOuRUGN51gru5bW9WUj2wXd4eY3lobScvt%2FynWdkTCyUQQ4bB6EgwmGVU%2F9ZqSdcqI18slbZ4OqpBANP6KfzZ4cCgdJQgGo3c%2F8lXCC9NsEIH462h8mV1K%2FkEHz4tMaYi0TkOx1RkU5VniH3AlokohHSiaLa3VZI%2B49QEwOIEIj23eOfXVagLNv8DRqbLKciJtKUJatXd4HiU3Y5joJlB9bWZN2hkGMTF1HhP7vwzCFu90sJ0xSY8ysWkNvAz94rR4r2sK35jKxvLGKWEc%2FoJTN%2FwNzpCSXUu%2F%2BwUBCmtbmJA7%2FZvD%2BB7Wb%2FrREMi7HN5L8JkPUFbhr38xjkKI8fXualX24n3cKXHww17VueYo6UmhbivMu77b8PEtBfWR8wh9x6MlSf9M6nyjyTE%2FySeE6%2B56GJrozwqZiAIJgNC23FGvXE%2B%2BYEjx%2FvLheyewy7dke9vrnak0eHZ9YuREHmp1cXccNfNLO0Jhl5xa9zZSGlZEGSvNC6zlP2%2FGZDrSaUweCKLpgSGZ%2FfqijUucTrdt3Nnp2w0viHR0SDDu0b%2FGBjqxAUNODEvhzBhHovbPmV3wp4kR7l0JgxZChXGpxyDorjULJE3po47RowB7FmkQlQpvYCuhD7LMjJvCmDjWRCa7JdNczcU%2Bz0Q02ML4NYmrOmjjJzE0c50SMNUl1OOcfS7QJfxDEShlAaCahrObKHYvste5ytUXGvbEPhHZCz%2Btf%2FRxcLdGvHHIekK%2FQchrv8GZQn9jMdn1PIi%2BIiqze2ch2fPmoohptK6%2BQMOpQ%2FfbruIbyA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=4c2d3cec597142bd45179cc93628ac306d34f0aeabd65c36e61e1ec20cc36d4f",
+      "file_size": 1972,
+      "type": "text/rtf",
+      "moderated": null
+    },
+    {
+      "id": 503131,
+      "file_name": "Wakatime_OpenRedirection.flv",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/503/131/fdaea9e88092b05d05745ee3a598c650a3835956/Wakatime_OpenRedirection.flv?response-content-disposition=attachment%3B%20filename%3D%22Wakatime_OpenRedirection.flv%22%3B%20filename%2A%3DUTF-8%27%27Wakatime_OpenRedirection.flv&response-content-type=video%2Fx-flv&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6AKSZDHS%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T144714Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCEHr6%2FITuA6i9MnGcSFvq0tSxJ%2BdxYNvgtGx9sVCpP0gIgQvA1Ky%2Fhd1hV8yUECKBBqd31%2F4qe78yUbG%2F1unOewWIqsQUIFRADGgwwMTM2MTkyNzQ4NDkiDMXcgCZzTCKH5ST3jCqOBWRl979CFVq%2B%2BT6ECmkSm23zy6aqef%2FvmEN9I18qMIC7V7J7DuyPMyzAZ3X3pPZQAGkDUC06OTAyWbbSGAmbJdxwW3q0X32PYTaEJBA1Fu8cY6Ys%2B1haz%2BDQfi%2F0GBm0liKZvpKgdRgYxGW3Kr0w0UMbBGTg%2F40XuOgVSS1P%2FEtCVkRZC0vHd%2B4T3PrVhh2TIL3f%2FZ24ghM0kJsZ9pjAf5foLXRrSe4qaLWl7Qem73y4XhXf1dNhPUzuFF3dlbPtfHzmknEa%2BSA5e9usC6Z%2FQyKB16GrxH8qLBpU6p1vHWObQVs4pJhQrPJ7KZjeCwfo1jLQL0nOuRUGN51gru5bW9WUj2wXd4eY3lobScvt%2FynWdkTCyUQQ4bB6EgwmGVU%2F9ZqSdcqI18slbZ4OqpBANP6KfzZ4cCgdJQgGo3c%2F8lXCC9NsEIH462h8mV1K%2FkEHz4tMaYi0TkOx1RkU5VniH3AlokohHSiaLa3VZI%2B49QEwOIEIj23eOfXVagLNv8DRqbLKciJtKUJatXd4HiU3Y5joJlB9bWZN2hkGMTF1HhP7vwzCFu90sJ0xSY8ysWkNvAz94rR4r2sK35jKxvLGKWEc%2FoJTN%2FwNzpCSXUu%2F%2BwUBCmtbmJA7%2FZvD%2BB7Wb%2FrREMi7HN5L8JkPUFbhr38xjkKI8fXualX24n3cKXHww17VueYo6UmhbivMu77b8PEtBfWR8wh9x6MlSf9M6nyjyTE%2FySeE6%2B56GJrozwqZiAIJgNC23FGvXE%2B%2BYEjx%2FvLheyewy7dke9vrnak0eHZ9YuREHmp1cXccNfNLO0Jhl5xa9zZSGlZEGSvNC6zlP2%2FGZDrSaUweCKLpgSGZ%2FfqijUucTrdt3Nnp2w0viHR0SDDu0b%2FGBjqxAUNODEvhzBhHovbPmV3wp4kR7l0JgxZChXGpxyDorjULJE3po47RowB7FmkQlQpvYCuhD7LMjJvCmDjWRCa7JdNczcU%2Bz0Q02ML4NYmrOmjjJzE0c50SMNUl1OOcfS7QJfxDEShlAaCahrObKHYvste5ytUXGvbEPhHZCz%2Btf%2FRxcLdGvHHIekK%2FQchrv8GZQn9jMdn1PIi%2BIiqze2ch2fPmoohptK6%2BQMOpQ%2FfbruIbyA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=76ad86fc3adc06fbe1428428d4c0266b7390e77bb93e8918369d2320b8758c1c",
+      "file_size": 21172082,
+      "type": "video/x-flv",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2019-10-02T09:50:48.937Z",
+  "allow_singular_disclosure_after": -188456185.15595576,
+  "singular_disclosure_allowed": true,
+  "vote_count": 12,
+  "voters": [
+    "sameerphad72",
+    "dhakal_ananda",
+    "pr0f0x01",
+    "sa1tama0",
+    "bb00x",
+    "cryptographer",
+    "nitrozeus0x01",
+    "jatingupta",
+    "bij0y",
+    "aster123",
+    "and 2 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "score": 3.7,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "physical",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "required",
+      "scope": "changed",
+      "confidentiality": "low",
+      "integrity": "low",
+      "availability": "none"
+    }
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
