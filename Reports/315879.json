@@ -1,0 +1,139 @@
+{
+  "id": 315879,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMTU4Nzk=",
+  "url": "https://hackerone.com/reports/315879",
+  "title": "Able to reset other user's password in https://card.starbucks.com.sg/",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2018-02-14T05:48:58.768Z",
+  "submitted_at": "2018-02-14T05:48:58.768Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "qwacsawd",
+    "url": "/qwacsawd",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/241/392/4230712087fce8e1f1e2a6f338da054741d655a3_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 1989,
+    "url": "https://hackerone.com/starbucks",
+    "handle": "starbucks",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/001/989/c9aa38cf3b1a91daa085d31e23d23f34cd1874df_original./235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/001/989/c9aa38cf3b1a91daa085d31e23d23f34cd1874df_original./3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Starbucks",
+      "twitter_handle": "Starbucks",
+      "website": "http://www.starbucks.com",
+      "about": "Premier purveyor of the finest coffee in the world, inspiring and nurturing the human spirit — one person, one cup and one neighborhood at a time."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2018-07-23T17:42:34.870Z",
+  "bug_reporter_agreed_on_going_public_at": "2018-07-21T14:21:04.651Z",
+  "team_member_agreed_on_going_public_at": "2018-07-23T17:42:34.628Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "**Description**\nIn the website https://card.starbucks.com.sg/ there is a password reset function (https://card.starbucks.com.sg/forgetPassword.php) that sends the password reset link to the user's email. By using a web proxy to monitor the request, the email address can be changed to allow the attacker to reset a victim(another email) password, thus allowing him to gain full access to the victim's starbucks account and starbucks card.\n\n**Summary**\nThe attacker request a password reset and obtains the password reset link in his email. By using a web proxy, he can use the password reset token and modify the his own email to a victim's email and the password reset will be used for the victim instead of the attacker.\n\n**Steps to Reproduce**\n1)Attacker visits https://card.starbucks.com.sg/forgetPassword.php and enters his account's email\n2)The link is sent to the attacks email's inbox and he clicks on the link while having a proxy monitor the request(burp)\n3)The attacker then modifies the email to put the victim's email in these 2 requests as shown in the image below F263235 & F263234\n4)Upon submitting the request, the password will be changed and the victim's password will be changed to the desired password\n\n## Impact\n\nThis attack does not require the victim to perform any actions and yet the account can be taken over by the attacker and this leaks the victim's personal information and starbucks card which can be used to purchase items. The attacker can also capture the session id.",
+  "weakness": {
+    "id": 27,
+    "name": "Improper Authentication - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 263234,
+      "file_name": "2.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/263/234/2bdab2ab49900c03af7902dc156ba54adc0294ef/2.PNG?response-content-disposition=attachment%3B%20filename%3D%222.PNG%22%3B%20filename%2A%3DUTF-8%27%272.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQX64GUFQ3%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T173711Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCM9doRXzYsTjzqpu4fpGC15lhKQyDYolY9SO%2F8j2ACPwIgI9PsMm3ZJycpcs1Hg2Toek9qtjvYqapzpR2Nxt1eXVMqsQUIGhADGgwwMTM2MTkyNzQ4NDkiDBZb5U3216C7k8aD7yqOBeoKtN%2FQM7LvZgrR6JAT98pVaZNMNBP9Op2x4kLkqXZUvklTwPCOP%2BUKxl8ShDILEY%2BN4YgawRh4Gb2Aipfi%2BKOoggTNY68T1hTI1WVFhUTeXaDdJcScxF4BOLmaPfuWeov9rsn%2FM7jsK4j0S3KkYvjuoM8YBh5PQTKS99JUJiObvsYb148eitRF1eBwGP7erZV%2F0L9%2BtSws5YLXFME%2FdRyHYTf7l259h8zADaT0LEKQ0ZwfBRRu%2B3HYvuNzyXVc1Ws0laQ1MuWau3vvGxOVgd%2Bly9L%2FUE0Q%2FinpwSCTqTMI%2BKX3JR3goQ4vju8kqdZUitdzHMZ078huACJCuXv%2FPWiT5OIQ2TteF%2B26hkHZyGynli%2B9NTdiZVfAxodTm3kkhO%2FhoOt5MO4iQTRxcz6usgQNEWPpLkAeUxD29BqdG8I78TuqFqE7lV3g%2FyR%2FPrn6FjHoctG%2B67OHBvO1OhC4nkxy2pKNXWnpBfeGH%2FWSo6ldxKs8YgbP4kH1%2B4raRRqS7lGuuasLBbFP1Q0SgNFrS%2FTC8Zxykbm72%2BsyB1B1uMxiqZ4yQTVOvkrSFzXUNMUPF6MVFxVjx8lFOy1tWd5PIV1OsodR%2FY7PA2uBuzAiU44ByY7ONVhCsrA8mUDX1D%2B5J3ka3rmShJKWdRgBERh2s33NKQ9GSF5q3365DFKu7FbY1%2FW3fI2PbrCd5xOxbp%2FWYY6jIzvRBJKaCfS2U839rKeDt9OjllgDSSLq7%2Fxy5%2FJHGZ4hPV5n7qZ1ZOzPH%2FSm3dISrbb9Ws%2Bov6WNGYu4w2XQHXqnNKrwebbYp4aIiULWCdU7PNEIhsY1kRTHykdGFYq4soSGP6e3eCcxds%2BMcfVsnnJMBOFyeN7pG1TLxTCP0cDGBjqxAYPctFWf03h5uKrEWC%2FIZPRsmCjClE%2BSXcGCEm6nV1wGqJPvbHffTvfHHAlho%2FqzXzIv1ZzsLW4h9sT52Eo%2B9amYEEVrJO%2BzJqYBh08gW7TScGPtZtxb8oXb5jdy9XIzFVeHvWJY8wx2VJogvEjcXaCAFaYTPk4F61xY0mVJarXPts6hnnHId6d8mDNIjpUm%2BZdtp5ic5G6%2FJ9RIyHOTRqWaOGqTOzHvUdFfuOuZoZPTtw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=6007f9ea4d083aa194905c4cb36f60ac2177681b45eb5b082331a456db3127bc",
+      "file_size": 21145,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 263235,
+      "file_name": "1.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/263/235/9eec8b05bd87a14cf0424806a06ee2b192de730b/1.PNG?response-content-disposition=attachment%3B%20filename%3D%221.PNG%22%3B%20filename%2A%3DUTF-8%27%271.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQX64GUFQ3%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T173711Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCM9doRXzYsTjzqpu4fpGC15lhKQyDYolY9SO%2F8j2ACPwIgI9PsMm3ZJycpcs1Hg2Toek9qtjvYqapzpR2Nxt1eXVMqsQUIGhADGgwwMTM2MTkyNzQ4NDkiDBZb5U3216C7k8aD7yqOBeoKtN%2FQM7LvZgrR6JAT98pVaZNMNBP9Op2x4kLkqXZUvklTwPCOP%2BUKxl8ShDILEY%2BN4YgawRh4Gb2Aipfi%2BKOoggTNY68T1hTI1WVFhUTeXaDdJcScxF4BOLmaPfuWeov9rsn%2FM7jsK4j0S3KkYvjuoM8YBh5PQTKS99JUJiObvsYb148eitRF1eBwGP7erZV%2F0L9%2BtSws5YLXFME%2FdRyHYTf7l259h8zADaT0LEKQ0ZwfBRRu%2B3HYvuNzyXVc1Ws0laQ1MuWau3vvGxOVgd%2Bly9L%2FUE0Q%2FinpwSCTqTMI%2BKX3JR3goQ4vju8kqdZUitdzHMZ078huACJCuXv%2FPWiT5OIQ2TteF%2B26hkHZyGynli%2B9NTdiZVfAxodTm3kkhO%2FhoOt5MO4iQTRxcz6usgQNEWPpLkAeUxD29BqdG8I78TuqFqE7lV3g%2FyR%2FPrn6FjHoctG%2B67OHBvO1OhC4nkxy2pKNXWnpBfeGH%2FWSo6ldxKs8YgbP4kH1%2B4raRRqS7lGuuasLBbFP1Q0SgNFrS%2FTC8Zxykbm72%2BsyB1B1uMxiqZ4yQTVOvkrSFzXUNMUPF6MVFxVjx8lFOy1tWd5PIV1OsodR%2FY7PA2uBuzAiU44ByY7ONVhCsrA8mUDX1D%2B5J3ka3rmShJKWdRgBERh2s33NKQ9GSF5q3365DFKu7FbY1%2FW3fI2PbrCd5xOxbp%2FWYY6jIzvRBJKaCfS2U839rKeDt9OjllgDSSLq7%2Fxy5%2FJHGZ4hPV5n7qZ1ZOzPH%2FSm3dISrbb9Ws%2Bov6WNGYu4w2XQHXqnNKrwebbYp4aIiULWCdU7PNEIhsY1kRTHykdGFYq4soSGP6e3eCcxds%2BMcfVsnnJMBOFyeN7pG1TLxTCP0cDGBjqxAYPctFWf03h5uKrEWC%2FIZPRsmCjClE%2BSXcGCEm6nV1wGqJPvbHffTvfHHAlho%2FqzXzIv1ZzsLW4h9sT52Eo%2B9amYEEVrJO%2BzJqYBh08gW7TScGPtZtxb8oXb5jdy9XIzFVeHvWJY8wx2VJogvEjcXaCAFaYTPk4F61xY0mVJarXPts6hnnHId6d8mDNIjpUm%2BZdtp5ic5G6%2FJ9RIyHOTRqWaOGqTOzHvUdFfuOuZoZPTtw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=710ac4ca57c3c241655706d20e6d7ecedc44c64ca189c6857bb88f67bb2afcd0",
+      "file_size": 18996,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2018-08-20T14:21:04.870Z",
+  "allow_singular_disclosure_after": -223701366.15801686,
+  "singular_disclosure_allowed": true,
+  "vote_count": 18,
+  "voters": [
+    "tinmo",
+    "ola0",
+    "battle_angel",
+    "alp",
+    "z3t",
+    "albatraoz",
+    "apapedulimu",
+    "whitesector",
+    "eveeez",
+    "khizer47",
+    "and 8 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 12995,
+    "asset_type": "OTHER",
+    "asset_identifier": "Other assets",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
