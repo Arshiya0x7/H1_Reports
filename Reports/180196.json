@@ -1,0 +1,116 @@
+{
+  "id": 180196,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xODAxOTY=",
+  "url": "https://hackerone.com/reports/180196",
+  "title": "Host header Injection rubygems.org",
+  "state": "Closed",
+  "substate": "not-applicable",
+  "severity_rating": "low",
+  "readable_substate": "N/A",
+  "created_at": "2016-11-04T18:12:04.182Z",
+  "submitted_at": "2016-11-04T18:12:04.182Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "bugs3ra",
+    "url": "/bugs3ra",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/031/877/979f1b2f975110612d4cab7336f0d594e4afb678_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 8212,
+    "url": "https://hackerone.com/rubygems",
+    "handle": "rubygems",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/008/212/e65eca09896d23bc029c08d3147a79a48ec1ee2f_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/008/212/e65eca09896d23bc029c08d3147a79a48ec1ee2f_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "RubyGems",
+      "twitter_handle": "rubygems_status",
+      "website": "https://rubygems.org",
+      "about": "RubyGems.org is the Ruby community’s gem hosting service."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2018-02-08T23:10:47.550Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-11-05T17:08:04.782Z",
+  "team_member_agreed_on_going_public_at": "2018-02-08T23:10:47.455Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi,\n\nAs you are interested in any bug in rubygems.org, I thought of reporting it.\n\nThe host header is not validated on rubygems.org. In many cases, developers are trusting the HTTP Host header value and using it to generate links, import scripts and even generate password resets links with its value. This is a very bad idea, because the HTTP Host header can be controlled by an attacker. This can be exploited using web-cache poisoning and by abusing alternative channels like password reset emails.\n\n**POC**\n```\nGET / HTTP/1.1\nHost: www.google.com\n```\nResponse\n```\nHTTP/1.1 500 Domain Not Found\nServer: Varnish\nRetry-After: 0\ncontent-type: text/html\nCache-Control: private, no-cache\nconnection: keep-alive\nContent-Length: 207\nAccept-Ranges: bytes\nDate: Mon, 31 Oct 2016 07:49:14 GMT\nVia: 1.1 varnish\nConnection: close\n\n<html>\n<head>\n<title>Fastly error: unknown domain www.google.com</title>\n</head>\n<body>\nFastly error: unknown domain: www.google.com. Please check that this domain has been added to a service.</body></html>\n```\nNow having my malicious page hosted on fastly(example taken is www.newrelic.com running on faslty), I can expolit the issue:\n```\nGET / HTTP/1.1\nHost: www.newrelic.com\n```\nResponse\n```\nHTTP/1.1 301 Moved Permanently\nServer: nginx\nContent-Type: application/x-msdownload\nStatus: 301 Moved Permanently\nLocation: http://newrelic.com/\n```",
+  "weakness": {
+    "id": 53,
+    "name": "Open Redirect"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 132923,
+      "file_name": "POC.JPG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/132/923/1a7c1bddb241f90e764ee6db3d2211cf2bab4b22/POC.JPG?response-content-disposition=attachment%3B%20filename%3D%22POC.JPG%22%3B%20filename%2A%3DUTF-8%27%27POC.JPG&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ2GP7HMFG%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T185758Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIC8jztlqtCc0i9dbbkiSdXFALVKPJZj2c2z%2F1QYNv5b4AiBq9He%2BoiwdnmQQaFYTCJT5LewmOqqL%2FhWbHyNqBRtdPyqxBQgbEAMaDDAxMzYxOTI3NDg0OSIM63%2F2yEnJ9MV98oaKKo4FyduVdprPRpbG1L28OQBKqTOvAtzvP7NldVpXh7EucwjXxZizj3%2BxZ8fURdajJhEyBL6uLzhLA1n3yJRSuXFJIw8oOnh13cUPWHByKVwfPOho%2B0GQKqQgr3EkY9PEakA0pM%2F09Kztibn66yQSsg3XDDatnV6AGKprKkcJm%2BgXCAxNjQNzlzqNdtUdZ2eMWVKGvqOrP4cHy8k5NIBP1s9SRJOiPbmmi1OMtS0PlocFyoguje1dKtFPtGjXzK7xt4%2Fx7YCvpJHIyQq9%2BV42WIRrHm%2BZDn7qqdmGa9zkT7C1Y5Wc9mjYgsAslvKr2LZ9MQOz%2F8Oro0ZP1TGpcQUEPq9Uhwes1mPQkEn%2FbDJobZDJJJaYSe6vh%2B3Nwk2Sm%2Bl9I3gO0BeSTksZDOlzm3p5DuhbEobKVkwLyLINfpP9PSq6xVennmPLWcwZRCW%2FcAUV2PwS1ZjOHSNV9SW717IQW%2B73wXeETGIEzP0o07sgYhWP65sLR%2BgLhABEGVZLsXTW3ZXaodyQuVlNt2gHwjRl1%2Fun06cN5teJf4OmwIIYSF34q4ZhigD0yIw4zD6JuW9%2B3WmR1GEjFwNj%2BmPNx6EtxaDIv57rwMFNZgzdHs%2B%2BF5eBOUQtjx620jxNqh%2B9IUNKSh3y7vYvkG4KexXHQEPR3ZBeViY7xLLaVHYFa0X38xYG1dqEuD%2F3M%2BNNs2tXNt084EQ%2BDnmK4YLb%2ByTBDUXaEkCP8xnznYFEQHakJiQyRk4CNaIBQ89zE9mKUTmXAYTVNN6SYUBlI5cuiuOUxb%2B2cT1TjImGWkLwwukFp6FmV47FHrkOIwdBmEti3q2SzlxDPENS0Vfl%2FyRAxKyj2lJFXqlC6yYLkcVwZ4K3ejIe9hTyMJnvwMYGOrIBceE1o%2FaBUOQoPHkb3%2BXhLGI%2FV4FBJt6lE76LX2BVH3v3mfUcl4%2BSe02Kyb%2Bo4imiWefYbxVLe9DZAyWzGKBy5tkX3TT9Cws3fISf%2B1rxaDQa3DcIesetBvy8lOP%2FU8B4Bt9m1F%2F9U%2BZn9TC4d1j1SMCFdqex71hbzSuEfts5RJkoqsMKEU2c0eCjeLCaAOQ%2FfvBDxVgh%2Fx%2Bdr6YUC7QbUhJlcbm2Vb2Ulp9pr9XKJooshQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=5aa1f3503a12191466d3e8ee1f9c19443f9a92cb3906f6577d64fd2a3b434d1e",
+      "file_size": 87842,
+      "type": "image/jpeg",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 3,
+  "voters": [
+    "pr0f0x01",
+    "tushar_cyber04",
+    "armansameer"
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "User"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
