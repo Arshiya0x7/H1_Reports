@@ -1,0 +1,142 @@
+{
+  "id": 610219,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC82MTAyMTk=",
+  "url": "https://hackerone.com/reports/610219",
+  "title": "Stored XSS via Create Project (Add new translation project)",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2019-06-12T14:28:32.362Z",
+  "submitted_at": "2019-06-12T14:28:32.362Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "th3_alchem1st",
+    "url": "/th3_alchem1st",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MjI0NjYsInB1ciI6ImJsb2JfaWQifX0=--f8b554d3ccbc213349927261375496c11a22faa1/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--2de8067d228529d65848a4eeed0bed0bb2531bc3/0f6.jpg"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 19468,
+    "url": "https://hackerone.com/weblate",
+    "handle": "weblate",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/019/468/71eb3827ae9f2a388f27bd4b7eefd20bc3ac813c_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/019/468/71eb3827ae9f2a388f27bd4b7eefd20bc3ac813c_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Weblate",
+      "twitter_handle": "WeblateOrg",
+      "website": "https://weblate.org/",
+      "about": "Weblate is a libre software web-based continuous localization system"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2019-07-09T13:43:21.812Z",
+  "bug_reporter_agreed_on_going_public_at": "2019-06-25T13:44:29.474Z",
+  "team_member_agreed_on_going_public_at": "2019-07-09T13:43:21.692Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi, Input validation and/or sanitisation is not currently applied in the **Project Name** field in https://<domain>/create/project/. As, a result, it is possible to have a stored XSS that will affect all the users in the Weblate application. To identify this XSS I used the Docker environment from https://github.com/WeblateOrg/docker.\n\n**Steps to reproduce:**\n\n1. Administrator creates a project and then adds a user in that project.\n2. Depending on permissions the user will login go to **watched projects** pick the project -> **Manage** -> **Settings** and will have the ability to change the Project Name. Here I changed it to `<svg/onload=alert(document.domain)>` and hit save.\n3. When the user visits his `/accounts/profile/` page, he will trigger the Stored XSS.\n\nI also found that even a user that doesn't have access to that project, but I guess the project is public, he will also get xss'ed. Furthermore, with this he also has the ability to xss the Admin, all the have to do is visit the `/accounts/profile/` page.\n\nSo, this has the potential to affect all users.\n\n## Impact\n\nInput validation and/or sanitisation on the Project Name field.\n\nPlease let me know if you require any additional information regarding this issue.\n\nThanks.",
+  "weakness": {
+    "id": 62,
+    "name": "Cross-site Scripting (XSS) - Stored"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 507694,
+      "file_name": "xss-weblate.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/507/694/36e1f8aafdec09fcbf3db41c9de2b6c32a0ee342/xss-weblate.png?response-content-disposition=attachment%3B%20filename%3D%22xss-weblate.png%22%3B%20filename%2A%3DUTF-8%27%27xss-weblate.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZ56IR27L%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T151139Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQC2lMRFmWCHhr%2BJNECl1sGrPTozu0B4CqSvp1JYeOWk2wIgHw%2Fug30iKOYlnLieSD7VpW6F4NwXgU4T0n5ovzArnooqsQUIFhADGgwwMTM2MTkyNzQ4NDkiDP%2B9pvCpDtieepJDKSqOBax3xK1OGSOoPE8oe0TypxR5JdRZH80bP8p6qTxkjMdLG4TmpG94B1w70DAkUnocUI0cCciCUWKQ%2FRB9HnZsLClWO8OYSC6QLzfoEb8WcfAapWbumEz5q2ryMSqIDDnww%2F6Vw3SlcghwenfpyrzvXevVVxwU8W3XTYD4BvmYwvy3hQE%2B37uOncdpd4Q%2BR9lklPHry7mp7Ixi%2FK9j1fKl0QS7HJxDgppew5z4SvwUKDi7174ZG0T%2BTxal148HJfLWX%2BhkRjGLJINti7gFw5eQUMW6WF9jdcF8S4EZAcEZBoqJ8m9aZOk%2B9FyEb8SxGzy13lJmAsCeArUopzv0idL1OklAImbVRCP1kjM8J8jFd73gXH2l8QxTvDPv3pKTUSIYjmYt64MXXEiYUO3KE4TNVqvheCB252c0V4ybMU94u0D9Xo5MKHRbelJ5JauOmDNbncclw2uuh8eHMoY%2FDAPd0XKXcSfSw8LWYZ4nKM3LMVdv52%2BKK9N7dy4Y%2FCtCDdPSGau4mTczSSp9Lndj2Q%2BV9AELP4YseVg3RYdTkr2PMAWPPztBFCSPj1mn2YlRRvWr%2Fa%2FLsUAeXgk3BK5cown4gRLLCXsX7OfSAUC1P63Sm0kuIxR9gXo62kR79mVOPDCUIA8k9d%2BgYf8jQVAHyx%2FkqlCXtlWmruVxEMq%2FCAD7A8g1dQMfGIbkfhL1U9you6bgwDrkW7JryqyBW0qTinPQKn3F4uC1R%2FdJjdlKD%2FzAVrzk53FQBJOkzBB5uYz5QEf5fzX1KH6pQkWZZxuhTji9WUHt5AUVOxT5PuN72SZZU9NbUb%2F3EsjRmB%2BkuBMEEjvqLnrUSy%2BJx%2FD2AOvpZmTo4XuO8jGVuB3K6B123%2Fj0%2BDC64b%2FGBjqxAVVzGvBjg86Wgaiw5L%2BJWXtWyMpuvK4lXSUzZeh1Mdq%2FjUp0bD34CobaDfqUopt%2B43hiZUiUlv2pVrrU4N8w181naJ6Xysk2%2BA%2B%2F57W4TMMh1XzOPoQcsMkgS%2B26RLk7qetiNdR8f11wjD1t38c5RQSMd28QyFJJA5GzLKaa50WzF8%2F73dYchgyraDeMJW5UdfhRXErV%2FTZoMaAwUAgTlbr79kSNnYdejSAPOwqwDIqfjQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=5acef8309176c71332057c5b413d85671df210c62b24a1dd3b83711c7a157cf0",
+      "file_size": 42770,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2019-07-25T13:44:29.569Z",
+  "allow_singular_disclosure_after": -194405229.65801644,
+  "singular_disclosure_allowed": true,
+  "vote_count": 11,
+  "voters": [
+    "mashoud1122",
+    "th3_alchem1st",
+    "akaash_pantherdefence",
+    "xaleraf4ra",
+    "cryptographer",
+    "0x08",
+    "jyiue",
+    "paradoxbacklash",
+    "mxgc",
+    "lgian",
+    "and 1 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 4.7,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "high",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "low",
+      "integrity": "low",
+      "availability": "low"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 175,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/WeblateOrg/docker",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
