@@ -1,0 +1,139 @@
+{
+  "id": 961046,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC85NjEwNDY=",
+  "url": "https://hackerone.com/reports/961046",
+  "title": "Stored XSS in backup scanning plan name",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2020-08-17T20:33:22.911Z",
+  "submitted_at": "2020-08-17T20:33:23.018Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "sbakhour",
+    "url": "/sbakhour",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/090/792/5bf60f21bd1431cc4a9f2822cd2a005334cb693b_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13428,
+    "url": "https://hackerone.com/acronis",
+    "handle": "acronis",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/e54TDdWdgLKsH3h1oFpK26bq/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/e54TDdWdgLKsH3h1oFpK26bq/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Acronis",
+      "twitter_handle": "Acronis",
+      "website": "https://www.acronis.com",
+      "about": "Complete integrated cybersecurity and data protection for MSPs and IT teams"
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2021-06-28T03:11:24.488Z",
+  "bug_reporter_agreed_on_going_public_at": "2021-06-28T03:11:24.395Z",
+  "team_member_agreed_on_going_public_at": "2021-06-10T13:05:33.049Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Dear Acronis Security Team,\n\n##Summary:\n\nThere is a possibility of storing an XSS on the https://mc-beta-cloud.acronis.com/ui/ console.\n\n##Steps To Reproduce:\n\n1. Login to the console with the given account\n2. Go to \"Backup Scanning\" under \"PLANS\"\n3. Click on \"Create Plan\"\n4. Specify the location of the \"Backups to scan\" (in my case I selected my PC where the agent is installed)\n5. Name the plan with this payload \"/><svg/onload=prompt(document.domain)>\n6. The XSS will fire up many times showing a self XSS alert\n7. Keep pressing \"OK\" till the alert goes away\n8. Click on \"Create\" to create the plan then click on the edit icon then click on \"Save Changes\"\n9. The Self XSS alert may re-pop up several times, just keep pressing the \"OK\" button\n10. Reload the pages by re-visiting  https://mc-beta-cloud.acronis.com/ui/  or going between the tabs\n11. Click again on  \"Backup Scanning\" under \"PLANS\"\n12. Select the plan create with the payload \"/><svg/onload=prompt(document.domain)>\n13. Try to Edit it and the stored XSS will fire up.\n\n##Supporting Material/References:\n\nPlease refer to the attached screenshot & video for reference.\n\n##Browser Tested:\n\nMozilla Firefox 68.9.0esr (64-bit)\n\n##Operating System Tested:\n\n   Windows 10 Professional 64-bit\n    Kali Linux 2020 32-bit\n\n## Impact\n\nAn XSS attack allows an attacker to execute arbitrary JavaScript in the context of the attacked website and the attacked user. This can be abused to steal session cookies, perform requests in the name of the victim or for phishing attacks.",
+  "bounty_amount": "500.0",
+  "formatted_bounty": "$500",
+  "weakness": {
+    "id": 62,
+    "name": "Cross-site Scripting (XSS) - Stored"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 952738,
+      "file_name": "Stored_XSS_beta_cloud_Acronis.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/9j3kLcs3rGhjYbWv5nPzXq8S?response-content-disposition=attachment%3B%20filename%3D%22Stored_XSS_beta_cloud_Acronis.mp4%22%3B%20filename%2A%3DUTF-8%27%27Stored_XSS_beta_cloud_Acronis.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQTNWJHDVM%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T022716Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH8aCXVzLXdlc3QtMiJHMEUCIDGz6%2F6GxJTN1j63kuIPQDFi0Z6l452T45IZEZVZeHLBAiEAgDpr%2FRvQoIILcvv7MwWroCWX473kfExlhy%2FgJ%2ByZhnoqugUI%2BP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDJj5Q0j6T%2BAE%2Bz1UEyqOBdEVHEGaYUFT77thaSeZ6lKuJx8gi8FbcjBI2Ev6W2bJikwG8i2f%2BLhfXtT8Wn6kQKK6r4qNQ5SDB2Z4EQGfwcYmIt%2FFaciFcWL%2Bxu4%2F05%2BXVM5OtOJx1PLjgQ%2BDycwNtYgXbZT2TDOMA9nIa2OGin8LX5LSqq%2FS%2BhtJpYTH9zkOX6pH1dTLcMX7i8Cl6tLJq4KoCFfLbvHAbbf38tjPybS180DjMntuHFLz8fok5V926%2FWU7i%2FlTqEFQVfBx0AZB5HVUubHCbacSD9vAHe1hrYVznFnGjfwcjo5C1u%2BUBOe5C3uQbElRl6IcpbTf9sAh%2FDO%2BffzrjtX8GAdFSfa9NP%2BWNlt3fzXpwdEWHBa%2B8DP%2FVzHjPcWLHdiLUy8udAUOsMpwZFX1nJwiztCuiSWEPB3ZUSk7OjJ2IfQoVJhPy9itkC5jyKeyCtZLfT2KP8wjGypWDIAbOLGrfuGliOE6fpqCbTyiaASClcPIk%2B6BS7iOOhlSkzBXitO0ydQ3xE1LrPKMNzPE7IY3VjC4UMXcrjMtOoJlb2GzEGJwTA5I844GPMcIFqLXHGMBQchEkmaQLXV90%2BiH%2BavSAmEkBsQte7p1L0piNPLvWy26VTRv0zAunIhiIHUzzbyv46Qcu%2F0ALXAaogeN9P2ekamzZupOwXlRzFEL3ro1Fage9iC20iQrc%2FB9TIvCwFe0mNUfEeDDd5gS%2F5Lo3npsU6FIcB%2B3eS1cR2bkbP%2B1UHOr6Z3yTIB76QQA6Vzt46huBwumifRqGYs83zkqNXeo%2F3%2FndfE%2BxwxZjwYk5o5PbBdgGy2cIicegneBs1LxbhDaVvizWYD0mdP7Qi6KYSFcw99DqSf9QSjMWMnSePG4zH9fiy3TTCm37zGBjqxAUpMBuGythxomliFM35sYIuU7hw6OO%2Builn%2B1UcAyhIahoaFoTfor4YPfstlBI5VoJpCB4N81qnH%2BEqpp0uWvgeNv%2F6iXjwb5ocnc1UhF3lgHhDQhiDGjeivhjJHvD14Zw4wWzyAc2nJqVsHSXM%2B3y5Ys7QCOJktLQ8E2fYeD6DVtRj8RgeBDBNhii1cOJtTQ7lnu6R8VDCcYymSZnUdyHVIQ09vt5TcE%2BsSympU3%2B0liQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=f89fae6efe0bab388cbe4ef71b4589b8274f43d4f1052f0ec7725f966c48b4e7",
+      "file_size": 5980707,
+      "type": "video/mp4",
+      "moderated": null
+    },
+    {
+      "id": 952752,
+      "file_name": "Acronis_cloud_beta_stored_XSS.JPG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/NsyiLNy8y5P4kxYLwVD3utPH?response-content-disposition=attachment%3B%20filename%3D%22Acronis_cloud_beta_stored_XSS.JPG%22%3B%20filename%2A%3DUTF-8%27%27Acronis_cloud_beta_stored_XSS.JPG&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQTNWJHDVM%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T022716Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH8aCXVzLXdlc3QtMiJHMEUCIDGz6%2F6GxJTN1j63kuIPQDFi0Z6l452T45IZEZVZeHLBAiEAgDpr%2FRvQoIILcvv7MwWroCWX473kfExlhy%2FgJ%2ByZhnoqugUI%2BP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDJj5Q0j6T%2BAE%2Bz1UEyqOBdEVHEGaYUFT77thaSeZ6lKuJx8gi8FbcjBI2Ev6W2bJikwG8i2f%2BLhfXtT8Wn6kQKK6r4qNQ5SDB2Z4EQGfwcYmIt%2FFaciFcWL%2Bxu4%2F05%2BXVM5OtOJx1PLjgQ%2BDycwNtYgXbZT2TDOMA9nIa2OGin8LX5LSqq%2FS%2BhtJpYTH9zkOX6pH1dTLcMX7i8Cl6tLJq4KoCFfLbvHAbbf38tjPybS180DjMntuHFLz8fok5V926%2FWU7i%2FlTqEFQVfBx0AZB5HVUubHCbacSD9vAHe1hrYVznFnGjfwcjo5C1u%2BUBOe5C3uQbElRl6IcpbTf9sAh%2FDO%2BffzrjtX8GAdFSfa9NP%2BWNlt3fzXpwdEWHBa%2B8DP%2FVzHjPcWLHdiLUy8udAUOsMpwZFX1nJwiztCuiSWEPB3ZUSk7OjJ2IfQoVJhPy9itkC5jyKeyCtZLfT2KP8wjGypWDIAbOLGrfuGliOE6fpqCbTyiaASClcPIk%2B6BS7iOOhlSkzBXitO0ydQ3xE1LrPKMNzPE7IY3VjC4UMXcrjMtOoJlb2GzEGJwTA5I844GPMcIFqLXHGMBQchEkmaQLXV90%2BiH%2BavSAmEkBsQte7p1L0piNPLvWy26VTRv0zAunIhiIHUzzbyv46Qcu%2F0ALXAaogeN9P2ekamzZupOwXlRzFEL3ro1Fage9iC20iQrc%2FB9TIvCwFe0mNUfEeDDd5gS%2F5Lo3npsU6FIcB%2B3eS1cR2bkbP%2B1UHOr6Z3yTIB76QQA6Vzt46huBwumifRqGYs83zkqNXeo%2F3%2FndfE%2BxwxZjwYk5o5PbBdgGy2cIicegneBs1LxbhDaVvizWYD0mdP7Qi6KYSFcw99DqSf9QSjMWMnSePG4zH9fiy3TTCm37zGBjqxAUpMBuGythxomliFM35sYIuU7hw6OO%2Builn%2B1UcAyhIahoaFoTfor4YPfstlBI5VoJpCB4N81qnH%2BEqpp0uWvgeNv%2F6iXjwb5ocnc1UhF3lgHhDQhiDGjeivhjJHvD14Zw4wWzyAc2nJqVsHSXM%2B3y5Ys7QCOJktLQ8E2fYeD6DVtRj8RgeBDBNhii1cOJtTQ7lnu6R8VDCcYymSZnUdyHVIQ09vt5TcE%2BsSympU3%2B0liQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=a1012a448dcab09fe289115e35a9980695d5a01be88d7e791e3af886e32a7c7c",
+      "file_size": 130137,
+      "type": "image/jpeg",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 119,
+  "voters": [
+    "monkelife",
+    "mr-medi",
+    "arist0phanes",
+    "mad_vima",
+    "ganeshbagaria",
+    "sw33tlie",
+    "drsniper",
+    "fqdn",
+    "mattberg",
+    "shreyaschavhan",
+    "and 109 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "Team"
+  },
+  "structured_scope": {
+    "databaseId": 13849,
+    "asset_type": "URL",
+    "asset_identifier": "beta-cloud.acronis.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
