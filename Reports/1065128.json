@@ -1,0 +1,138 @@
+{
+  "id": 1065128,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMDY1MTI4",
+  "url": "https://hackerone.com/reports/1065128",
+  "title": "No Rate Limit On dashboard.myndr.net/auth",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "none",
+  "readable_substate": "Resolved",
+  "created_at": "2020-12-23T13:34:12.512Z",
+  "submitted_at": "2020-12-23T13:34:12.550Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "azimuthub",
+    "url": "/azimuthub",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTE0NTM4OCwicHVyIjoiYmxvYl9pZCJ9fQ==--a44228de79dda77a362e3e455a9127b5203a580f/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--2de8067d228529d65848a4eeed0bed0bb2531bc3/xxxx.jpg"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 44612,
+    "url": "https://hackerone.com/myndr",
+    "handle": "myndr",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/72u0z23kuv9tw493ss9ee5qupf0u/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/72u0z23kuv9tw493ss9ee5qupf0u/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Myndr",
+      "twitter_handle": "myndr_NL",
+      "website": "https://www.myndr.nl/",
+      "about": "Myndr makes sure your Internet in the classroom is more suited to the actual needs of your students."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2021-09-23T08:41:40.146Z",
+  "bug_reporter_agreed_on_going_public_at": "2021-09-23T07:37:57.859Z",
+  "team_member_agreed_on_going_public_at": "2021-09-23T08:41:40.050Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nhello team,\n\nI tested a little bit the website and went to registration page where you will give 7 digits to complete your switch serial, i didn't want to go further with brute forcing because it's  forbidden how ever i gave a try with a small range of tries and have no message for limitting the number of requests. \n\n## Steps To Reproduce:\nTo reproduce this you have to follow these steps:\n\n  1. Send requests with  POST  and change the 7 digits of the param #switch-serial  and wait for http statut 200 instead of 404 \n\nPOST /auth/validate-switch-serial HTTP/1.1\nHost: dashboard.myndr.net\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:76.0) Gecko/20100101 Firefox/76.0\nAccept: */*\nAccept-Language: fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3\nAccept-Encoding: gzip, deflate\nContent-Type: application/x-www-form-urlencoded; charset=UTF-8\nX-Requested-With: XMLHttpRequest\nContent-Length: 33\nOrigin: https://dashboard.myndr.net\nDNT: 1\nConnection: close\nReferer: https://dashboard.myndr.net/auth/register?id=-1\n\nswitch-serial=MSA3/8878-XXXXXXX\n\n#Solution\n\nA limit to requests mechanism  must be deployed.\n\n## Impact\n\nAn attacker could send a large number of requests to determine the victim switch serial and went to the next step of registration.",
+  "weakness": {
+    "id": 27,
+    "name": "Improper Authentication - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1127086,
+      "file_name": "x.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/x350w23upt5kxk2nzwa6qfzdqu7i?response-content-disposition=attachment%3B%20filename%3D%22x.jpg%22%3B%20filename%2A%3DUTF-8%27%27x.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ3PTGXCBB%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T013412Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH4aCXVzLXdlc3QtMiJHMEUCICjPKCfEn7AzycH5jzZC7bvFmMGFnjr4oFB%2FNgW3fv16AiEAvEp1gK8uBkiiia7oKy7ZybEQRET%2F8yTlaL28zTnf3fsquwUI9%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDEUTE9utFMEn%2FQK%2FYiqPBVRkPSsYq7uvD9%2FivaWJFIoEuYA7tLMX2eEcpuuElpR9QkX5OJsNGxobnVIsj65e9n0XSOMTjUb7HT1bXgiYmpUxSGXKXH%2FvFY23mlNfEWpej3tzXKZXDg6Vp9%2F4gTo9nKxsSkX4KHBNReGnrV%2BmsbA%2FXVo1uCgEJg2HMUB3pjxo4Bnj9uWloEq1%2FbGRg2jZjgp2hnoBic0SgCCi0Lizfaqz656iQdzUQw0A3QtmzCZacMxI16BTroiegvDzcVXNf5L2IgwDJ7BdOHwbqwwFvoMN6tYc%2BvqkEWWGFgx%2Buh1b%2BoroG%2BtI044eCZYO2Btw8%2F3Ler6C8uk262h3IhH0RO0cR8LPeZg7Rkdq6mZhf60opgPJ6DoDsE27lPtDhNJQOftEa3gld8YHNcIsUxMaK8SR0N38XFwp2gPBCKUNN4BX1ilg3FNnncaDZjOZcKfVYpGICtr9IVuUYQidJKvLe%2B0%2Fs06h2uUW06e4bLzok5DBVHNGaFB9ns7%2BXIzZBM%2FipMiBopIu9yq2OC8s2I1D%2BhnOEN1Dc13cl0BJFBcFcK2GTOretKK%2BPwat9Sq%2Buo5VjihH7VlXZzjlBUJwZBbgvL26pNtw4uCocwWTanXDIvVFCEF3ht2t1iQMvIOkoYNtDyjI82AOy2NlWAz%2BVkDH4l53WKQu3f%2F%2FI%2FBAMeIgC2PXqdk6xcFleFCe8UkEk4PBljDaW1afSLK6FPF5keBH4paTYchEvBe5nuHjPfQfEF5Cgj7d7u9yZhoLCVi%2BuglEjy%2BIS4r8WGqzw8fiR9TPVeLYdiU4HY9AoKOALnQ6X6lN%2FxZIxr4HUKNi9x3fP9lLjTFpHrIJoq5lN8HLX4M7l5hs6fHTjQeHyv4hmzMMH5Qwgs%2B8xgY6sQFVBrHoNhlPezyl%2BxgBzHIDE0XJJjUMV6JDrYYRdNGfHBE51sVGxD8SBpdLQDw9CrNA2c4EJb52K84GGU4D6A1gI0eRq90SSQ7zTvwwycz6AuIYdlCtIWlte1%2BWcVYiH30RDk1i7WaBTHPyBWZ37qcQ4s4UKti1Lh%2BE7W2TYgH56XfqVMkh1ITF83feBaScIj4IzM1y8%2BpZi6wqAfD%2Batz9Z7DLBfbk719662jWXfOT%2FZo%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=cfb1240ef1c8573f9d73f5a9348a66edbe2ef6c1264521990d4e796fc13b5a13",
+      "file_size": 227093,
+      "type": "image/jpeg",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2021-10-23T07:37:57.964Z",
+  "allow_singular_disclosure_after": -123443774.38425085,
+  "singular_disclosure_allowed": true,
+  "vote_count": 7,
+  "voters": [
+    "alp",
+    "xzqtao",
+    "mrde6u9",
+    "destinedtohack",
+    "kwojcik",
+    "meispi",
+    "azimuthub"
+  ],
+  "severity": {
+    "rating": "none",
+    "score": 0.0,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "low",
+      "integrity": "none",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 41213,
+    "asset_type": "WILDCARD",
+    "asset_identifier": "*.myndr.nl",
+    "max_severity": "none"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
