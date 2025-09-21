@@ -1,0 +1,139 @@
+{
+  "id": 484420,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC80ODQ0MjA=",
+  "url": "https://hackerone.com/reports/484420",
+  "title": "Subdomain takeover on usclsapipma.cv.ford.com",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2019-01-23T05:09:30.817Z",
+  "submitted_at": "2019-01-23T05:09:30.817Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "march",
+    "url": "/march",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/007/588/be034e3969b8da4cf1ee07642861d19cb6944e12_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 35812,
+    "url": "https://hackerone.com/ford",
+    "handle": "ford",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/035/812/579c6f8d1b50ac569b2403e9a2508f5ac334e4ec_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/035/812/579c6f8d1b50ac569b2403e9a2508f5ac334e4ec_original.jpg/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Ford",
+      "twitter_handle": "",
+      "website": "http://ford.com",
+      "about": ""
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2019-03-24T23:26:15.015Z",
+  "bug_reporter_agreed_on_going_public_at": "2019-02-22T23:26:12.930Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello Ford H1 team,\n\nI want to report a Subdomain takeover vulnerability in this report, a pretty serious security issue in some context.\n\n##Overview:\nOne of the ford.com subdomains is pointing to Azure, which has unclaimed CNAME record. ANYONE is able to own ford.com subdomain at the moment.\n\nThis vulnerability is called subdomain takeover. You can read more about it here:\n\nhttps://blog.sweepatic.com/subdomain-takeover-principles/\nhttps://labs.detectify.com/tag/hostile-subdomain-takeover/\nhttps://hackerone.com/reports/325336\n\n##Details:\nusclsapipma.cv.ford.com has CNAME usclsapipma.trafficmanager.net wich has a CNAME to feuscspma3fcvapi.eastus.cloudapp.azure.com. However, feuscspma3fcvapi.eastus.cloudapp.azure.com is not registered in Azure cloudapp Virtual machine anymore and thus can be registered as FQDN for a easus VM by anyone. After registering the Cloud App Virtual Machine in Azure portal, the person doing so has full control over traffic on dynatraceppeast01.cf.ford.com (so, not only HTTP/HTTPS but also mails traffic, etc, since we have full control over the virtual machine and it's OS).\n\n##Mitigation:\nRemove the CNAME record from ford.com DNS zone completely.\nOR\nClaim it back in Azure portal\n\n##Files : \nAzure-check-availability.png -> Screenshot of the Azure website api \"check availability\" for the \"eastus\" cloudapp virtual machine. on the link, you can see the location \"eastus\" part of the fqdn ad the DomainNameLabel \"feuscspma3fcvapi\" part of the FQDN, and the \"available : true\" response for this fqdn.\ndns-proof.png -> Result of a \"dig\" command for this domains, showing the \"NXDOMAIN\" reponse for the CNAME entry of the ford subdomain.\n\nCheers,\n\nMarch_42\n\n## Impact\n\nSubdomain takeover can be abused to do several things like :\n\nMalware distribution\nPhishing / Spear phishing\nXSS\nAuthentication bypass\nLegitimate mail sending and receiving on behalf of ford subdomain\n...\nList goes on and on.",
+  "weakness": {
+    "id": 75,
+    "name": "Privilege Escalation"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 410943,
+      "file_name": "Azure-check-availability.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/410/943/7f0d28c84df73ae2a8c727ed3579b113047799fd/Azure-check-availability.png?response-content-disposition=attachment%3B%20filename%3D%22Azure-check-availability.png%22%3B%20filename%2A%3DUTF-8%27%27Azure-check-availability.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQSIKGEP7Z%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T155724Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDXSUJbm47Xkl6GhjmU3im4fJmwYTlkTUAVk7ZOqnxdVAIhAO2uWtZuYHfsefdBGLrVYRcR2FYoDyVPmigBARBQahDxKrEFCBcQAxoMMDEzNjE5Mjc0ODQ5Igy03HZaTgLGoKQJaG8qjgX8W0VTH04xkoaNV862svPDPU80n6pyEi3YUWe10h2lK1TXz0DOs77dMX68bQ18PzzcUav2EhTaNmX5rLjKpJ1DkQKnxzROiK5ZkPsZWdVqmE3fO1vahBNVuuKoeUAaYmqkwujaRmNkP4PdVCB%2BXV8VzyjT33W40cNAtGYtdXdn6wqaEX4J3hfidXlCVJ0wpiAnCqcyQWuYn%2BTq4sJIgNarXyubydkCpAtekhy0bBKNteeTZVMQScHm7vyJzQCV7pCgYbA%2F9%2FUu5q4G2Tzy010pEjyFBZNTA4665siLrU%2F6YKr%2F6nh9ONyY1rCFCAuPWGeuWok4OSdXBkcp3eNvebf8c13CKNItshoUVaWfrW6IkSV1dDrBL4T3WwaBTSZtfMIquer0VUaUEYUPOxu%2FcHYzkaI8hDFNzT8UScwK5BQgK%2BrMe1Rlap%2BxxxL5O2JjPdnoMDRxNVtbrEXLrSpRae1gz0wxcnwgLXeKJMd%2FC3RH9DQZSzY1QKNmzOe%2FHfsH%2BYmn2hieJCllKLnL%2BG01Pl50tWODu8uX0NRn%2Fypiy%2B%2F2eGPHCAU%2ByeuM7JHpqQ0dBLoMtOC0U%2FyIHqnu3%2BGkkzd8wjz9f%2FadmGJxUOza2R2vTCqQ40Me%2Flp65PjJnV9GeDDkO2P5taay5Vp%2BI0EvbolzHzXzpMViuJYnphQ82ft4uYwO1X7OkYX7MBudeZDkW%2FIC0AIk4DZYkjS0Ycmp3dEDL%2Berrf%2BTvveLVHzvzmzNb5wlBiNWlANws1WfGrDWMwPYQdH%2BdayKboNGWL1Rp2twWkWI29ZkNECwdjSvickZ%2Bk51OJoVdq3TUnGT1NOmsLLlOM2jhF%2Bsj9tTangrciafOmLBymP3UYohmtPSYdgwh47AxgY6sAELU2lPQmYa2go0IgVWvMv8Iv8i5y1IKjSv47zwDOk9y6rPQMxOlcinw3T3ewK%2FIMvNRKen0p0QBdpMTv1p7YA6hyrJgw0zI4Twp62x9cvMcLl5NVQglgTZIvSta0fKNAMFRB%2Bd5zl9i%2FzRL%2FEZG5yvG8EMTz7V4FJSfVIR781omSjWgLxNDu4RtpO4zpVf32vf9%2B%2BeKyvx5V%2BbwtSsJUGMGhXENoT4lG%2FWVjcsbgQOSA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=999f6e0121e0d95844a09599a732084024a79d8ac56a645ddf8bcccd2c3e3efa",
+      "file_size": 76853,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 410944,
+      "file_name": "dns-proof.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/410/944/205409789a8c5fb8cadf300f185f0352070e46c0/dns-proof.png?response-content-disposition=attachment%3B%20filename%3D%22dns-proof.png%22%3B%20filename%2A%3DUTF-8%27%27dns-proof.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQSIKGEP7Z%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T155724Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDXSUJbm47Xkl6GhjmU3im4fJmwYTlkTUAVk7ZOqnxdVAIhAO2uWtZuYHfsefdBGLrVYRcR2FYoDyVPmigBARBQahDxKrEFCBcQAxoMMDEzNjE5Mjc0ODQ5Igy03HZaTgLGoKQJaG8qjgX8W0VTH04xkoaNV862svPDPU80n6pyEi3YUWe10h2lK1TXz0DOs77dMX68bQ18PzzcUav2EhTaNmX5rLjKpJ1DkQKnxzROiK5ZkPsZWdVqmE3fO1vahBNVuuKoeUAaYmqkwujaRmNkP4PdVCB%2BXV8VzyjT33W40cNAtGYtdXdn6wqaEX4J3hfidXlCVJ0wpiAnCqcyQWuYn%2BTq4sJIgNarXyubydkCpAtekhy0bBKNteeTZVMQScHm7vyJzQCV7pCgYbA%2F9%2FUu5q4G2Tzy010pEjyFBZNTA4665siLrU%2F6YKr%2F6nh9ONyY1rCFCAuPWGeuWok4OSdXBkcp3eNvebf8c13CKNItshoUVaWfrW6IkSV1dDrBL4T3WwaBTSZtfMIquer0VUaUEYUPOxu%2FcHYzkaI8hDFNzT8UScwK5BQgK%2BrMe1Rlap%2BxxxL5O2JjPdnoMDRxNVtbrEXLrSpRae1gz0wxcnwgLXeKJMd%2FC3RH9DQZSzY1QKNmzOe%2FHfsH%2BYmn2hieJCllKLnL%2BG01Pl50tWODu8uX0NRn%2Fypiy%2B%2F2eGPHCAU%2ByeuM7JHpqQ0dBLoMtOC0U%2FyIHqnu3%2BGkkzd8wjz9f%2FadmGJxUOza2R2vTCqQ40Me%2Flp65PjJnV9GeDDkO2P5taay5Vp%2BI0EvbolzHzXzpMViuJYnphQ82ft4uYwO1X7OkYX7MBudeZDkW%2FIC0AIk4DZYkjS0Ycmp3dEDL%2Berrf%2BTvveLVHzvzmzNb5wlBiNWlANws1WfGrDWMwPYQdH%2BdayKboNGWL1Rp2twWkWI29ZkNECwdjSvickZ%2Bk51OJoVdq3TUnGT1NOmsLLlOM2jhF%2Bsj9tTangrciafOmLBymP3UYohmtPSYdgwh47AxgY6sAELU2lPQmYa2go0IgVWvMv8Iv8i5y1IKjSv47zwDOk9y6rPQMxOlcinw3T3ewK%2FIMvNRKen0p0QBdpMTv1p7YA6hyrJgw0zI4Twp62x9cvMcLl5NVQglgTZIvSta0fKNAMFRB%2Bd5zl9i%2FzRL%2FEZG5yvG8EMTz7V4FJSfVIR781omSjWgLxNDu4RtpO4zpVf32vf9%2B%2BeKyvx5V%2BbwtSsJUGMGhXENoT4lG%2FWVjcsbgQOSA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=8e1e639cb2b148a2ec6a047a264b8bdd0c30cf050336425ca194d01f1d7501ee",
+      "file_size": 85167,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2019-03-24T23:26:12.978Z",
+  "allow_singular_disclosure_after": -205000271.0500969,
+  "singular_disclosure_allowed": true,
+  "vote_count": 104,
+  "voters": [
+    "kerbyj",
+    "todayisnew-",
+    "checkm50",
+    "d0kkillo",
+    "fousekis",
+    "ali",
+    "tess",
+    "sumgr0",
+    "cyber_humans",
+    "hrdfrdh",
+    "and 94 more..."
+  ],
+  "severity": {
+    "rating": "high",
+    "author_type": "Team"
+  },
+  "structured_scope": {
+    "databaseId": 17626,
+    "asset_type": "URL",
+    "asset_identifier": "*.ford.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
