@@ -1,0 +1,150 @@
+{
+  "id": 358119,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zNTgxMTk=",
+  "url": "https://hackerone.com/reports/358119",
+  "title": "SSRF in proxy.duckduckgo.com via the image_host parameter",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2018-05-27T15:39:32.113Z",
+  "submitted_at": "2018-05-27T15:39:32.113Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "fpatrik",
+    "url": "/fpatrik",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/33e9z8cvc99nhn9cqw932sdpciw9/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": true,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 10995,
+    "url": "https://hackerone.com/duckduckgo",
+    "handle": "duckduckgo",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/4mpaehke5u0ubioeqvys0hcesjle/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/4mpaehke5u0ubioeqvys0hcesjle/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "DuckDuckGo",
+      "twitter_handle": "duckduckgo",
+      "website": "https://duckduckgo.com",
+      "about": "Independent online protection company. Get our mobile & desktop browser with protections built-in, including our search engine that doesn’t track you."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2018-08-15T14:46:32.647Z",
+  "bug_reporter_agreed_on_going_public_at": "2018-08-14T09:43:19.192Z",
+  "team_member_agreed_on_going_public_at": "2018-08-15T14:46:32.514Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "# Description\n\nhttps://proxy.duckduckgo.com/iur/ endpoint is vulnerable to ssrf via image_host\nget parameter.\n\n## Vulnerable URL:\nhttps://proxy.duckduckgo.com/iur/?f=1&image_host=https://tudomanyok.hu/\n\n## Some internal URL:\nhttps://proxy.duckduckgo.com/iur/?f=1&image_host=https://127.0.0.1:18091/\nhttp://127.0.0.1:9998/\nhttp://127.0.0.1:8092/\nhttp://127.0.0.1:8091/\n\nThe only restriction that is there must be a http:// or https:// before the URL so you can't go with ssh://\n\n# How to reporduce\n\n1. Go to one of the internal urls and you will see that there is something (some url is only visible with view-source)\n2. The best example is the  http://127.0.0.1:18091/ one if you will visit: view-source:https://proxy.duckduckgo.com/iur/?f=1&image_host=https://127.0.0.1:18091/ui/ that there is something called couchebase console. (only visible in view-source)\n\nThese are I think internal web ports because I wasn't able to go to these ports from the external proxy.duckduckgo.com url.\n\n## Impact\n\nAttacker can scan your internal network, finding internal port, and internal web applications\n\nThe hacker selected the **Server-Side Request Forgery (SSRF)** weakness. This vulnerability type requires contextual information from the hacker. They provided the following answers:\n\n**Can internal services be reached bypassing network access control?**\nYes\n\n**What internal services were accessible?**\nhttp://127.0.0.1:9998/\nhttp://127.0.0.1:8092/\nhttp://127.0.0.1:8091/\nhttps://127.0.0.1:18091/\n...\n\n**Security Impact**\nI was possible to reach internal services, however I didn't tested that is that important or not (because i didn't want to violate any law)\n\n",
+  "weakness": {
+    "id": 68,
+    "name": "Server-Side Request Forgery (SSRF)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 302403,
+      "file_name": "ssrf.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/302/403/7f75135cf153172630cf39d5a4e44c2355129b91/ssrf.png?response-content-disposition=attachment%3B%20filename%3D%22ssrf.png%22%3B%20filename%2A%3DUTF-8%27%27ssrf.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQSO43U5T6%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T172849Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJD%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQD67cMBGP2%2BcQLtexV8sGrY0vBz2yRgbATI0xTah5hTkQIhAMdsv37m9QyDoVkPuc96GcasJD1uv31qLa8y4k35gHjsKrEFCBkQAxoMMDEzNjE5Mjc0ODQ5IgzIrwdKXYjQ7LMCM8YqjgWhTO2AHOdnOctwq5FRCX389f%2BT7NDlghlgwbW8YytSnqPHmOTANkgDg6NPrycqqGargYVlB%2FLjXAo1GyV%2B7IroWh0aDreGeItcVPgPB5RErTFgE7mIUMA2foCTR8TW7h5iJkBn9SPuEEVxt%2ByKkS9EJZyNBoOfyxtJLFjzGOGwd6AJ9Wtm95t0eJTRVCOc0YC8%2BRpL6S4QK%2BUJTeRv6I%2B%2FHwzAveue42yOmsFqLGFKPoZRmiNEJ0AtFInnAmX53x1hrOOeede5X0evu2TG0ZNkX3RIizY7OENVjLckNdIus39UP%2BiYmuk4yeLEjuDFQE63CkQ7dFWrywt4Z%2Fzz2FU3svFFgwOaJEbI%2FyqvFhQOkMCTGL%2Fq3FqDjvRrIBVTW6h4r7c8CeWluUGie1r97kOZdV7Ub2aeUIUMUo5CW5%2F%2FWoy7ju4%2Fh1ZWFnBUTpH%2Fi3YAJ0VHgkAyo3tYuefrjtGi1ryQ0sSa8dOG4Vc%2BlGZMiGhvP2wBe7r68Qc6jjxA83hGM%2Bq26u5xzl8R0ESQSXKBrChFLlApel4GtDPT3Sl%2BN2DRdVP0f2ksEBWovVBSprDLpiJ%2BH1WjxfiK1wHI1JiPfWYpXDzJ9JJ8CaqpgQjCScCcq83XJFlt0txxnShaIP0hd3yrnFHcTVguD80q9zByoUOSYNZjHuX%2FMWdOv%2B0LvGy7n8%2F6Ya3NyM%2FX%2FvjuNLUvGRzDAoEba1SHQGBI5XCoAYOjTYkwurc8nZHXwv9hFdG9v1ymwYT1nZ%2Fg7J%2B%2Fj4f4MZJP%2BWe9wcXgsGF00iHfwMJgz4YJCKLdQcAiINRrde9wmx%2BDVxZDIvU9A6QR8jVHos8DUPx6kHirUT5%2F1SRcCYlY%2BMS9xezKOGrUUaow8rPAxgY6sAGeOsUTL2jZ3QSefAfTfLG8%2FPIdc5AVbXR0Ho8KFh6hzj3wh7HzHTuBOcUlrlhoVD3ayDY7g22i4wt%2FwEFybJ9EueG8I%2Fp76jwH9UDFcUz4TU15EM2mbP1JGae%2BPF%2BIKTz%2BhCMU5Y02etiBTT%2B31LaG%2BCCwAXKJ6ZTLJ%2BDIA4v1Y7mKM7wZs0nA6eBKQb%2F4kzmH7J7FnReWZHTgDQGdKXrN0VLDCiujuaIwOZbd1GliQw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=26243e6ee068b4fd9d8da5774d1ffc7098be4e6342d1474b783ba9de4a47e4b5",
+      "file_size": 195958,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 302404,
+      "file_name": "ssrf3.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/302/404/c53cfa947e5b7fcf09433480058db38b0cdef504/ssrf3.png?response-content-disposition=attachment%3B%20filename%3D%22ssrf3.png%22%3B%20filename%2A%3DUTF-8%27%27ssrf3.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQSO43U5T6%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T172849Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJD%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQD67cMBGP2%2BcQLtexV8sGrY0vBz2yRgbATI0xTah5hTkQIhAMdsv37m9QyDoVkPuc96GcasJD1uv31qLa8y4k35gHjsKrEFCBkQAxoMMDEzNjE5Mjc0ODQ5IgzIrwdKXYjQ7LMCM8YqjgWhTO2AHOdnOctwq5FRCX389f%2BT7NDlghlgwbW8YytSnqPHmOTANkgDg6NPrycqqGargYVlB%2FLjXAo1GyV%2B7IroWh0aDreGeItcVPgPB5RErTFgE7mIUMA2foCTR8TW7h5iJkBn9SPuEEVxt%2ByKkS9EJZyNBoOfyxtJLFjzGOGwd6AJ9Wtm95t0eJTRVCOc0YC8%2BRpL6S4QK%2BUJTeRv6I%2B%2FHwzAveue42yOmsFqLGFKPoZRmiNEJ0AtFInnAmX53x1hrOOeede5X0evu2TG0ZNkX3RIizY7OENVjLckNdIus39UP%2BiYmuk4yeLEjuDFQE63CkQ7dFWrywt4Z%2Fzz2FU3svFFgwOaJEbI%2FyqvFhQOkMCTGL%2Fq3FqDjvRrIBVTW6h4r7c8CeWluUGie1r97kOZdV7Ub2aeUIUMUo5CW5%2F%2FWoy7ju4%2Fh1ZWFnBUTpH%2Fi3YAJ0VHgkAyo3tYuefrjtGi1ryQ0sSa8dOG4Vc%2BlGZMiGhvP2wBe7r68Qc6jjxA83hGM%2Bq26u5xzl8R0ESQSXKBrChFLlApel4GtDPT3Sl%2BN2DRdVP0f2ksEBWovVBSprDLpiJ%2BH1WjxfiK1wHI1JiPfWYpXDzJ9JJ8CaqpgQjCScCcq83XJFlt0txxnShaIP0hd3yrnFHcTVguD80q9zByoUOSYNZjHuX%2FMWdOv%2B0LvGy7n8%2F6Ya3NyM%2FX%2FvjuNLUvGRzDAoEba1SHQGBI5XCoAYOjTYkwurc8nZHXwv9hFdG9v1ymwYT1nZ%2Fg7J%2B%2Fj4f4MZJP%2BWe9wcXgsGF00iHfwMJgz4YJCKLdQcAiINRrde9wmx%2BDVxZDIvU9A6QR8jVHos8DUPx6kHirUT5%2F1SRcCYlY%2BMS9xezKOGrUUaow8rPAxgY6sAGeOsUTL2jZ3QSefAfTfLG8%2FPIdc5AVbXR0Ho8KFh6hzj3wh7HzHTuBOcUlrlhoVD3ayDY7g22i4wt%2FwEFybJ9EueG8I%2Fp76jwH9UDFcUz4TU15EM2mbP1JGae%2BPF%2BIKTz%2BhCMU5Y02etiBTT%2B31LaG%2BCCwAXKJ6ZTLJ%2BDIA4v1Y7mKM7wZs0nA6eBKQb%2F4kzmH7J7FnReWZHTgDQGdKXrN0VLDCiujuaIwOZbd1GliQw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=9548319e2567e7b7b18f79c1e37c0ce1e251ebbb9c1e4409e26012db27f67853",
+      "file_size": 83904,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2018-09-13T09:43:19.932Z",
+  "allow_singular_disclosure_after": -221643929.36494902,
+  "singular_disclosure_allowed": true,
+  "vote_count": 15,
+  "voters": [
+    "smither",
+    "kapytein",
+    "ali",
+    "yumi",
+    "spam404",
+    "aryan2808",
+    "emitrani",
+    "eveeez",
+    "khizer47",
+    "sa1tama0",
+    "and 5 more..."
+  ],
+  "severity": {
+    "rating": "high",
+    "score": 7.5,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "low",
+      "integrity": "low",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 8671,
+    "asset_type": "WILDCARD",
+    "asset_identifier": "*.duckduckgo.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
