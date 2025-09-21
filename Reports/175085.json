@@ -1,0 +1,123 @@
+{
+  "id": 175085,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNzUwODU=",
+  "url": "https://hackerone.com/reports/175085",
+  "title": "URI scheme bypass in mail app lead to HTML content spoof and opener control",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-10-11T07:59:08.673Z",
+  "submitted_at": "2016-10-11T07:59:08.673Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "trichimtrich_",
+    "url": "/trichimtrich_",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13291,
+    "url": "https://hackerone.com/nextcloud",
+    "handle": "nextcloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Nextcloud",
+      "twitter_handle": "nextclouders",
+      "website": "https://nextcloud.com",
+      "about": "Access, share and protect your files, calendars, contacts, communication & more at home and in your enterprise."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2017-01-12T20:02:32.175Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2016-12-13T20:02:30.609Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Bug\nWhen we load a HTML mail from mailbox via api, etc\n`http://nextcloud/index.php/apps/mail/accounts/<accountID>/folders/SU5CT1g=/messages/<mailID>/html`\nOur content will be passed to HTML Purifier to strip malicious XSS patterns.\nAfter that, an filter will apply to transform acceptable URI schemes `http, https, ftp, cid` to redirect/proxy service. \nThere's a bug in here, only `http, https, cid` scheme are filtered.\nSo we can add `src` attribute or `href` from url with scheme `ftp` or `NULL` (like `'../../abc/xyz'`) . We can easily bypass image filter (also Content-Security-Policy)\nNotice that there's a filter that append `target=_blank` to all `<a>` tag. This can lead to opener bug [https://mathiasbynens.github.io/rel-noopener/#hax] (https://mathiasbynens.github.io/rel-noopener/#hax) that I learned from [124620] (https://hackerone.com/reports/124620).\nAnd finally it can leak accountID of user\n\n## PoC\n* Attacker create a shared link of a image\n\n`http://192.168.200.117/nextcloud/index.php/s/HUw7Cwa40Phlt8v/download`\n* Attacker start a ftp server and create a html page.\n\n`ftp://chim:chim@localhost/test.html`\n* Attacker send a HTML email\n\n```\n<h1>test schema</h1>\n<p>\n\t<a href=\"http://file.trich.im\">Link via redirect</a><br>\n\t<a href='ftp://chim:chim@localhost/hihi.html'>Bypass link</a>\n</p>\n\n<p>\n\tFiltered img<img src='http://192.168.200.117/nextcloud/index.php/s/HUw7Cwa40Phlt8v/download'><br>\n\tBypass img <img src='/nextcloud/index.php/s/HUw7Cwa40Phlt8v/download'>\n</p>\n```\n\n## Video Demo https://www.youtube.com/watch?v=BdOD49gokdI",
+  "weakness": {
+    "id": 57,
+    "name": "Violation of Secure Design Principles"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 127148,
+      "file_name": "shareimg.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/127/148/dc4ae41388280f99ef2b563d0a498bbe5661f215/shareimg.png?response-content-disposition=attachment%3B%20filename%3D%22shareimg.png%22%3B%20filename%2A%3DUTF-8%27%27shareimg.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4BD7AFDX%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T235806Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIG5Mzr0x%2F39caZ34VvnYZSu%2B4XVkYwA38IEB8ighJcTzAiEArtPm%2B8vaiCvHEmILAu%2BHyPF0pbWp%2BJPZNZdL%2F%2FlyMfcqsgUIHxADGgwwMTM2MTkyNzQ4NDkiDHvDZxI45WO%2FVcWRAyqPBWYJGhwuiVUh%2B0EvK00xvBEIwzRX34v%2BvZthshXDaUWH%2BuPRDBvIPmWGrSH8SD0g5H8HbEwkEfKzKDe5mjTk2awkWVbsSau8hngdZ7IhUGfDffI5lBmweljLTaxh%2BOoaq9Fs%2B8M5cec1GyvvCPKGDkFQeSrSIV6R6%2FDbCSm6i3N0K%2FamMzLzLLkT46OfbAyJP9LRvoa1w4L4sHNp6Yuj1H0KNyNE8TLfQBtH8Dc0ok4B0LKvxLlKMXC0JZJQkZr7HF5Dfn9mHEzR7vSqL18fUO2otCOQ4ERBiMMostU61Zi1UZJmu61vfApA7yhsBzxZ8rqKALxUu%2B1MFtosUYKkYrprYKEzKf9svpXjt%2FrXoBWbjoJkRXuvUZULV64AzqxfEABxHZnNlesMWsKnxcCi6hWoqM%2BMqFpwb%2ByEl%2BjvB7hb%2FpPlVfp%2FUX4hOMtJkN6uDdb1z%2FU9CnMaEdgawe6kTF9Vk%2FVgTwMGVloLq2yHI5vmd0tw8rxZ1I2ULlq%2FF5m8bqMCdif5rp2K7nBOhHTy9INO7J%2B85QgMsIeUZGt3cmPFFRP9kCG0gudhiCfx8O12qKSrP07TVQ%2FXxCbmeeGr1I2r6Bll3tkr8fENBu%2BKJScJy5O9OUl2aVyCndk7FgnFesONiq6cVO8TAz1Xf23OZJaPK%2FTzAFONQwscgKRFL9rZw1rwpoeahrbbC6mw7H7MqlQIM%2F9gmDx1ZWfVPTefT4FVKlpsrfYxrK5MtDBz7tQCiHCA7LfbXAjS%2FlWaAr2rdNKfndK7pdiCihvMKheo8M%2BOhQ27VwQdniEz2xssRvkOX4Wtfo340%2FLCmBv6SFEicozc4Jq4WyPoh3y1DkUJHxhOkdycejqPIVLn9IUshWgw1efBxgY6sQEHGWzuwlsd9fgperU6ktE%2BuXdh1rIZugRbxHX42QKa57gQF8EWQwEbtPI78E68kTrdP9nudx%2FAVHRecrssw0tXONvW6yuQBiE6gGix3Eq2%2BpFtSaKSngamNWxm0IF00P8zn4s2StsLeTzbZ3Nm86Dv4KQlzCnXGXly6KKUBCLHE3ZmKRfAwATv%2B7IcpN5amQZQu%2BTbMe1tmjRfvhIt%2BxuLa8WiyBlHqp5vns3XPmKRtA8%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=edb1781542d2beeba0228d626920f6cbf79848878420dae634cb88c887be0744",
+      "file_size": 134793,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 127149,
+      "file_name": "send.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/127/149/800b78fc460926ea711623876dac82d52755df36/send.png?response-content-disposition=attachment%3B%20filename%3D%22send.png%22%3B%20filename%2A%3DUTF-8%27%27send.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4BD7AFDX%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T235806Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIG5Mzr0x%2F39caZ34VvnYZSu%2B4XVkYwA38IEB8ighJcTzAiEArtPm%2B8vaiCvHEmILAu%2BHyPF0pbWp%2BJPZNZdL%2F%2FlyMfcqsgUIHxADGgwwMTM2MTkyNzQ4NDkiDHvDZxI45WO%2FVcWRAyqPBWYJGhwuiVUh%2B0EvK00xvBEIwzRX34v%2BvZthshXDaUWH%2BuPRDBvIPmWGrSH8SD0g5H8HbEwkEfKzKDe5mjTk2awkWVbsSau8hngdZ7IhUGfDffI5lBmweljLTaxh%2BOoaq9Fs%2B8M5cec1GyvvCPKGDkFQeSrSIV6R6%2FDbCSm6i3N0K%2FamMzLzLLkT46OfbAyJP9LRvoa1w4L4sHNp6Yuj1H0KNyNE8TLfQBtH8Dc0ok4B0LKvxLlKMXC0JZJQkZr7HF5Dfn9mHEzR7vSqL18fUO2otCOQ4ERBiMMostU61Zi1UZJmu61vfApA7yhsBzxZ8rqKALxUu%2B1MFtosUYKkYrprYKEzKf9svpXjt%2FrXoBWbjoJkRXuvUZULV64AzqxfEABxHZnNlesMWsKnxcCi6hWoqM%2BMqFpwb%2ByEl%2BjvB7hb%2FpPlVfp%2FUX4hOMtJkN6uDdb1z%2FU9CnMaEdgawe6kTF9Vk%2FVgTwMGVloLq2yHI5vmd0tw8rxZ1I2ULlq%2FF5m8bqMCdif5rp2K7nBOhHTy9INO7J%2B85QgMsIeUZGt3cmPFFRP9kCG0gudhiCfx8O12qKSrP07TVQ%2FXxCbmeeGr1I2r6Bll3tkr8fENBu%2BKJScJy5O9OUl2aVyCndk7FgnFesONiq6cVO8TAz1Xf23OZJaPK%2FTzAFONQwscgKRFL9rZw1rwpoeahrbbC6mw7H7MqlQIM%2F9gmDx1ZWfVPTefT4FVKlpsrfYxrK5MtDBz7tQCiHCA7LfbXAjS%2FlWaAr2rdNKfndK7pdiCihvMKheo8M%2BOhQ27VwQdniEz2xssRvkOX4Wtfo340%2FLCmBv6SFEicozc4Jq4WyPoh3y1DkUJHxhOkdycejqPIVLn9IUshWgw1efBxgY6sQEHGWzuwlsd9fgperU6ktE%2BuXdh1rIZugRbxHX42QKa57gQF8EWQwEbtPI78E68kTrdP9nudx%2FAVHRecrssw0tXONvW6yuQBiE6gGix3Eq2%2BpFtSaKSngamNWxm0IF00P8zn4s2StsLeTzbZ3Nm86Dv4KQlzCnXGXly6KKUBCLHE3ZmKRfAwATv%2B7IcpN5amQZQu%2BTbMe1tmjRfvhIt%2BxuLa8WiyBlHqp5vns3XPmKRtA8%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=cca485f871662278607e33beccd8167e2ddd4cf1b5d6daf12adc33ee7e2c6b1a",
+      "file_size": 137336,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-01-12T20:02:30.638Z",
+  "allow_singular_disclosure_after": -274247736.1046906,
+  "singular_disclosure_allowed": true,
+  "vote_count": 5,
+  "voters": [
+    "eveeez",
+    "khizer47",
+    "japz",
+    "spetr0x",
+    "bbisawdr"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
