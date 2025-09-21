@@ -1,0 +1,131 @@
+{
+  "id": 280389,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yODAzODk=",
+  "url": "https://hackerone.com/reports/280389",
+  "title": "No Rate limit on Password Reset Function",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2017-10-19T10:58:34.318Z",
+  "submitted_at": "2017-10-19T10:58:34.318Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "akaash_pantherdefence",
+    "url": "/akaash_pantherdefence",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/158/466/09b6cf7aee7af9935345adf666f89c9e603d6ea3_original.jpeg/c8a1698ff707a5e3e8a91a3484838363845daac68cb82c86d55c9e2d44d67b67"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 21745,
+    "url": "https://hackerone.com/infogram",
+    "handle": "infogram",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/021/745/553edf21f45ba8f73faba5d308e0d91fc026fef0_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/021/745/553edf21f45ba8f73faba5d308e0d91fc026fef0_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Infogram",
+      "twitter_handle": "infogram",
+      "website": "http://infogram.com",
+      "about": "Make Infographics and Charts that People Love"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2017-12-12T15:15:38.464Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-12-12T15:12:10.957Z",
+  "team_member_agreed_on_going_public_at": "2017-12-12T15:15:38.400Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello Infogram Security Team\n***************************\n\n###Description:-\nI have identified that when resetting the password, the request has no rate limit which then can be used to brute force through one request. Which can be annoying to the infogram users.\n\n###Steps to reproduce:-\n* Request for password reset link.\n* Catch the above request in burp suit send it to the repeater\n* Now send continuous request to the server.\n\n**NOTE:**  *Every time you will receive the same response which is {\"status\":\"ok\"}*\n\n>HTTP/1.1 200 OK\nDate: Thu, 19 Oct 2017 10:39:31 GMT\nContent-Type: application/json; charset=utf-8\nContent-Length: 15\nConnection: close\nServer: nginx\nX-DNS-Prefetch-Control: off\nStrict-Transport-Security: max-age=10886400\nX-Download-Options: noopen\nX-Content-Type-Options: nosniff\nX-XSS-Protection: 1; mode=block\nReferrer-Policy: no-referrer\nX-Frame-Options: SAMEORIGIN\nETag: W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\"\nX-Infogram-Server: b302\n\n{\"status\":\"ok\"}\n\n* I tried sending 25 request which was success. (It can be more..) \n{F230753}\n\n###Solution:- \nYou should limit the rate for password reset links to avoid such kind of issues.\n\n*************************\nBest Regards\n*Akaash Sharma :)*",
+  "weakness": {
+    "id": 27,
+    "name": "Improper Authentication - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 230753,
+      "file_name": "poc.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/230/753/14c8bf80db26e7506de78da23919f4f3eb7bd277/poc.jpg?response-content-disposition=attachment%3B%20filename%3D%22poc.jpg%22%3B%20filename%2A%3DUTF-8%27%27poc.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4NBYFOQ4%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T192119Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDUOkW2FzFC6pm%2FNX1XaXFOMoMH%2Bp4H2WUiPJZqY%2BanwgIhAJFQ%2FlQr6I%2B0XtQDeMC2oBzuFsDrw8mLPnzuXsmpbd1PKrIFCBoQAxoMMDEzNjE5Mjc0ODQ5Igyr7Rw5YRF0HZ7fR%2FYqjwW5Qd1a9sJiEkY%2B%2F3zgLJW1Urm240ouIXC%2Fgaxrdjh7p08XzP5hiWBzZJbdK8F0ucj7xdDtBM%2FwJEuTALPEVPodKNXLuo2iPiEfHLn6Mi044F%2B1kIUP0JUBECpklZXKfr1UYZwdUZr01mZv3kz%2FI3%2Fqn1w0AiWtbTG08ENHN%2BgPlNoi7FWCS6Su3fwHpMyve8Ws3n2ItTFL8KJU%2BDuMyVs7WA3fUYoB5SyTJtEeuJyq7xUt%2FIEq46i9%2B3R%2FZuXRS9MXDvEwJSenc7BovdJbkmrfHrNXldVgLVXfRDoI7rfzQg9kpiyZL%2FNtqP0eLFtwnOssULBgqtvcj8gS6xZol0yOSvzTatcqbdFaUBjUyLwnCyvalzYWpBG8iJ0hIsnKdVxgyOfm3eG%2FyMp0l2ze37ns7D2G42ReaM27z6o9MLu2%2FaXchNsGsACQUmyJzmQeaWkLKsN3t0CV1a4ikXVBJoKuSvE1Ow1COmF4Ga2gQGRvxhSKkmd%2BwqpMtiudIH2qoRrFAy9vYiLw3rNmj6PmurdKVSc5IQ9UNxuMF3Oody6yS5NDAZXXQXaG4wJ%2BdokigS90AYqlv9ISgI3CuNe08R9v67hxFBTRFYlkffzzWXjA55E3n%2FfB%2FfsKdvyOHus%2F4b%2B5ykH2GacB7nF7oaycS%2FIwvab5cWW5NKoEsiYhqg1qFqW%2F767vijcT54G9RDk99KaoL7RvH0XjSJZLGBH3ysF1apVxsziRJxMaqOdC92Psjzq17fzztkjL8IRjSu%2FmDkVRJoSg65hwJO7nyBDpZLnqoU4SyQXKhceVVzzVxrAvs1ULMjCrCNy8LLJuVpp4aVfgQBSuPISCgGpnNgRyRUBAEOg1IWUPYdUw49OAMQllMLXPwMYGOrABAWXJLzknPNalVhXK%2BCD1xQTo7%2FG%2F8w2hhdtgVQygVnyY5d%2BT9T7ud5%2BbdHuudRmYgmMmSjNEMp22ujihBkD%2Bff5FvQTNjj6uaoBxOVIT0HovM5Q%2FMD8whEgbTG5c7Z1wEG2nZEC1OV%2FfqWEtb5RMBmE5z0FRma6AYAY7IShPFPHfGzVOzU%2BB7oLUVCqVPJZZlTdn%2FX1dBFkKtdV4f1XLR%2BgKj30YXP3LHhQ1daucH9g%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=fea783fbed1bcccbc93b43a34fab6ccd72bd34220f60f21902ff954eb2090a1a",
+      "file_size": 36874,
+      "type": "image/jpeg",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2018-01-11T15:12:11.032Z",
+  "allow_singular_disclosure_after": -242798948.66345614,
+  "singular_disclosure_allowed": true,
+  "vote_count": 12,
+  "voters": [
+    "he4am",
+    "shubham_srt",
+    "masad12",
+    "r3y",
+    "eveeez",
+    "silv3rpoision",
+    "avanish11",
+    "dynamo214_",
+    "destinedtohack",
+    "abukowski",
+    "and 2 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 870,
+    "asset_type": "URL",
+    "asset_identifier": "infogram.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
