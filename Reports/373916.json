@@ -1,0 +1,131 @@
+{
+  "id": 373916,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zNzM5MTY=",
+  "url": "https://hackerone.com/reports/373916",
+  "title": "Open redirect on https://blog.fuzzing-project.org",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2018-06-29T13:16:49.176Z",
+  "submitted_at": "2018-06-29T13:16:49.176Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "juliocesar",
+    "url": "/juliocesar",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/086/511/11b3e67460c1848531225e6b17fbb48078861a08_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 30278,
+    "url": "https://hackerone.com/hannob",
+    "handle": "hannob",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NzQyNTgsInB1ciI6ImJsb2JfaWQifX0=--17551179046e358db89580820048674d0f970df4/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--a4d91faed3dff6024dfc1a7b7f8ccc6b45e38396/open-uri20180625-9169-fahww2",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/030/278/97035f061f6de55a9362b39edae4f5948bda6735_original./3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Hanno's projects",
+      "twitter_handle": "hanno",
+      "website": "https://hboeck.de/",
+      "about": "Personal web projects from Hanno Böck."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2018-11-10T11:54:30.841Z",
+  "bug_reporter_agreed_on_going_public_at": "2018-11-10T11:54:30.794Z",
+  "team_member_agreed_on_going_public_at": "2018-11-09T14:32:59.432Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "**Summary:**\n\nThere is an Open Redirect on  https://blog.fuzzing-project.org/exit.php?url= due to the application not checking the value passed by the user to the \"url\" parameter.\n\n**Description:**\n\nUnchecked redirects occur when an application redirects to a destination controlled by attackers. This often occurs in functionality returning users to a previous page, e.g. after authenticating.\n\nAn attacker can control the value of the \"url\" parameter and make it redirect to a malicious endpoint.\n\nhttps://blog.fuzzing-project.org/exit.php?url=\n\n## Steps To Reproduce:\n\nHere is a proof of concept to demonstrate how an open redirect occurs. Please note that this particular example is not a vulnerability and just here for demonstration purposes.\n\nPoC: https://blog.fuzzing-project.org/exit.php?url=aHR0cHM6Ly93d3cuaW5mb3NlYy5jb20uYnI=\n\nThe URL looks like it should go to https://blog.fuzzing-project.org, but you are redirected to https://www.infosec.com.br\n\n## Supporting Material/References:\n\nMitigation:\n\nWhen possible, do not allow user input to directly control redirect destinations; rather, generate them on the server side (e.g. via ID -> URL mapping). When this is not an option, a strict whitelist is highly recommended. Finally, a last-ditch mitigation can be performed by removing protocol specifiers from user input prior to redirection. This last method will not fix intra-site redirect exploits, but can prevent redirects to an attacker-controlled website.\n\nReference:\n\nhttps://www.owasp.org/index.php/Unvalidated_Redirects_and_Forwards_Cheat_Sheet\n\n## Impact\n\nAttackers may be able to use this to execute believable phishing attacks, bypass authentication, or (in rare circumstances) violate CSRF mitigations.",
+  "weakness": {
+    "id": 53,
+    "name": "Open Redirect"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 313661,
+      "file_name": "Screencast_2018-06-29_10_00_28.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/313/661/d8acac44f34dd8dc5c5fdd2b4dc7d9408674598e/Screencast_2018-06-29_10_00_28.mp4?response-content-disposition=attachment%3B%20filename%3D%22Screencast_2018-06-29_10_00_28.mp4%22%3B%20filename%2A%3DUTF-8%27%27Screencast_2018-06-29_10_00_28.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ63C5JMFQ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T164350Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIFDvRHn9ky1YQHzGuakS4Iz0vDtMnYWimh35oKHC7r%2F2AiAia3verAavWozpj%2BAPj1Qc2tpTLeRgJgInw7s8k0Ms7CqyBQgWEAMaDDAxMzYxOTI3NDg0OSIMRvcecFwXg0wZuwgGKo8FksKPXngK9ceXhWE613mjXnbZdBITFJXG%2B7ytn5mQqEzLPXaN8Dx%2F8nIueq6O5yT55A9X2c24%2FKOSrqpojCWB%2FmHExscAysLYKTPUIlVMYMErXfxTvQFibbmyznBSpJpT6mph1%2FC7m4PzL0Z7s5mDS2e2w0q67hMvtblmSd6z2S5sLLprqEv4nxaO2Z03eCVZed4HflAJpQWGkIN9dxrJmqL0xfNinTwvuGKS%2FtQXpUBCwbAlEPsVf6kFzMuBkc0qEZZXmFUVur2bm0BmaPy5U0SS0%2F0oEWM%2B%2Fd1IyjwDODtmd9pVA%2B1zdR2zU3SBpqjUGbCVyxM%2BCvCJKx2laInTTGrcZXpxB0ZaBPc72qXRyrFiYVUpxGbqbXqPTdJjGm8GxvuwY6dwYyqiDL0L4ZHA8ueYS34pZlSvE5cvZ%2B5L0JHJa9vEJ1W8Pqt1wxWRFxk9rTjKEsTldCLOAaZQArrL09XbORY9RKJymViUcVKXXDZyYrihG24puBP7Q0klt33FfXCOWl8D%2BdEqzwPIv5H2VZGi4m%2FGS4Id8QNSv7KNd72oaaqqBHPe%2BcaQBNdrl5tGj0GLQa5vEwuuFiqiZfYWS1JXRedJdO1231Hq5yU66xdMa6GLuVKIVsSg5Tz7a0KFhpvLGYG28NsHgim3jEPzU0%2FfskoJ43K0M%2FAQW57Qfto%2F4xPT%2Faem36dXOyY929FDEawLfAQW2K1c5SH1oiT%2Bomp7b0v3iKTxB5YbVOX1QIaqPITE64vVve%2FQVHigwZjXn6gm8r3%2B5jIuQXaMTKmt3Z8qZAXuvHXyIhFySvgvVd1HaBdX%2FLAo6wYx%2BaWuJl8Y7Qg7uuXGEMEBkIba7kqCgJ4cUzEvkb5%2BaF0h0rxabTD357%2FGBjqyAfqYzux0u2fIPi%2F%2B5WgXrdOTFF9hswACvH1kqzOXf9i%2FhFaA9reIVKxbcUQk7RHelMKqGaiuR4%2BORktmbLN6VadvA%2BPEkXFVVes%2B7LnvM9NmvFVdF2yG8LnQmcQMm%2Fue0xNqf3zd753V6T9g2UU8jFT%2F5oJbh4z7d9HvcXbDlcr4DTGGjwHTE7klqn8N7UXcU3Q4yrkD3foXSV43foaRVQywlCTelvhv%2FMKxvOToYrdap2M%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=57e9259e6af92beaa6165aa0cb1860929abe0b7c9fdd0ac43e72b4662ec986cb",
+      "file_size": 2502405,
+      "type": "video/mp4",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2018-12-09T14:32:59.503Z",
+  "allow_singular_disclosure_after": -214107050.82665262,
+  "singular_disclosure_allowed": true,
+  "vote_count": 16,
+  "voters": [
+    "ali",
+    "sameerphad72",
+    "0xd0m7",
+    "juliocesar",
+    "savitar0x01",
+    "geeknik",
+    "eveeez",
+    "khizer47",
+    "minodz1",
+    "prayoga",
+    "and 6 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 11140,
+    "asset_type": "WILDCARD",
+    "asset_identifier": "*.fuzzing-project.org",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
