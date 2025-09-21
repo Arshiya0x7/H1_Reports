@@ -1,0 +1,142 @@
+{
+  "id": 394861,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zOTQ4NjE=",
+  "url": "https://hackerone.com/reports/394861",
+  "title": "Incorrect Permission Assignment for Critical Resource",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2018-08-14T10:20:51.773Z",
+  "submitted_at": "2018-08-14T10:20:51.773Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "dhiraj-mishra",
+    "url": "/dhiraj-mishra",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/049/455/364f57d6fe4bbc9ead49c2648dacc68f89a3089b_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 8724,
+    "url": "https://hackerone.com/mariadb",
+    "handle": "mariadb",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/008/724/6a67872926e894490b4fdc36cd6a3f59e300616b_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/008/724/6a67872926e894490b4fdc36cd6a3f59e300616b_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "MariaDB",
+      "twitter_handle": "mariadb_org",
+      "website": "https://mariadb.org",
+      "about": "MariaDB is a high performance, open source database that helps the world's busiest websites deliver more content, faster."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2018-11-14T09:03:30.215Z",
+  "bug_reporter_agreed_on_going_public_at": "2018-11-14T09:03:30.147Z",
+  "team_member_agreed_on_going_public_at": "2018-10-22T08:31:51.244Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Dear Team, \n\nProduct Affected: https://github.com/MariaDB/server\n\nFile:\n /server/blob/10.3/sql/mysqld.cc#L2761\n\n```\n}\n    if (!SetSecurityDescriptorDacl(&sdPipeDescriptor, TRUE, NULL, FALSE))\n{\n```\n\nThis was purely identified on code review, Never create NULL ACLs.\n\nA mail was sent to security@mariadb.org and MariaDB team is working on this and a fix will be pushed in next version, attached mail headers for your reference.\n\n## Impact\n\nAn attacker can set it to Everyone (Deny All  Access), which would even forbid administrator access and may lead to privilege escalation.",
+  "weakness": {
+    "id": 75,
+    "name": "Privilege Escalation"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 333259,
+      "file_name": "MailFrom-security_mariadb.org.txt",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/333/259/4e1260e6f461c1f9f4b7282c09c1ed11e0491fd7/MailFrom-security_mariadb.org.txt?response-content-disposition=attachment%3B%20filename%3D%22MailFrom-security_mariadb.org.txt%22%3B%20filename%2A%3DUTF-8%27%27MailFrom-security_mariadb.org.txt&response-content-type=message%2Frfc822&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQRFHFU2CE%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T164124Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIHHk5KprzzraqX9WAR4WY3R95lW4kmOx1jm5VlPhFZn0AiEAps40phpYm5pLYBCZa%2Bz0Hd0tK9hBZJgyHCzGVUDaNiMqsgUIFxADGgwwMTM2MTkyNzQ4NDkiDOvzfXWWyql5a1PkciqPBUxYkJSBnLdFEkp%2FZs7XfkEz%2FzWXU%2Furg8hrdAtsc97fByHoA1L9hSnk1EJFW4KzD8EPCVj6dyvq2Ll39EV%2Bpg5nwLvLUv%2BsCGp22Ct0y8c68P4jx7k%2BWIh8fQFEXf6arz%2FVj1Pw3yOlcO0v%2Bb%2Fbo112KHtBTlCt%2BOo9CtSxzlXXSeOd%2BVrawDeoUnLM8PQE9XpMFhZRGBB6zsxlJCB0sz5bslLgy%2BlWg801IOE9Y%2FY7A0JFmWHTWEM5nOWi8Is%2BIhu%2FUZfRePXRVlBDm6U2UlkUI0vB5xNN2oRKAmQB0q5vsL89Ur64oBauiqV49NUGslDk0A8JJWTi570MP5%2FuZs0LeHk7C8xdAEF4GNPYWqLKyBq57UQgs7P8HHv7QXK4oaOPINs7G5owq64ZtZhYaf0y8aYG1uZZheusyJRrH5eATD01pbxOhiCDi12CDc4EETiy2QRZg5jQfnzWHpmTjp1CLOg%2FIY2I2qF%2BpQOXmgNyjOMZ3QfDkRY3n7Z5z4Zd8WHA5F5vC6JvuOdnZSgR6dH%2Bitr5VXPXqE%2FxQLpkkhxN5xKJ%2ByZ%2B086cEIoafBd4dJOXUagGzMbtifJwp6NM3tOvAzlrKCwExFRMziHYPSPXYnMUZ0ZUYcuE8gP%2FhCi5SzGrzAsfapaWomdgn8GFFahLDFo2K6BPYvU3Opp%2FJrmDVWJVqF2Sp0sCRarn%2FoSkbKzD1Frq7yoqVDlMiZtPTpAPkkmxiGaSSHAijgdrQClbuev9v%2BpGzu7VsTI66s9NrfKvusQLRDYdmQLciljzA15Nn7eaoU6%2BuwmdEgBZg1geJP5hJLWTY4NB%2BuZ%2B8zFiEb075SesgGZAAW2TnK831ei7cJqBHQjh3o%2FTFubPjBgwlIvAxgY6sQFUbZKjTTcw2J0TMBR8Oyc3RPkBYWF%2FivLNO6JVGCxyksPyRTodv2iO63dwSQa86T4lFkFCZ7CJtjHPSWgaTHB%2BidkgWIIK5XR%2BYNYqWnkEt3rEzJcDoRS%2F0QPP9ZL4gZYS4R7f9huonvYk3sr2qPsNYLe9liigzsqbjZdGqSmhLIkYMk4bwLvYUcJFN%2FzGmzVg3XLhfltfgw8vpeOXRf51OZGoA2X9j9FRvlN56JILav4%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=62f78b685bc73d6f92a74a2b41b4230bf1a4ffcaf2624992235e10b4abcd3e44",
+      "file_size": 11782,
+      "type": "message/rfc822",
+      "moderated": null
+    },
+    {
+      "id": 333261,
+      "file_name": "MariaDB.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/333/261/4300336c079b7d9911daac12d985ee24259723bd/MariaDB.png?response-content-disposition=attachment%3B%20filename%3D%22MariaDB.png%22%3B%20filename%2A%3DUTF-8%27%27MariaDB.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQRFHFU2CE%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T164124Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIHHk5KprzzraqX9WAR4WY3R95lW4kmOx1jm5VlPhFZn0AiEAps40phpYm5pLYBCZa%2Bz0Hd0tK9hBZJgyHCzGVUDaNiMqsgUIFxADGgwwMTM2MTkyNzQ4NDkiDOvzfXWWyql5a1PkciqPBUxYkJSBnLdFEkp%2FZs7XfkEz%2FzWXU%2Furg8hrdAtsc97fByHoA1L9hSnk1EJFW4KzD8EPCVj6dyvq2Ll39EV%2Bpg5nwLvLUv%2BsCGp22Ct0y8c68P4jx7k%2BWIh8fQFEXf6arz%2FVj1Pw3yOlcO0v%2Bb%2Fbo112KHtBTlCt%2BOo9CtSxzlXXSeOd%2BVrawDeoUnLM8PQE9XpMFhZRGBB6zsxlJCB0sz5bslLgy%2BlWg801IOE9Y%2FY7A0JFmWHTWEM5nOWi8Is%2BIhu%2FUZfRePXRVlBDm6U2UlkUI0vB5xNN2oRKAmQB0q5vsL89Ur64oBauiqV49NUGslDk0A8JJWTi570MP5%2FuZs0LeHk7C8xdAEF4GNPYWqLKyBq57UQgs7P8HHv7QXK4oaOPINs7G5owq64ZtZhYaf0y8aYG1uZZheusyJRrH5eATD01pbxOhiCDi12CDc4EETiy2QRZg5jQfnzWHpmTjp1CLOg%2FIY2I2qF%2BpQOXmgNyjOMZ3QfDkRY3n7Z5z4Zd8WHA5F5vC6JvuOdnZSgR6dH%2Bitr5VXPXqE%2FxQLpkkhxN5xKJ%2ByZ%2B086cEIoafBd4dJOXUagGzMbtifJwp6NM3tOvAzlrKCwExFRMziHYPSPXYnMUZ0ZUYcuE8gP%2FhCi5SzGrzAsfapaWomdgn8GFFahLDFo2K6BPYvU3Opp%2FJrmDVWJVqF2Sp0sCRarn%2FoSkbKzD1Frq7yoqVDlMiZtPTpAPkkmxiGaSSHAijgdrQClbuev9v%2BpGzu7VsTI66s9NrfKvusQLRDYdmQLciljzA15Nn7eaoU6%2BuwmdEgBZg1geJP5hJLWTY4NB%2BuZ%2B8zFiEb075SesgGZAAW2TnK831ei7cJqBHQjh3o%2FTFubPjBgwlIvAxgY6sQFUbZKjTTcw2J0TMBR8Oyc3RPkBYWF%2FivLNO6JVGCxyksPyRTodv2iO63dwSQa86T4lFkFCZ7CJtjHPSWgaTHB%2BidkgWIIK5XR%2BYNYqWnkEt3rEzJcDoRS%2F0QPP9ZL4gZYS4R7f9huonvYk3sr2qPsNYLe9liigzsqbjZdGqSmhLIkYMk4bwLvYUcJFN%2FzGmzVg3XLhfltfgw8vpeOXRf51OZGoA2X9j9FRvlN56JILav4%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=c8e76513925f15e30e84791aa2ca0539fa7688d984c566585a74e9f1237bea5c",
+      "file_size": 212987,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 333262,
+      "file_name": "MariaDB-2.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/333/262/a65e957dedf73e2a770fd80ce5a38fa5f8732306/MariaDB-2.png?response-content-disposition=attachment%3B%20filename%3D%22MariaDB-2.png%22%3B%20filename%2A%3DUTF-8%27%27MariaDB-2.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQRFHFU2CE%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T164124Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIHHk5KprzzraqX9WAR4WY3R95lW4kmOx1jm5VlPhFZn0AiEAps40phpYm5pLYBCZa%2Bz0Hd0tK9hBZJgyHCzGVUDaNiMqsgUIFxADGgwwMTM2MTkyNzQ4NDkiDOvzfXWWyql5a1PkciqPBUxYkJSBnLdFEkp%2FZs7XfkEz%2FzWXU%2Furg8hrdAtsc97fByHoA1L9hSnk1EJFW4KzD8EPCVj6dyvq2Ll39EV%2Bpg5nwLvLUv%2BsCGp22Ct0y8c68P4jx7k%2BWIh8fQFEXf6arz%2FVj1Pw3yOlcO0v%2Bb%2Fbo112KHtBTlCt%2BOo9CtSxzlXXSeOd%2BVrawDeoUnLM8PQE9XpMFhZRGBB6zsxlJCB0sz5bslLgy%2BlWg801IOE9Y%2FY7A0JFmWHTWEM5nOWi8Is%2BIhu%2FUZfRePXRVlBDm6U2UlkUI0vB5xNN2oRKAmQB0q5vsL89Ur64oBauiqV49NUGslDk0A8JJWTi570MP5%2FuZs0LeHk7C8xdAEF4GNPYWqLKyBq57UQgs7P8HHv7QXK4oaOPINs7G5owq64ZtZhYaf0y8aYG1uZZheusyJRrH5eATD01pbxOhiCDi12CDc4EETiy2QRZg5jQfnzWHpmTjp1CLOg%2FIY2I2qF%2BpQOXmgNyjOMZ3QfDkRY3n7Z5z4Zd8WHA5F5vC6JvuOdnZSgR6dH%2Bitr5VXPXqE%2FxQLpkkhxN5xKJ%2ByZ%2B086cEIoafBd4dJOXUagGzMbtifJwp6NM3tOvAzlrKCwExFRMziHYPSPXYnMUZ0ZUYcuE8gP%2FhCi5SzGrzAsfapaWomdgn8GFFahLDFo2K6BPYvU3Opp%2FJrmDVWJVqF2Sp0sCRarn%2FoSkbKzD1Frq7yoqVDlMiZtPTpAPkkmxiGaSSHAijgdrQClbuev9v%2BpGzu7VsTI66s9NrfKvusQLRDYdmQLciljzA15Nn7eaoU6%2BuwmdEgBZg1geJP5hJLWTY4NB%2BuZ%2B8zFiEb075SesgGZAAW2TnK831ei7cJqBHQjh3o%2FTFubPjBgwlIvAxgY6sQFUbZKjTTcw2J0TMBR8Oyc3RPkBYWF%2FivLNO6JVGCxyksPyRTodv2iO63dwSQa86T4lFkFCZ7CJtjHPSWgaTHB%2BidkgWIIK5XR%2BYNYqWnkEt3rEzJcDoRS%2F0QPP9ZL4gZYS4R7f9huonvYk3sr2qPsNYLe9liigzsqbjZdGqSmhLIkYMk4bwLvYUcJFN%2FzGmzVg3XLhfltfgw8vpeOXRf51OZGoA2X9j9FRvlN56JILav4%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=94bcc10e4e83be4578fd01cd979db9b63e580b559452195e72299b9e0e5fe765",
+      "file_size": 19622,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2018-11-21T08:31:51.312Z",
+  "allow_singular_disclosure_after": -215683773.28047943,
+  "singular_disclosure_allowed": true,
+  "vote_count": 6,
+  "voters": [
+    "ali",
+    "sameerphad72",
+    "eveeez",
+    "pr0f0x01",
+    "cryptographer",
+    "yaaya"
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "Team"
+  },
+  "structured_scope": {
+    "databaseId": 10335,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "MariaDB Server & Connectors - Access control bypass",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
