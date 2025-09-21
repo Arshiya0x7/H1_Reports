@@ -1,0 +1,124 @@
+{
+  "id": 224342,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yMjQzNDI=",
+  "url": "https://hackerone.com/reports/224342",
+  "title": "Bypassing captcha in registration on Hosted site",
+  "state": "Closed",
+  "substate": "informative",
+  "severity_rating": "medium",
+  "readable_substate": "Informative",
+  "created_at": "2017-04-27T14:05:38.032Z",
+  "submitted_at": "2017-04-27T14:05:38.032Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "pavanw3b",
+    "url": "/pavanw3b",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/038/280/46fd940624527eb674a6bbc0c1affe8448757fed_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 19468,
+    "url": "https://hackerone.com/weblate",
+    "handle": "weblate",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/019/468/71eb3827ae9f2a388f27bd4b7eefd20bc3ac813c_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/019/468/71eb3827ae9f2a388f27bd4b7eefd20bc3ac813c_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Weblate",
+      "twitter_handle": "WeblateOrg",
+      "website": "https://weblate.org/",
+      "about": "Weblate is a libre software web-based continuous localization system"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2017-07-03T05:56:15.863Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-07-03T05:56:15.801Z",
+  "team_member_agreed_on_going_public_at": "2017-05-18T19:52:52.130Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello again,\n\nI believe the captcha on the user registration form is very simple and can be easily bypassed to automatically register any number of accounts.\n\nA program can read the math captcha, solve it and submit the form with the answer and the other required parameters & headers.\n\n**Note:** I read the out of scope guideline about \"rate limiting\". I guess that's about rate limiting password change or other places. Want to make sure this bug is not neglected.\n\n### Risk\nA bad guy can automate the form submission. This has a potential to degrade the server performance as each submission invokes multiple database transactions like checking username, inserting the form data into user table etc.\n\n### Proof of concept\nI'm attaching a small python script to this report, which can completely automates the registration form submission. When you run the script, it asks how many accounts you want to register. Once you enter, it creates that many users and also prints user details, captcha challenge with question and the link to access the public email inbox.\n\n### How to run the POC\n* Open a command or Terminal if on mac\n* Enter `python <PATH>/wl-captcha-bypass.py`\n* Enter a small number for `How many accounts do you want to create?`\n* Note the response. Follow the guide to verify the confirmation email. You can also verify at the backend.\n\n### Requirement to run the POC Python Script\n* python 2.7+\n* request\n* beautifulsoup\n*Please refer the internet to set up*\n\n### Suggested Fix\n* Configure a hard captcha. You can consider Google's reCAPTCHA.\n\nLet me know if any questions.",
+  "weakness": {
+    "id": 48,
+    "name": "Uncontrolled Resource Consumption"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 180022,
+      "file_name": "wl-captcha-bypass.py",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/180/022/ed1a623c47e44bd8e6f49d73daede65db8a6d81f/wl-captcha-bypass.py?response-content-disposition=attachment%3B%20filename%3D%22wl-captcha-bypass.py%22%3B%20filename%2A%3DUTF-8%27%27wl-captcha-bypass.py&response-content-type=text%2Fx-python&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ5EAMCJ2L%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T213744Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCcAZf28iGJet3GMnMxUaaZbasC6MbHRhY15J3YP3VcSAIge4LiH1lGm%2FsHr2Q81Up9%2FNsGz%2Fi5i9tSh5dExL%2BeIzgqsgUIHhADGgwwMTM2MTkyNzQ4NDkiDC0O3VaKlP2%2Fu42v4yqPBVxDUIR6CRktOoX13UYIe8lcYdvfQZ2RcIuHxAqISYAjoRB3Yj%2BKkC8WNPj2ayZwuKHFbmSgbDSJOW8wGW4o0LdIxnDKjeu6A5CGwrv69%2F4YCd9tawK2A57wqXcR7Hz5Zl%2BSBzPaPPk5HZn1yXg1P1dpav2%2BqFYKV1KPzZhyN2UX%2FtVVKtK37GBJ3vjwk7PS%2BkLozPVVnOsv5k6Hr617xdmPfceos2HK9XKkaosF9PDqwS8W9YzbhUmJbP%2F7AtgL5dqztjWsCXY5OmKySuRQKpMbulFtOckI7dz9z5fk5TthJBdQo%2FPvd6KZVwVNKfFv6nZHN0%2BbRH8AHQ6hAe%2FRG%2FHcUuodEvZK3pOcbAZufDzBSNpkiFUGKa0mLb7J3hngBaY%2FsKTah%2Frh2m3Fsoy1m1FSxwJxTb1nDOr%2FR6oyJDnzKwMrTMKfz%2BhH9V7BDuhQCmK36s1HJsHNu3yEGTCFfQ%2FhMucr2jAlFdV9pUWoQb0BpAiWFIjDpj4I34Z5Xvt12wtXWTwCZp6kOV2NXzL00j8ILqGC5kRcwa%2BailTPyAofdWYg0YhGo5t22VrWpEX%2F%2FJHM1HqGFi3suTBvRtmrrKModUDliR97TzdK01KK%2FOKnVi4WuU2YzBXj2YqASB0SDSf88NT8voI6d6iaHeMs66nZT%2FjpGdivmf9gsJwV463FfDCgPBgL3Pliby6aUF98h0CmcfGYUSd9Oqfp%2Br8vdtm%2BayfrbEZmOAwgeTdC1p2JSYQALwBEjLcYifq5tbYDB7Dfyum59fcolchlf%2FM8XjgiZL7OfR1oMR4GTOsqsRI%2FF9xPU1pky6hos%2FAmlJG%2B1QJpBPVXAfxgjO8fCHwuuc8xF2cF3Cz3%2F6oZ6fuw0QAwp8PBxgY6sQHTp9Izu0zLi%2Fzomma%2FDshi66rfHgOGkY0KM5GHlaYLbHbLHvCI1RIBIjjUUK6nx6s8BV9bGYvKzJ7ANCRsKEX6tFM4vSADJIiUVk7lgoJ4OHmSmD2nvIF5OuZ6HVbkOXejlnBWsJ8Y3irmFTCgroCgEIOyxqrt6hhV3DQPjQNshhx9HfhkZ5MKJeNpHvbkX1Sy5GCesgZC1GIU06v4O8QcMCMEup%2F%2BqCohHn1YQIQl3wQ%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=963f5f0eb5d9627daeccdb67cbdf22197c771637a916f56394d465c886525105",
+      "file_size": 3069,
+      "type": "text/x-python",
+      "moderated": null
+    },
+    {
+      "id": 180023,
+      "file_name": "weblate-automated-registration.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/180/023/fad7446bfb4bfb97a463c03b48880cb40f3c1223/weblate-automated-registration.png?response-content-disposition=attachment%3B%20filename%3D%22weblate-automated-registration.png%22%3B%20filename%2A%3DUTF-8%27%27weblate-automated-registration.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ5EAMCJ2L%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T213744Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCcAZf28iGJet3GMnMxUaaZbasC6MbHRhY15J3YP3VcSAIge4LiH1lGm%2FsHr2Q81Up9%2FNsGz%2Fi5i9tSh5dExL%2BeIzgqsgUIHhADGgwwMTM2MTkyNzQ4NDkiDC0O3VaKlP2%2Fu42v4yqPBVxDUIR6CRktOoX13UYIe8lcYdvfQZ2RcIuHxAqISYAjoRB3Yj%2BKkC8WNPj2ayZwuKHFbmSgbDSJOW8wGW4o0LdIxnDKjeu6A5CGwrv69%2F4YCd9tawK2A57wqXcR7Hz5Zl%2BSBzPaPPk5HZn1yXg1P1dpav2%2BqFYKV1KPzZhyN2UX%2FtVVKtK37GBJ3vjwk7PS%2BkLozPVVnOsv5k6Hr617xdmPfceos2HK9XKkaosF9PDqwS8W9YzbhUmJbP%2F7AtgL5dqztjWsCXY5OmKySuRQKpMbulFtOckI7dz9z5fk5TthJBdQo%2FPvd6KZVwVNKfFv6nZHN0%2BbRH8AHQ6hAe%2FRG%2FHcUuodEvZK3pOcbAZufDzBSNpkiFUGKa0mLb7J3hngBaY%2FsKTah%2Frh2m3Fsoy1m1FSxwJxTb1nDOr%2FR6oyJDnzKwMrTMKfz%2BhH9V7BDuhQCmK36s1HJsHNu3yEGTCFfQ%2FhMucr2jAlFdV9pUWoQb0BpAiWFIjDpj4I34Z5Xvt12wtXWTwCZp6kOV2NXzL00j8ILqGC5kRcwa%2BailTPyAofdWYg0YhGo5t22VrWpEX%2F%2FJHM1HqGFi3suTBvRtmrrKModUDliR97TzdK01KK%2FOKnVi4WuU2YzBXj2YqASB0SDSf88NT8voI6d6iaHeMs66nZT%2FjpGdivmf9gsJwV463FfDCgPBgL3Pliby6aUF98h0CmcfGYUSd9Oqfp%2Br8vdtm%2BayfrbEZmOAwgeTdC1p2JSYQALwBEjLcYifq5tbYDB7Dfyum59fcolchlf%2FM8XjgiZL7OfR1oMR4GTOsqsRI%2FF9xPU1pky6hos%2FAmlJG%2B1QJpBPVXAfxgjO8fCHwuuc8xF2cF3Cz3%2F6oZ6fuw0QAwp8PBxgY6sQHTp9Izu0zLi%2Fzomma%2FDshi66rfHgOGkY0KM5GHlaYLbHbLHvCI1RIBIjjUUK6nx6s8BV9bGYvKzJ7ANCRsKEX6tFM4vSADJIiUVk7lgoJ4OHmSmD2nvIF5OuZ6HVbkOXejlnBWsJ8Y3irmFTCgroCgEIOyxqrt6hhV3DQPjQNshhx9HfhkZ5MKJeNpHvbkX1Sy5GCesgZC1GIU06v4O8QcMCMEup%2F%2BqCohHn1YQIQl3wQ%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=108977e133b7f9f18583e690cc3a732df670befd84220ce330f59c1fd49ca447",
+      "file_size": 319229,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 3,
+  "voters": [
+    "shubham_srt",
+    "pr0f0x01",
+    "pavanw3b"
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
