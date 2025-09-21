@@ -1,0 +1,122 @@
+{
+  "id": 1081986,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMDgxOTg2",
+  "url": "https://hackerone.com/reports/1081986",
+  "title": "Potential Authentication Bypass through \"autologin\" feature",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2021-01-19T23:53:03.642Z",
+  "submitted_at": "2021-01-19T23:53:03.773Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": true,
+    "username": "egix",
+    "url": "/egix",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/001/431/9435ac0bb25492f164582fbbc7e3f6f8f016b1d1_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": true,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 38302,
+    "url": "https://hackerone.com/impresscms",
+    "handle": "impresscms",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/038/302/c9f69b5546e2b4211c0a26681a398b1685cc5ebb_original./235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/038/302/c9f69b5546e2b4211c0a26681a398b1685cc5ebb_original./3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "ImpressCMS",
+      "twitter_handle": "impresscms",
+      "website": "https://www.impresscms.org",
+      "about": "PHP and MySQL Open source content management system for multiple languages"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2021-26600"
+  ],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2022-03-22T22:56:24.152Z",
+  "bug_reporter_agreed_on_going_public_at": "2022-02-20T22:56:20.737Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nThe vulnerability is located in the `/plugins/preloads/autologin.php` script:\n\n```\n45.\t\t\t$uname = $myts->stripSlashesGPC($autologinName);\n46.\t\t\t$pass = $myts->stripSlashesGPC($autologinPass);\n47.\t\t\tif (empty($uname) || is_numeric($pass)) {\n48.\t\t\t\t$user = false ;\n49.\t\t\t} else {\n50.\t\t\t\t// V3\n51.\t\t\t\t$uname4sql = addslashes($uname);\n52.\t\t\t\t$criteria = new icms_db_criteria_Compo(new icms_db_criteria_Item('login_name', $uname4sql));\n53.\t\t\t\t$user_handler = icms::handler('icms_member_user');\n54.\t\t\t\t$users = $user_handler->getObjects($criteria, false);\n55.\t\t\t\tif (empty($users) || count($users) != 1) {\n56.\t\t\t\t\t$user = false ;\n57.\t\t\t\t} else {\n58.\t\t\t\t\t// V3.1 begin\n59.\t\t\t\t\t$user = $users[0] ;\n60.\t\t\t\t\t$old_limit = time() - (defined('ICMS_AUTOLOGIN_LIFETIME') ? ICMS_AUTOLOGIN_LIFETIME : 604800);\n61.\t\t\t\t\tlist($old_Ynj, $old_encpass) = explode(':', $pass);\n62.\t\t\t\t\tif (strtotime($old_Ynj) < $old_limit || md5($user->getVar('pass') .\n63.\t\t\t\t\t\t\tICMS_DB_PASS . ICMS_DB_PREFIX . $old_Ynj) != $old_encpass)\n64.\t\t\t\t\t{\n65.\t\t\t\t\t\t$user = false;\n66.\t\t\t\t\t}\n```\n\nUser input passed through the \"autologin_uname\" and \"autologin_pass\" cookie values is being used at lines 51-54 to fetch an user object from the database, and then at lines 62-63 to check the correctness of the user's password. The vulnerability exists because of an unsafe way of comparing those parameters, due to comparison operator `!=` is being used instead of `!==` within the “if” statement at lines 62-63. The latter operator returns “true” only if the compared values are equal and the same type, while the first compare the values after “[type juggling](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Type%20Juggling)”. This might be exploited to bypass the authentication mechanism and login as any user without the knowledge of the relative password.\n\n## ImpressCMS branch :\nThe vulnerability has been spotted on ImpressCMS version 1.4.2 (the latest at the time of writing).\n\n## Steps To Reproduce:\nUse the attached Proof of Concept (PoC) script to reproduce this vulnerability. It's a PHP script supposed to be used from the command-line (CLI). You should see an output like the following:\n```\n$ php auth-bypass.php http://localhost/impresscms/ admin\n[-] Starting authentication bypass attack...\n[-] 2021-01-20 022141\n[-] You can autologin with the following cookies:\n[-] Cookie: autologin_uname=admin; autologin_pass=2021-01-20 022141:0\n```\n\n**NOTE**: the script will try to send multiple requests with incremental dates within the `autologin_pass` cookie (that will be the value of the `$old_Ynj` variable), and this will generate a different MD5 hash for each request, until something like `0e174892301580325162390102935332` will be returned by the `md5()` function. For this reason, the exploitation likelihood is very low, and the script execution might take days, months, or a theoretically infinite time.\n\n## Impact\n\nThis vulnerability could potentially be exploited to bypass the authentication mechanism and login without valid credentials.",
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1164379,
+      "file_name": "auth-bypass.php",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/7u4gcitnycrl59wj9vsaudqwxwjv?response-content-disposition=attachment%3B%20filename%3D%22auth-bypass.php%22%3B%20filename%2A%3DUTF-8%27%27auth-bypass.php&response-content-type=application%2Fx-php&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQV6PJB7MP%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T001150Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH0aCXVzLXdlc3QtMiJHMEUCIQCtf6vTXyH8%2Bozi0RYXyWxDGS6UKXEOlhZOs%2Bc7N1%2BnlQIgDxFPfPulSkPNL5xmf7rLy5YJAHXWAB9ZZa%2Bdc3emI60quwUI9v%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDLV%2Byc0OmGY5uWaZKiqPBS1vWopbXFrNrUeFYU1ggCTbW9fb8tA7cW7ci%2BdG9hPAJZ2AVTVHttMkHp7jnljQ6bHYxyYQ6oTXJQvY50wdEtot65T3%2BIdqlBi%2FTsGnJHoZNhzxb6qyRbxOpa9Li7IkYnPMwUPgR%2FJZOfVYinqcHvlMNOAWe5eVJuBaaRQ7CQ4iA2iTBujeCcGFi73Db055vyweW7Dy4ducSVDYL%2BV4p4kbcY6yNawfPiZBRBTqjjvs112WeUkw1J9iVZXtelLZPk1L1GM6C4YPdkKvTiNTQmF4tIwIcPf6c2yVIXs%2FPbzLz3ykydl3ZMTIxa6eT7waCRHX9ZS4wZg5DeoHpTyfHnjRErf6vVXb7l8xvNHfBKGNlYffMqRZlA30kaPj84EwTUcA9G3N42RItqBmsAFq6kHbQakld%2BWpEXOWAQMA79g3DyelksPYTGmEpfpphDRSNej6QbeDO3h14quanB%2Fq1Ddk9va95%2Br3DX8mZzRkGdZyYG5CXUkCy%2FBYi4TPQLvHidsgUL7HrBi9kqsdfKqPAyx8vJOiZ63Trzxac7bOPtfOEo9wtkF3X34OjVoQACZl05wGygM61lNDLrqRQ8qQt27nnwa7ZYuDa1YB45WACQieX814hFpkqMRP9Dzhp%2FljK7LpF7V05rBlysyL2ZGe%2BSnenMMKvR6IHjUppXxctqT2V5U7OPa5XSSysg5fvX2xziTlDLKb9XmjzXO6N16kA9c0YsM1CpBgx6ZpLUCztzKFDr%2FH95ulT%2F0LaFeUgftliewcn95RD2ksQgSLwMmOQbBvx4h%2B%2BNkKIsa%2F4vrWcz27%2Fh%2FL%2Ft2t2tr3BLs%2FD9RF5UH6ZxdrS2ARUFHT64biddhBOsaJQUOd1lcsEJ8%2FOkswxLG8xgY6sQGDSxPqhf8Set6IXO2TONDp%2BOXEYxIgC4S%2FOYip794wkSGxQ4WlMvlEgBD%2Btg0KXw3kw9UnXQVaJkvdXskQQU9w3fEtycBWQ1UcsQmEprgvQ3kdYHDM%2BjQjx%2Ba8R0qs4qHUetlphHFu3vqQ%2B8XP79pX%2FYfz31U%2FeHq09fH%2F1gGcNcjF3Ed73czv1thTVxCWZiIs3G1isuUvpONXJlddE%2FULYK4zZ4lpr4CLcF94svtFFIk%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=c40d695e7996e5042c87001f6b46a69514243ce9301d56e05e151ea70b176aed",
+      "file_size": 1067,
+      "type": "application/x-php",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2022-03-22T22:56:20.788Z",
+  "allow_singular_disclosure_after": -110423729.30887976,
+  "singular_disclosure_allowed": true,
+  "vote_count": 4,
+  "voters": [
+    "khizer47",
+    "pr0f0x01",
+    "shivammusic",
+    "mixin_star"
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 28943,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/impresscms/impresscms",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
