@@ -1,0 +1,150 @@
+{
+  "id": 946384,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC85NDYzODQ=",
+  "url": "https://hackerone.com/reports/946384",
+  "title": "A member-member privilege could access the https://console.rockset.com/billing?tab=payment page even though the billing page is hidden from the menu. ",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2020-07-29T09:36:10.432Z",
+  "submitted_at": "2020-07-29T09:36:10.432Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "jhimansh",
+    "url": "/jhimansh",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTA2MDg3NiwicHVyIjoiYmxvYl9pZCJ9fQ==--09aede8531bd543045855b80218c774ba08e1b0f/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--a4d91faed3dff6024dfc1a7b7f8ccc6b45e38396/hjj.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 49532,
+    "url": "https://hackerone.com/rockset",
+    "handle": "rockset",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/uQgy2m4PMuEh1pJTivfoR35h/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/uQgy2m4PMuEh1pJTivfoR35h/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "disabled",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Rockset",
+      "twitter_handle": "RocksetCloud",
+      "website": "http://rockset.com",
+      "about": ""
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2021-11-09T21:15:19.277Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-08-31T15:13:20.245Z",
+  "team_member_agreed_on_going_public_at": "2021-11-09T21:15:19.127Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary: I am writing to submit a vulnerability found at https://console.rockset.com/. I created an admin account with email himanshujoshitest2018@gmail.com and added a member with email himanshujoshitest2019@gmail.com. I logged in from the member's account and realized that the Billing page is not visible in the menu, it is hidden as per the designed privileges of a member however when I visited https://console.rockset.com/billing?tab=payment page, it did open and I could view beyond a member's privilege. I am attaching screenshots which shows two users, one is an admin and other is a member and the member is able to view the add payment method page and other information. The billing page is kept hidden from the menu but if I directly open the billing URL, i can view the page instead of it being forbidden. \n\n## Steps To Reproduce:\n1. Invite a member with member privileges. \n2. Login at console.rocket.com using member email address.\n3. You will see that the billing page is not available in the menu.\n4. Directly open https://console.rockset.com/billing?tab=payment page and it will be opened from the member's account however it is hidden from the menu. The access to this page is not yet forbidden. \n\nAttaching screenshots for your reference. There is one screenshot of admin's page and two screenshots of member's page in which the member has opened the billing page. \n\nRemediation:\nCheck the access-control while an URL is opened. \n\nThanks!\n\n## Impact\n\nThe impact here is medium however this is a access control issue and needs fixing. The billing information is not to be accessed by a someone with a member privilege and therefore the billing page is hidden from the menu however the member can still access the information which is not meant from a member.",
+  "weakness": {
+    "id": 135,
+    "name": "Improper Handling of Insufficient Permissions or Privileges"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 928410,
+      "file_name": "admin-UsersPage.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/vTRgZF8irq12NqMeth3sECBg?response-content-disposition=attachment%3B%20filename%3D%22admin-UsersPage.png%22%3B%20filename%2A%3DUTF-8%27%27admin-UsersPage.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4KRJQQVC%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T011033Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH8aCXVzLXdlc3QtMiJGMEQCIF7R5Mt7JSPof0K6chg4SbFgQgddHMFZioadyM8kMMlwAiBWqqeP3tOV03nhklehQlHnXnLsnsqAJ9PwtKl1pjquDiq7BQj4%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIM6kjVyeBfb4ZcxuUAKo8Fp7sZ3pga46diDFBqXTN47NTco7LkV%2BAinfhxEdjcoFLxt%2FwO06oQI4diRpeLu4J7SIQH2piSIgIc5So%2Bcxu2p6WrHk4qp7gq8d3mNMsf9yCDfItXUcMkswz6rF3eY68PFTuf33TNODxyvSbyJ3Mxh6ZQ5vKklpPzWmXSHO9r7TiW9dJRPtV4%2B2b9LT47rcQnWrinDFbnrxT9bW0Ub4giLneR9FB009jq3j9KHzP1flRXRf9C5YSytjXCnYkI9zRONjMyuzM1jJRH35gbpu2Opf0piI7jxA5Ha8YzYEgrb0HF%2BoXdwNhkP%2F28yAEGrqrLVdvBt54T79eKuOzLHRqKbh2NZRQPMt7QAMCqXyvwMqkwyoGik3BhYOMcPh%2BbCeSGjOI%2B2WES2kBgi3LM0EDX9CZepNr1stOs9S9A%2BO8Q0IsgHCWwLaJPvBryQm20MCUUOA%2FGUrW3aojSqFzDnm2qYP87%2F67%2FMA6Jk%2Fg5byszx24Dn%2BjY19V5H%2FdtTuLms%2FrVZc1OPjAR8Y%2BKK1USBg2K6AodUXYjFD%2FkH1hbD6EYSPM%2B5FXMQCEQG13PBZIoJzYcHtlczHuCU%2FxecC4Db2aXPUWFOgDK3aXKs3tTgIJa1X3sWKPYZvNX1YOQwUkZVWfhHzCIAJgNbgeYOWA12FF44R7zNm5kTLdpyjw3A2ePm%2B%2BRxvQLfOlc5HCkzG7mJGR1jobsIVQ%2BzDc0WD5x%2FewWbhDHfhtOt%2FbdZamacThQKb4YMjwU6GQVEl8HUk1s8M8pi9UKgFdfvm84MWVxBoxEVky6kgbyZxIS67xMj95UXwPqBRmFwDDYQW%2FVy%2FOmIteQcXp9OBrn6hsui33vKIiI4rKO6NUI3ruy0uYW3DAzJDCD57zGBjqyAfFvAXPSA2Hv1C8%2FRs0xqubCuJacSoLfLCUs1DAKVjol6%2FOxcdMr8fgHkFu5ZbXKJIi8PSkgJozPqp5e6Zyx0HB94yBTQhBMHiywVKAAYYI3Nt483u4bQmFv7V5oyihiNyMiwrsXlyqkd%2FH2g6BfaBQOScUL9NZYboXi7l1yh501SAP6u63k%2F8cz%2BNxpFMpMnFZnkYuzw1kX5%2F1VKIIlJ4%2FUbROw%2FERwyKVcmmjlK8XqLyg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=5129b4d993dc58e7fe1db339de307347550e4e62da657efd866d436f1bd66088",
+      "file_size": 34298,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 928411,
+      "file_name": "member-card_details_page.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/fHyw2eQbxVxkhfjJUxmy39nS?response-content-disposition=attachment%3B%20filename%3D%22member-card_details_page.png%22%3B%20filename%2A%3DUTF-8%27%27member-card_details_page.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4KRJQQVC%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T011033Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH8aCXVzLXdlc3QtMiJGMEQCIF7R5Mt7JSPof0K6chg4SbFgQgddHMFZioadyM8kMMlwAiBWqqeP3tOV03nhklehQlHnXnLsnsqAJ9PwtKl1pjquDiq7BQj4%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIM6kjVyeBfb4ZcxuUAKo8Fp7sZ3pga46diDFBqXTN47NTco7LkV%2BAinfhxEdjcoFLxt%2FwO06oQI4diRpeLu4J7SIQH2piSIgIc5So%2Bcxu2p6WrHk4qp7gq8d3mNMsf9yCDfItXUcMkswz6rF3eY68PFTuf33TNODxyvSbyJ3Mxh6ZQ5vKklpPzWmXSHO9r7TiW9dJRPtV4%2B2b9LT47rcQnWrinDFbnrxT9bW0Ub4giLneR9FB009jq3j9KHzP1flRXRf9C5YSytjXCnYkI9zRONjMyuzM1jJRH35gbpu2Opf0piI7jxA5Ha8YzYEgrb0HF%2BoXdwNhkP%2F28yAEGrqrLVdvBt54T79eKuOzLHRqKbh2NZRQPMt7QAMCqXyvwMqkwyoGik3BhYOMcPh%2BbCeSGjOI%2B2WES2kBgi3LM0EDX9CZepNr1stOs9S9A%2BO8Q0IsgHCWwLaJPvBryQm20MCUUOA%2FGUrW3aojSqFzDnm2qYP87%2F67%2FMA6Jk%2Fg5byszx24Dn%2BjY19V5H%2FdtTuLms%2FrVZc1OPjAR8Y%2BKK1USBg2K6AodUXYjFD%2FkH1hbD6EYSPM%2B5FXMQCEQG13PBZIoJzYcHtlczHuCU%2FxecC4Db2aXPUWFOgDK3aXKs3tTgIJa1X3sWKPYZvNX1YOQwUkZVWfhHzCIAJgNbgeYOWA12FF44R7zNm5kTLdpyjw3A2ePm%2B%2BRxvQLfOlc5HCkzG7mJGR1jobsIVQ%2BzDc0WD5x%2FewWbhDHfhtOt%2FbdZamacThQKb4YMjwU6GQVEl8HUk1s8M8pi9UKgFdfvm84MWVxBoxEVky6kgbyZxIS67xMj95UXwPqBRmFwDDYQW%2FVy%2FOmIteQcXp9OBrn6hsui33vKIiI4rKO6NUI3ruy0uYW3DAzJDCD57zGBjqyAfFvAXPSA2Hv1C8%2FRs0xqubCuJacSoLfLCUs1DAKVjol6%2FOxcdMr8fgHkFu5ZbXKJIi8PSkgJozPqp5e6Zyx0HB94yBTQhBMHiywVKAAYYI3Nt483u4bQmFv7V5oyihiNyMiwrsXlyqkd%2FH2g6BfaBQOScUL9NZYboXi7l1yh501SAP6u63k%2F8cz%2BNxpFMpMnFZnkYuzw1kX5%2F1VKIIlJ4%2FUbROw%2FERwyKVcmmjlK8XqLyg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=bc210081103058da80e95747a3c61fd64050b4d7c35c9d39320b217d7cdeb281",
+      "file_size": 90469,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 928412,
+      "file_name": "member-page.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/2rpjYCh5AgVUnSwR6EVVjeZp?response-content-disposition=attachment%3B%20filename%3D%22member-page.png%22%3B%20filename%2A%3DUTF-8%27%27member-page.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4KRJQQVC%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T011033Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH8aCXVzLXdlc3QtMiJGMEQCIF7R5Mt7JSPof0K6chg4SbFgQgddHMFZioadyM8kMMlwAiBWqqeP3tOV03nhklehQlHnXnLsnsqAJ9PwtKl1pjquDiq7BQj4%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIM6kjVyeBfb4ZcxuUAKo8Fp7sZ3pga46diDFBqXTN47NTco7LkV%2BAinfhxEdjcoFLxt%2FwO06oQI4diRpeLu4J7SIQH2piSIgIc5So%2Bcxu2p6WrHk4qp7gq8d3mNMsf9yCDfItXUcMkswz6rF3eY68PFTuf33TNODxyvSbyJ3Mxh6ZQ5vKklpPzWmXSHO9r7TiW9dJRPtV4%2B2b9LT47rcQnWrinDFbnrxT9bW0Ub4giLneR9FB009jq3j9KHzP1flRXRf9C5YSytjXCnYkI9zRONjMyuzM1jJRH35gbpu2Opf0piI7jxA5Ha8YzYEgrb0HF%2BoXdwNhkP%2F28yAEGrqrLVdvBt54T79eKuOzLHRqKbh2NZRQPMt7QAMCqXyvwMqkwyoGik3BhYOMcPh%2BbCeSGjOI%2B2WES2kBgi3LM0EDX9CZepNr1stOs9S9A%2BO8Q0IsgHCWwLaJPvBryQm20MCUUOA%2FGUrW3aojSqFzDnm2qYP87%2F67%2FMA6Jk%2Fg5byszx24Dn%2BjY19V5H%2FdtTuLms%2FrVZc1OPjAR8Y%2BKK1USBg2K6AodUXYjFD%2FkH1hbD6EYSPM%2B5FXMQCEQG13PBZIoJzYcHtlczHuCU%2FxecC4Db2aXPUWFOgDK3aXKs3tTgIJa1X3sWKPYZvNX1YOQwUkZVWfhHzCIAJgNbgeYOWA12FF44R7zNm5kTLdpyjw3A2ePm%2B%2BRxvQLfOlc5HCkzG7mJGR1jobsIVQ%2BzDc0WD5x%2FewWbhDHfhtOt%2FbdZamacThQKb4YMjwU6GQVEl8HUk1s8M8pi9UKgFdfvm84MWVxBoxEVky6kgbyZxIS67xMj95UXwPqBRmFwDDYQW%2FVy%2FOmIteQcXp9OBrn6hsui33vKIiI4rKO6NUI3ruy0uYW3DAzJDCD57zGBjqyAfFvAXPSA2Hv1C8%2FRs0xqubCuJacSoLfLCUs1DAKVjol6%2FOxcdMr8fgHkFu5ZbXKJIi8PSkgJozPqp5e6Zyx0HB94yBTQhBMHiywVKAAYYI3Nt483u4bQmFv7V5oyihiNyMiwrsXlyqkd%2FH2g6BfaBQOScUL9NZYboXi7l1yh501SAP6u63k%2F8cz%2BNxpFMpMnFZnkYuzw1kX5%2F1VKIIlJ4%2FUbROw%2FERwyKVcmmjlK8XqLyg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=90b97634c9a72ddd62892c473be748113035d22d5fb0b0e703a32c46d6866b0b",
+      "file_size": 44426,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 5,
+  "voters": [
+    "drsniper",
+    "shriyanss",
+    "pacmanx",
+    "dontmindifido",
+    "meispi"
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 4.3,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "low",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "low",
+      "integrity": "none",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 49976,
+    "asset_type": "URL",
+    "asset_identifier": "console.rockset.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
