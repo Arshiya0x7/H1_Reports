@@ -1,0 +1,126 @@
+{
+  "id": 178184,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNzgxODQ=",
+  "url": "https://hackerone.com/reports/178184",
+  "title": "SSRF in https://cards-dev.twitter.com/validator",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2016-10-26T09:48:57.900Z",
+  "submitted_at": "2016-10-26T09:48:57.900Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "mindaugas",
+    "url": "/mindaugas",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": true,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 61,
+    "url": "https://hackerone.com/x",
+    "handle": "x",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/ikx4ept298unt534kpz4am2bd4zs/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/ikx4ept298unt534kpz4am2bd4zs/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "X / xAI",
+      "twitter_handle": "XSecurity",
+      "website": "https://x.com",
+      "about": "X helps you create and share ideas and information instantly, without barriers."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2017-04-06T09:03:52.611Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-03-07T09:03:36.539Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello, \n\nAfter my previous report (2 years ago)  https://hackerone.com/reports/30860 you fixed the vulnerability, but now it looks like this fix was reverted and the same problem exists again.\n\nTest scenario:\nOpen https://cards-dev.twitter.com/validator\n\n1. Closed port on localhost\nhttp://0.0.0.0:123 -> ERROR: Fetching the page failed because other errors.\n\n2. Open port but not HTPP\nhttp://0.0.0.0:22 -> ERROR: Failed to fetch page due to: ChannelClosed\n\n3. Open HTPP port\nhttp://0.0.0.0:4680\n->\nINFO:  Page fetched successfully\nINFO:  2 metatags were found\nWARN:  Not whitelisted\n\n4. Existing folder\nhttp://0.0.0.0:4680/system/\n ->\nINFO:  Page fetched successfully\nINFO:  2 metatags were found\nWARN:  Not whitelisted\n\n5. None existis folder\nhttp://0.0.0.0:4680/system/\n->\nhttp://0.0.0.0:4680/test/\nINFO:  Page fetched successfully\nWARN:  No metatags found\n\nDisaster scenario:\nFind open HTTP service running on local infrastructure with ability to execute commands.\n\nFor example:\nhttp://0.0.0.0:4680/system/command.php?command=[ROOT_COMMAND]\n\n",
+  "weakness": {
+    "id": 68,
+    "name": "Server-Side Request Forgery (SSRF)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 130271,
+      "file_name": "twitter.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/130/271/8a7dfb055dc9d58f90d4d80178d55fac9823f175/twitter.png?response-content-disposition=attachment%3B%20filename%3D%22twitter.png%22%3B%20filename%2A%3DUTF-8%27%27twitter.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQRADLPHK%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T230407Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCMH60KA5c4oFROILJwlX3Ga3MXZ%2FQYQNX3He4P5AJMdgIhAI1hDx7ub27XNNWCp9HinTwvcqA3lEjxIkGOcLj5rQdFKrIFCB8QAxoMMDEzNjE5Mjc0ODQ5IgwzTtfMSrvLyCvpHrQqjwVnNPlGyR9vDw9obrVNS%2BqlNiaOm1yKVdRt9eI2V9ijVIU4hWJbOx4hIxz86ScjOUQlGsiaOs11KHUGfXtmvvAyPDcyRpacF7YO35qUeUn89mDbuvMsMUUqi%2Fg0xt%2BgbrkEfTNE2vyco49KctdEDPRlf7xnUNpINkPfc5CDxO63v6Qsgwz2aGbUVxflVUQzNe%2F383gzFqvOOe%2BOGNhvLk%2BNgrzwEIN3LiP%2FiYekCZ4Qrh%2Fxxuci6dOTgAhLOf6MRUcuvxk6gm0ZS5skBr1i2fiuLtXeIgyFGOz8WZzKDiqqlrYriAqXDaGjQk%2Bin7HJgX5kxvnMGeTbFktcAwaYCgVUxO5Ym2fM8ZRXozh6w9YKEMc3RrSrAi6kWHkkASDlUDtX%2BF5grXWFiI8S7CakKIYBEnIQRPSqg6hyXvWdOSQ4ZerDQ1Y6NQOqTgPFatWsyOkG9ERqS3xzTB9gZgOeF74fTMBENik7tMmqI%2BFFIcSpepc4nQwZI0hz%2FqdlpcOdcOTkqHEWPjh3TnYFNDPbQm0fsUuMn0EWVCLWw%2F%2FI6qF4RHh93vzm5k%2FyOHNxipVwG0%2BNmF3zggUdvVKx1ON5TDQdPEsG5jogYX087LX9LEIasKhqrkeAaXKRrVaNAOV7jchLC9nPF2cIhTy6TbrhE3Yi0Frp07aG5MDXpT50qAyY%2BRiuTxivHLg4YrgoG31j%2B%2BbuzySwasYcrbRBQN0n0fRLi7st4FH7EyWGt7GpqR9D67XF7F%2F0NK1vXMfbdJto0BEH1od2%2F5H7%2FiGGVFGQJp5RwxgDxqR1UKirZ%2B6Fz0PdAbtPDiefAwx4UWektN2H60isdmgT7x0YAj6meGJzRDCNBCoOmk9Pmi5CJvyIlOKCMPLYwcYGOrABt29w%2BchhXAbUvsBJ081b1qwI3Qr3DqIbHu2OwZtqPAzHrJBXZha0Ycdhe59%2Bt8CDw%2FsA%2B38YO5%2B0krzIm9WZ%2FnDtSasuAbtBBfnoyUYehj4EyqQAZI5j6mW6tXDsJVQi%2FXJ8WhIuCrUgy0s1Cnt2ISgPimsuYS8ZPl7NcXHJ%2BaXeh8QEThxgZdkZUMeUu8CmOlqiAiieTQ6lHVUqjskhMyWo0H%2BeogQ1O%2FJWH6WO0TE%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=e9e231f6e394070c8051387cb4a5f34ba00b431ed42d35eeceb9403cf446793b",
+      "file_size": 31799,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-04-06T09:03:36.579Z",
+  "allow_singular_disclosure_after": -267026430.924308,
+  "singular_disclosure_allowed": true,
+  "vote_count": 16,
+  "voters": [
+    "vijay_kumar",
+    "mpz",
+    "muhammad_uwais",
+    "eveeez",
+    "sa1tama0",
+    "0xradi",
+    "t4ym",
+    "linkks",
+    "alfredsaonoy",
+    "paulos__",
+    "and 6 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
