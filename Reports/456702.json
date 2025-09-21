@@ -1,0 +1,128 @@
+{
+  "id": 456702,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC80NTY3MDI=",
+  "url": "https://hackerone.com/reports/456702",
+  "title": "[atlasboard-atlassian-package] Cross-site Scripting (XSS)",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2018-12-06T01:23:27.941Z",
+  "submitted_at": "2018-12-06T01:23:27.941Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "ermilov",
+    "url": "/ermilov",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/066/860/675cf13b580684485fa62b5e472d044d85cbccca_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 23949,
+    "url": "https://hackerone.com/nodejs-ecosystem",
+    "handle": "nodejs-ecosystem",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/023/949/3ea3b2ae039a8f955a4a8fe65d99fe85dc817398_original./235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/023/949/3ea3b2ae039a8f955a4a8fe65d99fe85dc817398_original./3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "disabled",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Node.js third-party modules",
+      "twitter_handle": "",
+      "website": "https://nodejs.org/en/security/",
+      "about": "This program was used to handle vulnerabilities in the Node.js ecosystem."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2020-01-04T22:09:05.070Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-01-04T22:09:05.027Z",
+  "team_member_agreed_on_going_public_at": "2020-01-03T22:52:20.072Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "I would like to report XSS in `atlasboard-atlassian-package`\nIt allows to inject clientside javascript (or HTML) in cases when attacker has opportunity to create or modify issues on JIRA server (e.g bug tracker) which is configured to work with application from module.\n\n# Module\n\n**module name:** atlasboard-atlassian-package\n**version:** 0.0.2\n**npm page:** `https://www.npmjs.com/package/atlasboard-atlassian-package`\n\n## Module Description\n\n> this is a package ready to be used with Atlasboard. It contains dashboards, widgets and jobs related to Atlassian products.\n\n## Module Stats\n\n1 downloads in the last day\n9 downloads in the last week\n20 downloads in the last month\n\n# Vulnerability\n\n## Vulnerability Description\n\n> `atlasboard-atlassian-package` is a collection of widgets for `atlasboard` which is another package and a dashboard framework, 'blockers' widget dedicated to show issues from JIRA with 'Blocked' status (which actually can be used to show any kind of issues because it uses configurable JQL query for requesting data from Jira server) doesn't have proper incoming data sanitization.\n\n## Steps To Reproduce:\n\nFirst of all it requires `atlasboard` installed\nthat is why steps a from https://www.npmjs.com/package/atlasboard#installation\ninstall `atlasboard`\n```\nnpm install -g atlasboard\n```\ncreate your dashboard\n```\natlasboard new mywallboard\n```\ngo to dashboard directory and install `atlasboard-atlassian-package`\n```\ncd mywallboard/\ngit init\ngit submodule add https://bitbucket.org/atlassian/atlasboard-atlassian-package packages/atlassian\n```\nthen configure packages/atlassian/dashboards/example1.json to use Jira server,\n```\n...\n  \"config\": {\n    \"confluence-blockers\": {\n      \"timeout\": 30000,\n      \"retryOnErrorTimes\": 3,\n      \"interval\": 120000,\n      \"jira_server\": \"https://your-jira-portal.atlassian.net\",\n      \"jql\": \"project = \\\"YOUR-PROJECT\\\" ORDER BY priority DESC\"\n    },\n...\n```\nwhere `jira_server` - url of your Jira portal\n`jql` - query that you want to use for getting jira issues list\n\nthen create a ticket in Jira with summary containing payload e.g. ```test<script>alert(1)</script>```\nF386186\n\nthen start your dashboard\n```\natlasboard start\n```\nor\n```\nnode start.js\n```\n\nurl `dashboard-server:port/example1` will contain payload\nwhere `dashboard-server` - your server location where you host the dashboard\n`port` - port of your server where you host the dashboard\nby default it's `localhost:3000`\n\nsource:\nhttps://bitbucket.org/atlassian/atlasboard-atlassian-package/src/289092d890fa764983282d92730f4709a2038be5/widgets/blockers/blockers.js?at=master&fileviewer=file-view-default#blockers.js-44\n\n```javascript\nvar $summary = $(\"<div/>\").addClass(\"issue-summary\").append(blocker.summary).appendTo(listItem);\n```\nblocker is an issue object recieved from Jira\n\nif an attacker has access for changing issues summary in Jira any kind of markup (HTML / JS) can be injected on the dashboard\n\n## Patch\n\nI suppose it's better to use 'text' instead of 'append' here\n```javascript\nvar $summary = $(\"<div/>\").addClass(\"issue-summary\").text(blocker.summary).appendTo(listItem);\n```\n## Supporting Material/References:\n\n- Linux Mint current\n- Node.js 8.11.1\n- NPM 6.4.0\n\n# Wrap up\n\n- I contacted the maintainer to let them know:N\n- I opened an issue in the related repository: N\n\nDidn't do a patch myself because I'm not familiar with bitbucket and don't have account there, didn't contacted the maintainer for the same reason.\nIt's obviously has a low level impact but I guess this is important due to the fact that this package is presented as a good place to start creating your own dashboards for atlasboard  https://www.npmjs.com/package/atlasboard#importing-your-first-package\nMay be it won't affect somebody directly, but as long as this package is created by well known company (Atlassian) it can be a bad example of how to not sanitize your inputs\n\n## Impact\n\nCross-site Scripting",
+  "weakness": {
+    "id": 60,
+    "name": "Cross-site Scripting (XSS) - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 386186,
+      "file_name": "issue-summary.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/386/186/17f4559dcea2e6a9b55dbc22a206f9d8a1ef966a/issue-summary.png?response-content-disposition=attachment%3B%20filename%3D%22issue-summary.png%22%3B%20filename%2A%3DUTF-8%27%27issue-summary.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ5H6JMDKF%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T125221Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDFUPw5yUY8Vc32vxhAXP8PHFtr7JcEDzZv1bMYgxLmWwIgFqsO%2Fxtfx2BzXh0nWzMCT3JOH2Kp51%2F67DH8BPVph94qsQUIEhADGgwwMTM2MTkyNzQ4NDkiDFz7U%2FwFlXJI4uaVBCqOBWLhVYLwDGyfB9OTItyJREfKQC7jCNbrFxOFYNiaxRZlEQDIr81dbOpBWVw6nD91InCsQcyNRGrZglgF2HWSTCTkD4JMTnLcO8rV9hp1JqUK2fuSZDPAAioD12VT%2FYFu4rR8tx%2FqZV78%2Fz78kRgmRe7anLfklxebhPsPDQlylgR02pfw7cLbx7EH%2Fa%2BnBu%2Bi4isdYaNBhTewYG4wgD%2Fyv629guMa37ky2ByxpaQu3Y9aAsprFuUq%2Bxw77q%2BOE1j2MxwLVTMExO3kA0BmUgAsHCSm6LjYR7ZKYjmYxOkInLKDmQApdOZgmuD6U7LlMHH1tUHnBGOCXsbjpiIuk%2FKTyE9ejqbQ9XOv7g5RQd7rJpytmSh6Pm%2Bqi6TBE2xMUxn%2FIrr6o%2F8WL17StVT9lbGuMDIbg5PyEMSYb9DSmjJDCwdAa9xRDogyWBpSTXvBcAgT%2Fa%2FOKHdK04JYRjNuYPW8LnHHdpMMVWgtH9GtBMOMR%2Fg%2F2x1PAO0Ct5agZ0ft4b4SuIoURDtq0F8rl%2BAJU3uEfHf57o7zvcwuRqLNYxZ9QTp2wf7c60TxjIgOOkelF2IBHBb5MtL4IlHaAlJLnnvLF5x9T9mTMgsXFs%2BZgWRoUkS0kce3bhA1FqkA%2FgoiuDDQtn3UBN32wkP9NFkL57sNTWvRo4wpvz44Cf0T8kb2TBb8Bo6AcFIEYRLQkaEieN3a82hZkx9UI5Mg3u8SmNohBg%2B5m%2F3grhhUJqpDZzzXyff9pBij0PrN7CQ4iLofrmPvBADnV0P0JW%2B1wfrsDjxo%2FEFUTcD%2FAnX4iykp7U2E1Qq2OfABaru9GS0%2BqLyjKkMyE95VhEWUKRfRfYt0etc%2BmOcQtMLhR6sN9T5a6dlSdzCbh7%2FGBjqxARSGw%2B1SDekTRlDJWVt3%2Ff8YFxAG%2BJYbPq56MgZRHHuwNBYJkWYPap5oPvd%2FYtDWuQGcglXwI4iBaukn9Mm7Vuvrpy7WLmraNkXjpR8AGfuegKZfhetKKtZ0ZZ2LIVyWsOX1F2XLEf8CngPGhYdem%2BTVl03E%2FmOsfimhgxjkRsbJA0dJ4KnIDStb84TiXyuS1nlI%2BVR9uPoNNry%2F2pVdy4OuFdyeJ6VbNFlEeTCEV7O4Fw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=1aa81e1801c3a812e31eb4bf8819cd57241873577c50b3897b090a92962b0167",
+      "file_size": 11752,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2020-02-02T22:52:20.170Z",
+  "allow_singular_disclosure_after": -177775201.22851187,
+  "singular_disclosure_allowed": true,
+  "vote_count": 8,
+  "voters": [
+    "ali",
+    "bl4de",
+    "zimmer75",
+    "4xrhd",
+    "whit3h4tmahi",
+    "jon82",
+    "rhodesd",
+    "mhaja7"
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 22185,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "atlasboard-atlassian-package",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
