@@ -1,0 +1,155 @@
+{
+  "id": 323735,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMjM3MzU=",
+  "url": "https://hackerone.com/reports/323735",
+  "title": "Insecure Transportation Security Protocol Supported (TLS 1.0) on https://www.jamieweb.net",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2018-03-08T19:38:42.983Z",
+  "submitted_at": "2018-03-08T19:38:42.983Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "retr0",
+    "url": "/retr0",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/043/940/252ef752dfd4bcd18290c37c52bdc5f2dae59c90_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 24397,
+    "url": "https://hackerone.com/jamieweb",
+    "handle": "jamieweb",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/024/397/b701b28c374242ae359697e109ce293770d49f09_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/024/397/b701b28c374242ae359697e109ce293770d49f09_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "JamieWeb",
+      "twitter_handle": "jamieweb",
+      "website": "https://www.jamieweb.net",
+      "about": ""
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2018-05-11T10:51:52.104Z",
+  "bug_reporter_agreed_on_going_public_at": "2018-05-11T10:51:51.906Z",
+  "team_member_agreed_on_going_public_at": "2018-05-04T15:46:01.383Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary: \nhttps://www.jamieweb.net still support TLS 1.0 protocol which has several flaws.\n\n## Vulnerability:\nWith a SSL security scanner i was able to identify that an insecure transportation security protocol (TLS 1.0) is still supported by your web server.\n\nTLS 1.0 has several flaws. An attacker can cause connection failures and they can trigger the use of TLS 1.0 to exploit vulnerabilities like BEAST (Browser Exploit Against SSL/TLS).\n\nWebsites using TLS 1.0 will be considered non-compliant by PCI after 30 June 2018.\n\n## How to reproduice:\n- Using Kali Linux, or any Linux distribution with nmap installed:\n- Launch this command: nmap --script ssl-enum-ciphers -p 443 jamieweb.net\n- Please check attached file for scan result: F270760 and see that there is still references to TLSv1.0.\n\n## Remedy:\nConfigure your web server to disallow using weak ciphers. Please note that you need to restart the web server to enable changes.\n\n- For Apache, adjust the SSLProtocol directive provided by the mod_ssl module. This directive can be set either at the server level or in a virtual host configuration.\n>SSLProtocol +TLSv1.1 +TLSv1.2\n\n- For Nginx, locate any use of the directive ssl_protocols in the nginx.conf file and remove TLSv1.\n>ssl_protocols TLSv1.1 TLSv1.2;\n\n- For Microsoft IIS, you should make some changes on the system registry.\n1) Click on Start and then Run, type regedt32 or regedit, and then click OK.\n2) In Registry Editor, locate the following registry key or create if it does not exist:\n>HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\SecurityProviders\\SCHANNEL\\Protocols\\TLS 1.0\\\n3) Locate a key named Server or create if it doesn't exist.\n4) Under the Server key, locate a DWORD value named Enabled or create if it doesn't exist and set its value to \"0\".\n\n## Supporting Material/References:\n- [How to disable TLS v1.0](https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-R2-and-2012/dn786418(v=ws.11)#BKMK_SchannelTR_TLS10)\n- [OWASP - Insecure Configuration Management](https://www.owasp.org/index.php/Insecure_Configuration_Management)\n- [OWASP - Insufficient Transport Layer Protection](https://www.owasp.org/index.php/Top_10_2010-A9-Insufficient_Transport_Layer_Protection)\n- [How to disable PCT 1.0, SSL 2.0, SSL 3.0, or TLS 1.0 in Internet Information Services](https://support.microsoft.com/en-us/help/187498/how-to-disable-pct-1-0-ssl-2-0-ssl-3-0-or-tls-1-0-in-internet-informat)\n- [IIS Crypto is a free tool that gives administrators the ability to enable or disable protocols, ciphers, hashes and key exchange algorithms on Windows Server 2003, 2008 and 2012](https://www.nartac.com/Products/IISCrypto/)\n- [Date Change for Migrating from SSL and Early TLS](https://blog.pcisecuritystandards.org/migrating-from-ssl-and-early-tls)\n- [Browser Exploit Against SSL/TLS Attack (BEAST)](http://resources.infosecinstitute.com/ssl-attacks/)\n\nThanks for reading,\nRegards,\nretr0\n\n## Impact\n\nAttackers can perform man-in-the-middle attacks and observe the encryption traffic between your website and its visitors.",
+  "weakness": {
+    "id": 32,
+    "name": "Cryptographic Issues - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 270760,
+      "file_name": "nmap.txt",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/270/760/c86be508ee5688e75708e67f7d568aa88d1c781c/nmap.txt?response-content-disposition=attachment%3B%20filename%3D%22nmap.txt%22%3B%20filename%2A%3DUTF-8%27%27nmap.txt&response-content-type=text%2Fplain&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQRJA6IDM5%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T181110Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJD%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIF9ET4hr4ZTnbtO2pAIWv2UAweM96i1WrX7LBITwnHiwAiEAiX3EiP%2FRMpvk6b8SDA2%2F0Q4qQ4hQk5sCnwZz%2BFyoNXMqsgUIGRADGgwwMTM2MTkyNzQ4NDkiDBm%2BtUvOVk%2FC2SESLSqPBXzH3MSWfNOTTDD79tVYg0VY0W2n236ryhYLAfHDMiKc2GLJ1OofMH%2FMwSDTjDJ9c6GiToqLtNmDmthf%2BAsMeaVpWrpqSAEqjBWwPcLkvyN%2FU94cWXtp7yAGHg6OAeyn%2FUQTPkjro1UU9ZC93ArVp3jrlaibi8trjUWjR3E4exZ8Am9LvpEL9Lz4OAYLE60ngE4gXy%2FyDs37I2H9LPcYCoPUkD8dFZmv06%2BhYDwz%2BEfUYq4WsNgZ6PO29r3brW73CpjvRbrre0YQ%2F2fP4OEjJqBPzhJuWLSECU9JYEREwQN%2Fcn%2B9PlJVISm0RLk73u6yZq743V8yDognTDCgdxJbTM%2BNYwQk9HZljLSUTytH4akSzTaQ0UUStHiRu4c1MW%2FPN67glq2G%2FfNiVf0QhyF3lVWATxbVc3C0HLwvsieyjjw%2FjVcsr99p28CnTJl8m%2F2BM3wzPzSRrHC9QRcNxbtvDb80v1rL6G20IgfKLqFESGTnTlSsUFfA5n%2FqT8bxm8TJE2F01klIQnvBdnQI3rKxuKq53R%2FESRDDM8qbGBXvY6qv4IhD%2BVLWu3OuP%2FKe83aLam9VJVQoKEGIK1i9qeqx4KUzr2bxxr6oAmF%2BaI9qvjfo%2BH3ijivFsbjnexVCXtoqeZdb%2BoIxkLIpplq1ZhzuPRbkNQrH8SDbYEhalqYfnT2cqDrw%2BjAhCwjDC3D73L%2BmO07k8Kz4Sb3T4U1pAVM42iG8fSsWu1%2FV6FTIw6M4V9lolktMGiB93YGwo%2BKtYwJH%2BEWidA6AVUn4ZeoPZcZp7bXJLo%2FdYTy12VzRyxqfEcwGqzwgRv2hLpeBnk0FMTNurEVPpbLZADKvddyrrM99l6A05D4HoaMJn9328cdaRtsws7rAxgY6sQFoNpLnIjdQxdqmFp9oOuVXCeWphTtjDGNY5ZRU9h44XByX90iAp2R6SDfP4%2Fcf89EngImegV0yGzNWtP0Ma%2B1QTxMJkHisN8q3zL3xzZmXCtBpEbdT%2FKXdIkTJe9%2FtIRSmmI9OA2Be9npU%2BNjgCHk%2FZ3rBDAGe4YFAoZ946HDMpcn8ytr8f2Gr%2FyVw%2FD%2FYuLLbcLXei10yrXlvLwwCLfJeSpwl7Hdvq5tJUnrOP8abKrc%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=d7a3d119bd5db3ce17b60174a7a321a0e6e352c24f766370a3830a979804fb70",
+      "file_size": 3015,
+      "type": "text/plain",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2018-06-03T15:46:01.509Z",
+  "allow_singular_disclosure_after": -230437509.0034904,
+  "singular_disclosure_allowed": true,
+  "vote_count": 13,
+  "voters": [
+    "jokebookservice1",
+    "apapedulimu",
+    "mikassa53",
+    "khizer47",
+    "sn-shyk",
+    "0x08",
+    "50h41l",
+    "jamieonubuntu",
+    "ormons",
+    "glezpgar",
+    "and 3 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 3842,
+    "asset_type": "URL",
+    "asset_identifier": "www.jamieweb.net",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "id": 7320,
+      "category": "team",
+      "content": "TLS 1.0 was still enabled on my server. While there are currently no major vulnerabilities when using the latest software versions, it is good security practise to disable it.\n\nI ran an Apache CustomLog in order to ensure I would not be breaking compatibility for a large number of visitors. Only 0.078% of requests out of around 100,000 were not using TLS 1.2, so I disabled TLS 1.0 and TLS 1.1 completely.",
+      "updated_at": "2018-05-04T15:51:08.886Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 217385,
+        "username": "jamieonubuntu",
+        "name": "Jamie Scaife",
+        "bio": "",
+        "cleared": false,
+        "verified": false,
+        "website": "https://www.jamieweb.net",
+        "location": "United Kingdom",
+        "created_at": "2017-11-15T19:22:21.122Z",
+        "url": "https://hackerone.com/jamieonubuntu",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "company",
+        "profile_picture_urls": {
+          "small": "https://profile-photos.hackerone-user-content.com/variants/000/217/385/69ab567c95b73f28c6f63d81d945fb73a683c19c_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/000/217/385/69ab567c95b73f28c6f63d81d945fb73a683c19c_original.jpg/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a",
+          "xtralarge": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MzExMjgsInB1ciI6ImJsb2JfaWQifX0=--db71f73965ef7708f844c930652b0771e4a04547/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJyZXNpemUiOiIyNjB4MjYwXHUwMDNlIn0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--cf3aeca803d1baf476958c689ca7b472a4cb54f1/blue.jpg"
+        }
+      }
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
