@@ -1,0 +1,121 @@
+{
+  "id": 162955,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNjI5NTU=",
+  "url": "https://hackerone.com/reports/162955",
+  "title": "Code Injection in Slack's Windows Desktop Client leads to Privilege Escalation",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-08-24T08:27:34.777Z",
+  "submitted_at": "2016-08-24T08:27:34.777Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "fbogner",
+    "url": "/fbogner",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/097/209/c6a39a3f503e5915ea2ebf90fc4f5b2ca45ef78e_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 69,
+    "url": "https://hackerone.com/slack",
+    "handle": "slack",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/069/683fee312381bc46cadc7ea1950abc87944d12c3_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/069/683fee312381bc46cadc7ea1950abc87944d12c3_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Slack",
+      "twitter_handle": "slackhq",
+      "website": "https://slack.com",
+      "about": "All your team communication in one place, instantly searchable, and available wherever you go."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2017-07-14T19:01:03.937Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-06-14T19:01:03.784Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi,\n\nThis report is about a Code Injection vulnerability in Slack's Windows Desktop Client (slack.exe) that allows any local user to inject code into other user's Slack client.\n\nIt has been verified on a fully patched english Windows 7 64bit running the latest available Slack Desktop Client (2.1.1 32-Bit Direct Download). \n\nThe issue is that slack.exe tries to load its OpenSSL configuration from the non-existing file\nC:\\usr\\local\\ssl\\openssl.cnf (See Procmon screenshot). As any authenticated Windows user is allowed to\ncreate new folders at the system drive's root, the expected folder structure can be created by anyone. \n\nThis enables any local user to create the expected OpenSSL config file. Using this config file it is then possible to instruct OpenSSL to load additional libraries. This finally leads to arbitrary code execution in other user's slack.exe process. This is especially a problem as Slack is automatically started after logging in.\n\nHere's a video illustrating the attack: https://owncloud.bogner.sh/s/MRXZSp0YyfK9ycf\nAdditionally you can download the source code and the binary version of the used payloads here: https://owncloud.bogner.sh/s/z7kbZr9STr08R73\n\nTo fix this vulnerability the OpenSSL config file should only be loaded from secure locations (like somewhere from within the application's root folder)\n\nIf you have any questions just let me know.\nFlorian",
+  "weakness": {
+    "id": 58,
+    "name": "Command Injection - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 114492,
+      "file_name": "Screen_Shot_2016-08-24_at_09.48.52.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/114/492/5593935fbce2c828dcde2d853a4e161865617f5f/Screen_Shot_2016-08-24_at_09.48.52.png?response-content-disposition=attachment%3B%20filename%3D%22Screen_Shot_2016-08-24_at_09.48.52.png%22%3B%20filename%2A%3DUTF-8%27%27Screen_Shot_2016-08-24_at_09.48.52.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4YHF5EHB%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T212445Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJFMEMCIFqNX39T%2FXCJhXUkbTX3lWx8BjPqVE8MnKgEzGKAKedeAh8dx5v6uHPjEk%2BCj1ZBqfgMzv%2FRNtdMS5lgFNUa32GFKrEFCBwQAxoMMDEzNjE5Mjc0ODQ5IgyhgfORnLRqY3GEXbQqjgWHdxllSIT1v7ozL1D563B3s5O9ppME84bDUJGGDi%2FctsJl6PItf3fupoMgly%2BkTvfb2jozfmh9mV82Kqp4iSDMuv3e7FKFmhbLBA6YSKPJdW3rIk6n4KIghj%2BdsH6bsNQuY1JxIlX2ZFqxoftDjH1cH9WWdy5w8azr7yDVYBl09F6ATbB493UmlGzdGQNRvdUgGq8XsJ1lZLvZEXkErLgzZd7SvkL%2FOo82Tqn11F3mw%2BOMSwpTgg8op2AmldjwgJe4CyLZhYriUIvRjGpA9sAnJL0AH9rUE%2BG87yIiPrUndpYtlh1Hvq4JxQ3rGLwxdCy3ScMpdlJqwog9YlWK6SAm4LFTwZybjjWvjU0TbynlPsZHapyntasFH0GrPhe3qHBfMwsFMkbCWFgoqx%2FuShmHW35zishdC6hc1dbVq6V7J4IC%2FNAa40woeXKdsnJDxwMZy3EYYDTuD%2F1Y2dWkmrROK6hhz4BDLx41pApZwDKMYbqdv0jytswxYRDwr%2B9j7Ca%2BO8%2FN4Zx7lWj5L7aDsr1NNuhIRrPGg8zEB8QLYXXV5X6xS%2BSIfRbcm29JOJ7%2Fa8JYhO6oFu4R%2F2oN3I7VRJfNDF5UixB7Zye6Xw8AbS1qEOxkzkypZIIn0f1l%2Bj4IPgf5%2BEnLB8NWzclNpQRclJviZl2aVnzDgB8J9RvFXtJjugsM3YoDeE%2F%2BSzeEtLdTQGy3L8WRXoEr3d15VxuZF2wX9NOiYHtel8GFpxCiGeRXO4oGgd3KT4EuN15tUqoR9ESrzIJ6O0kwAEX%2FU4prAw1u6QqyVOIJqRTdbzbC6jB%2BlkJXSAbA%2BKnhEgq9hDn4CNaHhbmd5yrSXuONjzc%2F%2B9BM6egXoLNPqd0aXIOy5mUwy43BxgY6swHRMbrsLgWKjiiaI7ot7fwXNzz7VF5aCF%2BXCd1qM%2BtvalLfUA6wxzmvlPsK6Uvp8pMk%2Fs8PG1rn4ZcdJ94EDxC0O636Z5A36vcUecw5uqrpX1JABFxT%2Be7Da%2BVq%2FkwnCL%2BQHPDHgJu9ZiHHUim6IRY78Qpu1mi4h3eEA5F7xpCa4MK6cNBtr%2F8mJRiVVhpocrBv%2Bv1aG1CCL60oc6WNadMp4yhkrXtSek0v%2BTAaxXRS08p3%2BQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=f54ac0e2edcd4f41dbac063e1bca0111ba46d00feac31c5045636e7169948949",
+      "file_size": 54588,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-07-14T19:01:03.862Z",
+  "allow_singular_disclosure_after": -258431021.49633592,
+  "singular_disclosure_allowed": true,
+  "vote_count": 14,
+  "voters": [
+    "sp1d3rs",
+    "stefanovettorazzi",
+    "bl4de",
+    "spam404",
+    "0xsyndr0me",
+    "newfunction",
+    "fbogner",
+    "cayj",
+    "pappan",
+    "r3y",
+    "and 4 more..."
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
