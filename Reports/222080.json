@@ -1,0 +1,132 @@
+{
+  "id": 222080,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yMjIwODA=",
+  "url": "https://hackerone.com/reports/222080",
+  "title": "The email API to reset password is unlimited and can be used as a email bomb",
+  "state": "Closed",
+  "substate": "duplicate",
+  "severity_rating": "low",
+  "readable_substate": "Duplicate",
+  "created_at": "2017-04-19T07:58:27.332Z",
+  "submitted_at": "2017-04-19T07:58:27.332Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": true,
+    "username": "xifengweiyu",
+    "url": "/xifengweiyu",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13291,
+    "url": "https://hackerone.com/nextcloud",
+    "handle": "nextcloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Nextcloud",
+      "twitter_handle": "nextclouders",
+      "website": "https://nextcloud.com",
+      "about": "Access, share and protect your files, calendars, contacts, communication & more at home and in your enterprise."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2017-04-20T15:34:21.403Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-04-20T15:28:55.468Z",
+  "team_member_agreed_on_going_public_at": "2017-04-20T15:34:21.364Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "**Description:**\n\nThe email API `https://demo.nextcloud.com/qazxsw/lostpassword/email` to reset password is unlimited and can be used as a email bomb\n\n**Reproduce steps:**\n\n1.Every `Instant trial`'s link is `https://demo.nextcloud.com/yourname`,and it always has a default user `admin`\n\n2.then I try to visit one `https://demo.nextcloud.com/qazxsw/login?user=admin`,then I try to login it using `username:admin || password:xxxxx`(password can be any wrong password)  .see screenshot(1)\n\n3.Then nextcloud will prompt you to reset password,if you click it,admin's email box will receive an email.see screenshot(2)\n\n4.So I can use chrome console network panel to `replay XHR` continuously,then my email box receive many email.see screenshot(3)\n\n**How to harm other people:**\n\n1.visit any project which you don't own,for example `https://demo.nextcloud.com/test`\n2.If this people has set email address for his `admin`,then you can try the above reproduce steps.",
+  "weakness": {
+    "id": 26,
+    "name": "Improper Access Control - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 177110,
+      "file_name": "2.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/177/110/a1cc4ee5d08dd5eb693dacf92c2078308b136941/2.png?response-content-disposition=attachment%3B%20filename%3D%222.png%22%3B%20filename%2A%3DUTF-8%27%272.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQU6ESQMEE%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T225244Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQC4TIuyG4oEIFOm3SUTvK%2B3ZK1Qzkw5vPZpFQ2eEhdxPAIhALpmL%2BplVbuOVRoV2k3HfZPlAbkKrVV0RRY4%2F6pmgzUQKrIFCB4QAxoMMDEzNjE5Mjc0ODQ5IgwxRjHx2cOSB574QQsqjwVvzwimbZTEd4O%2FrcNl%2FSD3H5XXqpviY3JfCvonbNQyPo2HR%2BdrW0ZhOetnVHY2aphxRgvSbcGZyKOecYooapl6l4VKS1YUCTDGqc%2BXR06xzFKHNSLYcIrUU3UkNUqmgWZ8X0LLwKu4Sx6txTTGBcy49iQH%2BgKb24uvFbz6%2BoCtGD0mFCgxDcCfPXfkoqstgJeT55VArgWDPtAM68z2nCv8C%2F7KzjDBfnCtjqGJLczfxoNATy0DL2f0DqBKMMcQ8R15tvakucd8JUgp0vVyN7lRLIm3bJ37%2Fe3K7wPZJ%2BXW1thxdqAWuQkZC6wQIvS%2FZS1YcFZ0eL6PkrLRMsWZcSuo3Cdv8G2Sj1YuegU%2BN95CUSvsxEQo1zqeKUxzlN7%2BR0RRGk7qfqOef7LZAbWpU7foPaVK%2FxEfXsTgXVmUFdYOi3cqYyBTBU4liADHzCWhC0pOdBDyXKlGjFd6zmXQ7gNgEOMgYWvLBO0hUJM0zx8sr23pudAmAIKl6Nr4Z1DCyw1Zm6oVGxxaK8HWTmCWsAPBe4PfgG2HvNYNWUKlTAD753QYN8HIXi26qcoGmJlI2zd7KFNCkOGQ4M%2BnhRfmPBVrxtu0RbT8Nh6Pzd4UxOA7ttexvmJp4F8%2BhlzwQqmorBiDS5gK7AHbKqPH0TsaJ16wRtNZOtyAmZEFxEwMi90kq98FGXX91EbNObq%2BAOvg9lRASl%2FZs1jRprMvQTsQFxvJYlnYQvlL87w3%2B9oeQUKAHV0kJ4pR1K9MPtYICWWya%2B%2Blxy0FOjSGUTm4BHpJoFdi1RcegvL1VKrx%2BlWqcXYf1frs2dKG7GkSvLM6f5VXQxcdQOpXoZkTQPUD7xSXiI1m8Eh%2BbeTVwtDqX1sQ0tcGMNbVwcYGOrABvFQh0ck7xMikFaf354iMwrKTPzmn%2BHwyLdye6RarruEilECwhqeNyksYGG06%2FMbb2Y3a65jazA5Ql6rp4NmWmIavGwfThDQww4gAxxA2g7r9N%2F7RQ3dikjYjTkCu%2FAhFXYOZI1liBoND2M9v8y%2BTW3II8tW0sy5GWnnRCpyAyvkgqb9hm%2BvS86cj8Yi%2Fy3VBv7c8Svh5TFXW7i9smhy5%2B5oI5bxHrroK0wGMRGAXscQ%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=771ff3414730454f41bf907f4bedc91c8c2886266d38a72cca1a38299e874e9d",
+      "file_size": 269072,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 177111,
+      "file_name": "3.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/177/111/a57401c16b5b511750a30231878af1799bfc8b4c/3.png?response-content-disposition=attachment%3B%20filename%3D%223.png%22%3B%20filename%2A%3DUTF-8%27%273.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQU6ESQMEE%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T225244Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQC4TIuyG4oEIFOm3SUTvK%2B3ZK1Qzkw5vPZpFQ2eEhdxPAIhALpmL%2BplVbuOVRoV2k3HfZPlAbkKrVV0RRY4%2F6pmgzUQKrIFCB4QAxoMMDEzNjE5Mjc0ODQ5IgwxRjHx2cOSB574QQsqjwVvzwimbZTEd4O%2FrcNl%2FSD3H5XXqpviY3JfCvonbNQyPo2HR%2BdrW0ZhOetnVHY2aphxRgvSbcGZyKOecYooapl6l4VKS1YUCTDGqc%2BXR06xzFKHNSLYcIrUU3UkNUqmgWZ8X0LLwKu4Sx6txTTGBcy49iQH%2BgKb24uvFbz6%2BoCtGD0mFCgxDcCfPXfkoqstgJeT55VArgWDPtAM68z2nCv8C%2F7KzjDBfnCtjqGJLczfxoNATy0DL2f0DqBKMMcQ8R15tvakucd8JUgp0vVyN7lRLIm3bJ37%2Fe3K7wPZJ%2BXW1thxdqAWuQkZC6wQIvS%2FZS1YcFZ0eL6PkrLRMsWZcSuo3Cdv8G2Sj1YuegU%2BN95CUSvsxEQo1zqeKUxzlN7%2BR0RRGk7qfqOef7LZAbWpU7foPaVK%2FxEfXsTgXVmUFdYOi3cqYyBTBU4liADHzCWhC0pOdBDyXKlGjFd6zmXQ7gNgEOMgYWvLBO0hUJM0zx8sr23pudAmAIKl6Nr4Z1DCyw1Zm6oVGxxaK8HWTmCWsAPBe4PfgG2HvNYNWUKlTAD753QYN8HIXi26qcoGmJlI2zd7KFNCkOGQ4M%2BnhRfmPBVrxtu0RbT8Nh6Pzd4UxOA7ttexvmJp4F8%2BhlzwQqmorBiDS5gK7AHbKqPH0TsaJ16wRtNZOtyAmZEFxEwMi90kq98FGXX91EbNObq%2BAOvg9lRASl%2FZs1jRprMvQTsQFxvJYlnYQvlL87w3%2B9oeQUKAHV0kJ4pR1K9MPtYICWWya%2B%2Blxy0FOjSGUTm4BHpJoFdi1RcegvL1VKrx%2BlWqcXYf1frs2dKG7GkSvLM6f5VXQxcdQOpXoZkTQPUD7xSXiI1m8Eh%2BbeTVwtDqX1sQ0tcGMNbVwcYGOrABvFQh0ck7xMikFaf354iMwrKTPzmn%2BHwyLdye6RarruEilECwhqeNyksYGG06%2FMbb2Y3a65jazA5Ql6rp4NmWmIavGwfThDQww4gAxxA2g7r9N%2F7RQ3dikjYjTkCu%2FAhFXYOZI1liBoND2M9v8y%2BTW3II8tW0sy5GWnnRCpyAyvkgqb9hm%2BvS86cj8Yi%2Fy3VBv7c8Svh5TFXW7i9smhy5%2B5oI5bxHrroK0wGMRGAXscQ%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=f01fe27a449fea267bcb7eecd689be388604a3fe4ebeea00ec2fb837fd243bfe",
+      "file_size": 109313,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 177112,
+      "file_name": "1.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/177/112/ef8bba8b3dfdbca5e2b6b5d929b8c7093353fe5a/1.png?response-content-disposition=attachment%3B%20filename%3D%221.png%22%3B%20filename%2A%3DUTF-8%27%271.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQU6ESQMEE%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T225244Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQC4TIuyG4oEIFOm3SUTvK%2B3ZK1Qzkw5vPZpFQ2eEhdxPAIhALpmL%2BplVbuOVRoV2k3HfZPlAbkKrVV0RRY4%2F6pmgzUQKrIFCB4QAxoMMDEzNjE5Mjc0ODQ5IgwxRjHx2cOSB574QQsqjwVvzwimbZTEd4O%2FrcNl%2FSD3H5XXqpviY3JfCvonbNQyPo2HR%2BdrW0ZhOetnVHY2aphxRgvSbcGZyKOecYooapl6l4VKS1YUCTDGqc%2BXR06xzFKHNSLYcIrUU3UkNUqmgWZ8X0LLwKu4Sx6txTTGBcy49iQH%2BgKb24uvFbz6%2BoCtGD0mFCgxDcCfPXfkoqstgJeT55VArgWDPtAM68z2nCv8C%2F7KzjDBfnCtjqGJLczfxoNATy0DL2f0DqBKMMcQ8R15tvakucd8JUgp0vVyN7lRLIm3bJ37%2Fe3K7wPZJ%2BXW1thxdqAWuQkZC6wQIvS%2FZS1YcFZ0eL6PkrLRMsWZcSuo3Cdv8G2Sj1YuegU%2BN95CUSvsxEQo1zqeKUxzlN7%2BR0RRGk7qfqOef7LZAbWpU7foPaVK%2FxEfXsTgXVmUFdYOi3cqYyBTBU4liADHzCWhC0pOdBDyXKlGjFd6zmXQ7gNgEOMgYWvLBO0hUJM0zx8sr23pudAmAIKl6Nr4Z1DCyw1Zm6oVGxxaK8HWTmCWsAPBe4PfgG2HvNYNWUKlTAD753QYN8HIXi26qcoGmJlI2zd7KFNCkOGQ4M%2BnhRfmPBVrxtu0RbT8Nh6Pzd4UxOA7ttexvmJp4F8%2BhlzwQqmorBiDS5gK7AHbKqPH0TsaJ16wRtNZOtyAmZEFxEwMi90kq98FGXX91EbNObq%2BAOvg9lRASl%2FZs1jRprMvQTsQFxvJYlnYQvlL87w3%2B9oeQUKAHV0kJ4pR1K9MPtYICWWya%2B%2Blxy0FOjSGUTm4BHpJoFdi1RcegvL1VKrx%2BlWqcXYf1frs2dKG7GkSvLM6f5VXQxcdQOpXoZkTQPUD7xSXiI1m8Eh%2BbeTVwtDqX1sQ0tcGMNbVwcYGOrABvFQh0ck7xMikFaf354iMwrKTPzmn%2BHwyLdye6RarruEilECwhqeNyksYGG06%2FMbb2Y3a65jazA5Ql6rp4NmWmIavGwfThDQww4gAxxA2g7r9N%2F7RQ3dikjYjTkCu%2FAhFXYOZI1liBoND2M9v8y%2BTW3II8tW0sy5GWnnRCpyAyvkgqb9hm%2BvS86cj8Yi%2Fy3VBv7c8Svh5TFXW7i9smhy5%2B5oI5bxHrroK0wGMRGAXscQ%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=fe52200b2542396090a49bac170161bca8f51029bdd3b9162f41b5b35d10d01d",
+      "file_size": 1009235,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 3,
+  "voters": [
+    "pr0f0x01",
+    "spetr0x",
+    "destinedtohack"
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "User"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
