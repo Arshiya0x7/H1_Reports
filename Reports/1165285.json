@@ -1,0 +1,126 @@
+{
+  "id": 1165285,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMTY1Mjg1",
+  "url": "https://hackerone.com/reports/1165285",
+  "title": "No Rate limit on change password leads to account takeover",
+  "state": "Closed",
+  "substate": "duplicate",
+  "severity_rating": "low",
+  "readable_substate": "Duplicate",
+  "created_at": "2021-04-14T23:05:27.853Z",
+  "submitted_at": "2021-04-14T23:05:28.018Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "dreamispossible",
+    "url": "/dreamispossible",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTg0MzQ4NywicHVyIjoiYmxvYl9pZCJ9fQ==--99f3c93c1871658f68f6d40c375280580e59ace7/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGVnIiwiZ3Jhdml0eSI6IkNlbnRlciIsInJlc2l6ZSI6IjYyeDYyXiIsImNyb3AiOiI2Mng2MiswKzAifSwicHVyIjoidmFyaWF0aW9uIn19--0e8fb5b1a245559716caa2abf00b1571bf3c5040/7D6BFFFF-4547-4980-B7A7-68230F369762.jpeg"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 35710,
+    "url": "https://hackerone.com/reddit",
+    "handle": "reddit",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/osci5oey0q0wkiom39bk5onv8p7q/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/osci5oey0q0wkiom39bk5onv8p7q/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Reddit",
+      "twitter_handle": "reddit",
+      "website": "https://www.reddit.com",
+      "about": ""
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2021-12-13T22:47:48.125Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2021-10-27T14:12:18.093Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nI found when login and go to changing password, there is no rate limit on that function, which leads to takeover the account.\n\n## Steps To Reproduce:\n\n1-Create account on (https://old.reddit.com) & move to your setting,```In my case I chose !23Qweasdzxc as the password.```\n\n2-Go to change password on (https://old.reddit.com/prefs/update/#) & enter the wrong password in old password   and enter new password and confirm the password.\n\n\n3-Intercept the request & send it to Burp Intruder .\n\n4-Make word-list & and start Brute Forcing.```Make sure to add the correct password in the wordlist, I made  8890 words in the wordlist```\n\nfinally you can see the correct password in the response.like the following response .\n███\n\n\nAnd as you can see I made more than 8000 requests.\nand there is no rate limit.\n{F1265803}\n\n## Impact\n\nIf the attacker gets the user's cookies  through XSS or in somehow,he is able to takeover the account.",
+  "weakness": {
+    "id": 31,
+    "name": "Improper Restriction of Authentication Attempts"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1265803,
+      "file_name": "Screenshot_from_2021-04-15_02-03-58.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/9fsyv0j2fmac9tbmg8h0wzcwhptg?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_from_2021-04-15_02-03-58.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_from_2021-04-15_02-03-58.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ5NFJOVAF%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T005058Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEID%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCYoKrB%2B5OAtMEvTgI1XSN2%2BKvLv%2FCStZ28UmgWI5ObKwIhALGCZDa0Bq2L38Z%2Fa7dYv4m2VMjCdwsGoNrRzMjVp2KLKrsFCPn%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5IgxKteL6N%2B7t%2BhCTQkMqjwXJeRXjJ4O0ufVhiNeAdWoTAeaS3K9z5%2B%2FSJHMf2WAtLZx4kgetOSeeHRtMugsPWBC%2Bug6jjsy76pybkL1EYFZ%2BHurdTOiA10xtB%2BEu%2Bo0zHXt4s6wJlbTsOBpzJcycP0%2Bj9fSWmQlKTPvdqmHcHAIeH4D6hmNRS%2FyYtefuzRd9jc6xfeHyrsGV8mo4d6uZ2A0fg2hy1%2F1qb1XadZ1paLPyCZfgzQtVXH%2Bvhky1YB1dckNPacNmZA7mSLSZNoy4lgr39%2FuP02mR%2Bx08coW0djJuPXpBNPpQ5GuIsA1ev%2Bg%2FkxzkNFg8Iurb8xrHQlMBno3ZmujhXMO6mQmjclRB7stxh1Exi4ToRyAj9ys2n5n9DI2lu82NXIEx2c8u5M17em7dBXmFeS8XKoIjEq0vX1h%2B2SWji6fyrSN0Y3zSkqVo2SFA7SnmS9bAwBB7VHIslHZoHC7TDp%2BpUyuXMg4WJmQd07kGmm%2Fb9xxb562ODFeVFV%2Bw3uVJ840nT%2BzgJR84a%2F4tGuGqocZ8Cy4E0zkK9MZ3Hsd6x3IXOyrX%2Fh%2F8u%2F2fjtBFTcmxdfiXSNNx2jj%2FZ9iE4xZCEeVw0nyPWvTfkJTjiSjA2LbQgCK9BI0K%2FNrgP5FhiR8VL%2F1JNnDuXT1ae36m90n%2B4kaOygNNiVrLZDXu11ZidM%2B8L0ZnsA53ktL9bcmVTKWElcsa7vHZkwD7vj%2FDoZkQKpgj5fwgbOF2X0LcBNcSHRHyaln9fxl9ibEusC6ISslQ1JW0EAgzGKuPJIk7cemZi6RtrNjcT87VZIttNPNsH45zqIA%2B8njei2FQScCK744SPZQhZNEVgBwTKUMjHeg3OMfzHwRHi%2FGjpyemyKwKX93dJ5FxqEuMhtCeMKXzvMYGOrABS%2F7GpsZUawWuSZ4%2BGnTjwxHQ%2B2HPFUulGEIalHAL2LHhOVp3YYjZj90cWKPb83oDioKgtRsR%2Fn%2BfBauIB8qIbDmxt1s42h5r8Lzd66%2BpoizioEqa8kvLNvzoBvDaNu1Zvp50qJjqpcCfaXUg%2FrcpMV4530V1SIlrwEmkUCmLSOvc8n8%2FBSC5ML1W5ET5l8wee8Q1UP1EVxOOQddUIyli3p6tfFbhXY222hPpGECFxgM%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=c1d6a6ff8598ba0b5d52008a206cd35bb566a3f027f52466e40d0957215b51d5",
+      "file_size": 116285,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 8,
+  "voters": [
+    "tinmo",
+    "he4am",
+    "dreamispossible",
+    "khizer47",
+    "official_blackhat13",
+    "ind1go31",
+    "anebiro",
+    "meispi"
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 18826,
+    "asset_type": "URL",
+    "asset_identifier": "old.reddit.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
