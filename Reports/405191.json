@@ -1,0 +1,131 @@
+{
+  "id": 405191,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC80MDUxOTE=",
+  "url": "https://hackerone.com/reports/405191",
+  "title": "DOM XSS on 50x.html page",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2018-09-04T13:00:34.756Z",
+  "submitted_at": "2018-09-04T13:00:34.756Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "cujanovic",
+    "url": "/cujanovic",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/005/382/ff3eef97a8a4c4aa0f46b834454237dcf9d7e9b5_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 10995,
+    "url": "https://hackerone.com/duckduckgo",
+    "handle": "duckduckgo",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/4mpaehke5u0ubioeqvys0hcesjle/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/4mpaehke5u0ubioeqvys0hcesjle/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "DuckDuckGo",
+      "twitter_handle": "duckduckgo",
+      "website": "https://duckduckgo.com",
+      "about": "Independent online protection company. Get our mobile & desktop browser with protections built-in, including our search engine that doesn’t track you."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2018-10-16T18:09:59.634Z",
+  "bug_reporter_agreed_on_going_public_at": "2018-10-16T14:56:10.682Z",
+  "team_member_agreed_on_going_public_at": "2018-10-16T18:09:59.559Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello,\n\nThe is a DOM XSS vulnerability on https://duckduckgo.com/50x.html, it seems like the sink is DIV.innerHTML and the source is location.search.\nThe PoC url is: https://duckduckgo.com/50x.html?e=&atb=test%22/%3E%3Cimg%20src=x%20onerror=alert(document.domain);%3E\n\nThe code that is causing this XSS is located in:\nhttps://duckduckgo.com/lib/l110.js\nLine 26, Column 60903\n\nBelow is the part of the vulnerable code:\n`b5.createElement(\"div\"));\ncg = (m.exec(b7) || [\"\", \"\"])[1].toLowerCase();\nb4 = R[cg] || R._default;\nce.innerHTML =  b4[1]  + b7.replace(aB, \"<$1></$2>\") + b4[2];\ncb = b4[0];\nwhile (cb--) {\n\tce=ce.lastChild\n}\nif(!bI.support.leadingWhitespace&&b2.test(b7))`\n\nScreenshot:\n{F342240}\n\n## Impact\n\nThe attacker can execute JS code.",
+  "weakness": {
+    "id": 63,
+    "name": "Cross-site Scripting (XSS) - DOM"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 342240,
+      "file_name": "domxss-ddg.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/342/240/b66c24b92c920b990735569f72f8c6cf2f7f7340/domxss-ddg.png?response-content-disposition=attachment%3B%20filename%3D%22domxss-ddg.png%22%3B%20filename%2A%3DUTF-8%27%27domxss-ddg.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6VD4YZGP%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T165829Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIGJKRMI%2FBz8S%2BAZJPeL0i0stznCuaVhoPPEukEzqBOOUAiEA06Un8bwL%2BDLkrxn8yZbbm0jfNvPL8%2FKuyUVe7AuBS8EqsQUIGBADGgwwMTM2MTkyNzQ4NDkiDC1H4%2Fy6C7uTkRZKyCqOBY2A2QSmExZtxVjijUeYRdWuRuLgaolNvzLO9Fq0Ufw1hyviX7ZqSKRZOr73%2FX%2B%2B%2Bf38W3rkD09pa6TYKskeJukqV9bAZLvEnTZOLMRiRjGO0dvUs4XAJi1X1vpGzxOc3WS47DK80yvy6iKWEglJNK0aaVdcVao60MI8BB%2BirdxtH9Du6iCqt2ZQfeIQSCxiJz7sYxE5uLHIr%2FR%2B5ckYKsqi6TmHKPF%2B8gZu3%2BOvpEedEMu9Opt%2FgunKq6v36mfMxZhvXQ%2B6OnzpcICD%2BggZNa%2F3xq2MKyF5t%2B44E4k%2FKsV5JOPvoqYyTy1LYhwZgpuiLwwileUnz6EFhwN6AKuOtEN46IpwfbhcXQs1evHr2u%2FviE13%2FJ4nCPLbiWS7QdRqUV43J2bi%2BksYZ1%2F7k5bPEySOoz4HLCUv1FPpwztd7yFq9o0CIC5g5%2B1p14Rs5knc%2BF4%2BLLsy0BbTAbEbEv1m7Y%2Fmvm6oSMDeW5OUTfxxBmUeOrFXR6mqlnIrF6tT9ArS57UhmqVr%2By1hRsnckwASddW0rAyMYTyovTD%2F%2F%2FVLOfv4kmA8gmw2CrwPhFmTYRPDx7h9GTGF3IG5mnTIOqnOB64jFWi%2FTuyK2suw%2FaQ%2BftkiLHU2iqkp3SvjY6BVZkIBdMt0f6vZC3%2BVofPtmfzJLGKrgLE%2BHP0d66BGai4MmLcl5zgOu7DFCqImIk5Ppb37IaWuP6z2lVMv5Ksd7Z1Ve5FjI9dLKolxpb83DxKcRRnGJvLAe6AGlVur%2FpRQkMRVgwoxNzblQ8ZD%2BKAFcaRRqjGe3%2F3NDWf5wiPdQOeBcdRdJvLEtRwNFMsuF9LpXSW7%2F0KrjvS4ECkJ37GTPZs%2BcxK1WT2rg1lgmR5ftLX%2BWjCIpsDGBjqxAcE8ostgafbi8KNq9Lx0UlekYwCtzBDaitNQE9N9Q81ULi482vwqeKLtKsyiTrAWsqQeKKJuM0zctPyPDy5y3YIbTjX26TClYy7%2B7FlQWhCiE9PCgtT1I9ds4sCP7QSm3GldpIc%2FfH2bTEcl0OWZiGcn9i7VFSwC6YqwXz5p676NfdRPyJ4HkauoUrFaoU06%2BUpLP1H0PgP8%2FEQLVxDVvJAflbUNl3w5s8djPH1CC%2FRa0w%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=a4d499cf3638e898dc1ec591c74461f42a62449a44519f581a50efd506571b87",
+      "file_size": 72425,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2018-11-15T14:56:10.724Z",
+  "allow_singular_disclosure_after": -216180138.4322691,
+  "singular_disclosure_allowed": true,
+  "vote_count": 16,
+  "voters": [
+    "smither",
+    "ali",
+    "ras-it",
+    "sameerphad72",
+    "w2w",
+    "naategh",
+    "whitesector",
+    "khizer47",
+    "justas_b",
+    "cryptographer",
+    "and 6 more..."
+  ],
+  "severity": {
+    "rating": "high",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 8671,
+    "asset_type": "WILDCARD",
+    "asset_identifier": "*.duckduckgo.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
