@@ -1,0 +1,134 @@
+{
+  "id": 179920,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNzk5MjA=",
+  "url": "https://hackerone.com/reports/179920",
+  "title": "WordPress DB Class, bad implementation of prepare method guides to sqli and information disclosure",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "critical",
+  "readable_substate": "Resolved",
+  "created_at": "2016-11-03T13:32:17.535Z",
+  "submitted_at": "2016-11-03T13:32:17.535Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": true,
+    "username": "b258ea62bf297b02afa9854",
+    "url": "/b258ea62bf297b02afa9854",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 55,
+    "url": "https://hackerone.com/wordpress",
+    "handle": "wordpress",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/055/f114d1d31f904e3b903cd99a6cf566bb531f8401_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/055/f114d1d31f904e3b903cd99a6cf566bb531f8401_original.jpg/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "WordPress",
+      "twitter_handle": "wordpress",
+      "website": "https://wordpress.org/",
+      "about": "Beautiful sites of any kind."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2017-11-13T14:56:48.898Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-10-14T14:56:45.530Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Issue 1: Method checks if first argument is an array and if it is, it avoids the rest of the arguments and uses the first argument array values as input.\n\nIssue 2: When input query has %s in it, then it quote and this guides to sql injection in case query that need to be prepared have quoted user controlled input in it.  \n\nThis leaves all wordpress plugins/ themes potentially vulnerable on this two types of attack. As PoC sqli in bbpress wp plugin and core wp function is shown.\n\nPoC: \n1. There is SQLi in bbpress in case anonymous posting is allowed. ( check  bbpress-sqli.png)\n2.  Demo for the Issue 1 and Issue 2 for the prepare method\n3. Wordpress core function delete_metadata is vulnerable to sqli in case delete all e.g. last argument is true and meta value has value e.g. is user supplied / controlled.",
+  "weakness": {
+    "id": 67,
+    "name": "SQL Injection"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 132087,
+      "file_name": "bbpress-sqli.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/132/087/2b5692ba30e2a51c3fa2d31a09f95ccd2785b935/bbpress-sqli.png?response-content-disposition=attachment%3B%20filename%3D%22bbpress-sqli.png%22%3B%20filename%2A%3DUTF-8%27%27bbpress-sqli.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUNXCE6YL%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T193521Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDTqjg3%2F60zMbBv7Y%2FmGhKkm3GmrH3kxkZindmKEbQ8BAIgU6oFyNOx91SPL1yh3n4qa6w6Suy2ZZsRH%2F3QXJ0zfn4qsQUIGxADGgwwMTM2MTkyNzQ4NDkiDDmfL9Egc9HEdTNjDSqOBVzAkKHHcqMcDpeuaSCjFaKNDIz39dvxYduW5YPZ0IWglk9GqF48bMAxZmKuQA3utmy7%2BghVmkw5X8X5YOVuhVC%2FIEHQWLg6fBSyn1VD7XpfAbi8YKmWpuMEV9y2NuxjzeAEkZMVHXz78FmNKUk0UzoScP214X3Hntvlj25GmNeFVDggCpnIYIRTjz6lyqIg8I2EgVq4GpB9oYlMVU5lMZCJ2PQJeJS0CIYvyw5HREPinKc2iLVK4Pe%2B0bNIc3yqCaou%2BrA%2BieCpmr8vnLCyrkO4jBVnoovtP%2Bum5CqxfGcxp5YAGXgLREEuFtc0nY5t%2BBHXF07Ihp9aZDosuEj6OeIrDDwpioycdp7eN1vwD9Sdkz0Lm%2FTaRgkdZEQ%2FS%2FruTs0g6rHlpf1wUX7M6LSFX3%2FXdKuM8euvRh1aCnO%2F92CT8PE62UW2bBcCNdFUJcSSfT0CguV0aEHXFW5vezs8jinBCZCON23nPquPbE%2F1bOLcOEsALR6hphFbJSMql%2BOf9CKwZfWN85hdzq12XFfFE8P9AX6BWgY9Vvosa%2BjXU4Qeg2OKVcVPqZsk6tx1UMgNrwKXdH2agiN%2FPI%2FIqh5ppaDbZuNYt1Y1hIND0IAYHmsyqLVMYhL04bpOYSqaRHQQXVrGNqJKnUwdvUdKDji0IopXg9onJ8gyQPbmWxpXje4%2Bda0FS1NwAORZ%2FLnPTV2ohOHSad6wkQAdRY36Lfz1HWkRzEzcDKu7I473kpLexahRvl1K8x6rUa6KmiV8bEGHkir9SOf1eA6rBw7EEcKSfZqgXMqC90rDheCMBfrF3wHKIedPYrx8SjwBJ%2B8BxXREYIzu2xl0nEUz22OOH%2Bm%2FG7QVetMxNW7qs66HudlmHjCR%2BsDGBjqxASjXXkC23Ath0pdbOUYJmJWIWkJn5jAOvzdFLAwsMJwbNPFkZ05jRfF0usEvjzSDaEBcgTKvP0V1ZxrUrWAPqlbxLQIh9MPO2wGpqUcMZvVRtnJD7WNgLR7l7%2Bky7LymGL1o8v9PX4sPAV81eXujmX0DUAiCCbP4HQlsB%2FXzw66%2Fc1N7l7voC4ygwYREKnPLgiox2ok2ZFma6zp721Pml0LO5ymAECII%2BKRajF%2F8ZgxK9w%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=21f8e74eccb2f9f4f0b93e4e270f4185c7b4682099fc749bb346de4cd608224a",
+      "file_size": 17066,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 132088,
+      "file_name": "dh1.php",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/132/088/4c8580aebf8712978c479cb5618de2bbba6c9b21/dh1.php?response-content-disposition=attachment%3B%20filename%3D%22dh1.php%22%3B%20filename%2A%3DUTF-8%27%27dh1.php&response-content-type=text%2Fx-php&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUNXCE6YL%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T193521Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDTqjg3%2F60zMbBv7Y%2FmGhKkm3GmrH3kxkZindmKEbQ8BAIgU6oFyNOx91SPL1yh3n4qa6w6Suy2ZZsRH%2F3QXJ0zfn4qsQUIGxADGgwwMTM2MTkyNzQ4NDkiDDmfL9Egc9HEdTNjDSqOBVzAkKHHcqMcDpeuaSCjFaKNDIz39dvxYduW5YPZ0IWglk9GqF48bMAxZmKuQA3utmy7%2BghVmkw5X8X5YOVuhVC%2FIEHQWLg6fBSyn1VD7XpfAbi8YKmWpuMEV9y2NuxjzeAEkZMVHXz78FmNKUk0UzoScP214X3Hntvlj25GmNeFVDggCpnIYIRTjz6lyqIg8I2EgVq4GpB9oYlMVU5lMZCJ2PQJeJS0CIYvyw5HREPinKc2iLVK4Pe%2B0bNIc3yqCaou%2BrA%2BieCpmr8vnLCyrkO4jBVnoovtP%2Bum5CqxfGcxp5YAGXgLREEuFtc0nY5t%2BBHXF07Ihp9aZDosuEj6OeIrDDwpioycdp7eN1vwD9Sdkz0Lm%2FTaRgkdZEQ%2FS%2FruTs0g6rHlpf1wUX7M6LSFX3%2FXdKuM8euvRh1aCnO%2F92CT8PE62UW2bBcCNdFUJcSSfT0CguV0aEHXFW5vezs8jinBCZCON23nPquPbE%2F1bOLcOEsALR6hphFbJSMql%2BOf9CKwZfWN85hdzq12XFfFE8P9AX6BWgY9Vvosa%2BjXU4Qeg2OKVcVPqZsk6tx1UMgNrwKXdH2agiN%2FPI%2FIqh5ppaDbZuNYt1Y1hIND0IAYHmsyqLVMYhL04bpOYSqaRHQQXVrGNqJKnUwdvUdKDji0IopXg9onJ8gyQPbmWxpXje4%2Bda0FS1NwAORZ%2FLnPTV2ohOHSad6wkQAdRY36Lfz1HWkRzEzcDKu7I473kpLexahRvl1K8x6rUa6KmiV8bEGHkir9SOf1eA6rBw7EEcKSfZqgXMqC90rDheCMBfrF3wHKIedPYrx8SjwBJ%2B8BxXREYIzu2xl0nEUz22OOH%2Bm%2FG7QVetMxNW7qs66HudlmHjCR%2BsDGBjqxASjXXkC23Ath0pdbOUYJmJWIWkJn5jAOvzdFLAwsMJwbNPFkZ05jRfF0usEvjzSDaEBcgTKvP0V1ZxrUrWAPqlbxLQIh9MPO2wGpqUcMZvVRtnJD7WNgLR7l7%2Bky7LymGL1o8v9PX4sPAV81eXujmX0DUAiCCbP4HQlsB%2FXzw66%2Fc1N7l7voC4ygwYREKnPLgiox2ok2ZFma6zp721Pml0LO5ymAECII%2BKRajF%2F8ZgxK9w%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=e22e08737ac7ee7dcf229da56d91ec523d0a85d5df9e3911ab0857546e74562b",
+      "file_size": 2224,
+      "type": "text/x-php",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-11-13T14:56:45.627Z",
+  "allow_singular_disclosure_after": -247898315.56131962,
+  "singular_disclosure_allowed": true,
+  "vote_count": 17,
+  "voters": [
+    "jin",
+    "jokebookservice1",
+    "marcs0h",
+    "jensec",
+    "kuromatae",
+    "hunter",
+    "skansing",
+    "firs0v",
+    "bobo_ka",
+    "eveeez",
+    "and 7 more..."
+  ],
+  "severity": {
+    "rating": "critical",
+    "author_type": "User"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
