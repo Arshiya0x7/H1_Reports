@@ -1,0 +1,166 @@
+{
+  "id": 974222,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC85NzQyMjI=",
+  "url": "https://hackerone.com/reports/974222",
+  "title": "IDOR leads to Edit Anyone's Blogs / Websites",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2020-09-03T17:41:58.202Z",
+  "submitted_at": "2020-09-03T17:41:58.243Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "ali",
+    "url": "/ali",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/66sio8og4fja5dsqqnovd3bptdtj/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": true,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 111,
+    "url": "https://hackerone.com/automattic",
+    "handle": "automattic",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/111/7f89e1ea233f92916202521a069fdbfe9eced339_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/111/7f89e1ea233f92916202521a069fdbfe9eced339_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Automattic",
+      "twitter_handle": "",
+      "website": "https://automattic.com",
+      "about": "WordPress.com, WooCommerce, WordPress VIP, Jetpack, Beeper, Texts, Akismet, Gravatar, Crowdsignal, Tumblr and more!"
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2020-11-18T14:20:47.759Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-11-18T12:06:55.753Z",
+  "team_member_agreed_on_going_public_at": "2020-11-18T14:20:47.670Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello there,\nI hope all is well!\n\nSteps:\n1. Go to `https://intensedebate.com/signup` and create 2 accounts.\n2. Login as victim and go to `https://www.intensedebate.com/edit-user-profile`\n3. Click `Add Blog / Website` text and fill the form > click `Save Settings` button\n4. Go to `https://www.intensedebate.com/edit-user-profile`, again and search `radMainSite` text in page source and copy value.   \n{F975085}\n5. Then login as attacker.\n6. Go to `https://www.intensedebate.com/edit-user-profile` > click `Add Blog / Website` text and fill the form > click `Save Settings` button\n7. Go to `https://www.intensedebate.com/edit-user-profile`, again and click `Save Settings` button > open burp suite and change `hidBlogID` parameter with victim's `hidBlogID`.\n8. Forward the request and go to victim's account. Check your website informations. You will see it's changed.\n\nPoC:   \n{F975096}\n\n## Impact\n\nChanging victim's website/blog informations.\n\nBest Regards,\n@mygf",
+  "weakness": {
+    "id": 55,
+    "name": "Insecure Direct Object Reference (IDOR)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 975085,
+      "file_name": "1.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/zDibM3MsPfKztY8qux4QWUqh?response-content-disposition=attachment%3B%20filename%3D%221.png%22%3B%20filename%2A%3DUTF-8%27%271.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ54ULMSIN%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T081944Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQC1fLbjfAf5UuT%2Bzn9znM02BIm%2BtA0BdlVCADFmwtgiXAIhAKyEoANQxpF0pxqWybaHqy%2F3CBh%2B41mLRepyo9HHIXj3KrIFCBEQAxoMMDEzNjE5Mjc0ODQ5IgzfFtYU3NUkruzjxccqjwVVa7%2BvHU%2Fr1LYw9X5d%2Bf9DoD0M3KY1SvAmb%2F8IfdG21x392w4ex4Uc4V2Bgooc%2F7w1agU4uC8If8z2UE2jJDI%2F8hC6ZvVHcvXBn8GYJ5FTiW7VjJtDps%2Bmt9Pjq3i5gJMOyFl%2BpNiBapOIDatxtDhqqVHg9htlBz%2FLtcLXi%2FYWNXSITb8u4z8vXwrRgOCjNMtReJCt%2BnO1jHGO5sEpzGNR6fAy2CtQ4dJZxmrR0OWU1NW9PVM4XlGeSwQ913QFF8dMQkMDzpPpyhrFPjru0UON%2Bab9gpfqeIm9KmqsdGR3XxVGagx7iGpNs%2FAISp%2BefQEkBvWDSrIOS3lAxJKh1o9hCKuPFfnsTE96fGduITiIaNXuTiapN19%2BjrWpMY2XqzfRrJqRvemFcWb3kVAYCDn1TC0wvn2hseZZQ2H6J6OJi0N9HwLzcGvAU7rs7civ8AlaiYJpx8ZAs0m25VcQPLskIbDGkQVquYlJE4QHeppsC3nT38W3T9Czfe3gi6954Izqgx3xdZ7i2FiD3q%2FdMqFmBt%2BpNgKQlh4zNyj7z9%2B67r1PNri3Mb2awPXcqk4R5S0UYoJZGVnO864qZyOXiTKScyHQ7K3WWEeep3%2BKsnThFcmy%2Bxu%2BJvxiMizq1UJtYN3Sp%2BAs%2B9nx9mmw70biOM1j6tHQR6Y3mNak%2Br5lG%2FHcR%2BLaY7pNGasCQKBNoZx1o1YLC1X5HcFgsGWgrPQFnKNZS3zBnkTllnljrG2ymvAqxTieIQBohbtvM9plTqFPt6E3GdI%2BmPM9XaGCwPLFfJ1hsc0w8w%2BYLYr0oX8N6EG5ItsV06kYJs1t8w9DxcTZ6EeUZfwsmZYV8LcFhPZbePzrY6B63HvndwjrNWyiKt%2FiMLHivsYGOrABaA0ZcTiWnDN8649xTswB%2B%2Bq9lqIbDa8eTTrAubhWqrAG5PMGDWS%2BP7u7voWD0TDlhya70Gne0xbpxA3TbDN14w2RNjTwemo25gCuGNhPf%2FLVO4PRyAvCvbglrCZrtnUJg%2BFWgfwJRz7BcYi8RqN%2FC43WeRNwmr9CrK%2BRzmYn76Yz66NPWqIoZek6Xnn5ZDj7KFK33k7afTELueKgWChALlsCKqueViShPnU6UQ6Xq1U%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=ca19139d09f69a89c33a95770d314613634d824259903b78e00c341d017334ae",
+      "file_size": 83625,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 975087,
+      "file_name": "3.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/RzUgjYovtP8XXD2gs8Q464N7?response-content-disposition=attachment%3B%20filename%3D%223.png%22%3B%20filename%2A%3DUTF-8%27%273.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ54ULMSIN%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T081944Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQC1fLbjfAf5UuT%2Bzn9znM02BIm%2BtA0BdlVCADFmwtgiXAIhAKyEoANQxpF0pxqWybaHqy%2F3CBh%2B41mLRepyo9HHIXj3KrIFCBEQAxoMMDEzNjE5Mjc0ODQ5IgzfFtYU3NUkruzjxccqjwVVa7%2BvHU%2Fr1LYw9X5d%2Bf9DoD0M3KY1SvAmb%2F8IfdG21x392w4ex4Uc4V2Bgooc%2F7w1agU4uC8If8z2UE2jJDI%2F8hC6ZvVHcvXBn8GYJ5FTiW7VjJtDps%2Bmt9Pjq3i5gJMOyFl%2BpNiBapOIDatxtDhqqVHg9htlBz%2FLtcLXi%2FYWNXSITb8u4z8vXwrRgOCjNMtReJCt%2BnO1jHGO5sEpzGNR6fAy2CtQ4dJZxmrR0OWU1NW9PVM4XlGeSwQ913QFF8dMQkMDzpPpyhrFPjru0UON%2Bab9gpfqeIm9KmqsdGR3XxVGagx7iGpNs%2FAISp%2BefQEkBvWDSrIOS3lAxJKh1o9hCKuPFfnsTE96fGduITiIaNXuTiapN19%2BjrWpMY2XqzfRrJqRvemFcWb3kVAYCDn1TC0wvn2hseZZQ2H6J6OJi0N9HwLzcGvAU7rs7civ8AlaiYJpx8ZAs0m25VcQPLskIbDGkQVquYlJE4QHeppsC3nT38W3T9Czfe3gi6954Izqgx3xdZ7i2FiD3q%2FdMqFmBt%2BpNgKQlh4zNyj7z9%2B67r1PNri3Mb2awPXcqk4R5S0UYoJZGVnO864qZyOXiTKScyHQ7K3WWEeep3%2BKsnThFcmy%2Bxu%2BJvxiMizq1UJtYN3Sp%2BAs%2B9nx9mmw70biOM1j6tHQR6Y3mNak%2Br5lG%2FHcR%2BLaY7pNGasCQKBNoZx1o1YLC1X5HcFgsGWgrPQFnKNZS3zBnkTllnljrG2ymvAqxTieIQBohbtvM9plTqFPt6E3GdI%2BmPM9XaGCwPLFfJ1hsc0w8w%2BYLYr0oX8N6EG5ItsV06kYJs1t8w9DxcTZ6EeUZfwsmZYV8LcFhPZbePzrY6B63HvndwjrNWyiKt%2FiMLHivsYGOrABaA0ZcTiWnDN8649xTswB%2B%2Bq9lqIbDa8eTTrAubhWqrAG5PMGDWS%2BP7u7voWD0TDlhya70Gne0xbpxA3TbDN14w2RNjTwemo25gCuGNhPf%2FLVO4PRyAvCvbglrCZrtnUJg%2BFWgfwJRz7BcYi8RqN%2FC43WeRNwmr9CrK%2BRzmYn76Yz66NPWqIoZek6Xnn5ZDj7KFK33k7afTELueKgWChALlsCKqueViShPnU6UQ6Xq1U%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=03c1c6f65cfae648fb01248d6f24903b1fb27d75f4612944be357069c10faefa",
+      "file_size": 177010,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 975096,
+      "file_name": "bandicam_2020-09-03_20-39-49-941.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/Qzxgb7vbVF2Zz7yA6wEQLsw8?response-content-disposition=attachment%3B%20filename%3D%22bandicam_2020-09-03_20-39-49-941.mp4%22%3B%20filename%2A%3DUTF-8%27%27bandicam_2020-09-03_20-39-49-941.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ54ULMSIN%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T081944Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQC1fLbjfAf5UuT%2Bzn9znM02BIm%2BtA0BdlVCADFmwtgiXAIhAKyEoANQxpF0pxqWybaHqy%2F3CBh%2B41mLRepyo9HHIXj3KrIFCBEQAxoMMDEzNjE5Mjc0ODQ5IgzfFtYU3NUkruzjxccqjwVVa7%2BvHU%2Fr1LYw9X5d%2Bf9DoD0M3KY1SvAmb%2F8IfdG21x392w4ex4Uc4V2Bgooc%2F7w1agU4uC8If8z2UE2jJDI%2F8hC6ZvVHcvXBn8GYJ5FTiW7VjJtDps%2Bmt9Pjq3i5gJMOyFl%2BpNiBapOIDatxtDhqqVHg9htlBz%2FLtcLXi%2FYWNXSITb8u4z8vXwrRgOCjNMtReJCt%2BnO1jHGO5sEpzGNR6fAy2CtQ4dJZxmrR0OWU1NW9PVM4XlGeSwQ913QFF8dMQkMDzpPpyhrFPjru0UON%2Bab9gpfqeIm9KmqsdGR3XxVGagx7iGpNs%2FAISp%2BefQEkBvWDSrIOS3lAxJKh1o9hCKuPFfnsTE96fGduITiIaNXuTiapN19%2BjrWpMY2XqzfRrJqRvemFcWb3kVAYCDn1TC0wvn2hseZZQ2H6J6OJi0N9HwLzcGvAU7rs7civ8AlaiYJpx8ZAs0m25VcQPLskIbDGkQVquYlJE4QHeppsC3nT38W3T9Czfe3gi6954Izqgx3xdZ7i2FiD3q%2FdMqFmBt%2BpNgKQlh4zNyj7z9%2B67r1PNri3Mb2awPXcqk4R5S0UYoJZGVnO864qZyOXiTKScyHQ7K3WWEeep3%2BKsnThFcmy%2Bxu%2BJvxiMizq1UJtYN3Sp%2BAs%2B9nx9mmw70biOM1j6tHQR6Y3mNak%2Br5lG%2FHcR%2BLaY7pNGasCQKBNoZx1o1YLC1X5HcFgsGWgrPQFnKNZS3zBnkTllnljrG2ymvAqxTieIQBohbtvM9plTqFPt6E3GdI%2BmPM9XaGCwPLFfJ1hsc0w8w%2BYLYr0oX8N6EG5ItsV06kYJs1t8w9DxcTZ6EeUZfwsmZYV8LcFhPZbePzrY6B63HvndwjrNWyiKt%2FiMLHivsYGOrABaA0ZcTiWnDN8649xTswB%2B%2Bq9lqIbDa8eTTrAubhWqrAG5PMGDWS%2BP7u7voWD0TDlhya70Gne0xbpxA3TbDN14w2RNjTwemo25gCuGNhPf%2FLVO4PRyAvCvbglrCZrtnUJg%2BFWgfwJRz7BcYi8RqN%2FC43WeRNwmr9CrK%2BRzmYn76Yz66NPWqIoZek6Xnn5ZDj7KFK33k7afTELueKgWChALlsCKqueViShPnU6UQ6Xq1U%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=d26e122132301c55accfbbed5d2504516629b1b0ebd4718c8b3f2672da99ede0",
+      "file_size": 4424066,
+      "type": "video/mp4",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2020-12-18T12:06:56.113Z",
+  "allow_singular_disclosure_after": -150149568.80944479,
+  "singular_disclosure_allowed": true,
+  "vote_count": 168,
+  "voters": [
+    "rickiex",
+    "taha",
+    "hltakydn",
+    "luqii",
+    "carbon61",
+    "drsniper",
+    "scriptshuva",
+    "xploiterr",
+    "bombon",
+    "battle_angel",
+    "and 158 more..."
+  ],
+  "severity": {
+    "rating": "high",
+    "author_type": "User"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "id": 25490,
+      "category": "researcher",
+      "content": "If you want to follow me, here is my linkedin & twitter accounts:\nhttps://twitter.com/alicanact60\nhttps://tr.linkedin.com/in/alicanact60\n\n@mygf",
+      "updated_at": "2020-11-18T17:24:25.862Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 125937,
+        "username": "ali",
+        "name": "Ali Tütüncü",
+        "bio": "",
+        "cleared": true,
+        "verified": true,
+        "website": null,
+        "location": "",
+        "created_at": "2016-11-24T13:30:52.132Z",
+        "url": "https://hackerone.com/ali",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "hacker",
+        "profile_picture_urls": {
+          "small": "https://profile-photos.hackerone-user-content.com/variants/66sio8og4fja5dsqqnovd3bptdtj/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/66sio8og4fja5dsqqnovd3bptdtj/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a",
+          "xtralarge": "https://profile-photos.hackerone-user-content.com/variants/66sio8og4fja5dsqqnovd3bptdtj/4ac84fbe897190579a137d0cf55152b233cdd4f9984435bd80ef67e5e51a0586"
+        }
+      }
+    }
+  ]
+}
