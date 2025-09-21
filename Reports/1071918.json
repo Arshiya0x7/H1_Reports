@@ -1,0 +1,150 @@
+{
+  "id": 1071918,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMDcxOTE4",
+  "url": "https://hackerone.com/reports/1071918",
+  "title": "Moderator user has access to owner's support portal and tickets",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2021-01-05T13:15:18.824Z",
+  "submitted_at": "2021-01-05T13:15:18.957Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "pspspsp",
+    "url": "/pspspsp",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/a37ezl7dr58fx2h4t6yu3n99tuij/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 32972,
+    "url": "https://hackerone.com/logitech",
+    "handle": "logitech",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/032/972/8aa1ae9384c034f209edabfd44bac468c0bbbcdb_original./235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/032/972/8aa1ae9384c034f209edabfd44bac468c0bbbcdb_original./3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Logitech",
+      "twitter_handle": "logitech",
+      "website": "https://www.logitech.com",
+      "about": "Logitech is a consumer electronics manufacturer, specialising in smart home and video collaboration equipment, gaming accessories and peripherals"
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2021-01-20T23:49:51.153Z",
+  "bug_reporter_agreed_on_going_public_at": "2021-01-19T22:57:05.041Z",
+  "team_member_agreed_on_going_public_at": "2021-01-20T23:49:51.064Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\n\nHi there,\n\nIn https://streamlabs.com, there's a function where users can share his account to other users to manage their dashboard via following link.\n\n``https://streamlabs.com/dashboard#/settings/shared-access``.\n\nIn shared-access setting, user can invite other user with two roles **Moderator** and **Administrator**\n\n{F1145278}\n\nAs you can see in above picture, **Moderator**  has only access to Dashboard access, ability to skip/repeat alerts and cloudbot access.\n\nBut due to improper session management between https://streamlabs.com and https://support.streamlabs.com,\nShared-access users  can view/create/edit parent user's support tickets and profile which they should not access to.\n\n\n## Steps To Reproduce:\n\nLet's suppose there are two users which named User A and User B.\n\n*  Login to User A account and browse to https://streamlabs.com/dashboard#/settings/shared-access\n\n* Create an invitation link with **Moderator** role and copy link and Logout.\n\n*  Login to User B account and accept the invitation by pasting copied link.\n\n* Browse to https://streamlabs.com/dashboard#/settings/shared-access and you should notice that you have **Moderator** access to User A account.\n\n* Click the User A name and you'll see the message in header of the page, ***\"You are currently acting as User A, click here to return to User B\"***\n\n* Normally you only should be able to access dashboard and cloud bot function.\n\n* Now, just browse the following link then you'll be logged into  User A's support tickets account.\n        \n        https://streamlabs.com/zendesk?brand_id=1&locale_id=1&return_to=https://support.stramlabs.com\n\nI've attached  proof of concept video, hope it helps for you.\n\n{F1145279}\n\n## Impact\n\nAs I mentioned in above, Shared Access users can create/view/edit parent user's support tickets and profile which they shouldn't .",
+  "bounty_amount": "200.0",
+  "formatted_bounty": "$200",
+  "weakness": {
+    "id": 26,
+    "name": "Improper Access Control - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1145278,
+      "file_name": "Screen_Shot_2021-01-05_at_19.14.46.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/rogxsut34vptop814hbg5tl6dsid?response-content-disposition=attachment%3B%20filename%3D%22Screen_Shot_2021-01-05_at_19.14.46.png%22%3B%20filename%2A%3DUTF-8%27%27Screen_Shot_2021-01-05_at_19.14.46.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQR5XE32PF%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T072632Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCRwd0KKxgLwuMYjfPCh%2FTAhFr8JG6P%2BUiL2skKWymA%2BQIgMjzt%2FsSBEhHZ3adjoMFufzNWL9YN8nfIKX9ka2nLMY0quwUI%2Fv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDOG2COajaJMlA7aiuiqPBU%2FvCC9WL2GQ6Qkyj6egEbLmKoRD0ZCVsAR5qoqGqBv%2FV0xpB%2Fih3eX44mk6yH3ppV2WlKgMLft9pC5BqaIoYyAXjGSvDndNBQOftXB7ynWO8c5catpI1%2BhZ9pj9KetcFHAjI21JPrXgXehlKJS2PDd6mdmDZS%2FTG46JyVP%2BCTReq%2FTYoZh2hIpSxtw%2FwRa43VPIJIePN6eYmqA0uh%2B1BTn7iA8Upopv%2BrOjrvj1HYyICgQ0GItEyfb%2BfFefYI2vqI%2Bu9EMOThSG3ySuzE8iWeAWD%2BdyhskatYtB2qRWraxnYXHPEyqvC6YoADNTzoHg421KEiVHhNk7tyo%2FwDJzIYXNtTem3btYNqlYI38K4fs6CxL4%2F26X3ASp50H6PjaYHfA0jnS7CBgMW1xbt06eUT66QuuoCnC%2Fn2FtOAi9bVpJ2xlrzjEBL3KPNFEwJvvvO925u2j6dfOOJLOQZ5YENy%2BF5K%2BLl4R76qzXzOde1lOm1EAxjVJSUvn6TP4BZ%2F%2B9a2yWROcPTK%2B2zr5WSG2rC8dpUG4fgjPFSM%2FyBZNYRzcnAbDYGWrOozPKfSGLdGLrAnSJ3iY6wxTWMiHvnfdRMVj%2FA7qdFa5RBx3OnRdDugRf%2FpionCVl%2BsI%2BWWAqSicNGfKPt5g828oVL08ac53S0L6a47xa%2B%2BTymhZrxmpZh7Nvqx3clbj1M5OBQ%2FYJIcqw66Azz6CB6lCz7ckZOHT8DK3TkSrziwb9rRvjmSNUXeN3pNFNvCVjP3pIdYPmB1I8UVhUG7qakGeXD7E2O9lamQkVHatZXYxk4Ydg4B9j5oJs6kwVlGz5oo2ZX7c9sehxGoLhZM%2FcM8c1HPQ6wMxsCb3nux5d6OgrP7Ds3SXnzSEwu5G%2BxgY6sQEg6Lin%2BSUb%2FRy9JOrvmLdHVlPfbazbESRQbFSjrfLf01MHav0WEQ%2BB6YJWAsnHHIZviKWJ%2FazDm5oVsLg55F2NIpF7LQfJg7hmM6Oh70OzANKGecLVmgxcpBYHOTSf%2FQ1XbVovJxwpgMlL2f48KQHugfn5ZGahcyTeOIaW%2BymLf7QWKTzTmI8%2FZiuDPokHLlhb%2BtgZbdvLsQ960QyEGBfmgmFQAoEq36fGVgmyJhg81WQ%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=c849304338a3cce9b02c126abc5e69ea53901624522dbd6dfda46033978e3ad7",
+      "file_size": 152431,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1145279,
+      "file_name": "Screen_Recording_2021-01-05_at_18.54.29.mov",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/ev63uku2e61lxp45iphxhfmdokh9?response-content-disposition=attachment%3B%20filename%3D%22Screen_Recording_2021-01-05_at_18.54.29.mov%22%3B%20filename%2A%3DUTF-8%27%27Screen_Recording_2021-01-05_at_18.54.29.mov&response-content-type=video%2Fquicktime&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQR5XE32PF%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T072632Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCRwd0KKxgLwuMYjfPCh%2FTAhFr8JG6P%2BUiL2skKWymA%2BQIgMjzt%2FsSBEhHZ3adjoMFufzNWL9YN8nfIKX9ka2nLMY0quwUI%2Fv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDOG2COajaJMlA7aiuiqPBU%2FvCC9WL2GQ6Qkyj6egEbLmKoRD0ZCVsAR5qoqGqBv%2FV0xpB%2Fih3eX44mk6yH3ppV2WlKgMLft9pC5BqaIoYyAXjGSvDndNBQOftXB7ynWO8c5catpI1%2BhZ9pj9KetcFHAjI21JPrXgXehlKJS2PDd6mdmDZS%2FTG46JyVP%2BCTReq%2FTYoZh2hIpSxtw%2FwRa43VPIJIePN6eYmqA0uh%2B1BTn7iA8Upopv%2BrOjrvj1HYyICgQ0GItEyfb%2BfFefYI2vqI%2Bu9EMOThSG3ySuzE8iWeAWD%2BdyhskatYtB2qRWraxnYXHPEyqvC6YoADNTzoHg421KEiVHhNk7tyo%2FwDJzIYXNtTem3btYNqlYI38K4fs6CxL4%2F26X3ASp50H6PjaYHfA0jnS7CBgMW1xbt06eUT66QuuoCnC%2Fn2FtOAi9bVpJ2xlrzjEBL3KPNFEwJvvvO925u2j6dfOOJLOQZ5YENy%2BF5K%2BLl4R76qzXzOde1lOm1EAxjVJSUvn6TP4BZ%2F%2B9a2yWROcPTK%2B2zr5WSG2rC8dpUG4fgjPFSM%2FyBZNYRzcnAbDYGWrOozPKfSGLdGLrAnSJ3iY6wxTWMiHvnfdRMVj%2FA7qdFa5RBx3OnRdDugRf%2FpionCVl%2BsI%2BWWAqSicNGfKPt5g828oVL08ac53S0L6a47xa%2B%2BTymhZrxmpZh7Nvqx3clbj1M5OBQ%2FYJIcqw66Azz6CB6lCz7ckZOHT8DK3TkSrziwb9rRvjmSNUXeN3pNFNvCVjP3pIdYPmB1I8UVhUG7qakGeXD7E2O9lamQkVHatZXYxk4Ydg4B9j5oJs6kwVlGz5oo2ZX7c9sehxGoLhZM%2FcM8c1HPQ6wMxsCb3nux5d6OgrP7Ds3SXnzSEwu5G%2BxgY6sQEg6Lin%2BSUb%2FRy9JOrvmLdHVlPfbazbESRQbFSjrfLf01MHav0WEQ%2BB6YJWAsnHHIZviKWJ%2FazDm5oVsLg55F2NIpF7LQfJg7hmM6Oh70OzANKGecLVmgxcpBYHOTSf%2FQ1XbVovJxwpgMlL2f48KQHugfn5ZGahcyTeOIaW%2BymLf7QWKTzTmI8%2FZiuDPokHLlhb%2BtgZbdvLsQ960QyEGBfmgmFQAoEq36fGVgmyJhg81WQ%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=5828da6fce718f096f6e0bfac77fc9c7b9f560704f2fac23ce8b8e90e45c286a",
+      "file_size": 45283876,
+      "type": "video/quicktime",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 18,
+  "voters": [
+    "mainteemoforfun",
+    "captn0sharky1",
+    "dmc3",
+    "shubham_srt",
+    "2026",
+    "sudi",
+    "thalaivar304",
+    "h4x0r_dz",
+    "pspspsp",
+    "kmxx",
+    "and 8 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 5.0,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "low",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "low",
+      "integrity": "none",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 52462,
+    "asset_type": "WILDCARD",
+    "asset_identifier": "*.streamlabs.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
