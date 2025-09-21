@@ -1,0 +1,115 @@
+{
+  "id": 255125,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yNTUxMjU=",
+  "url": "https://hackerone.com/reports/255125",
+  "title": "Null Byte Injection in all fields of Profile",
+  "state": "Closed",
+  "substate": "informative",
+  "readable_substate": "Informative",
+  "created_at": "2017-07-31T10:29:46.785Z",
+  "submitted_at": "2017-07-31T10:29:46.785Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "asaxena2190",
+    "url": "/asaxena2190",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/110/801/b6414fd918230bc0a3e27f0811b8711594da6fdb_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 1601,
+    "url": "https://hackerone.com/legalrobot",
+    "handle": "legalrobot",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/001/601/0f164c3d9618b04b006b859517ff032ec57ab42a_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/001/601/0f164c3d9618b04b006b859517ff032ec57ab42a_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Legal Robot",
+      "twitter_handle": "LegalRobot",
+      "website": "https://www.legalrobot.com",
+      "about": "Automated legal document review using artificial intelligence"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2018-02-24T12:29:05.011Z",
+  "bug_reporter_agreed_on_going_public_at": "2018-02-24T12:29:04.934Z",
+  "team_member_agreed_on_going_public_at": "2017-08-26T23:05:52.968Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi Team,\n\nNull byte injection is possible in all the fields of Edit Profile functionality.\n\n**Affected URL:** \nhttps://app.legalrobot.com/account\n\n**Description:** \nPossible Injection of control characters, such as Null Byte 0x00, \\000, \\x00, \\z, or the Unicode representation \\u0000 into vulnerable fields in the Message endpoints in order to cause unexpected, harmful behaviors. \n A null character can be placed in a any field of profile with the percent code %00.\nThe ability to represent a null character does not always mean the resulting string will be correctly interpreted, as many programs will consider the null to be the end of the string.\n\n**POC:**\n1. Register a User.\n2. Click on Account.\n3. Click on Edit Profile.\n4. Put some control characters.\n5. Click on submit.\n6. Control characters will be saved at Server side as well as rendered at client side.\n\n**Fix:** Block the control characters from being saved on the back-end when included in user-input, as well as to suppress the output and rendering of previously-submitted control characters.\n\nPlease find the attached screen shot as well.\n\nThanks,\nAkash Saxena",
+  "weakness": {
+    "id": 14,
+    "name": "Improper Null Termination"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 208506,
+      "file_name": "legalrobot.JPG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/208/506/4472de22ef6bddc37caea1a6017cf1f2d84b9f97/legalrobot.JPG?response-content-disposition=attachment%3B%20filename%3D%22legalrobot.JPG%22%3B%20filename%2A%3DUTF-8%27%27legalrobot.JPG&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYUNTABAY%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T185023Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDkYPHaT1AnVGGL0e%2BQJGh7AVnTXjMc9%2FiL8%2BH1Ba9bsgIgL8rlQ3PUPeX2jeJsLaZVEHtFtEAlthfGa7Ma97cE930qsQUIGhADGgwwMTM2MTkyNzQ4NDkiDEI5I7uCEqyR19YY6yqOBRIzxH%2FyaE3DdLVMZP1cfNmnMVf8kydytSE1xHTh9WnQsUIK2BnDlkORp7VX7Xc0LhmwJ8bxcgcXxipLFWhaJtaredBC6rNbTNADQsO9TmXOJlAeHi%2B%2B4Pb5rF%2FHQF37CZp8cbLcPzJgom4%2FRzSe9c98RJ2tyZzkW1CtpYRszeQBHk6K2qfjv7tb7n7Q7kJ1ErpDOM7RAcdIl2rc2OfsTP4U%2B0Jqx5P8H3ziPR3pdfhHWooBPxhjocv6tHweaBxWT5jMqK8bnXlqB67vjEvPTVEdB13Ev5DdAY25U94QBD3s0qS3Vztza93x%2F0HVKzt%2BO9Ap04VfWvWfZv9sPFk7Eo%2F7QfemWIoqwDn2MOyLja2zQx577IRbCPmaX%2B08nm%2FPQz%2FPiiwFOO78y0S6mSoD2bSEG1Bbi7fJwoc9l21JvEcMFt1%2BB45AoHQ%2BFgz8RpurVu43oSThhD2hmbyECgLok%2FDQ2XIw2nE0B8gsjgqE5dehA2sSdz%2B%2BOke26BrqlTRhLGDOICwXE1GEXnvUwjKcCATZuUbguZeTOd2kzvNLairXbfWW%2B2reevC1MZ2APR2NBgFGxQkLh9d3lmZbj3WGBALsLP4QlhyhvH5AK5NAe5Ru%2FQzfjg2mrLe672qZjn8QnKFUhtHfUaTVZJcMhBtz971l6DpmlEJZ6NmAh6SNBvt6r7MuoyB7txx1YxSmW8TsVG%2FTNOWEwefElw%2BP5o18R3hl0Ug7v41Lq7Ia%2BurK51yLYpakCCHanYr4ZnlX4E14WlSIAb1qyXhq1eRrzeNv2Y01y%2FbNFEuUnf2dzVLj3o3%2F24Ms4pKi2dP6iNcSrn0qmgthg5FsQYCGBlihdGFuJ82QAo3gJJ8bJ4Rnyl5NMjC83MDGBjqxAcJ3kw5DWZSbo%2FPE9Vy%2FDbWVTbfer2AO2C4t4l%2Bm80%2BWDDQEJjRdOFMUPCpU%2Bxngmiudr1SqnKIWBpIfAThEkLveoNU%2FJUKQQgl1Wn%2BADATOE7opRZmug6W%2F77LjYrJHbGwtiy0iZyeqQ9iVclyoAfpV1gy2Mt0zhaeN4TSFV78AwlpOX6DDIq9oTBK1lUuaAZUYyPXIC2K79sgXDVMn6W9I7KBqYFOmTtda2A0tahZ7mA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=4143f6d7f08a8a7b5b7235365fac5dd1d2f8c3500c23bead832cfa10005b6cf3",
+      "file_size": 98022,
+      "type": "image/jpeg",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 2,
+  "voters": [
+    "apapedulimu",
+    "asaxena2190"
+  ],
+  "structured_scope": {
+    "databaseId": 519,
+    "asset_type": "URL",
+    "asset_identifier": "app.legalrobot.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
