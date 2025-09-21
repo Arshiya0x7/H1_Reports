@@ -1,0 +1,166 @@
+{
+  "id": 977851,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC85Nzc4NTE=",
+  "url": "https://hackerone.com/reports/977851",
+  "title": "Cache poisoning via X-Forwarded-Host in www.shopify.com/partners/blog",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2020-09-09T20:28:19.669Z",
+  "submitted_at": "2020-09-09T20:28:19.711Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "dakitu",
+    "url": "/dakitu",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/9owzfY7b67UTh2dZJDZrPyyK/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 1382,
+    "url": "https://hackerone.com/shopify",
+    "handle": "shopify",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Shopify",
+      "twitter_handle": "",
+      "website": "https://www.shopify.com",
+      "about": "Shopify is a multi-channel commerce platform that helps people sell online, in-store, and everywhere in between."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2020-09-11T17:03:05.108Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-09-11T17:03:05.069Z",
+  "team_member_agreed_on_going_public_at": "2020-09-11T16:33:23.113Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello, run in loop requests with```  X-Forwarded-Host: your_hackerz_site.com ``` - after some time You will notice in response ``` your_hackerz_site.com ```\n\n{F981839}\n\nnow remove ``` X-Forwarded-Host  ``` - there still be our url:\n\n{F981841}\n\ni've logged to my VPS to verify this bug and downloaded poisoned page (https://www.shopify.com/partners/blog/7-web-design-and-development-awards-you-should-enter) , it's contains links to collabolator:\n\n{F981844}\n\n{F981845}\n\nLooks like there is no URL keys so i stopped testing cause i'm breaking site functionally, but it was be worth to check if we can poison  ```  X-Forwarded-Host : foobar.pl\"><img src=x onerror=blah> ``` or try use other headers, if i get permission i can try other vectors on a older article to prevent distributing users.\n\n## Impact\n\npoisoning links, eg. FB share button:\n\n``` https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fa4129912adehq5m14ryflu01ovx68j0ur0ho6.burpcollaborator.net%2Fpartners%2Fblog%2F7-web-design-and-development-awards-you-should-enter ```",
+  "bounty_amount": "1000.0",
+  "formatted_bounty": "$1,000",
+  "weakness": {
+    "id": 93,
+    "name": "Improper Neutralization of HTTP Headers for Scripting Syntax"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 981839,
+      "file_name": "Screenshot_2020-09-09_22-19-31.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/JNzYRZ1beCtmepphq5t6c4qZ?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_2020-09-09_22-19-31.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_2020-09-09_22-19-31.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6UDGEAWX%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T090524Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDtomjzste%2FJyV7XywzlEJQYeqQ2gl1GbRXR68XAax2ZAIhAOXu4GCq8m%2Baons%2BoeD1F5wi6eBebA%2Flbq7z6%2BT5S13%2BKrIFCBEQAxoMMDEzNjE5Mjc0ODQ5Igz0Z1zn%2F0sHyj01UDIqjwU1Vm8BSQ8mwy%2F6URVMkd4PMFnas4kNcnyAhizE%2FtAF0Zo2Rf6osehF9A0vFXUqzBhf%2Bx0tn9BCykRmXL4LADQW2zG0CjvKZ8o0FRejBpfc4ABGr0s2kaBm20dZN46YJj%2Fci9fvZZXks24BJ4R9FMOr8BTuVz1b6QJuLu5ZvF5SijVlIc7qDZpcNOQwUKQGZCKhAiyKxV%2FPdj2wtABwdYRFChvP5HrC0OEE1b1JkM2XVLw3MrttmYe79K24scbCWlu8TNxqz0c%2FHPqayQ2dcErgzkMB%2BG35OzxBXU6KuQhgq3x1CaBaQmC53tpFEwzHDIqZAjrCB3v2l1n8xP9RpfzVSUPz1Pw0mgEQ9vCVLos1WkT5c%2BVghNfCgtN3ZZNakSb0Xo63aLDeyNrDmRQ8N%2B0cAT39RFVD0dFvarC3AlomGqz73cmjaGlZBK6npaBOjh1VijNsw9IEssbOxzts8eaEYK04YEGZiArUQdOKUa6NSYTFNE9DySi12E6zuoqSUQ1%2BM3xg5%2F9a2ezeWFPMfkI%2Fk9xd2H8QobL5HDm%2BQxoo1Xd6C5TY0CDPjWc%2FVJ3Vg%2FujtX7B4YRVGnIhw%2FoVcet%2B7BLsy8samnFShP75uWkw2TESNibZccSBFG796cZdoI9LTNSeL4unuO2lr5qZbVZ%2B%2FQUOVomf6UIfEiz9ILQjOk0%2BeK70YMy6KsInBS4cs6KqHtW6uE0qiPxPC9Sf7YzmKg%2BNKHU8n9%2FJw%2FqdR08dm8FIvGCU3ChxBLT3c25ARE1rgNzEq8WwPQrJLsh4rw%2BPPKCi%2FaLX%2BPeMqnZoxYGJwWYRGsecNgVXF9N06HvTmAyFbl4qGh3DTeqixRHICHUfrCgOj91rnM8kOOeD7hRPMOHkvsYGOrABpQSx1GCRLInHCXgDgl1ei25b5ml%2FW5yrarH%2F4hx%2Bpaa2NMHSkoQOdGhh4sgYrEm%2Fg8oceBhDenU%2FCZmSorsoUVnuQ8C%2FNWEvu2Wg8KqMzrZH7Ek10qtr%2BHD5B7EUJL%2FtIDQV%2BnRfKsDezaCHqPTezQYVw1%2BhPbFCChJ54naSnmcfE3%2FgNFA86zKuNC6LwZ%2B%2FE7Ca5CrnxQljX1VW8ORWPAWCMpgJnIFZwdXgidA9r%2BA%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=128a3bc2acf03ee6776c1309c769f12a3679115330610b000b8501a2f9603aea",
+      "file_size": 154135,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 981841,
+      "file_name": "Screenshot_2020-09-09_22-19-31.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/X7yt288bVtBxz4ecJa5AUub3?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_2020-09-09_22-19-31.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_2020-09-09_22-19-31.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6UDGEAWX%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T090524Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDtomjzste%2FJyV7XywzlEJQYeqQ2gl1GbRXR68XAax2ZAIhAOXu4GCq8m%2Baons%2BoeD1F5wi6eBebA%2Flbq7z6%2BT5S13%2BKrIFCBEQAxoMMDEzNjE5Mjc0ODQ5Igz0Z1zn%2F0sHyj01UDIqjwU1Vm8BSQ8mwy%2F6URVMkd4PMFnas4kNcnyAhizE%2FtAF0Zo2Rf6osehF9A0vFXUqzBhf%2Bx0tn9BCykRmXL4LADQW2zG0CjvKZ8o0FRejBpfc4ABGr0s2kaBm20dZN46YJj%2Fci9fvZZXks24BJ4R9FMOr8BTuVz1b6QJuLu5ZvF5SijVlIc7qDZpcNOQwUKQGZCKhAiyKxV%2FPdj2wtABwdYRFChvP5HrC0OEE1b1JkM2XVLw3MrttmYe79K24scbCWlu8TNxqz0c%2FHPqayQ2dcErgzkMB%2BG35OzxBXU6KuQhgq3x1CaBaQmC53tpFEwzHDIqZAjrCB3v2l1n8xP9RpfzVSUPz1Pw0mgEQ9vCVLos1WkT5c%2BVghNfCgtN3ZZNakSb0Xo63aLDeyNrDmRQ8N%2B0cAT39RFVD0dFvarC3AlomGqz73cmjaGlZBK6npaBOjh1VijNsw9IEssbOxzts8eaEYK04YEGZiArUQdOKUa6NSYTFNE9DySi12E6zuoqSUQ1%2BM3xg5%2F9a2ezeWFPMfkI%2Fk9xd2H8QobL5HDm%2BQxoo1Xd6C5TY0CDPjWc%2FVJ3Vg%2FujtX7B4YRVGnIhw%2FoVcet%2B7BLsy8samnFShP75uWkw2TESNibZccSBFG796cZdoI9LTNSeL4unuO2lr5qZbVZ%2B%2FQUOVomf6UIfEiz9ILQjOk0%2BeK70YMy6KsInBS4cs6KqHtW6uE0qiPxPC9Sf7YzmKg%2BNKHU8n9%2FJw%2FqdR08dm8FIvGCU3ChxBLT3c25ARE1rgNzEq8WwPQrJLsh4rw%2BPPKCi%2FaLX%2BPeMqnZoxYGJwWYRGsecNgVXF9N06HvTmAyFbl4qGh3DTeqixRHICHUfrCgOj91rnM8kOOeD7hRPMOHkvsYGOrABpQSx1GCRLInHCXgDgl1ei25b5ml%2FW5yrarH%2F4hx%2Bpaa2NMHSkoQOdGhh4sgYrEm%2Fg8oceBhDenU%2FCZmSorsoUVnuQ8C%2FNWEvu2Wg8KqMzrZH7Ek10qtr%2BHD5B7EUJL%2FtIDQV%2BnRfKsDezaCHqPTezQYVw1%2BhPbFCChJ54naSnmcfE3%2FgNFA86zKuNC6LwZ%2B%2FE7Ca5CrnxQljX1VW8ORWPAWCMpgJnIFZwdXgidA9r%2BA%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=90103a8f1c7edb745ab45a6d91877954276ba1fdf489455e36f4bbbded77d406",
+      "file_size": 154135,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 981844,
+      "file_name": "Screenshot_2020-09-09_22-22-31.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/8XnCVHgcJVEwLz2dtdoZcHGN?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_2020-09-09_22-22-31.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_2020-09-09_22-22-31.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6UDGEAWX%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T090524Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDtomjzste%2FJyV7XywzlEJQYeqQ2gl1GbRXR68XAax2ZAIhAOXu4GCq8m%2Baons%2BoeD1F5wi6eBebA%2Flbq7z6%2BT5S13%2BKrIFCBEQAxoMMDEzNjE5Mjc0ODQ5Igz0Z1zn%2F0sHyj01UDIqjwU1Vm8BSQ8mwy%2F6URVMkd4PMFnas4kNcnyAhizE%2FtAF0Zo2Rf6osehF9A0vFXUqzBhf%2Bx0tn9BCykRmXL4LADQW2zG0CjvKZ8o0FRejBpfc4ABGr0s2kaBm20dZN46YJj%2Fci9fvZZXks24BJ4R9FMOr8BTuVz1b6QJuLu5ZvF5SijVlIc7qDZpcNOQwUKQGZCKhAiyKxV%2FPdj2wtABwdYRFChvP5HrC0OEE1b1JkM2XVLw3MrttmYe79K24scbCWlu8TNxqz0c%2FHPqayQ2dcErgzkMB%2BG35OzxBXU6KuQhgq3x1CaBaQmC53tpFEwzHDIqZAjrCB3v2l1n8xP9RpfzVSUPz1Pw0mgEQ9vCVLos1WkT5c%2BVghNfCgtN3ZZNakSb0Xo63aLDeyNrDmRQ8N%2B0cAT39RFVD0dFvarC3AlomGqz73cmjaGlZBK6npaBOjh1VijNsw9IEssbOxzts8eaEYK04YEGZiArUQdOKUa6NSYTFNE9DySi12E6zuoqSUQ1%2BM3xg5%2F9a2ezeWFPMfkI%2Fk9xd2H8QobL5HDm%2BQxoo1Xd6C5TY0CDPjWc%2FVJ3Vg%2FujtX7B4YRVGnIhw%2FoVcet%2B7BLsy8samnFShP75uWkw2TESNibZccSBFG796cZdoI9LTNSeL4unuO2lr5qZbVZ%2B%2FQUOVomf6UIfEiz9ILQjOk0%2BeK70YMy6KsInBS4cs6KqHtW6uE0qiPxPC9Sf7YzmKg%2BNKHU8n9%2FJw%2FqdR08dm8FIvGCU3ChxBLT3c25ARE1rgNzEq8WwPQrJLsh4rw%2BPPKCi%2FaLX%2BPeMqnZoxYGJwWYRGsecNgVXF9N06HvTmAyFbl4qGh3DTeqixRHICHUfrCgOj91rnM8kOOeD7hRPMOHkvsYGOrABpQSx1GCRLInHCXgDgl1ei25b5ml%2FW5yrarH%2F4hx%2Bpaa2NMHSkoQOdGhh4sgYrEm%2Fg8oceBhDenU%2FCZmSorsoUVnuQ8C%2FNWEvu2Wg8KqMzrZH7Ek10qtr%2BHD5B7EUJL%2FtIDQV%2BnRfKsDezaCHqPTezQYVw1%2BhPbFCChJ54naSnmcfE3%2FgNFA86zKuNC6LwZ%2B%2FE7Ca5CrnxQljX1VW8ORWPAWCMpgJnIFZwdXgidA9r%2BA%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=feac5b8f5acd0e24dad1de035f6e94c1362b76d966ff2f905aa6dc26aae8b5fb",
+      "file_size": 69482,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 981845,
+      "file_name": "Screenshot_2020-09-09_22-22-44.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/n9bQTvDT9esMn8cHfRAB7huq?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_2020-09-09_22-22-44.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_2020-09-09_22-22-44.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6UDGEAWX%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T090524Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDtomjzste%2FJyV7XywzlEJQYeqQ2gl1GbRXR68XAax2ZAIhAOXu4GCq8m%2Baons%2BoeD1F5wi6eBebA%2Flbq7z6%2BT5S13%2BKrIFCBEQAxoMMDEzNjE5Mjc0ODQ5Igz0Z1zn%2F0sHyj01UDIqjwU1Vm8BSQ8mwy%2F6URVMkd4PMFnas4kNcnyAhizE%2FtAF0Zo2Rf6osehF9A0vFXUqzBhf%2Bx0tn9BCykRmXL4LADQW2zG0CjvKZ8o0FRejBpfc4ABGr0s2kaBm20dZN46YJj%2Fci9fvZZXks24BJ4R9FMOr8BTuVz1b6QJuLu5ZvF5SijVlIc7qDZpcNOQwUKQGZCKhAiyKxV%2FPdj2wtABwdYRFChvP5HrC0OEE1b1JkM2XVLw3MrttmYe79K24scbCWlu8TNxqz0c%2FHPqayQ2dcErgzkMB%2BG35OzxBXU6KuQhgq3x1CaBaQmC53tpFEwzHDIqZAjrCB3v2l1n8xP9RpfzVSUPz1Pw0mgEQ9vCVLos1WkT5c%2BVghNfCgtN3ZZNakSb0Xo63aLDeyNrDmRQ8N%2B0cAT39RFVD0dFvarC3AlomGqz73cmjaGlZBK6npaBOjh1VijNsw9IEssbOxzts8eaEYK04YEGZiArUQdOKUa6NSYTFNE9DySi12E6zuoqSUQ1%2BM3xg5%2F9a2ezeWFPMfkI%2Fk9xd2H8QobL5HDm%2BQxoo1Xd6C5TY0CDPjWc%2FVJ3Vg%2FujtX7B4YRVGnIhw%2FoVcet%2B7BLsy8samnFShP75uWkw2TESNibZccSBFG796cZdoI9LTNSeL4unuO2lr5qZbVZ%2B%2FQUOVomf6UIfEiz9ILQjOk0%2BeK70YMy6KsInBS4cs6KqHtW6uE0qiPxPC9Sf7YzmKg%2BNKHU8n9%2FJw%2FqdR08dm8FIvGCU3ChxBLT3c25ARE1rgNzEq8WwPQrJLsh4rw%2BPPKCi%2FaLX%2BPeMqnZoxYGJwWYRGsecNgVXF9N06HvTmAyFbl4qGh3DTeqixRHICHUfrCgOj91rnM8kOOeD7hRPMOHkvsYGOrABpQSx1GCRLInHCXgDgl1ei25b5ml%2FW5yrarH%2F4hx%2Bpaa2NMHSkoQOdGhh4sgYrEm%2Fg8oceBhDenU%2FCZmSorsoUVnuQ8C%2FNWEvu2Wg8KqMzrZH7Ek10qtr%2BHD5B7EUJL%2FtIDQV%2BnRfKsDezaCHqPTezQYVw1%2BhPbFCChJ54naSnmcfE3%2FgNFA86zKuNC6LwZ%2B%2FE7Ca5CrnxQljX1VW8ORWPAWCMpgJnIFZwdXgidA9r%2BA%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=f311d643aca87f9bab3e057a7ee3ac1dde66a04e2193c08b92efc47d19cf90b6",
+      "file_size": 56979,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 66,
+  "voters": [
+    "loaymorad",
+    "he4am",
+    "int0x13",
+    "omarelfarsaoui",
+    "4m1th",
+    "drsniper",
+    "teslatheg0d",
+    "jarij",
+    "mashoud1122",
+    "mainteemoforfun",
+    "and 56 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "score": 3.6,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "required",
+      "scope": "unchanged",
+      "confidentiality": "none",
+      "integrity": "low",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 10202,
+    "asset_type": "WILDCARD",
+    "asset_identifier": "*.shopify.com",
+    "max_severity": "medium"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
