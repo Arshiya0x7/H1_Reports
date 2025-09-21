@@ -1,0 +1,144 @@
+{
+  "id": 536669,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC81MzY2Njk=",
+  "url": "https://hackerone.com/reports/536669",
+  "title": "\"Test target\" of the \"HTTP target\" extension can unintentionally send username and password in the Authorization header",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2019-04-12T14:14:58.291Z",
+  "submitted_at": "2019-04-12T14:14:58.291Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "nathand",
+    "url": "/nathand",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/NY2oTeWofAnqK1X5MRNFCDXy/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 205,
+    "url": "https://hackerone.com/zendesk",
+    "handle": "zendesk",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/vqazo0hs6n64m1y7wrfnhrao63p9/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/vqazo0hs6n64m1y7wrfnhrao63p9/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Zendesk",
+      "twitter_handle": "",
+      "website": "https://www.zendesk.com",
+      "about": "At Zendesk we’re on a mission to simplify the complexity of business and make it easy for companies and customers to create connections. "
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2019-10-25T19:22:49.119Z",
+  "bug_reporter_agreed_on_going_public_at": "2019-06-26T01:48:01.214Z",
+  "team_member_agreed_on_going_public_at": "2019-10-25T19:22:48.997Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "**Summary:**\n\nIn certain conditions, the HTTP target extension is sending the username and password of the authenticated user testing the target in the test request's `Authorization` header as base64 encoded (i.e. HTTP basic auth).\n\nI have graded this as a medium due to some mitigating circumstances (browser specific) and actions required by the victim for an attack to be successful.\n\n**Description:**\n\nThe HTTP target extension allows admins to create a trigger and automation action that sends data to an arbitrary Internet accessible web resource. While creating the target via the Admin > Extensions > add target screen, the user can test the target, which sends the relevant HTTP request to the target URL and allows the user to inspect the request and response, to validate the settings before creating the target.\n\nUpon inspecting the request on a successful test, it became clear that the HTTP target test request is sending the username and password of the user performing this test:\n\n```\nGET /test.php HTTP/1.1\nAuthorization: Basic ████\nUser-Agent: Zendesk Target\nAccept-Encoding: gzip;q=1.0,deflate;q=0.6,identity;q=0.3\nAccept: */*\nConnection: close\nHost: nathandavison.com\n```\n\n(FYI: this user is a username and password user, and is not authenticating using a 3rd party service like Google)\n\nTo confirm this information is being sent over the wire, I set up a simple PHP script to collect the username and password from the test request using `$_SERVER['PHP_AUTH_USER']` and `$_SERVER['PHP_AUTH_PW']`, and I can confirm the values were being sent.\n\nWhile the HTTP target creation and test form does allow the user to specify Basic Authentication configuration, from what I can tell the test request is sending the agent's username and password as Basic auth even with the \"Enabled\" checkbox unticked - please see the attached video regarding this. Therefore, I would classify this as a cleartext transmission of sensitive information when such a thing would not be expected by the user.\n\n**Cause and potential fix:**\n\nMy testing suggests that this is client side behavior, in that because I have chosen to save my Zendesk username and password in my browser, the browser proceeds to auto-populate the username and password fields in the Basic Authentication's username and password fields in the HTTP target creation/edit form. This was tested in Firefox 66 - I have been unable to replicate the behavior in Chrome 73.\n\nTherefore it seems likely that the HTTP target test feature in Zendesk is not respecting the \"Enabled\" checkbox when performing the test request, and is rather sending the username and password values in the test request if the fields happen to have values. If this is true, the fix may be to stop this behavior, and only send the credentials when the checkbox is enabled.\n\nMy testing suggests this is not the case in the live target runs - if I save a target with my credentials populated in the basic auth fields, but leave the checkbox unticked, the real HTTP target calls do *not* contain my credentials.\n\n**Attack scenario:**\n\nTo exploit this, an attacker could create a 3rd party service for consumption by Zendesk users via the HTTP target extension, offering a genuine service for them to connect to and silently collect the username and passwords provided as described in this report. Because \"Test target\" is the default call to action in this form, it is likely a user would perform the test before creating the target, and inadvertently send their credentials. By default, the username and password fields in the target creation page are not visible, so it would not be obvious to a user they are populated with sensitive information.\n\nIf it is true that this is a Firefox specific behavior, the attacker could instruct users to use Firefox when setting up the HTTP target to try and maximize results (obviously not a relevant request, but perhaps something a majority of potential victims would not recognise as unusual or unreasonable).\n\n## Impact\n\nThe impact of this vulnerability is an attacker could steal user credentials, likely without the user being aware.",
+  "weakness": {
+    "id": 34,
+    "name": "Cleartext Transmission of Sensitive Information"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 12,
+  "voters": [
+    "sameerphad72",
+    "pr0f0x01",
+    "cr4xerbik4sh",
+    "cryptographer",
+    "frank0t",
+    "thepomerium",
+    "random53",
+    "birdopr3y",
+    "kubiksoft",
+    "jbjbjb1105",
+    "and 2 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "Team"
+  },
+  "structured_scope": {
+    "databaseId": 16067,
+    "asset_type": "URL",
+    "asset_identifier": "h1-your-domain.zendesk.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "id": 18662,
+      "category": "team",
+      "content": "@nathand discovered that the \"Test target\" feature of our \"HTTP Target\" extension in Zendesk Support would send Basic Authentication credentials, regardless of that option being enabled, as long as the Username and Password field were populated. ",
+      "updated_at": "2019-10-25T19:05:01.880Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 689203,
+        "username": "thepomerium",
+        "name": "",
+        "bio": "",
+        "cleared": false,
+        "verified": false,
+        "website": null,
+        "location": "",
+        "created_at": "2019-07-26T18:00:41.537Z",
+        "url": "https://hackerone.com/thepomerium",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "company",
+        "profile_picture_urls": {
+          "small": "https://profile-photos.hackerone-user-content.com/variants/sMJZc5YhRen9pFb2p3JCLqMP/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/sMJZc5YhRen9pFb2p3JCLqMP/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a",
+          "xtralarge": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NjE5NjUzLCJwdXIiOiJibG9iX2lkIn19--914827eac28f258b548a0f75d4e0d8c6966b8420/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJyZXNpemUiOiIyNjB4MjYwXHUwMDNlIn0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--cf3aeca803d1baf476958c689ca7b472a4cb54f1/ludenssquare.jpg"
+        }
+      }
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
