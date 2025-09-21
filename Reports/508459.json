@@ -1,0 +1,150 @@
+{
+  "id": 508459,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC81MDg0NTk=",
+  "url": "https://hackerone.com/reports/508459",
+  "title": "SSRF in webhooks leads to AWS private keys disclosure",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2019-03-12T14:32:57.330Z",
+  "submitted_at": "2019-03-12T14:32:57.330Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "honoki",
+    "url": "/honoki",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/im8gajpwn26s76yuznz5snne6o17/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": true,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 21045,
+    "url": "https://hackerone.com/omise",
+    "handle": "omise",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/nm9gwmg377pece9jzkjw5k1o7tm7/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/nm9gwmg377pece9jzkjw5k1o7tm7/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Omise",
+      "twitter_handle": "omise",
+      "website": "https://www.opn.ooo",
+      "about": "Next generation of payment Platform"
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2019-06-28T06:49:12.422Z",
+  "bug_reporter_agreed_on_going_public_at": "2019-06-27T10:54:04.874Z",
+  "team_member_agreed_on_going_public_at": "2019-06-28T06:49:12.259Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Vulnerability Summary\n\nOmise makes use of Amazon AWS as their application environment. Due to a vulnerability in the way webhooks are implemented, an attacker can make arbitrary HTTP/HTTPS requests from the application server and read their responses. This is known as a server-side request forgery (SSRF) vulnerability.\n\nThis vulnerability leads to access to Omise's Amazon EC2 instance with the user role `aws-opsworks-ec2-role`, including AWS private keys.\n\n## Description\n\nThe vulnerability exists in the way webhooks follow redirects. In general, it appears that redirects are not followed, but a HTTP 303 See Other status code allows an attacker to bypass this restriction.\n\nBy pointing my webhook URL to a server that issues a 303 redirect, I am able to redirect and read the responses of arbitrary HTTP/HTTPS requests from the application server. E.g. the following PHP script results in a successful request that is followed by the server:\n\n`<?php header('Location: http://<arbitrary-location>', TRUE, 303); ?>`\n\nAs a result, it is possible to request a number of things, including AWS credentials on the metadata server located at `http://169.254.169.254/latest/meta-data/iam/security-credentials/aws-opsworks-ec2-role`\n\n## Steps to reproduce\n\n* Host the following payload on `https://<your-attacker-server>/redir.php`:\n\n````\n<?php header('Location: http://169.254.169.254/latest/meta-data/iam/security-credentials/aws-opsworks-ec2-role', TRUE, 303); ?>\n````\n* Point your webhook endpoint on https://dashboard.omise.co/test/webhooks/edit to `https://<your-attacker-server>/redir.php`\n* Make a random call to the API, e.g. adding a user;\n* View the \"Recent Deliveries\" of the webhook calls on https://dashboard.omise.co/test/webhooks\n* Note the `200 OK` status code indicating a successful redirect\n* Click the event to view the response body of the AWS metadata\n\n## Recommendation\n\nI recommend to ensure all input provided to the endpoint is validated. In this case, ensure that 303 redirects are not followed either.\n\nI also recommend resetting all AWS access tokens. In addition, I recommend reviewing the Amazon access logs to investigate if this vulnerbility has been exploited in the past.\n\n## Attachments\n\n* **20190312_AWS-SSRF-303-redirect-2.png** - Screenshot showing the output of the AWS credentials obtained through the SSRF vulnerability.\n* **20190312_AWS-SSRF-303-redirect.png** - Screenshot showing the output of the AWS index of metadata.\n\n## Impact\n\nBy exploiting this vulnerability, an unauthorized attacker could gain access to the AWS environment of Omise. Note that the SSRF vulnerability could be abused in a variety of ways, not just limited to obtaining AWS credentials. For example, to enumerate and access services and web applications running on the internal network.",
+  "weakness": {
+    "id": 68,
+    "name": "Server-Side Request Forgery (SSRF)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 440082,
+      "file_name": "20190312_AWS-SSRF-303-redirect-2.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/440/082/993a78b820229d1cad2b6cc12444d8a6baf5b7e5/20190312_AWS-SSRF-303-redirect-2.png?response-content-disposition=attachment%3B%20filename%3D%2220190312_AWS-SSRF-303-redirect-2.png%22%3B%20filename%2A%3DUTF-8%27%2720190312_AWS-SSRF-303-redirect-2.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQTNOGV7ZA%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T151638Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDBr4rjuktX2tVt4pAD8CjN7frBwjWfsYhqFlEprte2gAIhAJDL1IxreZkbnwPDdAB3ktF%2F%2FAbQwNhANlA5Qc53hwPzKrIFCBUQAxoMMDEzNjE5Mjc0ODQ5IgxEHQJ87TgWPbxaX6EqjwXBYs9QiE8vYqird8fNeXl23XrrZv%2FIegH1kHrOeVNdl8SgI71tCDd%2BwIktentCuPgvq9mlBBIeh%2FzqvPNd7J6sAc8sgiL6qgTlMc0NyIc%2BjXfiU4x4QR86IBEvJnP9NaFyxRoLXGjn4kfvQFBxKXfE3M0NJ6Ist1fakdk9DCQyBkE4UBCcTHXdJ2oWKbHyo9CDN70JC3%2FkGLTj3vnu%2FZF7Tp5gQnqREZ%2FuRjSrMc%2FefuZI%2Fiph8cv8IQkfZysyzEuNDM91hikY1067J2KWIXhf6JSJ7DVF86ZeJLfukfnyfvxil4TI6Vxns2VRI%2B5Oh1uHSXbLdXGujAmzcESxqcjwlmyl7Oa7%2F%2BMa%2F8fM52BcfckfcOZ%2Fp2Hlu6m%2BGvPnYq%2BUeJmy0mec3ATezAo21up25k6IZL8CiQBlcWayjAc74QTHhdDiHdoeV3%2F3XtIu%2FsmhVwC9%2BdeU8mVI1ZrBvsvc6z2zQgeoeBj%2BsTeyuCnOfWD5OodlLyWPdn7zjtRedTGACX4hBGMNONJvhp4HnRxoSyl1sjVrIxF0m6gu0eXekmO%2BfFtAxD0OXWFaq37qgHyQT6nmTgVmcxpHGd0nxcUrb4ArvT8TgGCzNwPoW2L8Y9WID45%2BFlu6Hs%2FDZXlciEul7ctCkJspP9v1vLrLsklLpsdu5BFMSTLw4iO9Q2bYzwZkv5d3zazC45eFWszopjQGrm9Oy2K94m4cLPmplVj4duun%2FW8XHQhrDkPts%2FudeU0sl%2FPOUIG%2FxifL65%2B3R2JGQq0vbwZ8GuJaK7yXo0yZWHPx7W3WpTv3ZQewIu6ZGdt%2Fi4fpAoH9LRassztHxynhYR2aeg4he5xehKof9JqZsz9Hn1I29l340U7NQvC5MPfZv8YGOrAB2Iv6Pp9XpkVN2RbDkZvL5NRkxU2pL5JZM6SSW3bMSJbOd%2FgGM2ASYwE3vgwDfWHTxzWS38tc3%2BXNYTaov01cA0k4BS0%2FmhbZiMMern3c3WKPUUuMRAuBYkfI4H%2F0KvCPZIo03aikPMl%2FbnTvb7ROOcRljaxHTkC8BB6aX%2BtbxWaqgdFVx%2B8CjK49gTh7D19Ddi4a0CmGy7QPNcvVqtHiI2lE%2BG8S8mutZdGolRBAsWc%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=289dac701da1a54925c5a6bd0e780298c19227f5756553439c8499386028c4ee",
+      "file_size": 24668,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 440083,
+      "file_name": "20190312_AWS-SSRF-303-redirect.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/440/083/77312fc35de2139643e21a986e038f2433137264/20190312_AWS-SSRF-303-redirect.png?response-content-disposition=attachment%3B%20filename%3D%2220190312_AWS-SSRF-303-redirect.png%22%3B%20filename%2A%3DUTF-8%27%2720190312_AWS-SSRF-303-redirect.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQTNOGV7ZA%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T151638Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDBr4rjuktX2tVt4pAD8CjN7frBwjWfsYhqFlEprte2gAIhAJDL1IxreZkbnwPDdAB3ktF%2F%2FAbQwNhANlA5Qc53hwPzKrIFCBUQAxoMMDEzNjE5Mjc0ODQ5IgxEHQJ87TgWPbxaX6EqjwXBYs9QiE8vYqird8fNeXl23XrrZv%2FIegH1kHrOeVNdl8SgI71tCDd%2BwIktentCuPgvq9mlBBIeh%2FzqvPNd7J6sAc8sgiL6qgTlMc0NyIc%2BjXfiU4x4QR86IBEvJnP9NaFyxRoLXGjn4kfvQFBxKXfE3M0NJ6Ist1fakdk9DCQyBkE4UBCcTHXdJ2oWKbHyo9CDN70JC3%2FkGLTj3vnu%2FZF7Tp5gQnqREZ%2FuRjSrMc%2FefuZI%2Fiph8cv8IQkfZysyzEuNDM91hikY1067J2KWIXhf6JSJ7DVF86ZeJLfukfnyfvxil4TI6Vxns2VRI%2B5Oh1uHSXbLdXGujAmzcESxqcjwlmyl7Oa7%2F%2BMa%2F8fM52BcfckfcOZ%2Fp2Hlu6m%2BGvPnYq%2BUeJmy0mec3ATezAo21up25k6IZL8CiQBlcWayjAc74QTHhdDiHdoeV3%2F3XtIu%2FsmhVwC9%2BdeU8mVI1ZrBvsvc6z2zQgeoeBj%2BsTeyuCnOfWD5OodlLyWPdn7zjtRedTGACX4hBGMNONJvhp4HnRxoSyl1sjVrIxF0m6gu0eXekmO%2BfFtAxD0OXWFaq37qgHyQT6nmTgVmcxpHGd0nxcUrb4ArvT8TgGCzNwPoW2L8Y9WID45%2BFlu6Hs%2FDZXlciEul7ctCkJspP9v1vLrLsklLpsdu5BFMSTLw4iO9Q2bYzwZkv5d3zazC45eFWszopjQGrm9Oy2K94m4cLPmplVj4duun%2FW8XHQhrDkPts%2FudeU0sl%2FPOUIG%2FxifL65%2B3R2JGQq0vbwZ8GuJaK7yXo0yZWHPx7W3WpTv3ZQewIu6ZGdt%2Fi4fpAoH9LRassztHxynhYR2aeg4he5xehKof9JqZsz9Hn1I29l340U7NQvC5MPfZv8YGOrAB2Iv6Pp9XpkVN2RbDkZvL5NRkxU2pL5JZM6SSW3bMSJbOd%2FgGM2ASYwE3vgwDfWHTxzWS38tc3%2BXNYTaov01cA0k4BS0%2FmhbZiMMern3c3WKPUUuMRAuBYkfI4H%2F0KvCPZIo03aikPMl%2FbnTvb7ROOcRljaxHTkC8BB6aX%2BtbxWaqgdFVx%2B8CjK49gTh7D19Ddi4a0CmGy7QPNcvVqtHiI2lE%2BG8S8mutZdGolRBAsWc%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=c6f5e569d6207867b91ae12f45be29b40fd01dae485f6046d659f3c26a215976",
+      "file_size": 25154,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2019-07-27T10:54:05.020Z",
+  "allow_singular_disclosure_after": -194242953.86191124,
+  "singular_disclosure_allowed": true,
+  "vote_count": 204,
+  "voters": [
+    "urinaori",
+    "loaymorad",
+    "v8vito",
+    "arist0phanes",
+    "kanazawaaaa",
+    "aboalezz",
+    "orange303",
+    "nytr0gen",
+    "maskopatol",
+    "pudsec",
+    "and 194 more..."
+  ],
+  "severity": {
+    "rating": "high",
+    "score": 7.1,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "high",
+      "privileges_required": "low",
+      "user_interaction": "required",
+      "scope": "unchanged",
+      "confidentiality": "high",
+      "integrity": "high",
+      "availability": "high"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 16435,
+    "asset_type": "URL",
+    "asset_identifier": "dashboard.omise.co",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
