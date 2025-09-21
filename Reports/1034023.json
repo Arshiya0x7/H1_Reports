@@ -1,0 +1,139 @@
+{
+  "id": 1034023,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMDM0MDIz",
+  "url": "https://hackerone.com/reports/1034023",
+  "title": "Possible (we need to wait for some time) takeover of subdomain badootech.badoo.com which is pointing to Medium servers",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2020-11-13T16:16:18.993Z",
+  "submitted_at": "2020-11-13T16:16:19.046Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "w2w",
+    "url": "/w2w",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/yoctsvobzv6yn4lfpnusxzuidcr4/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": true,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 21554,
+    "url": "https://hackerone.com/bumble",
+    "handle": "bumble",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/021/554/13fb93fae5496e8e259a0f2a2fba3a72ca10550b_original./235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/021/554/13fb93fae5496e8e259a0f2a2fba3a72ca10550b_original./3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Bumble",
+      "twitter_handle": "bumble",
+      "website": "https://bumble.com/",
+      "about": "Bumble - Date, Meet, Network Better"
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2020-12-30T11:23:45.196Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-11-30T11:23:40.967Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "##Description:\nHello, team! Recently I found a new subdomain pushed; it's https://badootech.badoo.com/.\nThe site's content contains a Medium icon with the text \"Oops! We couldn’t find that page. Sorry about that.\", DNS records are:\nbadootech.badoo.com.\t21399\tIN\tA\t52.1.173.203\nbadootech.badoo.com.\t21399\tIN\tA\t52.4.225.124\nbadootech.badoo.com.\t21399\tIN\tA\t52.0.16.118\nbadootech.badoo.com.\t21399\tIN\tA\t52.1.147.205\nbadootech.badoo.com.\t21399\tIN\tA\t52.4.145.119\nbadootech.badoo.com.\t21399\tIN\tA\t52.4.240.221\nbadootech.badoo.com.\t21399\tIN\tA\t52.4.38.70\nbadootech.badoo.com.\t21399\tIN\tA\t52.4.175.111\nbadootech.badoo.com.\t21399\tIN\tA\t52.6.3.192\nbadootech.badoo.com.\t21399\tIN\tA\t52.6.46.142\nbadootech.badoo.com.\t21399\tIN\tA\t52.1.119.170\nbadootech.badoo.com.\t21399\tIN\tA\t52.5.181.79\n\nThis is a classic pointing to the Medium as a part of claiming custom domain. The thing here is that you haven't claim badootech.badoo.com host in the medium but added DNS records that could lead to subdomain takeover. Let's look at the process of how custom domains are linked with Medium's blogs at https://medium.com/feedium/how-to-set-up-a-custom-domain-on-medium-fbcb4041a1b9. https://extranewsfeed.com/ is an example of the Medium custom domain, and it has identical DNS records as your subdomain does! According to the article, steps to registering a custom domain on Medium are as following:\n1. Inform Medium you want to turn your publication into a custom domain.\n2. You’ll have to send Medium your: Publication URL, your registered domain URL, your domain registrar site (ex. GoDaddy)\n3. At one point, Medium charged a $75 fee for doing this service to account for extra costs on their side. I’m not sure if they will restart this or make it free yet.\n4. If Medium approves, they will send you: a CNAME and A Records.\n5. You have to log in to your domain registrar (ex. GoDaddy) and adjust the CNAME and A Record values to match the ones Medium gave you.\n6. Wait 4 to 24 hours, and your new domain should be up and running!\n\nSince DNS records were added already, we can skip the 5th step. All we have to do is to send to the Medium team a link to your domain, a link to my blog on medium, and the hosting name (it's \"register\" according to whois). Here is my request, along with the answer :\n\n{F1077184}\n\nAs you can see, Medium paused, providing the \"custom domains\" service but will relaunch it soon. When it is available, it'd be possible to take over a domain. I decided to send a report right away and let you know about it before the subdomain will be taken over by someone.\n\n## Impact\n\nImpact here is the phishing as with the \"Shopify\" subdomain takeover, severity at your discretion. I'd recommend removing DNS records.",
+  "bounty_amount": "300.0",
+  "formatted_bounty": "$300",
+  "weakness": {
+    "id": 65,
+    "name": "Business Logic Errors"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1077184,
+      "file_name": "Screenshot_2020-11-13_at_18.09.07.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/Lnnt36iKtW93pPRWQ6X3UZKY?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_2020-11-13_at_18.09.07.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_2020-11-13_at_18.09.07.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQXVVA62V%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T075049Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIHcziDAQ1U9m4ez28UQo%2F7nfwXvTkmhY0Ul5bupS6zvyAiBN9th4QG2cvB3InZobbEjFxm0iuov3h20xA9wMnKpcmyq6BQj%2B%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMwJR64zYrf5A%2B%2Bdn%2FKo4F162rcQ8y3uYKDtXdt72n7teFwwbyi4gvsMQ%2BQSUNO7NbheKBbdO5ZBgDrAq%2FTlhYusfoElNZOFCadBn0p4cXHCdohI67tm3n5dmrmtabkUqHw4VxxtoFyP6CMvCJOCMlahnb8ipCg8EGtegYxrssWWv%2FqmDg61RQfMzmxbk1zinjglpFSKjZrcX3X6Z8HjWOuotEBUaxo14mn7JIzf8RHOvh8dirvQdTEiP6HB9%2FeRUU0FRT6xA1fr2SoFZiAxU8oAWlTTiXbvkqgFZNX8%2BG0uzPimZA7YWBx6j0RYTjpEWutwr6SazKl2TqNiupg5kQOWIhwPh05gmHf46VeOLLHpN6%2B1aKAjuV8si7P0h7WEdZ6RwTAaf3xVA8DhP7a62xmybAnyZ%2B6Mlt3b7%2F54bjYkvqx6XyUZMnwN4WzNRmvBpxqDIU03xIRDYrWJ%2F6fZm8ZRZwFJvLA6Hki4NXIn%2BmSgsjQ3ywWEqtZfn3R9mt%2FZyGl%2F76byTjOGrIfmme4tLTvV1LDrOszWq4MNE3IZZuyVC1op44DioJ4I5zNwHTKKOqbIqn9H3nMXe04XXyjuyPuzy2c%2FH6Q%2B3%2FJOpRlMWUVHACNHoHAlev2saAt0kY304mhfIaSghq5%2Foruwp3LOqphcNCW0njbUl2sNQefoOKmG%2BpD3MMx9lgSLhlkIVt1mI7REZVZlSo%2BFcpmgUubrbCZryPqtN%2BjevUdZ%2BCoG4xu9296numkEixqAPWLi0sVZGM5iywYdgJNJf%2FesQVBLA4lgBW8YYNTqflG8n53Fd1stKYI1Kn%2BU7TkoD%2BMHKnuP6csk%2Fg6SW7MsXvUPB0g899FShba0%2Fopc41i6iTYcdvkr1gIUMhS%2B5FrZNOGFjVMOiEvsYGOrIBNnORvzo6e9VxSpllwAq8gloZlrKB0YtWxsWy0BIOS%2BGOxJwsxTfuUi7Rb2pz%2FQ%2BSr3%2FMfX7WTEm6c6CiRrMLorYf53cqv6Pj2ncEbm36umgfX8ehwBBzu9SHaABTsYQpVcc5KTV%2FizIfsuAsK3Z2sYb%2BNHgmPo4OFsgKIhAyuJrVuuNFtv%2BrUaEpx%2FlOfALz5A5WO76e2jZd56J37%2F4PIa1QS0IOJJTdF3h%2BvP2ugDJBeg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=def324e81e15e7fc9e3c7415ee3a0f454932b14d1d1a5991197ec540247a1ef4",
+      "file_size": 404021,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2020-12-30T11:23:41.071Z",
+  "allow_singular_disclosure_after": -149113628.49500865,
+  "singular_disclosure_allowed": true,
+  "vote_count": 40,
+  "voters": [
+    "aboba",
+    "teslatheg0d",
+    "bombon",
+    "ertugrul",
+    "n0x496n",
+    "badcracker",
+    "mattberg",
+    "bibekshah",
+    "xphiltrate",
+    "th4nu_0x0",
+    "and 30 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 6.6,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "high",
+      "user_interaction": "none",
+      "scope": "changed",
+      "confidentiality": "low",
+      "integrity": "low",
+      "availability": "low"
+    }
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
