@@ -1,0 +1,133 @@
+{
+  "id": 1073363,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMDczMzYz",
+  "url": "https://hackerone.com/reports/1073363",
+  "title": "Index Out Of Bounds in protobuf unmarshalling",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "none",
+  "readable_substate": "Resolved",
+  "created_at": "2021-01-07T10:23:44.954Z",
+  "submitted_at": "2021-01-07T10:23:45.000Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "pulpkk",
+    "url": "/pulpkk",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTY0MjUyMCwicHVyIjoiYmxvYl9pZCJ9fQ==--a8b625af6596ffd5d04a08bf3c522f8ae9897899/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGVnIiwiZ3Jhdml0eSI6IkNlbnRlciIsInJlc2l6ZSI6IjYyeDYyXiIsImNyb3AiOiI2Mng2MiswKzAifSwicHVyIjoidmFyaWF0aW9uIn19--0e8fb5b1a245559716caa2abf00b1571bf3c5040/morty.jpeg"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 39386,
+    "url": "https://hackerone.com/kubernetes",
+    "handle": "kubernetes",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/039/386/486f4380e09776d05a912ca9f46be23f72fe8197_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/039/386/486f4380e09776d05a912ca9f46be23f72fe8197_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Kubernetes",
+      "twitter_handle": "kubernetesio",
+      "website": "https://kubernetes.io/",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2021-08-30T19:06:19.305Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2021-07-31T19:06:15.279Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Report Submission Form\n\n## Summary:\n\nI have recently discovered a bug in the gogo/protobuf code generator.  This bug allows for an index out of bounds when unmarshalling certain protobuf objects. The bug is that a check is lacking when skipping certain bytes. There are numerous occurrences of this bug (too many to count easily) the following is one such case.\n\nIn `staging/src/k8s.io/api/certificates/v1beta1/generated.pb.go`\n```\n1686:\t\t\t\t\tskippy, err := skipGenerated(dAtA[iNdEx:])\n1690:\t\t\t\t\tif skippy < 0 {\n1693:\t\t\t\t\tif (iNdEx + skippy) > postIndex {\n1696:\t\t\t\t\tiNdEx += skippy\n```\n\nHere the issue may occur since `iNdEx` is an int the following `iNdEx += skippy` may overflow causing a negative value. Next time the `dAtA[iNdEx]` occurs it will cause an index out of bounds and the program will panic.\n\nSince the bug is so wide spread I have not fully analysed the different impacts but since this appears in many APIs it would likely lead to crashing nodes.\n\nPatch:\n\nThe code should have the checks to match the following as seen in the same file `staging/src/k8s.io/api/certificates/v1beta1/generated.pb.go`\n```\n1736:\t\t\tskippy, err := skipGenerated(dAtA[iNdEx:])\n1740:\t\t\tif skippy < 0 {\n1743:\t\t\tif (iNdEx + skippy) < 0 {\n1746:\t\t\tif (iNdEx + skippy) > l {\n1749:\t\t\tiNdEx += skippy\n```\n\nSpecifically the check `if (iNdEx + skippy) < 0`\n\nNote: I have contracted the maintainers of gogo/protobuf and they have a patch and will make a release soon. After that it is recommended to re-generate all of the existing protobuf code. Alternatively if waiting for a release is too long then the patch may be applied manually OR I can create a patched version of gogo/protobuf.\n\n## Kubernetes Version:\n\nv1.20.2\n\n## Component Version:\n\nn/a\n\n## Steps To Reproduce:\n\nI have not generated a PoC as the bug was very simple to explain but happy to do so upon request.\n\n## Supporting Material/References:\n\nn/a\n\n## Impact\n\nAttackers will be able to crash nodes which use the affected protobuf code arbitrarily.",
+  "weakness": {
+    "id": 9,
+    "name": "Buffer Over-read"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [],
+  "allow_singular_disclosure_at": "2021-08-30T19:06:15.432Z",
+  "allow_singular_disclosure_after": -128068858.97885452,
+  "singular_disclosure_allowed": true,
+  "vote_count": 13,
+  "voters": [
+    "ali",
+    "ayoub0x1",
+    "akashhamal0x01",
+    "h4x0r_dz",
+    "cryptographer",
+    "zeesek",
+    "cyberwarrior--_15",
+    "ulisses",
+    "lakkii",
+    "idrees200",
+    "and 3 more..."
+  ],
+  "severity": {
+    "rating": "none",
+    "score": 0.0,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "high",
+      "privileges_required": "low",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "none",
+      "integrity": "none",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 32459,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/kubernetes/kubernetes",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
