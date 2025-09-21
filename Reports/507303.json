@@ -1,0 +1,127 @@
+{
+  "id": 507303,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC81MDczMDM=",
+  "url": "https://hackerone.com/reports/507303",
+  "title": "[file-browser] Inadequate Output Encoding and Escaping ",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2019-03-10T04:04:35.878Z",
+  "submitted_at": "2019-03-10T04:04:35.878Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "johnssimon007",
+    "url": "/johnssimon007",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/NWPHHm8hwLotSetPuMmFkHCa/c8a1698ff707a5e3e8a91a3484838363845daac68cb82c86d55c9e2d44d67b67"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 23949,
+    "url": "https://hackerone.com/nodejs-ecosystem",
+    "handle": "nodejs-ecosystem",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/023/949/3ea3b2ae039a8f955a4a8fe65d99fe85dc817398_original./235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/023/949/3ea3b2ae039a8f955a4a8fe65d99fe85dc817398_original./3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "disabled",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Node.js third-party modules",
+      "twitter_handle": "",
+      "website": "https://nodejs.org/en/security/",
+      "about": "This program was used to handle vulnerabilities in the Node.js ecosystem."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2020-01-29T16:24:06.082Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2019-12-30T16:24:02.252Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "I would like to report stored xss in file-browser module\nIt allows an attacker to embed malicious js code as filenames,which get executed once browsed to the file over the web browser\n\n# Module\n\n**module name:** file-browser\n**version:** 0.0.5\n**npm page:** https://www.npmjs.com/package/file-browser\n\n## Module Description\nfile-browser is a utility to browse files on your file system using your browser. Its equivalent of creating a file share that can be accessed over http. Using this you can share files between different machines, and across different operating systems.\n\n\n## Vulnerability Description\n\ndue to improper output encoding and escaping ,it was possible for an attacker to embed malicious js code as filenames,which get executed once browsed to the file over the web browser\n## Steps To Reproduce:\n1.  npm -g install file-browser\n\n2.now running below command will start a file server on the specified port:\n  file-browser\n\n3.now create a file with xss payload as filename in current dir\n\ntouch '\"><img src=x onerror=alert(\"xss\")>.jpg'\n\n4.now goto url at which the file server is running\n\nhttp://127.0.0.1:8088/lib/template.html\n\nnow xss will popup\n\n## Supporting Material/References:\n\n- [OPERATING SYSTEM VERSION] Kali linux\n- [NODEJS VERSION] 11.8.0\n- [NPM VERSION] 6.5.0\n\n# Wrap up\n\n> Select Y or N for the following statements:\n\n- I contacted the maintainer to let them know: [N] \n- I opened an issue in the related repository: [N]\n\n## Impact\n\nthis could have enabled an attacker to execute malicous js code which might lead to session stealing,hooking up browser with frameworks like beef and so on",
+  "weakness": {
+    "id": 62,
+    "name": "Cross-site Scripting (XSS) - Stored"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 438480,
+      "file_name": "Screenshot_from_2019-03-10_09-34-59.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/438/480/a266c09967856144c6d7d575aad0bc99bbd46485/Screenshot_from_2019-03-10_09-34-59.png?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_from_2019-03-10_09-34-59.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_from_2019-03-10_09-34-59.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4AL7LQLH%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T124228Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDp33yNJ8faGVbpn83n0gBuQVbYuy1tW4%2F0DW3O82s43AIgBvwsE79nZvyysDGTEI8LjG1QX6KiTFf1GOGaLVSWUBcqsQUIFBADGgwwMTM2MTkyNzQ4NDkiDLTkkwyYIHrtnc1nQiqOBfKrK8x%2FbzvQ%2F8Ty3yQtB0Lh9imTuCG32LM7PVnNVwy5XNnbUx%2BP2byh0aor5nOzkqa8ra08NofGSQxs%2FW2qEZx62gx6ZwJsq%2BjTomX2lSeg8NKTew04yUziNn2TtakLuxuh4K%2FPHOeykdonbY5yVlMQ5m7NlltUdq%2BinbN%2FYobp5ubAx%2FPWv7Qsv1k%2BCAUc9xpNWEapemLrCLMc8ODSNGlt5pk2G2TeaQhiCK37ZLQvvpVfVTaABcbT268HqJa8LpDLR0UIRf3Mq%2BkYcPINqXrdgkXJVF84mSYySPa7W9UQQamIOk0Oww2pGW8QsQCwjWY5cceUORgYR2bnhuGe0vriAElHEzYef3I9B%2BB7Q9CMkK%2FQiYlZIqX6gzN%2FQHlEOBMdsu7pyfkZKr44wABeVwOR8dqQiR9VnKFDujSuaSTRzWVSxdcnA4jBL9nljUTo5%2B0vqzfS5GerdoDU0gfKtIMqEuS4JANXZjTg82vOjYfmVWqMHOYiSf%2B8rBP58zmtFSU7OQrN6J3KvTk66QR5DtLd4TgTHDQ77els%2BB9OlNQXuF6sFOYjEVnpECE43cXEE8GfRGx9nL052dgxZSK39PfpKUqtNkKL6vFuH9Rn4AnAL%2BsCusL3Q8ag8fjKKpvMzFNXPSqvB1Ekygnb7hEiLGffMMBijSAJwvZK0TUNSubO6ftbDFUyyCG8U8Wm5aPRFeOJ8by%2BUX3tPyVRyVfTqE3PtgAMS6YbzyQqcLNa1qZAJFCzVPhWNI8FOX3%2BtjRTf7kEj88Js0POvOriORU8y1lMw1lkHET3Qh4FUSQRlAtEgoMyb3eguzV%2Bgg7BrYdYGSfZV3O6oqs%2BRGa9RFd2BPxLPK4XfMcwGz3E9naG3DCmq7%2FGBjqxAccztsow60eqVnwWjPLvF49wNPG8%2BaWSReTNquGAr2NebkpkaTBftEA%2FMV4yC%2B2tmJPSRYJkq9KwdwFVhdEYbp4%2FAx6bzwbFHV5LvALyGurL%2BA6olykLBUrF96MBLleyg8tSdXFrAMDJPMuXNEGlc0lbkD4ahPwk%2FHy3VqaO5T4JMPUloL6FQuRBy74vwPVHzW3kBZBwuEdNVfHa5L4ML7hIv04642F%2FcEjgk4C0nVOf%2FQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=16ff9406ba37854180a115ffbc691bc99c76d006a75fe2d3d8d3d899a275529b",
+      "file_size": 52122,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2020-01-29T16:24:02.334Z",
+  "allow_singular_disclosure_after": -178143506.28218988,
+  "singular_disclosure_allowed": true,
+  "vote_count": 1,
+  "voters": [
+    "deb0con"
+  ],
+  "severity": {
+    "rating": "high",
+    "score": 7.5,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "high",
+      "integrity": "none",
+      "availability": "none"
+    }
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
