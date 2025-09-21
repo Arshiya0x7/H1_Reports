@@ -1,0 +1,121 @@
+{
+  "id": 172933,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNzI5MzM=",
+  "url": "https://hackerone.com/reports/172933",
+  "title": "IDNs displayed in unicode in messages/about/talk sections (Homograph Attack)",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-09-29T15:37:28.605Z",
+  "submitted_at": "2016-09-29T15:37:28.605Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "hk755a",
+    "url": "/hk755a",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/ayki6pwgcjiefesvrbaq5ltxujq0/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 545,
+    "url": "https://hackerone.com/yelp",
+    "handle": "yelp",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/545/de556165eaf2da7600f9ce75d1179281ee2d538f_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/545/de556165eaf2da7600f9ce75d1179281ee2d538f_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Yelp",
+      "twitter_handle": "",
+      "website": "https://www.yelp.com",
+      "about": "Connecting people to great local businesses in communities around the world."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2017-11-09T19:54:03.237Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-10-16T15:01:22.218Z",
+  "team_member_agreed_on_going_public_at": "2017-11-09T19:54:03.119Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello Yelp,\n\nPlease refer https://en.wikipedia.org/wiki/Internationalized_domain_name to know more about IDNs.\n\nThe IDN (Internationalized Domain Name) : http://ebаy.com/\nis a homograph for the latin ebay.com. if you click that first link, you might think that you are going to ebay.com but in fact, you are going to a homograph url http://xn--eby-7cd.com/\n\nWhen such an IDN is posted on Yelp (for ex at the about me page,Talk section,Messages etc.). ,it displays IDN in Unicode. It would be safer to represent the Punycode version of the URL so that it would be apparent to the users that something wierd is going on. i.e show  http://xn--eby-7cd.com/ instead of http://ebаy.com/\n\nA bad guy can exploit this vulnerability by putting up a spoof site behind one of these IDN links,posting the link anywhere on yelp (The talk section can be a nice place) and the user or the yelp moderator/admin opens and carelessly enters his credentials there.\n\nFacebook,hackerone,crowdcurity and many major sites have implemented code to block such attacks.They show the punycode version of the IDN url.\n\nMore info:\nhttp://www.charset.org/punycode.php?encoded=http%3A%2F%2Fxn--eby-7cd.com%2F&decode=Punycode+to+normal+text\n\nFew more Examples:\n1) https://www.уelp.com/\n2) https://www.yelp.com/\n\nThey both appear to be same when posted on yelp but actually 2nd is the original one and the 1st is actually https://www.xn--elp-cfd.com/\n\nFor reproduction paste https://www.xn--elp-cfd.com/ anywhere on yelp and post it.It would appear as yelp.com only\n\n",
+  "weakness": {
+    "id": 57,
+    "name": "Violation of Secure Design Principles"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 123889,
+      "file_name": "yelp.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/123/889/6f79e9ae6a9be9c10eb71848372f723618997cfd/yelp.png?response-content-disposition=attachment%3B%20filename%3D%22yelp.png%22%3B%20filename%2A%3DUTF-8%27%27yelp.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZH4PP2EU%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T194049Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDPsHKy%2B9Z18ppMHR%2Brz4JYjOICNwdECPQPDmd48flZ2AIhALHRZOgDMcraak9k1Q5mE5pZOgrP7j7NKrP972DuBDwIKrIFCBgQAxoMMDEzNjE5Mjc0ODQ5Igx5185VGHELQR28cdcqjwX4UX5NRHC6WIhvqJBCzs%2FhOK8pzByrzZVmTgU2PgPOZS5Fc0o8EmtsaWh4D4NJgdRweBOpRWWBhVb43Xo%2BUjf9gQn6XDs60OFCAo5tdLyXu9x15q8lb7e6UDWrASQilfDRNtfc9aWmwlhvAp5Iz0izFAm9CLmZH9MVJryn1u%2FF3lJbdO6nv3rmZPuqetb%2BoMxrGX%2BNPlif6l0%2Bqkj6rB7zCZGmPQtg2ZeN4k9FTconG%2FSFKV0i8s9oe3bVkjIlfcoMj0uJ50wA5BvG%2B7yjlzW0X%2F6WUMwmyQx135WzZ6WzFWaA0cSVCr9AYHNsiYJP9JW24j40LBqx%2Bcr6YxLBbKasZCxeskDMD%2BtJDR8vaHtOpDY2umjTSKDr9zW2mJk4SH6Xk5psuntJC5qKqq6FjH1kgqEmYyZ2eun%2FkHgl4c6W8obz22R1Zz0GdBIheHvBFg9QD0Og9IzISx36BMJ9NwqS9bSzGWFndTRJvHTCNrLXKEcsvBv4XT2H0QlefyaJSASCoZtaojrs6M09JC0JBIze94REepEuQtaV5WN8dGogRj4LCy8wangKg4nMy0Nv07tnAfsmi0AbB86giBDl8xjJ2MuArKtIfs3plSGML31j8QBoTaTSMuQsabfIUae%2FXDnADWLslgnwHZMyHnK0HTYfJbdPvR%2FHoNr8%2BI1qrq%2FAEYn%2FPKD48LgmykyI8PIdgbHy7%2BHDgiFBCMveKJRIEYRSswlcc13jYW7yyQ075nWLGE6GaBft%2Bk71MnlIm3f98AoRCm7yGq1FHidipqYPUYdH2ECzV59OJUr7vQo6FpM6kBli0HjnqXMt4NJyvDuVEx9X%2FYr7NG2rNeU9hMotrGJdFtHp%2B9hcaXrq7ZEekrw4MIKqwMYGOrAB8vOzOXkAO8w6yO95SepBdPR3u4MwaaWSTz%2FfnIG1RAgmz4rXzoKUb3jsULsqFm%2Bej0xl99ee5FaRTDJPiDMbKgih1BukouxDCvzhaCXJL8WsiSrMaG9cqATSigwkBJLoY%2BZOYsf%2FsWX77kgB29lxf6cXKnae1XeRj1cgMKO0RmYSJoi0yU5wBaasoufS3SuFu2MoMAPikvnikZvtPPWH6cEyxLvagkOOxVcoUmgai3A%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=5d349cf077fe405918144437f94db02866b9c19f0dc3d513f8edf2b51b063b99",
+      "file_size": 95332,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-11-15T15:01:22.261Z",
+  "allow_singular_disclosure_after": -247725566.94012183,
+  "singular_disclosure_allowed": true,
+  "vote_count": 12,
+  "voters": [
+    "jensec",
+    "2026",
+    "brahim_boufakri01",
+    "gamliel",
+    "eveeez",
+    "japz",
+    "0xm1racle",
+    "test0401",
+    "its_pyro",
+    "thejaguar",
+    "and 2 more..."
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
