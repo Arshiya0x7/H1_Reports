@@ -1,0 +1,151 @@
+{
+  "id": 389076,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zODkwNzY=",
+  "url": "https://hackerone.com/reports/389076",
+  "title": "`open-url` command allows opening unlimited number of tabs pointing to arbitrary URLs",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2018-07-31T21:52:55.319Z",
+  "submitted_at": "2018-07-31T21:52:55.319Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "metnew",
+    "url": "/metnew",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/jdthvavflc07lpt5x37qarrub1jt/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 22746,
+    "url": "https://hackerone.com/grammarly",
+    "handle": "grammarly",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/gx1qb7440tyefirbxv1tkl1ty186/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/gx1qb7440tyefirbxv1tkl1ty186/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Grammarly",
+      "twitter_handle": "",
+      "website": "https://www.grammarly.com",
+      "about": "Grammarly makes sure everything you type is clear, effective, and mistake-free."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2019-04-23T12:05:54.395Z",
+  "bug_reporter_agreed_on_going_public_at": "2019-04-18T15:05:01.448Z",
+  "team_member_agreed_on_going_public_at": "2019-04-23T12:05:54.262Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary\n\nAttacker could trigger Grammarly extension's `open-url` command to open any number of tabs pointing to any origin (including internal, e.g. `chrome://`) and cause \"infinite Chrome DoS\" if attacker's page is pinned.\n\n## Description\n\n### Page could Init Grammarly popup editor [no user gesture, helper]\n\nEvents have `isTrusted` property, which allows to determinate, whether current event is trusted(initiated by user). Grammarly popup editor could be initiated by page. \n\nAs I understood: injected content script could successfully emit events to background page only if popup was initiated earlier. \nThat means, attacker needs to initiate the popup somehow to communicate with background page through injected content script.\n\n> Not sure about the root cause of this behavior. Probably, because popup is created by background page origin, that's why background page becomes accessible after this.\n\n### send `open-url` to content script\n\nActive page could send commands to Grammarly content script using `window.postMessage`. \n\nCommand structure:\n\n``` js\nwindow.postMessage({\n    grammarly: true,\n    action: 'open-url',\n    url: 'file:///etc/passwd'\n}, \"*\")\n```\n\n### `open-url` handling in content script\n\nGrammarly content script \"parses\" commands using this snippet:\n``` js\nfunction Z(e) {\n    var t, n = e.action;\n    \"edit\" === n && U(e), \n    \"close\" === n && te(),\n    \"initialized\" === n && (t = \"Premium\" === e.userType ? \"freemium-plus\" : \"freemium\", O.documentElement.setAttribute(\"data-type\", t), setTimeout(function () {\n        return T.el.style.background = \"transparent\"\n    }, 300)), \n    \"socket\" === n && p.emitBackground(b.MessageTypes.client, e), \n    \"setSettings\" === n && N(e.data), \n    \"tracking\" === n && e.method && g.call(e.method, e.param, e.props), \n    \"popup-editor-fix\" === n && P(), \n    \"open-url\" === n && (!0 === e.upgradeHookUrl && (y.gnar.getPremiumButtonClick(e.placement || \"popupEditor\"), g.felog.userUpgradeClick(e.placement || \"popupEditor\")), p.emitBackground(\"open-url\", e.url))\n}\n```\n\n> There are multiple problems in this code, however, this report only about `open-url`.\n\nAs you see, `open-url` commands are sent to background page. \n\n### `open-url` handling on background page\n\n`open-url` command is handled by this snippet:\n\n```js\ne.prototype.open = function (e, t) {\n    return o.SafePromise.create(function (n, o) {\n      chrome.tabs.create({\n        url: e,\n        active: t\n      }, function (e) {\n        r.handleChromeError(function () {\n          return n(e)\n        }, o)\n      })\n    })\n}\n```\n\n> *More details in \"Impact\"*\n\n#### Step by Step\n\n1. Page sends a `open-url` command to content script [without user gesture, with attacker's `<url>` property]\n2. Content script sends `open-url` command to background page\n3. Background page opens new tab using `chrome.tabs` on `<url>`\n\n## Browsers Verified In:\n\nChrome 70.0.3508.0 Canary\nChrome 68.0.3440.75 Stable\n\n## Steps To Reproduce:\n\n### `file://`\n1. open `file-url.html` (no gesture required)\n2.  Extension opens **two** tabs on `file:///etc/passwd`\n\n### `chrome://version`\n\n1. open `chrome-url.html` (no gesture required)\n2. Extension opens **two** tabs on `chrome://version`\n\n> PoCs are reliable, however, if it doesn't works for you, try to adjust timers in script.\n\n## Supporting Material/References:\n\nscreencast for `chrome://version` and `file:///etc/passwd` attached.\n> Screencast for infinite DoS not attached, but I've attached PoC for this case, so that you can try 😈\n\n> Note: Works against logged in users. Probably, could be modified to work against unlogged in users.\n\n## Impact\n\n### Infinite number of new tabs\nAs you see, background page uses `chrome.tabs` under the hood. As opposite to `window.open`, `chrome.tabs` doesn't have limit on number of new tabs to open (only 1 tab is allowed for `window.open` without user's gestures). \n\nThat means page could open **as many tabs as it wants** using `open-url` command.\n\n**IMPACT**: this behavior could be abused by **malicious advertisement websites**.\n\n#### Open pages on restricted origins \n\nGrammarly extension has access to `<all_urls>`. That means it's possible to open URLs from restricted origins (`file://`, `chrome://`, `chrome-devtools://`, `chrome-extension://`, etc). \n\n**IMPACT:** \n\nThis behavior is extremely helpful when exploiting Chrome vulns or other 3rd-party web extensions (e.g. trigger vuln in `chrome-devtools://` [like this](https://bugs.chromium.org/p/chromium/issues/detail?id=607939))\n\n> **NOTE:** I didn't test this on Win machine. AFAIK, it was possible to trigger executables by navigating to local `.lnk/.url` files.\n\n#### \"Infinite Chrome DoS\" [requires attacker's page being pinned]\n\nNavigation to `chrome://quit` closes browser. However, if tab is pinned, Chrome reopens this tab on start. As of this vulnerability doesn't require user interaction, that could potentially lead to Chrome DoS. \n\n> (browser opens -> pinned page loads -> browser closes -> browser opens -> pinned page loads -> ...) \n\n**IMPACT:** I guess that most users wouldn't find a smarter solution than uninstalling extensions 😉or reinstalling the browser.",
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 326978,
+      "file_name": "grammarly-open-url-command.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/326/978/a8d865718ba8385a8ac99eef0a94beb9dfc32acf/grammarly-open-url-command.mp4?response-content-disposition=attachment%3B%20filename%3D%22grammarly-open-url-command.mp4%22%3B%20filename%2A%3DUTF-8%27%27grammarly-open-url-command.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWNAVQAE5%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T154159Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIDXG8q7VRdTP631MKmZ4fvttzAAv5lCyYMYNV784kGZjAiEAhv%2BV9Mg5xs9Q4zCmYFH6om2UWIbqTxOXrpZ%2B2%2FbDzXUqsgUIFxADGgwwMTM2MTkyNzQ4NDkiDIGZ8kKbAh%2F%2FPWaDsiqPBYhP8pm4XnRFxjp804kA9dz%2FChkMoeCRo09H5RRxUKWuL3Hht7UB8pviq0Ph1K%2FHTcmGwh93q4Ayukv4kY%2BcdKeSYjRmw7cMDjaogAMTIMitBxFdtPgjmRnaKyJaPF0A%2F6UzCpRMz8FumQa21icnzynw9cJSd6wSMqfRakvCMB%2Be5Z%2BkIjhcACm5f3POul28BVznGYgXSXTovo3lOSWBFyZX17ClfGQEYehe8I7VG8F35pVjCkxwqEzP144HMVnkdtpsIyAVOG7WPcwm0KOJIx%2BKhAfImQT8dkW2AAtqfv4kvgvcZEnUS2Kp5DyxNy7WA5M3rPHLk8%2FzfcC%2Fnukmx2PtTkeoP2CAS9%2F0pP2jZb1sFPGq8QGv8dP55JjbbblQxg9HaySXhO4AXDI4tFgfvmEtNBuLfgEN%2FEv66OQjA1SyZR0XnbI4MlhOXGkCl51AQKDXhKM593ZzKaqxWdkRWKbQOUM4Ha%2FX2mtuuAp4%2BfbSGJfHy82Wd80nfR4NnZMYIVEJbDh%2FOIK0VuA9qGn60PMdaDoYFrvfD3WDulA7eKHmb1IhiKFTRB3j7%2FgAuvWEb0NbOL2jpPScBL3zDV8xE%2Fvpkmj43tE4Fh1oTcU6fcE6gsUrEtO9Mo%2F1WYnTC%2Bnk60PuuAWuwhxBmcLoLPHCgBoxbByWS%2ByB9HY4ykbUqFeZugpyHXiCRsojTioWXw5L7M9o8vSnDryl%2FD3%2BDaZp2c0LCWnQy6%2B4DRQGXou85vQgzUF6aJDkiZyH9H%2FxDiew0JWB8vX9aEAwOZlcRETdgrACRgiiHY%2Bfaljot3%2Fmdn7CReK7PfRAN82qHWcr9U6NyHZzgmsTiQgkwHX07UrlU%2BzftbSlgIhPu%2F%2BYSFfdWNIwjPu%2FxgY6sQFxUOygixf0qUsgG%2FoVgsW28C5CvqIZyDpjPSKJhur1%2BBEZTfeh7FuHjp6tNQHenSwpHhoXwkfsxw4BvOxv%2B3ofBVdTjcQRLA4pXbur3BVLK%2FVGkeDfwJqLBZAGws1RhaqQPVp1EFpm0n3qwn3SoKfRKGCIXopjlcwH0Ard%2FdpHuLMYOvSLKY5oBhl%2FK35lY2n6pQMWBiSvhUOEy6JlIg5pzKInsUfJ3kz84TanaiOhAKg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=31c175b7b373f040857568d325e342ffb0451b74a972a067d5a026bfa068fa59",
+      "file_size": 196845,
+      "type": "video/mp4",
+      "moderated": null
+    },
+    {
+      "id": 326979,
+      "file_name": "chrome-url.html",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/326/979/207337ef56354217286aa65fecde4552bed01d50/chrome-url.html?response-content-disposition=attachment%3B%20filename%3D%22chrome-url.html%22%3B%20filename%2A%3DUTF-8%27%27chrome-url.html&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWNAVQAE5%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T154159Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIDXG8q7VRdTP631MKmZ4fvttzAAv5lCyYMYNV784kGZjAiEAhv%2BV9Mg5xs9Q4zCmYFH6om2UWIbqTxOXrpZ%2B2%2FbDzXUqsgUIFxADGgwwMTM2MTkyNzQ4NDkiDIGZ8kKbAh%2F%2FPWaDsiqPBYhP8pm4XnRFxjp804kA9dz%2FChkMoeCRo09H5RRxUKWuL3Hht7UB8pviq0Ph1K%2FHTcmGwh93q4Ayukv4kY%2BcdKeSYjRmw7cMDjaogAMTIMitBxFdtPgjmRnaKyJaPF0A%2F6UzCpRMz8FumQa21icnzynw9cJSd6wSMqfRakvCMB%2Be5Z%2BkIjhcACm5f3POul28BVznGYgXSXTovo3lOSWBFyZX17ClfGQEYehe8I7VG8F35pVjCkxwqEzP144HMVnkdtpsIyAVOG7WPcwm0KOJIx%2BKhAfImQT8dkW2AAtqfv4kvgvcZEnUS2Kp5DyxNy7WA5M3rPHLk8%2FzfcC%2Fnukmx2PtTkeoP2CAS9%2F0pP2jZb1sFPGq8QGv8dP55JjbbblQxg9HaySXhO4AXDI4tFgfvmEtNBuLfgEN%2FEv66OQjA1SyZR0XnbI4MlhOXGkCl51AQKDXhKM593ZzKaqxWdkRWKbQOUM4Ha%2FX2mtuuAp4%2BfbSGJfHy82Wd80nfR4NnZMYIVEJbDh%2FOIK0VuA9qGn60PMdaDoYFrvfD3WDulA7eKHmb1IhiKFTRB3j7%2FgAuvWEb0NbOL2jpPScBL3zDV8xE%2Fvpkmj43tE4Fh1oTcU6fcE6gsUrEtO9Mo%2F1WYnTC%2Bnk60PuuAWuwhxBmcLoLPHCgBoxbByWS%2ByB9HY4ykbUqFeZugpyHXiCRsojTioWXw5L7M9o8vSnDryl%2FD3%2BDaZp2c0LCWnQy6%2B4DRQGXou85vQgzUF6aJDkiZyH9H%2FxDiew0JWB8vX9aEAwOZlcRETdgrACRgiiHY%2Bfaljot3%2Fmdn7CReK7PfRAN82qHWcr9U6NyHZzgmsTiQgkwHX07UrlU%2BzftbSlgIhPu%2F%2BYSFfdWNIwjPu%2FxgY6sQFxUOygixf0qUsgG%2FoVgsW28C5CvqIZyDpjPSKJhur1%2BBEZTfeh7FuHjp6tNQHenSwpHhoXwkfsxw4BvOxv%2B3ofBVdTjcQRLA4pXbur3BVLK%2FVGkeDfwJqLBZAGws1RhaqQPVp1EFpm0n3qwn3SoKfRKGCIXopjlcwH0Ard%2FdpHuLMYOvSLKY5oBhl%2FK35lY2n6pQMWBiSvhUOEy6JlIg5pzKInsUfJ3kz84TanaiOhAKg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=0dc5b01c45e58417e2cc8746090cc1ab3004d9982fb3b3d607529f02bc605583",
+      "file_size": 818,
+      "type": "text/html",
+      "moderated": null
+    },
+    {
+      "id": 326980,
+      "file_name": "file-url.html",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/326/980/a654f2f1fe7459680cb53a43b99d11f2572777bb/file-url.html?response-content-disposition=attachment%3B%20filename%3D%22file-url.html%22%3B%20filename%2A%3DUTF-8%27%27file-url.html&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWNAVQAE5%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T154159Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIDXG8q7VRdTP631MKmZ4fvttzAAv5lCyYMYNV784kGZjAiEAhv%2BV9Mg5xs9Q4zCmYFH6om2UWIbqTxOXrpZ%2B2%2FbDzXUqsgUIFxADGgwwMTM2MTkyNzQ4NDkiDIGZ8kKbAh%2F%2FPWaDsiqPBYhP8pm4XnRFxjp804kA9dz%2FChkMoeCRo09H5RRxUKWuL3Hht7UB8pviq0Ph1K%2FHTcmGwh93q4Ayukv4kY%2BcdKeSYjRmw7cMDjaogAMTIMitBxFdtPgjmRnaKyJaPF0A%2F6UzCpRMz8FumQa21icnzynw9cJSd6wSMqfRakvCMB%2Be5Z%2BkIjhcACm5f3POul28BVznGYgXSXTovo3lOSWBFyZX17ClfGQEYehe8I7VG8F35pVjCkxwqEzP144HMVnkdtpsIyAVOG7WPcwm0KOJIx%2BKhAfImQT8dkW2AAtqfv4kvgvcZEnUS2Kp5DyxNy7WA5M3rPHLk8%2FzfcC%2Fnukmx2PtTkeoP2CAS9%2F0pP2jZb1sFPGq8QGv8dP55JjbbblQxg9HaySXhO4AXDI4tFgfvmEtNBuLfgEN%2FEv66OQjA1SyZR0XnbI4MlhOXGkCl51AQKDXhKM593ZzKaqxWdkRWKbQOUM4Ha%2FX2mtuuAp4%2BfbSGJfHy82Wd80nfR4NnZMYIVEJbDh%2FOIK0VuA9qGn60PMdaDoYFrvfD3WDulA7eKHmb1IhiKFTRB3j7%2FgAuvWEb0NbOL2jpPScBL3zDV8xE%2Fvpkmj43tE4Fh1oTcU6fcE6gsUrEtO9Mo%2F1WYnTC%2Bnk60PuuAWuwhxBmcLoLPHCgBoxbByWS%2ByB9HY4ykbUqFeZugpyHXiCRsojTioWXw5L7M9o8vSnDryl%2FD3%2BDaZp2c0LCWnQy6%2B4DRQGXou85vQgzUF6aJDkiZyH9H%2FxDiew0JWB8vX9aEAwOZlcRETdgrACRgiiHY%2Bfaljot3%2Fmdn7CReK7PfRAN82qHWcr9U6NyHZzgmsTiQgkwHX07UrlU%2BzftbSlgIhPu%2F%2BYSFfdWNIwjPu%2FxgY6sQFxUOygixf0qUsgG%2FoVgsW28C5CvqIZyDpjPSKJhur1%2BBEZTfeh7FuHjp6tNQHenSwpHhoXwkfsxw4BvOxv%2B3ofBVdTjcQRLA4pXbur3BVLK%2FVGkeDfwJqLBZAGws1RhaqQPVp1EFpm0n3qwn3SoKfRKGCIXopjlcwH0Ard%2FdpHuLMYOvSLKY5oBhl%2FK35lY2n6pQMWBiSvhUOEy6JlIg5pzKInsUfJ3kz84TanaiOhAKg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=d30148abb0aac7d8d214e710e9e2971aaabb880b7de0e2f0063206bda55ac5cc",
+      "file_size": 830,
+      "type": "text/html",
+      "moderated": null
+    },
+    {
+      "id": 326981,
+      "file_name": "infinite-dos-requires-tab-being-pinned.html",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/326/981/7265e9edc05117fd492eba071f329ef33f802203/infinite-dos-requires-tab-being-pinned.html?response-content-disposition=attachment%3B%20filename%3D%22infinite-dos-requires-tab-being-pinned.html%22%3B%20filename%2A%3DUTF-8%27%27infinite-dos-requires-tab-being-pinned.html&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWNAVQAE5%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T154159Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIDXG8q7VRdTP631MKmZ4fvttzAAv5lCyYMYNV784kGZjAiEAhv%2BV9Mg5xs9Q4zCmYFH6om2UWIbqTxOXrpZ%2B2%2FbDzXUqsgUIFxADGgwwMTM2MTkyNzQ4NDkiDIGZ8kKbAh%2F%2FPWaDsiqPBYhP8pm4XnRFxjp804kA9dz%2FChkMoeCRo09H5RRxUKWuL3Hht7UB8pviq0Ph1K%2FHTcmGwh93q4Ayukv4kY%2BcdKeSYjRmw7cMDjaogAMTIMitBxFdtPgjmRnaKyJaPF0A%2F6UzCpRMz8FumQa21icnzynw9cJSd6wSMqfRakvCMB%2Be5Z%2BkIjhcACm5f3POul28BVznGYgXSXTovo3lOSWBFyZX17ClfGQEYehe8I7VG8F35pVjCkxwqEzP144HMVnkdtpsIyAVOG7WPcwm0KOJIx%2BKhAfImQT8dkW2AAtqfv4kvgvcZEnUS2Kp5DyxNy7WA5M3rPHLk8%2FzfcC%2Fnukmx2PtTkeoP2CAS9%2F0pP2jZb1sFPGq8QGv8dP55JjbbblQxg9HaySXhO4AXDI4tFgfvmEtNBuLfgEN%2FEv66OQjA1SyZR0XnbI4MlhOXGkCl51AQKDXhKM593ZzKaqxWdkRWKbQOUM4Ha%2FX2mtuuAp4%2BfbSGJfHy82Wd80nfR4NnZMYIVEJbDh%2FOIK0VuA9qGn60PMdaDoYFrvfD3WDulA7eKHmb1IhiKFTRB3j7%2FgAuvWEb0NbOL2jpPScBL3zDV8xE%2Fvpkmj43tE4Fh1oTcU6fcE6gsUrEtO9Mo%2F1WYnTC%2Bnk60PuuAWuwhxBmcLoLPHCgBoxbByWS%2ByB9HY4ykbUqFeZugpyHXiCRsojTioWXw5L7M9o8vSnDryl%2FD3%2BDaZp2c0LCWnQy6%2B4DRQGXou85vQgzUF6aJDkiZyH9H%2FxDiew0JWB8vX9aEAwOZlcRETdgrACRgiiHY%2Bfaljot3%2Fmdn7CReK7PfRAN82qHWcr9U6NyHZzgmsTiQgkwHX07UrlU%2BzftbSlgIhPu%2F%2BYSFfdWNIwjPu%2FxgY6sQFxUOygixf0qUsgG%2FoVgsW28C5CvqIZyDpjPSKJhur1%2BBEZTfeh7FuHjp6tNQHenSwpHhoXwkfsxw4BvOxv%2B3ofBVdTjcQRLA4pXbur3BVLK%2FVGkeDfwJqLBZAGws1RhaqQPVp1EFpm0n3qwn3SoKfRKGCIXopjlcwH0Ard%2FdpHuLMYOvSLKY5oBhl%2FK35lY2n6pQMWBiSvhUOEy6JlIg5pzKInsUfJ3kz84TanaiOhAKg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=0c1c2ca0cdd1f3465daa5e3fa402181fe07adf41f9b7e6a6a4add376139d4256",
+      "file_size": 664,
+      "type": "text/html",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2019-05-18T15:05:01.542Z",
+  "allow_singular_disclosure_after": -200277417.5499882,
+  "singular_disclosure_allowed": true,
+  "vote_count": 37,
+  "voters": [
+    "whybee",
+    "ali",
+    "metnew",
+    "savitar0x01",
+    "harrymg",
+    "theappsec",
+    "katsuragicsl",
+    "kunal94",
+    "neilx",
+    "khizer47",
+    "and 27 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 3577,
+    "asset_type": "OTHER",
+    "asset_identifier": "Browser Extensions",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
