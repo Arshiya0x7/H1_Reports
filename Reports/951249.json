@@ -1,0 +1,126 @@
+{
+  "id": 951249,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC85NTEyNDk=",
+  "url": "https://hackerone.com/reports/951249",
+  "title": "[freespace] Command Injection due to Lack of Sanitization",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2020-08-04T20:43:52.003Z",
+  "submitted_at": "2020-08-04T20:43:52.025Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "ansuj7",
+    "url": "/ansuj7",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 23949,
+    "url": "https://hackerone.com/nodejs-ecosystem",
+    "handle": "nodejs-ecosystem",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/023/949/3ea3b2ae039a8f955a4a8fe65d99fe85dc817398_original./235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/023/949/3ea3b2ae039a8f955a4a8fe65d99fe85dc817398_original./3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "disabled",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Node.js third-party modules",
+      "twitter_handle": "",
+      "website": "https://nodejs.org/en/security/",
+      "about": "This program was used to handle vulnerabilities in the Node.js ecosystem."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2020-10-14T15:50:41.478Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-10-14T15:50:41.403Z",
+  "team_member_agreed_on_going_public_at": "2020-10-13T14:31:01.027Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "I would like to report `Command Injection` in the `freespace` module.\nIt allows an attacker to inject and execute shell commands on Unix based systems.\n\n# Module\n\n**module name:** freespace\n**version:** 1.0.4\n**npm page:** `https://www.npmjs.com/package/freespace`\n\n## Module Description\n\nA library that tells you how much free disk space you have.  \n- Works on all platform.\n- No dependencies and no native libraries.\n\n## Module Stats\n\n[26] weekly downloads\n\n# Vulnerability\n\n## Vulnerability Description\n\nThe library offers a function that allows a developer to pass in a disk-label (Windows) or a mount-point (Linux) and returns space details about the same. However, due to lack of proper sanitization of the parameter to that function, injection of multiple commands using delimiters such as `;` and `&&` will cause the shell to interpret and execute each command between those characters.  \nThis code is vulnerable on the Unix platform and not on Windows. The Windows variant also directly uses the input without sanitization, however, uses only the first character of the input parameter, which prevents injection.\n\nThis is the vulnerable code in `index.js` of the library:\n```javascript\nexports.check = function(driveOrMount, callback) {\n    return new Promise(function(resolve, reject) {\n        let cb = function(err, stdout, stderr) { ... };\n        if (!driveOrMountRegex.test(driveOrMount)) {\n            let err = new Error(DRIVE_STRING_ERROR);\n            if (callback) callback(err);\n            return reject(err);\n        }\n        if (process.platform === 'win32') {\n            driveOrMount = driveOrMount.charAt(0).toLowerCase();\n            cp.exec(`fsutil volume diskfree ${driveOrMount}:`, {}, cb);\n        } else {\n            cp.exec(`df -P ${driveOrMount} | awk 'NR==2 {print $4}'`, {}, cb);  // vulnerability - 'driveOrMount' is being used directly without sanitization\n        }\n    }).then(function(bytes) { return bytes })\n        .catch(function(err) { return Promise.reject(err) });\n};\n```\n\n\n## Steps To Reproduce:\n\n- Create test directory: `mkdir freespace-poc` and `cd` into it\n- Install the library with NPM:  `npm install freespace`\n- Create an output directory, I am using `/tmp` - which is initially empty\n- Create a file `test.js` containing the following:\n\n```javascript\nconst freespace = require('freespace');\n\nfreespace.check('/ ; touch /tmp/semicolon_file')\n        .then(bytes => {\n                console.log(bytes);\n        });\n\nfreespace.check('/ && touch /tmp/ampersand_file')\n        .then(bytes => {\n                console.log(bytes);\n        });\n```\n- Run the code: `node test.js`\n- List the output directory - in my case, `ls /tmp`\n- You will see that the files `semicolon_file` and `ampersand_file` have been created, indicating that the commands were injected and executed\n\n{F936538}\n\n## Patch\n\nAll parameters should be sanitized before being sent as shell command arguments. The developer has implemented a REGEX check before shell command calls in the line `if (!driveOrMountRegex.test(driveOrMount))` which does not cover these special cases. This REGEX can be used to whitelist/blacklist characters and either produce an error or strip them out and continue execution. \n\n## Supporting Material/References:\n\n- Operating System Version: Ubuntu 18.04.4 LTS \n- NodeJS Version: v14.7.0\n- NPM Version: 6.14.7\n\n# Wrap up\n\n- I contacted the maintainer to let them know: N \n- I opened an issue in the related repository: N\n\nThank you for your time.\n\n## Impact\n\nCommand Injection can lead to information gathering, system enumeration and further execution of scripts/binaries.",
+  "weakness": {
+    "id": 58,
+    "name": "Command Injection - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 936538,
+      "file_name": "freespace-poc.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/TZLSRrC4fm8iUq1Ya2UeVTVc?response-content-disposition=attachment%3B%20filename%3D%22freespace-poc.PNG%22%3B%20filename%2A%3DUTF-8%27%27freespace-poc.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ23RYEIKZ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T084715Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCIBf87yvrERE9sVHjEGhBeC7YR3ZoY9EhWea1Fmbm1QgIgQ6WkuP2W625aJtctd%2F1O6QW07VTZ6wS858VFr1DIA8YqugUI%2Fv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDHvzBJgrmcJDpbjggiqOBVuwAMLcZw6PR6nUENsVGzElSIillsP5mhgqMlsYajxi6p3j1Af0DTJ6PQEZQbY%2By5GQB%2FSdVKJ6bm9PSC3V1vJ3GNwJQM7FIE7SugrwOe%2B4gmAeClQhEy8jTc0jWeRmkST%2BQB%2FwqDiGajf%2BAZufjV7cGAz9OUvwChNOVRFPel7VnnoPQ9JV6QGcfrzZ3r7L%2Bu8rPwsv4lZkYdpxzGXnRZxlv7rV6cUmJyadedHGd5qK8x9RImqAGhSZwVP%2FxmWIMLrTs2410tuQOvFK8xHMuB%2BvTIFM4ET8vBuFpspJ1xrLvN5Mmrg72f6Qc3umMON1Pivd4DNchsT7alD7LgPa8wm0QDAYgOlkONZvJhr8O9XZRCROrJtmBFHexDSkxmnjGRGFQLeFVgqBvvNS7pQg35K6dDbm03aYcFS4uRuUUTN4uZr6k1ly63Ld0bSo8aVabC1DxNHuJalVLdTqGSQxIzeo8TEmDAQM1udqb3cI4pZ5QU9TrDkkLMSqT9anZ1Mhaf%2FDRHtuFud1v%2FZiT2oGqQ%2F0vBEpuByadqzUKBhWBGDma7XVsYEWrvXFv%2F7NHKc8z86FuqK6Y1MioxA7x8goP0ocwPY25%2FlG8QU5ndNWdFcGKFvGtroScF%2FqwyoaiHZYeN%2F1SweBHwU%2FSANon3LaL9RPls3e3dbW2M6qFqv3MB0%2BQWT0jJqeUHfu5rx6p9dYF%2BWPRDyLjHZywNLuFQOg1U1%2BkNEcySnCCGLeQy5ieqnMbNN5hhbWok14SUhAnEKuH7xLlY92tuBXxskeM5I1bUj6UFMQ2sIDV6mMReaA%2B21kbkeUgph5W7bCdi3E3pOeEPpD7Umt0hGCm9gryX7uqDwQIw2fZyFTqO0jgtfcCjC6%2B73GBjqxAahgDQgDym%2FrqCElh8PAK%2F8Q7kVKFzf27058Im31%2FPsriQrokDrx539UBgz1AF1V2ehw%2BDBwD6iyqx1ImQDupXBmntWfY%2B%2BP8VtqucjSLn4Xj%2B2ziaNpSjy8agYfeymNbku0RjL3%2F8oklNQp1cf8a%2F337ESrZ1MIsQLgWTqoqTsA1THaQqgYuxNc20SJoC1rI0NItsqaDpkoUsj4ZTERnNbMZfPw%2FAHegSwR2C8zq8AeCg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=28a5cb0f3a39ac0183054b2cb361de77f3a32137286bce9deee29d2f8f0f5af3",
+      "file_size": 21715,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2020-11-12T14:31:01.173Z",
+  "allow_singular_disclosure_after": -153252974.65412742,
+  "singular_disclosure_allowed": true,
+  "vote_count": 6,
+  "voters": [
+    "rook1337",
+    "0xwise",
+    "exception",
+    "agmed0",
+    "makentoch",
+    "muemmelmoehre"
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 2986,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "Other module",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
