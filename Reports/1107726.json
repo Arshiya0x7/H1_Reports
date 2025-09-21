@@ -1,0 +1,153 @@
+{
+  "id": 1107726,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMTA3NzI2",
+  "url": "https://hackerone.com/reports/1107726",
+  "title": "Stored XSS on apps.shopify.com",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2021-02-20T00:25:42.461Z",
+  "submitted_at": "2021-02-20T00:25:42.552Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "luc1d",
+    "url": "/luc1d",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NjgyMjAwNiwicHVyIjoiYmxvYl9pZCJ9fQ==--a53807c05d6be1a50e208f397e2bfb44ba653034/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--a4d91faed3dff6024dfc1a7b7f8ccc6b45e38396/Screenshot%202025-02-01%20at%202.13.22%20AM.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 1382,
+    "url": "https://hackerone.com/shopify",
+    "handle": "shopify",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Shopify",
+      "twitter_handle": "",
+      "website": "https://www.shopify.com",
+      "about": "Shopify is a multi-channel commerce platform that helps people sell online, in-store, and everywhere in between."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2021-04-08T19:23:55.717Z",
+  "bug_reporter_agreed_on_going_public_at": "2021-04-08T19:23:55.679Z",
+  "team_member_agreed_on_going_public_at": "2021-04-08T18:35:56.333Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Steps to reProduce:\n\n1> Write payload `luc1d\"><img/src=\"x\"onerror=alert(document.domain)>@wearehackerone.com` as `Store contact email` in General Settings page`(*.myshopify.com/admin/settings/general)`\n\n{F1202181}\n\n-- Wait here around 60 mins (maybe more idk, it was 60 mins for me) for the change to reflect --\n(You can confirm the change on here `https://apps.shopify.com/shops/<shopId>`)\n2> Visit any app page like `https://apps.shopify.com/local-delivery`\n3> Click `Get support` link on sidebar\n{F1202116}\n\n4> XSS will be triggered\n{F1202211}\n\nPoC Video,\n{F1202215}\n\n## Impact\n\nStored XSS",
+  "weakness": {
+    "id": 62,
+    "name": "Cross-site Scripting (XSS) - Stored"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1202116,
+      "file_name": "Screen_Shot_2021-02-19_at_4.58.44_PM.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/r7w14lbzsgwicwhw0dgcxm4oiuom?response-content-disposition=attachment%3B%20filename%3D%22Screen_Shot_2021-02-19_at_4.58.44_PM.png%22%3B%20filename%2A%3DUTF-8%27%27Screen_Shot_2021-02-19_at_4.58.44_PM.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ3OUXCARH%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T031741Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCkSQ3WIuFn1YhvtYJREJ%2BwqY%2FhIjcZv10ouj3spuQuOAIgX7ChTFvydUFb9MKjy%2F0DoU%2BivmjiWkXyiIyy8VRQ9EoqugUI%2Bv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDMMfqfmWA5NKBmscrSqOBZLDbYYkQpHt4fKWdZhd70Ko4L1N7u31wJUOsbkuBeVabelgvtwbXKXuXRCti5dfeHcSYCVqSLl2ZF212GIQxey%2BsmVwpzXwzsTrgILidaBq7HpdJ%2BC8LAoZXl3GdmBZNRggHmauqLjaLgJDYQ3j7%2FINR3t23Xu6n3hUig0ZVA1Xk6X7M5rFXZ%2FjMSIKUctCoxfDSIAY2DdaCcskbILS52ys%2BRXoU014cPnDVhFRbv88J4eS8PZ50i0ByTWLh67taYZA0MRs6%2BnoajsLjlBJdoX9ZEM7%2F3R2AA0m53PIMRTt0flc14UTxjJD6IEmVn1Q4097iGpYwVTrU3Oyx5AwZJl6Y1U7ApZeFEtHU1FbONAsvCAgghMpfpDHDRsNaAAqD3zR17Z0Hqitrx5xDppveKsNoLEvJtmi9Ya758OI6n8NO9IWhQdVhbuBpC98uBKHcjDSqToL%2FYYQzBZ1q%2B%2FAzOu1JoDcZDJBvqUdT5m6cS6ZDkioCR%2BHO8qXgGkeb7E49HkPca14OMGXSM4G6b%2FBrWiEdc0oQGlrMueFQ30jvFbZn%2BTnB7eJRsFQAzD9kLL9Tlk3RA49IlODNpvyi5qos9%2B7CPnAQ7D%2FGdR7fRi3UsEsrQX5xdDV1srlpUQE%2FiAjpddOfFp4slFvRJbg8DgrRr%2FuberMJmxuu%2BVBwfiNLBGF8G9Onih9oCvKv2n9FWWkK%2F8g9d3qvwtAwYXnZlSyJO967CvTPh1tAGCCUdTb5v6KUu7g%2F%2FEr1tQDISe%2BC53zaK0OyxDkW4S%2F7KlT5zrVIpvAy74TiQOW2%2Bp%2FbmN2yP095s2vXgTo84ojiQSqdlp1d9pHqW4lE3eGq9B7%2BfCtAT8CskaPHPXQsHqDKnTxxjCOnr3GBjqxASEm18uA67MUgchOJ4WI0sm8gCoEDw3EJSAqBrjmrX6P2pT1ZqzHublqIcyIrOiIUN0zqAQxP0KRXA7gueZKb2QYvMeHzD%2FvqHkkAcj2v7%2FhD%2FS5WMSvIjQ4bVndn1VDvZxsXakrgDbgS4CV8fVRCtkEVgI8u6XheWVlIsSnVujFSywvZ1pVsuMjZV2PRu%2F%2FStb585cG%2BkhgZjDl9qYr0i97ZdGOnc84Km31BaUcq44%2BNg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=8655c8e963d6ba504c8865c12fbd8d664733f49d430865cd8cae37db4f4df270",
+      "file_size": 248780,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1202181,
+      "file_name": "Screen_Shot_2021-02-19_at_6.24.27_PM.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/k0d3eh20jo0g0wv7eeoy1hyct6lz?response-content-disposition=attachment%3B%20filename%3D%22Screen_Shot_2021-02-19_at_6.24.27_PM.png%22%3B%20filename%2A%3DUTF-8%27%27Screen_Shot_2021-02-19_at_6.24.27_PM.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ3OUXCARH%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T031741Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCkSQ3WIuFn1YhvtYJREJ%2BwqY%2FhIjcZv10ouj3spuQuOAIgX7ChTFvydUFb9MKjy%2F0DoU%2BivmjiWkXyiIyy8VRQ9EoqugUI%2Bv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDMMfqfmWA5NKBmscrSqOBZLDbYYkQpHt4fKWdZhd70Ko4L1N7u31wJUOsbkuBeVabelgvtwbXKXuXRCti5dfeHcSYCVqSLl2ZF212GIQxey%2BsmVwpzXwzsTrgILidaBq7HpdJ%2BC8LAoZXl3GdmBZNRggHmauqLjaLgJDYQ3j7%2FINR3t23Xu6n3hUig0ZVA1Xk6X7M5rFXZ%2FjMSIKUctCoxfDSIAY2DdaCcskbILS52ys%2BRXoU014cPnDVhFRbv88J4eS8PZ50i0ByTWLh67taYZA0MRs6%2BnoajsLjlBJdoX9ZEM7%2F3R2AA0m53PIMRTt0flc14UTxjJD6IEmVn1Q4097iGpYwVTrU3Oyx5AwZJl6Y1U7ApZeFEtHU1FbONAsvCAgghMpfpDHDRsNaAAqD3zR17Z0Hqitrx5xDppveKsNoLEvJtmi9Ya758OI6n8NO9IWhQdVhbuBpC98uBKHcjDSqToL%2FYYQzBZ1q%2B%2FAzOu1JoDcZDJBvqUdT5m6cS6ZDkioCR%2BHO8qXgGkeb7E49HkPca14OMGXSM4G6b%2FBrWiEdc0oQGlrMueFQ30jvFbZn%2BTnB7eJRsFQAzD9kLL9Tlk3RA49IlODNpvyi5qos9%2B7CPnAQ7D%2FGdR7fRi3UsEsrQX5xdDV1srlpUQE%2FiAjpddOfFp4slFvRJbg8DgrRr%2FuberMJmxuu%2BVBwfiNLBGF8G9Onih9oCvKv2n9FWWkK%2F8g9d3qvwtAwYXnZlSyJO967CvTPh1tAGCCUdTb5v6KUu7g%2F%2FEr1tQDISe%2BC53zaK0OyxDkW4S%2F7KlT5zrVIpvAy74TiQOW2%2Bp%2FbmN2yP095s2vXgTo84ojiQSqdlp1d9pHqW4lE3eGq9B7%2BfCtAT8CskaPHPXQsHqDKnTxxjCOnr3GBjqxASEm18uA67MUgchOJ4WI0sm8gCoEDw3EJSAqBrjmrX6P2pT1ZqzHublqIcyIrOiIUN0zqAQxP0KRXA7gueZKb2QYvMeHzD%2FvqHkkAcj2v7%2FhD%2FS5WMSvIjQ4bVndn1VDvZxsXakrgDbgS4CV8fVRCtkEVgI8u6XheWVlIsSnVujFSywvZ1pVsuMjZV2PRu%2F%2FStb585cG%2BkhgZjDl9qYr0i97ZdGOnc84Km31BaUcq44%2BNg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=78adb29b8140659afce0d283100ed149ced307c996bf5e9207eea90b997d2db5",
+      "file_size": 223760,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1202211,
+      "file_name": "Screen_Shot_2021-02-19_at_7.22.53_PM.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/xygxnzfeoisdpzeo3uh5a84dd7q7?response-content-disposition=attachment%3B%20filename%3D%22Screen_Shot_2021-02-19_at_7.22.53_PM.png%22%3B%20filename%2A%3DUTF-8%27%27Screen_Shot_2021-02-19_at_7.22.53_PM.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ3OUXCARH%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T031741Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCkSQ3WIuFn1YhvtYJREJ%2BwqY%2FhIjcZv10ouj3spuQuOAIgX7ChTFvydUFb9MKjy%2F0DoU%2BivmjiWkXyiIyy8VRQ9EoqugUI%2Bv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDMMfqfmWA5NKBmscrSqOBZLDbYYkQpHt4fKWdZhd70Ko4L1N7u31wJUOsbkuBeVabelgvtwbXKXuXRCti5dfeHcSYCVqSLl2ZF212GIQxey%2BsmVwpzXwzsTrgILidaBq7HpdJ%2BC8LAoZXl3GdmBZNRggHmauqLjaLgJDYQ3j7%2FINR3t23Xu6n3hUig0ZVA1Xk6X7M5rFXZ%2FjMSIKUctCoxfDSIAY2DdaCcskbILS52ys%2BRXoU014cPnDVhFRbv88J4eS8PZ50i0ByTWLh67taYZA0MRs6%2BnoajsLjlBJdoX9ZEM7%2F3R2AA0m53PIMRTt0flc14UTxjJD6IEmVn1Q4097iGpYwVTrU3Oyx5AwZJl6Y1U7ApZeFEtHU1FbONAsvCAgghMpfpDHDRsNaAAqD3zR17Z0Hqitrx5xDppveKsNoLEvJtmi9Ya758OI6n8NO9IWhQdVhbuBpC98uBKHcjDSqToL%2FYYQzBZ1q%2B%2FAzOu1JoDcZDJBvqUdT5m6cS6ZDkioCR%2BHO8qXgGkeb7E49HkPca14OMGXSM4G6b%2FBrWiEdc0oQGlrMueFQ30jvFbZn%2BTnB7eJRsFQAzD9kLL9Tlk3RA49IlODNpvyi5qos9%2B7CPnAQ7D%2FGdR7fRi3UsEsrQX5xdDV1srlpUQE%2FiAjpddOfFp4slFvRJbg8DgrRr%2FuberMJmxuu%2BVBwfiNLBGF8G9Onih9oCvKv2n9FWWkK%2F8g9d3qvwtAwYXnZlSyJO967CvTPh1tAGCCUdTb5v6KUu7g%2F%2FEr1tQDISe%2BC53zaK0OyxDkW4S%2F7KlT5zrVIpvAy74TiQOW2%2Bp%2FbmN2yP095s2vXgTo84ojiQSqdlp1d9pHqW4lE3eGq9B7%2BfCtAT8CskaPHPXQsHqDKnTxxjCOnr3GBjqxASEm18uA67MUgchOJ4WI0sm8gCoEDw3EJSAqBrjmrX6P2pT1ZqzHublqIcyIrOiIUN0zqAQxP0KRXA7gueZKb2QYvMeHzD%2FvqHkkAcj2v7%2FhD%2FS5WMSvIjQ4bVndn1VDvZxsXakrgDbgS4CV8fVRCtkEVgI8u6XheWVlIsSnVujFSywvZ1pVsuMjZV2PRu%2F%2FStb585cG%2BkhgZjDl9qYr0i97ZdGOnc84Km31BaUcq44%2BNg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=48ecfc4aec4b332f84dacd7635ac5235ddf0f58ff72bba96a3dc24bd7a2e20b4",
+      "file_size": 489513,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1202215,
+      "file_name": "shopify_apps_xss.mov",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/shdb1archhnqthfe3ghqy50btn64?response-content-disposition=attachment%3B%20filename%3D%22shopify_apps_xss.mov%22%3B%20filename%2A%3DUTF-8%27%27shopify_apps_xss.mov&response-content-type=video%2Fquicktime&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ3OUXCARH%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T031741Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCkSQ3WIuFn1YhvtYJREJ%2BwqY%2FhIjcZv10ouj3spuQuOAIgX7ChTFvydUFb9MKjy%2F0DoU%2BivmjiWkXyiIyy8VRQ9EoqugUI%2Bv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDMMfqfmWA5NKBmscrSqOBZLDbYYkQpHt4fKWdZhd70Ko4L1N7u31wJUOsbkuBeVabelgvtwbXKXuXRCti5dfeHcSYCVqSLl2ZF212GIQxey%2BsmVwpzXwzsTrgILidaBq7HpdJ%2BC8LAoZXl3GdmBZNRggHmauqLjaLgJDYQ3j7%2FINR3t23Xu6n3hUig0ZVA1Xk6X7M5rFXZ%2FjMSIKUctCoxfDSIAY2DdaCcskbILS52ys%2BRXoU014cPnDVhFRbv88J4eS8PZ50i0ByTWLh67taYZA0MRs6%2BnoajsLjlBJdoX9ZEM7%2F3R2AA0m53PIMRTt0flc14UTxjJD6IEmVn1Q4097iGpYwVTrU3Oyx5AwZJl6Y1U7ApZeFEtHU1FbONAsvCAgghMpfpDHDRsNaAAqD3zR17Z0Hqitrx5xDppveKsNoLEvJtmi9Ya758OI6n8NO9IWhQdVhbuBpC98uBKHcjDSqToL%2FYYQzBZ1q%2B%2FAzOu1JoDcZDJBvqUdT5m6cS6ZDkioCR%2BHO8qXgGkeb7E49HkPca14OMGXSM4G6b%2FBrWiEdc0oQGlrMueFQ30jvFbZn%2BTnB7eJRsFQAzD9kLL9Tlk3RA49IlODNpvyi5qos9%2B7CPnAQ7D%2FGdR7fRi3UsEsrQX5xdDV1srlpUQE%2FiAjpddOfFp4slFvRJbg8DgrRr%2FuberMJmxuu%2BVBwfiNLBGF8G9Onih9oCvKv2n9FWWkK%2F8g9d3qvwtAwYXnZlSyJO967CvTPh1tAGCCUdTb5v6KUu7g%2F%2FEr1tQDISe%2BC53zaK0OyxDkW4S%2F7KlT5zrVIpvAy74TiQOW2%2Bp%2FbmN2yP095s2vXgTo84ojiQSqdlp1d9pHqW4lE3eGq9B7%2BfCtAT8CskaPHPXQsHqDKnTxxjCOnr3GBjqxASEm18uA67MUgchOJ4WI0sm8gCoEDw3EJSAqBrjmrX6P2pT1ZqzHublqIcyIrOiIUN0zqAQxP0KRXA7gueZKb2QYvMeHzD%2FvqHkkAcj2v7%2FhD%2FS5WMSvIjQ4bVndn1VDvZxsXakrgDbgS4CV8fVRCtkEVgI8u6XheWVlIsSnVujFSywvZ1pVsuMjZV2PRu%2F%2FStb585cG%2BkhgZjDl9qYr0i97ZdGOnc84Km31BaUcq44%2BNg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=f73688760d6d378aadb63b44fb25bec0a9905e9ac974f7c4c83a90a1fb3552bd",
+      "file_size": 19814699,
+      "type": "video/quicktime",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 26,
+  "voters": [
+    "taha",
+    "drsniper",
+    "battle_angel",
+    "shreyaschavhan",
+    "ali",
+    "th4nu_0x0",
+    "akashhamal0x01",
+    "h4x0r_dz",
+    "f_m",
+    "isira_adithya",
+    "and 16 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 10202,
+    "asset_type": "WILDCARD",
+    "asset_identifier": "*.shopify.com",
+    "max_severity": "medium"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
