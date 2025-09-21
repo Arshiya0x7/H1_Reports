@@ -1,0 +1,142 @@
+{
+  "id": 327088,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMjcwODg=",
+  "url": "https://hackerone.com/reports/327088",
+  "title": "Extra program metrics disclosed via /PROGRAM_NAME json response",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2018-03-18T16:28:00.128Z",
+  "submitted_at": "2018-03-18T16:28:00.128Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "yaworsk",
+    "url": "/yaworsk",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/046/435/8321e52445321287eea5b5b3f4c9f6ea69e92bb5_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13,
+    "url": "https://hackerone.com/security",
+    "handle": "security",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/013/fa942b9b1cbf4faf37482bf68458e1195aab9c02_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/013/fa942b9b1cbf4faf37482bf68458e1195aab9c02_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "HackerOne",
+      "twitter_handle": "Hacker0x01",
+      "website": "https://hackerone.com",
+      "about": "Vulnerability disclosure should be safe, transparent, and rewarding."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2018-03-28T18:05:03.095Z",
+  "bug_reporter_agreed_on_going_public_at": "2018-03-28T18:02:25.912Z",
+  "team_member_agreed_on_going_public_at": "2018-03-28T18:05:02.939Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "**Summary:**\nThe response to www.hackerone.com/PROGRAM.json includes `sla_missed_count` `sla_failed_count` and `researcher_count`. \n\n**Description:**\nViewing the response from a program's json endpoint includes the values for `sla_missed_count`, `sla_failed_count` and `researcher_count`.\n\nWith regards to the SLA metrics, these are not included in the UI on the policy page and hovering over a program indicator just reveals a summary of the information, such as >=1 report has failed the SLA. There is no mention of these values being disclosed in the program settings pages and according to the SLA FAQ docs, only a `summarized version of a program’s response efficiency metric performance [will be displayed] on their hacker facing security page` https://support.hackerone.com/hc/en-us/articles/115005927583-Response-SLAs-on-Security-Pages\n\nWith regards to the researcher count, I'm including this because the information isn't disclosed in the UI when you have a pending invite to a program and I'm not sure why that might be. Nonetheless, viewing the same JSON response includes the `researcher_count`\n\n### Steps To Reproduce\n\n1. Log in\n2. Visit any program and have Burp capture the response\n3. Confirm the bottom of the JSON response includes the SLA information\n\n### Supporting Material/References (Screenshots)\n\n{F273408}\n\n## Impact\n\nThe program settings page nor documentation indicates that SLA misses/fails will be disclosed. This information should be considered sensitive in nature and programs should opt into disclosing it if this is intentional since it reveals a minimum number of security vulnerabilities a program may be addressing (I say may because the SLA violation could be response / triage).\n\nThe researcher count could be considered sensitive in the context of a private invite, revealing how many vulnerabilities have been found by what number of people before having actually accepted an invitation. I recognize this is a stretch but also assume there is a reason this number isn't disclosed before accepting a private invitation.",
+  "weakness": {
+    "id": 18,
+    "name": "Information Disclosure"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 273408,
+      "file_name": "sla_metrics.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/273/408/ac22760930aa5bce842209d65fd0f0c29c146c55/sla_metrics.png?response-content-disposition=attachment%3B%20filename%3D%22sla_metrics.png%22%3B%20filename%2A%3DUTF-8%27%27sla_metrics.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQX64GUFQ3%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T183752Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCM9doRXzYsTjzqpu4fpGC15lhKQyDYolY9SO%2F8j2ACPwIgI9PsMm3ZJycpcs1Hg2Toek9qtjvYqapzpR2Nxt1eXVMqsQUIGhADGgwwMTM2MTkyNzQ4NDkiDBZb5U3216C7k8aD7yqOBeoKtN%2FQM7LvZgrR6JAT98pVaZNMNBP9Op2x4kLkqXZUvklTwPCOP%2BUKxl8ShDILEY%2BN4YgawRh4Gb2Aipfi%2BKOoggTNY68T1hTI1WVFhUTeXaDdJcScxF4BOLmaPfuWeov9rsn%2FM7jsK4j0S3KkYvjuoM8YBh5PQTKS99JUJiObvsYb148eitRF1eBwGP7erZV%2F0L9%2BtSws5YLXFME%2FdRyHYTf7l259h8zADaT0LEKQ0ZwfBRRu%2B3HYvuNzyXVc1Ws0laQ1MuWau3vvGxOVgd%2Bly9L%2FUE0Q%2FinpwSCTqTMI%2BKX3JR3goQ4vju8kqdZUitdzHMZ078huACJCuXv%2FPWiT5OIQ2TteF%2B26hkHZyGynli%2B9NTdiZVfAxodTm3kkhO%2FhoOt5MO4iQTRxcz6usgQNEWPpLkAeUxD29BqdG8I78TuqFqE7lV3g%2FyR%2FPrn6FjHoctG%2B67OHBvO1OhC4nkxy2pKNXWnpBfeGH%2FWSo6ldxKs8YgbP4kH1%2B4raRRqS7lGuuasLBbFP1Q0SgNFrS%2FTC8Zxykbm72%2BsyB1B1uMxiqZ4yQTVOvkrSFzXUNMUPF6MVFxVjx8lFOy1tWd5PIV1OsodR%2FY7PA2uBuzAiU44ByY7ONVhCsrA8mUDX1D%2B5J3ka3rmShJKWdRgBERh2s33NKQ9GSF5q3365DFKu7FbY1%2FW3fI2PbrCd5xOxbp%2FWYY6jIzvRBJKaCfS2U839rKeDt9OjllgDSSLq7%2Fxy5%2FJHGZ4hPV5n7qZ1ZOzPH%2FSm3dISrbb9Ws%2Bov6WNGYu4w2XQHXqnNKrwebbYp4aIiULWCdU7PNEIhsY1kRTHykdGFYq4soSGP6e3eCcxds%2BMcfVsnnJMBOFyeN7pG1TLxTCP0cDGBjqxAYPctFWf03h5uKrEWC%2FIZPRsmCjClE%2BSXcGCEm6nV1wGqJPvbHffTvfHHAlho%2FqzXzIv1ZzsLW4h9sT52Eo%2B9amYEEVrJO%2BzJqYBh08gW7TScGPtZtxb8oXb5jdy9XIzFVeHvWJY8wx2VJogvEjcXaCAFaYTPk4F61xY0mVJarXPts6hnnHId6d8mDNIjpUm%2BZdtp5ic5G6%2FJ9RIyHOTRqWaOGqTOzHvUdFfuOuZoZPTtw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=c407c16d300a1e27f5b6c210d6c50eb88ea344217f520884aeec405495cd6a4f",
+      "file_size": 108373,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2018-04-27T18:02:26.126Z",
+  "allow_singular_disclosure_after": -233627726.16201302,
+  "singular_disclosure_allowed": true,
+  "vote_count": 51,
+  "voters": [
+    "jokebookservice1",
+    "jensec",
+    "smsecurity",
+    "sp1d3rs",
+    "ramsexy",
+    "muon4",
+    "metawolf",
+    "w2w",
+    "flashdisk",
+    "savitar0x01",
+    "and 41 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 5.0,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "low",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "low",
+      "integrity": "none",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 3,
+    "asset_type": "URL",
+    "asset_identifier": "hackerone.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
