@@ -1,0 +1,180 @@
+{
+  "id": 859962,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC84NTk5NjI=",
+  "url": "https://hackerone.com/reports/859962",
+  "title": "Bypass apiserver proxy filter",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2020-04-27T00:04:50.125Z",
+  "submitted_at": "2020-04-27T00:04:50.125Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "javierprovecho",
+    "url": "/javierprovecho",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6OTE3OTE2LCJwdXIiOiJibG9iX2lkIn19--617f8bb1416f15f82fab200b3e6dcd8cf4c74372/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--2de8067d228529d65848a4eeed0bed0bb2531bc3/3F4ZK7_F_400x400.jpg"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 39386,
+    "url": "https://hackerone.com/kubernetes",
+    "handle": "kubernetes",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/039/386/486f4380e09776d05a912ca9f46be23f72fe8197_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/039/386/486f4380e09776d05a912ca9f46be23f72fe8197_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Kubernetes",
+      "twitter_handle": "kubernetesio",
+      "website": "https://kubernetes.io/",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2020-8562"
+  ],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2021-05-27T19:11:03.856Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2021-04-27T19:11:00.241Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Report Submission Form\n\n## Summary:\n\nTL,DR: Time-of-check (apiserver proxy filter) Time-of-use (apiserver proxy request) Race Condition.\n\nWhen the apiserver is proxying a request to a node though one of its addresses, it performs a filter validation. If the address type is a DNS record (Hostname, ExternalDNS, InternalDNS), the apiserver performs two DNS queries, one for filter validation, another for proxying the request. If the attacker sets the hostname to a custom DNS server, that is able return different values with zero TTL, it is possible to bypass that filter. \n\n## Kubernetes Version:\n1.18.0\n\n## Steps To Reproduce:\n\n### Preparation\n\n  1. Create a server with port UDP/53 (DNS) exposed.\n  2. Delegate a subdomain (e.g. fake.example.com) to the IP address of the server as a NS record.\n  3. Copy, build and run the custom DNS server (source code attached, use `go mod init` and `go mod tidy`).\n  4. Test that it successfully resolves any subdomain of the delegated zone (e.g. toctou.fake.example.com).\n\n### Execution\n\n  1. Create a KIND cluster (manifest attached, defaults to v1.17).\n  2. Create a Node (manifest attached, edit to change domain).\n  3. Start `kubectl proxy`.\n  4. Execute `curl localhost:8001/api/v1/nodes/toctou:80/proxy/`.\n\n## Supporting Material/References:\n\n  * `toctou-cluster.yml`, a KIND cluster manifest\n  * `toctou-node.yml`, a Node with a custom address.\n  * `toctou-dns-server.go`, a custom DNS server that returns different results to consecutive queries.\n\n## Impact\n\nhttps://github.com/kubernetes/kubernetes/pull/71980 was merged to mitigate dangerous proxying through the apiserver. An attacker with access to create nodes and send requests to them through apiserver proxy, could access cloud metadata endpoints or localhost services. This is specially important on as a service providers like https://github.com/oneinfra/oneinfra but could affect any vendor.",
+  "weakness": {
+    "id": 105,
+    "name": "Time-of-check Time-of-use (TOCTOU) Race Condition"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 804810,
+      "file_name": "toctou-dns-server.go",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/zycHNRadQBoFoPoNhjvs6GrB?response-content-disposition=attachment%3B%20filename%3D%22toctou-dns-server.go%22%3B%20filename%2A%3DUTF-8%27%27toctou-dns-server.go&response-content-type=text%2Fx-go&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQVNBPDR7O%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T024609Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIDSr2j0ANL%2FfAcmIbuIFEIi9OJ%2FVFZT8wrecZEVdmYHEAiEAgP3zlhzHVDlq%2BCJzOWJ3UUwbsLBCc%2FPD%2Ba0XriD4giYquwUI%2Bv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDMLk2GWuCcI%2BMVYOXSqPBd9luZyoHF9b%2BDdxp%2FY%2BFcX9%2Fc4eX8y870FeL1mI5z6xjbVHQwZad%2Bylag09vnTVGjL5XVWRtK196nvD5fcSaNU5%2B%2BSTqRBpb7DH%2Bda1FamYaWZ7x68jxRzoKwomxLPZcx7FzFrmt3JfiAO7%2BC6Bu4ktEJxsC8X5ZYCXLK9pbjCw3%2BjmPJ4x6L9YwNBcz3jWAB9ovqT4faEZKFeGree2ccVladldjw%2FwOEYS3mDD0yFI%2BZ8PlR9RxiMTbQW7LX7yi5I0r8sduHZl9INKIIiuBk1yyLeMtXXrnGZtEAdtcMlB2%2BiaP0PuUjKTktZywnpycqWd9748l61feLRE3xaj0BbSHouwQEvs5Tu3w3mwXuUDUP8Zbf2bkiCOKA7NwFAIKf2QguxHLWTnMLgl41tp1YDqxrkJ9EXcva212Slyrb7S2722tf92zgVj8iXtVAGD0fPo9ouf3iDz9Ck20pdK1J%2BsIdGifZwUPEBAlCIkKL0M1Eh3q2mHvnqPlLxKrFqiyGd2IlAOiZZq5tzQ50Y4n96Bf%2BmvRtPenDf0LlngGY3iH0liD0iQKLN9bW5GIg2B11Iy29hTboWNAFONqboYqWFvBqT8O9Lb7%2FcVy%2FheIZf0JJ6swTFEYqo0qLXFpqpX639a2FH9i9i3%2BaW1LWoOhIpsANTLrkud8OiiYaTywDVLZvKS32OX3jDm4n%2FjWaPGP6H767lCoKDmzaBPoRsykxYV2UOZ%2B2Nw3B%2F6O4Q4slp1Q03jgO9isFzBds1vuWuVwd8cX49erKNOLbyoe%2BrxWs0R48b6a7XDFHj3QHPoyPt726Y4V12nONi6Dh2K6Bp3S7YOla19XgsKYKEQRlPGAsOcIzb%2FpIJ%2B6fFVQ0TRt50wgZG9xgY6sQEw3KOjzD4f511fXPvvYjT8%2FU70VQ9yGcEGk4jeTchqUM%2BuL%2FTHWOge5DnafJzX0m8ZW%2BFm1XIfCGT%2B6YsL52OQudQlbs6zRMwxetinv2S%2Fb%2BBtg8Frn2uaiAKqDIC2S7%2FNZHaYNeszGbOb582XMHQeCXgStpFcaGFNyndoY3I8YxcqnEy9VXxBGcqObRH7XcG%2B%2F9www5LogunQ%2FfQ3BW%2F%2B7%2FakkNfttDxEyu%2BuYJWHgio%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=fd3c060322854a49adaabd6fb5cb7f63f1dd4b4c40e6ba85057148b31c391076",
+      "file_size": 2104,
+      "type": "text/x-go",
+      "moderated": null
+    },
+    {
+      "id": 804811,
+      "file_name": "toctou-node.yml",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/Sx3MAtsjV6g5pdkBBGbPYbMH?response-content-disposition=attachment%3B%20filename%3D%22toctou-node.yml%22%3B%20filename%2A%3DUTF-8%27%27toctou-node.yml&response-content-type=application%2Fx-yaml&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQVNBPDR7O%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T024609Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIDSr2j0ANL%2FfAcmIbuIFEIi9OJ%2FVFZT8wrecZEVdmYHEAiEAgP3zlhzHVDlq%2BCJzOWJ3UUwbsLBCc%2FPD%2Ba0XriD4giYquwUI%2Bv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDMLk2GWuCcI%2BMVYOXSqPBd9luZyoHF9b%2BDdxp%2FY%2BFcX9%2Fc4eX8y870FeL1mI5z6xjbVHQwZad%2Bylag09vnTVGjL5XVWRtK196nvD5fcSaNU5%2B%2BSTqRBpb7DH%2Bda1FamYaWZ7x68jxRzoKwomxLPZcx7FzFrmt3JfiAO7%2BC6Bu4ktEJxsC8X5ZYCXLK9pbjCw3%2BjmPJ4x6L9YwNBcz3jWAB9ovqT4faEZKFeGree2ccVladldjw%2FwOEYS3mDD0yFI%2BZ8PlR9RxiMTbQW7LX7yi5I0r8sduHZl9INKIIiuBk1yyLeMtXXrnGZtEAdtcMlB2%2BiaP0PuUjKTktZywnpycqWd9748l61feLRE3xaj0BbSHouwQEvs5Tu3w3mwXuUDUP8Zbf2bkiCOKA7NwFAIKf2QguxHLWTnMLgl41tp1YDqxrkJ9EXcva212Slyrb7S2722tf92zgVj8iXtVAGD0fPo9ouf3iDz9Ck20pdK1J%2BsIdGifZwUPEBAlCIkKL0M1Eh3q2mHvnqPlLxKrFqiyGd2IlAOiZZq5tzQ50Y4n96Bf%2BmvRtPenDf0LlngGY3iH0liD0iQKLN9bW5GIg2B11Iy29hTboWNAFONqboYqWFvBqT8O9Lb7%2FcVy%2FheIZf0JJ6swTFEYqo0qLXFpqpX639a2FH9i9i3%2BaW1LWoOhIpsANTLrkud8OiiYaTywDVLZvKS32OX3jDm4n%2FjWaPGP6H767lCoKDmzaBPoRsykxYV2UOZ%2B2Nw3B%2F6O4Q4slp1Q03jgO9isFzBds1vuWuVwd8cX49erKNOLbyoe%2BrxWs0R48b6a7XDFHj3QHPoyPt726Y4V12nONi6Dh2K6Bp3S7YOla19XgsKYKEQRlPGAsOcIzb%2FpIJ%2B6fFVQ0TRt50wgZG9xgY6sQEw3KOjzD4f511fXPvvYjT8%2FU70VQ9yGcEGk4jeTchqUM%2BuL%2FTHWOge5DnafJzX0m8ZW%2BFm1XIfCGT%2B6YsL52OQudQlbs6zRMwxetinv2S%2Fb%2BBtg8Frn2uaiAKqDIC2S7%2FNZHaYNeszGbOb582XMHQeCXgStpFcaGFNyndoY3I8YxcqnEy9VXxBGcqObRH7XcG%2B%2F9www5LogunQ%2FfQ3BW%2F%2B7%2FakkNfttDxEyu%2BuYJWHgio%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=795fa6b0d099584027e659054807b8df9adae99542501093f7d361d0e7904083",
+      "file_size": 128,
+      "type": "application/x-yaml",
+      "moderated": null
+    },
+    {
+      "id": 804812,
+      "file_name": "toctou-cluster.yml",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/KAqkkdXbqCxSZCy3RjxBv7Qs?response-content-disposition=attachment%3B%20filename%3D%22toctou-cluster.yml%22%3B%20filename%2A%3DUTF-8%27%27toctou-cluster.yml&response-content-type=application%2Fx-yaml&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQVNBPDR7O%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T024609Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIDSr2j0ANL%2FfAcmIbuIFEIi9OJ%2FVFZT8wrecZEVdmYHEAiEAgP3zlhzHVDlq%2BCJzOWJ3UUwbsLBCc%2FPD%2Ba0XriD4giYquwUI%2Bv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDMLk2GWuCcI%2BMVYOXSqPBd9luZyoHF9b%2BDdxp%2FY%2BFcX9%2Fc4eX8y870FeL1mI5z6xjbVHQwZad%2Bylag09vnTVGjL5XVWRtK196nvD5fcSaNU5%2B%2BSTqRBpb7DH%2Bda1FamYaWZ7x68jxRzoKwomxLPZcx7FzFrmt3JfiAO7%2BC6Bu4ktEJxsC8X5ZYCXLK9pbjCw3%2BjmPJ4x6L9YwNBcz3jWAB9ovqT4faEZKFeGree2ccVladldjw%2FwOEYS3mDD0yFI%2BZ8PlR9RxiMTbQW7LX7yi5I0r8sduHZl9INKIIiuBk1yyLeMtXXrnGZtEAdtcMlB2%2BiaP0PuUjKTktZywnpycqWd9748l61feLRE3xaj0BbSHouwQEvs5Tu3w3mwXuUDUP8Zbf2bkiCOKA7NwFAIKf2QguxHLWTnMLgl41tp1YDqxrkJ9EXcva212Slyrb7S2722tf92zgVj8iXtVAGD0fPo9ouf3iDz9Ck20pdK1J%2BsIdGifZwUPEBAlCIkKL0M1Eh3q2mHvnqPlLxKrFqiyGd2IlAOiZZq5tzQ50Y4n96Bf%2BmvRtPenDf0LlngGY3iH0liD0iQKLN9bW5GIg2B11Iy29hTboWNAFONqboYqWFvBqT8O9Lb7%2FcVy%2FheIZf0JJ6swTFEYqo0qLXFpqpX639a2FH9i9i3%2BaW1LWoOhIpsANTLrkud8OiiYaTywDVLZvKS32OX3jDm4n%2FjWaPGP6H767lCoKDmzaBPoRsykxYV2UOZ%2B2Nw3B%2F6O4Q4slp1Q03jgO9isFzBds1vuWuVwd8cX49erKNOLbyoe%2BrxWs0R48b6a7XDFHj3QHPoyPt726Y4V12nONi6Dh2K6Bp3S7YOla19XgsKYKEQRlPGAsOcIzb%2FpIJ%2B6fFVQ0TRt50wgZG9xgY6sQEw3KOjzD4f511fXPvvYjT8%2FU70VQ9yGcEGk4jeTchqUM%2BuL%2FTHWOge5DnafJzX0m8ZW%2BFm1XIfCGT%2B6YsL52OQudQlbs6zRMwxetinv2S%2Fb%2BBtg8Frn2uaiAKqDIC2S7%2FNZHaYNeszGbOb582XMHQeCXgStpFcaGFNyndoY3I8YxcqnEy9VXxBGcqObRH7XcG%2B%2F9www5LogunQ%2FfQ3BW%2F%2B7%2FakkNfttDxEyu%2BuYJWHgio%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=2c0a5b33453f6e127402fd841ae2e81517ad461bdf7023f693d721abf7759e98",
+      "file_size": 78,
+      "type": "application/x-yaml",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2021-05-27T19:11:00.441Z",
+  "allow_singular_disclosure_after": -136280109.33637974,
+  "singular_disclosure_allowed": true,
+  "vote_count": 7,
+  "voters": [
+    "ali",
+    "yusuf_furkan",
+    "badhunter",
+    "lonelylol",
+    "ekgaribadmi",
+    "meispi",
+    "d_hack"
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 6.8,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "high",
+      "user_interaction": "none",
+      "scope": "changed",
+      "confidentiality": "high",
+      "integrity": "none",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 32459,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/kubernetes/kubernetes",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "id": 21462,
+      "category": "researcher",
+      "content": "TL,DR: Time-of-check (apiserver proxy filter) Time-of-use (apiserver proxy request) Race Condition.",
+      "updated_at": "2020-04-27T00:05:23.986Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 1078382,
+        "username": "javierprovecho",
+        "name": "Javier Provecho Fernandez",
+        "bio": "",
+        "cleared": false,
+        "verified": false,
+        "website": null,
+        "location": "",
+        "created_at": "2020-04-26T21:46:13.245Z",
+        "url": "https://hackerone.com/javierprovecho",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "hacker",
+        "profile_picture_urls": {
+          "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6OTE3OTE2LCJwdXIiOiJibG9iX2lkIn19--617f8bb1416f15f82fab200b3e6dcd8cf4c74372/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--2de8067d228529d65848a4eeed0bed0bb2531bc3/3F4ZK7_F_400x400.jpg",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/RfpdaCWFuwm8WXf4KZM8xFWW/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a",
+          "xtralarge": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6OTE3OTE2LCJwdXIiOiJibG9iX2lkIn19--617f8bb1416f15f82fab200b3e6dcd8cf4c74372/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJyZXNpemUiOiIyNjB4MjYwXHUwMDNlIn0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--cf3aeca803d1baf476958c689ca7b472a4cb54f1/3F4ZK7_F_400x400.jpg"
+        }
+      }
+    }
+  ]
+}
