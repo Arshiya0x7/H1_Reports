@@ -1,0 +1,150 @@
+{
+  "id": 384255,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zODQyNTU=",
+  "url": "https://hackerone.com/reports/384255",
+  "title": "Stored XSS on Issue details page",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2018-07-19T17:49:43.530Z",
+  "submitted_at": "2018-07-19T17:49:43.530Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "8ayac",
+    "url": "/8ayac",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/266/369/5dc3ed65f4f281d1710a1728d46e13dc3c7db062_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": true,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 264,
+    "url": "https://hackerone.com/gitlab",
+    "handle": "gitlab",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/f0hovtq73f9ap815a0r1w42bocp4/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/f0hovtq73f9ap815a0r1w42bocp4/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "GitLab",
+      "twitter_handle": "gitlab",
+      "website": "https://about.gitlab.com",
+      "about": "A single application for the entire software development lifecycle."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2018-10-30T06:12:08.889Z",
+  "bug_reporter_agreed_on_going_public_at": "2018-10-30T06:12:08.806Z",
+  "team_member_agreed_on_going_public_at": "2018-10-30T05:31:15.488Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "**Summary:**\nThe detail page of Issue (the page that provides the content of an Issue) is vulnerable to Stored XSS.\n\n**Description:**\nThe two exploits are via the function of submittin an issue or the function of editing an issue.\nThis vulnerability is reproduced in `Firefox` and`Chrome`. `IE11` and`Edge` are not. I did not test the reproduction on other browsers.\n\n## Steps To Reproduce:\n1. Sign in to GitLab.\n2. Click the \"[+]\" icon.\n3. Click \"New Project\".\n4. Fill out \"Project name\" form with \"PoC\".\n5. Check the check box of \"Public\".\n6. Click \"Issues\"\n7. Click \"New issue\" button.\n8. Fill out the each form as follows:\n    * Title: PoC\n    * Description: `![xss\" onload=alert(1);//](a)`\n9. Click \"Submit issue\".\n\nFurthermore, when editing an already existing issue, you can also reproduce by entering A in the \"Description\" form and saving it.\n\n## Impact\n\nThe security impact is the same as any typical Stored XSS.\n\nThank you!",
+  "weakness": {
+    "id": 62,
+    "name": "Cross-site Scripting (XSS) - Stored"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 322390,
+      "file_name": "poc.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/322/390/96da4a3c21d19e2297a0bf0cb3a8d8a4f6cc4166/poc.PNG?response-content-disposition=attachment%3B%20filename%3D%22poc.PNG%22%3B%20filename%2A%3DUTF-8%27%27poc.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXQSJDR46%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T165051Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDFPFELgDCOnkKst7R6HkBJGJ%2FCN2KDvVYDO5pkHu%2FKiQIhAISBMqqvR5CTOhQAr6fNGxrfKjy1tC6xImaZ45b2XRgRKrIFCBgQAxoMMDEzNjE5Mjc0ODQ5IgydT4C5szjSfdEjbG8qjwXNfn48U5qP8DtQh22koX2ZziUvuAcX1UDkxjhArH5miYJ3lBVsPf4f7rN9Wdg4gy8IVjHPq9FbGOTa7hhbMLduKsQ9MVH2fbL%2FeJsUpw8O1rwGYcMqxwuPz2EYdvrXQAtSoCeZO6DYccCmDIwQqNAXqtLuaWCBtuGlEQPxNCOrzbpz1%2Bbfcs1m2KBCbPAbwBYtK9xxcp%2FzBG2nfIThr091pPvXRVPOhCE6XjcyoXQr4zGDpOUncJkF1THSodShAdERB%2B0YpUmkeCtVz%2FEshmOQInZJiX14R0tKQmjS0ORFkX5S2AdrSDfuWVHfINYwtiMfs23zrub8V5lngMpUy1dSSdvrYkAY5T0cesH5i%2FbKGJ4mAkm6FPuFzQJzGPrvTiAMGxGjcjHw4W7kRZSN1EZgxQ5laLr6uiE%2BDG2thvR2JhmBJXoaMBdiLW86PLG6Y7sepas6WVRkvLG3uyZnisBv1cBXZD1fEy5xFwtf56AJh0gxs5%2FiOHoHoIN6rlSgnCIuooJUHhCYvM3Fjz%2BM2%2BEW%2FXgEzkceBA7FOTK1fjrQCSvJVtUFVDS1KTpPb2ltr5cp%2B3di7zoLkBdlgidHD99VAeBsHvRcrvSBeMGnUGVfdM6JqhbzlB5KPj1m1I1cxsNqvBrC7InSR2pLvxvX9O4ri4fjgiIa%2FhMxvq4qpbyKDaCgCYQ0oXFLJJkzRLfaUPg9X3Li%2FXQljumu123J6gBlVrRdTZ0XoeGYKIvdd2zRIbHt1lz2z8zZmTy2z5QYAKPvC855o%2BqYpLNpHSpVg3ELaFPBjjzRCRou6%2FBLghHuLu5DIYjiIQppcBTrEVSW1MHbJTfK0fj20Vnw0w1SuqSRkqmv07W%2FgI8vRf7IDEKgMMajwMYGOrABmTka%2FZg0qf%2BCu4HDa71BELxFKnLAvO8psLVGBiUM3Gzk6YK7YbM8T%2Bo120qRVfuChnTM4%2F3u2RwbocPYWT03D%2F%2FyLjSXliW4gLdOyx9L2YuQD1Y6hMb84DCXLI%2BKb2F8LfmUZIlpIYk4EsnZ2mmSTAy%2BBC0pi%2FqcYIS4PcO7cjLWp4zIMpL3mWD8irtIg1PXYqqoBjtgM8fqgSdB%2Bb2og1UExlulzHb1jazdVeNZ954%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=9bf9c9c00c670c2b5b119348dbfa5b7c98d5c05de1e3665e4f6ec80690de041e",
+      "file_size": 105188,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2018-11-29T05:31:15.556Z",
+  "allow_singular_disclosure_after": -215003975.4675946,
+  "singular_disclosure_allowed": true,
+  "vote_count": 16,
+  "voters": [
+    "ali",
+    "bl4de",
+    "2026",
+    "savitar0x01",
+    "theappsec",
+    "eveeez",
+    "japz",
+    "cryptographer",
+    "hkr0x01",
+    "huterp5",
+    "and 6 more..."
+  ],
+  "severity": {
+    "rating": "high",
+    "author_type": "Team"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "id": 11329,
+      "category": "team",
+      "content": "The detail page of Issue (the page that provides the content of an Issue) is vulnerable to Stored XSS.",
+      "updated_at": "2018-10-30T05:31:04.294Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 229900,
+        "username": "jritchey",
+        "name": "James Ritchey",
+        "bio": null,
+        "cleared": false,
+        "verified": false,
+        "website": null,
+        "location": null,
+        "created_at": "2018-01-05T19:09:24.238Z",
+        "url": "https://hackerone.com/jritchey",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "company",
+        "profile_picture_urls": {
+          "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png",
+          "medium": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png",
+          "xtralarge": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+        }
+      }
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
