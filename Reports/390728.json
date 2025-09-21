@@ -1,0 +1,140 @@
+{
+  "id": 390728,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zOTA3Mjg=",
+  "url": "https://hackerone.com/reports/390728",
+  "title": "Stored XSS on scan.nextcloud.com",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2018-08-05T16:34:39.000Z",
+  "submitted_at": "2018-08-05T16:34:39.000Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "5b66c571",
+    "url": "/5b66c571",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13291,
+    "url": "https://hackerone.com/nextcloud",
+    "handle": "nextcloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Nextcloud",
+      "twitter_handle": "nextclouders",
+      "website": "https://nextcloud.com",
+      "about": "Access, share and protect your files, calendars, contacts, communication & more at home and in your enterprise."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2020-03-01T13:57:00.351Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2020-01-31T13:56:53.777Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "The scan.nextcloud.com engine fetches a 'status.php' content in order to extract some version number as well as installed flavors.\n\nWhile scanning a website, the following API-wise cinematic happens :\n\n    POST https://scan.nextcloud.com/api/queue (twice, gives the UUID)\n    GET https://scan.nextcloud.com/api/result/<UUID>\n\nThe first POST to /queue triggers a scan (/requeue works similarly), and the second request (GET) fetches a JSON describing the scan results.\n\nWhile all the data fetched in the attacker-controlled \"status.php\" file are safely escaped with escapeHTML (stripping a lot of unwanted characters, - you might want to double check that \\ is escaped as well.), the `data.url` isn't escaped, and is placed in a HTML DOM element as innerHTML\n\n{F328696}\n\nThis means that if an URL contains valid HTML, it will be interpreted upon loading the XHR answer. A poc has been done, scanning for `hack.pirate-server.com/heh<script>alert(1)`\n\n    $ mkdir 'heh<script>alert(1)'\n    $ ln -s ../status.php heh\\<script\\>alert\\(1\\)/\n\nPOC : https://scan.nextcloud.com/results/166b377c-a24d-41b3-bcec-1ae57dd651c8\n\nWhen loading the results, the <script> element is inserted, and an alert(1) pops :\n{F328697}\n\npoc demo :\n{F328698}\nend\n\n## Impact\n\nAn attacker - having tricked an user into accessing a trapped scan report - could gain arbitrary javascript execution in the context of `scan.nextcloud.com`, which is a subdomain of nextcloud.com.\n\nWhile this might not be critical, maybe a Content-Security-Policy of another nextcloud.com domain blindly trusts *.nextcloud.com.\n\nWhich could mean the standard XSS consequences : impersonation, secret stealing, proxying traffic, drive-by malware download, etc. etc.",
+  "weakness": {
+    "id": 62,
+    "name": "Cross-site Scripting (XSS) - Stored"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 328696,
+      "file_name": "Screenshot_from_2018-08-05_18-11-25.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/328/696/fd2651cadc56805c05f0f01dfc918ad7982c4a7a/Screenshot_from_2018-08-05_18-11-25.png?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_from_2018-08-05_18-11-25.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_from_2018-08-05_18-11-25.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ7HKROB63%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T121545Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQC0YDW%2FWBZ6pTL7VRNkKeI7gmM82i2U9cgqHyUoGtLJzQIgKWqqlXVr3oD3xZ02l9oKjqzyRDld8qnt0PdcJYCK6AAqsgUIFBADGgwwMTM2MTkyNzQ4NDkiDI7VIHEHzVmhJKE%2BkCqPBWMMn9RohWpSEZTGCLV3Kw3nLFPDCrYKLc7CvwPaYW0j11wEIbEqliuaSaQ%2FDixk6EjQWHEL8BaMumVWshyfF8aeB8trWUlVyeeWeECI7Q4dXEPV8bfHMjJa3LgK1hf6cJ7pkCfcxH%2FkbjZS6C3IzDpeNXS87vNrZDbV2M6r0hdKSkE4M3sgMJqIEDdAkzOZZk%2BmFNEr7lGWshY4p1HopXp4HOlN3nyWHC2aE6e3x6MHwypaXOqcd4ui0COfDCubkzSvXsMrw1P2yZsDbLcBILJfl2MC%2Blztg4FshYojzRIvRjXqRpEvQ2eLrUcrf0rcZ%2BoiHQIx8fUdtkCtGJ1g3TFHV7NqyNR0fQZVFsWpym2w%2F6ojDBORrJV6%2FVAQrs9gFLuW0E823Prvukt8YvLLzhdsBa75Xuc%2BSf4sC0PCvewrKhyvwGwSWQfwlSe8OoWiMm7ZPV85phx86qKaWxkzoGZ0PDyeRvedVopEQvj43trcxnawx14xJWnu4xDZZY0JMg8ZK1CFUO8Ll0lTpFawUyScQYUTeqR5KUjPB23jhglMpGgh%2Bgpuh5TDzaUgDUNecqIOrW1VaMwpoELXPjlQkr3KUAMz7%2BxuMpAkRSFqWMNsZIXBLQpBcB6HwyX9vuKfeqlZOGakst7kCmASMY5Z94yNQvI4TLfpNVO62pbky0Xgk1KYBc%2BfSAGBqM%2BV59TIl64t6Ssz68nyXwz8RaRnLb%2B8ALpUIinP4divhRtW1GSEySLQzJKe19%2Bw8OA0ImYmFb4y7mAjdD9UOKaHmD4bEVROpIFppiXoeLp9aKIaGdodHrSWo6ox8V%2BcxW3aXXioa0VU4%2FDlyu0qZSV4UQm31p3cu7j2pfPF113go63iePwwurC%2FxgY6sQFTFXfPSAUbM9al00OCSpcHYB8cJXjRt1U5BBMa4GKhYOz9W4%2BVNsvgpBI5FoYYewmkq1x4Hkxl0ZLnQC1ZZuT0Q4SQDB6UPs1%2B044H6ajFJkCWt5OAxagj7yLJ7ctl1%2BNrPBPSlu6YsZFmgPZgvfU65ZPvAArq9%2B6AG%2FMP9r7QW9DpFc1iZy1GmGPQjQndRSzo%2BGCrCc%2BL6Hz%2BQcKxYag1n1SuF4tOWKpwGzl8fiI7g%2Fk%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=9c9adc87466eb282a24c0522a7a9b35c5820a6051f786be6edc1c5eda147008e",
+      "file_size": 12453,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 328697,
+      "file_name": "Screenshot_from_2018-08-05_18-10-58.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/328/697/1985cd26945ec1276ab01e40af1b72a6ca37e963/Screenshot_from_2018-08-05_18-10-58.png?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_from_2018-08-05_18-10-58.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_from_2018-08-05_18-10-58.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ7HKROB63%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T121545Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQC0YDW%2FWBZ6pTL7VRNkKeI7gmM82i2U9cgqHyUoGtLJzQIgKWqqlXVr3oD3xZ02l9oKjqzyRDld8qnt0PdcJYCK6AAqsgUIFBADGgwwMTM2MTkyNzQ4NDkiDI7VIHEHzVmhJKE%2BkCqPBWMMn9RohWpSEZTGCLV3Kw3nLFPDCrYKLc7CvwPaYW0j11wEIbEqliuaSaQ%2FDixk6EjQWHEL8BaMumVWshyfF8aeB8trWUlVyeeWeECI7Q4dXEPV8bfHMjJa3LgK1hf6cJ7pkCfcxH%2FkbjZS6C3IzDpeNXS87vNrZDbV2M6r0hdKSkE4M3sgMJqIEDdAkzOZZk%2BmFNEr7lGWshY4p1HopXp4HOlN3nyWHC2aE6e3x6MHwypaXOqcd4ui0COfDCubkzSvXsMrw1P2yZsDbLcBILJfl2MC%2Blztg4FshYojzRIvRjXqRpEvQ2eLrUcrf0rcZ%2BoiHQIx8fUdtkCtGJ1g3TFHV7NqyNR0fQZVFsWpym2w%2F6ojDBORrJV6%2FVAQrs9gFLuW0E823Prvukt8YvLLzhdsBa75Xuc%2BSf4sC0PCvewrKhyvwGwSWQfwlSe8OoWiMm7ZPV85phx86qKaWxkzoGZ0PDyeRvedVopEQvj43trcxnawx14xJWnu4xDZZY0JMg8ZK1CFUO8Ll0lTpFawUyScQYUTeqR5KUjPB23jhglMpGgh%2Bgpuh5TDzaUgDUNecqIOrW1VaMwpoELXPjlQkr3KUAMz7%2BxuMpAkRSFqWMNsZIXBLQpBcB6HwyX9vuKfeqlZOGakst7kCmASMY5Z94yNQvI4TLfpNVO62pbky0Xgk1KYBc%2BfSAGBqM%2BV59TIl64t6Ssz68nyXwz8RaRnLb%2B8ALpUIinP4divhRtW1GSEySLQzJKe19%2Bw8OA0ImYmFb4y7mAjdD9UOKaHmD4bEVROpIFppiXoeLp9aKIaGdodHrSWo6ox8V%2BcxW3aXXioa0VU4%2FDlyu0qZSV4UQm31p3cu7j2pfPF113go63iePwwurC%2FxgY6sQFTFXfPSAUbM9al00OCSpcHYB8cJXjRt1U5BBMa4GKhYOz9W4%2BVNsvgpBI5FoYYewmkq1x4Hkxl0ZLnQC1ZZuT0Q4SQDB6UPs1%2B044H6ajFJkCWt5OAxagj7yLJ7ctl1%2BNrPBPSlu6YsZFmgPZgvfU65ZPvAArq9%2B6AG%2FMP9r7QW9DpFc1iZy1GmGPQjQndRSzo%2BGCrCc%2BL6Hz%2BQcKxYag1n1SuF4tOWKpwGzl8fiI7g%2Fk%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=4699ca88bc69c5e67bcee01af413c905a07f92b7c02ac08de6c94329f2dff134",
+      "file_size": 4362,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 328698,
+      "file_name": "Screenshot_from_2018-08-05_18-10-20.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/328/698/55f4c2ce870fbbc31d49ec4caea91b961d1fe088/Screenshot_from_2018-08-05_18-10-20.png?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_from_2018-08-05_18-10-20.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_from_2018-08-05_18-10-20.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ7HKROB63%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T121545Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQC0YDW%2FWBZ6pTL7VRNkKeI7gmM82i2U9cgqHyUoGtLJzQIgKWqqlXVr3oD3xZ02l9oKjqzyRDld8qnt0PdcJYCK6AAqsgUIFBADGgwwMTM2MTkyNzQ4NDkiDI7VIHEHzVmhJKE%2BkCqPBWMMn9RohWpSEZTGCLV3Kw3nLFPDCrYKLc7CvwPaYW0j11wEIbEqliuaSaQ%2FDixk6EjQWHEL8BaMumVWshyfF8aeB8trWUlVyeeWeECI7Q4dXEPV8bfHMjJa3LgK1hf6cJ7pkCfcxH%2FkbjZS6C3IzDpeNXS87vNrZDbV2M6r0hdKSkE4M3sgMJqIEDdAkzOZZk%2BmFNEr7lGWshY4p1HopXp4HOlN3nyWHC2aE6e3x6MHwypaXOqcd4ui0COfDCubkzSvXsMrw1P2yZsDbLcBILJfl2MC%2Blztg4FshYojzRIvRjXqRpEvQ2eLrUcrf0rcZ%2BoiHQIx8fUdtkCtGJ1g3TFHV7NqyNR0fQZVFsWpym2w%2F6ojDBORrJV6%2FVAQrs9gFLuW0E823Prvukt8YvLLzhdsBa75Xuc%2BSf4sC0PCvewrKhyvwGwSWQfwlSe8OoWiMm7ZPV85phx86qKaWxkzoGZ0PDyeRvedVopEQvj43trcxnawx14xJWnu4xDZZY0JMg8ZK1CFUO8Ll0lTpFawUyScQYUTeqR5KUjPB23jhglMpGgh%2Bgpuh5TDzaUgDUNecqIOrW1VaMwpoELXPjlQkr3KUAMz7%2BxuMpAkRSFqWMNsZIXBLQpBcB6HwyX9vuKfeqlZOGakst7kCmASMY5Z94yNQvI4TLfpNVO62pbky0Xgk1KYBc%2BfSAGBqM%2BV59TIl64t6Ssz68nyXwz8RaRnLb%2B8ALpUIinP4divhRtW1GSEySLQzJKe19%2Bw8OA0ImYmFb4y7mAjdD9UOKaHmD4bEVROpIFppiXoeLp9aKIaGdodHrSWo6ox8V%2BcxW3aXXioa0VU4%2FDlyu0qZSV4UQm31p3cu7j2pfPF113go63iePwwurC%2FxgY6sQFTFXfPSAUbM9al00OCSpcHYB8cJXjRt1U5BBMa4GKhYOz9W4%2BVNsvgpBI5FoYYewmkq1x4Hkxl0ZLnQC1ZZuT0Q4SQDB6UPs1%2B044H6ajFJkCWt5OAxagj7yLJ7ctl1%2BNrPBPSlu6YsZFmgPZgvfU65ZPvAArq9%2B6AG%2FMP9r7QW9DpFc1iZy1GmGPQjQndRSzo%2BGCrCc%2BL6Hz%2BQcKxYag1n1SuF4tOWKpwGzl8fiI7g%2Fk%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=afc37295429fc450d37dab1714ef9ab57d8e7e4f4b5598aedd2c6b570413e9ef",
+      "file_size": 14856,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2020-03-01T13:56:53.853Z",
+  "allow_singular_disclosure_after": -175385931.26793057,
+  "singular_disclosure_allowed": true,
+  "vote_count": 4,
+  "voters": [
+    "a_d_a_m",
+    "cryptographer",
+    "gustavetxc01",
+    "aswinraj"
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 47,
+    "asset_type": "URL",
+    "asset_identifier": "scan.nextcloud.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
