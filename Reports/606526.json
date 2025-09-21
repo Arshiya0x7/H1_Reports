@@ -1,0 +1,127 @@
+{
+  "id": 606526,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC82MDY1MjY=",
+  "url": "https://hackerone.com/reports/606526",
+  "title": "[tianma-static] Security issue with XSS.",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2019-06-11T16:08:58.926Z",
+  "submitted_at": "2019-06-11T16:08:58.926Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "wooeong22",
+    "url": "/wooeong22",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NDcwMjMsInB1ciI6ImJsb2JfaWQifX0=--b38ccaa31aea29932c1ed3c82294e19a7fe1c39b/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--a4d91faed3dff6024dfc1a7b7f8ccc6b45e38396/cat_2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 23949,
+    "url": "https://hackerone.com/nodejs-ecosystem",
+    "handle": "nodejs-ecosystem",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/023/949/3ea3b2ae039a8f955a4a8fe65d99fe85dc817398_original./235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/023/949/3ea3b2ae039a8f955a4a8fe65d99fe85dc817398_original./3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "disabled",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Node.js third-party modules",
+      "twitter_handle": "",
+      "website": "https://nodejs.org/en/security/",
+      "about": "This program was used to handle vulnerabilities in the Node.js ecosystem."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2018-16474"
+  ],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2020-10-12T20:44:40.207Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2020-09-12T20:44:16.714Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "I would like to report XSS in tianma-static\nIt allows XSS and HTML Injection\n\nFirst of all, It is my first report and I am sorry that I am not good at English T.T \nthank you.\n\n# Module\n\n**module name:** tianma-static\n**version:** 1.0.4\n**npm page:** `https://www.npmjs.com/package/tianma-static`\n\n## Module Description\n\n> Provide a static file service.\n\n# Vulnerability\n\n## Vulnerability Description\n\n1) File content type\nwhen I look a CVE-2018-16474([CVE-2018-16474](https://www.cvedetails.com/cve/CVE-2018-16474/), #403692), I think that's vulnerability need arbitrary file(name) upload.\n\nIf upload is possible, Attacker can upload `html` file. Also content type of the response header becomes `text/html` and it is possible to Stored XSS.\n\n{F506823}\n\n2) HTML Injection (It can lead to reflected XSS)\nwhen a send `%2f` in path (example: http://127.0.0.1:8080/%2f), `resolve` function make a normal path on the filesystem. but `req.pathname` will print out a manipulated path.\n\nso I can insert any html.\n\n{F506824}\n\nReflected XSS using HTML only is not easy bypass the modern browser.\nbut if I can upload any file, Reflected XSS is possible Using load script.\n\n{F506825}\n\n## Steps To Reproduce:\n\n1) File content type\n> - upload html file with XSS script. \n> - xss fired\n\n2) HTML Injection (reflected XSS)\n> - upload any file with XSS script.\n> - access `/%2f<script src='/[filename]'></script>`\n> - xss fired\n\n## Patch\n\n1. add content type header in response. \n2. change `decodeURI` to `decodeURIComponent`. or denied malicious path.\n\n# Wrap up\n- I contacted the maintainer to let them know: N\n- I opened an issue in the related repository: N\n\n## Impact\n\nIf file upload is possible, XSS can occur.",
+  "weakness": {
+    "id": 62,
+    "name": "Cross-site Scripting (XSS) - Stored"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 506823,
+      "file_name": "1._html_File_Stored_XSS.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/506/823/2b21833d6357577c47f97f734ae497ef8fda52b6/1._html_File_Stored_XSS.png?response-content-disposition=attachment%3B%20filename%3D%221._html_File_Stored_XSS.png%22%3B%20filename%2A%3DUTF-8%27%271._html_File_Stored_XSS.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQRJGTXS2Q%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T084814Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIEGTZ5RDpQvF8wyLFSFiG%2FUtihrhH7ZnUBI7e3a8UFy6AiAXZroJtdCyQPTJ%2BcafwdEItyg8odQot966T3au3TSU6CqxBQgREAMaDDAxMzYxOTI3NDg0OSIMUnup63%2F4%2FXmWMxHqKo4F7FOlyTX51aC0%2FTUQDVOGHSdTMmlhldk1WkDLiY0E%2BbucQXvhgP4xZu7%2FkRjk3bpiUQzYYGh6ksPxsK7D%2BfL20MkSJb1VeKHW0hZ8j330ENBkrkOqx6duO1v1TwRvifRLoLtZ3HmQRohhXpE8TeV3zfoJInG%2F6tAwwxkThTaS6YVasuQdwCqhkqG%2FUP%2Fe5xXlj0C%2Bkac71XuvuhJlepmENrEM8LV7uDZVmMHRPDxQau3OCiAeC5YKhiUthLGE8f1RPCL7mLq2daI1dJ2PyqpiaD2aJimkS14Ve4XuHKiTx%2BUewh2WgOwV5%2FBeQT8DjzeR0NanRSERE%2Bqqb%2BQUeN9h7gd86js%2Ft4BhMsFG1nDFixdDImYp%2BfBRXae%2F%2BCOcqpP2XpjukGW%2FDbENOsychATb4WG%2FJGid%2Fn%2Bfi2X1TVyXyXf%2Fr6c0imNZChe0CNQbyqxjPOoenGGT6wkBh9GvGw%2BoGkvko%2BLjck5bF0MVntHjpOGXQMVgnO0LCblLKmOw2aFKd%2Bur9flAvgO0MomdNCX47levNFo6NELaAuBet8Lmj%2BJxMorlgoUiYf%2FGIdXYKmXmXLWh75WAaIQgxtqXGc%2FSkPeM1Xjot1sZdxOHAY2gUoEfA4zEKtAIEHnjp9uaTIcK1xWxXuGMoYIbQ2ce0tZ67MQlQHmNLi3pb8oms6vOECAaon%2Fs3%2B2R0I4hPsPRmHiECJALAdkZZopWFyrHR8rXO8o6oMdes2rHlOGyznCVqKvz1DZlqgpmm%2BHNgncZhL9ciIFrGD0gBxwpTMuEZTRVIwUrWCo%2BShb4wvYPF8zgEGpUfcODAmmVLg19F55mpaF5BYhZp4TeIqjQ6QPXv%2FX5SA1Yp5IOpk0C15bhBvjFMI%2FlvsYGOrIBBgJNJfA7mwvczbpgMrhaTIAdIfChIA7o17ULhV%2FpiPFBpw0j1W%2BgDQJ0MBkznfAeJdbNUfHmJkUs5SaZOKq%2FR2C9gG%2FWqKbGrwbB7ZdJLjBbmHiLb6Bk%2BWnXl3UEEW90O%2FLXd9CjQOkS7GH3PeW1j43%2FdPD4TtkIW9Y0gMT0WTAl3JJVLqgygC93xOqvoQgUVU14NbhX7zO5uyqgQo3ruc1mP9i8ftDdcESYlqIAHRbjyw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=5ada280f65694f5bf32d0ce435a96749c5088f58df99c132ed6c4c268ebc6e4b",
+      "file_size": 105014,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 506824,
+      "file_name": "2._HTML_injection.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/506/824/d470f9debba1efb9bb53592361cd73b1056a6717/2._HTML_injection.png?response-content-disposition=attachment%3B%20filename%3D%222._HTML_injection.png%22%3B%20filename%2A%3DUTF-8%27%272._HTML_injection.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQRJGTXS2Q%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T084814Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIEGTZ5RDpQvF8wyLFSFiG%2FUtihrhH7ZnUBI7e3a8UFy6AiAXZroJtdCyQPTJ%2BcafwdEItyg8odQot966T3au3TSU6CqxBQgREAMaDDAxMzYxOTI3NDg0OSIMUnup63%2F4%2FXmWMxHqKo4F7FOlyTX51aC0%2FTUQDVOGHSdTMmlhldk1WkDLiY0E%2BbucQXvhgP4xZu7%2FkRjk3bpiUQzYYGh6ksPxsK7D%2BfL20MkSJb1VeKHW0hZ8j330ENBkrkOqx6duO1v1TwRvifRLoLtZ3HmQRohhXpE8TeV3zfoJInG%2F6tAwwxkThTaS6YVasuQdwCqhkqG%2FUP%2Fe5xXlj0C%2Bkac71XuvuhJlepmENrEM8LV7uDZVmMHRPDxQau3OCiAeC5YKhiUthLGE8f1RPCL7mLq2daI1dJ2PyqpiaD2aJimkS14Ve4XuHKiTx%2BUewh2WgOwV5%2FBeQT8DjzeR0NanRSERE%2Bqqb%2BQUeN9h7gd86js%2Ft4BhMsFG1nDFixdDImYp%2BfBRXae%2F%2BCOcqpP2XpjukGW%2FDbENOsychATb4WG%2FJGid%2Fn%2Bfi2X1TVyXyXf%2Fr6c0imNZChe0CNQbyqxjPOoenGGT6wkBh9GvGw%2BoGkvko%2BLjck5bF0MVntHjpOGXQMVgnO0LCblLKmOw2aFKd%2Bur9flAvgO0MomdNCX47levNFo6NELaAuBet8Lmj%2BJxMorlgoUiYf%2FGIdXYKmXmXLWh75WAaIQgxtqXGc%2FSkPeM1Xjot1sZdxOHAY2gUoEfA4zEKtAIEHnjp9uaTIcK1xWxXuGMoYIbQ2ce0tZ67MQlQHmNLi3pb8oms6vOECAaon%2Fs3%2B2R0I4hPsPRmHiECJALAdkZZopWFyrHR8rXO8o6oMdes2rHlOGyznCVqKvz1DZlqgpmm%2BHNgncZhL9ciIFrGD0gBxwpTMuEZTRVIwUrWCo%2BShb4wvYPF8zgEGpUfcODAmmVLg19F55mpaF5BYhZp4TeIqjQ6QPXv%2FX5SA1Yp5IOpk0C15bhBvjFMI%2FlvsYGOrIBBgJNJfA7mwvczbpgMrhaTIAdIfChIA7o17ULhV%2FpiPFBpw0j1W%2BgDQJ0MBkznfAeJdbNUfHmJkUs5SaZOKq%2FR2C9gG%2FWqKbGrwbB7ZdJLjBbmHiLb6Bk%2BWnXl3UEEW90O%2FLXd9CjQOkS7GH3PeW1j43%2FdPD4TtkIW9Y0gMT0WTAl3JJVLqgygC93xOqvoQgUVU14NbhX7zO5uyqgQo3ruc1mP9i8ftDdcESYlqIAHRbjyw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=b75ddb30dd5103ce8f3018e02f7c009a493f7f04f58407dc60fd61ac1aada91b",
+      "file_size": 87364,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 506825,
+      "file_name": "3._Reflected_XSS.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/506/825/423e1691340ed9a1149f1245ab0b1b2e91ee5d91/3._Reflected_XSS.png?response-content-disposition=attachment%3B%20filename%3D%223._Reflected_XSS.png%22%3B%20filename%2A%3DUTF-8%27%273._Reflected_XSS.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQRJGTXS2Q%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T084814Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIEGTZ5RDpQvF8wyLFSFiG%2FUtihrhH7ZnUBI7e3a8UFy6AiAXZroJtdCyQPTJ%2BcafwdEItyg8odQot966T3au3TSU6CqxBQgREAMaDDAxMzYxOTI3NDg0OSIMUnup63%2F4%2FXmWMxHqKo4F7FOlyTX51aC0%2FTUQDVOGHSdTMmlhldk1WkDLiY0E%2BbucQXvhgP4xZu7%2FkRjk3bpiUQzYYGh6ksPxsK7D%2BfL20MkSJb1VeKHW0hZ8j330ENBkrkOqx6duO1v1TwRvifRLoLtZ3HmQRohhXpE8TeV3zfoJInG%2F6tAwwxkThTaS6YVasuQdwCqhkqG%2FUP%2Fe5xXlj0C%2Bkac71XuvuhJlepmENrEM8LV7uDZVmMHRPDxQau3OCiAeC5YKhiUthLGE8f1RPCL7mLq2daI1dJ2PyqpiaD2aJimkS14Ve4XuHKiTx%2BUewh2WgOwV5%2FBeQT8DjzeR0NanRSERE%2Bqqb%2BQUeN9h7gd86js%2Ft4BhMsFG1nDFixdDImYp%2BfBRXae%2F%2BCOcqpP2XpjukGW%2FDbENOsychATb4WG%2FJGid%2Fn%2Bfi2X1TVyXyXf%2Fr6c0imNZChe0CNQbyqxjPOoenGGT6wkBh9GvGw%2BoGkvko%2BLjck5bF0MVntHjpOGXQMVgnO0LCblLKmOw2aFKd%2Bur9flAvgO0MomdNCX47levNFo6NELaAuBet8Lmj%2BJxMorlgoUiYf%2FGIdXYKmXmXLWh75WAaIQgxtqXGc%2FSkPeM1Xjot1sZdxOHAY2gUoEfA4zEKtAIEHnjp9uaTIcK1xWxXuGMoYIbQ2ce0tZ67MQlQHmNLi3pb8oms6vOECAaon%2Fs3%2B2R0I4hPsPRmHiECJALAdkZZopWFyrHR8rXO8o6oMdes2rHlOGyznCVqKvz1DZlqgpmm%2BHNgncZhL9ciIFrGD0gBxwpTMuEZTRVIwUrWCo%2BShb4wvYPF8zgEGpUfcODAmmVLg19F55mpaF5BYhZp4TeIqjQ6QPXv%2FX5SA1Yp5IOpk0C15bhBvjFMI%2FlvsYGOrIBBgJNJfA7mwvczbpgMrhaTIAdIfChIA7o17ULhV%2FpiPFBpw0j1W%2BgDQJ0MBkznfAeJdbNUfHmJkUs5SaZOKq%2FR2C9gG%2FWqKbGrwbB7ZdJLjBbmHiLb6Bk%2BWnXl3UEEW90O%2FLXd9CjQOkS7GH3PeW1j43%2FdPD4TtkIW9Y0gMT0WTAl3JJVLqgygC93xOqvoQgUVU14NbhX7zO5uyqgQo3ruc1mP9i8ftDdcESYlqIAHRbjyw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=76e0249c86e676d7c591cec48d8c113d7456d2f353840754139ee51d4bbf2a45",
+      "file_size": 234527,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2020-10-12T20:44:16.792Z",
+  "allow_singular_disclosure_after": -155909038.1343258,
+  "singular_disclosure_allowed": true,
+  "vote_count": 0,
+  "voters": [],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
