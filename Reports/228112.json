@@ -1,0 +1,120 @@
+{
+  "id": 228112,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yMjgxMTI=",
+  "url": "https://hackerone.com/reports/228112",
+  "title": "Directory Disclose,Email Disclose Zendmail vulnerability",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2017-05-13T09:57:58.179Z",
+  "submitted_at": "2017-05-13T09:57:58.179Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "test_this",
+    "url": "/test_this",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 8539,
+    "url": "https://hackerone.com/paragonie",
+    "handle": "paragonie",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/008/539/72f76fed45e5220b47ba2f679371ebf9ccb19c70_original./235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/008/539/72f76fed45e5220b47ba2f679371ebf9ccb19c70_original./3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Paragon Initiative Enterprises",
+      "twitter_handle": "ParagonIE",
+      "website": "https://github.com/paragonie",
+      "about": "Cryptography and Application Security Consultants - We Produce Various Open Source Libraries"
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2016-10034"
+  ],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2017-06-21T01:46:18.340Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-06-21T01:46:18.282Z",
+  "team_member_agreed_on_going_public_at": "2017-06-20T17:44:54.852Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": " i found three vulnerability\nDirectory information disclose,Email address disclose, and possible Remote code execution in Zendmail\nduring signup your code accept username with ',\",/,@ while all of the special character must be forbidden or encoded in username\n\nDirectory Disclose:\n______________________\n 1. goto sign-up  page and create a account with  username with double quote like as\"\n2. signin and goto ur account and add email address, then logout \n3.goto Forgot-Password section and enter username of above ( as\" )\n4.and see full path of server has been disclose (screenshot: directory.png)\n\nEmail address Disclose\n_________________________\nif you look close to screenshot below that email address of the user also disclose\n\nZendmail rce\n________________________________\nfrom the above screenshot, ur are using zendmail for email verification\nand searching through exploit of zendmail ,i found that  Zendmail is vulnerable to Remote code Execution\na security researcher Dawid Golunski discover its flaw CVE-2016-10034 in December\nwhere user can set corrupted email like '\"attacker\\\" -oQ/tmp/ -X/var/www/cache/phpcode.php \"@email.com'; cause RCE\nHis link https://legalhackers.com/advisories/ZendFramework-Exploit-ZendMail-Remote-Code-Exec-CVE-2016-10034-Vuln.html\nits possible to add such email in user account\ni also reported  this flaw of email REGEX  https://hackerone.com/reports/226334 but you ignored\n\ni also tried this payload but cant confirm that file has been created or not because i was testing in your website\nyou can also confirm by locally\n\nUsing the above username ( as\") break the sql query during email sending cause exception throw\n\nalso checked that if i used that username in password reset ,server response time is delayed\nit may cause Dos attack but it not possible in that case because u using Cloudflare network to prevent\n\n",
+  "weakness": {
+    "id": 89,
+    "name": "Information Exposure Through Directory Listing"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 184266,
+      "file_name": "directory.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/184/266/880c50c6741f68d15858527da29a17e82407ce1b/directory.png?response-content-disposition=attachment%3B%20filename%3D%22directory.png%22%3B%20filename%2A%3DUTF-8%27%27directory.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQRMBZUOV3%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T214824Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDEC%2FRKLXY153jdRT9bZPTeXaZ%2F6oEZWU3JdDbQ2jTubwIgY8KGFw1Qx27X%2F7AhMUlUVy%2BM5a%2FxFvluio2mZIr%2BovsqsQUIGxADGgwwMTM2MTkyNzQ4NDkiDBUvwT5PB7NszIhlqyqOBfldkBcCrL9Ox7uYoyoObeKr1kPE3XHHm%2FzbY%2BVgt98FHQvesWCi4rHZiDBnxJx61YbR52gPbZrEpmadj8u2z8chYHCjHykhSYepkuEetnk4nhMFZ2fSRq0Kk9erThDBgfiUpgsr%2FjjqLmvd59El1n79WCCb8SBiDvyWzb%2FiS4tafrXhs%2FZj7whbhSLFG8n12dYfDftwqmkUlnUMaaYEMc6dR5qcOAYOsnEcEU6b7xNKf4IhTAy%2FDviTh9zFsFU2J2vD8aZTTOURk4wODqbjH%2FkZmAnJ3JtgnCtcBzYhrFLaeEJp5erch%2Fy6DMmzkv9D0I4eM0fw9q7JzmK1X9oFQV7Ln%2FG5CZpDB4hbe1yUw%2BvaLZn1KCNL3QefL2Jo2ibih7Hxi48Ff6SsUpUNleWRcY9DPqMmdrrB7YcQSvxHNFCPVHeMf0uLrGDgr%2BVxzRyIvDunWPQqRcMBsvyxW3XW42gHg2r9WcMzt1THtHlY13IhpKacXvlfb7W9VrIphWD8msc6DSVTFg4nMO4Aa55nlTMYhkwCerniKL1bspUDymqCWSWKaEr1w4gPyr2KWrr51ff9KqjthtoFYEEVVx9WMYdLp86skHJGzobpbR0A2Eu1e%2FTaVblhn%2Bis9miLfazQxec7cG2T5L2XgUQOP1XKWVnH7wUuO2fMwGCZy8Maw%2Fm04%2FCHc9vFoDAJBpGoktwjI9ZJPQ%2BO5zq21foQE%2FoCEmPDQWCvC2AGi1Z%2FWcRXdr%2F9n9%2BODH3Rct%2B0fxBZDjhs1ik6QiPQIf0RNM7Nz8O4gyN2UscTDIJ8keok10fiulP3NJx0xqhe7OXmJh8h7X%2FgaKupyVGDbiInLYmUbjcgUpDuBxi6w4Hs%2Fiy7U28iWTDCgsHGBjqxAbbvj%2FXhO2JC97UL8mX9z%2FZdL5N8uvPm%2BpL4Q5ElCQ4BBqAF3tMOJrL46Ribl2l32HLQ2S3q%2BN%2FYWVs2PrbvYwjfZwhPyiLyxFEXH8oQgeabtuEYHP0BIGNbLsh9TL0D5NRQMuZ4e36osAejATbXGy5FNqPFpJ5WCYyH2xIidgXIlgvisp%2FeGpvn%2Fzu9J0SnbX3ONFTagLM19kQwtqsqGr71fFYj0MrGmuQF1SH0PW8TDQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=7f53b748a2d7e2b4f2521543f2fb537f8092b9beb5d75e27f7ea33ac786ecc4c",
+      "file_size": 64619,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-07-20T17:44:54.925Z",
+  "allow_singular_disclosure_after": -257918609.9049445,
+  "singular_disclosure_allowed": true,
+  "vote_count": 8,
+  "voters": [
+    "eveeez",
+    "mr_r3boot",
+    "sumit7",
+    "rbcafe",
+    "spetr0x",
+    "scept1c",
+    "chocho14k",
+    "eex"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
