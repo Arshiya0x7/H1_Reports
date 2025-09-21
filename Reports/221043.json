@@ -1,0 +1,139 @@
+{
+  "id": 221043,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yMjEwNDM=",
+  "url": "https://hackerone.com/reports/221043",
+  "title": "CSRF token validation is missing",
+  "state": "Closed",
+  "substate": "informative",
+  "severity_rating": "medium",
+  "readable_substate": "Informative",
+  "created_at": "2017-04-14T18:25:57.134Z",
+  "submitted_at": "2017-04-14T18:25:57.134Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": true,
+    "username": "596a96cc7bf9108cd896f33c4",
+    "url": "/596a96cc7bf9108cd896f33c4",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13291,
+    "url": "https://hackerone.com/nextcloud",
+    "handle": "nextcloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Nextcloud",
+      "twitter_handle": "nextclouders",
+      "website": "https://nextcloud.com",
+      "about": "Access, share and protect your files, calendars, contacts, communication & more at home and in your enterprise."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2017-04-19T06:55:51.732Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-04-19T00:47:04.857Z",
+  "team_member_agreed_on_going_public_at": "2017-04-19T06:55:51.656Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Greetings,\n\nHello Security Team,\n\n### Summary\nI know this is a medium risk issue but i want you guys to be aware of it that the CSRF token validation is missing at the time of login on `https://portal.nextcloud.com/login.php` login page.\n\n### PoC Code:\n```\n<form name=\"frmlogin\" action=\"https://portal.nextcloud.com/login.php\" method=\"post\" onsubmit=\"return ValidateForm();\">\n\t<div class=\"row\">\n\t\t<div class=\"col-xs-12\">\n\t\t\t<div class=\"form-group\">\n\t\t\t\t<label class=\"control-label\">Email</label>\n\t\t\t\t<input type=\"text\" name=\"member_username\" id=\"member_username\" value=\"\" class=\"form-control\">\n\t\t\t</div>\n\t\t</div><!-- col-sm-12 -->\n\t\t<div class=\"col-xs-12\">\n\t\t\t<div class=\"form-group\">\n\t\t\t\t<label class=\"control-label\">Password</label>\n\t\t\t\t<input type=\"password\" name=\"member_password\" class=\"form-control\">\n\t\t\t</div>\n\t\t</div><!-- col-sm-12 -->\n\t\t<div class=\"col-xs-12\">\n\t\t\t<div class=\"form-group text-center\">\n\t\t\t\t<button class=\"btn btn-search btn-primary col-xs-12 mb10\" style=\"padding:10px;margin-top:10px;\" type=\"submit\" name=\"login\" value=\"Login Now\">Login Now</button>\n\t\t\t\t<a href=\"https://support.nextcloud.com/#password_reset\">Forgot Password?</a>\n\t\t\t</div>\n\t\t</div><!-- col-sm-12 -->\n\t</div><!-- End Row -->\n</form>\n<script type=\"text/javascript\">\n\tvar tabs = '';\n\t//<![CDATA[\n\tfunction ValidateForm()\n\t{\n\t\tvar f = document.frmlogin;\n\t\tif(f.member_username.value=='')\n\t\t{\n\t\t\talert('Please enter the Username.');\n\t\t\tf.member_username.focus(); return false;\n\t\t}\n\t\tif(f.member_password.value=='')\n\t\t{\n\t\t\talert('Please specify the Password.');\n\t\t\tf.member_password.focus(); return false;\n\t\t}\n\t}\n\t//]]>\n</script>\n```\n### PoC Attached is the html code: {F175917}\n\n### Impact:\n* An attacker can Brute force their password.\n* Brute force Attack\n\n\nRegards,\nj3",
+  "weakness": {
+    "id": 45,
+    "name": "Cross-Site Request Forgery (CSRF)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 175917,
+      "file_name": "csrf_token_is_missing.html",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/175/917/9665dc0dc8b938426d70c3281bff8bc6301f04a4/csrf_token_is_missing.html?response-content-disposition=attachment%3B%20filename%3D%22csrf_token_is_missing.html%22%3B%20filename%2A%3DUTF-8%27%27csrf_token_is_missing.html&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ5EAMCJ2L%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T225547Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCcAZf28iGJet3GMnMxUaaZbasC6MbHRhY15J3YP3VcSAIge4LiH1lGm%2FsHr2Q81Up9%2FNsGz%2Fi5i9tSh5dExL%2BeIzgqsgUIHhADGgwwMTM2MTkyNzQ4NDkiDC0O3VaKlP2%2Fu42v4yqPBVxDUIR6CRktOoX13UYIe8lcYdvfQZ2RcIuHxAqISYAjoRB3Yj%2BKkC8WNPj2ayZwuKHFbmSgbDSJOW8wGW4o0LdIxnDKjeu6A5CGwrv69%2F4YCd9tawK2A57wqXcR7Hz5Zl%2BSBzPaPPk5HZn1yXg1P1dpav2%2BqFYKV1KPzZhyN2UX%2FtVVKtK37GBJ3vjwk7PS%2BkLozPVVnOsv5k6Hr617xdmPfceos2HK9XKkaosF9PDqwS8W9YzbhUmJbP%2F7AtgL5dqztjWsCXY5OmKySuRQKpMbulFtOckI7dz9z5fk5TthJBdQo%2FPvd6KZVwVNKfFv6nZHN0%2BbRH8AHQ6hAe%2FRG%2FHcUuodEvZK3pOcbAZufDzBSNpkiFUGKa0mLb7J3hngBaY%2FsKTah%2Frh2m3Fsoy1m1FSxwJxTb1nDOr%2FR6oyJDnzKwMrTMKfz%2BhH9V7BDuhQCmK36s1HJsHNu3yEGTCFfQ%2FhMucr2jAlFdV9pUWoQb0BpAiWFIjDpj4I34Z5Xvt12wtXWTwCZp6kOV2NXzL00j8ILqGC5kRcwa%2BailTPyAofdWYg0YhGo5t22VrWpEX%2F%2FJHM1HqGFi3suTBvRtmrrKModUDliR97TzdK01KK%2FOKnVi4WuU2YzBXj2YqASB0SDSf88NT8voI6d6iaHeMs66nZT%2FjpGdivmf9gsJwV463FfDCgPBgL3Pliby6aUF98h0CmcfGYUSd9Oqfp%2Br8vdtm%2BayfrbEZmOAwgeTdC1p2JSYQALwBEjLcYifq5tbYDB7Dfyum59fcolchlf%2FM8XjgiZL7OfR1oMR4GTOsqsRI%2FF9xPU1pky6hos%2FAmlJG%2B1QJpBPVXAfxgjO8fCHwuuc8xF2cF3Cz3%2F6oZ6fuw0QAwp8PBxgY6sQHTp9Izu0zLi%2Fzomma%2FDshi66rfHgOGkY0KM5GHlaYLbHbLHvCI1RIBIjjUUK6nx6s8BV9bGYvKzJ7ANCRsKEX6tFM4vSADJIiUVk7lgoJ4OHmSmD2nvIF5OuZ6HVbkOXejlnBWsJ8Y3irmFTCgroCgEIOyxqrt6hhV3DQPjQNshhx9HfhkZ5MKJeNpHvbkX1Sy5GCesgZC1GIU06v4O8QcMCMEup%2F%2BqCohHn1YQIQl3wQ%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=1aaaf478b1f58dc3c868f443c44ef49d450096e638cf2a13bf8124e88df5f26c",
+      "file_size": 1398,
+      "type": "text/html",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 2,
+  "voters": [
+    "r3y",
+    "spetr0x"
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "id": 3825,
+      "category": "researcher",
+      "content": "@lukasreschke, Sorry my mistake and my foolish action., Anyway i'm a newbie.\n\nI've found that even if there is a xsrf token on login form  you can brute force  the login form using Burp Intruder, with an extender extension to handle the CSRF token., that is why you said `This is not really what a CSRF token would prevent…` Thank you for correcting me on that.\n\nBut in fact that the `CSRF token validation is missing` on `https://portal.nextcloud.com/login.php` is my correct part. would you consider my report is valid? Thank you very much.\n\nCheers!, and God bless @lukasreschke",
+      "updated_at": "2017-06-08T02:25:52.791Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 154069,
+        "username": "596a96cc7bf9108cd896f33c4",
+        "name": "",
+        "bio": "",
+        "cleared": false,
+        "verified": false,
+        "website": "",
+        "location": "",
+        "created_at": "2017-03-26T19:26:09.512Z",
+        "url": "https://hackerone.com/596a96cc7bf9108cd896f33c4",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "hacker",
+        "profile_picture_urls": {
+          "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png",
+          "medium": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png",
+          "xtralarge": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+        }
+      }
+    }
+  ]
+}
