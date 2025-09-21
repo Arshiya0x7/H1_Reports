@@ -1,0 +1,131 @@
+{
+  "id": 826026,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC84MjYwMjY=",
+  "url": "https://hackerone.com/reports/826026",
+  "title": "Use-After-Free In IPV6_2292PKTOPTIONS leading To Arbitrary Kernel R/W Primitives",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2020-03-21T16:40:38.626Z",
+  "submitted_at": "2020-03-21T16:40:38.626Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "theflow0",
+    "url": "/theflow0",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 44879,
+    "url": "https://hackerone.com/playstation",
+    "handle": "playstation",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/8uyqZE6d69UGEYq8qwzS4Z3Q/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/8uyqZE6d69UGEYq8qwzS4Z3Q/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "PlayStation",
+      "twitter_handle": "PlayStation",
+      "website": "https://www.playstation.com",
+      "about": "Recognized as a global leader in interactive and digital entertainment, Sony Interactive Entertainment (SIE) is responsible for the PlayStation brand."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2020-07-06T19:12:54.099Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-06-25T22:20:27.311Z",
+  "team_member_agreed_on_going_public_at": "2020-07-06T19:12:53.980Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary\n\nDue to missing locks in option `IPV6_2292PKTOPTIONS` of `setsockopt` , it is possible to race and free the `struct ip6_pktopts ` buffer, while it is being handled by `ip6_setpktopt`. This structure contains pointers (`ip6po_pktinfo`) that can be hijacked to obtain arbitrary kernel R/W primitives. As a consequence, it is easy to have kernel code execution. This vulnerability is reachable from WebKit sandbox and is available in the latest FW, that is 7.02.\n\n## Attachment\n\nAttached is a Proof-Of-Concept that achieves a Local Privilege Escalation on FreeBSD 9 and FreeBSD 12.\n\n## Impact\n\n- In conjunction with a WebKit exploit, a fully chained remote attack can be achieved.\n- It is possible to steal/manipulate user data.\n- Dump and run pirated games.",
+  "bounty_amount": "10000.0",
+  "formatted_bounty": "$10,000",
+  "weakness": {
+    "id": 50,
+    "name": "Use After Free"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 755558,
+      "file_name": "exploit.c",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/Y13EyQCGKEqxH8PpJgFKh5uY?response-content-disposition=attachment%3B%20filename%3D%22exploit.c%22%3B%20filename%2A%3DUTF-8%27%27exploit.c&response-content-type=text%2Fx-c%2B%2Bsrc&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQTPF4ZMYL%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T095517Z&X-Amz-Expires=2743&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDzzbkCqsywccN8GLS7DwVyHNSiMlOga6HHW28IFriOOAIgTau0B4IslDSaYVvjTwMT2vMVAS%2BydaJOImvoD7WDRGQquwUI%2Fv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDKuAjAMYR7CxWomHryqPBTD7LUgho9FPqx9dXKQIsrIw%2BchghZqJIAEq%2FQ%2FOfPUJj2GdcVhHzBx8TqIn1RyIhrfd3DEShr3nEdCVT0%2FUZ1MHi8E10B629bN7kROPWrkmJZRK5rETZa97vpw9ZusPz0VDRyArkI1KdMvnF2rGp%2F4GtDskWHq126Po2aYRkUywjw6ofOmQfIDCPPhpbP%2BIvd%2BMTEx0vs5qD1JcEe2NUByPFtOHsh09VpDA%2BmLdMVLyb8R%2FGSDqBJkb11UKlJealBZZPnGi%2FGvj1K8dvUxJ8oAIsQMSZ4uF7fpvk5kppMzs%2BASgM%2Fd7ybpjwBujdx5d7XK%2FBkcRnHu7s694p716hsxc9xIaD%2FGXtLTtAlIM3VSWKcMvllggsg7eNAC5GlKqFhAn5v5%2BJZuQFGU8dkdjpLbvSx02jeQF0uYEd4raQ6JQnatqmxaAs4EFVnngIh1szs8WLwiiWpPdI6djAI%2FBQAZoDaqQoBoINZoKGskPUW328BPnT8zba7zr8ERCMfwNy7QzWcoyDCQvGOW8Snvm8mi249qQ9wZLOjCKHqJSy3uPy%2FCh6jper8QFttXG93p%2BL5c4yKBexpdiJ%2B6Nlup2x0m5ZkXIWGDKuTs%2BKGPZn%2Bw3jcxcnNHhhq1nX2TcrK9fjjgmBE7VIBn0yZAtVZpuBo%2FvgYLLifjRbBYo3C5JdsUD%2B3ksND8%2BF69Xx2t%2F7Z8JkbXdldYmiqYO01VI9qH9qVPB1LYyC%2BKWfnRrpMB6CvBbB4lWTIaawyZQVfzdGimvEbHMg2uNBRaVlrh%2FyPiUtLzmSFJ10ILoW5NtrtIu%2BOiOcBlik4aQsfACPWBAnLYCuy76W%2Fc%2BFQf2u3fZI1hrB5cFj0RLZ3D5KQ8Yl7%2F3nDowyP%2B9xgY6sQHwoEKGsXtk5DpjHDa6ZmqJOgp1LQX2F7OVZJ%2F65cR0bQD%2FDA3Wi%2BehvvGPbhbdL6P4Nr1f9kciXK9PDq7FrL%2Fp1opWVwh%2B4Q625BxgITNWDtkp7ZoIrpCwqQ6HlCq0kvHOcTyBhqw4N4VSV1LHO5QJNQJXOFkuHZJxBEwxgq3D0Oo3xFKmh9LAQeKMFzLbHYomU8vz0t3GGlkmAjn0nYEWv5ZPky%2B7XsEGo4DmAU2lhps%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=fc2d0afed24a8db8b10680dd49f02a070eefc5fde1a0979559be4c5cf901d064",
+      "file_size": 14801,
+      "type": "text/x-c++src",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 737,
+  "voters": [
+    "tedminfosec",
+    "an40r1",
+    "madinmars",
+    "halove23",
+    "danyar0",
+    "ds82",
+    "orange303",
+    "nebdar",
+    "kurogai",
+    "elpep0",
+    "and 727 more..."
+  ],
+  "severity": {
+    "rating": "high",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 40736,
+    "asset_type": "HARDWARE",
+    "asset_identifier": "PlayStation 4",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
