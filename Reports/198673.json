@@ -1,0 +1,113 @@
+{
+  "id": 198673,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xOTg2NzM=",
+  "url": "https://hackerone.com/reports/198673",
+  "title": "HTTP-Basic Authentication on logs.nextcloud.com",
+  "state": "Closed",
+  "substate": "informative",
+  "readable_substate": "Informative",
+  "created_at": "2017-01-16T05:58:51.131Z",
+  "submitted_at": "2017-01-16T05:58:51.131Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "rbcafe",
+    "url": "/rbcafe",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/uft7o1wpafGAE3ASGWGc39AL/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13291,
+    "url": "https://hackerone.com/nextcloud",
+    "handle": "nextcloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Nextcloud",
+      "twitter_handle": "nextclouders",
+      "website": "https://nextcloud.com",
+      "about": "Access, share and protect your files, calendars, contacts, communication & more at home and in your enterprise."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2017-01-17T10:05:57.294Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-01-17T10:05:57.247Z",
+  "team_member_agreed_on_going_public_at": "2017-01-17T10:04:18.800Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Greetings,\n\nWhile visiting https://logs.nextcloud.com/ , I noticed that this server use HTTP-Basic Authentication.\n\n{F152730}\n\nPOC :\n------\n\n    GET https://logs.nextcloud.com/ HTTP/1.1\n    User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:50.0) Gecko/20100101 Firefox/50.0\n    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\n    Accept-Language: en-US,en;q=0.5\n    Accept-Encoding: br\n    DNT: 1\n    Connection: keep-alive\n    Upgrade-Insecure-Requests: 1\n    Authorization: Basic cmJjYWZlOnJiY2FmZQ==\n    Host: logs.nextcloud.com\n\nResult : \n------\n\ncmJjYWZlOnJiY2FmZQ== is the base64 of rbcafe:rbcafe and it's transmitted plaintext\n\nRisk : \n------\n\n- Vulnerable to client side attacks.\n- Vulnerable to MITM attack.\n- Vulenrable to Eavesdropping attack.\n- Vulnerable to Brute force attacks.\n\nPossible fix :\n------\n\nHTTP-Basic Authentication should be changed for HTTP-Digest Authentication.\n\nBest regards\n@rbcafe",
+  "weakness": {
+    "id": 57,
+    "name": "Violation of Secure Design Principles"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 152730,
+      "file_name": "SAT.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/152/730/cc3fe3fbe0f130d952740241fb4e96bfd2abb352/SAT.png?response-content-disposition=attachment%3B%20filename%3D%22SAT.png%22%3B%20filename%2A%3DUTF-8%27%27SAT.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQRADLPHK%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T235606Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCMH60KA5c4oFROILJwlX3Ga3MXZ%2FQYQNX3He4P5AJMdgIhAI1hDx7ub27XNNWCp9HinTwvcqA3lEjxIkGOcLj5rQdFKrIFCB8QAxoMMDEzNjE5Mjc0ODQ5IgwzTtfMSrvLyCvpHrQqjwVnNPlGyR9vDw9obrVNS%2BqlNiaOm1yKVdRt9eI2V9ijVIU4hWJbOx4hIxz86ScjOUQlGsiaOs11KHUGfXtmvvAyPDcyRpacF7YO35qUeUn89mDbuvMsMUUqi%2Fg0xt%2BgbrkEfTNE2vyco49KctdEDPRlf7xnUNpINkPfc5CDxO63v6Qsgwz2aGbUVxflVUQzNe%2F383gzFqvOOe%2BOGNhvLk%2BNgrzwEIN3LiP%2FiYekCZ4Qrh%2Fxxuci6dOTgAhLOf6MRUcuvxk6gm0ZS5skBr1i2fiuLtXeIgyFGOz8WZzKDiqqlrYriAqXDaGjQk%2Bin7HJgX5kxvnMGeTbFktcAwaYCgVUxO5Ym2fM8ZRXozh6w9YKEMc3RrSrAi6kWHkkASDlUDtX%2BF5grXWFiI8S7CakKIYBEnIQRPSqg6hyXvWdOSQ4ZerDQ1Y6NQOqTgPFatWsyOkG9ERqS3xzTB9gZgOeF74fTMBENik7tMmqI%2BFFIcSpepc4nQwZI0hz%2FqdlpcOdcOTkqHEWPjh3TnYFNDPbQm0fsUuMn0EWVCLWw%2F%2FI6qF4RHh93vzm5k%2FyOHNxipVwG0%2BNmF3zggUdvVKx1ON5TDQdPEsG5jogYX087LX9LEIasKhqrkeAaXKRrVaNAOV7jchLC9nPF2cIhTy6TbrhE3Yi0Frp07aG5MDXpT50qAyY%2BRiuTxivHLg4YrgoG31j%2B%2BbuzySwasYcrbRBQN0n0fRLi7st4FH7EyWGt7GpqR9D67XF7F%2F0NK1vXMfbdJto0BEH1od2%2F5H7%2FiGGVFGQJp5RwxgDxqR1UKirZ%2B6Fz0PdAbtPDiefAwx4UWektN2H60isdmgT7x0YAj6meGJzRDCNBCoOmk9Pmi5CJvyIlOKCMPLYwcYGOrABt29w%2BchhXAbUvsBJ081b1qwI3Qr3DqIbHu2OwZtqPAzHrJBXZha0Ycdhe59%2Bt8CDw%2FsA%2B38YO5%2B0krzIm9WZ%2FnDtSasuAbtBBfnoyUYehj4EyqQAZI5j6mW6tXDsJVQi%2FXJ8WhIuCrUgy0s1Cnt2ISgPimsuYS8ZPl7NcXHJ%2BaXeh8QEThxgZdkZUMeUu8CmOlqiAiieTQ6lHVUqjskhMyWo0H%2BeogQ1O%2FJWH6WO0TE%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=bf00022059abc51fd1d6091e971e1e502b913067ce8be6f675ca3a410b7a437f",
+      "file_size": 27500,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 5,
+  "voters": [
+    "pr0f0x01",
+    "rbcafe",
+    "0x08",
+    "spetr0x",
+    "ffff11110000"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
