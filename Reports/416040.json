@@ -1,0 +1,180 @@
+{
+  "id": 416040,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC80MTYwNDA=",
+  "url": "https://hackerone.com/reports/416040",
+  "title": "Field Day With Protocol Handlers",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2018-09-29T06:41:48.353Z",
+  "submitted_at": "2018-09-29T06:41:48.353Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "dudetechitout",
+    "url": "/dudetechitout",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MzAyMDAsInB1ciI6ImJsb2JfaWQifX0=--5206ccb53b3122220c575db0fa1c32644eb64574/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--2de8067d228529d65848a4eeed0bed0bb2531bc3/khdj1S3O_400x400.jpg"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 15688,
+    "url": "https://hackerone.com/brave",
+    "handle": "brave",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/015/688/2aad5641af643ee4f4402896e4747293f6e9c5ca_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/015/688/2aad5641af643ee4f4402896e4747293f6e9c5ca_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Brave Software",
+      "twitter_handle": "brave",
+      "website": "https://brave.com",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2018-12-17T19:36:57.398Z",
+  "bug_reporter_agreed_on_going_public_at": "2018-10-29T17:32:17.857Z",
+  "team_member_agreed_on_going_public_at": "2018-12-17T19:36:57.278Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Summary\n=====================\n\nWhen launching a protocol such as ```mailto:```, ```SEARCH:```, or ```bitcoin:```, Brave only asks to allow the protocol to be opened by an external application. You can select on whether or not to remember the decision or not and to allow or deny it. The issue is that upon selecting \"Remember this decision\" and allowing the launching of an external application, it will launch the selected external application on any and all websites - regardless of permissions.\n\n## Version Information: \n\nBrave\t0.24.0\nV8\t6.9.427.23\nrev\tf657f15\nMuon\t8.1.6\nOS Release\t10.0.16299\nUpdate Channel\tRelease\nOS Architecture\tx64\nOS Platform\tMicrosoft Windows\nNode.js\t7.9.0\nBrave Sync\tv1.4.2\nlibchromiumcontent\t69.0.3497.100\n\n\nBut First\n=====================\n\nBefore I get started, I'd like to let you know there are a multitude of issues that will be covered in this report using this as a baseline. As basically this can be used for malicious intent and I'd like to get as many of them expressed as I can. *The most juicy one is \"Completely Bypass Brave's Protocol Permissions\".*\n\nOpening Bitcoin Hardware Wallet Automatically\n---------------------\nThe below steps will allow you to open a Bitcoin hardware wallet automatically with information already filled in.\n\n## Steps To Reproduce:\n\n * Open the \"wallet_landing.html\" file.\n * Click \"Click here to enable the bitcoin protocol in Brave.\"\n * Select \"Remember this decision\" and click \"Allow\".\n * Once the hardware wallet has launched, be sure to close it.\n * Click \"Click here to send me some bitcoin.\"\n\nAs you can see upon navigating to the second page, it doesn't ask for confirmation. It automatically launches the hardware wallet with the address to send and amount to send as well; both of which are changeable.\n\n## Video\n\nBe sure to watch the video of this in action, it's attached as \"bitcoin_wallet.mp4\".\n\n## Impact\n\nAllowing the launching of a protocol across a multitude of domains is dangerous. For example, going to BitPay to make a payment with bitcoin, setting it to remember and navigating to another website, the hardware wallet would launch, all information already filled out, that could result in an accidental amount of bitcoin being sent to a nameless address.\n\nCrashing the Brave Browser & OS\n---------------------\nWith a few altercations of the code, you can launch a multitude of bitcoin wallets that would eventually result in a complete crash of the OS and browser.\n\nDelete the code ```clearInterval(window.refreesh);``` on line 56 in file ```landing_run.html``` and launch it.\n\nIt will now launch the hardware wallet every 300 milliseconds.\n\nYou can of course change it to the ```mailto:``` protocol by changing the code ```window.open(\"bitcoin:\" + address + \"?amount=\" + amount, \"loader\");``` to ```window.open(\"mailto:\" + address + \"?amount=\" + amount, \"loader\");``` in the ```landing_run.html```, which will open up the users' default e-mail client every 300 milliseconds.\n\n## Impact\n\nSimply causing the operating system and browser to overload itself, which can cause loss of work or even permanent system damage depending on the user's reaction. For example, if the system overloads and completely freezes, the user will have no other choice but to do a hard shutdown. hard shutdowns can defiantly result in loss of work and if the user is unlucky, even system damage could accrue due to system file corruption at the time of shutdown.\n\nCompletely Bypass Brave's Protocol Permissions\n---------------------\nThis is an interesting one and shouldn't be taken lightly. What makes it so interesting is that Brave only asks to use the ```url:``` protocol. Any other protocol after that, you can launch without Brave even asking. For example, if I wanted to open the ```mailto:``` protocol, I don't have to allow it through Brace. This same trick works with the ```sms:```, ```bitcoin:```, ```acrobat:```, ```search:``` and many more - basically anything that's listed in your \"default apps by protocol\".\n\nLet's mess with the ```mailto:``` protocol by changing the code ```window.open(\"bitcoin:\" + address + \"?amount=\" + amount, \"loader\");``` in ```landing_run.html``` to ```window.open(\"url:mailto:\" + address + \"?amount=\" + amount, \"loader\");```.\n\nNow launch ```landing_run.html``` and allow Brave to launch the ```url:``` protocol.\n\nOnce allowed, your e-mail client will now open!\n\n## Video\n\n__It is highly suggested to watch the video attached as \"bypass_permissions.mp4\".__\n\nKeep in mind that my default browser is set as Internet Explorer.\n\nIf you'd like to see ```telnet:``` in action, check out the \"telnet.mp4\" video.\n\n## Impact\n\nThe impact of this is that basically any protocol is free game - system wide. I've tried to run this same scenario in FireFox, Internet Explorer, and Google Chrome, but all three of them ignore it.\n\nEnd\n=====================\n\nHopefully I filled out this report right. If you have any questions at all, feel free to ask and I'll assist.\n\n## Impact\n\nOpen bitcoin hardware wallet across multiple domains, crash OS and Brave, and bypass protocol permissions.",
+  "bounty_amount": "150.0",
+  "formatted_bounty": "$150",
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 352677,
+      "file_name": "bitcoin_wallet.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/352/677/8bde6939ae1a0493dccd6144b9eb85c41d3d2b4a/bitcoin_wallet.mp4?response-content-disposition=attachment%3B%20filename%3D%22bitcoin_wallet.mp4%22%3B%20filename%2A%3DUTF-8%27%27bitcoin_wallet.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQRFHFU2CE%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T162820Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIHHk5KprzzraqX9WAR4WY3R95lW4kmOx1jm5VlPhFZn0AiEAps40phpYm5pLYBCZa%2Bz0Hd0tK9hBZJgyHCzGVUDaNiMqsgUIFxADGgwwMTM2MTkyNzQ4NDkiDOvzfXWWyql5a1PkciqPBUxYkJSBnLdFEkp%2FZs7XfkEz%2FzWXU%2Furg8hrdAtsc97fByHoA1L9hSnk1EJFW4KzD8EPCVj6dyvq2Ll39EV%2Bpg5nwLvLUv%2BsCGp22Ct0y8c68P4jx7k%2BWIh8fQFEXf6arz%2FVj1Pw3yOlcO0v%2Bb%2Fbo112KHtBTlCt%2BOo9CtSxzlXXSeOd%2BVrawDeoUnLM8PQE9XpMFhZRGBB6zsxlJCB0sz5bslLgy%2BlWg801IOE9Y%2FY7A0JFmWHTWEM5nOWi8Is%2BIhu%2FUZfRePXRVlBDm6U2UlkUI0vB5xNN2oRKAmQB0q5vsL89Ur64oBauiqV49NUGslDk0A8JJWTi570MP5%2FuZs0LeHk7C8xdAEF4GNPYWqLKyBq57UQgs7P8HHv7QXK4oaOPINs7G5owq64ZtZhYaf0y8aYG1uZZheusyJRrH5eATD01pbxOhiCDi12CDc4EETiy2QRZg5jQfnzWHpmTjp1CLOg%2FIY2I2qF%2BpQOXmgNyjOMZ3QfDkRY3n7Z5z4Zd8WHA5F5vC6JvuOdnZSgR6dH%2Bitr5VXPXqE%2FxQLpkkhxN5xKJ%2ByZ%2B086cEIoafBd4dJOXUagGzMbtifJwp6NM3tOvAzlrKCwExFRMziHYPSPXYnMUZ0ZUYcuE8gP%2FhCi5SzGrzAsfapaWomdgn8GFFahLDFo2K6BPYvU3Opp%2FJrmDVWJVqF2Sp0sCRarn%2FoSkbKzD1Frq7yoqVDlMiZtPTpAPkkmxiGaSSHAijgdrQClbuev9v%2BpGzu7VsTI66s9NrfKvusQLRDYdmQLciljzA15Nn7eaoU6%2BuwmdEgBZg1geJP5hJLWTY4NB%2BuZ%2B8zFiEb075SesgGZAAW2TnK831ei7cJqBHQjh3o%2FTFubPjBgwlIvAxgY6sQFUbZKjTTcw2J0TMBR8Oyc3RPkBYWF%2FivLNO6JVGCxyksPyRTodv2iO63dwSQa86T4lFkFCZ7CJtjHPSWgaTHB%2BidkgWIIK5XR%2BYNYqWnkEt3rEzJcDoRS%2F0QPP9ZL4gZYS4R7f9huonvYk3sr2qPsNYLe9liigzsqbjZdGqSmhLIkYMk4bwLvYUcJFN%2FzGmzVg3XLhfltfgw8vpeOXRf51OZGoA2X9j9FRvlN56JILav4%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=5e760b4f663f103d53939824286155d0707f978db87e7fd022e5a8146048214b",
+      "file_size": 724300,
+      "type": "video/mp4",
+      "moderated": null
+    },
+    {
+      "id": 352679,
+      "file_name": "bypass_permissions.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/352/679/95bea4996e2e02642be8e21397d95c500643ce37/bypass_permissions.mp4?response-content-disposition=attachment%3B%20filename%3D%22bypass_permissions.mp4%22%3B%20filename%2A%3DUTF-8%27%27bypass_permissions.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQRFHFU2CE%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T162820Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIHHk5KprzzraqX9WAR4WY3R95lW4kmOx1jm5VlPhFZn0AiEAps40phpYm5pLYBCZa%2Bz0Hd0tK9hBZJgyHCzGVUDaNiMqsgUIFxADGgwwMTM2MTkyNzQ4NDkiDOvzfXWWyql5a1PkciqPBUxYkJSBnLdFEkp%2FZs7XfkEz%2FzWXU%2Furg8hrdAtsc97fByHoA1L9hSnk1EJFW4KzD8EPCVj6dyvq2Ll39EV%2Bpg5nwLvLUv%2BsCGp22Ct0y8c68P4jx7k%2BWIh8fQFEXf6arz%2FVj1Pw3yOlcO0v%2Bb%2Fbo112KHtBTlCt%2BOo9CtSxzlXXSeOd%2BVrawDeoUnLM8PQE9XpMFhZRGBB6zsxlJCB0sz5bslLgy%2BlWg801IOE9Y%2FY7A0JFmWHTWEM5nOWi8Is%2BIhu%2FUZfRePXRVlBDm6U2UlkUI0vB5xNN2oRKAmQB0q5vsL89Ur64oBauiqV49NUGslDk0A8JJWTi570MP5%2FuZs0LeHk7C8xdAEF4GNPYWqLKyBq57UQgs7P8HHv7QXK4oaOPINs7G5owq64ZtZhYaf0y8aYG1uZZheusyJRrH5eATD01pbxOhiCDi12CDc4EETiy2QRZg5jQfnzWHpmTjp1CLOg%2FIY2I2qF%2BpQOXmgNyjOMZ3QfDkRY3n7Z5z4Zd8WHA5F5vC6JvuOdnZSgR6dH%2Bitr5VXPXqE%2FxQLpkkhxN5xKJ%2ByZ%2B086cEIoafBd4dJOXUagGzMbtifJwp6NM3tOvAzlrKCwExFRMziHYPSPXYnMUZ0ZUYcuE8gP%2FhCi5SzGrzAsfapaWomdgn8GFFahLDFo2K6BPYvU3Opp%2FJrmDVWJVqF2Sp0sCRarn%2FoSkbKzD1Frq7yoqVDlMiZtPTpAPkkmxiGaSSHAijgdrQClbuev9v%2BpGzu7VsTI66s9NrfKvusQLRDYdmQLciljzA15Nn7eaoU6%2BuwmdEgBZg1geJP5hJLWTY4NB%2BuZ%2B8zFiEb075SesgGZAAW2TnK831ei7cJqBHQjh3o%2FTFubPjBgwlIvAxgY6sQFUbZKjTTcw2J0TMBR8Oyc3RPkBYWF%2FivLNO6JVGCxyksPyRTodv2iO63dwSQa86T4lFkFCZ7CJtjHPSWgaTHB%2BidkgWIIK5XR%2BYNYqWnkEt3rEzJcDoRS%2F0QPP9ZL4gZYS4R7f9huonvYk3sr2qPsNYLe9liigzsqbjZdGqSmhLIkYMk4bwLvYUcJFN%2FzGmzVg3XLhfltfgw8vpeOXRf51OZGoA2X9j9FRvlN56JILav4%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=59696314682253322ede8a6a9f8665464ac63602d294ab775cc3fd4becbf9f21",
+      "file_size": 1427534,
+      "type": "video/mp4",
+      "moderated": null
+    },
+    {
+      "id": 352680,
+      "file_name": "telnet.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/352/680/7c77039705b9d4c1469bfc1d82028ec5554ac71e/telnet.mp4?response-content-disposition=attachment%3B%20filename%3D%22telnet.mp4%22%3B%20filename%2A%3DUTF-8%27%27telnet.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQRFHFU2CE%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T162820Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIHHk5KprzzraqX9WAR4WY3R95lW4kmOx1jm5VlPhFZn0AiEAps40phpYm5pLYBCZa%2Bz0Hd0tK9hBZJgyHCzGVUDaNiMqsgUIFxADGgwwMTM2MTkyNzQ4NDkiDOvzfXWWyql5a1PkciqPBUxYkJSBnLdFEkp%2FZs7XfkEz%2FzWXU%2Furg8hrdAtsc97fByHoA1L9hSnk1EJFW4KzD8EPCVj6dyvq2Ll39EV%2Bpg5nwLvLUv%2BsCGp22Ct0y8c68P4jx7k%2BWIh8fQFEXf6arz%2FVj1Pw3yOlcO0v%2Bb%2Fbo112KHtBTlCt%2BOo9CtSxzlXXSeOd%2BVrawDeoUnLM8PQE9XpMFhZRGBB6zsxlJCB0sz5bslLgy%2BlWg801IOE9Y%2FY7A0JFmWHTWEM5nOWi8Is%2BIhu%2FUZfRePXRVlBDm6U2UlkUI0vB5xNN2oRKAmQB0q5vsL89Ur64oBauiqV49NUGslDk0A8JJWTi570MP5%2FuZs0LeHk7C8xdAEF4GNPYWqLKyBq57UQgs7P8HHv7QXK4oaOPINs7G5owq64ZtZhYaf0y8aYG1uZZheusyJRrH5eATD01pbxOhiCDi12CDc4EETiy2QRZg5jQfnzWHpmTjp1CLOg%2FIY2I2qF%2BpQOXmgNyjOMZ3QfDkRY3n7Z5z4Zd8WHA5F5vC6JvuOdnZSgR6dH%2Bitr5VXPXqE%2FxQLpkkhxN5xKJ%2ByZ%2B086cEIoafBd4dJOXUagGzMbtifJwp6NM3tOvAzlrKCwExFRMziHYPSPXYnMUZ0ZUYcuE8gP%2FhCi5SzGrzAsfapaWomdgn8GFFahLDFo2K6BPYvU3Opp%2FJrmDVWJVqF2Sp0sCRarn%2FoSkbKzD1Frq7yoqVDlMiZtPTpAPkkmxiGaSSHAijgdrQClbuev9v%2BpGzu7VsTI66s9NrfKvusQLRDYdmQLciljzA15Nn7eaoU6%2BuwmdEgBZg1geJP5hJLWTY4NB%2BuZ%2B8zFiEb075SesgGZAAW2TnK831ei7cJqBHQjh3o%2FTFubPjBgwlIvAxgY6sQFUbZKjTTcw2J0TMBR8Oyc3RPkBYWF%2FivLNO6JVGCxyksPyRTodv2iO63dwSQa86T4lFkFCZ7CJtjHPSWgaTHB%2BidkgWIIK5XR%2BYNYqWnkEt3rEzJcDoRS%2F0QPP9ZL4gZYS4R7f9huonvYk3sr2qPsNYLe9liigzsqbjZdGqSmhLIkYMk4bwLvYUcJFN%2FzGmzVg3XLhfltfgw8vpeOXRf51OZGoA2X9j9FRvlN56JILav4%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=766b40c669686aa294fa81487daa8e18d9916c6a0c7b9503b5358b9466658dfb",
+      "file_size": 287358,
+      "type": "video/mp4",
+      "moderated": null
+    },
+    {
+      "id": 352681,
+      "file_name": "wallet_landing.html",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/352/681/7707ef60c6962688b90b05a81ac7ede69680345e/wallet_landing.html?response-content-disposition=attachment%3B%20filename%3D%22wallet_landing.html%22%3B%20filename%2A%3DUTF-8%27%27wallet_landing.html&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQRFHFU2CE%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T162820Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIHHk5KprzzraqX9WAR4WY3R95lW4kmOx1jm5VlPhFZn0AiEAps40phpYm5pLYBCZa%2Bz0Hd0tK9hBZJgyHCzGVUDaNiMqsgUIFxADGgwwMTM2MTkyNzQ4NDkiDOvzfXWWyql5a1PkciqPBUxYkJSBnLdFEkp%2FZs7XfkEz%2FzWXU%2Furg8hrdAtsc97fByHoA1L9hSnk1EJFW4KzD8EPCVj6dyvq2Ll39EV%2Bpg5nwLvLUv%2BsCGp22Ct0y8c68P4jx7k%2BWIh8fQFEXf6arz%2FVj1Pw3yOlcO0v%2Bb%2Fbo112KHtBTlCt%2BOo9CtSxzlXXSeOd%2BVrawDeoUnLM8PQE9XpMFhZRGBB6zsxlJCB0sz5bslLgy%2BlWg801IOE9Y%2FY7A0JFmWHTWEM5nOWi8Is%2BIhu%2FUZfRePXRVlBDm6U2UlkUI0vB5xNN2oRKAmQB0q5vsL89Ur64oBauiqV49NUGslDk0A8JJWTi570MP5%2FuZs0LeHk7C8xdAEF4GNPYWqLKyBq57UQgs7P8HHv7QXK4oaOPINs7G5owq64ZtZhYaf0y8aYG1uZZheusyJRrH5eATD01pbxOhiCDi12CDc4EETiy2QRZg5jQfnzWHpmTjp1CLOg%2FIY2I2qF%2BpQOXmgNyjOMZ3QfDkRY3n7Z5z4Zd8WHA5F5vC6JvuOdnZSgR6dH%2Bitr5VXPXqE%2FxQLpkkhxN5xKJ%2ByZ%2B086cEIoafBd4dJOXUagGzMbtifJwp6NM3tOvAzlrKCwExFRMziHYPSPXYnMUZ0ZUYcuE8gP%2FhCi5SzGrzAsfapaWomdgn8GFFahLDFo2K6BPYvU3Opp%2FJrmDVWJVqF2Sp0sCRarn%2FoSkbKzD1Frq7yoqVDlMiZtPTpAPkkmxiGaSSHAijgdrQClbuev9v%2BpGzu7VsTI66s9NrfKvusQLRDYdmQLciljzA15Nn7eaoU6%2BuwmdEgBZg1geJP5hJLWTY4NB%2BuZ%2B8zFiEb075SesgGZAAW2TnK831ei7cJqBHQjh3o%2FTFubPjBgwlIvAxgY6sQFUbZKjTTcw2J0TMBR8Oyc3RPkBYWF%2FivLNO6JVGCxyksPyRTodv2iO63dwSQa86T4lFkFCZ7CJtjHPSWgaTHB%2BidkgWIIK5XR%2BYNYqWnkEt3rEzJcDoRS%2F0QPP9ZL4gZYS4R7f9huonvYk3sr2qPsNYLe9liigzsqbjZdGqSmhLIkYMk4bwLvYUcJFN%2FzGmzVg3XLhfltfgw8vpeOXRf51OZGoA2X9j9FRvlN56JILav4%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=5629fc56e8c7814bc88c1a0cc462193ac70c9d9bd90ddd5fd87734e36440491b",
+      "file_size": 231,
+      "type": "text/html",
+      "moderated": null
+    },
+    {
+      "id": 352682,
+      "file_name": "landing_run.html",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/352/682/0459f699b41ab46bdf18144f7c8629e815ef8f21/landing_run.html?response-content-disposition=attachment%3B%20filename%3D%22landing_run.html%22%3B%20filename%2A%3DUTF-8%27%27landing_run.html&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQRFHFU2CE%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T162820Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIHHk5KprzzraqX9WAR4WY3R95lW4kmOx1jm5VlPhFZn0AiEAps40phpYm5pLYBCZa%2Bz0Hd0tK9hBZJgyHCzGVUDaNiMqsgUIFxADGgwwMTM2MTkyNzQ4NDkiDOvzfXWWyql5a1PkciqPBUxYkJSBnLdFEkp%2FZs7XfkEz%2FzWXU%2Furg8hrdAtsc97fByHoA1L9hSnk1EJFW4KzD8EPCVj6dyvq2Ll39EV%2Bpg5nwLvLUv%2BsCGp22Ct0y8c68P4jx7k%2BWIh8fQFEXf6arz%2FVj1Pw3yOlcO0v%2Bb%2Fbo112KHtBTlCt%2BOo9CtSxzlXXSeOd%2BVrawDeoUnLM8PQE9XpMFhZRGBB6zsxlJCB0sz5bslLgy%2BlWg801IOE9Y%2FY7A0JFmWHTWEM5nOWi8Is%2BIhu%2FUZfRePXRVlBDm6U2UlkUI0vB5xNN2oRKAmQB0q5vsL89Ur64oBauiqV49NUGslDk0A8JJWTi570MP5%2FuZs0LeHk7C8xdAEF4GNPYWqLKyBq57UQgs7P8HHv7QXK4oaOPINs7G5owq64ZtZhYaf0y8aYG1uZZheusyJRrH5eATD01pbxOhiCDi12CDc4EETiy2QRZg5jQfnzWHpmTjp1CLOg%2FIY2I2qF%2BpQOXmgNyjOMZ3QfDkRY3n7Z5z4Zd8WHA5F5vC6JvuOdnZSgR6dH%2Bitr5VXPXqE%2FxQLpkkhxN5xKJ%2ByZ%2B086cEIoafBd4dJOXUagGzMbtifJwp6NM3tOvAzlrKCwExFRMziHYPSPXYnMUZ0ZUYcuE8gP%2FhCi5SzGrzAsfapaWomdgn8GFFahLDFo2K6BPYvU3Opp%2FJrmDVWJVqF2Sp0sCRarn%2FoSkbKzD1Frq7yoqVDlMiZtPTpAPkkmxiGaSSHAijgdrQClbuev9v%2BpGzu7VsTI66s9NrfKvusQLRDYdmQLciljzA15Nn7eaoU6%2BuwmdEgBZg1geJP5hJLWTY4NB%2BuZ%2B8zFiEb075SesgGZAAW2TnK831ei7cJqBHQjh3o%2FTFubPjBgwlIvAxgY6sQFUbZKjTTcw2J0TMBR8Oyc3RPkBYWF%2FivLNO6JVGCxyksPyRTodv2iO63dwSQa86T4lFkFCZ7CJtjHPSWgaTHB%2BidkgWIIK5XR%2BYNYqWnkEt3rEzJcDoRS%2F0QPP9ZL4gZYS4R7f9huonvYk3sr2qPsNYLe9liigzsqbjZdGqSmhLIkYMk4bwLvYUcJFN%2FzGmzVg3XLhfltfgw8vpeOXRf51OZGoA2X9j9FRvlN56JILav4%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=bbdef410292853807c56d5c85b01cf284c7645e7607471fc3e7d3e31a5d99625",
+      "file_size": 1704,
+      "type": "text/html",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 8,
+  "voters": [
+    "ali",
+    "h4x0r_dz",
+    "savitar0x01",
+    "cryptographer",
+    "sumit7",
+    "dudetechitout",
+    "reppie",
+    "reddmist"
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "Team"
+  },
+  "structured_scope": {
+    "databaseId": 7933,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/brave/browser-laptop",
+    "max_severity": "none"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "id": 10851,
+      "category": "researcher",
+      "content": "Allowing the ```url:``` protocol to run allows any other protocol to run without user permissions. Permanently allowing a protocol to run allows said protocol to run on any website, regardless of permissions. For example, allowing the ```url:``` protocol to run on ```http://google.com``` will allow it to run on ```http://www.malicious.com```. By doing so ```http://www.malicious.com``` can execute protocols such as ```ssh://```, ```telnet://```, ```search:```, and various other protocols without user permission. In fact, ```http://www.malicious.com``` can run all these protocols at the same time by embedding an iframe on a delay to visit each protocol of their choosing.",
+      "updated_at": "2018-09-29T12:01:09.801Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 204176,
+        "username": "dudetechitout",
+        "name": "dudetechitout",
+        "bio": "",
+        "cleared": false,
+        "verified": false,
+        "website": "https://dudetechitout.com",
+        "location": "",
+        "created_at": "2017-09-29T23:47:31.091Z",
+        "url": "https://hackerone.com/dudetechitout",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "hacker",
+        "profile_picture_urls": {
+          "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MzAyMDAsInB1ciI6ImJsb2JfaWQifX0=--5206ccb53b3122220c575db0fa1c32644eb64574/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--2de8067d228529d65848a4eeed0bed0bb2531bc3/khdj1S3O_400x400.jpg",
+          "medium": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MzAyMDAsInB1ciI6ImJsb2JfaWQifX0=--5206ccb53b3122220c575db0fa1c32644eb64574/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiODJ4ODJeIiwiY3JvcCI6IjgyeDgyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--29ac517e159d5d0770b357ab67c25f2cbc1a5e86/khdj1S3O_400x400.jpg",
+          "xtralarge": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MzAyMDAsInB1ciI6ImJsb2JfaWQifX0=--5206ccb53b3122220c575db0fa1c32644eb64574/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJyZXNpemUiOiIyNjB4MjYwXHUwMDNlIn0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--cf3aeca803d1baf476958c689ca7b472a4cb54f1/khdj1S3O_400x400.jpg"
+        }
+      }
+    }
+  ]
+}
