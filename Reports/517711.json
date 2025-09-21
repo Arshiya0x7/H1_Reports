@@ -1,0 +1,149 @@
+{
+  "id": 517711,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC81MTc3MTE=",
+  "url": "https://hackerone.com/reports/517711",
+  "title": "Bypassing the SMS sending limit for download app link.",
+  "state": "Closed",
+  "substate": "duplicate",
+  "severity_rating": "low",
+  "readable_substate": "Duplicate",
+  "created_at": "2019-03-28T11:29:41.769Z",
+  "submitted_at": "2019-03-28T11:29:41.769Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "bihari_web",
+    "url": "/bihari_web",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/209/891/0674c16705aae310e7963bffd5b2518ae1d73200_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 2943,
+    "url": "https://hackerone.com/eternal",
+    "handle": "eternal",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/9525xdsq4bz7ubnoie172ssjv8ul/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/9525xdsq4bz7ubnoie172ssjv8ul/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Eternal",
+      "twitter_handle": "Zomato",
+      "website": "https://www.eternal.com",
+      "about": "Eternal is India’s largest new-age tech company by market cap, comprising of 4 businesses (as of now) – Zomato, Blinkit, District, & Hyperpure."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2019-04-16T15:45:53.262Z",
+  "bug_reporter_agreed_on_going_public_at": "2019-04-01T02:18:23.601Z",
+  "team_member_agreed_on_going_public_at": "2019-04-16T15:45:53.171Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "**Summary:** Here an attacker can send the download link sms to any number of people bypassing the sms rate limit imposed by zomato.\n\n**Description:** zomato provides an easy way for the users to download their app when they are at the home page of zomato's website. A user can send upto 15 sms ( to themself or others) and after that the rate limit is imposed (Preventing them to abuse it). But however it can be bypassed.\n\n**Platform(s) Affected:** website\n\n## Steps To Reproduce:\n\n\n  1. visit to the website https://www.zomato.com/\n  2. Now at the bottom there is a TEXT LINK BUTTON (Click it and intercept the request)\n  3. It has an endpoints which have two **type** paramete rwhich handles the same sms functionality.\n\na) ``` /php/restaurantSmsHandler.php?type=app-download-sms&mobile_no=<NUMBER>&csrf_token=<TOKEN>```\n\nb) ``` /php/restaurantSmsHandler.php?type=order-app-download-sms&mobile_no=<NUMBER>&csrf_token=<TOKEN>```\n\n4) Now if we give the list of mobile number's to **mobile_no** parameter then all the numbers in this list are going to receive the sms.\n\n `/php/restaurantSmsHandler.php?type=app-download-sms&mobile_no=[8127410000,8317030000,...]&csrf_token=<TOKEN>`\n\n>Here there is no limit on number of MOBILE NUMBERs that can we putted in the list.\n\n## Supporting Material/References:\nF453703: Screenshot from 2019-03-28 16-45-54.png\n\n## Impact\n\n>The attacker can send the spam download app sms to any number of people without any limit",
+  "weakness": {
+    "id": 31,
+    "name": "Improper Restriction of Authentication Attempts"
+  },
+  "original_report_id": 329429,
+  "original_report_url": "https://hackerone.com/reports/329429",
+  "attachments": [
+    {
+      "id": 453703,
+      "file_name": "Screenshot_from_2019-03-28_16-45-54.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/453/703/4d3bbe4dbd1875a0f4846977999000edf8a4c6ac/Screenshot_from_2019-03-28_16-45-54.png?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_from_2019-03-28_16-45-54.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_from_2019-03-28_16-45-54.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQSIKGEP7Z%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T154358Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDXSUJbm47Xkl6GhjmU3im4fJmwYTlkTUAVk7ZOqnxdVAIhAO2uWtZuYHfsefdBGLrVYRcR2FYoDyVPmigBARBQahDxKrEFCBcQAxoMMDEzNjE5Mjc0ODQ5Igy03HZaTgLGoKQJaG8qjgX8W0VTH04xkoaNV862svPDPU80n6pyEi3YUWe10h2lK1TXz0DOs77dMX68bQ18PzzcUav2EhTaNmX5rLjKpJ1DkQKnxzROiK5ZkPsZWdVqmE3fO1vahBNVuuKoeUAaYmqkwujaRmNkP4PdVCB%2BXV8VzyjT33W40cNAtGYtdXdn6wqaEX4J3hfidXlCVJ0wpiAnCqcyQWuYn%2BTq4sJIgNarXyubydkCpAtekhy0bBKNteeTZVMQScHm7vyJzQCV7pCgYbA%2F9%2FUu5q4G2Tzy010pEjyFBZNTA4665siLrU%2F6YKr%2F6nh9ONyY1rCFCAuPWGeuWok4OSdXBkcp3eNvebf8c13CKNItshoUVaWfrW6IkSV1dDrBL4T3WwaBTSZtfMIquer0VUaUEYUPOxu%2FcHYzkaI8hDFNzT8UScwK5BQgK%2BrMe1Rlap%2BxxxL5O2JjPdnoMDRxNVtbrEXLrSpRae1gz0wxcnwgLXeKJMd%2FC3RH9DQZSzY1QKNmzOe%2FHfsH%2BYmn2hieJCllKLnL%2BG01Pl50tWODu8uX0NRn%2Fypiy%2B%2F2eGPHCAU%2ByeuM7JHpqQ0dBLoMtOC0U%2FyIHqnu3%2BGkkzd8wjz9f%2FadmGJxUOza2R2vTCqQ40Me%2Flp65PjJnV9GeDDkO2P5taay5Vp%2BI0EvbolzHzXzpMViuJYnphQ82ft4uYwO1X7OkYX7MBudeZDkW%2FIC0AIk4DZYkjS0Ycmp3dEDL%2Berrf%2BTvveLVHzvzmzNb5wlBiNWlANws1WfGrDWMwPYQdH%2BdayKboNGWL1Rp2twWkWI29ZkNECwdjSvickZ%2Bk51OJoVdq3TUnGT1NOmsLLlOM2jhF%2Bsj9tTangrciafOmLBymP3UYohmtPSYdgwh47AxgY6sAELU2lPQmYa2go0IgVWvMv8Iv8i5y1IKjSv47zwDOk9y6rPQMxOlcinw3T3ewK%2FIMvNRKen0p0QBdpMTv1p7YA6hyrJgw0zI4Twp62x9cvMcLl5NVQglgTZIvSta0fKNAMFRB%2Bd5zl9i%2FzRL%2FEZG5yvG8EMTz7V4FJSfVIR781omSjWgLxNDu4RtpO4zpVf32vf9%2B%2BeKyvx5V%2BbwtSsJUGMGhXENoT4lG%2FWVjcsbgQOSA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=2fbfce8824272c047bcf65f410c7847ebe879223d7af1343644f09d5d4465a27",
+      "file_size": 148180,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 7,
+  "voters": [
+    "upx",
+    "shubham_srt",
+    "sunny_achilles",
+    "bihari_web",
+    "cryptographer",
+    "j0rd",
+    "behimar"
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 383,
+    "asset_type": "WILDCARD",
+    "asset_identifier": "*.zomato.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "id": 15218,
+      "category": "team",
+      "content": "We've been receiving similar issues, disclosing it publicly so that everyone reading this report can know that this is out of scope and hence going forward will be closed as N/A.\n",
+      "updated_at": "2019-04-16T15:45:18.999Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 547853,
+        "username": "biryani-is-lob",
+        "name": "Biryani is lob <3 ",
+        "bio": "",
+        "cleared": false,
+        "verified": false,
+        "website": null,
+        "location": "",
+        "created_at": "2019-03-18T12:32:47.504Z",
+        "url": "https://hackerone.com/biryani-is-lob",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "company",
+        "profile_picture_urls": {
+          "small": "https://profile-photos.hackerone-user-content.com/variants/sYPtN4bJVr35fXwTxNPhuBtp/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/sYPtN4bJVr35fXwTxNPhuBtp/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c",
+          "xtralarge": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTA3NjI4MCwicHVyIjoiYmxvYl9pZCJ9fQ==--def45c0857b8d0af460c4f271999ca50efa9a964/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJyZXNpemUiOiIyNjB4MjYwXHUwMDNlIn0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--c155082ce6f9751dcb29cd6ea061a7e4d7329577/Screenshot%202020-08-11%20at%202.12.57%20PM.png"
+        }
+      }
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
