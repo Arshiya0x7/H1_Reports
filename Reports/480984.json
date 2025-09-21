@@ -1,0 +1,145 @@
+{
+  "id": 480984,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC80ODA5ODQ=",
+  "url": "https://hackerone.com/reports/480984",
+  "title": "Stack overflow affecting \"ext\" field on stylers.xml configuration file",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2019-01-16T15:55:52.607Z",
+  "submitted_at": "2019-01-16T15:55:52.607Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "ammm",
+    "url": "/ammm",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTY5MDksInB1ciI6ImJsb2JfaWQifX0=--3eda23593f9878da5e745315aa8d784a460df3d0/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--a4d91faed3dff6024dfc1a7b7f8ccc6b45e38396/FotoAntonio.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 36721,
+    "url": "https://hackerone.com/notepad-plus-plus",
+    "handle": "notepad-plus-plus",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6Nzc3MDUsInB1ciI6ImJsb2JfaWQifX0=--2ca2357f301fa5575a76366238f71e27e3ddfe36/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--a4d91faed3dff6024dfc1a7b7f8ccc6b45e38396/open-uri20181218-17572-foz24g",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/036/721/b8be93879279f14a49e5051a1a2794575fb1f3f8_original./3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "disabled",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Notepad++",
+      "twitter_handle": "notepad_plus",
+      "website": "https://notepad-plus-plus.org",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2019-08-25T12:51:14.728Z",
+  "bug_reporter_agreed_on_going_public_at": "2019-07-26T12:51:12.998Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "**Summary:**\n\nA stack buffer overflow vulnerability affects \"ext\" field into \"stylers.xml\" configuration file.\n\n\"isInList\" function doesn't check boundaries on word[64] array.\n\n**Description:**\nVulnerability src file: notepad-plus-plus/PowerEditor/src/MISC/Common/Common.cpp\nVulnerability line: line 329\nVariable affected: TCHAR word[64];\n\n## Steps To Reproduce:\n\nNotice: All this steps have been tested on 32-bits version of Notepad++.\n\n  1. Open \"stylers.xml\" configuration file (C:\\Users\\%USERPROFILE%\\AppData\\Roaming\\Notepad++)\n  2. Modify \"ext\" field with a long string, such as \"123456789012346789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789\" (see ExploitationExample.png)\n  3. Close Notepad++ application and re-open it.\n  4. Application should crash\n\n## Supporting Material/References:\n\n- ExploitationExample.png -> Exploitation example\n- CrashEvidence.png -> Evidence of vulnerability exploitation\n\n## Impact\n\nA local attacker could modify this configuration file to trigger a stack buffer overflow. When the victim re-open Notepad++ vulnerability will be exploited.\n\nIt's not a remote vulnerability. Local access to stylers.xml is required.",
+  "weakness": {
+    "id": 4,
+    "name": "Stack Overflow"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 407415,
+      "file_name": "CrashEvidence.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/407/415/91765919714194d62145e1d016a310bc23fc13da/CrashEvidence.png?response-content-disposition=attachment%3B%20filename%3D%22CrashEvidence.png%22%3B%20filename%2A%3DUTF-8%27%27CrashEvidence.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQY5U7GUIN%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T145254Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIC5niQD0qC3aoi4eSiLWoaiY65AIYo1DPdTPjLeAKLP2AiAHHto8YHVb%2FNSxWMUT59231oA%2BwfBjLmaU%2BVXjfUbnviqyBQgXEAMaDDAxMzYxOTI3NDg0OSIMzDlJpBmypiQrtoJNKo8FsGHokkKb9RIXAek5nIi%2FBJK5PvfQ%2FqshJQ5rrqwkMwSdYwrYqwCQvGM1uJGBHzWTyj4zu6Ih4nSgUnBbD%2FzSFDjJ%2BgQIAt8y8EPS2%2FNJk4IaSULYQmxdQOMQzVMdZve0n7cePMkplrYAV945MJCR%2FH%2FUWt09fn%2FAgvAQP2jVE%2BFsZFQG93KzPBmRGYQR34K8hPjz5%2FfuemagW%2Bq58NCTuyDLc1J4umna0Pe0U%2FjJaA5Th1aGEFmhhxcWv6muLhmIkLwqXOrQ7p473v5tOcxSz0F4ldwO3EAIcWVqDAU3F%2FRyirSa8v2I7J1f7lelcLTOoWZsG8yHw49ufk7QV5ia%2B%2BUy1knUrXwUWq%2F3CNHTUzWbYNSIFkX1URqW%2BxayQDqKu7tPTjg%2FBZwUAYavypZFKNmg%2BNWV1AqTvh0G8xm6SSo2erIOpXhXDRDhWY%2BKZjAlqYBgDT8RfiqaiStuQgnjAidULi%2BXSzUx3a3KFv549%2Fb5J1ybLIMsIdjrO5Dzv4JaBCM2Q0Q0bWnE36yuVtU8GxIE0CULiEnZd8oow2HWNuelamtB9QH%2Ft5mi9KQhPYQQo%2BSVS9KoXKCj%2FQSCYe9LcUmco%2F%2FcPmExBzKRoFvTu57n7O%2B9jGGUxBWZT6dCNNqcDe3GVV38uDznrGl50azP4yjkV%2FUXCRJRchK00VD276gGxBm4F8SsMzP9dxtgo4VoQbYZjQPTiPqG3UmkuOVVPoiUoqo3VwSLfH%2B6%2F6eTjMJo%2FlM2voA9pviZPInqBFprWNmjPzG3yDOBNE2l6X4D3pDbSPh2EX8EsA83a9%2FPtP3QY3SgfKurGf1RXnqV2rxrkUfkpwKc3YXfj%2BEkTNO7Xr4fMTxMBbAqalgJkNwAwjDBjsDGBjqyAcrclUxDrZ5iAKX4pfyn6ZYjz7zUvhlu2N1pGEYsrmR%2FWh3TiBu78jAIewRa%2BwR1ZoqcOwbYNR67OK66P7MdOKF8ifnYLE%2FrooR75%2B%2BHerT9RzhprNH79fm%2BZFIN6rElfl1OePlj8uJLM4p0dk1uVmhLdI%2FVazM5dABzjdkbDU7BX68BdWX1qRH5sr4VYAGaWtrt%2B9wvaq7Lvk6dr2Mv%2B9nKULxeHmBlIFMOIkG6Gl6QJf8%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=2f26d57dfcccb6f9addc8fd8fc5596c20d864ac26f148cdcbbf59f3d56fed594",
+      "file_size": 27539,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 407416,
+      "file_name": "ExploitationExample.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/407/416/fa29e2714df0a8133603674746516dc570b9ea06/ExploitationExample.png?response-content-disposition=attachment%3B%20filename%3D%22ExploitationExample.png%22%3B%20filename%2A%3DUTF-8%27%27ExploitationExample.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQY5U7GUIN%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T145254Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIC5niQD0qC3aoi4eSiLWoaiY65AIYo1DPdTPjLeAKLP2AiAHHto8YHVb%2FNSxWMUT59231oA%2BwfBjLmaU%2BVXjfUbnviqyBQgXEAMaDDAxMzYxOTI3NDg0OSIMzDlJpBmypiQrtoJNKo8FsGHokkKb9RIXAek5nIi%2FBJK5PvfQ%2FqshJQ5rrqwkMwSdYwrYqwCQvGM1uJGBHzWTyj4zu6Ih4nSgUnBbD%2FzSFDjJ%2BgQIAt8y8EPS2%2FNJk4IaSULYQmxdQOMQzVMdZve0n7cePMkplrYAV945MJCR%2FH%2FUWt09fn%2FAgvAQP2jVE%2BFsZFQG93KzPBmRGYQR34K8hPjz5%2FfuemagW%2Bq58NCTuyDLc1J4umna0Pe0U%2FjJaA5Th1aGEFmhhxcWv6muLhmIkLwqXOrQ7p473v5tOcxSz0F4ldwO3EAIcWVqDAU3F%2FRyirSa8v2I7J1f7lelcLTOoWZsG8yHw49ufk7QV5ia%2B%2BUy1knUrXwUWq%2F3CNHTUzWbYNSIFkX1URqW%2BxayQDqKu7tPTjg%2FBZwUAYavypZFKNmg%2BNWV1AqTvh0G8xm6SSo2erIOpXhXDRDhWY%2BKZjAlqYBgDT8RfiqaiStuQgnjAidULi%2BXSzUx3a3KFv549%2Fb5J1ybLIMsIdjrO5Dzv4JaBCM2Q0Q0bWnE36yuVtU8GxIE0CULiEnZd8oow2HWNuelamtB9QH%2Ft5mi9KQhPYQQo%2BSVS9KoXKCj%2FQSCYe9LcUmco%2F%2FcPmExBzKRoFvTu57n7O%2B9jGGUxBWZT6dCNNqcDe3GVV38uDznrGl50azP4yjkV%2FUXCRJRchK00VD276gGxBm4F8SsMzP9dxtgo4VoQbYZjQPTiPqG3UmkuOVVPoiUoqo3VwSLfH%2B6%2F6eTjMJo%2FlM2voA9pviZPInqBFprWNmjPzG3yDOBNE2l6X4D3pDbSPh2EX8EsA83a9%2FPtP3QY3SgfKurGf1RXnqV2rxrkUfkpwKc3YXfj%2BEkTNO7Xr4fMTxMBbAqalgJkNwAwjDBjsDGBjqyAcrclUxDrZ5iAKX4pfyn6ZYjz7zUvhlu2N1pGEYsrmR%2FWh3TiBu78jAIewRa%2BwR1ZoqcOwbYNR67OK66P7MdOKF8ifnYLE%2FrooR75%2B%2BHerT9RzhprNH79fm%2BZFIN6rElfl1OePlj8uJLM4p0dk1uVmhLdI%2FVazM5dABzjdkbDU7BX68BdWX1qRH5sr4VYAGaWtrt%2B9wvaq7Lvk6dr2Mv%2B9nKULxeHmBlIFMOIkG6Gl6QJf8%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=d3058cde1d3d7bb169cd74fb4b531bf74f9a216fa886bd5878f3851702a0901a",
+      "file_size": 249803,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2019-08-25T12:51:13.185Z",
+  "allow_singular_disclosure_after": -191728901.1369669,
+  "singular_disclosure_allowed": true,
+  "vote_count": 51,
+  "voters": [
+    "p1stachios",
+    "un4gi",
+    "ali",
+    "sameerphad72",
+    "th4nu_0x0",
+    "dhakal_ananda",
+    "mik317",
+    "asad0x01_",
+    "f_m",
+    "gingersmurfsown",
+    "and 41 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 6.8,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "high",
+      "privileges_required": "none",
+      "user_interaction": "required",
+      "scope": "unchanged",
+      "confidentiality": "high",
+      "integrity": "high",
+      "availability": "none"
+    }
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
