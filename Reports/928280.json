@@ -1,0 +1,132 @@
+{
+  "id": 928280,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC85MjgyODA=",
+  "url": "https://hackerone.com/reports/928280",
+  "title": "Formula Injection vulnerability in CSV export feature",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2020-07-20T22:56:29.311Z",
+  "submitted_at": "2020-07-20T22:56:29.311Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "6661620a",
+    "url": "/6661620a",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTIwNjY5OCwicHVyIjoiYmxvYl9pZCJ9fQ==--431edab8d5c2863e6ab746f196038aa726efc964/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGVnIiwiZ3Jhdml0eSI6IkNlbnRlciIsInJlc2l6ZSI6IjYyeDYyXiIsImNyb3AiOiI2Mng2MiswKzAifSwicHVyIjoidmFyaWF0aW9uIn19--0e8fb5b1a245559716caa2abf00b1571bf3c5040/cat.jpeg"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13291,
+    "url": "https://hackerone.com/nextcloud",
+    "handle": "nextcloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Nextcloud",
+      "twitter_handle": "nextclouders",
+      "website": "https://nextcloud.com",
+      "about": "Access, share and protect your files, calendars, contacts, communication & more at home and in your enterprise."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2021-03-04T09:28:17.607Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2021-02-02T09:28:16.453Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "**Dear Nextcloud Team –**\n\nI have identified a formula injection vulnerability [1][2] in the CSV export feature of the *Forms* App. I am aware that the Forms app is not part of this bug bounty program but was advised to disclose it via hackerone anyway.\n\n**Description.** When a (n Excel-/Calc-) formula is sent as the answer for a question that uses one of the two *Response* answer types which support text input, the formula get reflected in the .csv export file without any type of sanitation.\n\nWhen the content of a cell starts with one of the following characters, the content will be treated as formula.\n\n- Equals  to (\"=\")\n- Plus (\"+\")\n- Minus (\"-\")\n- At (\"@\")\n\n\n**Risk.** A malicious actor who is in possession of a link to a Nextcloud Form can abuse this vulnerability to exfiltrate the other participants answers from the same sheet, read local files or even execute code (in case the user who opens the document  trusts the csv file and dismisses the warning).\n\nThe following steps are required to reproduce the vulnerability:\n\n1. Create a new form that has either *Short Response* or *Long Response* field and save it.\n2. Visit the link and insert `=1+1` as answer\n3. Download the CSV and open it either in Excel or LibreOfficeWriter\n\n{F914621}\n\n**Remediation.** To remediate it, ensure that no cells start with either of the previously mentioned operators (+,-,@,=) which initiate the formula parsing. If one of those characters is required to be the first in a cell, e.g. for a bullet points list inside an answer, it can be escaped by prepending a single quote. The single quote won't be shown in Excel or Calc but will prohibit the content from getting parsed as a formula.\n\n\nCheers,\nFabian\n\n#### References\n[1] https://owasp.org/www-community/attacks/CSV_Injection \n[2] https://cwe.mitre.org/data/definitions/1236.html\n\n## Impact\n\nA malicious actor who is in possession of a link to a Nextcloud Form can abuse this vulnerability to \n- exfiltrate the other participants answers from the same sheet [1]\n- read local files or execute code (in case the user who opens the document trusts the csv file and dismisses the warning). [2]\n\n[1] https://www.notsosecure.com/data-exfiltration-formula-injection/\n[2] https://www.contextis.com/en/blog/comma-separated-vulnerabilities",
+  "weakness": {
+    "id": 70,
+    "name": "Code Injection"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 914621,
+      "file_name": "87601534-92c6a300-c6f5-11ea-9465-f2862ed7ee01.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/sb922b6AjznXh3o1uhHkvro3?response-content-disposition=attachment%3B%20filename%3D%2287601534-92c6a300-c6f5-11ea-9465-f2862ed7ee01.png%22%3B%20filename%2A%3DUTF-8%27%2787601534-92c6a300-c6f5-11ea-9465-f2862ed7ee01.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWJRMNYGF%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T034058Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDwCyxSjnyPOOfZ64A%2F6E8Jf3NWsxL07c3EfwhzWy%2FgAAIhAPvCsriW8Uc7HAsTekNaK9yPEc2QLdfvvfFI70YBCMrtKroFCPz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5IgwhzFCeeJWJUnPVB%2FIqjgXSlbjFjg5Gd%2BhZfSgqJoj7R718g1xsgFZlFZT2dBBGV7TTXDc4Y%2BBE8x58lCvTfWUJTZ%2FDzS2YVlWOyAs7TTDk2kOQwlqtI6lXkcaYpaiGmMRTdje19NffW7y4wNdLmIxM9Zvf0ogzjRbM%2F5Cft%2F%2Bv0mFCcd1v3aZb9PV7%2BMDGMz9Hm9dP159PiEnAffMsXxD%2FTDopmrcxEue8hGje%2Fr4CVzoLHCYtIPzhBA5TahTbPtJjlC%2BL7F%2BC47fHg9KksNFHlT%2FlNr6vEwuLlZ%2BNzpfOmjLSL4vwkUbHtZgFXF8jrR0lew%2FTYN6Kq4SpecVrZJEOuzgV4p6tWP8ARonjVjVPismCPvOF5qCTu%2Bl5vOXPCJxLrxdvpT7wwR55oXSz%2FYOjSUqDhra1Vuf63ebeoLmWiafw%2FuUF3QiEtayiBPrVXJJIJ8HagZ4TzmOoGd1Fd66S314OSc6NydkqMrPc833gtm8Fb76UkfatPSWriuy8NfdaNHQbdvgJr5Sd7tMIUvKtB7WkusQjEK7P%2FCVSBrpxA56ViqQLa6ifJdT6hn4bGoLaxvP2UfN22hjKu%2FJjnVeVM6vGdEnyaa9TZUdWH6iooGLfuhAhCLKxE%2Bs4vo%2BnD8XxwpS6b8DqKuFIUxh8XhlKLvsJ57ajEQnHPhL6FW1UangW5N7h8870BUowGNpUX2DZ4uBHowMWxYI%2FoFKg%2FFhgpb9SyKBqYc2C9mHWLdPPj2HPlAVV51hJLNhKMBCAl%2FxX0tElAcHFvsQ6cldXMYrt0palgoEDzlGsLrXQYr6f0TnIpYXJfOy5k9ddRzj3Q9KXRJUsLsBSq5T73eD2z5TJphnDdIWxYtq4JYGat7Ijn01LpEkC4Fgz3vAUhGcwxM69xgY6sAEhKL7dZDxe7Jo5Y%2BRzoRNE9y6T0POBC0WMro2SqnNyv3B7MdTM%2B8%2B%2FW7MD5BVjhT%2FP2mu%2B4iWgzd76mhcnsVZSzAOuOUWN8FPo6O1GLbiMpOVLg0ACK6Hzip09jD5z4u7QlmymETyGPN1JCx9NnD79kznaqsAWOupNnIv9E2Ne0LwHULCBtKzo%2BXks5sYwlx7GtAEbxMOqMNkukv6AZSqq5BDezkPJtPcu84PXSCB8SQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=9fa38ab4073a7e639e830d364eb70ebd74cad3779ba7e70297d6528de1e914a5",
+      "file_size": 73087,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2021-03-04T09:28:16.545Z",
+  "allow_singular_disclosure_after": -143575962.21011922,
+  "singular_disclosure_allowed": true,
+  "vote_count": 6,
+  "voters": [
+    "shreyaschavhan",
+    "th4nu_0x0",
+    "salahhasoneh",
+    "sa1tama0",
+    "wet_spark",
+    "6661620a"
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 4.7,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "required",
+      "scope": "changed",
+      "confidentiality": "low",
+      "integrity": "none",
+      "availability": "none"
+    }
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
