@@ -1,0 +1,152 @@
+{
+  "id": 683298,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC82ODMyOTg=",
+  "url": "https://hackerone.com/reports/683298",
+  "title": "XSS and Open Redirect on MoPub Login",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2019-08-27T23:07:07.662Z",
+  "submitted_at": "2019-08-27T23:07:07.662Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "jackb898",
+    "url": "/jackb898",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/CBcmZYZbwyyEjGj5BP7AQ4FK/c8a1698ff707a5e3e8a91a3484838363845daac68cb82c86d55c9e2d44d67b67"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 61,
+    "url": "https://hackerone.com/x",
+    "handle": "x",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/ikx4ept298unt534kpz4am2bd4zs/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/ikx4ept298unt534kpz4am2bd4zs/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "X / xAI",
+      "twitter_handle": "XSecurity",
+      "website": "https://x.com",
+      "about": "X helps you create and share ideas and information instantly, without barriers."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2019-09-24T23:18:02.369Z",
+  "bug_reporter_agreed_on_going_public_at": "2019-09-10T22:04:02.266Z",
+  "team_member_agreed_on_going_public_at": "2019-09-24T23:18:02.289Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "**Summary:** I found open redirect at the MoPub login page, https://app.mopub.com/login?next=https://google.com. It also allows javascript URIs, leading to XSS.\n\n\n**Description:** You can modify the \"next\" URL parameter to redirect to any website upon logging in on MoPub. \n\n## Steps To Reproduce:\n\n1. Take this URL: https://app.mopub.com/login?next=https://google.com\n2. Change \"https://google.com\" to whatever URL you want to redirect to.\n3. Visit the URL and login\n4. You will be redirected to that site\n\n## Impact: Outlined in Impact section below\n\n## Supporting Material/References:\n\nHere's a proof of concept using the URL javascript:alert(\"proof of concept\"):\n{F568245}\n\n## Impact\n\nAn attacker could use this for phishing, cookie jacking, etc. since it allows javascript URIs and therefore XSS vectors. Additionally, they could use URL encoding to hide the URL that the victim is being redirected to.",
+  "bounty_amount": "1540.0",
+  "formatted_bounty": "$1,540",
+  "weakness": {
+    "id": 53,
+    "name": "Open Redirect"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 568245,
+      "file_name": "d075ed6487c103b8c497250d385fe75f.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/dMvQ4UMgch9yc1YtB7fyKFup?response-content-disposition=attachment%3B%20filename%3D%22d075ed6487c103b8c497250d385fe75f.mp4%22%3B%20filename%2A%3DUTF-8%27%27d075ed6487c103b8c497250d385fe75f.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQT5SD3VK2%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T143719Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQClRXfVQ6TcJFROTF%2BD0LDL4IptBemJc5EMG848%2FCEiSQIhAKDXmyowzdpDu4zfEapkWcuivUF63JNAxYz2favlbU6bKrIFCBcQAxoMMDEzNjE5Mjc0ODQ5IgyKlpw5OowlLiWsLL8qjwU0D29xrhlZFCfHcqjeZqnfiyItH0QCdyaKA%2F8%2BPGpNz2JgpL6QTAwDZCtHYpJ2OsSV%2Fr0t%2BhiNft4faKC3j2Re4gXFlwXAzQ3UGuAAGxcwgIc7gFmPcZWE0SRhBdJmk2S%2BJos09tCiFdi%2FbxRyB3zF64dzD5fSumyqcEn%2B2Vnd00pMBX742VkbEf7ZrNuyB62b1ytaX9jj9uvCFABG55FHDM%2Bs37wZacobZcdYBUPtU2XeZTkWX7AKGe%2FYmNjN%2FCI%2BxIoV7xxTqcG%2Baq7erC61AYhVA5BQfpjdl1bhHpa12u1DFE7HS57F97QReN6xh059bv%2FTllJIx8plaNjjH2jyflJMGw0Dw2DMiRrS7tIxJhQLAjBMb4C4V7N%2BM%2BaYvfy8%2FfbziqtvAUL8KMu6JyAjiQFuRhibIpqiMs3vU1r2o3TaJvpwb%2F9%2B0noBVyL2mEXDZLSZXRNCnvTiCzHLsk87FJVYtRr2awVVN9HtLz2KvmKgDreKiPAOXfPCFtAQa9YLiWIPUuVtgioN9ZBo5xJaCCyMGIzCh%2Fkrs1a0DcWy4F7Ytp4jBJcaMTR19B9HxNJL3aj8fMZlif8A0f0aaG%2FBgx7o5981IkRN3fvdIme%2FGy59thdwpQWaGEcGFmbADJgW%2FUetzXfy4OHnAUuQN5g8tkLNZhOOMkLBC3kLLrbfeiTttC8hssEuonPS5FvdddJqvftgcN%2Btb6H%2B1mYkyDlIcS6dii1q%2BhZizteMV9E0OBg1K8Ylk36UwJ3sW%2B8VxpTiVst%2FCObvfePMpGyI10NWIZQWKo%2BbxnzRUnD14TtT5uqbGn0QUuAEyUMWhQFS5SK5ZjRVCzQKPJTjGtT1RulMo59rlIi8SANcD1u8orU0MJP5v8YGOrABxqGEwH2lu%2FSIiLkjMB93i6n75LP7E6dFaf8U2coeh%2FJFyPT0Fob%2BvLKn7heOlHaTP86GXxcuQ%2F7dOAFxfCcMZJwPoTg4MLVffgesdH3XcR6WccyCO7CULPqRy39ydkdy5bAD0rlIb4KBU4W2miAyLWCv5A8%2BACxOO2Y%2BdrmDICvpHOjLOqM2jQrXEsy42y2NRm8%2FtGBFtSOfk9J9G5g0mOcoHMA4EPWmf7LR9VvpFQc%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=f7c0cb2c9c0ef053208c618e3abeb9beb157754e2e04dcef1711a3a7db216c66",
+      "file_size": 73844,
+      "type": "video/mp4",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2019-10-10T22:04:02.352Z",
+  "allow_singular_disclosure_after": -187720397.346577,
+  "singular_disclosure_allowed": true,
+  "vote_count": 243,
+  "voters": [
+    "j0nh4t",
+    "orange303",
+    "azizk",
+    "cxzer0",
+    "todayisnew-",
+    "yxw21",
+    "mashoud1122",
+    "me9187",
+    "phibz",
+    "ali",
+    "and 233 more..."
+  ],
+  "structured_scope": {
+    "databaseId": 1074,
+    "asset_type": "URL",
+    "asset_identifier": "mopub.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "id": 20504,
+      "category": "researcher",
+      "content": "Very simple open redirect made more impactful by the lack of filtering javascript URIs. Thanks again to the Twitter team for a quick response/bounty!",
+      "updated_at": "2021-07-23T19:37:44.012Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 87732,
+        "username": "jackb898",
+        "name": "Jack Burton",
+        "bio": "",
+        "cleared": false,
+        "verified": false,
+        "website": "https://www.jackburton.me",
+        "location": "Houston, Texas",
+        "created_at": "2016-06-25T15:29:25.034Z",
+        "url": "https://hackerone.com/jackb898",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "hacker",
+        "profile_picture_urls": {
+          "small": "https://profile-photos.hackerone-user-content.com/variants/CBcmZYZbwyyEjGj5BP7AQ4FK/c8a1698ff707a5e3e8a91a3484838363845daac68cb82c86d55c9e2d44d67b67",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/CBcmZYZbwyyEjGj5BP7AQ4FK/74790fe75ac5dbe8a5140a122388d59ebac913dcfa941f0b3a45e6cad161f9ea",
+          "xtralarge": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6ODk5ODE4LCJwdXIiOiJibG9iX2lkIn19--706fc1d8cf99088100aa014521fa0e2c05556bc2/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGVnIiwicmVzaXplIjoiMjYweDI2MFx1MDAzZSJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--cea846659d6dfdc215f3c0fb14f7ed8ebc9f95ef/ED1EBE46-216F-48FC-8CEF-661A6B1CC530.jpeg"
+        }
+      }
+    }
+  ]
+}
