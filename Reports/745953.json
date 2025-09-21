@@ -1,0 +1,147 @@
+{
+  "id": 745953,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC83NDU5NTM=",
+  "url": "https://hackerone.com/reports/745953",
+  "title": "Camo Image Proxy Bypass with CSS Escape Sequences",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2019-11-25T14:29:47.901Z",
+  "submitted_at": "2019-11-25T14:29:47.901Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "zhutyra",
+    "url": "/zhutyra",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/wrc8f8glavelrj7kz1elj97flmgh/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 30475,
+    "url": "https://hackerone.com/chaturbate",
+    "handle": "chaturbate",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/030/475/178c32f60a890eb06ce5d698d44b3eafa35ccf8c_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/030/475/178c32f60a890eb06ce5d698d44b3eafa35ccf8c_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Chaturbate",
+      "twitter_handle": "chaturbate",
+      "website": "https://chaturbate.com",
+      "about": "The largest online adult cam site"
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2019-12-18T03:15:27.464Z",
+  "bug_reporter_agreed_on_going_public_at": "2019-12-18T03:15:27.405Z",
+  "team_member_agreed_on_going_public_at": "2019-12-17T22:32:51.931Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary\n\nWith CSS escape sequences it is possible to bypass CSS url detection and filtering.\n\n## Details\n\nUsers can use HTML tags in their Profile Bio in *About Me* and *Wish List* fields. Among other filtering and sanitization, image URLs are replaced by URLs on internal image proxy. For example, this content in *About Me*:\n```html\n<span style=\"background:url(http://foo.com/bar)\">XX</span>\n```\nWill be replaced by this:\n```html\n<span style=\"background:url(https://camo.stream.highwebmedia.com/f923a95762fc0b6025015c00b58922b72f25096d/687474703a2f2f666f6f2e636f6d2f626172)\" target=\"_blank\" rel=\"nofollow\">XX</span>\n```\nThe problem is that the parser doesn't support CSS escape sequences, and for example this form, with letter `r` written as hexadecimal escape sequence, will not be detected as image link:\n```html\n<span style=\"background:u\\72l(http://foo.com/bar)\">XX</span>\n```\n## Steps To Reproduce:\n\nPut the code mentioned above in your Bio.\n{F643234}\nAfter saving the edit, you can use the Developer Tools to inspect the element and see that the URL has not been replaced.\n{F643235}\nAnd in Network monitor in Developer Tools you can see that it was processed. In this case blocked by Content Security Policies.\n{F643236}\n\n## Note\n\nI'm not aware of any immediate security threat from this. Like, I have no accompanying CSRF or information leak and I assume use of browsers that adhere to CSP. But definitely it is something that should be fixed.\n\n## Impact\n\nThe room owner can force room visitors to make unintended URL requests.",
+  "weakness": {
+    "id": 131,
+    "name": "Improper Neutralization of Escape, Meta, or Control Sequences"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 643234,
+      "file_name": "01-edit.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/uZsrTun5uBCDStxYbnegdhvw?response-content-disposition=attachment%3B%20filename%3D%2201-edit.png%22%3B%20filename%2A%3DUTF-8%27%2701-edit.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ3BMH67TU%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T125843Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIFljCnxBRm4k3mDOCNsZVf17QtNFYCYfznQ9MVhsJmuuAiBbOK8n3QO%2BoA%2BcJOaPEjuo2OnpQxXeGtV5gblrabFkdCqyBQgVEAMaDDAxMzYxOTI3NDg0OSIMu%2FDXvvg9fcRigun4Ko8Fb5ZIEjeevQoEG0l2BV%2BGWxg8S5ceOIpi9Vj5rzWvu%2FU8ULagtSQacHoYerVTS2w5mxb8q2eMyDWfB3WNcZp2jYoblOAOjGDkxFv0UfNMGU5qBv8audlGkD9bBj7k%2BPMh1elv8KOf5TSPS1TQgzoRPT1X5zf%2BUitErQDeos7hOVB27j0jmNUSU%2F62uqEpN5zzc4JDV6qPsWi%2B3MT7xqLVxQJaxMs0BkmYUNt%2BmDm6e8GkmRyyDXloQWuPJgbGwFgpcx1lE%2FdqBKny4rF9VApD%2Bs3l6I0ljLykB%2BCAK%2ByAA2z9BvFFoIk%2FxFSOlqls4xp47H51RxUBx5QVAlzxlLSqqtF07ygbOI3nWSDkXBRBh71ODGwtYPklYcAy%2BN1JIBRkTSB7P%2FApcdK%2F2HJmJmi3mNdO8DjUSAXt%2B6xrNOM7xjPuxOtz0db7fZdSmKKXvxlxi%2FTAaoM9F%2BJZ%2FGncN9cCvXkZHfTe4DQMnxULaVvxM40oXz7SvblcQoTgQTDcLUck%2BJiDf9fMLCu8HBz%2BOUAJggeTTLzasHSrySGvIpMTBuffvnBnnVa29Mm7K2WlV5wJE0i2vDjyh%2FZ8ERYD2u7%2BpaWooSen17bTtOgBA8rpw8Ca%2BBBCzBGJ4Jnv%2F7Vg5I0t6bT1RKrC%2B7ruuT8oH02SYFfBbc0AVE3YoRZ4c%2F81%2Bve3MDQo93OTxMwPyuEph5zyT%2F0uL36Kog%2FL0%2FHDLWxDoqCho4dyn8yODfz3VOrE5u7jsSac%2FAVh9AlbPuCB5Fz0%2F0dBqb2vPihtVHnRr1%2BaD8HcuNsV6UwuWtYjabks5SXoSh4sDkBV0QjqYgyQT%2F2xrYwkHJGgNRZg7X%2B0GQB2W6JfoK%2Bk8n6dhdDh9N%2BC%2FTCr1b%2FGBjqyAVVK9luJ2DpE2HH7QULrpYu01A8Fm4WvVccUWw3poFTPvtokByojqV9CgizgRjo2wHFdocvJ4lpbjnQjjxMkbJLK%2FW9qfA7eVQzSnDC7HGaYVsiUekGk4%2BmwXx7iMvjgYSnBoKWAaBqd3fRqTEW4g3lhzi7lOpTLcWZp60Ya9y2Gr9bjvLCe2g89bmHm9cxzB7H7SDaXF159IthNc4CVFX2TMwhNV%2BaVJ6D%2B6UC7%2Bp%2FLkJ8%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=42b5487c94dd5b2e0d2505d3b7b50a4f99d143018c1a0405674d1f38b0a8753b",
+      "file_size": 11161,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 643235,
+      "file_name": "02-inspect.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/tfP2y1LPkJrhDR7NfD7vK9uQ?response-content-disposition=attachment%3B%20filename%3D%2202-inspect.png%22%3B%20filename%2A%3DUTF-8%27%2702-inspect.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ3BMH67TU%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T125843Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIFljCnxBRm4k3mDOCNsZVf17QtNFYCYfznQ9MVhsJmuuAiBbOK8n3QO%2BoA%2BcJOaPEjuo2OnpQxXeGtV5gblrabFkdCqyBQgVEAMaDDAxMzYxOTI3NDg0OSIMu%2FDXvvg9fcRigun4Ko8Fb5ZIEjeevQoEG0l2BV%2BGWxg8S5ceOIpi9Vj5rzWvu%2FU8ULagtSQacHoYerVTS2w5mxb8q2eMyDWfB3WNcZp2jYoblOAOjGDkxFv0UfNMGU5qBv8audlGkD9bBj7k%2BPMh1elv8KOf5TSPS1TQgzoRPT1X5zf%2BUitErQDeos7hOVB27j0jmNUSU%2F62uqEpN5zzc4JDV6qPsWi%2B3MT7xqLVxQJaxMs0BkmYUNt%2BmDm6e8GkmRyyDXloQWuPJgbGwFgpcx1lE%2FdqBKny4rF9VApD%2Bs3l6I0ljLykB%2BCAK%2ByAA2z9BvFFoIk%2FxFSOlqls4xp47H51RxUBx5QVAlzxlLSqqtF07ygbOI3nWSDkXBRBh71ODGwtYPklYcAy%2BN1JIBRkTSB7P%2FApcdK%2F2HJmJmi3mNdO8DjUSAXt%2B6xrNOM7xjPuxOtz0db7fZdSmKKXvxlxi%2FTAaoM9F%2BJZ%2FGncN9cCvXkZHfTe4DQMnxULaVvxM40oXz7SvblcQoTgQTDcLUck%2BJiDf9fMLCu8HBz%2BOUAJggeTTLzasHSrySGvIpMTBuffvnBnnVa29Mm7K2WlV5wJE0i2vDjyh%2FZ8ERYD2u7%2BpaWooSen17bTtOgBA8rpw8Ca%2BBBCzBGJ4Jnv%2F7Vg5I0t6bT1RKrC%2B7ruuT8oH02SYFfBbc0AVE3YoRZ4c%2F81%2Bve3MDQo93OTxMwPyuEph5zyT%2F0uL36Kog%2FL0%2FHDLWxDoqCho4dyn8yODfz3VOrE5u7jsSac%2FAVh9AlbPuCB5Fz0%2F0dBqb2vPihtVHnRr1%2BaD8HcuNsV6UwuWtYjabks5SXoSh4sDkBV0QjqYgyQT%2F2xrYwkHJGgNRZg7X%2B0GQB2W6JfoK%2Bk8n6dhdDh9N%2BC%2FTCr1b%2FGBjqyAVVK9luJ2DpE2HH7QULrpYu01A8Fm4WvVccUWw3poFTPvtokByojqV9CgizgRjo2wHFdocvJ4lpbjnQjjxMkbJLK%2FW9qfA7eVQzSnDC7HGaYVsiUekGk4%2BmwXx7iMvjgYSnBoKWAaBqd3fRqTEW4g3lhzi7lOpTLcWZp60Ya9y2Gr9bjvLCe2g89bmHm9cxzB7H7SDaXF159IthNc4CVFX2TMwhNV%2BaVJ6D%2B6UC7%2Bp%2FLkJ8%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=1411d903c841664bb20f8b5b0d25cc0a34346ba71342ae3d304fc2220fc651fc",
+      "file_size": 17591,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 643236,
+      "file_name": "03-network.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/tg4rXYMcbKjoMAsgiB9Cfjaj?response-content-disposition=attachment%3B%20filename%3D%2203-network.png%22%3B%20filename%2A%3DUTF-8%27%2703-network.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ3BMH67TU%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T125843Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIFljCnxBRm4k3mDOCNsZVf17QtNFYCYfznQ9MVhsJmuuAiBbOK8n3QO%2BoA%2BcJOaPEjuo2OnpQxXeGtV5gblrabFkdCqyBQgVEAMaDDAxMzYxOTI3NDg0OSIMu%2FDXvvg9fcRigun4Ko8Fb5ZIEjeevQoEG0l2BV%2BGWxg8S5ceOIpi9Vj5rzWvu%2FU8ULagtSQacHoYerVTS2w5mxb8q2eMyDWfB3WNcZp2jYoblOAOjGDkxFv0UfNMGU5qBv8audlGkD9bBj7k%2BPMh1elv8KOf5TSPS1TQgzoRPT1X5zf%2BUitErQDeos7hOVB27j0jmNUSU%2F62uqEpN5zzc4JDV6qPsWi%2B3MT7xqLVxQJaxMs0BkmYUNt%2BmDm6e8GkmRyyDXloQWuPJgbGwFgpcx1lE%2FdqBKny4rF9VApD%2Bs3l6I0ljLykB%2BCAK%2ByAA2z9BvFFoIk%2FxFSOlqls4xp47H51RxUBx5QVAlzxlLSqqtF07ygbOI3nWSDkXBRBh71ODGwtYPklYcAy%2BN1JIBRkTSB7P%2FApcdK%2F2HJmJmi3mNdO8DjUSAXt%2B6xrNOM7xjPuxOtz0db7fZdSmKKXvxlxi%2FTAaoM9F%2BJZ%2FGncN9cCvXkZHfTe4DQMnxULaVvxM40oXz7SvblcQoTgQTDcLUck%2BJiDf9fMLCu8HBz%2BOUAJggeTTLzasHSrySGvIpMTBuffvnBnnVa29Mm7K2WlV5wJE0i2vDjyh%2FZ8ERYD2u7%2BpaWooSen17bTtOgBA8rpw8Ca%2BBBCzBGJ4Jnv%2F7Vg5I0t6bT1RKrC%2B7ruuT8oH02SYFfBbc0AVE3YoRZ4c%2F81%2Bve3MDQo93OTxMwPyuEph5zyT%2F0uL36Kog%2FL0%2FHDLWxDoqCho4dyn8yODfz3VOrE5u7jsSac%2FAVh9AlbPuCB5Fz0%2F0dBqb2vPihtVHnRr1%2BaD8HcuNsV6UwuWtYjabks5SXoSh4sDkBV0QjqYgyQT%2F2xrYwkHJGgNRZg7X%2B0GQB2W6JfoK%2Bk8n6dhdDh9N%2BC%2FTCr1b%2FGBjqyAVVK9luJ2DpE2HH7QULrpYu01A8Fm4WvVccUWw3poFTPvtokByojqV9CgizgRjo2wHFdocvJ4lpbjnQjjxMkbJLK%2FW9qfA7eVQzSnDC7HGaYVsiUekGk4%2BmwXx7iMvjgYSnBoKWAaBqd3fRqTEW4g3lhzi7lOpTLcWZp60Ya9y2Gr9bjvLCe2g89bmHm9cxzB7H7SDaXF159IthNc4CVFX2TMwhNV%2BaVJ6D%2B6UC7%2Bp%2FLkJ8%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=950f1847d62a70aa863ad0da10705b23548da45fdaf284c73a36274df38ffa3f",
+      "file_size": 12013,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2020-01-16T22:32:52.052Z",
+  "allow_singular_disclosure_after": -179245551.0619971,
+  "singular_disclosure_allowed": true,
+  "vote_count": 24,
+  "voters": [
+    "locationkumar",
+    "yxw21",
+    "sameerphad72",
+    "teuvokas",
+    "zoczus",
+    "mik317",
+    "thalaivar304",
+    "sa1tama0",
+    "bb00x",
+    "exception",
+    "and 14 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "Team"
+  },
+  "structured_scope": {
+    "databaseId": 11722,
+    "asset_type": "URL",
+    "asset_identifier": "chaturbate.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
