@@ -1,0 +1,139 @@
+{
+  "id": 810320,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC84MTAzMjA=",
+  "url": "https://hackerone.com/reports/810320",
+  "title": "Read-only user can delete higher privileged members using open DELETE /api/memberships/<membershipID> endpoint",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2020-03-04T04:37:08.980Z",
+  "submitted_at": "2020-03-04T04:37:08.980Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "chipped",
+    "url": "/chipped",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6ODM4MzMxLCJwdXIiOiJibG9iX2lkIn19--5fe34895bad1822190485987854a17519139725f/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--a4d91faed3dff6024dfc1a7b7f8ccc6b45e38396/chip.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 12172,
+    "url": "https://hackerone.com/helium",
+    "handle": "helium",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/012/172/c6ee5425ee5cb13a9616336667e01488d68f161f_original./235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/012/172/c6ee5425ee5cb13a9616336667e01488d68f161f_original./3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Helium",
+      "twitter_handle": "helium",
+      "website": "http://www.helium.com",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2020-06-29T21:25:08.722Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-05-30T21:24:51.785Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "##Summary\nThe `/api/memberships/membershipID` endpoint on console.helium.com is open to anyone, including read-only users in an organization. This means that a read-only member can kick a manager, administrator, or even the owner out of an organization using this vulnerability. \n\n##Steps to Reproduce:\n1. Create two accounts, user 1 (admin), user 2 (read-only member) with any organization name\n2. You should already have the orgs set up, so for user 1, head over to the `Users` tab on the left\n3. Click `Add User` on the right\n4. Enter user 2's email (make sure their permission is read-only) and submit\n5. Log in to user 2\n6. Click **Switch** next to user 1's organization (should be at the home page)\n7. Turn on burp or any proxy and start intercepting\n8. Click on users on the left\n9. Look for the GraphQL request with the operation name of **PaginatedMembershipsQuery**, this will list all memberships in that organization (including the ID, which is what we're looking for) {F736503}\n10. Look for user 1's email and store the membership ID (`id`)\n11. Now go to user 2 and switch back to **their** organization and add user 1 to that org (perms don't matter)\n12. This will instantly add them to the user list without an invite\n13. Start intercepting and delete them from the user list\n14. Send the `DELETE /api/memberships/id` to repeater\n15. Now put the membership ID you stored earlier and replace it with the current ID, this should then delete the membership {F736504}\n16. Refresh the page for user 1, it will actually log them out as well with a 401 of `You don't have access to this organization`\n\nThis will remove any user from the organization. This is particularly dangerous if you want to take over an organization, except the only thing you can do is kick users out, the rest is still read-only. This is also possible for managers, they can remove administrators, which is more impactful since managers actually have permission within the org. So as a result, administrators wouldn't be able to supervise the hacker and he would have complete control over the organization.\n\n## Impact\n\nYou can kick any user you want from an organization as long as you are a member.",
+  "weakness": {
+    "id": 75,
+    "name": "Privilege Escalation"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 736503,
+      "file_name": "POC1.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/ZD5knpyD6GBNXRkzTHXX4zHS?response-content-disposition=attachment%3B%20filename%3D%22POC1.png%22%3B%20filename%2A%3DUTF-8%27%27POC1.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQVDKEGTGL%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T100006Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIn%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIB9mNsT84D7ND2huVZPsxnKc2oVoZypFck99J8NBmUlCAiEAoyuDlfzGFVL%2Ft0RQnKKpUGx%2F%2BAkiO41I%2B%2FpfyQfV%2Fj4qsQUIEhADGgwwMTM2MTkyNzQ4NDkiDMG7hZ0YnSH9e9tnHCqOBSeAo%2BRXo6BFs6%2Bxl3vFt9CGHg%2F0n7laPNGGabiQnj0BSp1jZsmcy5QUunKM55nQ2geW37ihvYPW4iYPjsdmdnkEHCEnVCQixP10kob8cB9iJHfVSqc9nOVZ%2FOnIAvV93jTh5MNXSxM1ONLDWvrANbjV0BKbhhs2exR8eCkBJ7qhg%2B2qnujMd0iNrUvzdhVEJfWGmKaSr9eNKTn6M5nxN9joKqJx8UKgDzs4lnLHKlH%2Bitc7uKWK%2FEt6iXekiWRJlg1s4P89%2FQNU0z2ywNJa%2BTRYh9i48mpXl4PG0JKZUJWTW8AWtifD4UIBposw4Fj0BhaaTOadB5lH%2Bd4tj8AEosHyof4eBrW4OPEH41asF%2Fath5OXSpXOL0o9E0%2BQLN18%2ByKB1LxiYaAkhj7RypelueLkLPPHrvFL%2B8eLVd8iJsFxSUWeeWr7xnWgpg3WVLl11svwbzI0K7PVr5gx7UANnxigeSYTawwCDfxQafw3D6wc9yJv0e5OWFKXRLjnAm4FZdx1Hwy3ic8v2SPm8etb79HsUHN%2FqJXcfZNbIMuIRHFsq%2FVn6h3UNsBNf3znamM1RyhjqAvwSM%2FQGLdn4WKRzvtnxO9uW90Zpg0J4YpD3XbBgeVfw%2FodKljtKk3I1jLpAMv2VOfYBDNLYpnN5ocdsCH4WA8Gtuo2el3b58ykLf%2FepqFUxz1%2BB9mV7F%2FvzvvFsENHUndsxAz3luhmmxOwtb1lUAgZXngAahH29VxmVGxBW7RSednAldnVOhIAoHCorS6auEANdT6jqwLuFPQNeDX0EDansnB2tYGNn8Vk8C1W653BDJ%2FUNCmlRJmgpaig9yWe6AUeOzWkZpgyobq3p3t6b2WmdEQnReRlKO13QTDW%2Br7GBjqxAdJ%2Bss3D1d%2B23GcFbI3BKQq3GY1tto7h%2FQUYU983ENF5P2BDchI0UruSGy47nqVx%2FvelioJK5f1RZTOY2sMmXjr1xpFr8HuWdKfz4WFSUWh32rF2xvCEFDGxo%2Bj2jgibuqVSU6VgS21sDZoxRI%2Fp8N%2BAPA6DwpraXqt7vAOHaJ6gQmZ9Z5RwY9WyX5g2ogiucydd8xF5FFF4tITmwfzuH%2BH6aE3kzBIEFVRlnBCrUwwfWw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=14e99f79c73d31d134e39a75a756fb1d6c509f148b22b97363e8a294d35468ca",
+      "file_size": 31346,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 736504,
+      "file_name": "POC2.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/EiQSidyhe5dqjv2nocTqawvA?response-content-disposition=attachment%3B%20filename%3D%22POC2.png%22%3B%20filename%2A%3DUTF-8%27%27POC2.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQVDKEGTGL%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T100006Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIn%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIB9mNsT84D7ND2huVZPsxnKc2oVoZypFck99J8NBmUlCAiEAoyuDlfzGFVL%2Ft0RQnKKpUGx%2F%2BAkiO41I%2B%2FpfyQfV%2Fj4qsQUIEhADGgwwMTM2MTkyNzQ4NDkiDMG7hZ0YnSH9e9tnHCqOBSeAo%2BRXo6BFs6%2Bxl3vFt9CGHg%2F0n7laPNGGabiQnj0BSp1jZsmcy5QUunKM55nQ2geW37ihvYPW4iYPjsdmdnkEHCEnVCQixP10kob8cB9iJHfVSqc9nOVZ%2FOnIAvV93jTh5MNXSxM1ONLDWvrANbjV0BKbhhs2exR8eCkBJ7qhg%2B2qnujMd0iNrUvzdhVEJfWGmKaSr9eNKTn6M5nxN9joKqJx8UKgDzs4lnLHKlH%2Bitc7uKWK%2FEt6iXekiWRJlg1s4P89%2FQNU0z2ywNJa%2BTRYh9i48mpXl4PG0JKZUJWTW8AWtifD4UIBposw4Fj0BhaaTOadB5lH%2Bd4tj8AEosHyof4eBrW4OPEH41asF%2Fath5OXSpXOL0o9E0%2BQLN18%2ByKB1LxiYaAkhj7RypelueLkLPPHrvFL%2B8eLVd8iJsFxSUWeeWr7xnWgpg3WVLl11svwbzI0K7PVr5gx7UANnxigeSYTawwCDfxQafw3D6wc9yJv0e5OWFKXRLjnAm4FZdx1Hwy3ic8v2SPm8etb79HsUHN%2FqJXcfZNbIMuIRHFsq%2FVn6h3UNsBNf3znamM1RyhjqAvwSM%2FQGLdn4WKRzvtnxO9uW90Zpg0J4YpD3XbBgeVfw%2FodKljtKk3I1jLpAMv2VOfYBDNLYpnN5ocdsCH4WA8Gtuo2el3b58ykLf%2FepqFUxz1%2BB9mV7F%2FvzvvFsENHUndsxAz3luhmmxOwtb1lUAgZXngAahH29VxmVGxBW7RSednAldnVOhIAoHCorS6auEANdT6jqwLuFPQNeDX0EDansnB2tYGNn8Vk8C1W653BDJ%2FUNCmlRJmgpaig9yWe6AUeOzWkZpgyobq3p3t6b2WmdEQnReRlKO13QTDW%2Br7GBjqxAdJ%2Bss3D1d%2B23GcFbI3BKQq3GY1tto7h%2FQUYU983ENF5P2BDchI0UruSGy47nqVx%2FvelioJK5f1RZTOY2sMmXjr1xpFr8HuWdKfz4WFSUWh32rF2xvCEFDGxo%2Bj2jgibuqVSU6VgS21sDZoxRI%2Fp8N%2BAPA6DwpraXqt7vAOHaJ6gQmZ9Z5RwY9WyX5g2ogiucydd8xF5FFF4tITmwfzuH%2BH6aE3kzBIEFVRlnBCrUwwfWw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=cf296bbb6847a4d02751545eee0a55f825ad21dda5fa0d5e62ac64d3fc9eddc9",
+      "file_size": 38190,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2020-06-29T21:24:51.838Z",
+  "allow_singular_disclosure_after": -164982914.33341536,
+  "singular_disclosure_allowed": true,
+  "vote_count": 21,
+  "voters": [
+    "ali",
+    "1trick",
+    "mik317",
+    "0xelkomy",
+    "sl4x",
+    "vanpanpan_",
+    "chipped",
+    "b69fb2ebda43240ece9dbeb",
+    "setrexis",
+    "meispi",
+    "and 11 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "Team"
+  },
+  "structured_scope": {
+    "databaseId": 43253,
+    "asset_type": "URL",
+    "asset_identifier": "https://helium-console-dev.herokuapp.com/",
+    "max_severity": "high"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
