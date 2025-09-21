@@ -1,0 +1,142 @@
+{
+  "id": 542180,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC81NDIxODA=",
+  "url": "https://hackerone.com/reports/542180",
+  "title": "Malformed NAV file leads to buffer overflow and code execution in Left4Dead2.exe",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "critical",
+  "readable_substate": "Resolved",
+  "created_at": "2019-04-18T17:36:32.186Z",
+  "submitted_at": "2019-04-18T17:36:32.186Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "hunterstanton",
+    "url": "/hunterstanton",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/006/057/5f4d182836910825ea65d4f94955ee5f47129b41_original.jpeg/c8a1698ff707a5e3e8a91a3484838363845daac68cb82c86d55c9e2d44d67b67"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 23363,
+    "url": "https://hackerone.com/valve",
+    "handle": "valve",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/023/363/c78d46a7d0ea39e3a15a7c19c1a48634f2571eb9_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/023/363/c78d46a7d0ea39e3a15a7c19c1a48634f2571eb9_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Valve",
+      "twitter_handle": "",
+      "website": "https://www.valvesoftware.com",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2020-03-25T22:00:16.031Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-03-25T01:16:01.633Z",
+  "team_member_agreed_on_going_public_at": "2020-03-25T22:00:15.929Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary\nIn the parsing routines of NAV files (which contain the navigation mesh used by the AI for survivor bots, zombies, and the AI director spawning system) a buffer overflow exists which can be used to control the EIP register and takeover code execution. \n\n## Proof-of-Concept\n1. Download the attached c1m1_hotel.nav\n2. Place it in your *<steamapps>/Left 4 Dead 2/left4dead2/maps/* directory\n3. Start up Left4Dead 2 and attach a debugger\n4. Enter \"map c1m1_hotel\" into the developer console\n5. Observe that EIP becomes 0x41414102, indicating that a buffer overflow has occurred and code execution is possible\n\n## Operating Systems Tested\n- Windows 10 1809 Build 17763.437\n\nI have not tried this for MacOS or Linux, however I assume it would work on both of those platforms as well if they all share the same codebase as the Windows executable.\n\n## Notes\nBecause Left4Dead 2 ships on Windows with a non-ASLR enabled module (binkw32.dll), it is much easier to write up a working exploit for this vulnerability as you no longer need an additional infoleak of some kind to do serious damage and can just use ROP.\n\n## Impact\n\n## Impact\nIf an attacker successfully exploits this vulnerability, the attacker can run arbitrary code on the machine of a victim.\n\nDue to the fact that Source supports sending arbitrary files to clients when connecting to a server, it is possible that you could create a fake dedicated server that does nothing but send the malformed NAV file to clients who are connecting, creating a remote code execution scenario.\n\nAnother attack scenario would be an attacker uploading a campaign map with a malformed NAV to the Steam Workshop, and convincing other users to download it. When they download it and load the campaign in game, arbitrary code will be executed on their machines.",
+  "bounty_amount": "10000.0",
+  "formatted_bounty": "$10,000",
+  "weakness": {
+    "id": 3,
+    "name": "Classic Buffer Overflow"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 471665,
+      "file_name": "c1m1_hotel.nav",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/471/665/f7d98a25135d6c4f7231c194d52222d46801b3d2/c1m1_hotel.nav?response-content-disposition=attachment%3B%20filename%3D%22c1m1_hotel.nav%22%3B%20filename%2A%3DUTF-8%27%27c1m1_hotel.nav&response-content-type=application%2Fx-mach-binary&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4AL7LQLH%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T115944Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDp33yNJ8faGVbpn83n0gBuQVbYuy1tW4%2F0DW3O82s43AIgBvwsE79nZvyysDGTEI8LjG1QX6KiTFf1GOGaLVSWUBcqsQUIFBADGgwwMTM2MTkyNzQ4NDkiDLTkkwyYIHrtnc1nQiqOBfKrK8x%2FbzvQ%2F8Ty3yQtB0Lh9imTuCG32LM7PVnNVwy5XNnbUx%2BP2byh0aor5nOzkqa8ra08NofGSQxs%2FW2qEZx62gx6ZwJsq%2BjTomX2lSeg8NKTew04yUziNn2TtakLuxuh4K%2FPHOeykdonbY5yVlMQ5m7NlltUdq%2BinbN%2FYobp5ubAx%2FPWv7Qsv1k%2BCAUc9xpNWEapemLrCLMc8ODSNGlt5pk2G2TeaQhiCK37ZLQvvpVfVTaABcbT268HqJa8LpDLR0UIRf3Mq%2BkYcPINqXrdgkXJVF84mSYySPa7W9UQQamIOk0Oww2pGW8QsQCwjWY5cceUORgYR2bnhuGe0vriAElHEzYef3I9B%2BB7Q9CMkK%2FQiYlZIqX6gzN%2FQHlEOBMdsu7pyfkZKr44wABeVwOR8dqQiR9VnKFDujSuaSTRzWVSxdcnA4jBL9nljUTo5%2B0vqzfS5GerdoDU0gfKtIMqEuS4JANXZjTg82vOjYfmVWqMHOYiSf%2B8rBP58zmtFSU7OQrN6J3KvTk66QR5DtLd4TgTHDQ77els%2BB9OlNQXuF6sFOYjEVnpECE43cXEE8GfRGx9nL052dgxZSK39PfpKUqtNkKL6vFuH9Rn4AnAL%2BsCusL3Q8ag8fjKKpvMzFNXPSqvB1Ekygnb7hEiLGffMMBijSAJwvZK0TUNSubO6ftbDFUyyCG8U8Wm5aPRFeOJ8by%2BUX3tPyVRyVfTqE3PtgAMS6YbzyQqcLNa1qZAJFCzVPhWNI8FOX3%2BtjRTf7kEj88Js0POvOriORU8y1lMw1lkHET3Qh4FUSQRlAtEgoMyb3eguzV%2Bgg7BrYdYGSfZV3O6oqs%2BRGa9RFd2BPxLPK4XfMcwGz3E9naG3DCmq7%2FGBjqxAccztsow60eqVnwWjPLvF49wNPG8%2BaWSReTNquGAr2NebkpkaTBftEA%2FMV4yC%2B2tmJPSRYJkq9KwdwFVhdEYbp4%2FAx6bzwbFHV5LvALyGurL%2BA6olykLBUrF96MBLleyg8tSdXFrAMDJPMuXNEGlc0lbkD4ahPwk%2FHy3VqaO5T4JMPUloL6FQuRBy74vwPVHzW3kBZBwuEdNVfHa5L4ML7hIv04642F%2FcEjgk4C0nVOf%2FQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=b886ca03e33828798f3791e4baab54d412556782527d441078196ebe101472ca",
+      "file_size": 545129,
+      "type": "application/x-mach-binary",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 266,
+  "voters": [
+    "leonm",
+    "arm4nd0",
+    "rapiddns",
+    "jeti",
+    "sebd",
+    "is-",
+    "orange303",
+    "a626p",
+    "sgabe",
+    "logue",
+    "and 256 more..."
+  ],
+  "severity": {
+    "rating": "critical",
+    "score": 9.0,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "low",
+      "user_interaction": "required",
+      "scope": "changed",
+      "confidentiality": "high",
+      "integrity": "high",
+      "availability": "high"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 1290,
+    "asset_type": "DOWNLOADABLE_EXECUTABLES",
+    "asset_identifier": "*.exe",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
