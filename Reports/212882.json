@@ -1,0 +1,114 @@
+{
+  "id": 212882,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yMTI4ODI=",
+  "url": "https://hackerone.com/reports/212882",
+  "title": "SIGABRT in only mirb",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2017-03-12T17:24:03.468Z",
+  "submitted_at": "2017-03-12T17:24:03.468Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "ston3",
+    "url": "/ston3",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 15668,
+    "url": "https://hackerone.com/shopify-scripts",
+    "handle": "shopify-scripts",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/015/668/ebbe467de8ef2fc936053593e1289e30f04c3b06_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/015/668/ebbe467de8ef2fc936053593e1289e30f04c3b06_original.jpg/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "shopify-scripts",
+      "twitter_handle": "",
+      "website": "",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2017-04-27T21:20:01.041Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2017-03-28T21:19:45.969Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "PoC\n-------------------\n\nThe following code triggers the bug (attached as test.rb):\n\n\tdef to_str\n\t``\n\t00end\n\t0.times\n\nDebug - mirb\n-------------------\n\n\tThe program being debugged has been started already.\n\tStart it from the beginning? (y or n) y\n\tStarting program: /home/x/Desktop/test/mruby/bin/mirb test.rb\n\tmirb - Embeddable Interactive Ruby Shell\n\n\t => :to_str\n\t*** Error in `/home/x/Desktop/test/mruby/bin/mirb': realloc(): invalid next size: 0x0000000000710bb0 ***\n\n\tProgram received signal SIGABRT, Aborted.\n\t0x00007ffff7744f79 in __GI_raise (sig=sig@entry=6) at ../nptl/sysdeps/unix/sysv/linux/raise.c:56\n\t56\t../nptl/sysdeps/unix/sysv/linux/raise.c: No such file or directory.\n\t(gdb) info reg\n\trax            0x0\t0\n\trbx            0x69\t105\n\trcx            0xffffffffffffffff\t-1\n\trdx            0x6\t6\n\trsi            0x6865\t26725\n\trdi            0x6865\t26725\n\trbp            0x7ffffffbfdd0\t0x7ffffffbfdd0\n\trsp            0x7ffffffbfa38\t0x7ffffffbfa38\n\tr8             0x3062623031373030\t3486457020661837872\n\tr9             0x75726d2f74736574\t8462946700367193460\n\tr10            0x8\t8\n\tr11            0x246\t582\n\tr12            0x7ffffffbfbe0\t140737488092128\n\tr13            0x7\t7\n\tr14            0x69\t105\n\tr15            0x7\t7\n\trip            0x7ffff7744f79\t0x7ffff7744f79 <__GI_raise+57>\n\teflags         0x246\t[ PF ZF IF ]\n\tcs             0x33\t51\n\tss             0x2b\t43\n\tds             0x0\t0\n\tes             0x0\t0\n\tfs             0x0\t0\n\tgs             0x0\t0\n\nBacktrace - mirb\n-------------------\n\n\t(gdb) bt\n\t#0  0x00007ffff7744f79 in __GI_raise (sig=sig@entry=6) at ../nptl/sysdeps/unix/sysv/linux/raise.c:56\n\t#1  0x00007ffff7748388 in __GI_abort () at abort.c:89\n\t#2  0x00007ffff77821d4 in __libc_message (do_abort=do_abort@entry=1, fmt=fmt@entry=0x7ffff7890a10 \"*** Error in `%s': %s: 0x%s ***\\n\") at ../sysdeps/posix/libc_fatal.c:175\n\t#3  0x00007ffff778cf37 in malloc_printerr (action=<optimized out>, str=0x7ffff788cc07 \"realloc(): invalid next size\", ptr=<optimized out>) at malloc.c:4996\n\t#4  0x00007ffff7790777 in _int_realloc (av=<optimized out>, oldp=0x710ba0, oldsize=<optimized out>, nb=<optimized out>) at malloc.c:4234\n\t#5  0x00007ffff7791e09 in __GI___libc_realloc (oldmem=0x710bb0, bytes=16384) at malloc.c:3029\n\t#6  0x000000000042cbab in mrb_default_allocf (mrb=0x6b0010, p=0x710bb0, size=16384, ud=0x0) at /home/x/Desktop/test/mruby/src/state.c:60\n\t#7  0x0000000000434df6 in mrb_realloc_simple (mrb=0x6b0010, p=0x710bb0, len=16384) at /home/x/Desktop/test/mruby/src/gc.c:201\n\t#8  0x0000000000434e78 in mrb_realloc (mrb=0x6b0010, p=0x710bb0, len=16384) at /home/x/Desktop/test/mruby/src/gc.c:215\n\t#9  0x00000000004063cf in stack_extend_alloc (mrb=0x6b0010, room=7, keep=3) at /home/x/Desktop/test/mruby/src/vm.c:161\n\t#10 0x00000000004064e3 in stack_extend (mrb=0x6b0010, room=7, keep=3) at /home/x/Desktop/test/mruby/src/vm.c:181\n\t#11 0x000000000040a180 in mrb_vm_exec (mrb=0x6b0010, proc=0x6b5ad0, pc=0x71ec30) at /home/x/Desktop/test/mruby/src/vm.c:1264\n\t#12 0x00000000004083c5 in mrb_vm_run (mrb=0x6b0010, proc=0x6b2d40, self=..., stack_keep=2) at /home/x/Desktop/test/mruby/src/vm.c:820\n\t#13 0x00000000004105a5 in mrb_run (mrb=0x6b0010, proc=0x6b2d40, self=...) at /home/x/Desktop/test/mruby/src/vm.c:2568\n\t#14 0x000000000040753a in mrb_funcall_with_block (mrb=0x6b0010, self=..., mid=144, argc=0, argv=0x0, blk=...) at /home/x/Desktop/test/mruby/src/vm.c:451\n\t#15 0x00000000004075d9 in mrb_funcall_argv (mrb=0x6b0010, self=..., mid=144, argc=0, argv=0x0) at /home/x/Desktop/test/mruby/src/vm.c:461\n\t#16 0x0000000000403774 in convert_type (mrb=0x6b0010, val=..., tname=0x46db1e \"String\", method=0x46db17 \"to_str\", raise=0 '\\000') at /home/x/Desktop/test/mruby/src/object.c:320\n\t#17 0x0000000000403983 in mrb_check_convert_type (mrb=0x6b0010, val=..., type=MRB_TT_STRING, tname=0x46db1e \"String\", method=0x46db17 \"to_str\") at /home/x/Desktop/test/mruby/src/object.c:356\n\t#18 0x000000000041977b in mrb_check_string_type (mrb=0x6b0010, str=...) at /home/x/Desktop/test/mruby/src/string.c:1754\n\t#19 0x0000000000413073 in mrb_f_raise (mrb=0x6b0010, self=...) at /home/x/Desktop/test/mruby/src/kernel.c:862\n\t#20 0x0000000000409ee2 in mrb_vm_exec (mrb=0x6b0010, proc=0x6b5ad0, pc=0x488dc8 <mrblib_irep+15388>) at /home/x/Desktop/test/mruby/src/vm.c:1227\n\t#21 0x00000000004083c5 in mrb_vm_run (mrb=0x6b0010, proc=0x6b2d40, self=..., stack_keep=2) at /home/x/Desktop/test/mruby/src/vm.c:820\n\t#22 0x00000000004105a5 in mrb_run (mrb=0x6b0010, proc=0x6b2d40, self=...) at /home/x/Desktop/test/mruby/src/vm.c:2568\n\t#23 0x000000000040753a in mrb_funcall_with_block (mrb=0x6b0010, self=..., mid=144, argc=0, argv=0x0, blk=...) at /home/x/Desktop/test/mruby/src/vm.c:451\n\t#24 0x00000000004075d9 in mrb_funcall_argv (mrb=0x6b0010, self=..., mid=144, argc=0, argv=0x0) at /home/x/Desktop/test/mruby/src/vm.c:461\n\t#25 0x0000000000403774 in convert_type (mrb=0x6b0010, val=..., tname=0x46db1e \"String\", method=0x46db17 \"to_str\", raise=0 '\\000') at /home/x/Desktop/test/mruby/src/object.c:320\n\t#26 0x0000000000403983 in mrb_check_convert_type (mrb=0x6b0010, val=..., type=MRB_TT_STRING, tname=0x46db1e \"String\", method=0x46db17 \"to_str\") at /home/x/Desktop/test/mruby/src/object.c:356\n\t#27 0x000000000041977b in mrb_check_string_type (mrb=0x6b0010, str=...) at /home/x/Desktop/test/mruby/src/string.c:1754\n\t#28 0x0000000000413073 in mrb_f_raise (mrb=0x6b0010, self=...) at /home/x/Desktop/test/mruby/src/kernel.c:862\n\t#29 0x0000000000409ee2 in mrb_vm_exec (mrb=0x6b0010, proc=0x6b5ad0, pc=0x488dc8 <mrblib_irep+15388>) at /home/x/Desktop/test/mruby/src/vm.c:1227\n\t#30 0x00000000004083c5 in mrb_vm_run (mrb=0x6b0010, proc=0x6b2d40, self=..., stack_keep=2) at /home/x/Desktop/test/mruby/src/vm.c:820\n\t#31 0x00000000004105a5 in mrb_run (mrb=0x6b0010, proc=0x6b2d40, self=...) at /home/x/Desktop/test/mruby/src/vm.c:2568\n\t#32 0x000000000040753a in mrb_funcall_with_block (mrb=0x6b0010, self=..., mid=144, argc=0, argv=0x0, blk=...) at /home/x/Desktop/test/mruby/src/vm.c:451\n\t#33 0x00000000004075d9 in mrb_funcall_argv (mrb=0x6b0010, self=..., mid=144, argc=0, argv=0x0) at /home/x/Desktop/test/mruby/src/vm.c:461\n\t#34 0x0000000000403774 in convert_type (mrb=0x6b0010, val=..., tname=0x46db1e \"String\", method=0x46db17 \"to_str\", raise=0 '\\000') at /home/x/Desktop/test/mruby/src/object.c:320\n\t#35 0x0000000000403983 in mrb_check_convert_type (mrb=0x6b0010, val=..., type=MRB_TT_STRING, tname=0x46db1e \"String\", method=0x46db17 \"to_str\") at /home/x/Desktop/test/mruby/src/object.c:356\n\t#36 0x000000000041977b in mrb_check_string_type (mrb=0x6b0010, str=...) at /home/x/Desktop/test/mruby/src/string.c:1754\n\t#37 0x0000000000413073 in mrb_f_raise (mrb=0x6b0010, self=...) at /home/x/Desktop/test/mruby/src/kernel.c:862\n\t#38 0x0000000000409ee2 in mrb_vm_exec (mrb=0x6b0010, proc=0x6b5ad0, pc=0x488dc8 <mrblib_irep+15388>) at /home/x/Desktop/test/mruby/src/vm.c:1227\n\t#39 0x00000000004083c5 in mrb_vm_run (mrb=0x6b0010, proc=0x6b2d40, self=..., stack_keep=2) at /home/x/Desktop/test/mruby/src/vm.c:820\n\t#40 0x00000000004105a5 in mrb_run (mrb=0x6b0010, proc=0x6b2d40, self=...) at /home/x/Desktop/test/mruby/src/vm.c:2568\n\t#41 0x000000000040753a in mrb_funcall_with_block (mrb=0x6b0010, self=..., mid=144, argc=0, argv=0x0, blk=...) at /home/x/Desktop/test/mruby/src/vm.c:451\n\t#42 0x00000000004075d9 in mrb_funcall_argv (mrb=0x6b0010, self=..., mid=144, argc=0, argv=0x0) at /home/x/Desktop/test/mruby/src/vm.c:461\n\t#43 0x0000000000403774 in convert_type (mrb=0x6b0010, val=..., tname=0x46db1e \"String\", method=0x46db17 \"to_str\", raise=0 '\\000') at /home/x/Desktop/test/mruby/src/object.c:320\n\t#44 0x0000000000403983 in mrb_check_convert_type (mrb=0x6b0010, val=..., type=MRB_TT_STRING, tname=0x46db1e \"String\", method=0x46db17 \"to_str\") at /home/x/Desktop/test/mruby/src/object.c:356\n\t#45 0x000000000041977b in mrb_check_string_type (mrb=0x6b0010, str=...) at /home/x/Desktop/test/mruby/src/string.c:1754\n\t#46 0x0000000000413073 in mrb_f_raise (mrb=0x6b0010, self=...) at /home/x/Desktop/test/mruby/src/kernel.c:862\n\t#47 0x0000000000409ee2 in mrb_vm_exec (mrb=0x6b0010, proc=0x6b5ad0, pc=0x488dc8 <mrblib_irep+15388>) at /home/x/Desktop/test/mruby/src/vm.c:1227\n\t#48 0x00000000004083c5 in mrb_vm_run (mrb=0x6b0010, proc=0x6b2d40, self=..., stack_keep=2) at /home/x/Desktop/test/mruby/src/vm.c:820\n\t#49 0x00000000004105a5 in mrb_run (mrb=0x6b0010, proc=0x6b2d40, self=...) at /home/x/Desktop/test/mruby/src/vm.c:2568\n\t---Type <return> to continue, or q <return> to quit---q\n\tQuit",
+  "weakness": {
+    "id": 2,
+    "name": "Memory Corruption - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 168267,
+      "file_name": "test.rb",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/168/267/f971e176b6ef8334fe5912a485ab409fa5f2f6d9/test.rb?response-content-disposition=attachment%3B%20filename%3D%22test.rb%22%3B%20filename%2A%3DUTF-8%27%27test.rb&response-content-type=text%2Fplain&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ47SYAPAJ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T224613Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIFQlZdM%2BiHDyN9oni09hrwl3M7K20t9Vimgie0HLfNmHAiEAqmczIiyJE5llSe1xTfXIl4Bw%2BJdB3CSV3xMFov%2FAjEAqsQUIHhADGgwwMTM2MTkyNzQ4NDkiDGTATplagYxC2xegDSqOBVn84RpirpPeAsluMTBHBJPPcy3TNEGPtOb1g030u4%2BQqyRdbkHOeu8azW2dxIVENOx%2BPHk6VlHJXgV4d8HUPIeOnM40HYuXdOSzYUTyt1WXFSGpLJaSWiB03TZqdL5bqtaEMJu5UcC5z0Cdi1GIpGFsgKzCdcJQoIzDumo7zZyZ9WeFC77ekgmM1Wt6PkAYvHPeQGAJhATn1vEvc0eNnbdytiwFaQqiSvnY248y0JnJ%2F8qEDgRgNIDTYy%2BJzW8C1rSBNfmG86RcOINqrieLUz7e4D0OkTiY3ZmFJbhxMGry%2F%2BEU0uPJ2FhesmCsjPO2Q4qYjxuLteizkHbOCEMIryUDZ6lO7FPCEwUuQA0P2zZurtU7jXF70OoMpRIdmvSFpxF105GouBl7u4C4DaZd%2FG0WwEmttAW7MyhDk0R0yhnPvqm5u3qPizlXSvkGMTiEiC0kbntCjFpywefw2gw4IDltu1ccvvL5MhDRHiWVi79rEQQNnH2f%2BDZP85IQoc6JaVsSNBJMvQfnewwbTD7Ve8qIx5%2FnwFoaPMzFesb8pogauw4KP6A2BgO4GV8009Dnb9gRZpLVeBdKQaRp8kfLcsKRc%2FNd5BHQ7sMY8%2FmY%2BO4JpNd1FyN7DVnJvxavLkiTgXasTxpsBv5AJM25fhDmYeoEP%2BCmGUg4yii3832kILdhoI%2BrOFaNfRVdc0bNPBU6CqfNblTVRbk6fENhXMpkleVhNNVkQIDtCeUaofRXCfZ37l7pHU%2BJEOcXS4%2BIK5G2rpM0hdrTd3uua3MyiCbytk80G%2BiqNDf3zpJcaKkMCC54U6%2ByYkzQecXdlJVEeRzqP%2F3XWXv05Oqq9lNtf8rUOhd5ClgytZTNvJL9vV%2B%2FLTDTxMHGBjqxAYBo0aIpQji0ejSypObDv3XihNYitgjKFJgsdYeEepYKQhlw706ugkA1witeimv%2FDB1hc4iHPgAkUx%2B%2FvZ40%2FJ0apXyV5UFGy2LgXNmdzhqfjs%2F06haJgUg6CCQ5j1nkvFaan%2FyNQpk6Hccl%2BRB%2FKl8l3LZuSPiFwq78Bit95f3pmhaUjWgj8CLMjvf%2F7enBBgJwOyrmphgHZ7DafHSAJ5bjgcbapH5OR7Fsyd2fMtoh%2Fw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=64c5e1f984e35afda6195a739827e3f808bbf438cd0221b08b1a639136aa8930",
+      "file_size": 30,
+      "type": "text/plain",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-04-27T21:19:46.010Z",
+  "allow_singular_disclosure_after": -265166787.27274984,
+  "singular_disclosure_allowed": true,
+  "vote_count": 4,
+  "voters": [
+    "apapedulimu",
+    "eveeez",
+    "linkks",
+    "spetr0x"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
