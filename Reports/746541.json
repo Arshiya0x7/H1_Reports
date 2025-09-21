@@ -1,0 +1,159 @@
+{
+  "id": 746541,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC83NDY1NDE=",
+  "url": "https://hackerone.com/reports/746541",
+  "title": "SSRF on local storage of iOS mobile",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2019-11-26T10:37:16.194Z",
+  "submitted_at": "2019-11-26T10:37:16.194Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "l0l1ch3ng",
+    "url": "/l0l1ch3ng",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13291,
+    "url": "https://hackerone.com/nextcloud",
+    "handle": "nextcloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Nextcloud",
+      "twitter_handle": "nextclouders",
+      "website": "https://nextcloud.com",
+      "about": "Access, share and protect your files, calendars, contacts, communication & more at home and in your enterprise."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2020-03-01T10:29:39.050Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2020-01-31T10:29:35.782Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "1. The tester uploaded the text file, containing \"test ssrf\" message, in order to proof SSRF attack.\n2. Next, the tester uploaded the common file and then manipulate the content and extension file to html format in order to find the application path: <svg/onload=document.write(document.location)> \n3. The tester access that file and found the application path to use for SSRF local file disclosure.\n4. Then, the tester uploaded the common file and then manipulate the content and extension file to html format in order to view the local file via SSRF attack: <iframe src=\"file://.../ssrfpoc.txt\" width=\"400\" height=\"400\"></iframe> \n5. The tester access that file and found that this application allow you to access and read the local file successfully.\n\n## Impact\n\nThis allow anyone to use other URLs such as that can access documents on the system/application (using file://) a.k.a Sensitive Data Exposure.",
+  "weakness": {
+    "id": 68,
+    "name": "Server-Side Request Forgery (SSRF)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 644080,
+      "file_name": "Step_1.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/uhJiYF7rjWWJ1fRjmv18wPj9?response-content-disposition=attachment%3B%20filename%3D%22Step_1.PNG%22%3B%20filename%2A%3DUTF-8%27%27Step_1.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ5H6JMDKF%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T121809Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDFUPw5yUY8Vc32vxhAXP8PHFtr7JcEDzZv1bMYgxLmWwIgFqsO%2Fxtfx2BzXh0nWzMCT3JOH2Kp51%2F67DH8BPVph94qsQUIEhADGgwwMTM2MTkyNzQ4NDkiDFz7U%2FwFlXJI4uaVBCqOBWLhVYLwDGyfB9OTItyJREfKQC7jCNbrFxOFYNiaxRZlEQDIr81dbOpBWVw6nD91InCsQcyNRGrZglgF2HWSTCTkD4JMTnLcO8rV9hp1JqUK2fuSZDPAAioD12VT%2FYFu4rR8tx%2FqZV78%2Fz78kRgmRe7anLfklxebhPsPDQlylgR02pfw7cLbx7EH%2Fa%2BnBu%2Bi4isdYaNBhTewYG4wgD%2Fyv629guMa37ky2ByxpaQu3Y9aAsprFuUq%2Bxw77q%2BOE1j2MxwLVTMExO3kA0BmUgAsHCSm6LjYR7ZKYjmYxOkInLKDmQApdOZgmuD6U7LlMHH1tUHnBGOCXsbjpiIuk%2FKTyE9ejqbQ9XOv7g5RQd7rJpytmSh6Pm%2Bqi6TBE2xMUxn%2FIrr6o%2F8WL17StVT9lbGuMDIbg5PyEMSYb9DSmjJDCwdAa9xRDogyWBpSTXvBcAgT%2Fa%2FOKHdK04JYRjNuYPW8LnHHdpMMVWgtH9GtBMOMR%2Fg%2F2x1PAO0Ct5agZ0ft4b4SuIoURDtq0F8rl%2BAJU3uEfHf57o7zvcwuRqLNYxZ9QTp2wf7c60TxjIgOOkelF2IBHBb5MtL4IlHaAlJLnnvLF5x9T9mTMgsXFs%2BZgWRoUkS0kce3bhA1FqkA%2FgoiuDDQtn3UBN32wkP9NFkL57sNTWvRo4wpvz44Cf0T8kb2TBb8Bo6AcFIEYRLQkaEieN3a82hZkx9UI5Mg3u8SmNohBg%2B5m%2F3grhhUJqpDZzzXyff9pBij0PrN7CQ4iLofrmPvBADnV0P0JW%2B1wfrsDjxo%2FEFUTcD%2FAnX4iykp7U2E1Qq2OfABaru9GS0%2BqLyjKkMyE95VhEWUKRfRfYt0etc%2BmOcQtMLhR6sN9T5a6dlSdzCbh7%2FGBjqxARSGw%2B1SDekTRlDJWVt3%2Ff8YFxAG%2BJYbPq56MgZRHHuwNBYJkWYPap5oPvd%2FYtDWuQGcglXwI4iBaukn9Mm7Vuvrpy7WLmraNkXjpR8AGfuegKZfhetKKtZ0ZZ2LIVyWsOX1F2XLEf8CngPGhYdem%2BTVl03E%2FmOsfimhgxjkRsbJA0dJ4KnIDStb84TiXyuS1nlI%2BVR9uPoNNry%2F2pVdy4OuFdyeJ6VbNFlEeTCEV7O4Fw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=4b7940614a769086d96871c7d93bf55c1280f310c9b6237f13397bf62e406404",
+      "file_size": 237346,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 644081,
+      "file_name": "Step_2.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/1zzgMkK4rgWZefPDb4fsfpqH?response-content-disposition=attachment%3B%20filename%3D%22Step_2.png%22%3B%20filename%2A%3DUTF-8%27%27Step_2.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ5H6JMDKF%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T121809Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDFUPw5yUY8Vc32vxhAXP8PHFtr7JcEDzZv1bMYgxLmWwIgFqsO%2Fxtfx2BzXh0nWzMCT3JOH2Kp51%2F67DH8BPVph94qsQUIEhADGgwwMTM2MTkyNzQ4NDkiDFz7U%2FwFlXJI4uaVBCqOBWLhVYLwDGyfB9OTItyJREfKQC7jCNbrFxOFYNiaxRZlEQDIr81dbOpBWVw6nD91InCsQcyNRGrZglgF2HWSTCTkD4JMTnLcO8rV9hp1JqUK2fuSZDPAAioD12VT%2FYFu4rR8tx%2FqZV78%2Fz78kRgmRe7anLfklxebhPsPDQlylgR02pfw7cLbx7EH%2Fa%2BnBu%2Bi4isdYaNBhTewYG4wgD%2Fyv629guMa37ky2ByxpaQu3Y9aAsprFuUq%2Bxw77q%2BOE1j2MxwLVTMExO3kA0BmUgAsHCSm6LjYR7ZKYjmYxOkInLKDmQApdOZgmuD6U7LlMHH1tUHnBGOCXsbjpiIuk%2FKTyE9ejqbQ9XOv7g5RQd7rJpytmSh6Pm%2Bqi6TBE2xMUxn%2FIrr6o%2F8WL17StVT9lbGuMDIbg5PyEMSYb9DSmjJDCwdAa9xRDogyWBpSTXvBcAgT%2Fa%2FOKHdK04JYRjNuYPW8LnHHdpMMVWgtH9GtBMOMR%2Fg%2F2x1PAO0Ct5agZ0ft4b4SuIoURDtq0F8rl%2BAJU3uEfHf57o7zvcwuRqLNYxZ9QTp2wf7c60TxjIgOOkelF2IBHBb5MtL4IlHaAlJLnnvLF5x9T9mTMgsXFs%2BZgWRoUkS0kce3bhA1FqkA%2FgoiuDDQtn3UBN32wkP9NFkL57sNTWvRo4wpvz44Cf0T8kb2TBb8Bo6AcFIEYRLQkaEieN3a82hZkx9UI5Mg3u8SmNohBg%2B5m%2F3grhhUJqpDZzzXyff9pBij0PrN7CQ4iLofrmPvBADnV0P0JW%2B1wfrsDjxo%2FEFUTcD%2FAnX4iykp7U2E1Qq2OfABaru9GS0%2BqLyjKkMyE95VhEWUKRfRfYt0etc%2BmOcQtMLhR6sN9T5a6dlSdzCbh7%2FGBjqxARSGw%2B1SDekTRlDJWVt3%2Ff8YFxAG%2BJYbPq56MgZRHHuwNBYJkWYPap5oPvd%2FYtDWuQGcglXwI4iBaukn9Mm7Vuvrpy7WLmraNkXjpR8AGfuegKZfhetKKtZ0ZZ2LIVyWsOX1F2XLEf8CngPGhYdem%2BTVl03E%2FmOsfimhgxjkRsbJA0dJ4KnIDStb84TiXyuS1nlI%2BVR9uPoNNry%2F2pVdy4OuFdyeJ6VbNFlEeTCEV7O4Fw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=083dad62960b7fc942f8dd95d43ce624091056c80f96d696a06c80d25f435465",
+      "file_size": 394638,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 644082,
+      "file_name": "Step_3.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/KQvxoyQS61LYdAex1gKmt9g8?response-content-disposition=attachment%3B%20filename%3D%22Step_3.PNG%22%3B%20filename%2A%3DUTF-8%27%27Step_3.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ5H6JMDKF%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T121809Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDFUPw5yUY8Vc32vxhAXP8PHFtr7JcEDzZv1bMYgxLmWwIgFqsO%2Fxtfx2BzXh0nWzMCT3JOH2Kp51%2F67DH8BPVph94qsQUIEhADGgwwMTM2MTkyNzQ4NDkiDFz7U%2FwFlXJI4uaVBCqOBWLhVYLwDGyfB9OTItyJREfKQC7jCNbrFxOFYNiaxRZlEQDIr81dbOpBWVw6nD91InCsQcyNRGrZglgF2HWSTCTkD4JMTnLcO8rV9hp1JqUK2fuSZDPAAioD12VT%2FYFu4rR8tx%2FqZV78%2Fz78kRgmRe7anLfklxebhPsPDQlylgR02pfw7cLbx7EH%2Fa%2BnBu%2Bi4isdYaNBhTewYG4wgD%2Fyv629guMa37ky2ByxpaQu3Y9aAsprFuUq%2Bxw77q%2BOE1j2MxwLVTMExO3kA0BmUgAsHCSm6LjYR7ZKYjmYxOkInLKDmQApdOZgmuD6U7LlMHH1tUHnBGOCXsbjpiIuk%2FKTyE9ejqbQ9XOv7g5RQd7rJpytmSh6Pm%2Bqi6TBE2xMUxn%2FIrr6o%2F8WL17StVT9lbGuMDIbg5PyEMSYb9DSmjJDCwdAa9xRDogyWBpSTXvBcAgT%2Fa%2FOKHdK04JYRjNuYPW8LnHHdpMMVWgtH9GtBMOMR%2Fg%2F2x1PAO0Ct5agZ0ft4b4SuIoURDtq0F8rl%2BAJU3uEfHf57o7zvcwuRqLNYxZ9QTp2wf7c60TxjIgOOkelF2IBHBb5MtL4IlHaAlJLnnvLF5x9T9mTMgsXFs%2BZgWRoUkS0kce3bhA1FqkA%2FgoiuDDQtn3UBN32wkP9NFkL57sNTWvRo4wpvz44Cf0T8kb2TBb8Bo6AcFIEYRLQkaEieN3a82hZkx9UI5Mg3u8SmNohBg%2B5m%2F3grhhUJqpDZzzXyff9pBij0PrN7CQ4iLofrmPvBADnV0P0JW%2B1wfrsDjxo%2FEFUTcD%2FAnX4iykp7U2E1Qq2OfABaru9GS0%2BqLyjKkMyE95VhEWUKRfRfYt0etc%2BmOcQtMLhR6sN9T5a6dlSdzCbh7%2FGBjqxARSGw%2B1SDekTRlDJWVt3%2Ff8YFxAG%2BJYbPq56MgZRHHuwNBYJkWYPap5oPvd%2FYtDWuQGcglXwI4iBaukn9Mm7Vuvrpy7WLmraNkXjpR8AGfuegKZfhetKKtZ0ZZ2LIVyWsOX1F2XLEf8CngPGhYdem%2BTVl03E%2FmOsfimhgxjkRsbJA0dJ4KnIDStb84TiXyuS1nlI%2BVR9uPoNNry%2F2pVdy4OuFdyeJ6VbNFlEeTCEV7O4Fw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=8a1a77917a8c6186d12bf01391b83a1f8c4a9c579f4ae54b05e09945cf21d6ae",
+      "file_size": 115249,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 644092,
+      "file_name": "Step_4.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/L7LEyZ51LbxjcMkTejmw9dcQ?response-content-disposition=attachment%3B%20filename%3D%22Step_4.png%22%3B%20filename%2A%3DUTF-8%27%27Step_4.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ5H6JMDKF%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T121809Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDFUPw5yUY8Vc32vxhAXP8PHFtr7JcEDzZv1bMYgxLmWwIgFqsO%2Fxtfx2BzXh0nWzMCT3JOH2Kp51%2F67DH8BPVph94qsQUIEhADGgwwMTM2MTkyNzQ4NDkiDFz7U%2FwFlXJI4uaVBCqOBWLhVYLwDGyfB9OTItyJREfKQC7jCNbrFxOFYNiaxRZlEQDIr81dbOpBWVw6nD91InCsQcyNRGrZglgF2HWSTCTkD4JMTnLcO8rV9hp1JqUK2fuSZDPAAioD12VT%2FYFu4rR8tx%2FqZV78%2Fz78kRgmRe7anLfklxebhPsPDQlylgR02pfw7cLbx7EH%2Fa%2BnBu%2Bi4isdYaNBhTewYG4wgD%2Fyv629guMa37ky2ByxpaQu3Y9aAsprFuUq%2Bxw77q%2BOE1j2MxwLVTMExO3kA0BmUgAsHCSm6LjYR7ZKYjmYxOkInLKDmQApdOZgmuD6U7LlMHH1tUHnBGOCXsbjpiIuk%2FKTyE9ejqbQ9XOv7g5RQd7rJpytmSh6Pm%2Bqi6TBE2xMUxn%2FIrr6o%2F8WL17StVT9lbGuMDIbg5PyEMSYb9DSmjJDCwdAa9xRDogyWBpSTXvBcAgT%2Fa%2FOKHdK04JYRjNuYPW8LnHHdpMMVWgtH9GtBMOMR%2Fg%2F2x1PAO0Ct5agZ0ft4b4SuIoURDtq0F8rl%2BAJU3uEfHf57o7zvcwuRqLNYxZ9QTp2wf7c60TxjIgOOkelF2IBHBb5MtL4IlHaAlJLnnvLF5x9T9mTMgsXFs%2BZgWRoUkS0kce3bhA1FqkA%2FgoiuDDQtn3UBN32wkP9NFkL57sNTWvRo4wpvz44Cf0T8kb2TBb8Bo6AcFIEYRLQkaEieN3a82hZkx9UI5Mg3u8SmNohBg%2B5m%2F3grhhUJqpDZzzXyff9pBij0PrN7CQ4iLofrmPvBADnV0P0JW%2B1wfrsDjxo%2FEFUTcD%2FAnX4iykp7U2E1Qq2OfABaru9GS0%2BqLyjKkMyE95VhEWUKRfRfYt0etc%2BmOcQtMLhR6sN9T5a6dlSdzCbh7%2FGBjqxARSGw%2B1SDekTRlDJWVt3%2Ff8YFxAG%2BJYbPq56MgZRHHuwNBYJkWYPap5oPvd%2FYtDWuQGcglXwI4iBaukn9Mm7Vuvrpy7WLmraNkXjpR8AGfuegKZfhetKKtZ0ZZ2LIVyWsOX1F2XLEf8CngPGhYdem%2BTVl03E%2FmOsfimhgxjkRsbJA0dJ4KnIDStb84TiXyuS1nlI%2BVR9uPoNNry%2F2pVdy4OuFdyeJ6VbNFlEeTCEV7O4Fw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=e76d5715cbbc80b522386182be5b3f2469316bbe6b8ef4232dade102b3bd44de",
+      "file_size": 409208,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 644096,
+      "file_name": "Step_5.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/5U2QaGef8tgUpDmvmq4aZLj2?response-content-disposition=attachment%3B%20filename%3D%22Step_5.PNG%22%3B%20filename%2A%3DUTF-8%27%27Step_5.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ5H6JMDKF%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T121809Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDFUPw5yUY8Vc32vxhAXP8PHFtr7JcEDzZv1bMYgxLmWwIgFqsO%2Fxtfx2BzXh0nWzMCT3JOH2Kp51%2F67DH8BPVph94qsQUIEhADGgwwMTM2MTkyNzQ4NDkiDFz7U%2FwFlXJI4uaVBCqOBWLhVYLwDGyfB9OTItyJREfKQC7jCNbrFxOFYNiaxRZlEQDIr81dbOpBWVw6nD91InCsQcyNRGrZglgF2HWSTCTkD4JMTnLcO8rV9hp1JqUK2fuSZDPAAioD12VT%2FYFu4rR8tx%2FqZV78%2Fz78kRgmRe7anLfklxebhPsPDQlylgR02pfw7cLbx7EH%2Fa%2BnBu%2Bi4isdYaNBhTewYG4wgD%2Fyv629guMa37ky2ByxpaQu3Y9aAsprFuUq%2Bxw77q%2BOE1j2MxwLVTMExO3kA0BmUgAsHCSm6LjYR7ZKYjmYxOkInLKDmQApdOZgmuD6U7LlMHH1tUHnBGOCXsbjpiIuk%2FKTyE9ejqbQ9XOv7g5RQd7rJpytmSh6Pm%2Bqi6TBE2xMUxn%2FIrr6o%2F8WL17StVT9lbGuMDIbg5PyEMSYb9DSmjJDCwdAa9xRDogyWBpSTXvBcAgT%2Fa%2FOKHdK04JYRjNuYPW8LnHHdpMMVWgtH9GtBMOMR%2Fg%2F2x1PAO0Ct5agZ0ft4b4SuIoURDtq0F8rl%2BAJU3uEfHf57o7zvcwuRqLNYxZ9QTp2wf7c60TxjIgOOkelF2IBHBb5MtL4IlHaAlJLnnvLF5x9T9mTMgsXFs%2BZgWRoUkS0kce3bhA1FqkA%2FgoiuDDQtn3UBN32wkP9NFkL57sNTWvRo4wpvz44Cf0T8kb2TBb8Bo6AcFIEYRLQkaEieN3a82hZkx9UI5Mg3u8SmNohBg%2B5m%2F3grhhUJqpDZzzXyff9pBij0PrN7CQ4iLofrmPvBADnV0P0JW%2B1wfrsDjxo%2FEFUTcD%2FAnX4iykp7U2E1Qq2OfABaru9GS0%2BqLyjKkMyE95VhEWUKRfRfYt0etc%2BmOcQtMLhR6sN9T5a6dlSdzCbh7%2FGBjqxARSGw%2B1SDekTRlDJWVt3%2Ff8YFxAG%2BJYbPq56MgZRHHuwNBYJkWYPap5oPvd%2FYtDWuQGcglXwI4iBaukn9Mm7Vuvrpy7WLmraNkXjpR8AGfuegKZfhetKKtZ0ZZ2LIVyWsOX1F2XLEf8CngPGhYdem%2BTVl03E%2FmOsfimhgxjkRsbJA0dJ4KnIDStb84TiXyuS1nlI%2BVR9uPoNNry%2F2pVdy4OuFdyeJ6VbNFlEeTCEV7O4Fw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=cd860ca40b8636f721ab3c0193e0a5ac05623c7cbdcd56fed106ce2cb19d77f4",
+      "file_size": 102488,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2020-03-01T10:29:35.856Z",
+  "allow_singular_disclosure_after": -175398513.6138916,
+  "singular_disclosure_allowed": true,
+  "vote_count": 7,
+  "voters": [
+    "a_d_a_m",
+    "sameerphad72",
+    "tosun",
+    "raizoo",
+    "markuta",
+    "destinedtohack",
+    "darkzek"
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 2,
+    "asset_type": "APPLE_STORE_APP_ID",
+    "asset_identifier": "it.twsweb.Nextcloud",
+    "max_severity": "medium"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
