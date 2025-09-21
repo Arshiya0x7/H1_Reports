@@ -1,0 +1,187 @@
+{
+  "id": 497255,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC80OTcyNTU=",
+  "url": "https://hackerone.com/reports/497255",
+  "title": "A stack buffer overflow in BabyGrid.cpp can lead to program crashes via a malicious localization file",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2019-02-17T11:52:01.984Z",
+  "submitted_at": "2019-02-17T11:52:01.984Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "peter_",
+    "url": "/peter_",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MjI4OTEsInB1ciI6ImJsb2JfaWQifX0=--bd24cc616576e469ab57c08d11da1d11e3917515/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--2de8067d228529d65848a4eeed0bed0bb2531bc3/TABE0LHNJ-UAGBMQAUX-eb45955b53b8-512.jpg"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 36721,
+    "url": "https://hackerone.com/notepad-plus-plus",
+    "handle": "notepad-plus-plus",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6Nzc3MDUsInB1ciI6ImJsb2JfaWQifX0=--2ca2357f301fa5575a76366238f71e27e3ddfe36/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--a4d91faed3dff6024dfc1a7b7f8ccc6b45e38396/open-uri20181218-17572-foz24g",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/036/721/b8be93879279f14a49e5051a1a2794575fb1f3f8_original./3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "disabled",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Notepad++",
+      "twitter_handle": "notepad_plus",
+      "website": "https://notepad-plus-plus.org",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2019-05-07T22:45:59.211Z",
+  "bug_reporter_agreed_on_going_public_at": "2019-04-07T22:45:58.863Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "**Summary:** A stack buffer overflow in BabyGrid.cpp can lead to program crashes via a malicious localization file, when opening the Shortcut Mapper sub-menu\n\n**Description:** Setting a very long `name` attribute for specific xml tags in the `nativeLang.xml` will trigger a stack buffer overflow, due to missing bound checks.\n\nThe `nativeLang.xml` file is an optional configuration file, as described in [http://docs.notepad-plus-plus.org/index.php/Configuration_Files](http://docs.notepad-plus-plus.org/index.php/Configuration_Files), [http://docs.notepad-plus-plus.org/index.php/Localisation](http://docs.notepad-plus-plus.org/index.php/Localisation), [https://notepad-plus-plus.org/contribute/binary-translation-howto.html](https://notepad-plus-plus.org/contribute/binary-translation-howto.html). `nativeLang.xml` lets users change the localization language of Notepad++, by providing alternative translations for every visible string in the GUI.\n\nIn the `nativeLang.xml` file, in the `ShortcutMapper` tag,\nthe `name` attribute of any of the following children is vulnerable:\n\n* `ColumnName`\n* `ColumnShortcut`\n* `ColumnCategory`\n* `ColumnPlugin`\n\nThe overflow is triggered with:\n\n* a `name` with more than ~1000 characters on the 32-bit program\n* a `name` with more than ~2000 characters on the 64-bit program\n\nSee the attached proofs of concept as an example.\n\nThe cause of the overflow is the usage of the unsafe `lstrcat` and `lstrcpy` functions without any bounds checks.\n\n## Vulnerability #1\nIn `PowerEditor/src/WinControls/Grid/BabyGrid.cpp`, line 1671:\n\n```\n    lstrcat(buffer, (TCHAR*)lParam);\n```\n\n`lstrcat` introduces an unbounded stack buffer overflow, by overrunning the 1000 bytes long buffer `buffer`.\n\n`lParam` can be controlled and can be of arbitrary length, for example when loading localization strings.\n\nExample of an execution trace triggering the vulnerability:\n\n1. In `ShortcutMapper.cpp`, `ShortcutMapper::run_dlgProc`\n2. In `ShortcutMapper.cpp`, `ShortcutMapper::fillOutBabyGrid`\n\t* `generic_string nameStr = nativeLangSpeaker->getShortcutMapperLangStr(\"ColumnName\", TEXT(\"Name\"));`\n\t* `_babygrid.setText(0, 1, nameStr.c_str());`\n3. In `BabyGridWrapper.h`, `setText`\n\t* `\t\t::SendMessage(_hSelf, BGM_SETCELLDATA, reinterpret_cast<WPARAM>(&cell), reinterpret_cast<LPARAM>(text));`\n4. In `BabyGrid.cpp`, `GridProc`\n\t* `lstrcat(buffer, (TCHAR*)lParam);` (line 1669)\n\n## Vulnerability #2\nIf vulnerability #1 is fixed, a second vulnerability will still allow a very similar stack buffer overflow.\n\nIn `PowerEditor/src/WinControls/Grid/BabyGrid.cpp`, line 1308:\n\n```\n    lstrcpy(temptext,text);\n```\n\n`lstrcpy` introduces an unbounded stack buffer overflow, by overrunning the 1000 bytes long buffer `temptext`.\n\n`text` can be controlled and can be of arbitrary length, for example when loading localization strings.\n\nExample of an execution trace triggering the vulnerability:\n\n1. In `ShortcutMapper.cpp`, `ShortcutMapper::run_dlgProc`\n2. In `ShortcutMapper.cpp`, `ShortcutMapper::fillOutBabyGrid`\n\t* `generic_string nameStr = nativeLangSpeaker->getShortcutMapperLangStr(\"ColumnName\", TEXT(\"Name\"));`\n\t* `_babygrid.setText(0, 1, nameStr.c_str());`\n3. In `BabyGridWrapper.h`, `setText`\n\t* `\t\t::SendMessage(_hSelf, BGM_SETCELLDATA, reinterpret_cast<WPARAM>(&cell), reinterpret_cast<LPARAM>(text));`\n4. In `BabyGrid.cpp`, `GridProc`\n\t* `longestline=FindLongestLine(hdc,(TCHAR*)lParam,&size);` (line 1726)\n5. In `BabyGrid.cpp`, `FindLongestLine`\n\t* `lstrcpy(temptext,text);` (line 1306)\n\n\n## Steps To Reproduce:\n\n1. Install the 32-bit version of Notepad++\n2. Copy `nativeLang.xml` to the `%APPDATA%\\Notepad++` folder (or to the Notepad++ installation folder)\n3. Run Notepad++\n4. Open the \"Settings\" > \"Shortcut Mapper\" menu\n\nNotepad++ will crash.\n\n### Alternative steps\nThe PoC can be reproduced in the same way on the 64-bit version by using one of the provided .xml files ending with `-64` (remember to rename them to `nativeLang.xml`).\n\nAll of the attached files, when renamed to `nativeLang.xml` and moved to the `%APPDATA%\\Notepad++` folder, will trigger a crash.\n\nThe `nativeLang-4` version of the PoC needs an additional step: after opening the Shortcut Mapper, move to the \"Plugin\" tab.\n\n## Suggested fix\n\n* Add `strsafe.h` as header\n\n* In `PowerEditor/src/WinControls/Grid/BabyGrid.cpp`, line 1671\n\n```diff\n-    lstrcat(buffer, (TCHAR*)lParam);\n+    StringCchCat(buffer, 1000, (TCHAR*)lParam);\n```\n\n* In `PowerEditor/src/WinControls/Grid/BabyGrid.cpp`, line 1308\n\n```diff\n-    lstrcpy(temptext,text);\n+    StringCchCopy(temptext, 1000, text);\n```\n\n`strcat` and `strcpy` are fundamentally unsafe, due to the lack of bounds checking. Consider replacing all occurrences with safer alternatives like `StringCchCat` and `StringCchCopy`.\n\n## Supporting Material/References:\n\n### Debug info of tested executables\nThe executables were downloaded from the nightly build at https://ci.appveyor.com/project/donho/notepad-plus-plus\n\n```\nNotepad++ v7.6.3   (32-bit)\nBuild time : Feb 16 2019 - 23:07:35\nPath : C:\\Users\\Pietro\\Downloads\\npp.7.6.3.bin.minimalist\\notepad++.exe\nAdmin mode : OFF\nLocal Conf mode : ON\nOS : Windows 10 (64-bit)\nPlugins : none\n```\n\n```\nNotepad++ v7.6.3   (64-bit)\nBuild time : Feb 17 2019 - 02:47:42\nPath : C:\\Users\\Pietro\\Downloads\\npp.7.6.3.bin.minimalist64\\notepad++.exe\nAdmin mode : OFF\nLocal Conf mode : ON\nOS : Windows 10 (64-bit)\nPlugins : none\n```\n\n## Impact\n\nAny user who is using one of these malicious localization files will experience crashes when using the \"Shortcut Mapper\" menu.\n\nThis may cause:\n\n* Loss of unsaved data when the program crashes (if the interval between automatic file backups is too long or automatic backups are disabled)\n* No access to the Shortcut Mapper, making it impossible to change shortcuts\n\nUsers may be persuaded to install a custom localization file, for instance by looking for a translation for a language that is not supported yet, or by believing that a particular translation is better than the official one.\n\nMoreover, a malicious program running with the user's permission may directly write to %APPDATA% and trigger the vulnerability.\n\nSince this exploit is read from a file and therefore not dynamic, exploitation to code execution looks impossible due to the presence of the stack cookie and ASLR.",
+  "weakness": {
+    "id": 4,
+    "name": "Stack Overflow"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 425490,
+      "file_name": "nativeLang-1.xml",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/425/490/bd4c0d462e1ea9ae46e1f6c2a85239993223fcef/nativeLang-1.xml?response-content-disposition=attachment%3B%20filename%3D%22nativeLang-1.xml%22%3B%20filename%2A%3DUTF-8%27%27nativeLang-1.xml&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ63C5JMFQ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T153552Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIFDvRHn9ky1YQHzGuakS4Iz0vDtMnYWimh35oKHC7r%2F2AiAia3verAavWozpj%2BAPj1Qc2tpTLeRgJgInw7s8k0Ms7CqyBQgWEAMaDDAxMzYxOTI3NDg0OSIMRvcecFwXg0wZuwgGKo8FksKPXngK9ceXhWE613mjXnbZdBITFJXG%2B7ytn5mQqEzLPXaN8Dx%2F8nIueq6O5yT55A9X2c24%2FKOSrqpojCWB%2FmHExscAysLYKTPUIlVMYMErXfxTvQFibbmyznBSpJpT6mph1%2FC7m4PzL0Z7s5mDS2e2w0q67hMvtblmSd6z2S5sLLprqEv4nxaO2Z03eCVZed4HflAJpQWGkIN9dxrJmqL0xfNinTwvuGKS%2FtQXpUBCwbAlEPsVf6kFzMuBkc0qEZZXmFUVur2bm0BmaPy5U0SS0%2F0oEWM%2B%2Fd1IyjwDODtmd9pVA%2B1zdR2zU3SBpqjUGbCVyxM%2BCvCJKx2laInTTGrcZXpxB0ZaBPc72qXRyrFiYVUpxGbqbXqPTdJjGm8GxvuwY6dwYyqiDL0L4ZHA8ueYS34pZlSvE5cvZ%2B5L0JHJa9vEJ1W8Pqt1wxWRFxk9rTjKEsTldCLOAaZQArrL09XbORY9RKJymViUcVKXXDZyYrihG24puBP7Q0klt33FfXCOWl8D%2BdEqzwPIv5H2VZGi4m%2FGS4Id8QNSv7KNd72oaaqqBHPe%2BcaQBNdrl5tGj0GLQa5vEwuuFiqiZfYWS1JXRedJdO1231Hq5yU66xdMa6GLuVKIVsSg5Tz7a0KFhpvLGYG28NsHgim3jEPzU0%2FfskoJ43K0M%2FAQW57Qfto%2F4xPT%2Faem36dXOyY929FDEawLfAQW2K1c5SH1oiT%2Bomp7b0v3iKTxB5YbVOX1QIaqPITE64vVve%2FQVHigwZjXn6gm8r3%2B5jIuQXaMTKmt3Z8qZAXuvHXyIhFySvgvVd1HaBdX%2FLAo6wYx%2BaWuJl8Y7Qg7uuXGEMEBkIba7kqCgJ4cUzEvkb5%2BaF0h0rxabTD357%2FGBjqyAfqYzux0u2fIPi%2F%2B5WgXrdOTFF9hswACvH1kqzOXf9i%2FhFaA9reIVKxbcUQk7RHelMKqGaiuR4%2BORktmbLN6VadvA%2BPEkXFVVes%2B7LnvM9NmvFVdF2yG8LnQmcQMm%2Fue0xNqf3zd753V6T9g2UU8jFT%2F5oJbh4z7d9HvcXbDlcr4DTGGjwHTE7klqn8N7UXcU3Q4yrkD3foXSV43foaRVQywlCTelvhv%2FMKxvOToYrdap2M%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=4b2b26672c19bb6f836e470c93bbd7f1dc06c57a5bec531e935e3e560f1072b5",
+      "file_size": 74283,
+      "type": "application/xml",
+      "moderated": null
+    },
+    {
+      "id": 425491,
+      "file_name": "nativeLang.xml",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/425/491/1541864e850267d2a260268e393f5da97b0bc359/nativeLang.xml?response-content-disposition=attachment%3B%20filename%3D%22nativeLang.xml%22%3B%20filename%2A%3DUTF-8%27%27nativeLang.xml&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ63C5JMFQ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T153552Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIFDvRHn9ky1YQHzGuakS4Iz0vDtMnYWimh35oKHC7r%2F2AiAia3verAavWozpj%2BAPj1Qc2tpTLeRgJgInw7s8k0Ms7CqyBQgWEAMaDDAxMzYxOTI3NDg0OSIMRvcecFwXg0wZuwgGKo8FksKPXngK9ceXhWE613mjXnbZdBITFJXG%2B7ytn5mQqEzLPXaN8Dx%2F8nIueq6O5yT55A9X2c24%2FKOSrqpojCWB%2FmHExscAysLYKTPUIlVMYMErXfxTvQFibbmyznBSpJpT6mph1%2FC7m4PzL0Z7s5mDS2e2w0q67hMvtblmSd6z2S5sLLprqEv4nxaO2Z03eCVZed4HflAJpQWGkIN9dxrJmqL0xfNinTwvuGKS%2FtQXpUBCwbAlEPsVf6kFzMuBkc0qEZZXmFUVur2bm0BmaPy5U0SS0%2F0oEWM%2B%2Fd1IyjwDODtmd9pVA%2B1zdR2zU3SBpqjUGbCVyxM%2BCvCJKx2laInTTGrcZXpxB0ZaBPc72qXRyrFiYVUpxGbqbXqPTdJjGm8GxvuwY6dwYyqiDL0L4ZHA8ueYS34pZlSvE5cvZ%2B5L0JHJa9vEJ1W8Pqt1wxWRFxk9rTjKEsTldCLOAaZQArrL09XbORY9RKJymViUcVKXXDZyYrihG24puBP7Q0klt33FfXCOWl8D%2BdEqzwPIv5H2VZGi4m%2FGS4Id8QNSv7KNd72oaaqqBHPe%2BcaQBNdrl5tGj0GLQa5vEwuuFiqiZfYWS1JXRedJdO1231Hq5yU66xdMa6GLuVKIVsSg5Tz7a0KFhpvLGYG28NsHgim3jEPzU0%2FfskoJ43K0M%2FAQW57Qfto%2F4xPT%2Faem36dXOyY929FDEawLfAQW2K1c5SH1oiT%2Bomp7b0v3iKTxB5YbVOX1QIaqPITE64vVve%2FQVHigwZjXn6gm8r3%2B5jIuQXaMTKmt3Z8qZAXuvHXyIhFySvgvVd1HaBdX%2FLAo6wYx%2BaWuJl8Y7Qg7uuXGEMEBkIba7kqCgJ4cUzEvkb5%2BaF0h0rxabTD357%2FGBjqyAfqYzux0u2fIPi%2F%2B5WgXrdOTFF9hswACvH1kqzOXf9i%2FhFaA9reIVKxbcUQk7RHelMKqGaiuR4%2BORktmbLN6VadvA%2BPEkXFVVes%2B7LnvM9NmvFVdF2yG8LnQmcQMm%2Fue0xNqf3zd753V6T9g2UU8jFT%2F5oJbh4z7d9HvcXbDlcr4DTGGjwHTE7klqn8N7UXcU3Q4yrkD3foXSV43foaRVQywlCTelvhv%2FMKxvOToYrdap2M%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=ed29d1075263d54e89399bac8d5e5cb0e3e650d84a9c8ae86750a46ea947522b",
+      "file_size": 74283,
+      "type": "application/xml",
+      "moderated": null
+    },
+    {
+      "id": 425492,
+      "file_name": "nativeLang-1-64.xml",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/425/492/ffc98ab24a06423bb52ce3560b72c1435e38f910/nativeLang-1-64.xml?response-content-disposition=attachment%3B%20filename%3D%22nativeLang-1-64.xml%22%3B%20filename%2A%3DUTF-8%27%27nativeLang-1-64.xml&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ63C5JMFQ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T153552Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIFDvRHn9ky1YQHzGuakS4Iz0vDtMnYWimh35oKHC7r%2F2AiAia3verAavWozpj%2BAPj1Qc2tpTLeRgJgInw7s8k0Ms7CqyBQgWEAMaDDAxMzYxOTI3NDg0OSIMRvcecFwXg0wZuwgGKo8FksKPXngK9ceXhWE613mjXnbZdBITFJXG%2B7ytn5mQqEzLPXaN8Dx%2F8nIueq6O5yT55A9X2c24%2FKOSrqpojCWB%2FmHExscAysLYKTPUIlVMYMErXfxTvQFibbmyznBSpJpT6mph1%2FC7m4PzL0Z7s5mDS2e2w0q67hMvtblmSd6z2S5sLLprqEv4nxaO2Z03eCVZed4HflAJpQWGkIN9dxrJmqL0xfNinTwvuGKS%2FtQXpUBCwbAlEPsVf6kFzMuBkc0qEZZXmFUVur2bm0BmaPy5U0SS0%2F0oEWM%2B%2Fd1IyjwDODtmd9pVA%2B1zdR2zU3SBpqjUGbCVyxM%2BCvCJKx2laInTTGrcZXpxB0ZaBPc72qXRyrFiYVUpxGbqbXqPTdJjGm8GxvuwY6dwYyqiDL0L4ZHA8ueYS34pZlSvE5cvZ%2B5L0JHJa9vEJ1W8Pqt1wxWRFxk9rTjKEsTldCLOAaZQArrL09XbORY9RKJymViUcVKXXDZyYrihG24puBP7Q0klt33FfXCOWl8D%2BdEqzwPIv5H2VZGi4m%2FGS4Id8QNSv7KNd72oaaqqBHPe%2BcaQBNdrl5tGj0GLQa5vEwuuFiqiZfYWS1JXRedJdO1231Hq5yU66xdMa6GLuVKIVsSg5Tz7a0KFhpvLGYG28NsHgim3jEPzU0%2FfskoJ43K0M%2FAQW57Qfto%2F4xPT%2Faem36dXOyY929FDEawLfAQW2K1c5SH1oiT%2Bomp7b0v3iKTxB5YbVOX1QIaqPITE64vVve%2FQVHigwZjXn6gm8r3%2B5jIuQXaMTKmt3Z8qZAXuvHXyIhFySvgvVd1HaBdX%2FLAo6wYx%2BaWuJl8Y7Qg7uuXGEMEBkIba7kqCgJ4cUzEvkb5%2BaF0h0rxabTD357%2FGBjqyAfqYzux0u2fIPi%2F%2B5WgXrdOTFF9hswACvH1kqzOXf9i%2FhFaA9reIVKxbcUQk7RHelMKqGaiuR4%2BORktmbLN6VadvA%2BPEkXFVVes%2B7LnvM9NmvFVdF2yG8LnQmcQMm%2Fue0xNqf3zd753V6T9g2UU8jFT%2F5oJbh4z7d9HvcXbDlcr4DTGGjwHTE7klqn8N7UXcU3Q4yrkD3foXSV43foaRVQywlCTelvhv%2FMKxvOToYrdap2M%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=da725b94e492f472793f2d01c8ac01cc5bbffbb997e216a02d4905397a878562",
+      "file_size": 75722,
+      "type": "application/xml",
+      "moderated": null
+    },
+    {
+      "id": 425493,
+      "file_name": "nativeLang-2-64.xml",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/425/493/52a450cd7028a839cc3b49719f7bdd9b7072d732/nativeLang-2-64.xml?response-content-disposition=attachment%3B%20filename%3D%22nativeLang-2-64.xml%22%3B%20filename%2A%3DUTF-8%27%27nativeLang-2-64.xml&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ63C5JMFQ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T153552Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIFDvRHn9ky1YQHzGuakS4Iz0vDtMnYWimh35oKHC7r%2F2AiAia3verAavWozpj%2BAPj1Qc2tpTLeRgJgInw7s8k0Ms7CqyBQgWEAMaDDAxMzYxOTI3NDg0OSIMRvcecFwXg0wZuwgGKo8FksKPXngK9ceXhWE613mjXnbZdBITFJXG%2B7ytn5mQqEzLPXaN8Dx%2F8nIueq6O5yT55A9X2c24%2FKOSrqpojCWB%2FmHExscAysLYKTPUIlVMYMErXfxTvQFibbmyznBSpJpT6mph1%2FC7m4PzL0Z7s5mDS2e2w0q67hMvtblmSd6z2S5sLLprqEv4nxaO2Z03eCVZed4HflAJpQWGkIN9dxrJmqL0xfNinTwvuGKS%2FtQXpUBCwbAlEPsVf6kFzMuBkc0qEZZXmFUVur2bm0BmaPy5U0SS0%2F0oEWM%2B%2Fd1IyjwDODtmd9pVA%2B1zdR2zU3SBpqjUGbCVyxM%2BCvCJKx2laInTTGrcZXpxB0ZaBPc72qXRyrFiYVUpxGbqbXqPTdJjGm8GxvuwY6dwYyqiDL0L4ZHA8ueYS34pZlSvE5cvZ%2B5L0JHJa9vEJ1W8Pqt1wxWRFxk9rTjKEsTldCLOAaZQArrL09XbORY9RKJymViUcVKXXDZyYrihG24puBP7Q0klt33FfXCOWl8D%2BdEqzwPIv5H2VZGi4m%2FGS4Id8QNSv7KNd72oaaqqBHPe%2BcaQBNdrl5tGj0GLQa5vEwuuFiqiZfYWS1JXRedJdO1231Hq5yU66xdMa6GLuVKIVsSg5Tz7a0KFhpvLGYG28NsHgim3jEPzU0%2FfskoJ43K0M%2FAQW57Qfto%2F4xPT%2Faem36dXOyY929FDEawLfAQW2K1c5SH1oiT%2Bomp7b0v3iKTxB5YbVOX1QIaqPITE64vVve%2FQVHigwZjXn6gm8r3%2B5jIuQXaMTKmt3Z8qZAXuvHXyIhFySvgvVd1HaBdX%2FLAo6wYx%2BaWuJl8Y7Qg7uuXGEMEBkIba7kqCgJ4cUzEvkb5%2BaF0h0rxabTD357%2FGBjqyAfqYzux0u2fIPi%2F%2B5WgXrdOTFF9hswACvH1kqzOXf9i%2FhFaA9reIVKxbcUQk7RHelMKqGaiuR4%2BORktmbLN6VadvA%2BPEkXFVVes%2B7LnvM9NmvFVdF2yG8LnQmcQMm%2Fue0xNqf3zd753V6T9g2UU8jFT%2F5oJbh4z7d9HvcXbDlcr4DTGGjwHTE7klqn8N7UXcU3Q4yrkD3foXSV43foaRVQywlCTelvhv%2FMKxvOToYrdap2M%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=d607c0b3fc1642bbf088b0c97b2f10abfeb42d6373f926a0d344f246daecfff5",
+      "file_size": 75718,
+      "type": "application/xml",
+      "moderated": null
+    },
+    {
+      "id": 425494,
+      "file_name": "nativeLang-2.xml",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/425/494/a8a1ff8c7652b9e8060be444a8734d0fded4d13f/nativeLang-2.xml?response-content-disposition=attachment%3B%20filename%3D%22nativeLang-2.xml%22%3B%20filename%2A%3DUTF-8%27%27nativeLang-2.xml&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ63C5JMFQ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T153552Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIFDvRHn9ky1YQHzGuakS4Iz0vDtMnYWimh35oKHC7r%2F2AiAia3verAavWozpj%2BAPj1Qc2tpTLeRgJgInw7s8k0Ms7CqyBQgWEAMaDDAxMzYxOTI3NDg0OSIMRvcecFwXg0wZuwgGKo8FksKPXngK9ceXhWE613mjXnbZdBITFJXG%2B7ytn5mQqEzLPXaN8Dx%2F8nIueq6O5yT55A9X2c24%2FKOSrqpojCWB%2FmHExscAysLYKTPUIlVMYMErXfxTvQFibbmyznBSpJpT6mph1%2FC7m4PzL0Z7s5mDS2e2w0q67hMvtblmSd6z2S5sLLprqEv4nxaO2Z03eCVZed4HflAJpQWGkIN9dxrJmqL0xfNinTwvuGKS%2FtQXpUBCwbAlEPsVf6kFzMuBkc0qEZZXmFUVur2bm0BmaPy5U0SS0%2F0oEWM%2B%2Fd1IyjwDODtmd9pVA%2B1zdR2zU3SBpqjUGbCVyxM%2BCvCJKx2laInTTGrcZXpxB0ZaBPc72qXRyrFiYVUpxGbqbXqPTdJjGm8GxvuwY6dwYyqiDL0L4ZHA8ueYS34pZlSvE5cvZ%2B5L0JHJa9vEJ1W8Pqt1wxWRFxk9rTjKEsTldCLOAaZQArrL09XbORY9RKJymViUcVKXXDZyYrihG24puBP7Q0klt33FfXCOWl8D%2BdEqzwPIv5H2VZGi4m%2FGS4Id8QNSv7KNd72oaaqqBHPe%2BcaQBNdrl5tGj0GLQa5vEwuuFiqiZfYWS1JXRedJdO1231Hq5yU66xdMa6GLuVKIVsSg5Tz7a0KFhpvLGYG28NsHgim3jEPzU0%2FfskoJ43K0M%2FAQW57Qfto%2F4xPT%2Faem36dXOyY929FDEawLfAQW2K1c5SH1oiT%2Bomp7b0v3iKTxB5YbVOX1QIaqPITE64vVve%2FQVHigwZjXn6gm8r3%2B5jIuQXaMTKmt3Z8qZAXuvHXyIhFySvgvVd1HaBdX%2FLAo6wYx%2BaWuJl8Y7Qg7uuXGEMEBkIba7kqCgJ4cUzEvkb5%2BaF0h0rxabTD357%2FGBjqyAfqYzux0u2fIPi%2F%2B5WgXrdOTFF9hswACvH1kqzOXf9i%2FhFaA9reIVKxbcUQk7RHelMKqGaiuR4%2BORktmbLN6VadvA%2BPEkXFVVes%2B7LnvM9NmvFVdF2yG8LnQmcQMm%2Fue0xNqf3zd753V6T9g2UU8jFT%2F5oJbh4z7d9HvcXbDlcr4DTGGjwHTE7klqn8N7UXcU3Q4yrkD3foXSV43foaRVQywlCTelvhv%2FMKxvOToYrdap2M%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=a800be765bf3c9dab459fc631b43ee536d2f36a3b0a1332f0e3c155b77426145",
+      "file_size": 74279,
+      "type": "application/xml",
+      "moderated": null
+    },
+    {
+      "id": 425495,
+      "file_name": "nativeLang-3-64.xml",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/425/495/5f33f73568a9a2965ac509a98dec6b284db89443/nativeLang-3-64.xml?response-content-disposition=attachment%3B%20filename%3D%22nativeLang-3-64.xml%22%3B%20filename%2A%3DUTF-8%27%27nativeLang-3-64.xml&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ63C5JMFQ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T153552Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIFDvRHn9ky1YQHzGuakS4Iz0vDtMnYWimh35oKHC7r%2F2AiAia3verAavWozpj%2BAPj1Qc2tpTLeRgJgInw7s8k0Ms7CqyBQgWEAMaDDAxMzYxOTI3NDg0OSIMRvcecFwXg0wZuwgGKo8FksKPXngK9ceXhWE613mjXnbZdBITFJXG%2B7ytn5mQqEzLPXaN8Dx%2F8nIueq6O5yT55A9X2c24%2FKOSrqpojCWB%2FmHExscAysLYKTPUIlVMYMErXfxTvQFibbmyznBSpJpT6mph1%2FC7m4PzL0Z7s5mDS2e2w0q67hMvtblmSd6z2S5sLLprqEv4nxaO2Z03eCVZed4HflAJpQWGkIN9dxrJmqL0xfNinTwvuGKS%2FtQXpUBCwbAlEPsVf6kFzMuBkc0qEZZXmFUVur2bm0BmaPy5U0SS0%2F0oEWM%2B%2Fd1IyjwDODtmd9pVA%2B1zdR2zU3SBpqjUGbCVyxM%2BCvCJKx2laInTTGrcZXpxB0ZaBPc72qXRyrFiYVUpxGbqbXqPTdJjGm8GxvuwY6dwYyqiDL0L4ZHA8ueYS34pZlSvE5cvZ%2B5L0JHJa9vEJ1W8Pqt1wxWRFxk9rTjKEsTldCLOAaZQArrL09XbORY9RKJymViUcVKXXDZyYrihG24puBP7Q0klt33FfXCOWl8D%2BdEqzwPIv5H2VZGi4m%2FGS4Id8QNSv7KNd72oaaqqBHPe%2BcaQBNdrl5tGj0GLQa5vEwuuFiqiZfYWS1JXRedJdO1231Hq5yU66xdMa6GLuVKIVsSg5Tz7a0KFhpvLGYG28NsHgim3jEPzU0%2FfskoJ43K0M%2FAQW57Qfto%2F4xPT%2Faem36dXOyY929FDEawLfAQW2K1c5SH1oiT%2Bomp7b0v3iKTxB5YbVOX1QIaqPITE64vVve%2FQVHigwZjXn6gm8r3%2B5jIuQXaMTKmt3Z8qZAXuvHXyIhFySvgvVd1HaBdX%2FLAo6wYx%2BaWuJl8Y7Qg7uuXGEMEBkIba7kqCgJ4cUzEvkb5%2BaF0h0rxabTD357%2FGBjqyAfqYzux0u2fIPi%2F%2B5WgXrdOTFF9hswACvH1kqzOXf9i%2FhFaA9reIVKxbcUQk7RHelMKqGaiuR4%2BORktmbLN6VadvA%2BPEkXFVVes%2B7LnvM9NmvFVdF2yG8LnQmcQMm%2Fue0xNqf3zd753V6T9g2UU8jFT%2F5oJbh4z7d9HvcXbDlcr4DTGGjwHTE7klqn8N7UXcU3Q4yrkD3foXSV43foaRVQywlCTelvhv%2FMKxvOToYrdap2M%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=618528b18d51059488f08de4392b43d11b35baef9c3544dfb85f5b92c1359582",
+      "file_size": 75718,
+      "type": "application/xml",
+      "moderated": null
+    },
+    {
+      "id": 425496,
+      "file_name": "nativeLang-3.xml",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/425/496/b65dfa396e31ffad088e8e23b6845a9d1c2a05c8/nativeLang-3.xml?response-content-disposition=attachment%3B%20filename%3D%22nativeLang-3.xml%22%3B%20filename%2A%3DUTF-8%27%27nativeLang-3.xml&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ63C5JMFQ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T153552Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIFDvRHn9ky1YQHzGuakS4Iz0vDtMnYWimh35oKHC7r%2F2AiAia3verAavWozpj%2BAPj1Qc2tpTLeRgJgInw7s8k0Ms7CqyBQgWEAMaDDAxMzYxOTI3NDg0OSIMRvcecFwXg0wZuwgGKo8FksKPXngK9ceXhWE613mjXnbZdBITFJXG%2B7ytn5mQqEzLPXaN8Dx%2F8nIueq6O5yT55A9X2c24%2FKOSrqpojCWB%2FmHExscAysLYKTPUIlVMYMErXfxTvQFibbmyznBSpJpT6mph1%2FC7m4PzL0Z7s5mDS2e2w0q67hMvtblmSd6z2S5sLLprqEv4nxaO2Z03eCVZed4HflAJpQWGkIN9dxrJmqL0xfNinTwvuGKS%2FtQXpUBCwbAlEPsVf6kFzMuBkc0qEZZXmFUVur2bm0BmaPy5U0SS0%2F0oEWM%2B%2Fd1IyjwDODtmd9pVA%2B1zdR2zU3SBpqjUGbCVyxM%2BCvCJKx2laInTTGrcZXpxB0ZaBPc72qXRyrFiYVUpxGbqbXqPTdJjGm8GxvuwY6dwYyqiDL0L4ZHA8ueYS34pZlSvE5cvZ%2B5L0JHJa9vEJ1W8Pqt1wxWRFxk9rTjKEsTldCLOAaZQArrL09XbORY9RKJymViUcVKXXDZyYrihG24puBP7Q0klt33FfXCOWl8D%2BdEqzwPIv5H2VZGi4m%2FGS4Id8QNSv7KNd72oaaqqBHPe%2BcaQBNdrl5tGj0GLQa5vEwuuFiqiZfYWS1JXRedJdO1231Hq5yU66xdMa6GLuVKIVsSg5Tz7a0KFhpvLGYG28NsHgim3jEPzU0%2FfskoJ43K0M%2FAQW57Qfto%2F4xPT%2Faem36dXOyY929FDEawLfAQW2K1c5SH1oiT%2Bomp7b0v3iKTxB5YbVOX1QIaqPITE64vVve%2FQVHigwZjXn6gm8r3%2B5jIuQXaMTKmt3Z8qZAXuvHXyIhFySvgvVd1HaBdX%2FLAo6wYx%2BaWuJl8Y7Qg7uuXGEMEBkIba7kqCgJ4cUzEvkb5%2BaF0h0rxabTD357%2FGBjqyAfqYzux0u2fIPi%2F%2B5WgXrdOTFF9hswACvH1kqzOXf9i%2FhFaA9reIVKxbcUQk7RHelMKqGaiuR4%2BORktmbLN6VadvA%2BPEkXFVVes%2B7LnvM9NmvFVdF2yG8LnQmcQMm%2Fue0xNqf3zd753V6T9g2UU8jFT%2F5oJbh4z7d9HvcXbDlcr4DTGGjwHTE7klqn8N7UXcU3Q4yrkD3foXSV43foaRVQywlCTelvhv%2FMKxvOToYrdap2M%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=24dd6475323c4f143a38c0c419888fbc3c3d4775e598121b5bc9a59f18d79d67",
+      "file_size": 74279,
+      "type": "application/xml",
+      "moderated": null
+    },
+    {
+      "id": 425497,
+      "file_name": "nativeLang-4.xml",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/425/497/04d3891e42332c4ee31861078d8d77b8a9f7d6ab/nativeLang-4.xml?response-content-disposition=attachment%3B%20filename%3D%22nativeLang-4.xml%22%3B%20filename%2A%3DUTF-8%27%27nativeLang-4.xml&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ63C5JMFQ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T153552Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIFDvRHn9ky1YQHzGuakS4Iz0vDtMnYWimh35oKHC7r%2F2AiAia3verAavWozpj%2BAPj1Qc2tpTLeRgJgInw7s8k0Ms7CqyBQgWEAMaDDAxMzYxOTI3NDg0OSIMRvcecFwXg0wZuwgGKo8FksKPXngK9ceXhWE613mjXnbZdBITFJXG%2B7ytn5mQqEzLPXaN8Dx%2F8nIueq6O5yT55A9X2c24%2FKOSrqpojCWB%2FmHExscAysLYKTPUIlVMYMErXfxTvQFibbmyznBSpJpT6mph1%2FC7m4PzL0Z7s5mDS2e2w0q67hMvtblmSd6z2S5sLLprqEv4nxaO2Z03eCVZed4HflAJpQWGkIN9dxrJmqL0xfNinTwvuGKS%2FtQXpUBCwbAlEPsVf6kFzMuBkc0qEZZXmFUVur2bm0BmaPy5U0SS0%2F0oEWM%2B%2Fd1IyjwDODtmd9pVA%2B1zdR2zU3SBpqjUGbCVyxM%2BCvCJKx2laInTTGrcZXpxB0ZaBPc72qXRyrFiYVUpxGbqbXqPTdJjGm8GxvuwY6dwYyqiDL0L4ZHA8ueYS34pZlSvE5cvZ%2B5L0JHJa9vEJ1W8Pqt1wxWRFxk9rTjKEsTldCLOAaZQArrL09XbORY9RKJymViUcVKXXDZyYrihG24puBP7Q0klt33FfXCOWl8D%2BdEqzwPIv5H2VZGi4m%2FGS4Id8QNSv7KNd72oaaqqBHPe%2BcaQBNdrl5tGj0GLQa5vEwuuFiqiZfYWS1JXRedJdO1231Hq5yU66xdMa6GLuVKIVsSg5Tz7a0KFhpvLGYG28NsHgim3jEPzU0%2FfskoJ43K0M%2FAQW57Qfto%2F4xPT%2Faem36dXOyY929FDEawLfAQW2K1c5SH1oiT%2Bomp7b0v3iKTxB5YbVOX1QIaqPITE64vVve%2FQVHigwZjXn6gm8r3%2B5jIuQXaMTKmt3Z8qZAXuvHXyIhFySvgvVd1HaBdX%2FLAo6wYx%2BaWuJl8Y7Qg7uuXGEMEBkIba7kqCgJ4cUzEvkb5%2BaF0h0rxabTD357%2FGBjqyAfqYzux0u2fIPi%2F%2B5WgXrdOTFF9hswACvH1kqzOXf9i%2FhFaA9reIVKxbcUQk7RHelMKqGaiuR4%2BORktmbLN6VadvA%2BPEkXFVVes%2B7LnvM9NmvFVdF2yG8LnQmcQMm%2Fue0xNqf3zd753V6T9g2UU8jFT%2F5oJbh4z7d9HvcXbDlcr4DTGGjwHTE7klqn8N7UXcU3Q4yrkD3foXSV43foaRVQywlCTelvhv%2FMKxvOToYrdap2M%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=fd84715f8f0a0a5c27dfdbd5811a4a3305fb4bebe42e1719ea960aad7b944a67",
+      "file_size": 74281,
+      "type": "application/xml",
+      "moderated": null
+    },
+    {
+      "id": 425498,
+      "file_name": "nativeLang-4-64.xml",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/425/498/48e7860afbd001c0ab01b31a28df2085a0e3b58f/nativeLang-4-64.xml?response-content-disposition=attachment%3B%20filename%3D%22nativeLang-4-64.xml%22%3B%20filename%2A%3DUTF-8%27%27nativeLang-4-64.xml&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ63C5JMFQ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T153552Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIFDvRHn9ky1YQHzGuakS4Iz0vDtMnYWimh35oKHC7r%2F2AiAia3verAavWozpj%2BAPj1Qc2tpTLeRgJgInw7s8k0Ms7CqyBQgWEAMaDDAxMzYxOTI3NDg0OSIMRvcecFwXg0wZuwgGKo8FksKPXngK9ceXhWE613mjXnbZdBITFJXG%2B7ytn5mQqEzLPXaN8Dx%2F8nIueq6O5yT55A9X2c24%2FKOSrqpojCWB%2FmHExscAysLYKTPUIlVMYMErXfxTvQFibbmyznBSpJpT6mph1%2FC7m4PzL0Z7s5mDS2e2w0q67hMvtblmSd6z2S5sLLprqEv4nxaO2Z03eCVZed4HflAJpQWGkIN9dxrJmqL0xfNinTwvuGKS%2FtQXpUBCwbAlEPsVf6kFzMuBkc0qEZZXmFUVur2bm0BmaPy5U0SS0%2F0oEWM%2B%2Fd1IyjwDODtmd9pVA%2B1zdR2zU3SBpqjUGbCVyxM%2BCvCJKx2laInTTGrcZXpxB0ZaBPc72qXRyrFiYVUpxGbqbXqPTdJjGm8GxvuwY6dwYyqiDL0L4ZHA8ueYS34pZlSvE5cvZ%2B5L0JHJa9vEJ1W8Pqt1wxWRFxk9rTjKEsTldCLOAaZQArrL09XbORY9RKJymViUcVKXXDZyYrihG24puBP7Q0klt33FfXCOWl8D%2BdEqzwPIv5H2VZGi4m%2FGS4Id8QNSv7KNd72oaaqqBHPe%2BcaQBNdrl5tGj0GLQa5vEwuuFiqiZfYWS1JXRedJdO1231Hq5yU66xdMa6GLuVKIVsSg5Tz7a0KFhpvLGYG28NsHgim3jEPzU0%2FfskoJ43K0M%2FAQW57Qfto%2F4xPT%2Faem36dXOyY929FDEawLfAQW2K1c5SH1oiT%2Bomp7b0v3iKTxB5YbVOX1QIaqPITE64vVve%2FQVHigwZjXn6gm8r3%2B5jIuQXaMTKmt3Z8qZAXuvHXyIhFySvgvVd1HaBdX%2FLAo6wYx%2BaWuJl8Y7Qg7uuXGEMEBkIba7kqCgJ4cUzEvkb5%2BaF0h0rxabTD357%2FGBjqyAfqYzux0u2fIPi%2F%2B5WgXrdOTFF9hswACvH1kqzOXf9i%2FhFaA9reIVKxbcUQk7RHelMKqGaiuR4%2BORktmbLN6VadvA%2BPEkXFVVes%2B7LnvM9NmvFVdF2yG8LnQmcQMm%2Fue0xNqf3zd753V6T9g2UU8jFT%2F5oJbh4z7d9HvcXbDlcr4DTGGjwHTE7klqn8N7UXcU3Q4yrkD3foXSV43foaRVQywlCTelvhv%2FMKxvOToYrdap2M%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=598357cf0d9742fe8c4a16641eee9cf002f861b2faaa0a62642a033cefc3fdb8",
+      "file_size": 75720,
+      "type": "application/xml",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2019-05-07T22:45:58.931Z",
+  "allow_singular_disclosure_after": -201199793.26501217,
+  "singular_disclosure_allowed": true,
+  "vote_count": 8,
+  "voters": [
+    "base_64",
+    "mik317",
+    "asad0x01_",
+    "sjbestia",
+    "cryptographer",
+    "b288e77b35583aef4d5d924",
+    "bitm0de",
+    "nahuelistico"
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "Team"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
