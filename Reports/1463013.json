@@ -1,0 +1,119 @@
+{
+  "id": 1463013,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNDYzMDEz",
+  "url": "https://hackerone.com/reports/1463013",
+  "title": "Occasional use-after-free in multi_done() libcurl-7.81.0",
+  "state": "Closed",
+  "substate": "informative",
+  "severity_rating": "low",
+  "readable_substate": "Informative",
+  "created_at": "2022-01-28T18:22:32.999Z",
+  "submitted_at": "2022-01-28T18:22:33.099Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "luminixaaron",
+    "url": "/luminixaaron",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 35663,
+    "url": "https://hackerone.com/curl",
+    "handle": "curl",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/035/663/2faf4c279d437d64bfda6d23d62ce1833813a4d9_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/035/663/2faf4c279d437d64bfda6d23d62ce1833813a4d9_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "curl",
+      "twitter_handle": "",
+      "website": "https://curl.se",
+      "about": "cURL is an Open Source project providing a library and command-line tool doing internet transfers"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2022-03-09T21:46:52.194Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2022-01-30T11:53:09.885Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "We are seeing the use of a `struct connectdata *` on a thread after it was returned to the connection cache (and thus available for use on other threads including potential deallocation) in `multi_done()` in libcurl-7.81.0.  This could occasionally result in an actual use-after-free, witnessed on Windows 10 platform.\n\n## Steps To Reproduce:\n- [`multi_done()` line 717](https://github.com/curl/curl/blob/curl-7_81_0/lib/multi.c#L717) a call is made to `Curl_conncache_return_conn()`\n- `Curl_conncache_return_conn()` returns `TRUE` (conn was returned to the cache and available for use in other threads) and execution continues on [line 719](https://github.com/curl/curl/blob/curl-7_81_0/lib/multi.c#L719) where the code derefs the now unowned `conn` to get the `connection_id`\n- We have a fork with a [commit](https://github.com/luminixinc/curl/commit/e8560cb3a2aa0c104d1afcc77490b70bad1ce9cd) that both tests (inline, not formally) and offers a potential fix for this issue.\n- See attached screenshot showing assert firing in debug build\n\n## Impact\n\nUnsure.\n\nI'm not a hacker, and would have been happy to submit this as a GitHub issue instead, but _discretion being the better part of valor_, decided to post this issue here instead :)\n\nTangentially, I do not care to get credit or receive a bounty for this issue.  Would be great to get this fixed as I suggested or in some other manner, thanks!",
+  "weakness": {
+    "id": 50,
+    "name": "Use After Free"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1596575,
+      "file_name": "assert.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/frmaa5xpbt51e6knf6hqxm4yjw5q?response-content-disposition=attachment%3B%20filename%3D%22assert.png%22%3B%20filename%2A%3DUTF-8%27%27assert.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQVETB6NTJ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T001807Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH0aCXVzLXdlc3QtMiJHMEUCIQCYnko1tMVzQaQ44fz7rO80zexmhh2%2FLqdPjZ4gDJjHTAIgdorI8tGUcvQvsAKCxGLcjr9sd%2BJ026hdb1p84pF%2B18YqugUI9v%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDIHUt0Xxh8Fh3tz0GSqOBUppGn7A3c4oWm7vMmwVvkuUj3TQgXMso%2FSyeExTvBTlGRRlCy5e6oM6JaJtD8ezJoCN6jrY7TXJ7BG9Z%2Fs%2FRnPXME39pzTlppIPJug6ByZ%2FTfrU0ubZ%2Fc91w99L8rB4kqHpjhA6YRj7uVEb3RjExDPIyvf%2BuNeiQS9nt%2FNqghxB4YHGB0EA3vavAII%2FKBJOR9um91KYYvacIabStfej44EZO9EvkVO04%2Bt26s3nYDk5rdQpHWOAZI8eUkYXRkNMneVhVOJzj9qm8uZNM73T1TTk6tX6Nw4XqGpJPK1tW38IY1qfUS9ycwY%2Bn410n28iaQfvCr5Uddd9apL5K%2Bw3v3kxMvd2QzfepYbT5bJE6Rpej%2BfRxg5cDr%2B16u9sOYVmoge9AteGT5QtBxvBsyDOFleNLD42RyUXnGtlbiPe5XdtlTswhnHl8VDlWfczQ%2FMHtuybt1teIudbnaIFR0TV%2B3h1jzykB2m4qkDfMyQwM6mqIc6aLlqpKV0cbnDfWbj4I8FhoJt2HwVbZJGFNYdj2dBJi7ApQkDgJIUXcbY5cT7pXZK6kU4Tm9m%2BuI%2Br8uW27MvE1AefLtWvZqGZIGERkT9kPN6dH5jaWlg9%2B%2FfM5mH6op%2Fkc%2B3j6HwNc%2BZWWQWaao3WDXM5Vp3%2FxOLeSyczFkRTiQQyeEeT1K8G5mRpTBOerlt2npzMWSF5o5o%2B0jlp9EhmBfRIHwn3Rl%2FNJYllugDGRrAvamtsk2ecMfchFXEaaOI7KaIynC2Jm0cTpjx2MXdfXB%2F9kakgXPgvkLBnhBt4PIEiiUI1hozbLzmZDcNyAykwM%2BQbh5wq5RwXemft1m3Y2fxp8pMsqXYHcuakmekzsjeFNON7zS3Yz1jiKjDUpbzGBjqxAQ1mXx%2Fmv4lCG9meklEB9YnHcqq5vuyXfLgnZI6zGjXvmgoQBRLHlWST%2F0k9ddAF2Yv7FQ0RbL6JgRcSaO5uI%2BmvaCY%2BE0PB9FSN27w%2FHgnHB1vM%2BGT5%2ByGxGPxyY2I%2Fb%2BiBEmEf3VZG0axRZ5tINJZDjkSkTWdPPAQnB%2BnAvi5ywcvTxVdxSU9jk20mJ0awmb6z9AnfkVscGPkg1KCZZ54nRsl%2F2uDcxL6s4iPU%2FtvI9A%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=32ca56ea5ace946de49b179351b9340436eed56bf25b9c7b5b7c4e6f5b45a9a8",
+      "file_size": 356498,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 1,
+  "voters": [
+    "shivammusic"
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 18844,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/curl/curl",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
