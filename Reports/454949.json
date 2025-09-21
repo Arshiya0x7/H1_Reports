@@ -1,0 +1,131 @@
+{
+  "id": 454949,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC80NTQ5NDk=",
+  "url": "https://hackerone.com/reports/454949",
+  "title": "Race Condition in Flag Submission",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2018-12-04T17:35:29.953Z",
+  "submitted_at": "2018-12-04T17:35:29.953Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "dropper",
+    "url": "/dropper",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/HGb6QDe35S3ugAYGNhruQj2e/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13,
+    "url": "https://hackerone.com/security",
+    "handle": "security",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/013/fa942b9b1cbf4faf37482bf68458e1195aab9c02_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/013/fa942b9b1cbf4faf37482bf68458e1195aab9c02_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "HackerOne",
+      "twitter_handle": "Hacker0x01",
+      "website": "https://hackerone.com",
+      "about": "Vulnerability disclosure should be safe, transparent, and rewarding."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2019-07-22T17:29:52.391Z",
+  "bug_reporter_agreed_on_going_public_at": "2019-07-22T17:29:52.196Z",
+  "team_member_agreed_on_going_public_at": "2019-07-19T17:00:13.595Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "**Summary:**\n\nThis report describes a Race Condition Vulnerability which allow an authenticated user to submit the same Flag multiple times. Increasing the user points and therefore the chances to get an invitation to a private program.\n\n### Steps To Reproduce\nTo  reproduce this bug, you need to:\n1. Login with a valid user account\n2. Solve one of the challenges and get a Flag. It can be the Trivial one (worth 1 point).\n3. Go to the submit page, put the Flag that was found and intercept the POST request that is sent during the Flag submission. You can use Burp Suite for that, for example.\n4. Then, you just have to submit the POST several times in a short time frame. I recommend a script with multi threads or \"Race The Web\" tool that I will mention below.\n5. Enjoy your extra points with the same flag.\n\n### Tool Used During PoC\nTo the PoC I used \"Race The Web\", available at: https://github.com/insp3ctre/race-the-web\nWith this tool we can send the requests faster than we could with Burp Intruder. Getting better results. \n\n### Supporting Material/References (Screenshots)\nThe outcome is shown below:\n {F385429}\nI've used the Trivial Flag 70 times and earned 2 invitations.\n\n### Note\nI've created a new user to do this PoC. In case you want to delete, the e-mail is: ███████\n\n## Impact\n\nAn attacker could use this Race Condition vulnerability to earn extra points and increase the chances to get invited to a private program without the need to solve other chalanges available.",
+  "weakness": {
+    "id": 140,
+    "name": "Concurrent Execution using Shared Resource with Improper Synchronization ('Race Condition')"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 385429,
+      "file_name": "ctfhackerone.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/385/429/d6ab6d4d6f6a9ca6750890c9eab0fed00fedf62a/ctfhackerone.png?response-content-disposition=attachment%3B%20filename%3D%22ctfhackerone.png%22%3B%20filename%2A%3DUTF-8%27%27ctfhackerone.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ3BMH67TU%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T150651Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIFljCnxBRm4k3mDOCNsZVf17QtNFYCYfznQ9MVhsJmuuAiBbOK8n3QO%2BoA%2BcJOaPEjuo2OnpQxXeGtV5gblrabFkdCqyBQgVEAMaDDAxMzYxOTI3NDg0OSIMu%2FDXvvg9fcRigun4Ko8Fb5ZIEjeevQoEG0l2BV%2BGWxg8S5ceOIpi9Vj5rzWvu%2FU8ULagtSQacHoYerVTS2w5mxb8q2eMyDWfB3WNcZp2jYoblOAOjGDkxFv0UfNMGU5qBv8audlGkD9bBj7k%2BPMh1elv8KOf5TSPS1TQgzoRPT1X5zf%2BUitErQDeos7hOVB27j0jmNUSU%2F62uqEpN5zzc4JDV6qPsWi%2B3MT7xqLVxQJaxMs0BkmYUNt%2BmDm6e8GkmRyyDXloQWuPJgbGwFgpcx1lE%2FdqBKny4rF9VApD%2Bs3l6I0ljLykB%2BCAK%2ByAA2z9BvFFoIk%2FxFSOlqls4xp47H51RxUBx5QVAlzxlLSqqtF07ygbOI3nWSDkXBRBh71ODGwtYPklYcAy%2BN1JIBRkTSB7P%2FApcdK%2F2HJmJmi3mNdO8DjUSAXt%2B6xrNOM7xjPuxOtz0db7fZdSmKKXvxlxi%2FTAaoM9F%2BJZ%2FGncN9cCvXkZHfTe4DQMnxULaVvxM40oXz7SvblcQoTgQTDcLUck%2BJiDf9fMLCu8HBz%2BOUAJggeTTLzasHSrySGvIpMTBuffvnBnnVa29Mm7K2WlV5wJE0i2vDjyh%2FZ8ERYD2u7%2BpaWooSen17bTtOgBA8rpw8Ca%2BBBCzBGJ4Jnv%2F7Vg5I0t6bT1RKrC%2B7ruuT8oH02SYFfBbc0AVE3YoRZ4c%2F81%2Bve3MDQo93OTxMwPyuEph5zyT%2F0uL36Kog%2FL0%2FHDLWxDoqCho4dyn8yODfz3VOrE5u7jsSac%2FAVh9AlbPuCB5Fz0%2F0dBqb2vPihtVHnRr1%2BaD8HcuNsV6UwuWtYjabks5SXoSh4sDkBV0QjqYgyQT%2F2xrYwkHJGgNRZg7X%2B0GQB2W6JfoK%2Bk8n6dhdDh9N%2BC%2FTCr1b%2FGBjqyAVVK9luJ2DpE2HH7QULrpYu01A8Fm4WvVccUWw3poFTPvtokByojqV9CgizgRjo2wHFdocvJ4lpbjnQjjxMkbJLK%2FW9qfA7eVQzSnDC7HGaYVsiUekGk4%2BmwXx7iMvjgYSnBoKWAaBqd3fRqTEW4g3lhzi7lOpTLcWZp60Ya9y2Gr9bjvLCe2g89bmHm9cxzB7H7SDaXF159IthNc4CVFX2TMwhNV%2BaVJ6D%2B6UC7%2Bp%2FLkJ8%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=f4a1f972e8bbf81b77c2e2cca377ddb97aac7c3727b4fb9bce9c6a8e66074613",
+      "file_size": 78024,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2019-08-18T17:00:13.731Z",
+  "allow_singular_disclosure_after": -192319597.31573254,
+  "singular_disclosure_allowed": true,
+  "vote_count": 89,
+  "voters": [
+    "loaymorad",
+    "he4am",
+    "th3hidd3nmist",
+    "br0x1337",
+    "dropper",
+    "checkm50",
+    "thaivu",
+    "fqdn",
+    "ali",
+    "bassem_sadaqah",
+    "and 79 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 14424,
+    "asset_type": "URL",
+    "asset_identifier": "https://ctf.hacker101.com",
+    "max_severity": "low"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
