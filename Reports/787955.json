@@ -1,0 +1,148 @@
+{
+  "id": 787955,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC83ODc5NTU=",
+  "url": "https://hackerone.com/reports/787955",
+  "title": "PII of Users Disclosure using \"/members/invite/\" endpoint",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2020-02-03T03:58:18.179Z",
+  "submitted_at": "2020-02-03T03:58:18.179Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "bonikia97",
+    "url": "/bonikia97",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/2ioupabecnlvo1r2di5m86gwfpru/c8a1698ff707a5e3e8a91a3484838363845daac68cb82c86d55c9e2d44d67b67"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 43330,
+    "url": "https://hackerone.com/lab45",
+    "handle": "lab45",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/uss17aubpsiag1df5tlp5mriefid/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/uss17aubpsiag1df5tlp5mriefid/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "disabled",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Lab45",
+      "twitter_handle": "",
+      "website": "http://wipro.com/lab45",
+      "about": ""
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2020-04-13T13:11:44.714Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-03-27T23:39:07.784Z",
+  "team_member_agreed_on_going_public_at": "2020-04-13T13:11:44.556Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello!\n\nI found PII Disclosue at https://connect.topcoder.com/projects/\n\n#Steps to Reproduce.\n\n1) Go to https://connect.topcoder.com/projects\n2) Select an existing project, or create a new one.\n3) Select the \"Manage Invitations\" option. (on the left sidebar).\n4) Enter the Username/Email of the user you want to add.\n5) Intercept two Request (GET & POST) with BurpSuite, and send this to Repeater.\n6) With Requests: \n\n6.1)With GET Request: See that it is similar to a query in the database, you can manipulate them to get more information. Use this to get the ID of any user.\n\n6.2)With POST Request: Put any userIds, and send the Request.\n\n7) Look the Response, the email and more information of users can be seen.\n \nRegards!\n\nPoC: \n1) \"PII Email TopCoder\" Video.\n2)  Image called \"Manipulated Email Request\",  In which you will see the manipulated request to get all users with email-domain \"@wearehackerone.com\".\n(With this you could obtain the IDs of any user and any email domain by following the steps of the PoC in video.)\n\n\nRegards!\n\n## Impact\n\nIf the attacker wanted, he could see the information of the Admins, or any Member of TopCoder. It could collect internal information from the company and continue to feed its attack vectors.\nIf you check other endpoints, nowhere is the user's email shown.",
+  "weakness": {
+    "id": 18,
+    "name": "Information Disclosure"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 704243,
+      "file_name": "PII_Email_TopCoder.mkv",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/KDbXVKtmaL5pPUgkfamYUkWM?response-content-disposition=attachment%3B%20filename%3D%22PII_Email_TopCoder.mkv%22%3B%20filename%2A%3DUTF-8%27%27PII_Email_TopCoder.mkv&response-content-type=video%2Fx-matroska&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUVBRNLRJ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T114910Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQD3nvre18sAd1wct05fqsgN7bQuQDSO9jbe432Lz6NEiAIhAPoaLF1AuRHIcBqdTHYy5hp6%2BvzlDX81Yx2ItLaNH5iMKrEFCBMQAxoMMDEzNjE5Mjc0ODQ5IgxawqXHjAefXDd0sHUqjgVoaYiaUVH5r6TFZ9iq9qUnb9L%2BPMrDYzIHjUHRgSChDUE4WH2dKmYRW2q2q4xlTuK0moDBbcERxjxpQaePRoztwTSWasB3S5ou6013SwwZPI%2BerbtbFTOOPFrjew9xkcsPPgFLEYpy4pUxSQ0K00v3tYCIsFmhZodUZMycXEJisE5Ez3DOlbuw4UN8xXzSuXYdjuY3B2amlBfItWeAlLc113UqV7nZmU0XN4RGtusu2drVySbBZ9OXiTyPX%2FGBD%2Fb%2FDsD7mTw97rTkXMxvPzAU7z0jCqZUubHuf5KA5fqnpQTPWKz5bjFQGPqOxzRQwjVik6coRNXvc8fTo14I35D9ic8jKMFVZjlg5PNcw6NfCG9O%2FOPQUuWot7xHfDP9Uq3pbjWX8fmtmpWxME9ccW5H0X1scPdeGarjmSAp8UmrE8Jf7vOKgGW4iGireL48Wpmhvv9v9lovUiNWRPtbDbuGtUgdxrtJnPsp%2FF%2B7TXVTVHaccptBlK4S3A9lzAA6acesy32RFhQcdOaK0AfzODWw1yqdH%2B7eZiy7J4YbwlgaktI6kOXlOSdGPVaLI02UQT6Ua03IA4PC0zFFrWO9VqYFKSjm1FRDsX%2BsT0oGPVV0KWXytEQkDTw0zI3mihCGH0CYlkdcI2TJyIMDJwV0M2e43uh4PUqRKNO7vzKdAYogQzNw36idX%2FsQHlRFklh99yyBNnTdY8gLndE3dt5wlh7dn%2FnVChRLORTzSLhsMCAV1VTeCdWTSPWn0BmEKOyBsDo0mxa9m0POzueMIDUxNcF9b7wURDV2urWl9N32snkQJ3l4hR40m6WgBHmcEqF24ZmlX0DHdLl922xTKbcbGphfwecXlGzkiE01cxNJHXUwiJe%2FxgY6sAGt5UNeZn4rnknZG1wh45ZoQGtvLnlNLBWvKLU1fvwfEVc1Y3eZ4ONW36DJ14fiz8dc77hv%2FGbKAeRjDpc2xqYI%2FEjt4i8NZuiYzFYYvbk5RRu04cYqJtexxtDR422U%2BfT9cyLUg6bONp6Z2gZPVDC%2BpuN4RFWd%2F0ofdGB%2BqI7w%2FkneiZqccP29CAjkj%2BbU5bjDj5f4KGN2tXxAkDXYRtaFAAG2%2BEhds3d0%2BG1Q9pU3mA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=19c64ed448f5b407b30ee13f83732c270d6a5e3fb15ae61643ca5eb1c5c3c0dc",
+      "file_size": 94812619,
+      "type": "video/x-matroska",
+      "moderated": null
+    },
+    {
+      "id": 704246,
+      "file_name": "Manipulated_Email_Request.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/QdqXz8zMRkiTkZL6Usv4tAFa?response-content-disposition=attachment%3B%20filename%3D%22Manipulated_Email_Request.jpg%22%3B%20filename%2A%3DUTF-8%27%27Manipulated_Email_Request.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUVBRNLRJ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T114910Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQD3nvre18sAd1wct05fqsgN7bQuQDSO9jbe432Lz6NEiAIhAPoaLF1AuRHIcBqdTHYy5hp6%2BvzlDX81Yx2ItLaNH5iMKrEFCBMQAxoMMDEzNjE5Mjc0ODQ5IgxawqXHjAefXDd0sHUqjgVoaYiaUVH5r6TFZ9iq9qUnb9L%2BPMrDYzIHjUHRgSChDUE4WH2dKmYRW2q2q4xlTuK0moDBbcERxjxpQaePRoztwTSWasB3S5ou6013SwwZPI%2BerbtbFTOOPFrjew9xkcsPPgFLEYpy4pUxSQ0K00v3tYCIsFmhZodUZMycXEJisE5Ez3DOlbuw4UN8xXzSuXYdjuY3B2amlBfItWeAlLc113UqV7nZmU0XN4RGtusu2drVySbBZ9OXiTyPX%2FGBD%2Fb%2FDsD7mTw97rTkXMxvPzAU7z0jCqZUubHuf5KA5fqnpQTPWKz5bjFQGPqOxzRQwjVik6coRNXvc8fTo14I35D9ic8jKMFVZjlg5PNcw6NfCG9O%2FOPQUuWot7xHfDP9Uq3pbjWX8fmtmpWxME9ccW5H0X1scPdeGarjmSAp8UmrE8Jf7vOKgGW4iGireL48Wpmhvv9v9lovUiNWRPtbDbuGtUgdxrtJnPsp%2FF%2B7TXVTVHaccptBlK4S3A9lzAA6acesy32RFhQcdOaK0AfzODWw1yqdH%2B7eZiy7J4YbwlgaktI6kOXlOSdGPVaLI02UQT6Ua03IA4PC0zFFrWO9VqYFKSjm1FRDsX%2BsT0oGPVV0KWXytEQkDTw0zI3mihCGH0CYlkdcI2TJyIMDJwV0M2e43uh4PUqRKNO7vzKdAYogQzNw36idX%2FsQHlRFklh99yyBNnTdY8gLndE3dt5wlh7dn%2FnVChRLORTzSLhsMCAV1VTeCdWTSPWn0BmEKOyBsDo0mxa9m0POzueMIDUxNcF9b7wURDV2urWl9N32snkQJ3l4hR40m6WgBHmcEqF24ZmlX0DHdLl922xTKbcbGphfwecXlGzkiE01cxNJHXUwiJe%2FxgY6sAGt5UNeZn4rnknZG1wh45ZoQGtvLnlNLBWvKLU1fvwfEVc1Y3eZ4ONW36DJ14fiz8dc77hv%2FGbKAeRjDpc2xqYI%2FEjt4i8NZuiYzFYYvbk5RRu04cYqJtexxtDR422U%2BfT9cyLUg6bONp6Z2gZPVDC%2BpuN4RFWd%2F0ofdGB%2BqI7w%2FkneiZqccP29CAjkj%2BbU5bjDj5f4KGN2tXxAkDXYRtaFAAG2%2BEhds3d0%2BG1Q9pU3mA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=09df4d58773dc4b307453f59111f8400b46b8311aef5fbfda77e772f84534c46",
+      "file_size": 220283,
+      "type": "image/jpeg",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 52,
+  "voters": [
+    "a_d_a_m",
+    "rook1337",
+    "kickino",
+    "ali",
+    "tess",
+    "sh1yo",
+    "mik317",
+    "killinem_sec",
+    "bruzistico_",
+    "term1nal",
+    "and 42 more..."
+  ],
+  "severity": {
+    "rating": "high",
+    "score": 7.1,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "low",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "high",
+      "integrity": "low",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 37527,
+    "asset_type": "URL",
+    "asset_identifier": "connect.topcoder.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
