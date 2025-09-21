@@ -1,0 +1,150 @@
+{
+  "id": 974271,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC85NzQyNzE=",
+  "url": "https://hackerone.com/reports/974271",
+  "title": "Stored XSS on https://app.crowdsignal.com/surveys/[Survey-Id]/question - Bypass",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2020-09-03T18:53:46.553Z",
+  "submitted_at": "2020-09-03T18:53:46.589Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "ali",
+    "url": "/ali",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/66sio8og4fja5dsqqnovd3bptdtj/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": true,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 111,
+    "url": "https://hackerone.com/automattic",
+    "handle": "automattic",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/111/7f89e1ea233f92916202521a069fdbfe9eced339_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/111/7f89e1ea233f92916202521a069fdbfe9eced339_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Automattic",
+      "twitter_handle": "",
+      "website": "https://automattic.com",
+      "about": "WordPress.com, WooCommerce, WordPress VIP, Jetpack, Beeper, Texts, Akismet, Gravatar, Crowdsignal, Tumblr and more!"
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2020-11-18T14:20:21.496Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-11-18T12:12:19.497Z",
+  "team_member_agreed_on_going_public_at": "2020-11-18T14:20:21.412Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello there,\nI hope all is well!\n\nI found a stored xss on https://app.crowdsignal.com/\n\nSteps:\n* Go to `https://app.crowdsignal.com/dashboard`\n* Create a survey.\n* Go to `https://app.crowdsignal.com/quizzes/{survey-id}/question`\n* Add `Multiple Choice`\n* Click `Add media` button.\n* Select `Embed Media`\n* Paste this: `[dailymotion id=x8oma9]`\n* Insert it.\n* Open Burp Suite and click `Save` button.\n* Return to burp suite and paste xss payload to `media[11111111]` parameter: `[dailymotion id=x8oma9\"><svg/onload=prompt(document.domain)>]`\n* Forward the request and refresh the page. You will see xss alert.\n\nThis isn't self xss because I saw users who Team plan can invite other users to their dashboards. So attacker can steal victim's cookies.\n\nAlso I recorded a poc video for you:   \n{F975177}\n\n## Impact\n\nStealing cookies.\n\nBest Regards,\n@mygf",
+  "weakness": {
+    "id": 62,
+    "name": "Cross-site Scripting (XSS) - Stored"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 975177,
+      "file_name": "bandicam_2020-09-03_21-49-20-444.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/M5QvfTYMf6cHzT7Fworc3Hnn?response-content-disposition=attachment%3B%20filename%3D%22bandicam_2020-09-03_21-49-20-444.mp4%22%3B%20filename%2A%3DUTF-8%27%27bandicam_2020-09-03_21-49-20-444.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYPOFYQG4%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T081955Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIBmu3GQHg70X330n2%2BBanZR7V9qvbbd%2Fmtpos1MgwZ%2FHAiB6F7F2fV1OvA82Y%2BFy9JoX8eB3otaacV5N8wgGVpxb8yq7BQj%2B%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMuz2KclKcXvYWn7PdKo8Fb6mKB6T1lr%2FMKU8PB2L4HnA1SvA4a0tVn1Si9zDh7xasjgEG%2BQ0ExVu260uKJsjBoy4yFn9bD15Vq73n4k8m51BOtQCWPRnHwuGxYJXMmulwYOI2l6NkpThun1XhLwU5TAy4MVOs0YhYauCquXWzEcRnoW8s3eI0tcTuoxeTHVc8%2FQ5%2BJxaC%2FY6Q0qS2DfZDFx450ak27mw%2Fb4ffWDzB4mpCPBjOUYcm088ZFL3I7KnY4IJ4NxG1Yx4gZiprXsLxeqOVu9plDTPGoNamgMK4I9dJN3qjRw6vyud%2FY4vDO3HZc6daDhoG5NTCKMjodvAElOh6jGWaUc%2BjenP9Zru1SUAtsO07pFGBF1LFBMziGojS17nRwBeTvq%2FVkEgqfmWLNpnADtU%2BVdKQfX%2FrU%2FoSdaAX6eQkla17GWkIqITnXEHfUFiekccUommEoHBodv%2B1tGXgHgvb5%2Fy%2Fttt%2FK6gIdz5amyhpaUjT%2BhuISg39DrhNQNHCq8NL0rJXNftQIofIHT%2FkfG8Kk6cNUVs%2FSKQEZbRR4hxyaGDb%2FLnDUJ73mi6qUJnFJd7ZUTJqomQLyK9SIUvsXYp1sKAb6CSArLzLhkVGXRJocBZO2TtMtfz8RFIdQeMwvoLfEToF8sHFoSchZkY1FbZFDViSmthHTEb13mLVVcnHyKvJ0me84XMRaJrZyOYniu0sC0TghGoUL4pDoDJrgdNRP0GrMfQ%2FSo3IZ3UkI%2BdzCOUQhUktc3RIEcBMxCpL0CpfqPLFyGgCKI1J%2BnOc88mJLo7buzKRzgZk2UfgJtaeqMccmMBdmniF4bxMNwfs00fS7T23JgTaOeO2pu4I1wytxyUg3djZ4kjo0vkS7TYMEJP3oRuAqeMkAjC%2Fhb7GBjqyAQIGbGO9fWXRcAZ2FIK6F0O%2FPFHSK1S27nOgLrCXnNYiXtl3UMe8wMzebECB%2FtVSlTcXF%2FhvKoWR63G8NRLCvVaMl%2Fc%2ByEU6EK170SO2YPtrhy1HjztHhaTZ191Mm4IHHZRlqrDXSIzI9S3BAA%2Fo7MPBDi47cMQ04DEd%2BbhIPxPgwsleYFF4GNeuUS%2BNCHcpeQKGyxj1MXEZdGqorw%2B0zoHmr2p52Kiv7rkhtSqdK4XrHuQ%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=0f677b3fd329836ab39aab5fdfce0647b4dc7aa378772b1c6e5f859ea5b682e3",
+      "file_size": 7790755,
+      "type": "video/mp4",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2020-12-18T12:12:19.603Z",
+  "allow_singular_disclosure_after": -150149255.68640223,
+  "singular_disclosure_allowed": true,
+  "vote_count": 77,
+  "voters": [
+    "taha",
+    "drsniper",
+    "scriptshuva",
+    "xploiterr",
+    "bombon",
+    "ertugrul",
+    "snorlhax",
+    "rocky1696",
+    "m0chan",
+    "larbjb",
+    "and 67 more..."
+  ],
+  "severity": {
+    "rating": "high",
+    "author_type": "User"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "id": 25491,
+      "category": "researcher",
+      "content": "If you want to follow me, here is my linkedin & twitter accounts:\nhttps://twitter.com/alicanact60\nhttps://tr.linkedin.com/in/alicanact60\n\n@mygf",
+      "updated_at": "2020-11-18T17:24:29.490Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 125937,
+        "username": "ali",
+        "name": "Ali Tütüncü",
+        "bio": "",
+        "cleared": true,
+        "verified": true,
+        "website": null,
+        "location": "",
+        "created_at": "2016-11-24T13:30:52.132Z",
+        "url": "https://hackerone.com/ali",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "hacker",
+        "profile_picture_urls": {
+          "small": "https://profile-photos.hackerone-user-content.com/variants/66sio8og4fja5dsqqnovd3bptdtj/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/66sio8og4fja5dsqqnovd3bptdtj/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a",
+          "xtralarge": "https://profile-photos.hackerone-user-content.com/variants/66sio8og4fja5dsqqnovd3bptdtj/4ac84fbe897190579a137d0cf55152b233cdd4f9984435bd80ef67e5e51a0586"
+        }
+      }
+    }
+  ]
+}
