@@ -1,0 +1,168 @@
+{
+  "id": 301812,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMDE4MTI=",
+  "url": "https://hackerone.com/reports/301812",
+  "title": "Bitmoji source code is accessible",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2018-01-02T17:02:30.560Z",
+  "submitted_at": "2018-01-02T17:02:30.560Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "rms",
+    "url": "/rms",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/014/954/96084dbb997dff1d0904bd0642ca0a4d99df39dc_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 513,
+    "url": "https://hackerone.com/snapchat",
+    "handle": "snapchat",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/513/87067c5c4ed63c2c07a522ca3198d2310e2a14c6_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/513/87067c5c4ed63c2c07a522ca3198d2310e2a14c6_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Snapchat",
+      "twitter_handle": "",
+      "website": "https://www.snapchat.com/",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2021-07-31T00:20:32.738Z",
+  "bug_reporter_agreed_on_going_public_at": "2018-09-18T14:28:26.149Z",
+  "team_member_agreed_on_going_public_at": "2021-07-31T00:20:32.611Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "hi team,\n\nI'm starting my research on snapchat by scanning all sub-domains on all the domains in-scope: snapchat.com, bitmoji.com, etc.\n\nLet's look at one of the urls, [https://rendering-service.prod.us-east.bitstrips.com/](https://rendering-service.prod.us-east.bitstrips.com/)\n\nWhen I request `GET https://rendering-service.prod.us-east.bitstrips.com/`\nThe response is  `403 Forbidden`\n\nAfter searching, I've found [/WEB-INF/](https://rendering-service.prod.us-east.bitstrips.com/WEB-INF/) & [/META-INF/](https://rendering-service.prod.us-east.bitstrips.com/META-INF/) directories, which are accessibles and allow directory listing. \n\nInside `/WEB-INF/` we have all the .class files of bitmoji, we can download all the files.\n\nThen by using a java decompiler such as `procyon-decompiler` we reverse the .class files to make those readable. \n\nbest,\nhermès.\n\n## Impact\n\nSource code leaked",
+  "bounty_amount": "1000.0",
+  "formatted_bounty": "$1,000",
+  "weakness": {
+    "id": 89,
+    "name": "Information Exposure Through Directory Listing"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 250888,
+      "file_name": "Screen_Shot_2018-01-02_at_17.51.06.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/250/888/1d71240950a033a1d3af8b7ed43a329b372d720e/Screen_Shot_2018-01-02_at_17.51.06.png?response-content-disposition=attachment%3B%20filename%3D%22Screen_Shot_2018-01-02_at_17.51.06.png%22%3B%20filename%2A%3DUTF-8%27%27Screen_Shot_2018-01-02_at_17.51.06.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQTNWJHDVM%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T020739Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH8aCXVzLXdlc3QtMiJHMEUCIDGz6%2F6GxJTN1j63kuIPQDFi0Z6l452T45IZEZVZeHLBAiEAgDpr%2FRvQoIILcvv7MwWroCWX473kfExlhy%2FgJ%2ByZhnoqugUI%2BP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDJj5Q0j6T%2BAE%2Bz1UEyqOBdEVHEGaYUFT77thaSeZ6lKuJx8gi8FbcjBI2Ev6W2bJikwG8i2f%2BLhfXtT8Wn6kQKK6r4qNQ5SDB2Z4EQGfwcYmIt%2FFaciFcWL%2Bxu4%2F05%2BXVM5OtOJx1PLjgQ%2BDycwNtYgXbZT2TDOMA9nIa2OGin8LX5LSqq%2FS%2BhtJpYTH9zkOX6pH1dTLcMX7i8Cl6tLJq4KoCFfLbvHAbbf38tjPybS180DjMntuHFLz8fok5V926%2FWU7i%2FlTqEFQVfBx0AZB5HVUubHCbacSD9vAHe1hrYVznFnGjfwcjo5C1u%2BUBOe5C3uQbElRl6IcpbTf9sAh%2FDO%2BffzrjtX8GAdFSfa9NP%2BWNlt3fzXpwdEWHBa%2B8DP%2FVzHjPcWLHdiLUy8udAUOsMpwZFX1nJwiztCuiSWEPB3ZUSk7OjJ2IfQoVJhPy9itkC5jyKeyCtZLfT2KP8wjGypWDIAbOLGrfuGliOE6fpqCbTyiaASClcPIk%2B6BS7iOOhlSkzBXitO0ydQ3xE1LrPKMNzPE7IY3VjC4UMXcrjMtOoJlb2GzEGJwTA5I844GPMcIFqLXHGMBQchEkmaQLXV90%2BiH%2BavSAmEkBsQte7p1L0piNPLvWy26VTRv0zAunIhiIHUzzbyv46Qcu%2F0ALXAaogeN9P2ekamzZupOwXlRzFEL3ro1Fage9iC20iQrc%2FB9TIvCwFe0mNUfEeDDd5gS%2F5Lo3npsU6FIcB%2B3eS1cR2bkbP%2B1UHOr6Z3yTIB76QQA6Vzt46huBwumifRqGYs83zkqNXeo%2F3%2FndfE%2BxwxZjwYk5o5PbBdgGy2cIicegneBs1LxbhDaVvizWYD0mdP7Qi6KYSFcw99DqSf9QSjMWMnSePG4zH9fiy3TTCm37zGBjqxAUpMBuGythxomliFM35sYIuU7hw6OO%2Builn%2B1UcAyhIahoaFoTfor4YPfstlBI5VoJpCB4N81qnH%2BEqpp0uWvgeNv%2F6iXjwb5ocnc1UhF3lgHhDQhiDGjeivhjJHvD14Zw4wWzyAc2nJqVsHSXM%2B3y5Ys7QCOJktLQ8E2fYeD6DVtRj8RgeBDBNhii1cOJtTQ7lnu6R8VDCcYymSZnUdyHVIQ09vt5TcE%2BsSympU3%2B0liQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=3013da36b688cedf261b6caec0ea7be8734752583e63ca79bd7ff0d4c892c943",
+      "file_size": 112570,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 250889,
+      "file_name": "Screen_Shot_2018-01-02_at_17.51.21.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/250/889/37633c9ec334e76b0e7865c6a65605cb0875c8f8/Screen_Shot_2018-01-02_at_17.51.21.png?response-content-disposition=attachment%3B%20filename%3D%22Screen_Shot_2018-01-02_at_17.51.21.png%22%3B%20filename%2A%3DUTF-8%27%27Screen_Shot_2018-01-02_at_17.51.21.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQTNWJHDVM%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T020739Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH8aCXVzLXdlc3QtMiJHMEUCIDGz6%2F6GxJTN1j63kuIPQDFi0Z6l452T45IZEZVZeHLBAiEAgDpr%2FRvQoIILcvv7MwWroCWX473kfExlhy%2FgJ%2ByZhnoqugUI%2BP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDJj5Q0j6T%2BAE%2Bz1UEyqOBdEVHEGaYUFT77thaSeZ6lKuJx8gi8FbcjBI2Ev6W2bJikwG8i2f%2BLhfXtT8Wn6kQKK6r4qNQ5SDB2Z4EQGfwcYmIt%2FFaciFcWL%2Bxu4%2F05%2BXVM5OtOJx1PLjgQ%2BDycwNtYgXbZT2TDOMA9nIa2OGin8LX5LSqq%2FS%2BhtJpYTH9zkOX6pH1dTLcMX7i8Cl6tLJq4KoCFfLbvHAbbf38tjPybS180DjMntuHFLz8fok5V926%2FWU7i%2FlTqEFQVfBx0AZB5HVUubHCbacSD9vAHe1hrYVznFnGjfwcjo5C1u%2BUBOe5C3uQbElRl6IcpbTf9sAh%2FDO%2BffzrjtX8GAdFSfa9NP%2BWNlt3fzXpwdEWHBa%2B8DP%2FVzHjPcWLHdiLUy8udAUOsMpwZFX1nJwiztCuiSWEPB3ZUSk7OjJ2IfQoVJhPy9itkC5jyKeyCtZLfT2KP8wjGypWDIAbOLGrfuGliOE6fpqCbTyiaASClcPIk%2B6BS7iOOhlSkzBXitO0ydQ3xE1LrPKMNzPE7IY3VjC4UMXcrjMtOoJlb2GzEGJwTA5I844GPMcIFqLXHGMBQchEkmaQLXV90%2BiH%2BavSAmEkBsQte7p1L0piNPLvWy26VTRv0zAunIhiIHUzzbyv46Qcu%2F0ALXAaogeN9P2ekamzZupOwXlRzFEL3ro1Fage9iC20iQrc%2FB9TIvCwFe0mNUfEeDDd5gS%2F5Lo3npsU6FIcB%2B3eS1cR2bkbP%2B1UHOr6Z3yTIB76QQA6Vzt46huBwumifRqGYs83zkqNXeo%2F3%2FndfE%2BxwxZjwYk5o5PbBdgGy2cIicegneBs1LxbhDaVvizWYD0mdP7Qi6KYSFcw99DqSf9QSjMWMnSePG4zH9fiy3TTCm37zGBjqxAUpMBuGythxomliFM35sYIuU7hw6OO%2Builn%2B1UcAyhIahoaFoTfor4YPfstlBI5VoJpCB4N81qnH%2BEqpp0uWvgeNv%2F6iXjwb5ocnc1UhF3lgHhDQhiDGjeivhjJHvD14Zw4wWzyAc2nJqVsHSXM%2B3y5Ys7QCOJktLQ8E2fYeD6DVtRj8RgeBDBNhii1cOJtTQ7lnu6R8VDCcYymSZnUdyHVIQ09vt5TcE%2BsSympU3%2B0liQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=29a115f1d70ceb5c5bd4b52c6af35a44ecb06462b5feb060d906e186d80d0783",
+      "file_size": 620749,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 250890,
+      "file_name": "Screen_Shot_2018-01-02_at_17.48.45.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/250/890/0d79346d852af0df5e168e35c65a9874b6dd6623/Screen_Shot_2018-01-02_at_17.48.45.png?response-content-disposition=attachment%3B%20filename%3D%22Screen_Shot_2018-01-02_at_17.48.45.png%22%3B%20filename%2A%3DUTF-8%27%27Screen_Shot_2018-01-02_at_17.48.45.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQTNWJHDVM%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T020739Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH8aCXVzLXdlc3QtMiJHMEUCIDGz6%2F6GxJTN1j63kuIPQDFi0Z6l452T45IZEZVZeHLBAiEAgDpr%2FRvQoIILcvv7MwWroCWX473kfExlhy%2FgJ%2ByZhnoqugUI%2BP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDJj5Q0j6T%2BAE%2Bz1UEyqOBdEVHEGaYUFT77thaSeZ6lKuJx8gi8FbcjBI2Ev6W2bJikwG8i2f%2BLhfXtT8Wn6kQKK6r4qNQ5SDB2Z4EQGfwcYmIt%2FFaciFcWL%2Bxu4%2F05%2BXVM5OtOJx1PLjgQ%2BDycwNtYgXbZT2TDOMA9nIa2OGin8LX5LSqq%2FS%2BhtJpYTH9zkOX6pH1dTLcMX7i8Cl6tLJq4KoCFfLbvHAbbf38tjPybS180DjMntuHFLz8fok5V926%2FWU7i%2FlTqEFQVfBx0AZB5HVUubHCbacSD9vAHe1hrYVznFnGjfwcjo5C1u%2BUBOe5C3uQbElRl6IcpbTf9sAh%2FDO%2BffzrjtX8GAdFSfa9NP%2BWNlt3fzXpwdEWHBa%2B8DP%2FVzHjPcWLHdiLUy8udAUOsMpwZFX1nJwiztCuiSWEPB3ZUSk7OjJ2IfQoVJhPy9itkC5jyKeyCtZLfT2KP8wjGypWDIAbOLGrfuGliOE6fpqCbTyiaASClcPIk%2B6BS7iOOhlSkzBXitO0ydQ3xE1LrPKMNzPE7IY3VjC4UMXcrjMtOoJlb2GzEGJwTA5I844GPMcIFqLXHGMBQchEkmaQLXV90%2BiH%2BavSAmEkBsQte7p1L0piNPLvWy26VTRv0zAunIhiIHUzzbyv46Qcu%2F0ALXAaogeN9P2ekamzZupOwXlRzFEL3ro1Fage9iC20iQrc%2FB9TIvCwFe0mNUfEeDDd5gS%2F5Lo3npsU6FIcB%2B3eS1cR2bkbP%2B1UHOr6Z3yTIB76QQA6Vzt46huBwumifRqGYs83zkqNXeo%2F3%2FndfE%2BxwxZjwYk5o5PbBdgGy2cIicegneBs1LxbhDaVvizWYD0mdP7Qi6KYSFcw99DqSf9QSjMWMnSePG4zH9fiy3TTCm37zGBjqxAUpMBuGythxomliFM35sYIuU7hw6OO%2Builn%2B1UcAyhIahoaFoTfor4YPfstlBI5VoJpCB4N81qnH%2BEqpp0uWvgeNv%2F6iXjwb5ocnc1UhF3lgHhDQhiDGjeivhjJHvD14Zw4wWzyAc2nJqVsHSXM%2B3y5Ys7QCOJktLQ8E2fYeD6DVtRj8RgeBDBNhii1cOJtTQ7lnu6R8VDCcYymSZnUdyHVIQ09vt5TcE%2BsSympU3%2B0liQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=0b3d75e46c36b8cd883e0510a1ef4f31587139dc68c126b7c765fa2ef2aff4e5",
+      "file_size": 422411,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2018-10-18T14:28:26.267Z",
+  "allow_singular_disclosure_after": -218547553.19798812,
+  "singular_disclosure_allowed": true,
+  "vote_count": 87,
+  "voters": [
+    "qiaoqiao",
+    "arist0phanes",
+    "osman1337",
+    "ganeshbagaria",
+    "d0xing",
+    "jensec",
+    "drsniper",
+    "ertugrul",
+    "sklnhunt",
+    "kapytein",
+    "and 77 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "Team"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "id": 73264,
+      "category": "team",
+      "content": "The Bitmoji rendering service provided directory listings and access to .jar and .class files in some of those directories. Although the top level site returned a `403 Forbidden`, the access control check was not present on subpaths, allowing directory listings, notably at `/WEB-INF/` and `/META-INF/`.\n\nWhile not arbitrary file system access on the rendering service, it did provide a directory listing and access to some sensitive files. We thank the reporter for pointing us to this issue.",
+      "updated_at": "2021-07-31T00:20:08.183Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 139654,
+        "username": "jww-sc",
+        "name": "Joel Weinberger",
+        "bio": "",
+        "cleared": false,
+        "verified": false,
+        "website": null,
+        "location": "",
+        "created_at": "2017-02-01T03:04:17.835Z",
+        "url": "https://hackerone.com/jww-sc",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "company",
+        "profile_picture_urls": {
+          "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png",
+          "medium": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png",
+          "xtralarge": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+        }
+      }
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
