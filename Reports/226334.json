@@ -1,0 +1,106 @@
+{
+  "id": 226334,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yMjYzMzQ=",
+  "url": "https://hackerone.com/reports/226334",
+  "title": "Improper validation of Email ",
+  "state": "Closed",
+  "substate": "informative",
+  "readable_substate": "Informative",
+  "created_at": "2017-05-05T13:32:49.376Z",
+  "submitted_at": "2017-05-05T13:32:49.376Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "test_this",
+    "url": "/test_this",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 8539,
+    "url": "https://hackerone.com/paragonie",
+    "handle": "paragonie",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/008/539/72f76fed45e5220b47ba2f679371ebf9ccb19c70_original./235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/008/539/72f76fed45e5220b47ba2f679371ebf9ccb19c70_original./3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Paragon Initiative Enterprises",
+      "twitter_handle": "ParagonIE",
+      "website": "https://github.com/paragonie",
+      "about": "Cryptography and Application Security Consultants - We Produce Various Open Source Libraries"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2017-05-07T06:08:41.464Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2017-05-05T20:53:58.715Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "1.goto https://bridge.cspr.ng/my/account\nhere no rate limit present for email and display name,real name\ni just entered 1000 character length email in email field and it accepted\n\nalso for the display name ,real name\n\nanother \nthere is no regular expression to check valid email \nif u give email as \"aaaaaa\", \"a++++++++\", \"vdadva*$'/@4%$123\", \"sdfsjghg@something\" all will be accepted as valid email\nAlso 500+ character email also valid according to your code\nhere is the specification for email address\nhttps://en.wikipedia.org/wiki/Email_address\nand email id must be <254 character \n\nas email id strored in mysql as VARCHAR(128), \nso all the trailing character in mysql db will be truncted\nif your email like abc@gmail.com and you entered as abc+aaaaaaaaaaaaaaaaaa......@gmail.com,then still you receave email in abc@gmail.com\nMITIGATION:\n you must use filter_var($email, FILTER_VALIDATE_EMAIL) to validate email\nor use Regex like /^[_a-z0-9-]+(\\.[_a-z0-9-]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,3})$/",
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 182089,
+      "file_name": "Screenshot_-_May_5__2017_7.09_PM.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/182/089/e681522dbf54b12da600abfbb08cb4d26c0c7135/Screenshot_-_May_5__2017_7.09_PM.png?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_-_May_5__2017_7.09_PM.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_-_May_5__2017_7.09_PM.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ47SYAPAJ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T224001Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIFQlZdM%2BiHDyN9oni09hrwl3M7K20t9Vimgie0HLfNmHAiEAqmczIiyJE5llSe1xTfXIl4Bw%2BJdB3CSV3xMFov%2FAjEAqsQUIHhADGgwwMTM2MTkyNzQ4NDkiDGTATplagYxC2xegDSqOBVn84RpirpPeAsluMTBHBJPPcy3TNEGPtOb1g030u4%2BQqyRdbkHOeu8azW2dxIVENOx%2BPHk6VlHJXgV4d8HUPIeOnM40HYuXdOSzYUTyt1WXFSGpLJaSWiB03TZqdL5bqtaEMJu5UcC5z0Cdi1GIpGFsgKzCdcJQoIzDumo7zZyZ9WeFC77ekgmM1Wt6PkAYvHPeQGAJhATn1vEvc0eNnbdytiwFaQqiSvnY248y0JnJ%2F8qEDgRgNIDTYy%2BJzW8C1rSBNfmG86RcOINqrieLUz7e4D0OkTiY3ZmFJbhxMGry%2F%2BEU0uPJ2FhesmCsjPO2Q4qYjxuLteizkHbOCEMIryUDZ6lO7FPCEwUuQA0P2zZurtU7jXF70OoMpRIdmvSFpxF105GouBl7u4C4DaZd%2FG0WwEmttAW7MyhDk0R0yhnPvqm5u3qPizlXSvkGMTiEiC0kbntCjFpywefw2gw4IDltu1ccvvL5MhDRHiWVi79rEQQNnH2f%2BDZP85IQoc6JaVsSNBJMvQfnewwbTD7Ve8qIx5%2FnwFoaPMzFesb8pogauw4KP6A2BgO4GV8009Dnb9gRZpLVeBdKQaRp8kfLcsKRc%2FNd5BHQ7sMY8%2FmY%2BO4JpNd1FyN7DVnJvxavLkiTgXasTxpsBv5AJM25fhDmYeoEP%2BCmGUg4yii3832kILdhoI%2BrOFaNfRVdc0bNPBU6CqfNblTVRbk6fENhXMpkleVhNNVkQIDtCeUaofRXCfZ37l7pHU%2BJEOcXS4%2BIK5G2rpM0hdrTd3uua3MyiCbytk80G%2BiqNDf3zpJcaKkMCC54U6%2ByYkzQecXdlJVEeRzqP%2F3XWXv05Oqq9lNtf8rUOhd5ClgytZTNvJL9vV%2B%2FLTDTxMHGBjqxAYBo0aIpQji0ejSypObDv3XihNYitgjKFJgsdYeEepYKQhlw706ugkA1witeimv%2FDB1hc4iHPgAkUx%2B%2FvZ40%2FJ0apXyV5UFGy2LgXNmdzhqfjs%2F06haJgUg6CCQ5j1nkvFaan%2FyNQpk6Hccl%2BRB%2FKl8l3LZuSPiFwq78Bit95f3pmhaUjWgj8CLMjvf%2F7enBBgJwOyrmphgHZ7DafHSAJ5bjgcbapH5OR7Fsyd2fMtoh%2Fw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=b0519d890d24eb149fb8eab3d28297896c5e9d04ff6c47df11a8cc32a9a633d8",
+      "file_size": 57894,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 2,
+  "voters": [
+    "spetr0x",
+    "mutali"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
