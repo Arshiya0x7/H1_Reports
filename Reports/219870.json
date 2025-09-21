@@ -1,0 +1,118 @@
+{
+  "id": 219870,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yMTk4NzA=",
+  "url": "https://hackerone.com/reports/219870",
+  "title": "mirb only: stack-buffer-overflow (OOB write) in main()",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2017-04-10T05:06:09.058Z",
+  "submitted_at": "2017-04-10T05:06:09.058Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "geeknik",
+    "url": "/geeknik",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/7xfGZCKCxUuGLYGfuUZM3XyY/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 15668,
+    "url": "https://hackerone.com/shopify-scripts",
+    "handle": "shopify-scripts",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/015/668/ebbe467de8ef2fc936053593e1289e30f04c3b06_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/015/668/ebbe467de8ef2fc936053593e1289e30f04c3b06_original.jpg/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "shopify-scripts",
+      "twitter_handle": "",
+      "website": "",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2017-05-09T12:43:12.853Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-05-09T02:45:12.933Z",
+  "team_member_agreed_on_going_public_at": "2017-05-09T12:43:12.815Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Triggered in `7e28510` (7 April 2017) with `mirb` only.\n\n`cat test013.rb | mirb`\n\n```\n==17976==ERROR: AddressSanitizer: stack-buffer-overflow on address 0x7fffeb477fb0 at pc 0x408c21 bp 0x7fffeb477a90 sp 0x7fffeb477a88\nWRITE of size 1 at 0x7fffeb477fb0 thread T0\n    #0 0x408c20 in main /root/mruby/mrbgems/mruby-bin-mirb/tools/mirb/mirb.c:466\n    #1 0x7f96e4703b44 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x21b44)\n    #2 0x40aefc (/root/mruby/bin/mirb+0x40aefc)\n\nAddress 0x7fffeb477fb0 is located in stack of thread T0 at offset 1184 in frame\n    #0 0x40549f in main /root/mruby/mrbgems/mruby-bin-mirb/tools/mirb/mirb.c:361\n\n  This frame has 4 object(s):\n    [32, 56) 'args'\n    [96, 126) 'unexpected_end'\n    [160, 1184) 'last_code_line' <== Memory access at offset 1184 overflows this variable\n    [1216, 5312) 'ruby_code'\nHINT: this may be a false positive if your program uses some custom stack unwind mechanism or swapcontext\n      (longjmp and C++ exceptions *are* supported)\nSUMMARY: AddressSanitizer: stack-buffer-overflow /root/mruby/mrbgems/mruby-bin-mirb/tools/mirb/mirb.c:466 main\n```\n\n",
+  "weakness": {
+    "id": 4,
+    "name": "Stack Overflow"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 174583,
+      "file_name": "test013.rb.gz",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/174/583/be7957c1c560df369d47a0849020744fccad8e59/test013.rb.gz?response-content-disposition=attachment%3B%20filename%3D%22test013.rb.gz%22%3B%20filename%2A%3DUTF-8%27%27test013.rb.gz&response-content-type=application%2Fgzip&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4YHF5EHB%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T223851Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJFMEMCIFqNX39T%2FXCJhXUkbTX3lWx8BjPqVE8MnKgEzGKAKedeAh8dx5v6uHPjEk%2BCj1ZBqfgMzv%2FRNtdMS5lgFNUa32GFKrEFCBwQAxoMMDEzNjE5Mjc0ODQ5IgyhgfORnLRqY3GEXbQqjgWHdxllSIT1v7ozL1D563B3s5O9ppME84bDUJGGDi%2FctsJl6PItf3fupoMgly%2BkTvfb2jozfmh9mV82Kqp4iSDMuv3e7FKFmhbLBA6YSKPJdW3rIk6n4KIghj%2BdsH6bsNQuY1JxIlX2ZFqxoftDjH1cH9WWdy5w8azr7yDVYBl09F6ATbB493UmlGzdGQNRvdUgGq8XsJ1lZLvZEXkErLgzZd7SvkL%2FOo82Tqn11F3mw%2BOMSwpTgg8op2AmldjwgJe4CyLZhYriUIvRjGpA9sAnJL0AH9rUE%2BG87yIiPrUndpYtlh1Hvq4JxQ3rGLwxdCy3ScMpdlJqwog9YlWK6SAm4LFTwZybjjWvjU0TbynlPsZHapyntasFH0GrPhe3qHBfMwsFMkbCWFgoqx%2FuShmHW35zishdC6hc1dbVq6V7J4IC%2FNAa40woeXKdsnJDxwMZy3EYYDTuD%2F1Y2dWkmrROK6hhz4BDLx41pApZwDKMYbqdv0jytswxYRDwr%2B9j7Ca%2BO8%2FN4Zx7lWj5L7aDsr1NNuhIRrPGg8zEB8QLYXXV5X6xS%2BSIfRbcm29JOJ7%2Fa8JYhO6oFu4R%2F2oN3I7VRJfNDF5UixB7Zye6Xw8AbS1qEOxkzkypZIIn0f1l%2Bj4IPgf5%2BEnLB8NWzclNpQRclJviZl2aVnzDgB8J9RvFXtJjugsM3YoDeE%2F%2BSzeEtLdTQGy3L8WRXoEr3d15VxuZF2wX9NOiYHtel8GFpxCiGeRXO4oGgd3KT4EuN15tUqoR9ESrzIJ6O0kwAEX%2FU4prAw1u6QqyVOIJqRTdbzbC6jB%2BlkJXSAbA%2BKnhEgq9hDn4CNaHhbmd5yrSXuONjzc%2F%2B9BM6egXoLNPqd0aXIOy5mUwy43BxgY6swHRMbrsLgWKjiiaI7ot7fwXNzz7VF5aCF%2BXCd1qM%2BtvalLfUA6wxzmvlPsK6Uvp8pMk%2Fs8PG1rn4ZcdJ94EDxC0O636Z5A36vcUecw5uqrpX1JABFxT%2Be7Da%2BVq%2FkwnCL%2BQHPDHgJu9ZiHHUim6IRY78Qpu1mi4h3eEA5F7xpCa4MK6cNBtr%2F8mJRiVVhpocrBv%2Bv1aG1CCL60oc6WNadMp4yhkrXtSek0v%2BTAaxXRS08p3%2BQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=a33de1fd40b2ab36d1b388599274541cf4f9d20246c6e452dbf5d3b931345adf",
+      "file_size": 41,
+      "type": "application/gzip",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-06-08T02:45:12.988Z",
+  "allow_singular_disclosure_after": -261604418.63002437,
+  "singular_disclosure_allowed": true,
+  "vote_count": 3,
+  "voters": [
+    "geeknik",
+    "eveeez",
+    "spetr0x"
+  ],
+  "severity": {
+    "rating": "high",
+    "author_type": "User"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
