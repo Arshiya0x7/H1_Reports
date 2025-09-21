@@ -1,0 +1,151 @@
+{
+  "id": 663729,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC82NjM3Mjk=",
+  "url": "https://hackerone.com/reports/663729",
+  "title": "[Brave browser] WebTorrent has DNS rebinding vulnerability",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2019-07-30T18:06:53.315Z",
+  "submitted_at": "2019-07-30T18:06:53.315Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "newfunction",
+    "url": "/newfunction",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/2miia86h6gou58lati8p3usdvhan/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": true,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 15688,
+    "url": "https://hackerone.com/brave",
+    "handle": "brave",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/015/688/2aad5641af643ee4f4402896e4747293f6e9c5ca_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/015/688/2aad5641af643ee4f4402896e4747293f6e9c5ca_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Brave Software",
+      "twitter_handle": "brave",
+      "website": "https://brave.com",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2019-10-16T18:33:02.230Z",
+  "bug_reporter_agreed_on_going_public_at": "2019-09-29T17:09:33.930Z",
+  "team_member_agreed_on_going_public_at": "2019-10-16T18:33:02.118Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nBrave browser has built-in WebTorrent extension. After it finishes downloading a torrent, it serves the downloaded files on a local HTTP server listening on a random port. The problem is that the local HTTP server doesn't check for the hostname of the requesters, so a malicious remote website can discover what files the user has downloaded using DNS rebinding attack.\n\n## Products affected: \n\n * OS: Windows 10 x64 Build 10.0.18362.10005\n * Brave: Version 0.66.101 Chromium: 75.0.3770.142 (Official Build) (64-bit)\n\n## Steps To Reproduce:\n\nAn actual attack would do a port scanning and DNS rebinding on server side, but for simplicity, the following steps just simulate such attack locally with a single port.\n\n * Download poc.html\n * Open Fiddler. In AutoResponder, enter: If request matches `regex:http://example.org:\\d+/test.html`, then respond with `[path to poc.html]`\n * In your system's hosts file, add `127.0.0.1  example.org`\n * Open Brave browser, navigate to any magnet link. Then start torrent.\n * After the torrent is fully downloaded, hover your pointer on the download icon in \"Save file\" column. The URL should be http://127.0.0.1:50210/0. The port number may be different.\n * Open a new tab, navigate to http://example.org:50210/test.html (you may need to change the port number). Click \"Start testing\" button. You should see the first downloaded file content on the page.\n\n## Supporting Material/References:\n\n  * poc.html and screenshots\n\n## Impact\n\nMalicious websites can discover what files users have downloaded using WebTorrent.",
+  "weakness": {
+    "id": 18,
+    "name": "Information Disclosure"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 543211,
+      "file_name": "screenshot_of_Fiddler_rule.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/543/211/689c277246ff150f15cc37163f67a0d512661af8/screenshot_of_Fiddler_rule.png?response-content-disposition=attachment%3B%20filename%3D%22screenshot_of_Fiddler_rule.png%22%3B%20filename%2A%3DUTF-8%27%27screenshot_of_Fiddler_rule.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6AKSZDHS%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T140427Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCEHr6%2FITuA6i9MnGcSFvq0tSxJ%2BdxYNvgtGx9sVCpP0gIgQvA1Ky%2Fhd1hV8yUECKBBqd31%2F4qe78yUbG%2F1unOewWIqsQUIFRADGgwwMTM2MTkyNzQ4NDkiDMXcgCZzTCKH5ST3jCqOBWRl979CFVq%2B%2BT6ECmkSm23zy6aqef%2FvmEN9I18qMIC7V7J7DuyPMyzAZ3X3pPZQAGkDUC06OTAyWbbSGAmbJdxwW3q0X32PYTaEJBA1Fu8cY6Ys%2B1haz%2BDQfi%2F0GBm0liKZvpKgdRgYxGW3Kr0w0UMbBGTg%2F40XuOgVSS1P%2FEtCVkRZC0vHd%2B4T3PrVhh2TIL3f%2FZ24ghM0kJsZ9pjAf5foLXRrSe4qaLWl7Qem73y4XhXf1dNhPUzuFF3dlbPtfHzmknEa%2BSA5e9usC6Z%2FQyKB16GrxH8qLBpU6p1vHWObQVs4pJhQrPJ7KZjeCwfo1jLQL0nOuRUGN51gru5bW9WUj2wXd4eY3lobScvt%2FynWdkTCyUQQ4bB6EgwmGVU%2F9ZqSdcqI18slbZ4OqpBANP6KfzZ4cCgdJQgGo3c%2F8lXCC9NsEIH462h8mV1K%2FkEHz4tMaYi0TkOx1RkU5VniH3AlokohHSiaLa3VZI%2B49QEwOIEIj23eOfXVagLNv8DRqbLKciJtKUJatXd4HiU3Y5joJlB9bWZN2hkGMTF1HhP7vwzCFu90sJ0xSY8ysWkNvAz94rR4r2sK35jKxvLGKWEc%2FoJTN%2FwNzpCSXUu%2F%2BwUBCmtbmJA7%2FZvD%2BB7Wb%2FrREMi7HN5L8JkPUFbhr38xjkKI8fXualX24n3cKXHww17VueYo6UmhbivMu77b8PEtBfWR8wh9x6MlSf9M6nyjyTE%2FySeE6%2B56GJrozwqZiAIJgNC23FGvXE%2B%2BYEjx%2FvLheyewy7dke9vrnak0eHZ9YuREHmp1cXccNfNLO0Jhl5xa9zZSGlZEGSvNC6zlP2%2FGZDrSaUweCKLpgSGZ%2FfqijUucTrdt3Nnp2w0viHR0SDDu0b%2FGBjqxAUNODEvhzBhHovbPmV3wp4kR7l0JgxZChXGpxyDorjULJE3po47RowB7FmkQlQpvYCuhD7LMjJvCmDjWRCa7JdNczcU%2Bz0Q02ML4NYmrOmjjJzE0c50SMNUl1OOcfS7QJfxDEShlAaCahrObKHYvste5ytUXGvbEPhHZCz%2Btf%2FRxcLdGvHHIekK%2FQchrv8GZQn9jMdn1PIi%2BIiqze2ch2fPmoohptK6%2BQMOpQ%2FfbruIbyA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=1a22c9e7ee2b556334b10805c0fc510fc8e8310b079b93f6c356ccbdb6295090",
+      "file_size": 11642,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 543212,
+      "file_name": "poc.html",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/543/212/2e43a79fced3c8e654061fbbeebf4e2c6e29a13f/poc.html?response-content-disposition=attachment%3B%20filename%3D%22poc.html%22%3B%20filename%2A%3DUTF-8%27%27poc.html&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6AKSZDHS%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T140427Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCEHr6%2FITuA6i9MnGcSFvq0tSxJ%2BdxYNvgtGx9sVCpP0gIgQvA1Ky%2Fhd1hV8yUECKBBqd31%2F4qe78yUbG%2F1unOewWIqsQUIFRADGgwwMTM2MTkyNzQ4NDkiDMXcgCZzTCKH5ST3jCqOBWRl979CFVq%2B%2BT6ECmkSm23zy6aqef%2FvmEN9I18qMIC7V7J7DuyPMyzAZ3X3pPZQAGkDUC06OTAyWbbSGAmbJdxwW3q0X32PYTaEJBA1Fu8cY6Ys%2B1haz%2BDQfi%2F0GBm0liKZvpKgdRgYxGW3Kr0w0UMbBGTg%2F40XuOgVSS1P%2FEtCVkRZC0vHd%2B4T3PrVhh2TIL3f%2FZ24ghM0kJsZ9pjAf5foLXRrSe4qaLWl7Qem73y4XhXf1dNhPUzuFF3dlbPtfHzmknEa%2BSA5e9usC6Z%2FQyKB16GrxH8qLBpU6p1vHWObQVs4pJhQrPJ7KZjeCwfo1jLQL0nOuRUGN51gru5bW9WUj2wXd4eY3lobScvt%2FynWdkTCyUQQ4bB6EgwmGVU%2F9ZqSdcqI18slbZ4OqpBANP6KfzZ4cCgdJQgGo3c%2F8lXCC9NsEIH462h8mV1K%2FkEHz4tMaYi0TkOx1RkU5VniH3AlokohHSiaLa3VZI%2B49QEwOIEIj23eOfXVagLNv8DRqbLKciJtKUJatXd4HiU3Y5joJlB9bWZN2hkGMTF1HhP7vwzCFu90sJ0xSY8ysWkNvAz94rR4r2sK35jKxvLGKWEc%2FoJTN%2FwNzpCSXUu%2F%2BwUBCmtbmJA7%2FZvD%2BB7Wb%2FrREMi7HN5L8JkPUFbhr38xjkKI8fXualX24n3cKXHww17VueYo6UmhbivMu77b8PEtBfWR8wh9x6MlSf9M6nyjyTE%2FySeE6%2B56GJrozwqZiAIJgNC23FGvXE%2B%2BYEjx%2FvLheyewy7dke9vrnak0eHZ9YuREHmp1cXccNfNLO0Jhl5xa9zZSGlZEGSvNC6zlP2%2FGZDrSaUweCKLpgSGZ%2FfqijUucTrdt3Nnp2w0viHR0SDDu0b%2FGBjqxAUNODEvhzBhHovbPmV3wp4kR7l0JgxZChXGpxyDorjULJE3po47RowB7FmkQlQpvYCuhD7LMjJvCmDjWRCa7JdNczcU%2Bz0Q02ML4NYmrOmjjJzE0c50SMNUl1OOcfS7QJfxDEShlAaCahrObKHYvste5ytUXGvbEPhHZCz%2Btf%2FRxcLdGvHHIekK%2FQchrv8GZQn9jMdn1PIi%2BIiqze2ch2fPmoohptK6%2BQMOpQ%2FfbruIbyA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=8f8c0df5325b2243fcd07adab47e3bd1270271bcf522be092d3a19518209d54e",
+      "file_size": 828,
+      "type": "text/html",
+      "moderated": null
+    },
+    {
+      "id": 543213,
+      "file_name": "screenshot_of_PoC_page.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/543/213/2b6999816a0a207e552f801345555abb91bd615a/screenshot_of_PoC_page.png?response-content-disposition=attachment%3B%20filename%3D%22screenshot_of_PoC_page.png%22%3B%20filename%2A%3DUTF-8%27%27screenshot_of_PoC_page.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6AKSZDHS%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T140427Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCEHr6%2FITuA6i9MnGcSFvq0tSxJ%2BdxYNvgtGx9sVCpP0gIgQvA1Ky%2Fhd1hV8yUECKBBqd31%2F4qe78yUbG%2F1unOewWIqsQUIFRADGgwwMTM2MTkyNzQ4NDkiDMXcgCZzTCKH5ST3jCqOBWRl979CFVq%2B%2BT6ECmkSm23zy6aqef%2FvmEN9I18qMIC7V7J7DuyPMyzAZ3X3pPZQAGkDUC06OTAyWbbSGAmbJdxwW3q0X32PYTaEJBA1Fu8cY6Ys%2B1haz%2BDQfi%2F0GBm0liKZvpKgdRgYxGW3Kr0w0UMbBGTg%2F40XuOgVSS1P%2FEtCVkRZC0vHd%2B4T3PrVhh2TIL3f%2FZ24ghM0kJsZ9pjAf5foLXRrSe4qaLWl7Qem73y4XhXf1dNhPUzuFF3dlbPtfHzmknEa%2BSA5e9usC6Z%2FQyKB16GrxH8qLBpU6p1vHWObQVs4pJhQrPJ7KZjeCwfo1jLQL0nOuRUGN51gru5bW9WUj2wXd4eY3lobScvt%2FynWdkTCyUQQ4bB6EgwmGVU%2F9ZqSdcqI18slbZ4OqpBANP6KfzZ4cCgdJQgGo3c%2F8lXCC9NsEIH462h8mV1K%2FkEHz4tMaYi0TkOx1RkU5VniH3AlokohHSiaLa3VZI%2B49QEwOIEIj23eOfXVagLNv8DRqbLKciJtKUJatXd4HiU3Y5joJlB9bWZN2hkGMTF1HhP7vwzCFu90sJ0xSY8ysWkNvAz94rR4r2sK35jKxvLGKWEc%2FoJTN%2FwNzpCSXUu%2F%2BwUBCmtbmJA7%2FZvD%2BB7Wb%2FrREMi7HN5L8JkPUFbhr38xjkKI8fXualX24n3cKXHww17VueYo6UmhbivMu77b8PEtBfWR8wh9x6MlSf9M6nyjyTE%2FySeE6%2B56GJrozwqZiAIJgNC23FGvXE%2B%2BYEjx%2FvLheyewy7dke9vrnak0eHZ9YuREHmp1cXccNfNLO0Jhl5xa9zZSGlZEGSvNC6zlP2%2FGZDrSaUweCKLpgSGZ%2FfqijUucTrdt3Nnp2w0viHR0SDDu0b%2FGBjqxAUNODEvhzBhHovbPmV3wp4kR7l0JgxZChXGpxyDorjULJE3po47RowB7FmkQlQpvYCuhD7LMjJvCmDjWRCa7JdNczcU%2Bz0Q02ML4NYmrOmjjJzE0c50SMNUl1OOcfS7QJfxDEShlAaCahrObKHYvste5ytUXGvbEPhHZCz%2Btf%2FRxcLdGvHHIekK%2FQchrv8GZQn9jMdn1PIi%2BIiqze2ch2fPmoohptK6%2BQMOpQ%2FfbruIbyA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=684cee624b871948dfc75d50c79f75aff6e8129a70a9c1ab6e31a1be74ac9487",
+      "file_size": 25412,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 543214,
+      "file_name": "screenshot_of_webtorrent_page_where_you_find_port_number.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/543/214/ab78496f096a9d1f477e6373516a343e027155d4/screenshot_of_webtorrent_page_where_you_find_port_number.PNG?response-content-disposition=attachment%3B%20filename%3D%22screenshot_of_webtorrent_page_where_you_find_port_number.PNG%22%3B%20filename%2A%3DUTF-8%27%27screenshot_of_webtorrent_page_where_you_find_port_number.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6AKSZDHS%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T140427Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCEHr6%2FITuA6i9MnGcSFvq0tSxJ%2BdxYNvgtGx9sVCpP0gIgQvA1Ky%2Fhd1hV8yUECKBBqd31%2F4qe78yUbG%2F1unOewWIqsQUIFRADGgwwMTM2MTkyNzQ4NDkiDMXcgCZzTCKH5ST3jCqOBWRl979CFVq%2B%2BT6ECmkSm23zy6aqef%2FvmEN9I18qMIC7V7J7DuyPMyzAZ3X3pPZQAGkDUC06OTAyWbbSGAmbJdxwW3q0X32PYTaEJBA1Fu8cY6Ys%2B1haz%2BDQfi%2F0GBm0liKZvpKgdRgYxGW3Kr0w0UMbBGTg%2F40XuOgVSS1P%2FEtCVkRZC0vHd%2B4T3PrVhh2TIL3f%2FZ24ghM0kJsZ9pjAf5foLXRrSe4qaLWl7Qem73y4XhXf1dNhPUzuFF3dlbPtfHzmknEa%2BSA5e9usC6Z%2FQyKB16GrxH8qLBpU6p1vHWObQVs4pJhQrPJ7KZjeCwfo1jLQL0nOuRUGN51gru5bW9WUj2wXd4eY3lobScvt%2FynWdkTCyUQQ4bB6EgwmGVU%2F9ZqSdcqI18slbZ4OqpBANP6KfzZ4cCgdJQgGo3c%2F8lXCC9NsEIH462h8mV1K%2FkEHz4tMaYi0TkOx1RkU5VniH3AlokohHSiaLa3VZI%2B49QEwOIEIj23eOfXVagLNv8DRqbLKciJtKUJatXd4HiU3Y5joJlB9bWZN2hkGMTF1HhP7vwzCFu90sJ0xSY8ysWkNvAz94rR4r2sK35jKxvLGKWEc%2FoJTN%2FwNzpCSXUu%2F%2BwUBCmtbmJA7%2FZvD%2BB7Wb%2FrREMi7HN5L8JkPUFbhr38xjkKI8fXualX24n3cKXHww17VueYo6UmhbivMu77b8PEtBfWR8wh9x6MlSf9M6nyjyTE%2FySeE6%2B56GJrozwqZiAIJgNC23FGvXE%2B%2BYEjx%2FvLheyewy7dke9vrnak0eHZ9YuREHmp1cXccNfNLO0Jhl5xa9zZSGlZEGSvNC6zlP2%2FGZDrSaUweCKLpgSGZ%2FfqijUucTrdt3Nnp2w0viHR0SDDu0b%2FGBjqxAUNODEvhzBhHovbPmV3wp4kR7l0JgxZChXGpxyDorjULJE3po47RowB7FmkQlQpvYCuhD7LMjJvCmDjWRCa7JdNczcU%2Bz0Q02ML4NYmrOmjjJzE0c50SMNUl1OOcfS7QJfxDEShlAaCahrObKHYvste5ytUXGvbEPhHZCz%2Btf%2FRxcLdGvHHIekK%2FQchrv8GZQn9jMdn1PIi%2BIiqze2ch2fPmoohptK6%2BQMOpQ%2FfbruIbyA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=3d762d5d035ae38616c10e6ae34de0eca61cfce1e7c81f06bebc9dd65aa489fe",
+      "file_size": 44224,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 9,
+  "voters": [
+    "mr-medi",
+    "eugenekolo",
+    "ali",
+    "exception",
+    "cryptographer",
+    "oboy137",
+    "antikvar",
+    "br3wb0n1k",
+    "adriiiprodri"
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 7942,
+    "asset_type": "DOWNLOADABLE_EXECUTABLES",
+    "asset_identifier": "https://laptop-updates.brave.com/latest/winx64",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
