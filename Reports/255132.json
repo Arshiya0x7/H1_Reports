@@ -1,0 +1,114 @@
+{
+  "id": 255132,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yNTUxMzI=",
+  "url": "https://hackerone.com/reports/255132",
+  "title": "Credential gets exposed",
+  "state": "Closed",
+  "substate": "informative",
+  "severity_rating": "low",
+  "readable_substate": "Informative",
+  "created_at": "2017-07-31T11:21:47.758Z",
+  "submitted_at": "2017-07-31T11:21:47.758Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "luke081515",
+    "url": "/luke081515",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 18,
+    "url": "https://hackerone.com/phabricator",
+    "handle": "phabricator",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/018/61446f7e6f0684c8c9f7c36c918b7ecd58183588_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/018/61446f7e6f0684c8c9f7c36c918b7ecd58183588_original.jpg/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Phabricator",
+      "twitter_handle": "phabricator",
+      "website": "http://phacility.com/phabricator/",
+      "about": "Phabricator is a collection of open source web applications that help software companies build better software."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2017-08-02T18:21:06.852Z",
+  "bug_reporter_agreed_on_going_public_at": "2017-08-02T18:18:29.863Z",
+  "team_member_agreed_on_going_public_at": "2017-08-02T18:21:06.799Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "1. Create a repo\n2. Mirror it to an URL\n3. Assign a credential to the mirror\n4. I've now had an existing repo, and wanted to change it to mirror only, so that phabricator pulls from an URL instead of self-hosting.\n\nI now recived this error msg:\n    Pull of 'Luke081515Bot' failed: Working copy at \"/srv/repos/LUKE\" has a mismatched origin URI, \"https://Luke081515:<redacted>@bitbucket.org/Luke081515/lukebot\". The expected origin URI is \"https://newUrl/Luke/Luke081515Bot.git\". Fix your configuration, or set the remote URI correctly. To avoid breaking anything, Phabricator will not automatically fix this.\n\nIn this case the <redacted> part was my password for bitbucket, completly visible for everyone who is able to see the repo. Phabricator should not expose the whole URLs including passwords. \n\nSo in theory everyone who can edit a repo, but can't view a credential can get access to it by producing this git error and then see the password at the raw error.\n",
+  "weakness": {
+    "id": 18,
+    "name": "Information Disclosure"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 208516,
+      "file_name": "PhabExpose.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/208/516/7b7bd484b0fb5e3cedeaf1f0ed7838748e9966b9/PhabExpose.PNG?response-content-disposition=attachment%3B%20filename%3D%22PhabExpose.PNG%22%3B%20filename%2A%3DUTF-8%27%27PhabExpose.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ2GP7HMFG%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T211044Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIC8jztlqtCc0i9dbbkiSdXFALVKPJZj2c2z%2F1QYNv5b4AiBq9He%2BoiwdnmQQaFYTCJT5LewmOqqL%2FhWbHyNqBRtdPyqxBQgbEAMaDDAxMzYxOTI3NDg0OSIM63%2F2yEnJ9MV98oaKKo4FyduVdprPRpbG1L28OQBKqTOvAtzvP7NldVpXh7EucwjXxZizj3%2BxZ8fURdajJhEyBL6uLzhLA1n3yJRSuXFJIw8oOnh13cUPWHByKVwfPOho%2B0GQKqQgr3EkY9PEakA0pM%2F09Kztibn66yQSsg3XDDatnV6AGKprKkcJm%2BgXCAxNjQNzlzqNdtUdZ2eMWVKGvqOrP4cHy8k5NIBP1s9SRJOiPbmmi1OMtS0PlocFyoguje1dKtFPtGjXzK7xt4%2Fx7YCvpJHIyQq9%2BV42WIRrHm%2BZDn7qqdmGa9zkT7C1Y5Wc9mjYgsAslvKr2LZ9MQOz%2F8Oro0ZP1TGpcQUEPq9Uhwes1mPQkEn%2FbDJobZDJJJaYSe6vh%2B3Nwk2Sm%2Bl9I3gO0BeSTksZDOlzm3p5DuhbEobKVkwLyLINfpP9PSq6xVennmPLWcwZRCW%2FcAUV2PwS1ZjOHSNV9SW717IQW%2B73wXeETGIEzP0o07sgYhWP65sLR%2BgLhABEGVZLsXTW3ZXaodyQuVlNt2gHwjRl1%2Fun06cN5teJf4OmwIIYSF34q4ZhigD0yIw4zD6JuW9%2B3WmR1GEjFwNj%2BmPNx6EtxaDIv57rwMFNZgzdHs%2B%2BF5eBOUQtjx620jxNqh%2B9IUNKSh3y7vYvkG4KexXHQEPR3ZBeViY7xLLaVHYFa0X38xYG1dqEuD%2F3M%2BNNs2tXNt084EQ%2BDnmK4YLb%2ByTBDUXaEkCP8xnznYFEQHakJiQyRk4CNaIBQ89zE9mKUTmXAYTVNN6SYUBlI5cuiuOUxb%2B2cT1TjImGWkLwwukFp6FmV47FHrkOIwdBmEti3q2SzlxDPENS0Vfl%2FyRAxKyj2lJFXqlC6yYLkcVwZ4K3ejIe9hTyMJnvwMYGOrIBceE1o%2FaBUOQoPHkb3%2BXhLGI%2FV4FBJt6lE76LX2BVH3v3mfUcl4%2BSe02Kyb%2Bo4imiWefYbxVLe9DZAyWzGKBy5tkX3TT9Cws3fISf%2B1rxaDQa3DcIesetBvy8lOP%2FU8B4Bt9m1F%2F9U%2BZn9TC4d1j1SMCFdqex71hbzSuEfts5RJkoqsMKEU2c0eCjeLCaAOQ%2FfvBDxVgh%2Fx%2Bdr6YUC7QbUhJlcbm2Vb2Ulp9pr9XKJooshQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=52130f30ccea71229aac4e759f0c6e3b80d7cba47c21d36c761263656d4b497d",
+      "file_size": 45238,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 1,
+  "voters": [
+    "annonymous1"
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "Team"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
