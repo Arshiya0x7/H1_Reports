@@ -1,0 +1,132 @@
+{
+  "id": 994051,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC85OTQwNTE=",
+  "url": "https://hackerone.com/reports/994051",
+  "title": "Race condition on my.stripo.email at /cabinet/stripeapi/v1/projects/298427/emails/folders uri",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2020-09-29T13:38:45.584Z",
+  "submitted_at": "2020-09-29T13:38:45.659Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "zeroc00i",
+    "url": "/zeroc00i",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MzczMzc0NywicHVyIjoiYmxvYl9pZCJ9fQ==--56a73178bf6639935ab39ab4910b95055365984b/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--2de8067d228529d65848a4eeed0bed0bb2531bc3/uranium.jpg"
+    },
+    "is_me?": false,
+    "cleared": true,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 42368,
+    "url": "https://hackerone.com/stripo",
+    "handle": "stripo",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/042/368/5b1017d17427be6c8e05cbc95da27646bf45e925_original./235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/042/368/5b1017d17427be6c8e05cbc95da27646bf45e925_original./3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Stripo Inc",
+      "twitter_handle": "",
+      "website": "https://stripo.email",
+      "about": "Stripo is a lightweight and intuitive email template editor that lets users build professional looking and highly responsive email templates."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2020-11-09T15:12:51.458Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2020-11-03T11:40:14.427Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nHi! I hope you all are pretty good =)\nWe have discovered a race condition endpoint\n\n## Steps To Reproduce:\n```\nPOST /cabinet/stripeapi/v1/projects/298427/emails/folders HTTP/1.1\nHost: my.stripo.email\nConnection: close\nContent-Length: 23\nAccept: application/json, text/plain, */*\nPragma: no-cache\nExpires: Sat, 01 Jan 2000 00:00:00 GMT\nCache-Control: no-cache\nX-XSRF-TOKEN: 704b458b-c5bd-4ff1-9610-da193b987cb7\nUser-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36\nContent-Type: application/json;charset=UTF-8\nOrigin: https://my.stripo.email\nSec-Fetch-Site: same-origin\nSec-Fetch-Mode: cors\nSec-Fetch-Dest: empty\nReferer: https://my.stripo.email/cabinet/\nAccept-Encoding: gzip, deflate\nAccept-Language: pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7,pl;q=0.6\nCookie: G_AUTHUSER_H=1; _ga=GA1.2.1350209788.1601383605; _gid=GA1.2.1199907309.1601383605; G_ENABLED_IDPS=google; __stripe_mid=5c31e871-7c0e-48a1-809a-e499e39a3dcaa15e57; __stripe_sid=0bcd042d-752e-43c8-877d-83f63b1fa64ddb3e7e; _ga=GA1.3.1350209788.1601383605; _gid=GA1.3.1199907309.1601383605; JSESSIONID=81E11E33CF9ABA02A4AB3D68A29BC4F8; token=eyJhbGciOiJSUzUxMiJ9.eyJhdXRoX3Rva2VuIjoie1widXNlckluZm9cIjp7XCJpZFwiOjI5NDA3NyxcImVtYWlsXCI6XCJqYWFhaGJvdW50eUBnbWFpbC5jb21cIixcImxvY2FsZUtleVwiOlwicHRcIixcImZpcnN0TmFtZVwiOlwiYm91bnR5MVwiLFwibGFzdE5hbWVcIjpcImJvdW50eVwiLFwiZmFjZWJvb2tJZFwiOm51bGwsXCJuYW1lXCI6bnVsbCxcInBob25lc1wiOltdLFwiYWN0aXZlXCI6dHJ1ZSxcImd1aWRcIjpudWxsLFwiYWN0aXZlUHJvamVjdElkXCI6Mjk4NDI3LFwic3VwZXJVc2VyVjJcIjpmYWxzZSxcImdhSWRcIjpcImNiZTljMzIyLTAzYTUtNDc0MS05ZDI2LTU3NzE3NTBiNDNjMFwiLFwib3JnYW5pemF0aW9uSWRcIjoyOTM4MTQsXCJvd25lZFByb2plY3RzXCI6WzI5ODQyN10sXCJmdWxsTmFtZVwiOlwiYm91bnR5MSBib3VudHlcIn0sXCJpc3N1ZWRBdFwiOjE2MDEzODQxNTY3NDEsXCJhcGlLZXlcIjpudWxsLFwicHJvamVjdElkXCI6bnVsbCxcInhzcmZUb2tlblwiOlwiNzA0YjQ1OGItYzViZC00ZmYxLTk2MTAtZGExOTNiOTg3Y2I3XCIsXCJyb2xlXCI6XCJDQUJJTkVUX1VTRVJcIixcImF1dGhvcml0aWVzXCI6W119IiwiZXhwIjoxNjAxNDcwNTU2fQ.v5AkWczH5NwzUvTNhKEYYLhBoL3If9GCb-TkJcCrY_UJN0zFOP0_R7inBRFfwwikVj0GDgTu5YrXCOsy4tge1ug-vemWzEKN5fCC_1qBjN3bWNMKwaL_73VDXvWaFFJGH7o78L5AJI5561bYPTTKFUoq1pn0WooP2K-mepsKblh9SHcN8_VuKjlXx7LbqqrrA9JWSvFOYJgIGfNODr4NfkMBvMrfVxTmPm1CsAvBNKC4sAc02xbuOmWDx0Pvw23RhQHUAHNNPwGKIYYBPsHaqcSQBVtxqs-mtIT0gzVeBUmPXK9t3E82m_aAUBYEEXYwnVdb9lsVPytrYC3wMj-cva-BZLcfC_Lji9NqcVH9LeQXof3JCTtsKnqSSn3rxAdQeGqPIo9Pc-3y1oXJAgGGGMXmZ2DiYIQ24EQUrNwManvWlLLS4OGaKX5XIC5WvT0N-iwaeDcCw-2OCS5sElK1hN0CbhJ4u7i8k_6tK6rFFRWP2OVqayC55dhCeaCmdgwYqAnfc7cJ44kmeYhP-9Jg2h8tHEYnV172llmGQE2UrYlMy3x1FT3yKyU-knWMFrUSI6kXG-oc_ScPJV9JDaSOsBjdXoHfG8MyuH6R6JxEC7qAo4fm6UV25MQIzMXLNZmhbR-RvKIRK-o9l9wDsT4-PxpTmUB8_LVU8Mji9qm5NXQ; amplitude_id_246810a6e954a53a140e3232aac8f1a9stripo.email=eyJkZXZpY2VJZCI6ImRkMjI1YzcwLTEzMTktNDU5NC04ZGZjLTdmODhkYTNhZGJlMVIiLCJ1c2VySWQiOm51bGwsIm9wdE91dCI6ZmFsc2UsInNlc3Npb25JZCI6MTYwMTM4MzYwNTA0NiwibGFzdEV2ZW50VGltZSI6MTYwMTM4NDE0NzIzNSwiZXZlbnRJZCI6MCwiaWRlbnRpZnlJZCI6MCwic2VxdWVuY2VOdW1iZXIiOjB9; intercom-session-b1m243ec=REUyV2F2UnAveGI2blZHVjRpeTFDKy9KZ1J5SHNBcXBIcjlOdjdybW9kODVQdFpESDZ5NUt1Y0twTjdxNHJMcS0tc0x0SkEwNWp4UHdMaWpCSFE5bkZSQT09--c213f9f6b9e06e876f19bb76bdef398b2e5f7787\n\n{\"name\":\"Nova Pasta 2\"}\n```\n\n  1. Create a new email\n  2. Create a new folder\n  3. There isnt any x-rate-limit header to prevent repeatedly requests\n\n## Screenshots \nPlease check the attachments\n\n## Impact\n\nAn atacker could make use of this atack vector to make API unavailable to another users if this request was strongly repeated.",
+  "weakness": {
+    "id": 140,
+    "name": "Concurrent Execution using Shared Resource with Improper Synchronization ('Race Condition')"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1007577,
+      "file_name": "photo_2020-09-29_10-14-14.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/EZhh9B4tk3HGXqQZTGGukCtn?response-content-disposition=attachment%3B%20filename%3D%22photo_2020-09-29_10-14-14.jpg%22%3B%20filename%2A%3DUTF-8%27%27photo_2020-09-29_10-14-14.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ2GXDHEIT%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T082646Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIArrexrf4lCKH5id%2F%2BZMJA437JNQlRcfJZv4hbNold%2B0AiBgGHJoIaXWmlLDsM7vQjXwigBWqCA1Rl7CM6y%2BxwJIMCq6BQj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMKY6N%2B%2FO6ldfNZtRKKo4FcOBzyPX20u82w%2Bf90yEDhZnrYE5rYepiufZ7%2FghplTlhJ2ABxy22g34cTpUO6vuU7ORolDJDFc1kMT0p29%2BaPqdD6R17hntakDvpaN0tqp6YhUU2YBb%2FtLdZ2R9z5SjMKNlm1%2FjV5b7gLOOzbxH1OYqg9GNtTTbNShxTY6p6iwpiXWCBRheFQ%2Fnp6k8560VJSrEqRnVdqzpshLz7jVx1nY%2FkSSR09PntjuIAmSwAKJfotT7LgRR9ZGm2ks9w0hvkC%2FCEUnnb%2FiHUKzMnTm%2Ba0jq1MG8rRuxWWgchgG6shZivqprtoQisjx%2FKhK811jOaz0JaP%2BofUmxlapXI7Y8MdW7ytGFMlcPwXG7N0KOBhinbq8Ve48ViBbm2y9IFzEhDnGWR155G%2Fw6O6XaZ9ad%2FlP5prGuYiW%2BvXG2TFledjc1B4xQaOLr6LSON8EhvqFjjzqMug7dhyZJYBt0%2FnJ5U6Q4HDaO8p8jUv5TrXyliYmd1N%2FpYMfrU4Oekik1pInIWHn1p8Xmn2Ub87Qr%2BGAEZXeLG50%2F9EVdZUAcxAGWNW4sj8klacebAYvG1xHeWqLxuwjMR9rkZPke6IEIKuMhYxUabi1MJNhzLo%2FA%2F82Tv491jYApsxHv1k224mS%2FaoAlvOwLQTX75zCHqj22ZfG0Beu0rogU%2FsAO6oTOi5kP5t%2FRq4KQwTrbRgP%2FlTZJVQ7PeCwidR13mQ8poGV1khrs2IvU49PadEfF0sGIliHky9tyVCllkFM2sIAnlfIgOkhdTcl%2FNdfmi6%2BNFkOndFkVGQe5LIV%2B%2FY5%2BBrtDHcN5CS%2FqhBadpvJi%2FRHGz6WttI%2By5Zuks8KfMmL5JNBa9TC7Rlr6fPza8XC%2FbYktr2OGgMKigvsYGOrIBTprSsY7l0wtzYM8oA%2BBplWKf%2BLpySmoICb4KVRbdZR6n4Syq8KaXsuneOV45mif8NjktUMIMUkkbOCm%2B%2FVuAE7c%2B1j37TKBdzm%2BkbAiLK7NbqjbChB1GYFi8J6psIOK5cx%2FJyIznlpTDUIDgebXn3DXOaa7VejIemA2aEHpLdrafQ%2F8fZrYMvQL9HSTMsifcS8m2rZDGaIsFSZTkY%2BBVcD0UdOSiRQrTvVnUhvPN%2BNYEzg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=35fc488ba2086e8c8acba06d4260ccefc0bbd4d83bfea152da27a4f770bd6ae6",
+      "file_size": 99045,
+      "type": "image/jpeg",
+      "moderated": null
+    },
+    {
+      "id": 1007578,
+      "file_name": "photo_2020-09-29_10-14-33.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/zcUCwEVfs63X54hpDFyqGvCQ?response-content-disposition=attachment%3B%20filename%3D%22photo_2020-09-29_10-14-33.jpg%22%3B%20filename%2A%3DUTF-8%27%27photo_2020-09-29_10-14-33.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ2GXDHEIT%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T082646Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIArrexrf4lCKH5id%2F%2BZMJA437JNQlRcfJZv4hbNold%2B0AiBgGHJoIaXWmlLDsM7vQjXwigBWqCA1Rl7CM6y%2BxwJIMCq6BQj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMKY6N%2B%2FO6ldfNZtRKKo4FcOBzyPX20u82w%2Bf90yEDhZnrYE5rYepiufZ7%2FghplTlhJ2ABxy22g34cTpUO6vuU7ORolDJDFc1kMT0p29%2BaPqdD6R17hntakDvpaN0tqp6YhUU2YBb%2FtLdZ2R9z5SjMKNlm1%2FjV5b7gLOOzbxH1OYqg9GNtTTbNShxTY6p6iwpiXWCBRheFQ%2Fnp6k8560VJSrEqRnVdqzpshLz7jVx1nY%2FkSSR09PntjuIAmSwAKJfotT7LgRR9ZGm2ks9w0hvkC%2FCEUnnb%2FiHUKzMnTm%2Ba0jq1MG8rRuxWWgchgG6shZivqprtoQisjx%2FKhK811jOaz0JaP%2BofUmxlapXI7Y8MdW7ytGFMlcPwXG7N0KOBhinbq8Ve48ViBbm2y9IFzEhDnGWR155G%2Fw6O6XaZ9ad%2FlP5prGuYiW%2BvXG2TFledjc1B4xQaOLr6LSON8EhvqFjjzqMug7dhyZJYBt0%2FnJ5U6Q4HDaO8p8jUv5TrXyliYmd1N%2FpYMfrU4Oekik1pInIWHn1p8Xmn2Ub87Qr%2BGAEZXeLG50%2F9EVdZUAcxAGWNW4sj8klacebAYvG1xHeWqLxuwjMR9rkZPke6IEIKuMhYxUabi1MJNhzLo%2FA%2F82Tv491jYApsxHv1k224mS%2FaoAlvOwLQTX75zCHqj22ZfG0Beu0rogU%2FsAO6oTOi5kP5t%2FRq4KQwTrbRgP%2FlTZJVQ7PeCwidR13mQ8poGV1khrs2IvU49PadEfF0sGIliHky9tyVCllkFM2sIAnlfIgOkhdTcl%2FNdfmi6%2BNFkOndFkVGQe5LIV%2B%2FY5%2BBrtDHcN5CS%2FqhBadpvJi%2FRHGz6WttI%2By5Zuks8KfMmL5JNBa9TC7Rlr6fPza8XC%2FbYktr2OGgMKigvsYGOrIBTprSsY7l0wtzYM8oA%2BBplWKf%2BLpySmoICb4KVRbdZR6n4Syq8KaXsuneOV45mif8NjktUMIMUkkbOCm%2B%2FVuAE7c%2B1j37TKBdzm%2BkbAiLK7NbqjbChB1GYFi8J6psIOK5cx%2FJyIznlpTDUIDgebXn3DXOaa7VejIemA2aEHpLdrafQ%2F8fZrYMvQL9HSTMsifcS8m2rZDGaIsFSZTkY%2BBVcD0UdOSiRQrTvVnUhvPN%2BNYEzg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=4aad18f821ba7ca21ca0297290a9eaea3a9ddd116be8154c268f919bebd9766b",
+      "file_size": 41967,
+      "type": "image/jpeg",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 6,
+  "voters": [
+    "zeroc00i",
+    "shubham_srt",
+    "shohag_sp",
+    "0xkenzo",
+    "johnas",
+    "anoymous144"
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 38701,
+    "asset_type": "URL",
+    "asset_identifier": "stripo.email",
+    "max_severity": "medium"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
