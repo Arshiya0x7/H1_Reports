@@ -1,0 +1,150 @@
+{
+  "id": 270068,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yNzAwNjg=",
+  "url": "https://hackerone.com/reports/270068",
+  "title": "Installer can modify other gems if gem name is specially crafted",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2017-09-21T02:26:57.258Z",
+  "submitted_at": "2017-09-21T02:26:57.258Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "nmalkin",
+    "url": "/nmalkin",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 8212,
+    "url": "https://hackerone.com/rubygems",
+    "handle": "rubygems",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/008/212/e65eca09896d23bc029c08d3147a79a48ec1ee2f_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/008/212/e65eca09896d23bc029c08d3147a79a48ec1ee2f_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "RubyGems",
+      "twitter_handle": "rubygems_status",
+      "website": "https://rubygems.org",
+      "about": "RubyGems.org is the Ruby community’s gem hosting service."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2018-03-22T04:54:02.816Z",
+  "bug_reporter_agreed_on_going_public_at": "2018-02-20T04:53:55.629Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "# Installer can modify other gems if gem name is specially crafted\n\nThe `install_location` function allows writing to certain files outside the installation directory.\n\nThe `install_location` function in lib/rubygems/package.rb attempts to ensure that files are not installed outside `destination_dir`.  However the test it employs, a string comparison using `start_with?`, fails to prevent the case when `destination_dir` is a prefix of the path being written.\n\nExample that should be prevented but is allowed:\n```\ninstall_location '../install-whatever-foobar/hello.txt', '/tmp/install'\n# outputs '/tmp/install-whatever-foobar/hello.txt'\n```\n\n`gem install` always constructs `destination_dir` as `'#{name}-#{version}'`, so the vulnerability cannot overwrite arbitrary files.  However, a malicious gem with `name='rails'` and an empty version number (`version=''`), for example, could overwrite the files of any other gem whose name begins with `rails-`, like rails-i18n or rails-letsencrypt.\n\n## Proof of concept\n\nThe attached ra.gem demonstrates the vulnerability. It assumes that some other gems have already been installed.\n\n```bash\ngem install --install-dir=/tmp/install rails-i18n rails-letsencrypt rails-html-sanitizer\ngem install --install-dir=/tmp/install ra.gem\n```\n\nThe malicious gem will do three things, each of which could potentially lead to code execution:\n\n- delete an existing rails-letsencrypt-0.5.3 gem\n- overwrite a code file in the rails-i18n-5.0.4 gem\n- symlink rails-html-sanitizer-1.0.3 to a world-writable directory\n\nThe structure of the gem file reveals how the attack works:\n\n```sh\n$ tar -xvf ra.gem\nmetadata.gz\ndata.tar.gz\n$ gzip -dc metadata.gz | head -n 4\n--- !ruby/object:Gem::Specification\nname: rails\nversion: !ruby/object:Gem::Version\n  version: ''\n$ tar -tvf data.tar.gz\n-rw-r--r-- 0/0              12 1969-12-31 16:00 README\ndrwxr-xr-x 0/0               0 1969-12-31 16:00 ../rails-letsencrypt-0.5.3/\n-rw-r--r-- 0/0              12 1969-12-31 16:00 ../rails-i18n-5.0.4/lib/rails_i18n.rb\nlrw-r--r-- 0/0               0 1969-12-31 16:00 ../rails-html-sanitizer-1.0.3 -> /tmp/attacker-controlled\n```\n\n## Remediation\n\nA sufficient fix is to append a directory separator to `destination_dir` before doing the `start_with?` check.\n\n```\ndiff --git a/lib/rubygems/package.rb b/lib/rubygems/package.rb\nindex c36e71d8..f73f9d30 100644\n--- a/lib/rubygems/package.rb\n+++ b/lib/rubygems/package.rb\n@@ -424,7 +424,7 @@ EOM\n     destination = File.expand_path destination\n\n     raise Gem::Package::PathError.new(destination, destination_dir) unless\n-      destination.start_with? destination_dir\n+      destination.start_with? destination_dir + '/'\n\n     destination.untaint\n     destination\n```\n\n## Attached files\n\n- `ra.gem`, an example of a vulnerable gem\n- `make-ra-gem.py`, sample code that generates the proof of concept (to run: `./make-ra-gem.py > ra.gem`)\n- `0001-Add-test_install_location_suffix.patch`, test code that checks for this vulnerability. Run with `ruby -I\"lib:test\" test/rubygems/test_gem_package.rb`.\n",
+  "weakness": {
+    "id": 19,
+    "name": "Path Traversal"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 222676,
+      "file_name": "ra.gem",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/222/676/02d197ea3b2a89e5b03f26af39d43e984c584b30/ra.gem?response-content-disposition=attachment%3B%20filename%3D%22ra.gem%22%3B%20filename%2A%3DUTF-8%27%27ra.gem&response-content-type=application%2Fx-tar&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ65WOA7G6%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T183843Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJD%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIBTB5FOiz2xfB8lQx1pNmxOchIiX9CorPa79ekyICT%2FIAiA4%2BRsfB9L4zvgWA%2Fv388H8ZoXAyDq4sxUeu%2BfCpeqxlyqxBQgZEAMaDDAxMzYxOTI3NDg0OSIMKfPGyDOi8pwjR3yhKo4FDTiSCy8q7JQFmt%2FrBtKI0nqteGSxb2H7XFDZwOLI7rgYIJiHCA%2FUkO%2FUPiAQf2lGZQtB%2Fc7KW9OAT9BjBVaWIZI2KXQ1vokOHFrmfIECMNpEIO8byNajt9HBCOXiucE3UhAA8xQ7qWWfzVZaFcl2t2dAN%2BvLahw9lYCAcWDTpI5rDKdPX%2FQdD%2BFO7EMJSNcGGWvs5NfUu8wm%2BKoAnrp7gsPz0ldpHJTSC4c%2BSPRtWcAx2kCTGhtuve8pGrgGG3guL9pgGdLjCP3h5CUNWWHGntfMnQlykowKyB%2F%2BmVsVdF%2Bl1jTgA8KXhvbLfJ2KWIn%2B4Xnga8pKFyzA6hw8AkEswGuPuFycwbGsjHnJr4jBkthdo%2BfJ%2F9cDSmHZ6vc3fRmLsRP2NmGlkqSKVu%2FNpgcxyP0jA%2F67dkdWICs4WHLPJ9DmNu0bcgxJ3VDFigxO6jpqIym4LTfulv8Ni6Wbqq4SiSUvQC%2BsLygRoNcR46bqafhB5qZ1d9KVJkeheKHzLOUI%2BqKIDXfQZnmCNRyjmjM0ma7XfExKYrKDCQ91B0nAh1JgTBCuWYYEH91%2BklLXw%2F5QqRX%2FicI1%2BewX63WDfbyAwzL%2FzPK%2FBJi0Esj9FD4qz5rgg1%2FhZbDvd794Eg6d8iF5qJXR9rkkYLMFqnF6Q5vC8vy%2BRq21O6zos5rXyi2TOvz%2BuLK%2F7E7gnKithHMVA%2Ft89rIT%2BVOjOHwuVeSi6voSvUnWJKdgg8HCBuh4vp%2F4uJyRfadc3hNFYkZl0gGWRuJPaOAf0ivSLRjxnZIJFxGrCczuT6yKo9oGAu9Xh8cvFgpUPb1%2FdZfjWuCpa7uUzmLwDoIDeVguW4NeHZ4IhsES3v2qNjUvIwpc2J2DLSYKMIfAwMYGOrIBTVi0Z077CJtbOCvdu4nM5Olwv8CseCCMQV9%2FzeMMsHp%2FgtrgAFvmrCIKgibKMQngnZCskiMkLzmj3PS13r42xOQGVqynLVSxWnkBBYEcVlXOYOGKdNYrrX4EvDFD5Yme5zVhmnmgm%2Fv1uxvFUy7KVpCUGDRiOXesVJ30b%2BexuUkmkOMxRWnfe5WuTxoaBIIh7bRW%2FAbFKgri%2BCo8ii%2FH9bwd7I87u5moQ0VH68qeNK67Rw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=95f066f7a578c0c68db78530b61fc3d61823d404e25ad192c8339a048c4ba946",
+      "file_size": 10240,
+      "type": "application/x-tar",
+      "moderated": null
+    },
+    {
+      "id": 222677,
+      "file_name": "make-ra-gem.py",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/222/677/02b8c15db2a4e9b534e85b37a66c808caed25304/make-ra-gem.py?response-content-disposition=attachment%3B%20filename%3D%22make-ra-gem.py%22%3B%20filename%2A%3DUTF-8%27%27make-ra-gem.py&response-content-type=text%2Fx-python&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ65WOA7G6%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T183843Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJD%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIBTB5FOiz2xfB8lQx1pNmxOchIiX9CorPa79ekyICT%2FIAiA4%2BRsfB9L4zvgWA%2Fv388H8ZoXAyDq4sxUeu%2BfCpeqxlyqxBQgZEAMaDDAxMzYxOTI3NDg0OSIMKfPGyDOi8pwjR3yhKo4FDTiSCy8q7JQFmt%2FrBtKI0nqteGSxb2H7XFDZwOLI7rgYIJiHCA%2FUkO%2FUPiAQf2lGZQtB%2Fc7KW9OAT9BjBVaWIZI2KXQ1vokOHFrmfIECMNpEIO8byNajt9HBCOXiucE3UhAA8xQ7qWWfzVZaFcl2t2dAN%2BvLahw9lYCAcWDTpI5rDKdPX%2FQdD%2BFO7EMJSNcGGWvs5NfUu8wm%2BKoAnrp7gsPz0ldpHJTSC4c%2BSPRtWcAx2kCTGhtuve8pGrgGG3guL9pgGdLjCP3h5CUNWWHGntfMnQlykowKyB%2F%2BmVsVdF%2Bl1jTgA8KXhvbLfJ2KWIn%2B4Xnga8pKFyzA6hw8AkEswGuPuFycwbGsjHnJr4jBkthdo%2BfJ%2F9cDSmHZ6vc3fRmLsRP2NmGlkqSKVu%2FNpgcxyP0jA%2F67dkdWICs4WHLPJ9DmNu0bcgxJ3VDFigxO6jpqIym4LTfulv8Ni6Wbqq4SiSUvQC%2BsLygRoNcR46bqafhB5qZ1d9KVJkeheKHzLOUI%2BqKIDXfQZnmCNRyjmjM0ma7XfExKYrKDCQ91B0nAh1JgTBCuWYYEH91%2BklLXw%2F5QqRX%2FicI1%2BewX63WDfbyAwzL%2FzPK%2FBJi0Esj9FD4qz5rgg1%2FhZbDvd794Eg6d8iF5qJXR9rkkYLMFqnF6Q5vC8vy%2BRq21O6zos5rXyi2TOvz%2BuLK%2F7E7gnKithHMVA%2Ft89rIT%2BVOjOHwuVeSi6voSvUnWJKdgg8HCBuh4vp%2F4uJyRfadc3hNFYkZl0gGWRuJPaOAf0ivSLRjxnZIJFxGrCczuT6yKo9oGAu9Xh8cvFgpUPb1%2FdZfjWuCpa7uUzmLwDoIDeVguW4NeHZ4IhsES3v2qNjUvIwpc2J2DLSYKMIfAwMYGOrIBTVi0Z077CJtbOCvdu4nM5Olwv8CseCCMQV9%2FzeMMsHp%2FgtrgAFvmrCIKgibKMQngnZCskiMkLzmj3PS13r42xOQGVqynLVSxWnkBBYEcVlXOYOGKdNYrrX4EvDFD5Yme5zVhmnmgm%2Fv1uxvFUy7KVpCUGDRiOXesVJ30b%2BexuUkmkOMxRWnfe5WuTxoaBIIh7bRW%2FAbFKgri%2BCo8ii%2FH9bwd7I87u5moQ0VH68qeNK67Rw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=5b229246a84eba30b07ffc3d4951e8e6443e0fe038262e6b8fe5e44d68742ab7",
+      "file_size": 2339,
+      "type": "text/x-python",
+      "moderated": null
+    },
+    {
+      "id": 222679,
+      "file_name": "0001-Add-test_install_location_suffix.patch",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/222/679/0c3a9b59226ba0d350654f09f6368f01f730f0c9/0001-Add-test_install_location_suffix.patch?response-content-disposition=attachment%3B%20filename%3D%220001-Add-test_install_location_suffix.patch%22%3B%20filename%2A%3DUTF-8%27%270001-Add-test_install_location_suffix.patch&response-content-type=text%2Fx-diff&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ65WOA7G6%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T183843Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJD%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIBTB5FOiz2xfB8lQx1pNmxOchIiX9CorPa79ekyICT%2FIAiA4%2BRsfB9L4zvgWA%2Fv388H8ZoXAyDq4sxUeu%2BfCpeqxlyqxBQgZEAMaDDAxMzYxOTI3NDg0OSIMKfPGyDOi8pwjR3yhKo4FDTiSCy8q7JQFmt%2FrBtKI0nqteGSxb2H7XFDZwOLI7rgYIJiHCA%2FUkO%2FUPiAQf2lGZQtB%2Fc7KW9OAT9BjBVaWIZI2KXQ1vokOHFrmfIECMNpEIO8byNajt9HBCOXiucE3UhAA8xQ7qWWfzVZaFcl2t2dAN%2BvLahw9lYCAcWDTpI5rDKdPX%2FQdD%2BFO7EMJSNcGGWvs5NfUu8wm%2BKoAnrp7gsPz0ldpHJTSC4c%2BSPRtWcAx2kCTGhtuve8pGrgGG3guL9pgGdLjCP3h5CUNWWHGntfMnQlykowKyB%2F%2BmVsVdF%2Bl1jTgA8KXhvbLfJ2KWIn%2B4Xnga8pKFyzA6hw8AkEswGuPuFycwbGsjHnJr4jBkthdo%2BfJ%2F9cDSmHZ6vc3fRmLsRP2NmGlkqSKVu%2FNpgcxyP0jA%2F67dkdWICs4WHLPJ9DmNu0bcgxJ3VDFigxO6jpqIym4LTfulv8Ni6Wbqq4SiSUvQC%2BsLygRoNcR46bqafhB5qZ1d9KVJkeheKHzLOUI%2BqKIDXfQZnmCNRyjmjM0ma7XfExKYrKDCQ91B0nAh1JgTBCuWYYEH91%2BklLXw%2F5QqRX%2FicI1%2BewX63WDfbyAwzL%2FzPK%2FBJi0Esj9FD4qz5rgg1%2FhZbDvd794Eg6d8iF5qJXR9rkkYLMFqnF6Q5vC8vy%2BRq21O6zos5rXyi2TOvz%2BuLK%2F7E7gnKithHMVA%2Ft89rIT%2BVOjOHwuVeSi6voSvUnWJKdgg8HCBuh4vp%2F4uJyRfadc3hNFYkZl0gGWRuJPaOAf0ivSLRjxnZIJFxGrCczuT6yKo9oGAu9Xh8cvFgpUPb1%2FdZfjWuCpa7uUzmLwDoIDeVguW4NeHZ4IhsES3v2qNjUvIwpc2J2DLSYKMIfAwMYGOrIBTVi0Z077CJtbOCvdu4nM5Olwv8CseCCMQV9%2FzeMMsHp%2FgtrgAFvmrCIKgibKMQngnZCskiMkLzmj3PS13r42xOQGVqynLVSxWnkBBYEcVlXOYOGKdNYrrX4EvDFD5Yme5zVhmnmgm%2Fv1uxvFUy7KVpCUGDRiOXesVJ30b%2BexuUkmkOMxRWnfe5WuTxoaBIIh7bRW%2FAbFKgri%2BCo8ii%2FH9bwd7I87u5moQ0VH68qeNK67Rw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=0625f03fae1ec99d8700764bdbf669144bfcb4864615314fff7a911b45a2d892",
+      "file_size": 1532,
+      "type": "text/x-diff",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2018-03-22T04:53:55.684Z",
+  "allow_singular_disclosure_after": -236785487.815312,
+  "singular_disclosure_allowed": true,
+  "vote_count": 8,
+  "voters": [
+    "jokebookservice1",
+    "muon4",
+    "apapedulimu",
+    "eveeez",
+    "japz",
+    "lowebrew",
+    "amykruse",
+    "baharnarenj"
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 5.5,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "local",
+      "attack_complexity": "high",
+      "privileges_required": "none",
+      "user_interaction": "required",
+      "scope": "changed",
+      "confidentiality": "none",
+      "integrity": "high",
+      "availability": "none"
+    }
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
