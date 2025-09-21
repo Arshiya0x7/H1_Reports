@@ -1,0 +1,136 @@
+{
+  "id": 1437942,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNDM3OTQy",
+  "url": "https://hackerone.com/reports/1437942",
+  "title": "DLL hijacking in Monero GUI for Windows 0.17.3.0 would allow an attacker to perform remote command execution",
+  "state": "Closed",
+  "substate": "informative",
+  "severity_rating": "medium",
+  "readable_substate": "Informative",
+  "created_at": "2021-12-30T00:49:01.578Z",
+  "submitted_at": "2021-12-30T00:49:01.644Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "fukuyama",
+    "url": "/fukuyama",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTA4MDQ2MCwicHVyIjoiYmxvYl9pZCJ9fQ==--35ed70515c0fba25e3bad612f82f0f63f47180ae/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--a4d91faed3dff6024dfc1a7b7f8ccc6b45e38396/hacker_hacker_human_-512.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 7731,
+    "url": "https://hackerone.com/monero",
+    "handle": "monero",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/007/731/55634f7fcd917725c7a5771cc6e7c9b4d5fe0c22_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/007/731/55634f7fcd917725c7a5771cc6e7c9b4d5fe0c22_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Monero",
+      "twitter_handle": "monero",
+      "website": "https://getmonero.org",
+      "about": " Monero: the secure, private, untraceable cryptocurrency"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2021-12-30T17:08:50.250Z",
+  "bug_reporter_agreed_on_going_public_at": "2021-12-30T17:08:50.212Z",
+  "team_member_agreed_on_going_public_at": "2021-12-30T16:59:46.649Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Summary:\nMonero for windows contains a DLL hijacking vulnerability that allows to get a meterpreter command (metasploit remote shell), The moment the victim runs the program it will execute our payload (malicious .dll) that will give an attacker a meterpreter console. This will allow the attacker obtain a remote command execution console and If the victim runs the program frequently this will give the attacker permanent access to the it's computer.\n\nThe moment the user or the attacker runs the program it will execute our malicious.dll. If the attacker has a low-privileged shell or a basic shell that does not allow him to perform too many actions beyond the basic ones, then he can upgrade his shell and use all the advantages that the meterpreter has, which will allow him to perform more actions than a basic shell and also the opportunity to escalate privileges using post exploitation modules.\n\nIf for any reason the user runs the program as an administrator user, it is 100% sure that the attacker will obtain administrator privileges.\n\nObservation\nI used my own local IP and a normal .dll malicious file creator (maybe your antivirus will detect it, remember to disable it temporarily or add an exception) just for the PoC. In real situation an attacker will use a public IP (real or faked), and the malicious .dll would be encoded.\n\nReleases Affected:\nmonero-gui-install-win-x64-v0.17.3.0.exe ( https://downloads.getmonero.org/gui/win64install )\n\nSteps To Reproduce:\n\n1. Create the malicious .DLL file named as: perf.dll (Screenshot_1.png)\n2. Drop perf.dll in the install folder location ( C:\\Users\\<Your username here>\\AppData\\Local\\Microsoft\\WindowsApps)  (Screenshot_2.png)\n3. In the attacker's computer , using metasploit configure a multi/handler meterpreter. (Screenshot_3.png)\n4. Execute the program\n5. Now the attacker will have a meterpreter connection (Remote Code Execution). (Screenshot_4.png)\n\nSupporting Material/References:\nhttps://attack.mitre.org/techniques/T1574/001/\n\n## Impact\n\nAn attacker can exploit this vulnerability to load a DLL file of the attacker's choosing that could execute arbitrary code which will give an opportunity for the attacker to escalate privileges if he uses the post-exploitation modules or post-exploitation techniques.\n\nIf for any reason the user runs the program as an administrator user, it is 100% sure that the attacker will obtain administrator privileges.",
+  "weakness": {
+    "id": 70,
+    "name": "Code Injection"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 1562803,
+      "file_name": "Screenshot_1.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/pvlxv7am8vte370ehi1deg8zu90f?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_1.PNG%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_1.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXT4DERRQ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T004345Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH0aCXVzLXdlc3QtMiJIMEYCIQC11Miz1cjNNXKzJTdEEtlkCcJ594CxI%2FZGJyXldINcHwIhAN1HIJ6z0FHBLTMESFgOI%2BEAHcaT1OAtdSz%2BULEfZ7IcKrsFCPb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5Igx8pMMNo%2F0UzhY4QW0qjwUT6rwtcKyUFqZ03Y8aP97Kjfl6fhibAMK1HSmo2x9RkRFgxHW%2FDhItExYKg5xdLkWgXroI8IsbMuTkYDgxjVtPYKsxQPT0FiVDVrvUBzVtlShiNfeoR6F9L7egr9Ucw91%2FRU56%2B6U%2B1PBf5Jsy8g8jzVcD8K8gLBdAsLTCgTalQdSlNoXvEqjDdwjZ17Ld5pYe%2Blbr%2B2J%2FNVuFZS4ibcGRU1i1MixSQIGkH7o%2BK0pOeybw9DInFx36QSQ0YyeSl0Ygq9nWQJQHmoy73ahJSfCPdEh4BliTUvHqZs0MY3sO1sIeggIRpK6rD9bFV7jQ8jc1QpeahL5ddIz9cIimvhks2EgTYb641Km%2FEQBoElxHX7%2BLqve1gWN8%2F1dkAxvoICzmvq7Osw3lRm9od3bB0i6msga0NLBwkIx%2FAwJmT6GgaLo3mbZ324HtcGn2oEV8Pasb9x5XeuJsNksd3E5%2BMU9ZLs9tjmH%2F1%2Bz4Tkf0A7vQRs51MVhUk%2Bee%2BM2TVp2tHv%2F4Wla1DDiDHxBawEhDYM4U0xQdiZLfOzevl%2BkXvZrMwFe%2F0cV3xjluLeJfmRzfhd0tVxGdZNI3UtVswuapjKg%2Bx0NV2znk8YU9odspxXnKVrM8nqQhVbnws%2FIHQGx4P7yswwoLq80qs2ZyIcTMOAoKgjvc0l%2FUemEVe8u4HcAldHVvu4Oa1KPDP4sYvSZ9pyIt5Y8l4maDzUg88Qcf9rguhyciSO94lQ0qqLDW8nbCxox47h6ZjWFwLaxvU7RiYvSzr7hD%2FUnxtzHsE9kuXZorQn22Vj6pd4twgY6PPVOVq5UfbHEEmbwnLbuFUGCIZRoPhqNpMwbYZveE6hPPWSmBIAKDHPOGLHlbPDjfOZhsMO2tvMYGOrAB72ce509bguRZhVh5qAd92hjXYy3U0ySE6T2gegLTYyTVbZQG0A9J9al0ZdZ00SIRn9hXeLIgiy1zhug1NpM44mf8JOuD3LDhNHOYBD1IZqnZ9oL%2FYP7GzZ2r6Mw3fdaMAaSFhG9Fnz6QpMjknTvawMwUZskNNUQ%2BI70sEC5%2Bt%2FMvjo5zem7icAW6QEie4JhYhMP1ScMES66G%2Fnww3jXLdv7wvMTd%2B514r%2FhvwSmszdw%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=bf63d36272cea9ab7ef6167350af7acf984b21b05e6706d508c5a3d0395dc2df",
+      "file_size": 51986,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1562804,
+      "file_name": "Screenshot_2.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/rthhnyvgj9b3lxkyiezy7ggwgzra?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_2.PNG%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_2.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXT4DERRQ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T004345Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH0aCXVzLXdlc3QtMiJIMEYCIQC11Miz1cjNNXKzJTdEEtlkCcJ594CxI%2FZGJyXldINcHwIhAN1HIJ6z0FHBLTMESFgOI%2BEAHcaT1OAtdSz%2BULEfZ7IcKrsFCPb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5Igx8pMMNo%2F0UzhY4QW0qjwUT6rwtcKyUFqZ03Y8aP97Kjfl6fhibAMK1HSmo2x9RkRFgxHW%2FDhItExYKg5xdLkWgXroI8IsbMuTkYDgxjVtPYKsxQPT0FiVDVrvUBzVtlShiNfeoR6F9L7egr9Ucw91%2FRU56%2B6U%2B1PBf5Jsy8g8jzVcD8K8gLBdAsLTCgTalQdSlNoXvEqjDdwjZ17Ld5pYe%2Blbr%2B2J%2FNVuFZS4ibcGRU1i1MixSQIGkH7o%2BK0pOeybw9DInFx36QSQ0YyeSl0Ygq9nWQJQHmoy73ahJSfCPdEh4BliTUvHqZs0MY3sO1sIeggIRpK6rD9bFV7jQ8jc1QpeahL5ddIz9cIimvhks2EgTYb641Km%2FEQBoElxHX7%2BLqve1gWN8%2F1dkAxvoICzmvq7Osw3lRm9od3bB0i6msga0NLBwkIx%2FAwJmT6GgaLo3mbZ324HtcGn2oEV8Pasb9x5XeuJsNksd3E5%2BMU9ZLs9tjmH%2F1%2Bz4Tkf0A7vQRs51MVhUk%2Bee%2BM2TVp2tHv%2F4Wla1DDiDHxBawEhDYM4U0xQdiZLfOzevl%2BkXvZrMwFe%2F0cV3xjluLeJfmRzfhd0tVxGdZNI3UtVswuapjKg%2Bx0NV2znk8YU9odspxXnKVrM8nqQhVbnws%2FIHQGx4P7yswwoLq80qs2ZyIcTMOAoKgjvc0l%2FUemEVe8u4HcAldHVvu4Oa1KPDP4sYvSZ9pyIt5Y8l4maDzUg88Qcf9rguhyciSO94lQ0qqLDW8nbCxox47h6ZjWFwLaxvU7RiYvSzr7hD%2FUnxtzHsE9kuXZorQn22Vj6pd4twgY6PPVOVq5UfbHEEmbwnLbuFUGCIZRoPhqNpMwbYZveE6hPPWSmBIAKDHPOGLHlbPDjfOZhsMO2tvMYGOrAB72ce509bguRZhVh5qAd92hjXYy3U0ySE6T2gegLTYyTVbZQG0A9J9al0ZdZ00SIRn9hXeLIgiy1zhug1NpM44mf8JOuD3LDhNHOYBD1IZqnZ9oL%2FYP7GzZ2r6Mw3fdaMAaSFhG9Fnz6QpMjknTvawMwUZskNNUQ%2BI70sEC5%2Bt%2FMvjo5zem7icAW6QEie4JhYhMP1ScMES66G%2Fnww3jXLdv7wvMTd%2B514r%2FhvwSmszdw%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=6d1c0d1a4793c6d864b1827467b0fcbf0d1badb3a5f8e1b70fe1361b76a8fde9",
+      "file_size": 50837,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1562805,
+      "file_name": "Screenshot_3.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/iox334k9g94xtxfk9n8gza5jnx6x?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_3.PNG%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_3.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXT4DERRQ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T004345Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH0aCXVzLXdlc3QtMiJIMEYCIQC11Miz1cjNNXKzJTdEEtlkCcJ594CxI%2FZGJyXldINcHwIhAN1HIJ6z0FHBLTMESFgOI%2BEAHcaT1OAtdSz%2BULEfZ7IcKrsFCPb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5Igx8pMMNo%2F0UzhY4QW0qjwUT6rwtcKyUFqZ03Y8aP97Kjfl6fhibAMK1HSmo2x9RkRFgxHW%2FDhItExYKg5xdLkWgXroI8IsbMuTkYDgxjVtPYKsxQPT0FiVDVrvUBzVtlShiNfeoR6F9L7egr9Ucw91%2FRU56%2B6U%2B1PBf5Jsy8g8jzVcD8K8gLBdAsLTCgTalQdSlNoXvEqjDdwjZ17Ld5pYe%2Blbr%2B2J%2FNVuFZS4ibcGRU1i1MixSQIGkH7o%2BK0pOeybw9DInFx36QSQ0YyeSl0Ygq9nWQJQHmoy73ahJSfCPdEh4BliTUvHqZs0MY3sO1sIeggIRpK6rD9bFV7jQ8jc1QpeahL5ddIz9cIimvhks2EgTYb641Km%2FEQBoElxHX7%2BLqve1gWN8%2F1dkAxvoICzmvq7Osw3lRm9od3bB0i6msga0NLBwkIx%2FAwJmT6GgaLo3mbZ324HtcGn2oEV8Pasb9x5XeuJsNksd3E5%2BMU9ZLs9tjmH%2F1%2Bz4Tkf0A7vQRs51MVhUk%2Bee%2BM2TVp2tHv%2F4Wla1DDiDHxBawEhDYM4U0xQdiZLfOzevl%2BkXvZrMwFe%2F0cV3xjluLeJfmRzfhd0tVxGdZNI3UtVswuapjKg%2Bx0NV2znk8YU9odspxXnKVrM8nqQhVbnws%2FIHQGx4P7yswwoLq80qs2ZyIcTMOAoKgjvc0l%2FUemEVe8u4HcAldHVvu4Oa1KPDP4sYvSZ9pyIt5Y8l4maDzUg88Qcf9rguhyciSO94lQ0qqLDW8nbCxox47h6ZjWFwLaxvU7RiYvSzr7hD%2FUnxtzHsE9kuXZorQn22Vj6pd4twgY6PPVOVq5UfbHEEmbwnLbuFUGCIZRoPhqNpMwbYZveE6hPPWSmBIAKDHPOGLHlbPDjfOZhsMO2tvMYGOrAB72ce509bguRZhVh5qAd92hjXYy3U0ySE6T2gegLTYyTVbZQG0A9J9al0ZdZ00SIRn9hXeLIgiy1zhug1NpM44mf8JOuD3LDhNHOYBD1IZqnZ9oL%2FYP7GzZ2r6Mw3fdaMAaSFhG9Fnz6QpMjknTvawMwUZskNNUQ%2BI70sEC5%2Bt%2FMvjo5zem7icAW6QEie4JhYhMP1ScMES66G%2Fnww3jXLdv7wvMTd%2B514r%2FhvwSmszdw%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=5b376b9b187752c2c9adc4ecbce9d45813b32b2b502f8c9436622b4dbd76392d",
+      "file_size": 77909,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 1562806,
+      "file_name": "Screenshot_4.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/9tt0752wmh8ncaclsaxg8k0w8gaa?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_4.PNG%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_4.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXT4DERRQ%2F20250921%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250921T004345Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH0aCXVzLXdlc3QtMiJIMEYCIQC11Miz1cjNNXKzJTdEEtlkCcJ594CxI%2FZGJyXldINcHwIhAN1HIJ6z0FHBLTMESFgOI%2BEAHcaT1OAtdSz%2BULEfZ7IcKrsFCPb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5Igx8pMMNo%2F0UzhY4QW0qjwUT6rwtcKyUFqZ03Y8aP97Kjfl6fhibAMK1HSmo2x9RkRFgxHW%2FDhItExYKg5xdLkWgXroI8IsbMuTkYDgxjVtPYKsxQPT0FiVDVrvUBzVtlShiNfeoR6F9L7egr9Ucw91%2FRU56%2B6U%2B1PBf5Jsy8g8jzVcD8K8gLBdAsLTCgTalQdSlNoXvEqjDdwjZ17Ld5pYe%2Blbr%2B2J%2FNVuFZS4ibcGRU1i1MixSQIGkH7o%2BK0pOeybw9DInFx36QSQ0YyeSl0Ygq9nWQJQHmoy73ahJSfCPdEh4BliTUvHqZs0MY3sO1sIeggIRpK6rD9bFV7jQ8jc1QpeahL5ddIz9cIimvhks2EgTYb641Km%2FEQBoElxHX7%2BLqve1gWN8%2F1dkAxvoICzmvq7Osw3lRm9od3bB0i6msga0NLBwkIx%2FAwJmT6GgaLo3mbZ324HtcGn2oEV8Pasb9x5XeuJsNksd3E5%2BMU9ZLs9tjmH%2F1%2Bz4Tkf0A7vQRs51MVhUk%2Bee%2BM2TVp2tHv%2F4Wla1DDiDHxBawEhDYM4U0xQdiZLfOzevl%2BkXvZrMwFe%2F0cV3xjluLeJfmRzfhd0tVxGdZNI3UtVswuapjKg%2Bx0NV2znk8YU9odspxXnKVrM8nqQhVbnws%2FIHQGx4P7yswwoLq80qs2ZyIcTMOAoKgjvc0l%2FUemEVe8u4HcAldHVvu4Oa1KPDP4sYvSZ9pyIt5Y8l4maDzUg88Qcf9rguhyciSO94lQ0qqLDW8nbCxox47h6ZjWFwLaxvU7RiYvSzr7hD%2FUnxtzHsE9kuXZorQn22Vj6pd4twgY6PPVOVq5UfbHEEmbwnLbuFUGCIZRoPhqNpMwbYZveE6hPPWSmBIAKDHPOGLHlbPDjfOZhsMO2tvMYGOrAB72ce509bguRZhVh5qAd92hjXYy3U0ySE6T2gegLTYyTVbZQG0A9J9al0ZdZ00SIRn9hXeLIgiy1zhug1NpM44mf8JOuD3LDhNHOYBD1IZqnZ9oL%2FYP7GzZ2r6Mw3fdaMAaSFhG9Fnz6QpMjknTvawMwUZskNNUQ%2BI70sEC5%2Bt%2FMvjo5zem7icAW6QEie4JhYhMP1ScMES66G%2Fnww3jXLdv7wvMTd%2B514r%2FhvwSmszdw%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=ba23d16d64a2bc06a3229ba6704bb7ec19c4ccf3fbaae257ec611eb66f7fc663",
+      "file_size": 64185,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 0,
+  "voters": [],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
