@@ -1,0 +1,129 @@
+{
+  "id": 124429,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMjQ0Mjk=",
+  "url": "https://hackerone.com/reports/124429",
+  "title": "Stored XSS via \"Free Shipping\" option (Discounts)",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-03-19T09:34:31.733Z",
+  "submitted_at": "2016-03-19T09:34:31.733Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "ancst",
+    "url": "/ancst",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NzQ3MTU5MSwicHVyIjoiYmxvYl9pZCJ9fQ==--b837598ed7fc0549454f56d7d3a14e9b881ce085/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--a4d91faed3dff6024dfc1a7b7f8ccc6b45e38396/T08JMCUM3A6-U08JVNFF2BT-54d033c4d2de-512.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 1382,
+    "url": "https://hackerone.com/shopify",
+    "handle": "shopify",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Shopify",
+      "twitter_handle": "",
+      "website": "https://www.shopify.com",
+      "about": "Shopify is a multi-channel commerce platform that helps people sell online, in-store, and everywhere in between."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2016-04-05T12:11:17.812Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-04-05T12:11:17.581Z",
+  "team_member_agreed_on_going_public_at": "2016-04-04T22:50:15.149Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "POC  steps:\n1) Go to the customers page and add a new search group named as \"><img src=x onerror=prompt(7) (see img1.png)\n2) Go to the discounts page, create a new discount code and mark the \"Free Shipping\" option. \n3) Open a web proxy (i.e. tamper data) and press the \"save discount\" button.\n4) Through the web proxy (i.e. tamper data) modify the POST request and change the value of \"discount%5Bapplies_to_resource%5D\" to \"customer_saved_search\" and the \"discount%5Bapplies_to_id%5D\" to \"1131411463\" (the id of the new search group in step 1)(see img2.png).\n5) Xssed (img3.png)\n\n    Click Save",
+  "bounty_amount": "500.0",
+  "formatted_bounty": "$500",
+  "weakness": {
+    "id": 60,
+    "name": "Cross-site Scripting (XSS) - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 79813,
+      "file_name": "img2.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/079/813/8ca0d849b5445cff5ef05b2e158a4ea6c3d2a1b1/img2.png?response-content-disposition=attachment%3B%20filename%3D%22img2.png%22%3B%20filename%2A%3DUTF-8%27%27img2.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQX2ZBEFQF%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T134739Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIGjy%2Fumu1uPb7XqQBEk3gPyxzEVlOSFcb9YWkKE9PXQLAiEA997l%2BVrRbgPXR3pppf8pOib%2B%2FXnor7Xq5MI%2Fa3YZqrUqsgUILhADGgwwMTM2MTkyNzQ4NDkiDKHAXymNuEBkF27VziqPBaE2%2FrVCiHWAtPDbWCMJ9oABSmc0snSsLdtXUYDNnC%2FhSI5J2tlWKl4xoIE47TndJG2GFqYic%2FeJEK3%2FDsxIE852YJ7nuMkq%2BN%2BhRGLnYaMBMUl6fqFuC2uax4FJUl1rEXRhC8mogtCYTZMfI1nmcZFVPab1ZZFN6uU2F3TPXt1hNZ6Mza3SBpJTbnQ2NMSf8mSBN5NtHHK%2B3xVfSOM3RgTGzA2r253j96xa8tg0Vn9%2BLVCAeI9i136Vvm8bGbP%2FdNmwx7fZgLLEMJFoLTDqPKhaLR0%2BliSxXA31AzJF4kKdvNU0kysx1mowuK7c9bTx%2FinUO4bTAICKYVdFIXC60BpTZ59juBrmEEodePOPSZ35CjwmcWDYBLJjYfJuPrJ5mNInnq4JQIi8aHe3u7C8XFMiWCzMwi%2BWmX0RBHa%2Bbe173%2BWMgRfIEvlziZGDs%2Fnejxv0XLLZZdJmh4%2FYyvNSMs2d%2B5u5znRZ3TZCUn4L4k%2FPoySceqDup2oLjPZEJ0ppbQkpAOjxZc97zLbs76R0svIUdbkf%2Bf889uwwiYgG3pcaQzOgIxjkOxnKxLZrxwLSzgmuDDCJ96JKsHxSEZdkQ73558b2TeO8uiK1P3K%2ByPVzg%2B3OGZCcoiMRn5lflFMr2UpzaDO%2BHmIrvDd3avdLne7AUYSmh63DARsj1ud5ch9pdfbI2HRd4vy7lpuf5JhmQkjhRkKMJTWyKE22awj3ny%2FVvpc7bSksktzZ2xLRXdFg%2BPAGpma4%2BaPOs9GgjsJvd76lHFamX87X6eEcSuP0crOv2ujeHRnN%2BzM7i0t1ZqepnP7ZuNPTQ5kOFXWeEzyNkpo7jEcw2Iu1yoJOJjo3VKDUWG3RX3AJDH82qLoFPEMwoY%2FFxgY6sQGVpYp%2Fv0%2Fn5ShYbyUytexzBZr%2B6OTDOnRxkPovsWsBtExeh%2Fw27IOmvejfGksRQEvCPYQTpEDB7rsY%2BsakTKNXqhkGbMwdFcFuieDfjgUTKAHBiWg8zc5gJ%2BNttdWkjmvW67FBPO5PsCPIySGn7QtphBU1RfsanN8ujo9BNVRTL%2FCW%2F%2B1DBWgYDGDhJp%2FFsjDJc5%2BS5c8wITOhlax03HDGeo%2FCJ3Cm%2FqKbje8cRgBX6v4%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=d7084ca36ff061d075419fbdb08e92122f01fd17f23c093c939b59dd508c2bb9",
+      "file_size": 76480,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 79814,
+      "file_name": "img3.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/079/814/b96d20cd31f5fd50c5643d97091a15ef01a0cd48/img3.png?response-content-disposition=attachment%3B%20filename%3D%22img3.png%22%3B%20filename%2A%3DUTF-8%27%27img3.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQX2ZBEFQF%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T134739Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIGjy%2Fumu1uPb7XqQBEk3gPyxzEVlOSFcb9YWkKE9PXQLAiEA997l%2BVrRbgPXR3pppf8pOib%2B%2FXnor7Xq5MI%2Fa3YZqrUqsgUILhADGgwwMTM2MTkyNzQ4NDkiDKHAXymNuEBkF27VziqPBaE2%2FrVCiHWAtPDbWCMJ9oABSmc0snSsLdtXUYDNnC%2FhSI5J2tlWKl4xoIE47TndJG2GFqYic%2FeJEK3%2FDsxIE852YJ7nuMkq%2BN%2BhRGLnYaMBMUl6fqFuC2uax4FJUl1rEXRhC8mogtCYTZMfI1nmcZFVPab1ZZFN6uU2F3TPXt1hNZ6Mza3SBpJTbnQ2NMSf8mSBN5NtHHK%2B3xVfSOM3RgTGzA2r253j96xa8tg0Vn9%2BLVCAeI9i136Vvm8bGbP%2FdNmwx7fZgLLEMJFoLTDqPKhaLR0%2BliSxXA31AzJF4kKdvNU0kysx1mowuK7c9bTx%2FinUO4bTAICKYVdFIXC60BpTZ59juBrmEEodePOPSZ35CjwmcWDYBLJjYfJuPrJ5mNInnq4JQIi8aHe3u7C8XFMiWCzMwi%2BWmX0RBHa%2Bbe173%2BWMgRfIEvlziZGDs%2Fnejxv0XLLZZdJmh4%2FYyvNSMs2d%2B5u5znRZ3TZCUn4L4k%2FPoySceqDup2oLjPZEJ0ppbQkpAOjxZc97zLbs76R0svIUdbkf%2Bf889uwwiYgG3pcaQzOgIxjkOxnKxLZrxwLSzgmuDDCJ96JKsHxSEZdkQ73558b2TeO8uiK1P3K%2ByPVzg%2B3OGZCcoiMRn5lflFMr2UpzaDO%2BHmIrvDd3avdLne7AUYSmh63DARsj1ud5ch9pdfbI2HRd4vy7lpuf5JhmQkjhRkKMJTWyKE22awj3ny%2FVvpc7bSksktzZ2xLRXdFg%2BPAGpma4%2BaPOs9GgjsJvd76lHFamX87X6eEcSuP0crOv2ujeHRnN%2BzM7i0t1ZqepnP7ZuNPTQ5kOFXWeEzyNkpo7jEcw2Iu1yoJOJjo3VKDUWG3RX3AJDH82qLoFPEMwoY%2FFxgY6sQGVpYp%2Fv0%2Fn5ShYbyUytexzBZr%2B6OTDOnRxkPovsWsBtExeh%2Fw27IOmvejfGksRQEvCPYQTpEDB7rsY%2BsakTKNXqhkGbMwdFcFuieDfjgUTKAHBiWg8zc5gJ%2BNttdWkjmvW67FBPO5PsCPIySGn7QtphBU1RfsanN8ujo9BNVRTL%2FCW%2F%2B1DBWgYDGDhJp%2FFsjDJc5%2BS5c8wITOhlax03HDGeo%2FCJ3Cm%2FqKbje8cRgBX6v4%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=9d6a8713883c78b6e4f54d8d7d3c06cdb87e7f00e4174e7ff27eaffca1b573e8",
+      "file_size": 151439,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 79815,
+      "file_name": "img1.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/079/815/57dfe53a3187f79e43b8f3d0142f7a1286d52b90/img1.png?response-content-disposition=attachment%3B%20filename%3D%22img1.png%22%3B%20filename%2A%3DUTF-8%27%27img1.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQX2ZBEFQF%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T134739Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIGjy%2Fumu1uPb7XqQBEk3gPyxzEVlOSFcb9YWkKE9PXQLAiEA997l%2BVrRbgPXR3pppf8pOib%2B%2FXnor7Xq5MI%2Fa3YZqrUqsgUILhADGgwwMTM2MTkyNzQ4NDkiDKHAXymNuEBkF27VziqPBaE2%2FrVCiHWAtPDbWCMJ9oABSmc0snSsLdtXUYDNnC%2FhSI5J2tlWKl4xoIE47TndJG2GFqYic%2FeJEK3%2FDsxIE852YJ7nuMkq%2BN%2BhRGLnYaMBMUl6fqFuC2uax4FJUl1rEXRhC8mogtCYTZMfI1nmcZFVPab1ZZFN6uU2F3TPXt1hNZ6Mza3SBpJTbnQ2NMSf8mSBN5NtHHK%2B3xVfSOM3RgTGzA2r253j96xa8tg0Vn9%2BLVCAeI9i136Vvm8bGbP%2FdNmwx7fZgLLEMJFoLTDqPKhaLR0%2BliSxXA31AzJF4kKdvNU0kysx1mowuK7c9bTx%2FinUO4bTAICKYVdFIXC60BpTZ59juBrmEEodePOPSZ35CjwmcWDYBLJjYfJuPrJ5mNInnq4JQIi8aHe3u7C8XFMiWCzMwi%2BWmX0RBHa%2Bbe173%2BWMgRfIEvlziZGDs%2Fnejxv0XLLZZdJmh4%2FYyvNSMs2d%2B5u5znRZ3TZCUn4L4k%2FPoySceqDup2oLjPZEJ0ppbQkpAOjxZc97zLbs76R0svIUdbkf%2Bf889uwwiYgG3pcaQzOgIxjkOxnKxLZrxwLSzgmuDDCJ96JKsHxSEZdkQ73558b2TeO8uiK1P3K%2ByPVzg%2B3OGZCcoiMRn5lflFMr2UpzaDO%2BHmIrvDd3avdLne7AUYSmh63DARsj1ud5ch9pdfbI2HRd4vy7lpuf5JhmQkjhRkKMJTWyKE22awj3ny%2FVvpc7bSksktzZ2xLRXdFg%2BPAGpma4%2BaPOs9GgjsJvd76lHFamX87X6eEcSuP0crOv2ujeHRnN%2BzM7i0t1ZqepnP7ZuNPTQ5kOFXWeEzyNkpo7jEcw2Iu1yoJOJjo3VKDUWG3RX3AJDH82qLoFPEMwoY%2FFxgY6sQGVpYp%2Fv0%2Fn5ShYbyUytexzBZr%2B6OTDOnRxkPovsWsBtExeh%2Fw27IOmvejfGksRQEvCPYQTpEDB7rsY%2BsakTKNXqhkGbMwdFcFuieDfjgUTKAHBiWg8zc5gJ%2BNttdWkjmvW67FBPO5PsCPIySGn7QtphBU1RfsanN8ujo9BNVRTL%2FCW%2F%2B1DBWgYDGDhJp%2FFsjDJc5%2BS5c8wITOhlax03HDGeo%2FCJ3Cm%2FqKbje8cRgBX6v4%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=93594202a72c23fa28d01461b6b9fbc16e3a85c30ab16c94a5d5b5fd5f897442",
+      "file_size": 104327,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-05-04T22:50:15.385Z",
+  "allow_singular_disclosure_after": -296146644.14995795,
+  "singular_disclosure_allowed": true,
+  "vote_count": 1,
+  "voters": [
+    "dyabla"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
