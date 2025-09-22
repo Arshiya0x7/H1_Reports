@@ -1,0 +1,119 @@
+{
+  "id": 94637,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC85NDYzNw==",
+  "url": "https://hackerone.com/reports/94637",
+  "title": "Host Header Injection/Redirection",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2015-10-19T15:45:56.807Z",
+  "submitted_at": "2015-10-19T15:45:56.807Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "xer0dayz",
+    "url": "/xer0dayz",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/9BcGMu3V68aXLSPHzP7UQk9k/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 569,
+    "url": "https://hackerone.com/whisper",
+    "handle": "whisper",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/569/3652e25f9292ac76674319422f1fc9ce1a79283b_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/569/3652e25f9292ac76674319422f1fc9ce1a79283b_original.jpg/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "disabled",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Whisper",
+      "twitter_handle": null,
+      "website": "http://whisper.sh/",
+      "about": "Whisper is an anonymous social network that lets people share confessions, express themselves, and meet new people."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2016-01-06T19:42:36.579Z",
+  "bug_reporter_agreed_on_going_public_at": "2015-12-07T19:42:22.052Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "whisper.sh is vulnerable to host header injection because the host header can be changed to something outside the target domain (ie. whisper.sh) and cause it to redirect to to that domain instead (see below). \n\nAttack vectors are somewhat limited but depends on how the host header is used by the back-end application code. If code references the hostname used in the URL such as password reset pages, an attacker could spoof the host header of the request in order to trick the application to forwarding the password reset email to the attackers domain instead, etc. Other attack vectors may also be possible through manipulation of hyperlinks or other misc. code that relies on the host/domain of the request.\n\nGET / HTTP/1.1\nHost: crowdshield.com\nUser-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:18.0) Gecko/20100101 Firefox/18.0\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\nAccept-Language: en-US,en;q=0.5\nAccept-Encoding: gzip, deflate\nConnection: keep-alive\n\nHTTP/1.1 301 Moved Permanently\nContent-length: 0\nLocation: https://crowdshield.com/\nConnection: close\n\nIf you search Google for this vulnerability, there are many, many blogs, articles and white papers describing this vulnerability and associated attack vectors. Every major commercial web application scanner like Accunetix will report this same vulnerability. \n\nFor more details, please read: https://www.acunetix.com/blog/articles/automated-detection-of-host-header-attacks/.\n\nNormally, most apps will reject any request that doesn't originate from the same origin (ie. whisper.sh). To fix, the application should reject anything that doesn't match the target domain. This may also be an error in the rewrite functions of the back-end web server as well.\n",
+  "bounty_amount": "30.0",
+  "formatted_bounty": "$30",
+  "weakness": {
+    "id": 53,
+    "name": "Open Redirect"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 57992,
+      "file_name": "Host_Header_Injection.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/057/992/2265384e15f612340b4110e92a758741a7b5656a/Host_Header_Injection.png?response-content-disposition=attachment%3B%20filename%3D%22Host_Header_Injection.png%22%3B%20filename%2A%3DUTF-8%27%27Host_Header_Injection.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUMVLSKQQ%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T233400Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIFq510j17eP3ZJ3lHgNedZzMTxSbYwLmbdcS0vJBigwoAiEAlqUx4JCCJGBV4%2FL4%2Fi57THHB6DdbaKXIytfwNwaaV1EqsgUINBADGgwwMTM2MTkyNzQ4NDkiDB0nys65R252OR9IjiqPBR0Dy%2FTV1TC6Q7kn4%2BPtwn4%2F0JLzBKGmfALW0P%2B4YFj2KoHb9lXJ3U2MFoDmEhcxgLF6hGlM%2Fy91ZsgCxUpyu3RlyXF1XplmGe%2FYjoDV7XNub4cktqGqdZWQDEEvSW2D1UADKRtTGyC5KQbh2kF84y9xqLmuhE4KvQ1lnReJxfCmBe4EMGEgOqOU7MPUHTQPQ9v4rumSw0mh5JV9z9XoVc%2FdnPa%2F9we0u96Yf4AGVI5JmOsgTdLVFdNZiSCAXYr47Gb0hPfq%2BvsNP%2Fnyo%2FvH2Dbhqhc6p2T96H%2FQgz41acmkjNvExtITqVIdclmRqlONv2FqiQzzjAdOnh7Yh7Dbnykg1lL0r%2FqXWiAwjMyErXjTjt8LqdUi2HgA23bh9HFDod0ywjYc2iPjMic98f1tPQF%2BaFq%2BG5a1QvcarbiA6XjbiWhuirWsrBQYDdPxPM6ut3wdlocfI6Hv0IyCxgmQ8933OULG0WgxuVahygQ6OyuwE5wQLszj9ya4f3fpUh9W8936TQwPlkqDu2R%2FEKbFV3lbYvfQDpZB2oZUFbVUK1M6RM4mLnmN7%2BA2HLh61e1b8lefu%2BtnDsP0a6qDIBu7PBtsSwk9gmlfa30Q%2B3kJU4H96fz7M0ZxkRJ%2BzJJzvipUG3NEfZS%2BAOT5DCloC5kfzeqKfKZB09Zj4tLi9u2zE08H3sjy9dTyQBuNIuc0qB%2FISsjQdEYkwb%2FrAflvMkRKsLhjoLYAfaXyq3eK1lkloLSKKlatvjsKgqUJMN8jepv%2F5VjFAYPZxU%2B61RlyH9rTqLwNIB0XarzIWdksf6Wo4%2F1%2BQHIX9txBce4DPor%2BJs9rY%2FINal2TC5pkkMC9wqnQDj1p%2Fqojaoyh75ugJUCP1LMwzMPGxgY6sQE%2F8sJWiRlzFIvVqiEqs5Hu4P75qRvCIvEP3al4QPaZKTmLx6JU5Eh6%2BxU0X0xfMm3rqIeHgnvM2O88VdMWDo6MdB3DwoadMAwXOHwHLq0D%2FKFi8slaR%2F0R9pOb4eWj3aARbSvu89o3VxvFJSAI%2B%2F3Y%2BsFhwoztYbsuPP8FNGCLC2FtuHy17epxFf6N7s8EuV0%2B%2Bxbl5kDUSAmR2%2FGcscMX4b11hhTPT5Bl%2F6GbWrZEkaI%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=f8a1620af9b0f6295b58a1ecc2556533260f7a2382036ea79e98b1fb9c008e0e",
+      "file_size": 30858,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-01-06T19:42:22.227Z",
+  "allow_singular_disclosure_after": -306474698.1561132,
+  "singular_disclosure_allowed": true,
+  "vote_count": 7,
+  "voters": [
+    "pr0f0x01",
+    "shivammusic",
+    "tridevreddy333",
+    "jayateertha043",
+    "mnqazi",
+    "mohamedadel46",
+    "kenjithesenpai"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
