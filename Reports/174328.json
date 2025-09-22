@@ -1,0 +1,192 @@
+{
+  "id": 174328,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNzQzMjg=",
+  "url": "https://hackerone.com/reports/174328",
+  "title": "CSRF in github integration",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2016-10-06T11:34:47.622Z",
+  "submitted_at": "2016-10-06T11:34:47.622Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "asanso",
+    "url": "/asanso",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/005/452/35bd4e65a2ff558a24074d1029b51749670bbea4_original.jpg/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 69,
+    "url": "https://hackerone.com/slack",
+    "handle": "slack",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/069/683fee312381bc46cadc7ea1950abc87944d12c3_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/069/683fee312381bc46cadc7ea1950abc87944d12c3_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Slack",
+      "twitter_handle": "slackhq",
+      "website": "https://slack.com",
+      "about": "All your team communication in one place, instantly searchable, and available wherever you go."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2016-11-18T04:24:01.420Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-10-19T04:23:48.320Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "There is a CSRF in the github integration in the case of \"Only pre-approved apps can be installed by team members: (slack1.png)\nGithub is not one of those pre approved application. So a normal user cannot install it (slack2)\nNow lets assume the channel administrator is adding this integration to one common channel e.g. #random (slack3.png).\nNow the other non admin users receive a notification \"added an integration to this channel: github\" (slack4.png) but if they try to click the link they will have a page saying \"added an integration to this channel: github\" (slack5.png). The problem is that they still have the uri of the integration, that is something like https://vecchiowerther.slack.com/services/CODE E.g. https://vecchiowerther.slack.com/services/B2L476P3P\n\nThis can be used to make the admin of the channel to  \"switch to unauthed mode\".\nFor the attacker is enough to forge a an html page as\n\n<html>\n<img src=\"https://vecchiowerther.slack.com/services/88143227125?no_auth_mode=1\">\n</html>\n\ne.g. in http://asanso.github.io/csrf.html (or in any website). \nIf the admin will visit this website he will loose the github integration and switch to the unauthed mode (slack6.png)",
+  "bounty_amount": "500.0",
+  "formatted_bounty": "$500",
+  "weakness": {
+    "id": 45,
+    "name": "Cross-Site Request Forgery (CSRF)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 126323,
+      "file_name": "slack2.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/126/323/4659128f4b77935fa32393826fd39645f76792f9/slack2.png?response-content-disposition=attachment%3B%20filename%3D%22slack2.png%22%3B%20filename%2A%3DUTF-8%27%27slack2.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUCEGC5NH%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T074054Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJ%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIC%2FX90ZqJtg5Sdcb9Kp9WHtl9Oag8i4%2FYNEVy%2Fp0J2Q4AiBFDhXjR2HXAZ0e6RiUH4I%2FAkf4GAVOt3ZTOWmynYgXNyqxBQgoEAMaDDAxMzYxOTI3NDg0OSIMw7EZipx4LV949I6pKo4F6g3MoY%2FvOqafR8InASylitYdI3lmpcF4oGkKIs55H%2FZJU0%2FX1ZVkBatdm0FDXU65tgCVPrtrPS9t93c3BNbfPpzhFNdxBGOXMZ%2FWUQb9QFD1C9Xc2BrfN03weEQNYsh7FhVFL5c%2Bhy4WSHwC3KrV7HzpcpdxBbrKlcLeNxb%2FwVubYzsjUflp9%2B4%2Fw07C1Pz5ivilaLRhVu1aPHaHmYKLOR9vFaSWQcY58tRd9KBtkSPjvNiPlA%2BOieHjvczi6QZqGgk6UCovvW1FRra4SgN1qcLyLgF7xRXhSRX0KBslJ6bBBAtm2D26aXSsUdl%2F74%2BXa%2FuMofaitKq5oy%2BBHjhJQjFWgITbFnK3Ge7Dk7Z6F0TQCRDEemPX77M6ZXH%2FXvtQq9Bc6UkaAiRZ0pEc5VyVNRWhqg7s4n9L4c1AsymLIFQQTNiI0tl5CUrXiKCfLDlxraOIWezSQidImDkmBRuwYa6AsoevjhG8rPVzAtOcW5fTW9%2Br3PY0q%2FqdXFMkQ5yF49pMxdxXjZVpjIZ%2FsG3hETYEHIA5Pum9m0e5NQzeW4%2BytWWekiLzSJkyVbBeDordv5tea8MPuMptxMI3WBNi1pVEs6qdiczBKJSGsRhS6U7NyGAwDoy%2BF2ok8tRhvJqx7g6on4oyt4f%2FyHF0NMFWn4ZduQ6AE3cgu5vxvfcGLYeo2Zd9A2YLT739zhoNaRD6%2F0UDZDNc5pWfU%2BjdIJtFKlIR5l8c3HUXvW3WSVLJk%2FTs0VdMYRKEbHdbgQWILHp2%2BJ25KexQznje8Y4DZ1N8du0kRjjxrptHABoe7xG6HXvjXL5t0qOIUNokZ5N7EOfYej8UDorgbRxzoi88vJ2Mv7dMsavZ3sfsw%2BRyQCTLMLLfw8YGOrIBr1ND1Wus6Ky1E3o%2Fl46nx8xcgWoFemiLprCy9nVXvoySjeR5xRX4kYGkunTFdgtC8ThN7I63pvR%2FOo33mcmYAAHCO2e3wnU%2BZb5ySCg96ZUKQkTuiNP0cTpjLsm9kfsVQqR08Lg3kt9YxOy04FHxM4W9KgbZHax%2FK%2BDUI43K8h7cQ%2F1nXR7LSjN%2BBNyBLaGgv8CnAMmGtN3mjdS7k5%2FnrkX9MVfCa8zPCKGms4aTvkon7w%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=ee644980f90d7303b66001d6f6a85b09b98565505c8934656400984540261c56",
+      "file_size": 68842,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 126324,
+      "file_name": "slack1.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/126/324/5ccda3b3eaa94e11aadf124b55ba959c331df174/slack1.png?response-content-disposition=attachment%3B%20filename%3D%22slack1.png%22%3B%20filename%2A%3DUTF-8%27%27slack1.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUCEGC5NH%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T074054Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJ%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIC%2FX90ZqJtg5Sdcb9Kp9WHtl9Oag8i4%2FYNEVy%2Fp0J2Q4AiBFDhXjR2HXAZ0e6RiUH4I%2FAkf4GAVOt3ZTOWmynYgXNyqxBQgoEAMaDDAxMzYxOTI3NDg0OSIMw7EZipx4LV949I6pKo4F6g3MoY%2FvOqafR8InASylitYdI3lmpcF4oGkKIs55H%2FZJU0%2FX1ZVkBatdm0FDXU65tgCVPrtrPS9t93c3BNbfPpzhFNdxBGOXMZ%2FWUQb9QFD1C9Xc2BrfN03weEQNYsh7FhVFL5c%2Bhy4WSHwC3KrV7HzpcpdxBbrKlcLeNxb%2FwVubYzsjUflp9%2B4%2Fw07C1Pz5ivilaLRhVu1aPHaHmYKLOR9vFaSWQcY58tRd9KBtkSPjvNiPlA%2BOieHjvczi6QZqGgk6UCovvW1FRra4SgN1qcLyLgF7xRXhSRX0KBslJ6bBBAtm2D26aXSsUdl%2F74%2BXa%2FuMofaitKq5oy%2BBHjhJQjFWgITbFnK3Ge7Dk7Z6F0TQCRDEemPX77M6ZXH%2FXvtQq9Bc6UkaAiRZ0pEc5VyVNRWhqg7s4n9L4c1AsymLIFQQTNiI0tl5CUrXiKCfLDlxraOIWezSQidImDkmBRuwYa6AsoevjhG8rPVzAtOcW5fTW9%2Br3PY0q%2FqdXFMkQ5yF49pMxdxXjZVpjIZ%2FsG3hETYEHIA5Pum9m0e5NQzeW4%2BytWWekiLzSJkyVbBeDordv5tea8MPuMptxMI3WBNi1pVEs6qdiczBKJSGsRhS6U7NyGAwDoy%2BF2ok8tRhvJqx7g6on4oyt4f%2FyHF0NMFWn4ZduQ6AE3cgu5vxvfcGLYeo2Zd9A2YLT739zhoNaRD6%2F0UDZDNc5pWfU%2BjdIJtFKlIR5l8c3HUXvW3WSVLJk%2FTs0VdMYRKEbHdbgQWILHp2%2BJ25KexQznje8Y4DZ1N8du0kRjjxrptHABoe7xG6HXvjXL5t0qOIUNokZ5N7EOfYej8UDorgbRxzoi88vJ2Mv7dMsavZ3sfsw%2BRyQCTLMLLfw8YGOrIBr1ND1Wus6Ky1E3o%2Fl46nx8xcgWoFemiLprCy9nVXvoySjeR5xRX4kYGkunTFdgtC8ThN7I63pvR%2FOo33mcmYAAHCO2e3wnU%2BZb5ySCg96ZUKQkTuiNP0cTpjLsm9kfsVQqR08Lg3kt9YxOy04FHxM4W9KgbZHax%2FK%2BDUI43K8h7cQ%2F1nXR7LSjN%2BBNyBLaGgv8CnAMmGtN3mjdS7k5%2FnrkX9MVfCa8zPCKGms4aTvkon7w%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=4b2bcc00be8d6a411fd099c7e3553297b696a0b0908dfa849a54d7f8a6725417",
+      "file_size": 127629,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 126325,
+      "file_name": "slack4.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/126/325/91717ae165c17fd265b5d08347b22a8f16fa0a7e/slack4.png?response-content-disposition=attachment%3B%20filename%3D%22slack4.png%22%3B%20filename%2A%3DUTF-8%27%27slack4.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUCEGC5NH%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T074054Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJ%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIC%2FX90ZqJtg5Sdcb9Kp9WHtl9Oag8i4%2FYNEVy%2Fp0J2Q4AiBFDhXjR2HXAZ0e6RiUH4I%2FAkf4GAVOt3ZTOWmynYgXNyqxBQgoEAMaDDAxMzYxOTI3NDg0OSIMw7EZipx4LV949I6pKo4F6g3MoY%2FvOqafR8InASylitYdI3lmpcF4oGkKIs55H%2FZJU0%2FX1ZVkBatdm0FDXU65tgCVPrtrPS9t93c3BNbfPpzhFNdxBGOXMZ%2FWUQb9QFD1C9Xc2BrfN03weEQNYsh7FhVFL5c%2Bhy4WSHwC3KrV7HzpcpdxBbrKlcLeNxb%2FwVubYzsjUflp9%2B4%2Fw07C1Pz5ivilaLRhVu1aPHaHmYKLOR9vFaSWQcY58tRd9KBtkSPjvNiPlA%2BOieHjvczi6QZqGgk6UCovvW1FRra4SgN1qcLyLgF7xRXhSRX0KBslJ6bBBAtm2D26aXSsUdl%2F74%2BXa%2FuMofaitKq5oy%2BBHjhJQjFWgITbFnK3Ge7Dk7Z6F0TQCRDEemPX77M6ZXH%2FXvtQq9Bc6UkaAiRZ0pEc5VyVNRWhqg7s4n9L4c1AsymLIFQQTNiI0tl5CUrXiKCfLDlxraOIWezSQidImDkmBRuwYa6AsoevjhG8rPVzAtOcW5fTW9%2Br3PY0q%2FqdXFMkQ5yF49pMxdxXjZVpjIZ%2FsG3hETYEHIA5Pum9m0e5NQzeW4%2BytWWekiLzSJkyVbBeDordv5tea8MPuMptxMI3WBNi1pVEs6qdiczBKJSGsRhS6U7NyGAwDoy%2BF2ok8tRhvJqx7g6on4oyt4f%2FyHF0NMFWn4ZduQ6AE3cgu5vxvfcGLYeo2Zd9A2YLT739zhoNaRD6%2F0UDZDNc5pWfU%2BjdIJtFKlIR5l8c3HUXvW3WSVLJk%2FTs0VdMYRKEbHdbgQWILHp2%2BJ25KexQznje8Y4DZ1N8du0kRjjxrptHABoe7xG6HXvjXL5t0qOIUNokZ5N7EOfYej8UDorgbRxzoi88vJ2Mv7dMsavZ3sfsw%2BRyQCTLMLLfw8YGOrIBr1ND1Wus6Ky1E3o%2Fl46nx8xcgWoFemiLprCy9nVXvoySjeR5xRX4kYGkunTFdgtC8ThN7I63pvR%2FOo33mcmYAAHCO2e3wnU%2BZb5ySCg96ZUKQkTuiNP0cTpjLsm9kfsVQqR08Lg3kt9YxOy04FHxM4W9KgbZHax%2FK%2BDUI43K8h7cQ%2F1nXR7LSjN%2BBNyBLaGgv8CnAMmGtN3mjdS7k5%2FnrkX9MVfCa8zPCKGms4aTvkon7w%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=e98535585c61bc6bed9a800036485d53f7441e35bdf9660db6b6522d62777e44",
+      "file_size": 20954,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 126326,
+      "file_name": "slack3.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/126/326/a1dce6a50e8b1c42df17457b0feb9d403db09edc/slack3.png?response-content-disposition=attachment%3B%20filename%3D%22slack3.png%22%3B%20filename%2A%3DUTF-8%27%27slack3.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUCEGC5NH%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T074054Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJ%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIC%2FX90ZqJtg5Sdcb9Kp9WHtl9Oag8i4%2FYNEVy%2Fp0J2Q4AiBFDhXjR2HXAZ0e6RiUH4I%2FAkf4GAVOt3ZTOWmynYgXNyqxBQgoEAMaDDAxMzYxOTI3NDg0OSIMw7EZipx4LV949I6pKo4F6g3MoY%2FvOqafR8InASylitYdI3lmpcF4oGkKIs55H%2FZJU0%2FX1ZVkBatdm0FDXU65tgCVPrtrPS9t93c3BNbfPpzhFNdxBGOXMZ%2FWUQb9QFD1C9Xc2BrfN03weEQNYsh7FhVFL5c%2Bhy4WSHwC3KrV7HzpcpdxBbrKlcLeNxb%2FwVubYzsjUflp9%2B4%2Fw07C1Pz5ivilaLRhVu1aPHaHmYKLOR9vFaSWQcY58tRd9KBtkSPjvNiPlA%2BOieHjvczi6QZqGgk6UCovvW1FRra4SgN1qcLyLgF7xRXhSRX0KBslJ6bBBAtm2D26aXSsUdl%2F74%2BXa%2FuMofaitKq5oy%2BBHjhJQjFWgITbFnK3Ge7Dk7Z6F0TQCRDEemPX77M6ZXH%2FXvtQq9Bc6UkaAiRZ0pEc5VyVNRWhqg7s4n9L4c1AsymLIFQQTNiI0tl5CUrXiKCfLDlxraOIWezSQidImDkmBRuwYa6AsoevjhG8rPVzAtOcW5fTW9%2Br3PY0q%2FqdXFMkQ5yF49pMxdxXjZVpjIZ%2FsG3hETYEHIA5Pum9m0e5NQzeW4%2BytWWekiLzSJkyVbBeDordv5tea8MPuMptxMI3WBNi1pVEs6qdiczBKJSGsRhS6U7NyGAwDoy%2BF2ok8tRhvJqx7g6on4oyt4f%2FyHF0NMFWn4ZduQ6AE3cgu5vxvfcGLYeo2Zd9A2YLT739zhoNaRD6%2F0UDZDNc5pWfU%2BjdIJtFKlIR5l8c3HUXvW3WSVLJk%2FTs0VdMYRKEbHdbgQWILHp2%2BJ25KexQznje8Y4DZ1N8du0kRjjxrptHABoe7xG6HXvjXL5t0qOIUNokZ5N7EOfYej8UDorgbRxzoi88vJ2Mv7dMsavZ3sfsw%2BRyQCTLMLLfw8YGOrIBr1ND1Wus6Ky1E3o%2Fl46nx8xcgWoFemiLprCy9nVXvoySjeR5xRX4kYGkunTFdgtC8ThN7I63pvR%2FOo33mcmYAAHCO2e3wnU%2BZb5ySCg96ZUKQkTuiNP0cTpjLsm9kfsVQqR08Lg3kt9YxOy04FHxM4W9KgbZHax%2FK%2BDUI43K8h7cQ%2F1nXR7LSjN%2BBNyBLaGgv8CnAMmGtN3mjdS7k5%2FnrkX9MVfCa8zPCKGms4aTvkon7w%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=05ed0eb1546b512b727925085717e78efdeda781b3902443d154711a0cd817af",
+      "file_size": 171276,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 126327,
+      "file_name": "slack5.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/126/327/c34f99bc566551125ac9259b96ebb37ec257a423/slack5.png?response-content-disposition=attachment%3B%20filename%3D%22slack5.png%22%3B%20filename%2A%3DUTF-8%27%27slack5.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUCEGC5NH%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T074054Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJ%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIC%2FX90ZqJtg5Sdcb9Kp9WHtl9Oag8i4%2FYNEVy%2Fp0J2Q4AiBFDhXjR2HXAZ0e6RiUH4I%2FAkf4GAVOt3ZTOWmynYgXNyqxBQgoEAMaDDAxMzYxOTI3NDg0OSIMw7EZipx4LV949I6pKo4F6g3MoY%2FvOqafR8InASylitYdI3lmpcF4oGkKIs55H%2FZJU0%2FX1ZVkBatdm0FDXU65tgCVPrtrPS9t93c3BNbfPpzhFNdxBGOXMZ%2FWUQb9QFD1C9Xc2BrfN03weEQNYsh7FhVFL5c%2Bhy4WSHwC3KrV7HzpcpdxBbrKlcLeNxb%2FwVubYzsjUflp9%2B4%2Fw07C1Pz5ivilaLRhVu1aPHaHmYKLOR9vFaSWQcY58tRd9KBtkSPjvNiPlA%2BOieHjvczi6QZqGgk6UCovvW1FRra4SgN1qcLyLgF7xRXhSRX0KBslJ6bBBAtm2D26aXSsUdl%2F74%2BXa%2FuMofaitKq5oy%2BBHjhJQjFWgITbFnK3Ge7Dk7Z6F0TQCRDEemPX77M6ZXH%2FXvtQq9Bc6UkaAiRZ0pEc5VyVNRWhqg7s4n9L4c1AsymLIFQQTNiI0tl5CUrXiKCfLDlxraOIWezSQidImDkmBRuwYa6AsoevjhG8rPVzAtOcW5fTW9%2Br3PY0q%2FqdXFMkQ5yF49pMxdxXjZVpjIZ%2FsG3hETYEHIA5Pum9m0e5NQzeW4%2BytWWekiLzSJkyVbBeDordv5tea8MPuMptxMI3WBNi1pVEs6qdiczBKJSGsRhS6U7NyGAwDoy%2BF2ok8tRhvJqx7g6on4oyt4f%2FyHF0NMFWn4ZduQ6AE3cgu5vxvfcGLYeo2Zd9A2YLT739zhoNaRD6%2F0UDZDNc5pWfU%2BjdIJtFKlIR5l8c3HUXvW3WSVLJk%2FTs0VdMYRKEbHdbgQWILHp2%2BJ25KexQznje8Y4DZ1N8du0kRjjxrptHABoe7xG6HXvjXL5t0qOIUNokZ5N7EOfYej8UDorgbRxzoi88vJ2Mv7dMsavZ3sfsw%2BRyQCTLMLLfw8YGOrIBr1ND1Wus6Ky1E3o%2Fl46nx8xcgWoFemiLprCy9nVXvoySjeR5xRX4kYGkunTFdgtC8ThN7I63pvR%2FOo33mcmYAAHCO2e3wnU%2BZb5ySCg96ZUKQkTuiNP0cTpjLsm9kfsVQqR08Lg3kt9YxOy04FHxM4W9KgbZHax%2FK%2BDUI43K8h7cQ%2F1nXR7LSjN%2BBNyBLaGgv8CnAMmGtN3mjdS7k5%2FnrkX9MVfCa8zPCKGms4aTvkon7w%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=353a4b788cf5fcbe9cf664bba41c130f6a6cd79b00becaae3632e546ecbabdcd",
+      "file_size": 37313,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 126328,
+      "file_name": "slack6.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/126/328/a2dd5096a5d2269b217f93c5a67b178308fa3f55/slack6.png?response-content-disposition=attachment%3B%20filename%3D%22slack6.png%22%3B%20filename%2A%3DUTF-8%27%27slack6.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUCEGC5NH%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T074054Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJ%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIC%2FX90ZqJtg5Sdcb9Kp9WHtl9Oag8i4%2FYNEVy%2Fp0J2Q4AiBFDhXjR2HXAZ0e6RiUH4I%2FAkf4GAVOt3ZTOWmynYgXNyqxBQgoEAMaDDAxMzYxOTI3NDg0OSIMw7EZipx4LV949I6pKo4F6g3MoY%2FvOqafR8InASylitYdI3lmpcF4oGkKIs55H%2FZJU0%2FX1ZVkBatdm0FDXU65tgCVPrtrPS9t93c3BNbfPpzhFNdxBGOXMZ%2FWUQb9QFD1C9Xc2BrfN03weEQNYsh7FhVFL5c%2Bhy4WSHwC3KrV7HzpcpdxBbrKlcLeNxb%2FwVubYzsjUflp9%2B4%2Fw07C1Pz5ivilaLRhVu1aPHaHmYKLOR9vFaSWQcY58tRd9KBtkSPjvNiPlA%2BOieHjvczi6QZqGgk6UCovvW1FRra4SgN1qcLyLgF7xRXhSRX0KBslJ6bBBAtm2D26aXSsUdl%2F74%2BXa%2FuMofaitKq5oy%2BBHjhJQjFWgITbFnK3Ge7Dk7Z6F0TQCRDEemPX77M6ZXH%2FXvtQq9Bc6UkaAiRZ0pEc5VyVNRWhqg7s4n9L4c1AsymLIFQQTNiI0tl5CUrXiKCfLDlxraOIWezSQidImDkmBRuwYa6AsoevjhG8rPVzAtOcW5fTW9%2Br3PY0q%2FqdXFMkQ5yF49pMxdxXjZVpjIZ%2FsG3hETYEHIA5Pum9m0e5NQzeW4%2BytWWekiLzSJkyVbBeDordv5tea8MPuMptxMI3WBNi1pVEs6qdiczBKJSGsRhS6U7NyGAwDoy%2BF2ok8tRhvJqx7g6on4oyt4f%2FyHF0NMFWn4ZduQ6AE3cgu5vxvfcGLYeo2Zd9A2YLT739zhoNaRD6%2F0UDZDNc5pWfU%2BjdIJtFKlIR5l8c3HUXvW3WSVLJk%2FTs0VdMYRKEbHdbgQWILHp2%2BJ25KexQznje8Y4DZ1N8du0kRjjxrptHABoe7xG6HXvjXL5t0qOIUNokZ5N7EOfYej8UDorgbRxzoi88vJ2Mv7dMsavZ3sfsw%2BRyQCTLMLLfw8YGOrIBr1ND1Wus6Ky1E3o%2Fl46nx8xcgWoFemiLprCy9nVXvoySjeR5xRX4kYGkunTFdgtC8ThN7I63pvR%2FOo33mcmYAAHCO2e3wnU%2BZb5ySCg96ZUKQkTuiNP0cTpjLsm9kfsVQqR08Lg3kt9YxOy04FHxM4W9KgbZHax%2FK%2BDUI43K8h7cQ%2F1nXR7LSjN%2BBNyBLaGgv8CnAMmGtN3mjdS7k5%2FnrkX9MVfCa8zPCKGms4aTvkon7w%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=570839e2bd8e381f1cafde3b80408a2d5450313088e9aef472bddb3f3772ba2e",
+      "file_size": 110186,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-11-18T04:23:48.387Z",
+  "allow_singular_disclosure_after": -279083825.6803725,
+  "singular_disclosure_allowed": true,
+  "vote_count": 22,
+  "voters": [
+    "smsecurity",
+    "zlz",
+    "cha5m",
+    "yaworsk",
+    "flashdisk",
+    "supernatural",
+    "madrobot",
+    "eveeez",
+    "ak1t4",
+    "c12316651",
+    "and 12 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "id": 2804,
+      "category": "researcher",
+      "content": "CSRF in Github integration",
+      "updated_at": "2016-10-14T20:56:28.480Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 5452,
+        "username": "asanso",
+        "name": "Antonio Sanso",
+        "bio": "Adober, Apache committer/PMC member, natural born geek, engineer, pseudo-hacker, wannabe-mathematician,",
+        "cleared": false,
+        "verified": false,
+        "website": "http://blog.intothesymmetry.com",
+        "location": "Switzerland",
+        "created_at": "2014-04-23T12:54:44.765Z",
+        "url": "https://hackerone.com/asanso",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "hacker",
+        "profile_picture_urls": {
+          "small": "https://profile-photos.hackerone-user-content.com/variants/000/005/452/35bd4e65a2ff558a24074d1029b51749670bbea4_original.jpg/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/000/005/452/35bd4e65a2ff558a24074d1029b51749670bbea4_original.jpg/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c",
+          "xtralarge": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MjUwOSwicHVyIjoiYmxvYl9pZCJ9fQ==--fb6276105229f422809cf6bebbd4676b2156b52e/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJyZXNpemUiOiIyNjB4MjYwXHUwMDNlIn0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--c155082ce6f9751dcb29cd6ea061a7e4d7329577/alert(_hh_).jpg"
+        }
+      }
+    }
+  ]
+}
