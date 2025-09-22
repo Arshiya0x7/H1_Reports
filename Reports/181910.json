@@ -1,0 +1,124 @@
+{
+  "id": 181910,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xODE5MTA=",
+  "url": "https://hackerone.com/reports/181910",
+  "title": "Range constructor type confusion DoS",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2016-11-13T12:41:55.264Z",
+  "submitted_at": "2016-11-13T12:41:55.264Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "h72",
+    "url": "/h72",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/llf9qq317dedunxi4grrtc0q8w2j/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 15668,
+    "url": "https://hackerone.com/shopify-scripts",
+    "handle": "shopify-scripts",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/015/668/ebbe467de8ef2fc936053593e1289e30f04c3b06_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/015/668/ebbe467de8ef2fc936053593e1289e30f04c3b06_original.jpg/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "shopify-scripts",
+      "twitter_handle": "",
+      "website": "",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2016-12-17T01:03:07.728Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-12-17T01:03:07.680Z",
+  "team_member_agreed_on_going_public_at": "2016-12-16T19:53:23.717Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "It's possible to crash mruby by redefining the `Range` class and then using the range literal syntax:\n\n    Range = Array\n    (1..2).inspect\n\nThe `mrb_range_new` function allocates and initializes a range object backed by the `RRange` struct, however it uses runtime constant lookup to find the `Range` class object. Redefining the `Range` constant to point to a different class and calling an instance method causes a segfault, as the `RRange::edges` field is confused for the `iv` field on other structs.\n\nIt may be possible to achieve RCE through this vulnerability, but there are significant complicating factors and I have not spent the time trying to develop an RCE PoC.\n\nI have attached a patch which fixes this bug. My patch adds a `range_class` field to `mrb_state`, following the pattern other core classes use to avoid runtime constant lookups.",
+  "bounty_amount": "10000.0",
+  "formatted_bounty": "$10,000",
+  "weakness": {
+    "id": 48,
+    "name": "Uncontrolled Resource Consumption"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 134461,
+      "file_name": "mruby-range-dos.patch",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/134/461/ed93dac631e29e5d5ca9397291e4d48ce52c94aa/mruby-range-dos.patch?response-content-disposition=attachment%3B%20filename%3D%22mruby-range-dos.patch%22%3B%20filename%2A%3DUTF-8%27%27mruby-range-dos.patch&response-content-type=text%2Fx-diff&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4GJ2ROIL%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T001452Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQD0W7F4vO0UCBthyZruglTnaMLL2D%2BlpzRcOIFAoqqA9AIhAJYrz2xd4yyJKAes3b6N6LKT2TKvHQa%2FJkzT720joYdTKrEFCB0QAxoMMDEzNjE5Mjc0ODQ5IgzfN%2BSfV0Oofpv1rxcqjgVALN05pr9kfUmq5NzR%2BXPH2E7waVVIQfZxs5L5sL1QegxQ3576AGtfSRVku%2F7y5cmDmxwuU9Hc4ydYL0c49Fo%2BUxK10JbYqRR5NTrq4Zgq%2FgA8qM71dUd2wvcA82uIdUXEepKBBBhC5d0g0LCLyr1JYGo7%2BW8Be1JsbForWL5QEClhr36lEJXjZQekKnzsXUEeFN9171GjITzbl7aiMx2dtrtuEaosH%2Fi%2B0AMvyqw7UmXcifqz8DajJS2HItH0Zlcb7MY1CqA27%2ByvfVX4PV9XzB1P3TEYexJO1SFTbY9j3dTq9G6yW%2B0iMSHmuZvBHStBHXqSKx5tqrVz8uY8a9jMo7wb36d2RkS6VukVn69AeCfz1QyfoZhroqrfwkNsrbbSDPN5bmj9kGrUs3tmTNE432CeD1lxn2AXbxk%2B1dqfO85IoSvT5FVrU6zBeY%2BDkQKrYJklTLwBevIZq6pEcSCan1voai%2F7BXYSeaM6QbQkCUgNh%2BdX8EXWL%2FRvj%2FdPqe%2BdQkkWgzFzwk9WplKXBYUwBwDHb8x8YOKstQleRq56Zi0NVNBN4AxNqN0ChHMyOvzhb6E9wuoNGyeol%2F7tCi3N1uwKPUF2vTncBRxc71QAd2IwHG1qLvNYitvSuGFHyothcx3FfQUWpx1eL1UibwqEbKvdrDUJ6kjagUkiNrVLUDKyKRmf%2FvhMkWhBpxkguw7VXQpNTaWy%2BMyWRqP1zLhJfHMA5g7agRXGsjcTfEx7S0VqHIUtziS0G0aV1Ie%2F3H5rLExUWY2SbuzqLdhuKRW8a9%2BlhO1SJTEbjI3GTXz1SVvK3CODEK49RoBG5iHnZSDKFbp%2F%2Br039%2FGlU5mauYS4ZZsnbQJ7hmPXbz1NTGgwtrHBxgY6sAFvIdF9EY1o%2FPUSUYtR%2Bz4SyMOOR0q6L3F0ASR5y%2BgOxFzpgHI0vgQ0SA6ZXIHov%2FlNnjSa1n3iTjOUEubhBn0%2BR1rHjgPQu2KPuEctsa91atMd74QKiMuVPwi62WNbjuVR9XJwfhHPrLzqReei2iDt1RN2zsrjF%2BpP67qmOcbpXL1Fgkp6tg4Ks2dVrKOs9%2F%2FHlbkr9aDiZsi%2B%2BRbusBydX4aE%2Fdr3ojIww6Pc4jWiqw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=608b2f2cd5bec8ab3b904367484f754a54bf0d67264f1670faa993a1418b823b",
+      "file_size": 1865,
+      "type": "text/x-diff",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-01-15T19:53:23.768Z",
+  "allow_singular_disclosure_after": -273990088.66336256,
+  "singular_disclosure_allowed": true,
+  "vote_count": 7,
+  "voters": [
+    "mpz",
+    "eveeez",
+    "spetr0x",
+    "scept1c",
+    "elakrimi",
+    "hackerjuan",
+    "br0k3nsec"
+  ],
+  "severity": {
+    "rating": "high",
+    "author_type": "Team"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
