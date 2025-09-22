@@ -1,0 +1,141 @@
+{
+  "id": 141174,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNDExNzQ=",
+  "url": "https://hackerone.com/reports/141174",
+  "title": "node.drchrono.com - Information Disclosure and Windows Host Exposed",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-05-26T12:34:52.294Z",
+  "submitted_at": "2016-05-26T12:34:52.294Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "bashlogic",
+    "url": "/bashlogic",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/076/825/29c34c49f7a54e6999d0cc5cc2966c40e2c0f57b_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 1492,
+    "url": "https://hackerone.com/drchrono",
+    "handle": "drchrono",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/001/492/22504e1f134263ff85b7870959fa127edcd98bd0_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/001/492/22504e1f134263ff85b7870959fa127edcd98bd0_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "disabled",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "drchrono",
+      "twitter_handle": "drchrono",
+      "website": "https://www.drchrono.com",
+      "about": "EHR, Practice Management, Medical Billing & Revenue Cycle Management available on iPad, iPhone, web ... and a healthcare API."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2016-06-13T19:02:13.909Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-06-06T22:29:29.772Z",
+  "team_member_agreed_on_going_public_at": "2016-06-13T19:02:13.726Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "This host has the following TCP ports open;\n* 21 - FTP\n* 22 - SSH\n* 135 - Windows RPC Dynamic\n* 445 - Microsoft DS\n* 3389 - Remote Desktop\n* 5986 - PowerShell Remoting\n* 47001 - WinRM\n\nThe server appears to be secured well on the whole.\nHowever the services SSH and FTP do all give out some information.\nPlease see attached images for the versions given out.\nThis information could be used by a malicious attacker, to create a targeted attack vector, on the underlying server.\n\nTo remove the FileZilla ftp server version go to the options and ensure the **%v** is removed from the welcome message. See the screenshot named **Remove FileZilla version.PNG**.\n\nTo remove the banner version from the SSH service locate the SSH configuration file and open it up in notepad, find the line with the option named **banner** and set it to **none**. The default location for Windows is **C:\\Program Files\\OpenSSH\\etc\\ssh_config**.\n\nThe remote desktop is widely open and does not require any form of authentication to connect. As you will see in the screenshot named **Remote Desktop.png** it clearly states the OS version running, which again all helps a malicious attacker. You can not remove this information however you can protect against it. It is highly recommended that you enable network level authentication (NLA), this means that you are not able to connect to remote desktop unless you are authenticated first. Also ensure that you have set the remote desktop to use high encryption. More information about this can be found here https://technet.microsoft.com/en-us/library/cc770833(v=ws.11).aspx.\n\nWith Microsoft DS (445 SMB) open, ensure you have disabled the local administrator account or at least renamed it from default. This account can not be locked out, allowing for unlimited password guesses against it. This would facilitate an attacker, as they could use this service to brute force the password until obtained. As remote desktop is open they could simply login to the server with full administrative privileges once the password has been revealed.\n\nI would highly recommend ensuring that you have had a build review completed on the server by an experienced security professional as the server is very open to the internet. If money is an issue then ask your administration team to follow the guidance from the CIS benchmarks, available at https://benchmarks.cisecurity.org/downloads/benchmarks/.\n\nFinal general advice is to not open the ports to the world when there is no need and to ensure that the FTP/SSH service installed is always fully patched.\nThe ports identified are useful for internal administration only, I would recommend limiting their availability to your trusted subnets or IP addresses. This can be done using the windows firewall or a hardware firewall such as checkpoint.\n\n",
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 96184,
+      "file_name": "FTP_Service_Banner.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/096/184/911825ee073c6c5acd4c40c905113a30ba9019d2/FTP_Service_Banner.PNG?response-content-disposition=attachment%3B%20filename%3D%22FTP_Service_Banner.PNG%22%3B%20filename%2A%3DUTF-8%27%27FTP_Service_Banner.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXLVX3G6O%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T144710Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQChGFbqW1AwmmVPHNt9rwQxnxfTS%2FMnUYNkF%2FwTRCcbRAIgYjjm41l%2F2pq%2BsMc%2Bmu0Nn0FFRynsw9134TaV77pb3hQqsQUILhADGgwwMTM2MTkyNzQ4NDkiDCduQHOqgZLHDp3VqiqOBT1ddvZpn99UKj7aPwG%2BgFwzpgDURgzmEIsWKS2H6r57J6hLYxwMKe19xWRcM0Fo2G%2FLkWEruLoa4hyFbLmccmcJCu5dCz3hHF9P3dippc5j638Z2j6lPbjmqcf8b3JyGbR7PnEZF%2BAjIXjzhgwYsyrUBGR6ia3xXVVZ3O3Tb541pZTL9PieWeZRnatMz0kjaQzUAXGiCOlmWhcd3SA%2FgHYyFZgA29tXShDvXX%2FHNRTtKcpBREpYvgUSGNQTvMTvQeumWmw8FGkDaY8MT4sByYRWItoPKXUHNX7oIdKsebeDQ3IXS01ZQmkiJfj%2FA4SayNiU6hqLbN4mrtwo5UoM1TJAiwTbFm%2Bze81t6wIfz%2BBt2fCTIX3GoJnk9XH5keXKkUdGqm7hFdyyxHlbdAtqOZhgm2lagBv67Tm%2Fdq6rc02SdaEyaXBq523ti1la5PZJpTUsV8i9I%2F5wI2xN64IbQykEKwwH1nKYMORybZ1YmevWIztFiyGwqyWgp1vmh3zeGTQfC2OTSMyF1sddduP4uNLxdFqxggZdHKgvk7VsybQutgGlTLZ0FdQ3ro4gtIBbNpPF%2BacjWu4N%2FAqIjjfRwZcPhrHBGf5r11AaZZK7cL9102OYnAX84HTbkGkSrWcnAmZqHWiISzMHognnL9rKDXe0yuQP2mJH6gP8mBJRm%2FMmr%2FE5FHhilG8x2ed2UfBEiiC%2BmDk7LeKAUrauJKiOfUU9DT9KreZUpUvaF3W6gb5MVfJYBrEWfJhYlrP0YONSSd5%2F%2FGFGNFIcpyxh1IkaOBAeSWVBhsMzx5oaV2DthkC6mGDKPvmsfp%2BJTwbxXUNyq341RESgZllxPuzY0sfcms5Em5i0lJpPlsieZ1dj6jCYhsXGBjqxAd%2FkUFxKYN%2BXPLJG9sL6HXpynwSsxSKP2RCPxWinf07aXnag3NTc5E5hoIhWeS2AYa6XIghfSE0BWE7A3CfgJ6hiBERzCns%2FKWI3%2FayNBo1HBiYhxnVJI69LkXqu7VP02f9N8DNVCxazFhOCU8id23DFRxLbaBTHAR4IEQoWfQfBOwAcOSeA6Dk7NSs4XWiw2UbNkw%2FJMhAAkPh33eUPZqh5hXLwxPJwQNWa%2B20pAcaU%2Fg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=66af426917c0c94d7ad72671f2f4e0d9199b6eb748d4576858def3446bc3f4a5",
+      "file_size": 13638,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 96185,
+      "file_name": "Open_Ports.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/096/185/d3bad4b0c1ba0ca3d23277eabcfc1afe4a664891/Open_Ports.PNG?response-content-disposition=attachment%3B%20filename%3D%22Open_Ports.PNG%22%3B%20filename%2A%3DUTF-8%27%27Open_Ports.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXLVX3G6O%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T144710Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQChGFbqW1AwmmVPHNt9rwQxnxfTS%2FMnUYNkF%2FwTRCcbRAIgYjjm41l%2F2pq%2BsMc%2Bmu0Nn0FFRynsw9134TaV77pb3hQqsQUILhADGgwwMTM2MTkyNzQ4NDkiDCduQHOqgZLHDp3VqiqOBT1ddvZpn99UKj7aPwG%2BgFwzpgDURgzmEIsWKS2H6r57J6hLYxwMKe19xWRcM0Fo2G%2FLkWEruLoa4hyFbLmccmcJCu5dCz3hHF9P3dippc5j638Z2j6lPbjmqcf8b3JyGbR7PnEZF%2BAjIXjzhgwYsyrUBGR6ia3xXVVZ3O3Tb541pZTL9PieWeZRnatMz0kjaQzUAXGiCOlmWhcd3SA%2FgHYyFZgA29tXShDvXX%2FHNRTtKcpBREpYvgUSGNQTvMTvQeumWmw8FGkDaY8MT4sByYRWItoPKXUHNX7oIdKsebeDQ3IXS01ZQmkiJfj%2FA4SayNiU6hqLbN4mrtwo5UoM1TJAiwTbFm%2Bze81t6wIfz%2BBt2fCTIX3GoJnk9XH5keXKkUdGqm7hFdyyxHlbdAtqOZhgm2lagBv67Tm%2Fdq6rc02SdaEyaXBq523ti1la5PZJpTUsV8i9I%2F5wI2xN64IbQykEKwwH1nKYMORybZ1YmevWIztFiyGwqyWgp1vmh3zeGTQfC2OTSMyF1sddduP4uNLxdFqxggZdHKgvk7VsybQutgGlTLZ0FdQ3ro4gtIBbNpPF%2BacjWu4N%2FAqIjjfRwZcPhrHBGf5r11AaZZK7cL9102OYnAX84HTbkGkSrWcnAmZqHWiISzMHognnL9rKDXe0yuQP2mJH6gP8mBJRm%2FMmr%2FE5FHhilG8x2ed2UfBEiiC%2BmDk7LeKAUrauJKiOfUU9DT9KreZUpUvaF3W6gb5MVfJYBrEWfJhYlrP0YONSSd5%2F%2FGFGNFIcpyxh1IkaOBAeSWVBhsMzx5oaV2DthkC6mGDKPvmsfp%2BJTwbxXUNyq341RESgZllxPuzY0sfcms5Em5i0lJpPlsieZ1dj6jCYhsXGBjqxAd%2FkUFxKYN%2BXPLJG9sL6HXpynwSsxSKP2RCPxWinf07aXnag3NTc5E5hoIhWeS2AYa6XIghfSE0BWE7A3CfgJ6hiBERzCns%2FKWI3%2FayNBo1HBiYhxnVJI69LkXqu7VP02f9N8DNVCxazFhOCU8id23DFRxLbaBTHAR4IEQoWfQfBOwAcOSeA6Dk7NSs4XWiw2UbNkw%2FJMhAAkPh33eUPZqh5hXLwxPJwQNWa%2B20pAcaU%2Fg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=8d9d0126761980e948d6088801a011fc1e8da3d00d982dd06788e7a2edcbd0a9",
+      "file_size": 31938,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 96186,
+      "file_name": "Remote_Desktop.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/096/186/f54ee7195afc19cda41571cc744c4b1ffcd027b9/Remote_Desktop.png?response-content-disposition=attachment%3B%20filename%3D%22Remote_Desktop.png%22%3B%20filename%2A%3DUTF-8%27%27Remote_Desktop.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXLVX3G6O%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T144710Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQChGFbqW1AwmmVPHNt9rwQxnxfTS%2FMnUYNkF%2FwTRCcbRAIgYjjm41l%2F2pq%2BsMc%2Bmu0Nn0FFRynsw9134TaV77pb3hQqsQUILhADGgwwMTM2MTkyNzQ4NDkiDCduQHOqgZLHDp3VqiqOBT1ddvZpn99UKj7aPwG%2BgFwzpgDURgzmEIsWKS2H6r57J6hLYxwMKe19xWRcM0Fo2G%2FLkWEruLoa4hyFbLmccmcJCu5dCz3hHF9P3dippc5j638Z2j6lPbjmqcf8b3JyGbR7PnEZF%2BAjIXjzhgwYsyrUBGR6ia3xXVVZ3O3Tb541pZTL9PieWeZRnatMz0kjaQzUAXGiCOlmWhcd3SA%2FgHYyFZgA29tXShDvXX%2FHNRTtKcpBREpYvgUSGNQTvMTvQeumWmw8FGkDaY8MT4sByYRWItoPKXUHNX7oIdKsebeDQ3IXS01ZQmkiJfj%2FA4SayNiU6hqLbN4mrtwo5UoM1TJAiwTbFm%2Bze81t6wIfz%2BBt2fCTIX3GoJnk9XH5keXKkUdGqm7hFdyyxHlbdAtqOZhgm2lagBv67Tm%2Fdq6rc02SdaEyaXBq523ti1la5PZJpTUsV8i9I%2F5wI2xN64IbQykEKwwH1nKYMORybZ1YmevWIztFiyGwqyWgp1vmh3zeGTQfC2OTSMyF1sddduP4uNLxdFqxggZdHKgvk7VsybQutgGlTLZ0FdQ3ro4gtIBbNpPF%2BacjWu4N%2FAqIjjfRwZcPhrHBGf5r11AaZZK7cL9102OYnAX84HTbkGkSrWcnAmZqHWiISzMHognnL9rKDXe0yuQP2mJH6gP8mBJRm%2FMmr%2FE5FHhilG8x2ed2UfBEiiC%2BmDk7LeKAUrauJKiOfUU9DT9KreZUpUvaF3W6gb5MVfJYBrEWfJhYlrP0YONSSd5%2F%2FGFGNFIcpyxh1IkaOBAeSWVBhsMzx5oaV2DthkC6mGDKPvmsfp%2BJTwbxXUNyq341RESgZllxPuzY0sfcms5Em5i0lJpPlsieZ1dj6jCYhsXGBjqxAd%2FkUFxKYN%2BXPLJG9sL6HXpynwSsxSKP2RCPxWinf07aXnag3NTc5E5hoIhWeS2AYa6XIghfSE0BWE7A3CfgJ6hiBERzCns%2FKWI3%2FayNBo1HBiYhxnVJI69LkXqu7VP02f9N8DNVCxazFhOCU8id23DFRxLbaBTHAR4IEQoWfQfBOwAcOSeA6Dk7NSs4XWiw2UbNkw%2FJMhAAkPh33eUPZqh5hXLwxPJwQNWa%2B20pAcaU%2Fg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=afd1ee876f88c3659519262f54ef4bfb4824ec17360fd69ab72986b6f00a12a9",
+      "file_size": 29736,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 96187,
+      "file_name": "Remove_FileZilla_version.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/096/187/b0e8bd102954b8e75001ff7a731d2df70e7db6a2/Remove_FileZilla_version.PNG?response-content-disposition=attachment%3B%20filename%3D%22Remove_FileZilla_version.PNG%22%3B%20filename%2A%3DUTF-8%27%27Remove_FileZilla_version.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXLVX3G6O%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T144710Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQChGFbqW1AwmmVPHNt9rwQxnxfTS%2FMnUYNkF%2FwTRCcbRAIgYjjm41l%2F2pq%2BsMc%2Bmu0Nn0FFRynsw9134TaV77pb3hQqsQUILhADGgwwMTM2MTkyNzQ4NDkiDCduQHOqgZLHDp3VqiqOBT1ddvZpn99UKj7aPwG%2BgFwzpgDURgzmEIsWKS2H6r57J6hLYxwMKe19xWRcM0Fo2G%2FLkWEruLoa4hyFbLmccmcJCu5dCz3hHF9P3dippc5j638Z2j6lPbjmqcf8b3JyGbR7PnEZF%2BAjIXjzhgwYsyrUBGR6ia3xXVVZ3O3Tb541pZTL9PieWeZRnatMz0kjaQzUAXGiCOlmWhcd3SA%2FgHYyFZgA29tXShDvXX%2FHNRTtKcpBREpYvgUSGNQTvMTvQeumWmw8FGkDaY8MT4sByYRWItoPKXUHNX7oIdKsebeDQ3IXS01ZQmkiJfj%2FA4SayNiU6hqLbN4mrtwo5UoM1TJAiwTbFm%2Bze81t6wIfz%2BBt2fCTIX3GoJnk9XH5keXKkUdGqm7hFdyyxHlbdAtqOZhgm2lagBv67Tm%2Fdq6rc02SdaEyaXBq523ti1la5PZJpTUsV8i9I%2F5wI2xN64IbQykEKwwH1nKYMORybZ1YmevWIztFiyGwqyWgp1vmh3zeGTQfC2OTSMyF1sddduP4uNLxdFqxggZdHKgvk7VsybQutgGlTLZ0FdQ3ro4gtIBbNpPF%2BacjWu4N%2FAqIjjfRwZcPhrHBGf5r11AaZZK7cL9102OYnAX84HTbkGkSrWcnAmZqHWiISzMHognnL9rKDXe0yuQP2mJH6gP8mBJRm%2FMmr%2FE5FHhilG8x2ed2UfBEiiC%2BmDk7LeKAUrauJKiOfUU9DT9KreZUpUvaF3W6gb5MVfJYBrEWfJhYlrP0YONSSd5%2F%2FGFGNFIcpyxh1IkaOBAeSWVBhsMzx5oaV2DthkC6mGDKPvmsfp%2BJTwbxXUNyq341RESgZllxPuzY0sfcms5Em5i0lJpPlsieZ1dj6jCYhsXGBjqxAd%2FkUFxKYN%2BXPLJG9sL6HXpynwSsxSKP2RCPxWinf07aXnag3NTc5E5hoIhWeS2AYa6XIghfSE0BWE7A3CfgJ6hiBERzCns%2FKWI3%2FayNBo1HBiYhxnVJI69LkXqu7VP02f9N8DNVCxazFhOCU8id23DFRxLbaBTHAR4IEQoWfQfBOwAcOSeA6Dk7NSs4XWiw2UbNkw%2FJMhAAkPh33eUPZqh5hXLwxPJwQNWa%2B20pAcaU%2Fg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=5836a24af5f612e781d4847c81726c6b977056efe10cd9b85763138f880a7fba",
+      "file_size": 17243,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 96188,
+      "file_name": "SSH_Service_Banner.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/096/188/6532ae7d069d89dfafa7ffab238822138be207fa/SSH_Service_Banner.PNG?response-content-disposition=attachment%3B%20filename%3D%22SSH_Service_Banner.PNG%22%3B%20filename%2A%3DUTF-8%27%27SSH_Service_Banner.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXLVX3G6O%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T144710Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQChGFbqW1AwmmVPHNt9rwQxnxfTS%2FMnUYNkF%2FwTRCcbRAIgYjjm41l%2F2pq%2BsMc%2Bmu0Nn0FFRynsw9134TaV77pb3hQqsQUILhADGgwwMTM2MTkyNzQ4NDkiDCduQHOqgZLHDp3VqiqOBT1ddvZpn99UKj7aPwG%2BgFwzpgDURgzmEIsWKS2H6r57J6hLYxwMKe19xWRcM0Fo2G%2FLkWEruLoa4hyFbLmccmcJCu5dCz3hHF9P3dippc5j638Z2j6lPbjmqcf8b3JyGbR7PnEZF%2BAjIXjzhgwYsyrUBGR6ia3xXVVZ3O3Tb541pZTL9PieWeZRnatMz0kjaQzUAXGiCOlmWhcd3SA%2FgHYyFZgA29tXShDvXX%2FHNRTtKcpBREpYvgUSGNQTvMTvQeumWmw8FGkDaY8MT4sByYRWItoPKXUHNX7oIdKsebeDQ3IXS01ZQmkiJfj%2FA4SayNiU6hqLbN4mrtwo5UoM1TJAiwTbFm%2Bze81t6wIfz%2BBt2fCTIX3GoJnk9XH5keXKkUdGqm7hFdyyxHlbdAtqOZhgm2lagBv67Tm%2Fdq6rc02SdaEyaXBq523ti1la5PZJpTUsV8i9I%2F5wI2xN64IbQykEKwwH1nKYMORybZ1YmevWIztFiyGwqyWgp1vmh3zeGTQfC2OTSMyF1sddduP4uNLxdFqxggZdHKgvk7VsybQutgGlTLZ0FdQ3ro4gtIBbNpPF%2BacjWu4N%2FAqIjjfRwZcPhrHBGf5r11AaZZK7cL9102OYnAX84HTbkGkSrWcnAmZqHWiISzMHognnL9rKDXe0yuQP2mJH6gP8mBJRm%2FMmr%2FE5FHhilG8x2ed2UfBEiiC%2BmDk7LeKAUrauJKiOfUU9DT9KreZUpUvaF3W6gb5MVfJYBrEWfJhYlrP0YONSSd5%2F%2FGFGNFIcpyxh1IkaOBAeSWVBhsMzx5oaV2DthkC6mGDKPvmsfp%2BJTwbxXUNyq341RESgZllxPuzY0sfcms5Em5i0lJpPlsieZ1dj6jCYhsXGBjqxAd%2FkUFxKYN%2BXPLJG9sL6HXpynwSsxSKP2RCPxWinf07aXnag3NTc5E5hoIhWeS2AYa6XIghfSE0BWE7A3CfgJ6hiBERzCns%2FKWI3%2FayNBo1HBiYhxnVJI69LkXqu7VP02f9N8DNVCxazFhOCU8id23DFRxLbaBTHAR4IEQoWfQfBOwAcOSeA6Dk7NSs4XWiw2UbNkw%2FJMhAAkPh33eUPZqh5hXLwxPJwQNWa%2B20pAcaU%2Fg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=7fc9b56d60347f6d1da9028f047a5e71efedebc695c422e4038cf43e4317e5d3",
+      "file_size": 7260,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-07-06T22:29:29.894Z",
+  "allow_singular_disclosure_after": -290708260.9556188,
+  "singular_disclosure_allowed": true,
+  "vote_count": 3,
+  "voters": [
+    "dyabla",
+    "insid3code",
+    "brimstone"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
