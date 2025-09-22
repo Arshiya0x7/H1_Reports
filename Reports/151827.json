@@ -1,0 +1,148 @@
+{
+  "id": 151827,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNTE4Mjc=",
+  "url": "https://hackerone.com/reports/151827",
+  "title": "The contribution save option seem to be vulnerable to CSRF",
+  "state": "Closed",
+  "substate": "informative",
+  "severity_rating": "none",
+  "readable_substate": "Informative",
+  "created_at": "2016-07-16T21:57:46.306Z",
+  "submitted_at": "2016-07-16T21:57:46.306Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "roshanpty",
+    "url": "/roshanpty",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/050/237/ea48df82ad7c243880d400d7a2e0b6585b6f526f_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 1868,
+    "url": "https://hackerone.com/gratipay",
+    "handle": "gratipay",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/001/868/a75c6649c5b4671b3cf44160af884a7da9fd0b67_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/001/868/a75c6649c5b4671b3cf44160af884a7da9fd0b67_original.jpg/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "disabled",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Gratipay",
+      "twitter_handle": "Gratipay",
+      "website": "https://gratipay.com/",
+      "about": "Gratitude? Gratipay! The easiest way for your company to pay for open source."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2016-07-17T15:14:38.881Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-07-17T15:14:38.825Z",
+  "team_member_agreed_on_going_public_at": "2016-07-17T14:55:44.978Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "The application is vulnerable to Cross Site Request Forgery\n====================\n\nDescription\n---------------------\nThe option in the application to save weekly contribution for a project is vulnerable to Cross Site Request forgery. \n**Note:** I am unable to perform the action itself normally. But it is obvious that the application uses no protection against CSRF and the token named **csrf_token** is being passed in the cookie instead of a post parameter or HTTP header. \n\nDetailed Steps:\n---------------------\n**Step 1:** Open a project and modify the weekly contribution for the same. \n{F105367}\n**Step 2:** Send the request to save the modified value.\n{F105368}\n**Step 3:** It can be observed that no kind of CSRF protection is employed and the request can be recreated in the following URL format. If anyone clicks on the link in a browser where they are already logged in to gratipay, the amount will be automatically updated.\nhttps://gratipay.com/<project>/payment-instruction.json?amount=<amount>",
+  "weakness": {
+    "id": 45,
+    "name": "Cross-Site Request Forgery (CSRF)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 105367,
+      "file_name": "2016-07-16_17_50_20-Passwork_-_Gratipay.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/105/367/b5b36faede7021f53e9f619c8a2aeea9eb395f32/2016-07-16_17_50_20-Passwork_-_Gratipay.png?response-content-disposition=attachment%3B%20filename%3D%222016-07-16_17_50_20-Passwork_-_Gratipay.png%22%3B%20filename%2A%3DUTF-8%27%272016-07-16_17_50_20-Passwork_-_Gratipay.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ5DEFEEWH%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T152903Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCKHXdu2k6hZksZlVQ7lb5CD7Dq7NEDUKIDEpcdNn5AUgIgEM5CTN9iEl5mglLkfAYhenK892jQaZ%2BTDedkOYB40ZMqsQUILxADGgwwMTM2MTkyNzQ4NDkiDB91rL2NVBcRb76GeyqOBdJdnOqtauqCyIwXqa%2FkmDztDgMxq3wYBdBrdI9%2Bf84Hu44KJwmIM85o4f%2FGLSE1yvmCJG6b5pPwapl6%2FsQMvG4z4b9J%2BQ688FcciT3jIqVns465EDk1CTh2VujLyk8zK4nGLQIwjw5rASPMlsPfAXpzbJlxn6%2BJXT8YWpC8zwJrUwRJLio4HK9LHrCJPdfjebOXKY%2BwmXmNb%2FUBjqrx2iP3h3x4ugHUGWIsQgYu3Mt4l1q7J8mp9Z4zIOqqV66zBU0jf%2FnDr2IKftGYXcf%2F6kx2lyP2GraydpgW3wPLa5rGmr2ANhI9NAh7moHgG7jl%2FpAMqeU6PVdp0IMAW2Q5OOFyhrk99VHUJ%2BZQ8mNK57obHeGmrFdwm6V1yLYMBNsLdlHxK%2BXoxNWnqNOIegMuZySojzJglsgXU5SP1zC445odCFSWmbnJvUlvb0sKjS6LW0se4PM34p%2FFX1E1cUyHZnwxO2r31AMTyaSLdFs%2BxAITW5uZj4LC0PiCzMU5YFx1Xet5m70pTmO4K995mbXsTvuYeFycxBupKUa3UA9kH9hfJLlve3g0K6%2Fc7F9HF2gQ%2FHjnGOJouF61VxYkn4XvClfFVjduyKC3gHFiZwLsuKULGyBONuM%2B5rnumhTiqCYlRwqwfmr6ZZXp6lgBo%2B95yyuBTVrNh%2FkdN2pCLHJcOzJGUo%2BbdzlmulSe9Vu6zi8dDn1v2Ci60Y0EwhZmwBbTgd3BRSACf6hp2kmk%2FTBriJS%2Fk%2B3AQosVB8R6msSILn6vViobakxybHlqncX7y9yq62QgziCuqEQF8LLwtz5HutXc4TcmejbIXkIC6xYpCcWHHDMljsJQo3zWGQPY9E4wlwUhUWytJKJEAnybTIiAzzD1tsXGBjqxAdB9sogm1GjvuEUXf6YUlj%2FO%2BlQd%2Fmxe5%2F%2F2%2FRjknK%2BRiUsm6sTTOgKWXGZ0VI%2FyiRPCIs39kFeFJZkvd7hFEk2KvB%2FutvqQhQ3kuBlGM9yIYLK5QUtq%2Bfvo0LhfHQc%2FswHgnRLGuUVX4JAkCP7Y8CjTAomdoUmTqP28Rkf6eJhqGO0h3TPbmZS2KLEpaOKb9zLYus3JND7v0yvg1IsS0uyZVvjSjSOeVbF6zSie3z9x5g%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=8661b7e9e2af58e25aaec369baff7524a66d4b4eb7c8e742844935f726526335",
+      "file_size": 13098,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 105368,
+      "file_name": "2016-07-16_17_51_39-Program_Manager.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/105/368/6870a9bfb4a187a794d76cbdf1c4be7e31780288/2016-07-16_17_51_39-Program_Manager.png?response-content-disposition=attachment%3B%20filename%3D%222016-07-16_17_51_39-Program_Manager.png%22%3B%20filename%2A%3DUTF-8%27%272016-07-16_17_51_39-Program_Manager.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ5DEFEEWH%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T152903Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCKHXdu2k6hZksZlVQ7lb5CD7Dq7NEDUKIDEpcdNn5AUgIgEM5CTN9iEl5mglLkfAYhenK892jQaZ%2BTDedkOYB40ZMqsQUILxADGgwwMTM2MTkyNzQ4NDkiDB91rL2NVBcRb76GeyqOBdJdnOqtauqCyIwXqa%2FkmDztDgMxq3wYBdBrdI9%2Bf84Hu44KJwmIM85o4f%2FGLSE1yvmCJG6b5pPwapl6%2FsQMvG4z4b9J%2BQ688FcciT3jIqVns465EDk1CTh2VujLyk8zK4nGLQIwjw5rASPMlsPfAXpzbJlxn6%2BJXT8YWpC8zwJrUwRJLio4HK9LHrCJPdfjebOXKY%2BwmXmNb%2FUBjqrx2iP3h3x4ugHUGWIsQgYu3Mt4l1q7J8mp9Z4zIOqqV66zBU0jf%2FnDr2IKftGYXcf%2F6kx2lyP2GraydpgW3wPLa5rGmr2ANhI9NAh7moHgG7jl%2FpAMqeU6PVdp0IMAW2Q5OOFyhrk99VHUJ%2BZQ8mNK57obHeGmrFdwm6V1yLYMBNsLdlHxK%2BXoxNWnqNOIegMuZySojzJglsgXU5SP1zC445odCFSWmbnJvUlvb0sKjS6LW0se4PM34p%2FFX1E1cUyHZnwxO2r31AMTyaSLdFs%2BxAITW5uZj4LC0PiCzMU5YFx1Xet5m70pTmO4K995mbXsTvuYeFycxBupKUa3UA9kH9hfJLlve3g0K6%2Fc7F9HF2gQ%2FHjnGOJouF61VxYkn4XvClfFVjduyKC3gHFiZwLsuKULGyBONuM%2B5rnumhTiqCYlRwqwfmr6ZZXp6lgBo%2B95yyuBTVrNh%2FkdN2pCLHJcOzJGUo%2BbdzlmulSe9Vu6zi8dDn1v2Ci60Y0EwhZmwBbTgd3BRSACf6hp2kmk%2FTBriJS%2Fk%2B3AQosVB8R6msSILn6vViobakxybHlqncX7y9yq62QgziCuqEQF8LLwtz5HutXc4TcmejbIXkIC6xYpCcWHHDMljsJQo3zWGQPY9E4wlwUhUWytJKJEAnybTIiAzzD1tsXGBjqxAdB9sogm1GjvuEUXf6YUlj%2FO%2BlQd%2Fmxe5%2F%2F2%2FRjknK%2BRiUsm6sTTOgKWXGZ0VI%2FyiRPCIs39kFeFJZkvd7hFEk2KvB%2FutvqQhQ3kuBlGM9yIYLK5QUtq%2Bfvo0LhfHQc%2FswHgnRLGuUVX4JAkCP7Y8CjTAomdoUmTqP28Rkf6eJhqGO0h3TPbmZS2KLEpaOKb9zLYus3JND7v0yvg1IsS0uyZVvjSjSOeVbF6zSie3z9x5g%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=f0569f6bb154cad4dbb62311b5cfc624ecc351bd13bf49bbecc537811eb9ef8b",
+      "file_size": 69733,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 3,
+  "voters": [
+    "wkcaj",
+    "bugdiscloseguys",
+    "dyabla"
+  ],
+  "severity": {
+    "rating": "none",
+    "author_type": "Team"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "id": 2230,
+      "category": "researcher",
+      "content": "Gratipay validates an X-CSRF header to prevent CSRF attacks. During my tests it weirdly did not append those headers and I presumed that it could be an implementation flaw which can further be leveraged to perform CSRF attacks. This was a false positive. Thanks to @nache_ for rightly pointing it out.",
+      "updated_at": "2016-07-17T15:13:43.698Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 50237,
+        "username": "roshanpty",
+        "name": "rosh",
+        "bio": "An infosec enthusiast, incident handler and a penetration tester",
+        "cleared": false,
+        "verified": false,
+        "website": "https://www.linkedin.com/in/roshanpty",
+        "location": "United States",
+        "created_at": "2016-01-09T20:14:17.799Z",
+        "url": "https://hackerone.com/roshanpty",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "hacker",
+        "profile_picture_urls": {
+          "small": "https://profile-photos.hackerone-user-content.com/variants/000/050/237/ea48df82ad7c243880d400d7a2e0b6585b6f526f_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/000/050/237/ea48df82ad7c243880d400d7a2e0b6585b6f526f_original.jpg/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a",
+          "xtralarge": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NzExNCwicHVyIjoiYmxvYl9pZCJ9fQ==--b2bd76ec7ce904d71206a8321639282b9847dc0a/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJyZXNpemUiOiIyNjB4MjYwXHUwMDNlIn0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--cf3aeca803d1baf476958c689ca7b472a4cb54f1/round-error-icon-16.jpg"
+        }
+      }
+    }
+  ]
+}
