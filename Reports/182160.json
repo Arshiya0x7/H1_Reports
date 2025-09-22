@@ -1,0 +1,145 @@
+{
+  "id": 182160,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xODIxNjA=",
+  "url": "https://hackerone.com/reports/182160",
+  "title": "XSS in IE11 on portswigger.net via Flash",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-11-14T21:07:33.860Z",
+  "submitted_at": "2016-11-14T21:07:33.860Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "opnsec",
+    "url": "/opnsec",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/002/871/17ffe7f89623315912b4a69a6441247262583484_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 15252,
+    "url": "https://hackerone.com/portswigger",
+    "handle": "portswigger",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/015/252/60e8778f4f1fee57ea2b164a7d2ec1e2d2dd7bc8_original./235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/015/252/60e8778f4f1fee57ea2b164a7d2ec1e2d2dd7bc8_original./3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "PortSwigger Web Security",
+      "twitter_handle": "Burp_Suite",
+      "website": "https://portswigger.net",
+      "about": "Burp Suite is the leading software for web security testing"
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2016-11-30T16:32:07.216Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-11-30T16:32:07.159Z",
+  "team_member_agreed_on_going_public_at": "2016-11-30T14:20:52.665Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello Portswigger Security Team,\n\nThere is a reflective XSS vulnerability in portswigger.net. The flash file `https://portswigger.net/burp/tutorials/video-js/video-js.swf` is from an old video.js library (version 3.2.0) which is vulnerable to XSS.\nThis XSS will be blocked by CSP instruction `object-src https://portswigger.net/knowledgebase/papers/;` but it will execute on browsers that don't enforce this CSP like Internet Explorer 11.\n\nPOC link : https://portswigger.net/burp/tutorials/video-js/video-js.swf?readyFunction=alert%28document.domain%2b'%20XSSed!'%29\n\nPOC instructions :\n- Open the POC link in Internet Explorer 11 with flash active\n- The javascript payload executes in `https://portswigger.net`\n(Tested on Windows 10)\n\nMitigation :\nTo solve this issue, replace the old `https://portswigger.net/burp/tutorials/video-js` library with the updated video.js library from http://videojs.com/. It is also better to host any swf file on a sandbox subdomain.\n\nRegards,\n\nEnguerran @opnsec",
+  "weakness": {
+    "id": 60,
+    "name": "Cross-site Scripting (XSS) - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 134728,
+      "file_name": "Portswigger_XSS.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/134/728/31aa08000e08c4d7b2d49ec7fc92d1ea6def375f/Portswigger_XSS.png?response-content-disposition=attachment%3B%20filename%3D%22Portswigger_XSS.png%22%3B%20filename%2A%3DUTF-8%27%27Portswigger_XSS.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQRP4IY24O%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T002459Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCAIK4i55ICgKUrkze9Xdw7zHc%2FPWjOtaiSN43UqPL9KgIgVjbzkxH3I5Urgf5mB78Vi0WDgcLTxzr4pHoR9I%2BAIewqsQUIHxADGgwwMTM2MTkyNzQ4NDkiDKbSkd5RXhvPNyVWCyqOBcgfE6Ko939uofZjgHtS60QR5K%2BA5Vh2z2%2FnBEKzoCO0PCQQdO2Jj8%2BtKAuMUkE4jNu74DS8f%2B4jSLPlmGg8nRAtZf5%2BqVH3JyaPiaD1T5e%2FZQJVMgQC0UeNAZCVUIXru0vTPwJsdzJs3dohCoWvboWGCL7CCO0QvFCyqyZggnLPDur96tkWEKHYDr%2BlsOBWo7JkELPGK14By3fyV%2BSrkedzV5%2BVfi9%2F1CcrG2ailAz2uX1CXlvj8pruW1jBeuK2ZJy%2B25q9MU7D86a66rcNTZ0tTckqI9%2FZ1PRKjBmBEypqavgFsgL5O%2Br7bmGLQQRgcsZrSjF8ogceuMrh48RGRKF0OQLiqiI7VLRdy29UqPwq4e1GiC3JzYHhgr3v7d902OLTOt5qTUAZWrWXvr4%2FYajl8vXyDumlOdty1zNuUSBJDOwzDXaYYOq8fDObdomDF3Tj1Rf07r5OWa1hycF5KkjCvKSDX6PFhoVj%2F2b4H77FunphKJHedsufLEpuhrm9135YFWtt7O8kUn1%2BcxFtozozRPfxGHafQ5EL%2FXPhXcM53AXUQgwO2P0SZd1l4wBdOFgvS0yIW%2Fe0qRGKfM7PWWGc3ExFYh8%2FxxrBkQvqHHsmcls%2Bj2y5OgWY0t4vgaArx5H%2F0YKW2BZ2P8SLGh6X1M8yERry31davIYbnYeQ2jn6g1zxvPHsxsD8uTOcFu4mCz6xwd7O0%2B5G1%2FpIqHvUVAA3ayCth2WtPctqdQG0Cbj%2FyPzb5sS%2BJ13VNify1AcwGoxqSJZu%2FSu66ea2mVJ7rVk5X6yfqsMfW5oF3k2IvJoUjbU24%2FEDq08rsXVVebYjNRR%2B%2Bk1aeFThHCaLc7dmnuNAFvfGcItkLIPGFDckNDCh7MHGBjqxAYUVXDOlCX0u%2FPXg06tlOXML9KBIY98cEfiBgouJPth1QvKsaChMarkyZ8WTFKVPXMEtirxsb6rpqLn9U3vcGM3t62hSfWONEqLYb1zM7rfPH7szTSRDhQ5hyn97fSse1HUhRf3zfLpfMVS72qWTi6s9pJ38vGRsdVKDuOepU2ArGb7R3rdXonW1LqZuKcGIiq0g2q0zpno4ciLDqQ7JAYHBvCydXBUSroEuZPqKzaFIAQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=0d08061b6d13515a20b2e0b35785d52a757e964c9a4d6421cb79fedb6f00f5ad",
+      "file_size": 26219,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-12-30T14:20:52.703Z",
+  "allow_singular_disclosure_after": -275393046.6403101,
+  "singular_disclosure_allowed": true,
+  "vote_count": 33,
+  "voters": [
+    "d1m0ck",
+    "albinowax",
+    "hogarth45",
+    "michiel",
+    "suv",
+    "reactors08",
+    "spam404",
+    "yaworsk",
+    "zeeshank",
+    "dilawer",
+    "and 23 more..."
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "id": 2992,
+      "category": "team",
+      "content": "@opnsec found a forgotten unlinked Flash video player on portswigger.net that was vulnerable to XSS.  Fortunately our use of CSP partially mitigated it, meaning it could only be used to exploit Internet Explorer users. ",
+      "updated_at": "2016-11-30T13:12:15.482Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 56414,
+        "username": "albinowax",
+        "name": "James Kettle",
+        "bio": "@albinowax",
+        "cleared": true,
+        "verified": true,
+        "website": "https://jameskettle.com",
+        "location": "United Kingdom",
+        "created_at": "2016-02-15T11:34:15.992Z",
+        "url": "https://hackerone.com/albinowax",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "hacker",
+        "profile_picture_urls": {
+          "small": "https://profile-photos.hackerone-user-content.com/variants/000/056/414/9d843d496965d8c0e710de3867a41720c1577dc4_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/000/056/414/9d843d496965d8c0e710de3867a41720c1577dc4_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c",
+          "xtralarge": "https://profile-photos.hackerone-user-content.com/variants/000/056/414/9d843d496965d8c0e710de3867a41720c1577dc4_original.png/d6d8259739a2a4d509639b7804214d057bca547cc3fafe509ec3e3a86321b1d1"
+        }
+      }
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
