@@ -1,0 +1,115 @@
+{
+  "id": 123125,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMjMxMjU=",
+  "url": "https://hackerone.com/reports/123125",
+  "title": "XSS on hardware.shopify.com",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-03-15T01:03:38.664Z",
+  "submitted_at": "2016-03-15T01:03:38.664Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "virtualhunter",
+    "url": "/virtualhunter",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/052/708/b5875aa5a0697c2e10bf492467cc239e882c7a49_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 1382,
+    "url": "https://hackerone.com/shopify",
+    "handle": "shopify",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Shopify",
+      "twitter_handle": "",
+      "website": "https://www.shopify.com",
+      "about": "Shopify is a multi-channel commerce platform that helps people sell online, in-store, and everywhere in between."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2016-04-09T00:03:05.637Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-04-09T00:03:05.408Z",
+  "team_member_agreed_on_going_public_at": "2016-04-04T22:47:31.507Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "This is stored vulnerability for all your users, not only registered or signed in.\n\nVulnerable parameter: properties[builder_id] at *.shopify.com/cart/add\nThe vulnerability is in array levels. When you try something like \nproperties[builder_id][second_parameter]=value,\nyou will see many corrupted tags in HTML because 2-level array will return as \n\"builder_id\":{\"second_parameter \":\"value\"} instead of \"builder_id\":\"shapp_options_421549285_1455208671885\" in cart.js\n\nSo you could inject your code in tr,div,a,insert  tags. All you need - is redirect a victim to special url. For example, you cold try this: properties[builder_id][%20onmouseover%3dalert(1)%20]=value \nScript will strike when victim will move a coursor over product.\n\nHere is a link with your cookies in a harware store for example:\nhttp://hardware.shopify.com/cart/add?&id=1106494145&iPad%20Stand=1120276481&Cash%20Drawer=1120176153&Receipt%20Printer=1120166789&attributes[cart_exists]=true&properties[builder_id][%20onmouseover%3dalert(document.cookie)%20]=shapp_options_421549285_1455208671885&properties[master_builder][]=1&properties[test]=test&properties[value]=11&add\n\nI recommend you to check incoming parameters for arrays like here:\nhttp://php.net/manual/en/function.is-array.php",
+  "weakness": {
+    "id": 60,
+    "name": "Cross-site Scripting (XSS) - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 78845,
+      "file_name": "shopify.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/078/845/797e9ac5983f4f4e163ca1ec78428578f85ef582/shopify.jpg?response-content-disposition=attachment%3B%20filename%3D%22shopify.jpg%22%3B%20filename%2A%3DUTF-8%27%27shopify.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ3KM7UVYI%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T133846Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDvh7Po0uBf8NT5QhdGe3Ztn5gnBpO2P2vWZMU%2Fj46cFgIgRxNXCsdTlqwx%2B4J9qvcm0IjexkQPoBCXpcuy4Y8WUssqsgUILhADGgwwMTM2MTkyNzQ4NDkiDM1CbzK5zdCcvUKRjCqPBfFvpxEQeL%2FFVKfQab693y0xTvPA3NWnt2KaKt0ka6X7ArCpv7mi9Gs3X9AwPTQ4AuPsIvae2dxGqytr9h3bpXtNXUb1LUITPIPXN2ZfK1DBcyagdj0Z21zhidWMHf3yOLBnVx%2B5umkZyg%2Bb%2BUxUDGmxlfuplR7jlN3bf5ZR8nUzsCTauSXKXJdMXhL6axa64%2BLmUUgbxgoT1fngnFORczO2i3Sd%2F4vvtguhqOxD1tTYD6WKfrkiQPEuQwCRJTqIWxIUwRfir2gqPEKnZpObWF3Q3ohesjHRFiVLMx5fE3IPbVXRa7KxanKZDowuPl1RBaPMAFuzHaxqUtS5SEqFBrDq4biFUzaDbY73VRG8Dri%2FF%2FmJKi1jFyMp%2Fpm7plTAzHuvlw1QS1%2FbrLJ%2FaqiUiH%2F4Ukep4rA4%2Fb0nYLwHuTjcO%2BdpMuE94PSJcrp8kSt2q6ltWtlJu%2BAGlAG6vaTLcic5SviGV65959UoRWNIuPb%2B0WyCXcY6cx0%2B9JK6SxyjklUgNUS2nCxpury0vezm133IuUBQk9zwulEHUfm4xgvQ0qy9i69UtHP1BE3sFlP%2FIam8Q6LxjwGP7FI13i7vzQs%2FBy7JlyDnsNqzrOCDAc8UOzFb5djGbBgWw5xgODmld4K1lCY0kebH3kmh%2BI7AFU2oFSLrCtAxJ0ISAzPpswOCGWHp1bFIl1WFqVxvXk6Lw5gcW6T9oL7C4N1N0KFsYq94J3wy3xVe3%2F8l7jjcGBPx1FcyM%2BgKoXMhsL7%2BCLWOJSUK9sy8sLEj4XBasq7pD5umiOWAyHelnFfTSIfzU%2ByOYN0184KDt%2BiJUjruo9iVOnBrN847CnNN8jbk%2BlRDIcF03bqR%2BREFvzNWJQL8P%2Fww64HFxgY6sQHX7UuoXEnI5P1zHXKsHoTLz00MctLm36mhr%2Ftf3kEX8pMDkkRMbaoCEoKjCFd1Teu6L7ejihJ7EwjNkIPcbR2UK5QBbIYXe7MFl0Lq0Iv21BS%2BeGE3r3w1FJJrLNIzjpnTcAnv5X8hrPB2iAllf0zFylTG7IugbL7ojXrlMJdeEGKhfD%2BJkBDhpuEhDCtQvscwa6z5Jr43POrGGeT5KY2CS30b4lPrR7XsMgX0qPw%2B8do%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=0ea5b595ef638e017f1e533a2ae072a276c0a0efe593d892a7d5be2f93fe1c04",
+      "file_size": 167693,
+      "type": "image/jpeg",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-05-04T22:47:31.705Z",
+  "allow_singular_disclosure_after": -296146274.5565004,
+  "singular_disclosure_allowed": true,
+  "vote_count": 5,
+  "voters": [
+    "mashoud1122",
+    "sameerphad72",
+    "b6117130df17feef13481e3",
+    "dyabla",
+    "acka"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
