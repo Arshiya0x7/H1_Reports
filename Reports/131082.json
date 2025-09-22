@@ -1,0 +1,125 @@
+{
+  "id": 131082,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMzEwODI=",
+  "url": "https://hackerone.com/reports/131082",
+  "title": "Open Redirector via (apps/files_pdfviewer) for un-authenticated users.",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-04-15T12:37:01.271Z",
+  "submitted_at": "2016-04-15T12:37:01.271Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "penrose",
+    "url": "/penrose",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/068/816/473ac7cd95801046216fccf992eec634fced599d_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 3059,
+    "url": "https://hackerone.com/owncloud",
+    "handle": "owncloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/003/059/d31dc64427bbbf2e428a0b0b97bce59b98d2ba0d_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/003/059/d31dc64427bbbf2e428a0b0b97bce59b98d2ba0d_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "ownCloud",
+      "twitter_handle": "ownCloud",
+      "website": "https://www.owncloud.com",
+      "about": "ownCloud GmbH is the company behind the ownCloud Project - the most downloaded open source project for data and file sync, share and view."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2016-07-02T08:45:32.784Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-06-02T08:45:27.818Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Affected Products:  OWNCLOUD (https://demo.owncloud.org/index.php/apps/files_pdfviewer)\nVersion Tested: v1.0.712, other versions might be vulnerable\nClass:\tOpen Redirector\nRemote:\tYes\n\nA non authenticated user can be easily tricked into following one of the following links in order to download a supposedly uploaded file on an owncloud instance:\nThe EvilFile the pdfviewer is trying to redirect will not load in the viewer automatically. But if the user clicks the download button on the right upper corner of the viewer any file will be downloaded instantly and the browser will be redirected to a different domain (ex. https://evildomain.xx ).\n\n****OPEN REDIRECT Attack Replication Steps: \n\nStep 1: Visit https://demo.owncloud.org/index.php/apps/files_pdfviewer?file=https://evildomain.xx/EvilFile.xx [ Check POC1.jpg ]\n\nStep 2: Click Download button on the right upper corner of the viewer.\n\nStep 3: Browser is redirected to https://evildomain.xx/EvilFile.xx\n\nComment: No user authentication is required for the user to be redirected. All owncloud installations in the wild are vulnerable to this attack.\n\n\n****Example Phishing Message with OPEN REDIRECT Attack:\n\n\nMessage:\n\nPlease view the files i have shared with you by following the link below, if this file is not automatically opened please click the download button on the right upper corner: \n\nhttps://demo.owncloud.org/index.php/apps/files_pdfviewer?file=https://evildomain.xx/remote.php/webdav/Demo.pdf%20%3CIf%20this%20file%20is%20not%20available%20please%20click%20the%20dowload%20button%20on%20the%20right%20upper%20corner%3E [ Check POC2.jpg ]\n\n",
+  "bounty_amount": "150.0",
+  "formatted_bounty": "$150",
+  "weakness": {
+    "id": 53,
+    "name": "Open Redirect"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 85810,
+      "file_name": "POC2.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/085/810/a4c3ca26f8b79e1067cc190b4e0662c41a5a1cba/POC2.jpg?response-content-disposition=attachment%3B%20filename%3D%22POC2.jpg%22%3B%20filename%2A%3DUTF-8%27%27POC2.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4MXCCVR5%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T141440Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIHvTdP6fVrIY4ThGJ%2FM2RL86A0r8wJCds%2FYfQDR9UT1oAiEAqJQGWT8Mvi8GmA6L0ur%2FuBULlcrDd9%2FZ%2B6i%2FxiBQsCYqsQUILhADGgwwMTM2MTkyNzQ4NDkiDDa2sA9pWRcToFj%2FWSqOBbhGZkU7LgJsTirIEIVW426rchvcAIVXHI11q2BQQR3xkfHfg7QLEuVp6ki0VBmiy1%2FSdeWgZOKMXHMFVUQKFRl8uVzVZR357iXEcNhaCAjOhbeyRk1FbBB2zEQ2r1kAu7QoVBa5XApnXT1k6Y9AxsyKKCtmLVgVUfx4lSkqcz21XZcWKJyNlvmNoNQ8d7rcV79kpNbKcSv2ZYSZz%2FDQsLdPllsfDkMWkPLN7AzOgpHdak5AxvZcq8xYIMYjRV9PC8Gy0Fq6YcAvOg0CgfhSvxw1eIPQkyfhk4tniVQhEaNu%2F6YxP10SFzZg%2FBfwp7dmDb9NDJOGUbN1mnwZSjH%2BXcUR7kf12MaqLuSpq1UwL7BT94GmAGpFQ1X%2BotMXTqgzOcNF6o5gJZkFNlJnLR7lWHpR8iiwoY2p5B9YUTsbEzJThUK5b7xvFndaQjpjYjikaZe0377kHRH2AppLq%2FpMBEw0EyScVIqAHEBGDIb4MSRnHxLDDPcWPhubMqIiAPqIeZv5aL1gFqk0bTbwwIxRAvYel932vTssydrkB8IvI%2B3miXpvP6gkumxGTkdUWCa74qu1xjlNtpfQyRizTk%2BDYxOcSavL7ASv9kj4mTEv5%2Bh7ORUHAa3InaeVUY4uaN3UhmCgXuR4wiglCEgVarlsjOz%2Bb4SMFgFRBKBqeO%2F5mnBdJI4FoSTD3rQJocVrBxk3WaFnRsax2%2FMIij5SBZeiq9sWxI5ymisWsUYVoCT5z6TN7LIOdD7%2FZpSSBNKLrcxL%2Fqly%2FAzZfAPAc%2F%2BHynJCWTtHOmpTMl0i%2BIkeAaMXsUb26Q2EDNm%2FlgwmFcMg1D1JhuNw%2FV%2FnXAQpntGeQwi2N9xcq3mMXca4t6RTFRC5TzDsh8XGBjqxAROm%2FclN%2BpZTQ%2FAdHzn75bPu1xQjHkDpbjJQDITWF%2FkKSfZoWa6g0IpU35eGV8YARLrXZAxJSjwn80JycIKdvZPtqeX1br6aTdsikBQXDyZYo%2B9vaEd2zYFwNpCuHnYtsFz5dkY10lQgMmS25Jhz71Eifvb28elKfy6cFQ8aOR8X1KzkqvkZ3xSCD7qlA4x5vUuZfImf5zb6Qw3mjULJ05SSyMtbwIS%2BeWgO7%2Fwqm%2FJezQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=0fbfcde5bab7e3088d77e3f1bf16c8733f5b5f7aff00daaa36faae38551f6891",
+      "file_size": 123814,
+      "type": "image/jpeg",
+      "moderated": null
+    },
+    {
+      "id": 85811,
+      "file_name": "POC1.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/085/811/c43c7299ba59012455079b3584cf4499faded545/POC1.jpg?response-content-disposition=attachment%3B%20filename%3D%22POC1.jpg%22%3B%20filename%2A%3DUTF-8%27%27POC1.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4MXCCVR5%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T141440Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIHvTdP6fVrIY4ThGJ%2FM2RL86A0r8wJCds%2FYfQDR9UT1oAiEAqJQGWT8Mvi8GmA6L0ur%2FuBULlcrDd9%2FZ%2B6i%2FxiBQsCYqsQUILhADGgwwMTM2MTkyNzQ4NDkiDDa2sA9pWRcToFj%2FWSqOBbhGZkU7LgJsTirIEIVW426rchvcAIVXHI11q2BQQR3xkfHfg7QLEuVp6ki0VBmiy1%2FSdeWgZOKMXHMFVUQKFRl8uVzVZR357iXEcNhaCAjOhbeyRk1FbBB2zEQ2r1kAu7QoVBa5XApnXT1k6Y9AxsyKKCtmLVgVUfx4lSkqcz21XZcWKJyNlvmNoNQ8d7rcV79kpNbKcSv2ZYSZz%2FDQsLdPllsfDkMWkPLN7AzOgpHdak5AxvZcq8xYIMYjRV9PC8Gy0Fq6YcAvOg0CgfhSvxw1eIPQkyfhk4tniVQhEaNu%2F6YxP10SFzZg%2FBfwp7dmDb9NDJOGUbN1mnwZSjH%2BXcUR7kf12MaqLuSpq1UwL7BT94GmAGpFQ1X%2BotMXTqgzOcNF6o5gJZkFNlJnLR7lWHpR8iiwoY2p5B9YUTsbEzJThUK5b7xvFndaQjpjYjikaZe0377kHRH2AppLq%2FpMBEw0EyScVIqAHEBGDIb4MSRnHxLDDPcWPhubMqIiAPqIeZv5aL1gFqk0bTbwwIxRAvYel932vTssydrkB8IvI%2B3miXpvP6gkumxGTkdUWCa74qu1xjlNtpfQyRizTk%2BDYxOcSavL7ASv9kj4mTEv5%2Bh7ORUHAa3InaeVUY4uaN3UhmCgXuR4wiglCEgVarlsjOz%2Bb4SMFgFRBKBqeO%2F5mnBdJI4FoSTD3rQJocVrBxk3WaFnRsax2%2FMIij5SBZeiq9sWxI5ymisWsUYVoCT5z6TN7LIOdD7%2FZpSSBNKLrcxL%2Fqly%2FAzZfAPAc%2F%2BHynJCWTtHOmpTMl0i%2BIkeAaMXsUb26Q2EDNm%2FlgwmFcMg1D1JhuNw%2FV%2FnXAQpntGeQwi2N9xcq3mMXca4t6RTFRC5TzDsh8XGBjqxAROm%2FclN%2BpZTQ%2FAdHzn75bPu1xQjHkDpbjJQDITWF%2FkKSfZoWa6g0IpU35eGV8YARLrXZAxJSjwn80JycIKdvZPtqeX1br6aTdsikBQXDyZYo%2B9vaEd2zYFwNpCuHnYtsFz5dkY10lQgMmS25Jhz71Eifvb28elKfy6cFQ8aOR8X1KzkqvkZ3xSCD7qlA4x5vUuZfImf5zb6Qw3mjULJ05SSyMtbwIS%2BeWgO7%2Fwqm%2FJezQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=8972d7e72288e1b189a138a6c60620c96a026c670f3e1400ddbb1b5353214495",
+      "file_size": 68173,
+      "type": "image/jpeg",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-07-02T08:45:28.007Z",
+  "allow_singular_disclosure_after": -291101352.5761159,
+  "singular_disclosure_allowed": true,
+  "vote_count": 5,
+  "voters": [
+    "detroitsmash",
+    "penrose",
+    "spetr0x",
+    "dyabla",
+    "acka"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
