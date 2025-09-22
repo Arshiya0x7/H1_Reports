@@ -1,0 +1,110 @@
+{
+  "id": 153628,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNTM2Mjg=",
+  "url": "https://hackerone.com/reports/153628",
+  "title": "[Not just a server configuration issue] Full Path Disclosure ",
+  "state": "Closed",
+  "substate": "informative",
+  "readable_substate": "Informative",
+  "created_at": "2016-07-25T07:09:54.407Z",
+  "submitted_at": "2016-07-25T07:09:54.407Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "ahsan",
+    "url": "/ahsan",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/048/674/a85d1f36a4d4b4c6269951bc913cc6f4fc3fcb23_original.JPG/8774a5031fc14b74dc4404da039040c69df8ed41021007c0c2beb9de489fcf66"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 162,
+    "url": "https://hackerone.com/iandunn-projects",
+    "handle": "iandunn-projects",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/jo328q250pb9uztc4p1zivborzwy/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/jo328q250pb9uztc4p1zivborzwy/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Ian Dunn",
+      "twitter_handle": "",
+      "website": "",
+      "about": "I'm a WordPress developer who maintains several small open source projects."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2016-08-24T18:48:00.764Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2016-07-25T14:27:53.034Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hey, I've just found a 'full path disclosure' in basic-google-maps-placemarks, so it's not just a server configuration issue! I've tested it on different servers (including windows, ubuntu, CentOS etc..) \n\n#PoC\nSo, if we visit `wp-content/plugins/basic-google-maps-placemarks/unit-tests.php` it is clearly disclosing the full path as you can see in the following links:\n\n- http://jazzalajmi.com/espace-pro/wp-content/plugins/basic-google-maps-placemarks/unit-tests.php \n- http://ywamnorthwoods.org/setapart/wp-content/plugins/basic-google-maps-placemarks/unit-tests.php\n- http://www.t1fx.com/teamt1fx/wp-content/plugins/basic-google-maps-placemarks/unit-tests.php\n- http://www.processinstruments.net/wp-content/plugins/basic-google-maps-placemarks/unit-tests.php\n- http://faas-bh.com/001/03udruzene/wp-content/plugins/basic-google-maps-placemarks/unit-tests.php\n- http://www.dominihost.com.br/1line/wp-content/plugins/basic-google-maps-placemarks/unit-tests.php\n- http://www.dominihost.com.br/1line/wp-content/plugins/basic-google-maps-placemarks/unit-tests.php\n\nAnd eventually, in my localhost too:\n\n\n{F107116}\n\n\nWell, not all websites using basic-google-maps-placemarks, have a server configuration issue, so it's probably an issue in your plugin! :-)\n\n###Impact:\nWell, the possible impact is that if attacker gets into the server using other website, he might symlink and also get access to the site using that full path! \n\n>> *Request: Still if you are not going to fix this, please close as informativer*\n\nCheers,\nAhsan",
+  "weakness": {
+    "id": 18,
+    "name": "Information Disclosure"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 107116,
+      "file_name": "2016-07-25_00h04_51.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/107/116/ffdd42525e89cb854a0aa93dd233b5a50b75a5c6/2016-07-25_00h04_51.png?response-content-disposition=attachment%3B%20filename%3D%222016-07-25_00h04_51.png%22%3B%20filename%2A%3DUTF-8%27%272016-07-25_00h04_51.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6NXY2SSZ%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T153410Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIGJnpw3PEt91mN5O4a0y0gJT3bAVwo8B13Ou4eRyMp8YAiEA8%2Fdw6oi3r3qhqseCnWIJ%2BHWHdgs3q8WttKyNZmXz404qsgUILxADGgwwMTM2MTkyNzQ4NDkiDP1EO4TkUdX0vnM3syqPBfB%2FHm2rtSl9K0PYmCbSyfRnUDFAwrkYxCQescQ3xuHOoDEqUBHPQeug0HLgTvB3xgtlUnG5nNBnm9fhUpQeQXBMQ0ZDtHKes8ARDvR%2FgXKd1KmsQ6M%2B0GOvhCxkK7BqrwUIObpwZxhBYckQyIuEb%2FZV70neXjfGAprObbkVe9Ld4mdfe8MEMZilxuKchZQYH2b9kL9mdHzdyfksF28HCrRpFJhuYggH7XztTFoBIEpqkcrlytv69iUYhYyIAhIRbpJuip73OqdXXNX4wD%2BJPpN0SrFRUVuf1M4OI5d2%2BpzsOM6UxBH8fj%2BRKD8d%2F1G3H3eGKnGQNkHba34mZPmOQ6At%2B%2BlMnGfL2bZhvWGwr7ZeoJnv3CJE%2FFKEbq85dr7gF4i24Twuk8ZGXmrYXla0uNBd2AF7RWudJAKBPMZmkz355Q1XsqROHCaGqPTjv0%2FYdDmOCNRteClIpQKeMXEuDMF87koYRle%2BFJ%2FNgcCYNN%2B2RNh6ALJJBQZT5JcFmbmxzrZFqLdFYNanqKE5Zqcx25kiBe30ahHWSxDdbmXJI7im0FBrCPpjk0%2BdAOJOi8BlrS8hjLP28lNjwW%2Fzf%2BllMkb59NhTbyeZfnEH3DnlPkqPyVMVbGlp0lip3hjN96d3dClivrul5wt3SLYx%2BBX39wd5bXdb8jb1APrhjWGhSDtPKJBtYsJw1tgeVLPzNUR%2BVSl9USK%2FYUJSMH3ZzfwsNmeMNvc2br8gNMKds2wa4eUEluZE3CplwNNz85LQuXCNvCHOxSchFrw8rPLKsxGqS1864znLAvKf0OBewWz27RWd8CWP8%2FYr%2F3vTmykyosFy4y44GwxtG5%2FYSA5zbCGMaWuJx1nxs3F94brRA2hV%2BoIwp63FxgY6sQHN9q60YeZMBLiBqE%2FbQ1i1SGEYUpgjIJVxA5dMWEOyfyBr40ABN8yhXxN%2BMqxJdglzG0JTmYrWSiOSGCd9CqP4VQV%2FomlNLBRnZPylcklD%2BIi00dGSYOkufYnSLaAKcX3vCIqGd0uL0RUFKMnSo7CtDp4woO0WNixfyZ%2BthvsG5cdx8O64hvPuevt7rwvda3gHq%2FzjAqFA6o4G9eVU9AkyPAJI4x07nqQ6rzlg1KxyrIE%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=5c95d235b16afe8b5d63b1e87fc067cd37017d9a84b3b7b51e2b9536c3f87de4",
+      "file_size": 21909,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 2,
+  "voters": [
+    "spetr0x",
+    "dyabla"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
