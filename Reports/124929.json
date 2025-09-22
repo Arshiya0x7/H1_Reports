@@ -1,0 +1,159 @@
+{
+  "id": 124929,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMjQ5Mjk=",
+  "url": "https://hackerone.com/reports/124929",
+  "title": "External programs revealing info",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-03-22T10:00:39.023Z",
+  "submitted_at": "2016-03-22T10:00:39.023Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "1337coder",
+    "url": "/1337coder",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NDM2NiwicHVyIjoiYmxvYl9pZCJ9fQ==--4538efd991835e60e49f9730d67348793800a95c/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--2de8067d228529d65848a4eeed0bed0bb2531bc3/zargar.jpg"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13,
+    "url": "https://hackerone.com/security",
+    "handle": "security",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/013/fa942b9b1cbf4faf37482bf68458e1195aab9c02_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/013/fa942b9b1cbf4faf37482bf68458e1195aab9c02_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "HackerOne",
+      "twitter_handle": "Hacker0x01",
+      "website": "https://hackerone.com",
+      "about": "Vulnerability disclosure should be safe, transparent, and rewarding."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "no-content",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2016-04-01T08:44:42.215Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-04-01T08:44:41.614Z",
+  "team_member_agreed_on_going_public_at": "2016-04-01T08:00:59.182Z",
+  "comments_closed?": true,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "",
+  "bounty_amount": "1500.0",
+  "formatted_bounty": "$1,500",
+  "weakness": {
+    "id": 27,
+    "name": "Improper Authentication - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [],
+  "allow_singular_disclosure_at": "2016-05-01T08:01:13.334Z",
+  "allow_singular_disclosure_after": -296459290.9846408,
+  "singular_disclosure_allowed": true,
+  "vote_count": 8,
+  "voters": [
+    "shubham_srt",
+    "tbehroz",
+    "japz",
+    "0619",
+    "jugno",
+    "yasir",
+    "dyabla",
+    "destinedtohack"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "id": 1550,
+      "category": "team",
+      "content": "A bug in an authorization check was found by @1337coder on an endpoint that was showing the members of a team, as well as the team member groups that were set up. \n\nExample output:\n\n```\n[\n  {\n    \"id\":1,\n    \"username\":\"dirk\",\n    \"name\":\"dirk\",\n    \"bio\":\"\",\n    \"url\":\"https://hackerone.com/dirk\"\n  },\n  {\n    \"id\":2,\n    \"name\":\"Admin\",\n    \"team_members_count\":1\n  }\n]\n```\nThis was the case for all pages that have a private or sandboxed program, that also have a public page. Also affected were all public programs.\n\nThe fact if a user is a member of a team is not considered secret for most accounts, however for those that have chosen to be \"Concealed\", this method exposed this data. Also exposed were the team member group names and sizes, which is considered non-public data.\n\nAlthough this does not directly lead to a disclosure of private programs, the names of the team member groups can be very telling as to what a team is currently doing. A team that has set up a \"Triage\" and \"Bounty\" group can be expected to be running a private Bug Bounty. The number of members a team has can also be telling in this regard.\n\nAll endpoints that use this authorization method have been checked. Due to additional, more restrictive checks on these endpoints, no other data has been vulnerable. \n\nAlso, due to the mention of semi-private information about several programs on the platform, we have decided to disclose this under a \"limited\" timeline rather than try to redact every bit of non-public information.",
+      "updated_at": "2016-04-01T08:09:58.932Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 13067,
+        "username": "dirk",
+        "name": "Dirk",
+        "bio": "",
+        "cleared": false,
+        "verified": false,
+        "website": "https://www.foo.com",
+        "location": "",
+        "created_at": "2014-10-15T13:50:22.541Z",
+        "url": "https://hackerone.com/dirk",
+        "hackerone_triager": false,
+        "hackerone_employee": true,
+        "user_type": "company",
+        "profile_picture_urls": {
+          "small": "https://profile-photos.hackerone-user-content.com/variants/iwmxb0engle6ocn8h8tw1w2t1fks/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/iwmxb0engle6ocn8h8tw1w2t1fks/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c",
+          "xtralarge": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NjMwNjc5NCwicHVyIjoiYmxvYl9pZCJ9fQ==--83fd365e6ce12f978220b2b8123f94177e6966e7/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJyZXNpemUiOiIyNjB4MjYwXHUwMDNlIn0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--c155082ce6f9751dcb29cd6ea061a7e4d7329577/hackerone-icon-2048x2048-ctdo8ks8.png"
+        }
+      }
+    },
+    {
+      "id": 1552,
+      "category": "researcher",
+      "content": "The Bug was on \"Filter entities\" endpoint, that lead to disclosure of data which is mentioned in summary.\n\nI was able to fetch some important data which is considered as Non-public.\nFollow me on twitter @zargaryasir.",
+      "updated_at": "2016-03-23T12:31:34.896Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 18449,
+        "username": "1337coder",
+        "name": "Ubaid Zargar",
+        "bio": "I am a website security analyst from Kashmir",
+        "cleared": false,
+        "verified": false,
+        "website": "http://www.",
+        "location": "Srinagar Jammu and Kashmir",
+        "created_at": "2015-03-05T11:33:23.327Z",
+        "url": "https://hackerone.com/1337coder",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "hacker",
+        "profile_picture_urls": {
+          "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NDM2NiwicHVyIjoiYmxvYl9pZCJ9fQ==--4538efd991835e60e49f9730d67348793800a95c/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--2de8067d228529d65848a4eeed0bed0bb2531bc3/zargar.jpg",
+          "medium": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NDM2NiwicHVyIjoiYmxvYl9pZCJ9fQ==--4538efd991835e60e49f9730d67348793800a95c/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiODJ4ODJeIiwiY3JvcCI6IjgyeDgyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--29ac517e159d5d0770b357ab67c25f2cbc1a5e86/zargar.jpg",
+          "xtralarge": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NDM2NiwicHVyIjoiYmxvYl9pZCJ9fQ==--4538efd991835e60e49f9730d67348793800a95c/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJyZXNpemUiOiIyNjB4MjYwXHUwMDNlIn0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--cf3aeca803d1baf476958c689ca7b472a4cb54f1/zargar.jpg"
+        }
+      }
+    }
+  ]
+}
