@@ -1,0 +1,114 @@
+{
+  "id": 100565,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMDA1NjU=",
+  "url": "https://hackerone.com/reports/100565",
+  "title": "Executing scripts on slack-files.com using SVG",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2015-11-19T21:31:28.524Z",
+  "submitted_at": "2015-11-19T21:31:28.524Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "kamil_hism",
+    "url": "/kamil_hism",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/005/311/834a58ff0f4a82db11ee6fe0e38772150ea735f7_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 69,
+    "url": "https://hackerone.com/slack",
+    "handle": "slack",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/069/683fee312381bc46cadc7ea1950abc87944d12c3_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/069/683fee312381bc46cadc7ea1950abc87944d12c3_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Slack",
+      "twitter_handle": "slackhq",
+      "website": "https://slack.com",
+      "about": "All your team communication in one place, instantly searchable, and available wherever you go."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2016-02-18T21:02:48.459Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-01-19T21:02:46.955Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Impact\n\nAlthough `slack-files.com` is a sandbox domain, there are many ways to gain the victim's trust during phishing attack. For example, an attacker might render a fake log-in form with \"You need to sign in to see this file\" message and trick users into handing out their passwords.\n\n\n## Steps to reproduce\n\n1) Download attached to report or use the following code snippet to create SVG file:\n\n```js\n<svg width=\"100%\" height=\"100%\" viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\" onload=\"alert('script')\">\n  <script type=\"text/javascript\"><![CDATA[\n  // some exploit code here\n  ]]></script>\n\n  <circle cx=\"50\" cy=\"50\" r=\"50\" fill=\"green\" />\n</svg>\n```\n\nA SVG script and other DOM elements is equivalent to the elements in HTML, so in the example above `alert('script')` will be executed on svg load event.\n\n2) Upload constructed SVG file to some channel or dm in Slack.\n\n3) Click on message with just uploaded file.\n\n\n## Observed\nClicking on message opens a new tab and navigates user to `slack-files.com`. Once SVG loaded the `alert('script')` is executing.\n\nAlso this file can be shared via public link. In this case victim should click on image preview to start script execute.\n\n\n## Expected\nUsers expect that after clicking on message with file they will see this file or file will be downloaded.\n\n\n## Possible fix\nThere are three ways:\n* If you want to continue render SVG files directly in users browsers, you should refuse executing inline scripts by serving attachments with `Content-Security-Policy: default-src 'none';` header. For example GitHub uses this way (open dev console to observe CSP errors for SVG above: https://camo.githubusercontent.com/ce86214c84dcc6c0d85fc268c1c0b1a122fb37a0/687474703a2f2f6b616d696c2e6869736d2e72752f696d672f6578706c6f697461626c652e737667) But you need to be sure that users do not use deprecated browsers (see http://caniuse.com/#feat=contentsecuritypolicy)\n\n* Do not use `image/svg+xml` Content-Type when serving files. Use `text/plain`, so users will see just a raw inner of SVG file.\n\n* Serve SVG files with `Content-Disposition: attachment;` header. So browsers will start downloading attachment instead of render it in the browser.",
+  "weakness": {
+    "id": 60,
+    "name": "Cross-site Scripting (XSS) - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 62499,
+      "file_name": "exploitable.svg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/062/499/fe2abc8a231826baf63c5dbd4a4faf0067f6f47f/exploitable.svg?response-content-disposition=attachment%3B%20filename%3D%22exploitable.svg%22%3B%20filename%2A%3DUTF-8%27%27exploitable.svg&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ3IEMAXPA%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T115355Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIAgYKibtXABc1iIuEcKJAeSAg0XR8enmOMUOUePx7LfRAiEAyIqSd9O1sXMpvzKlp2NFr7wFi5FYgvJicjwBhqXI8jwqsgUIKxADGgwwMTM2MTkyNzQ4NDkiDDZPy1zCLNh1ujJMlSqPBbDUfHwqoU4A8csEuSdwoAIEZgKIQbzHoiq42VAbTmnsctyIGBUDnx0nRCJYJa0nBwgxQM7K1%2BOj1TvHkXhgK8sae6%2FepgxmsQspka4xeo0GtzTM3%2Fk5UTYimaMajxotEdzN7k9v%2BenRz6Lh23GQPbnTG%2F%2BLw4cNW2wSGt9nqP5DAwoBlR%2B1mJebmOC2jetAxatGAkIlc6N0kMSxKITQb27GWjqeNkQ17Gff1Md%2FDLTqGf3ryJsy%2FCHmlr1k9IK5ni%2FzZeIy%2BtCmf79CQoAKkG15CYlZEGcBOe6aW3UzJHPn3sYVdnHdwt2D0pKP7sZ8WbRhEEDT27qXk3XKNvLXjWlpKe8MFTkFX5RP7AbLtmQ%2F64QWGDSNEsUYITG9u4pOFhWPGfsyxYVCb0%2B5xXoZXX9b6fRwg9QrVVJVq0H79amY89mdRkifsGkgCSTr5ImuKAE8EenmKnjxSzA1fLxTCvKfj9chGF1ZNnIFKXWW5Ex0YA7JcRoTcCR756NR56chqNrAN1yik3fo9dCU3C4EDHhckGOr2EBDPa18x0UQ3Rhlxm6PjqwQBKEx9K3%2BrlViTrrLR4pVqhXiPB%2FsHcF3sWNdXjMLk4C3ctHSSGbDa7MTvP5MOW8VehKpkVb%2Bs3LuGTlD28QgNRk0curUJJmKpVdhkRyGY4xQUItUfEIF1LELSTGbj%2BH07NH4Xm7fAzBl7BvjmPtJWImGOY8hbz8TJMqu2uLjo2Bk9MWDCDqhv7VXThBM8aYkg1XnExQ3Qvx2%2BQ3LCzIGviK3XX5XPQOdomC5LpgHYkCjsl3P9rtoHpSS5eSEPqTsxL6ogQ6AjenDyvTeA8b1RhdUwARwh0FxjKKwU7oPob2zERAkFS3lg2wwsMLExgY6sQGEmd%2BQlorbp%2FpZOZvE%2BWwhVNJRk7zjxuk9LR1bt2gXbqk84ABztR0PWrVyuwPlAPBx0joOROoBVVztZtfzY2O26VnJTPij%2BF3PQFStV4cqub%2Fje0J3Y%2F9C%2FFqu1lB00O9Tgdb%2Bor0uELkvXILsDDYo%2BFvwTTR%2Bye%2B%2FiT7KlxXZjvFcfaf7NofgTVQv3mCGnBOQOMAtSna%2Br73DtBZSiLqPxxGfRtht50%2Bs5SGc6x3UjrQ%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=9b3c294bba0e077909766d48a90e2f07b3d4614a8c084271351fc7968872066a",
+      "file_size": 258,
+      "type": "text/html",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-02-18T21:02:47.428Z",
+  "allow_singular_disclosure_after": -302712668.2783218,
+  "singular_disclosure_allowed": true,
+  "vote_count": 4,
+  "voters": [
+    "test0x00",
+    "sameerphad72",
+    "kamil_hism",
+    "shivammusic"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
