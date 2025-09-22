@@ -1,0 +1,129 @@
+{
+  "id": 150083,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNTAwODM=",
+  "url": "https://hackerone.com/reports/150083",
+  "title": "Cross Site Scripting(XSS) on IRCCloud Badges Page (using Parameter Pollution)",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-07-08T19:55:20.685Z",
+  "submitted_at": "2016-07-08T19:55:20.685Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "rohitdua",
+    "url": "/rohitdua",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 140,
+    "url": "https://hackerone.com/irccloud",
+    "handle": "irccloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/140/c90be8ce0ea099d908ca652a82df9952b782e7c2_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/140/c90be8ce0ea099d908ca652a82df9952b782e7c2_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "IRCCloud",
+      "twitter_handle": "irccloud",
+      "website": "https://www.irccloud.com",
+      "about": "Group chat for teams, friends, and communities. IRCCloud is an IRC client with a future. Stay connected, chat from anywhere, and never miss a message."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2016-07-08T23:50:49.161Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-07-08T23:39:53.890Z",
+  "team_member_agreed_on_going_public_at": "2016-07-08T23:50:49.062Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "I. Vulnerability\n---------------------\nIRCCloud is affected by Cross Site Scripting vulnerability in its badges page. (www.irccloud.com/badges)\n\nII. Description\n---------------------\nIRCCloud is open to parameter pollution attacks ie. a parameter passed more than once with different values results in varying different results.\nThis bug is used to leverage an XSS in the badges page.\n\n####POC link:\n```\nwww.irccloud.com/badges?hostname=hostname\" type=\"text/javascript\"> /*&hostname=*/alert('XSS\\n-Rohit Dua'); //\n```\nIf  you visit the link a javascript pops up showing the message 'XSS - Rohit Dua'. (screenshot_irccloud.png)\n\nEven after parameter pollution, the attack is ineffective due to strong XSS filters(possibly firewall)\nThe _filter evasion_ is possible due a certain combination of javascript comments in the url that combine and comment out the unneeded part.\n\n#####[Attached]\nPOC source code screenshot\nPOC alert box screenshot\n\nPlease verify and fix the same.",
+  "weakness": {
+    "id": 60,
+    "name": "Cross-site Scripting (XSS) - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 103965,
+      "file_name": "irccloud.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/103/965/b237dc41bafc6acbdbe7fe8c3fd25b7f5405a5a8/irccloud.png?response-content-disposition=attachment%3B%20filename%3D%22irccloud.png%22%3B%20filename%2A%3DUTF-8%27%27irccloud.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQTG677AJS%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T152235Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDOT3g2bTNlbLaFkjmGQBHiL0kP1ZNIBcOHt5KJgN2oHwIhAL1S2x9pNtR2rqh3U5LywblnJ4S5NXrtFNjucnDUuGDKKrIFCDAQAxoMMDEzNjE5Mjc0ODQ5IgxB7f6d%2BLSjrqlGbDUqjwU4Rg2893wQpg0T3eS3eUfBWQ26j46O%2FyvlQTagORTrDkrDAlKYvmNNcFlUtZrwY28maPgx72jOsxShNTC6bWC6aWbFuC8RFASkR3w5zv03DinsDt6wBCrtT0YnhgvQgOTNjVRcW%2FqaXiqMt2YZHn9UsVmMHL3fHzczMpcEburt97eRr9ATDuc%2B3xaFJiRmb%2BsWuyoFftR93DD6QqCBWBHtx44vYcMw%2Bfl6rmsMSrPrc8RrM3o2esB5HC%2B2kf51E2clwWgdx%2BZPP7pM%2B17xI1oUdjzrRkdPfcsaZT7wMbxk8t6YpxWVv8bk6zgQF0AEmukXgwxnwxRaDJh67VMbcqJsKB9CGWoBLJvYELOCacB2nDAs5J8jJODspHuzWvWGZqGWuA%2BUQbJhG1y5%2B7WMAGn03oRsZ4naxNHL%2F2op3k44SYBz%2Bs60QtbP1zuyz1HcRfc5pVQ8Rxoy%2BGGp8YhvUiMhfaMrgsifoAQUQ4ZlBSr7qQ0ZzQD0TkYBSUbnI2woujSC3pLrFeuYlvaXdFI9NSXaC60eXYaaRjFffaO%2F%2FQi9xPICBJKetzCK6MfzW33R1%2BLkJRqsfHaqZ3WFm0O3Lr34mloOFQtir7kQib25hVR5pzvXp7oMrZxohanOqjiZkA02wQAHRDMmtIIr0HKv9Ii820yP%2FiVlcZqKjCMqkttoCjLEFxsvg0V031dhV8jXynkn3pomdDNSZ9wGWSm3HhMUcL5oVsHy8xx5T5DLYJqqCPuRTpwWbl8g9rYfxRlu74OGvegKCNbsONXWvBG3nz857VWu3DdajtZlvImnz3AJXdI2VHv3TWPG2Q2zOOjX6leZYryTui0qFidEb7hUJmXWL2nhgwD7qaCk51ik9FaRMKTIxcYGOrABCMI559wZgYpwz%2F8iOGMEyg0HWAu4bp0soqfQTi%2FzXjF9dER6kp2Zv4XdPIAkE2tBoFA%2BOi3Qj%2Fk%2F08FP8Q6Onjfz26B9GU0Ye7GOtF%2BObykkk2w80amaQWkETqFlg4lD0azvOWi5v%2Bdp3quJGo85mElAcQFxpWtsM6O5xdyRJU24UbE2U2Od%2FTlonlBliG3%2B8MwTt%2FUDZcjHaxWwjBz%2FDRv%2B1D7mNDjzf4U98c6VLZk%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=a9507d1bcac9a3791235e33dd5e4275dc9c4b87998d2b5a3884706382f00a411",
+      "file_size": 38056,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 103966,
+      "file_name": "screenshot_irccloud.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/103/966/336955500f5ad61340046d3a7b6b8608f1518893/screenshot_irccloud.png?response-content-disposition=attachment%3B%20filename%3D%22screenshot_irccloud.png%22%3B%20filename%2A%3DUTF-8%27%27screenshot_irccloud.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQTG677AJS%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T152235Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDOT3g2bTNlbLaFkjmGQBHiL0kP1ZNIBcOHt5KJgN2oHwIhAL1S2x9pNtR2rqh3U5LywblnJ4S5NXrtFNjucnDUuGDKKrIFCDAQAxoMMDEzNjE5Mjc0ODQ5IgxB7f6d%2BLSjrqlGbDUqjwU4Rg2893wQpg0T3eS3eUfBWQ26j46O%2FyvlQTagORTrDkrDAlKYvmNNcFlUtZrwY28maPgx72jOsxShNTC6bWC6aWbFuC8RFASkR3w5zv03DinsDt6wBCrtT0YnhgvQgOTNjVRcW%2FqaXiqMt2YZHn9UsVmMHL3fHzczMpcEburt97eRr9ATDuc%2B3xaFJiRmb%2BsWuyoFftR93DD6QqCBWBHtx44vYcMw%2Bfl6rmsMSrPrc8RrM3o2esB5HC%2B2kf51E2clwWgdx%2BZPP7pM%2B17xI1oUdjzrRkdPfcsaZT7wMbxk8t6YpxWVv8bk6zgQF0AEmukXgwxnwxRaDJh67VMbcqJsKB9CGWoBLJvYELOCacB2nDAs5J8jJODspHuzWvWGZqGWuA%2BUQbJhG1y5%2B7WMAGn03oRsZ4naxNHL%2F2op3k44SYBz%2Bs60QtbP1zuyz1HcRfc5pVQ8Rxoy%2BGGp8YhvUiMhfaMrgsifoAQUQ4ZlBSr7qQ0ZzQD0TkYBSUbnI2woujSC3pLrFeuYlvaXdFI9NSXaC60eXYaaRjFffaO%2F%2FQi9xPICBJKetzCK6MfzW33R1%2BLkJRqsfHaqZ3WFm0O3Lr34mloOFQtir7kQib25hVR5pzvXp7oMrZxohanOqjiZkA02wQAHRDMmtIIr0HKv9Ii820yP%2FiVlcZqKjCMqkttoCjLEFxsvg0V031dhV8jXynkn3pomdDNSZ9wGWSm3HhMUcL5oVsHy8xx5T5DLYJqqCPuRTpwWbl8g9rYfxRlu74OGvegKCNbsONXWvBG3nz857VWu3DdajtZlvImnz3AJXdI2VHv3TWPG2Q2zOOjX6leZYryTui0qFidEb7hUJmXWL2nhgwD7qaCk51ik9FaRMKTIxcYGOrABCMI559wZgYpwz%2F8iOGMEyg0HWAu4bp0soqfQTi%2FzXjF9dER6kp2Zv4XdPIAkE2tBoFA%2BOi3Qj%2Fk%2F08FP8Q6Onjfz26B9GU0Ye7GOtF%2BObykkk2w80amaQWkETqFlg4lD0azvOWi5v%2Bdp3quJGo85mElAcQFxpWtsM6O5xdyRJU24UbE2U2Od%2FTlonlBliG3%2B8MwTt%2FUDZcjHaxWwjBz%2FDRv%2B1D7mNDjzf4U98c6VLZk%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=7e475d463283f77e302478c0914aa56d330ba525a962b36ecee4101f571bf0d7",
+      "file_size": 222390,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-08-07T23:39:54.027Z",
+  "allow_singular_disclosure_after": -287941361.71451044,
+  "singular_disclosure_allowed": true,
+  "vote_count": 47,
+  "voters": [
+    "wargsec",
+    "fern",
+    "lukasreschke",
+    "bogdantc",
+    "michiel",
+    "wkcaj",
+    "nahamsec",
+    "lucky_sen",
+    "try_to_hack",
+    "jutsuce",
+    "and 37 more..."
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
