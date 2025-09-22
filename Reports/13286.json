@@ -1,0 +1,121 @@
+{
+  "id": 13286,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMzI4Ng==",
+  "url": "https://hackerone.com/reports/13286",
+  "title": "Host Header Injection - irccloud.com",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2014-05-25T10:41:44.901Z",
+  "submitted_at": "2014-05-25T10:41:44.901Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "ethicalhacker",
+    "url": "/ethicalhacker",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 140,
+    "url": "https://hackerone.com/irccloud",
+    "handle": "irccloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/140/c90be8ce0ea099d908ca652a82df9952b782e7c2_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/140/c90be8ce0ea099d908ca652a82df9952b782e7c2_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "IRCCloud",
+      "twitter_handle": "irccloud",
+      "website": "https://www.irccloud.com",
+      "about": "Group chat for teams, friends, and communities. IRCCloud is an IRC client with a future. Stay connected, chat from anywhere, and never miss a message."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2014-07-08T10:00:33.687Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2014-05-27T11:14:22.038Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Host Header Injection Attack - irccloud.com\r\n\r\nAn attacker can manipulate the Host header as seen by the web application and cause the application to behave in unexpected ways.\r\n\r\nVery often multiple websites are hosted on the same IP address. This is where the Host Header comes in. This header specifies which website should process the HTTP request. The web server uses the value of this header to dispatch the request to the specified website. Each website hosted on the same IP address is called a virtual host.\r\n\r\nBut what happens if we specify an invalid Host Header? If Apache receives an unrecognized Host Header, it passes it to the first virtual host defined in httpd.conf. Therefore, it's possible to send requests with arbitrary Host Headers to the first virtual host. \r\n\r\nAnother way to pass arbitrary Host headers is to use the X-Forwarded-Host Header. In some configurations this header will rewrite the value of the Host header. Therefore it's possible to make a request like:\r\n\r\n#PoC Request -\r\nGET / HTTP/1.1\r\nHost: google.com\r\nHost: www.irccloud.com\r\nProxy-Connection: keep-alive\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\r\nUser-Agent: Mozilla/5.0 (Windows NT 6.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36\r\nAccept-Encoding: gzip,deflate,sdch\r\nAccept-Language: en-US,en;q=0.8\r\n\r\n\r\n#PoC Response -\r\nHTTP/1.1 301 Moved Permanently\r\nContent-length: 0\r\nLocation: https://google.com/\r\nConnection: close\r\n\r\n\r\n#PoC Payload -\r\nHost: google.com\r\nHost: anymalicioussite.com\r\n\r\n\r\n#PoC pcap -\r\nEnclosed\r\n\r\n\r\n#PoC Screenshot -\r\nEnclosed \r\n\r\n\r\nPlease verify and fix the same.\r\n",
+  "bounty_amount": "100.0",
+  "formatted_bounty": "$100",
+  "weakness": {
+    "id": 57,
+    "name": "Violation of Secure Design Principles"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 9684,
+      "file_name": "irccloud-host-header.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/009/684/42f62027d69a5b3aa912ba2dd366fd98a92734a1/irccloud-host-header.jpg?response-content-disposition=attachment%3B%20filename%3D%22irccloud-host-header.jpg%22%3B%20filename%2A%3DUTF-8%27%27irccloud-host-header.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQSNJ3BUVB%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T141839Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIFGHTIIS3oYkPOu99OHBWH1tTfbEV3kceyLsr%2FLqNGeLAiEA1h%2FbNkU4LoiV%2FhKoNf0nLhzdC1xrxwobnlpxScFsD34qsgUILhADGgwwMTM2MTkyNzQ4NDkiDKKguYhvww2ERh3YgCqPBec2xFz32uZ6z4gDW74MuHLQCU%2Fy%2BU1CKf3FfdouDntyxdeOu%2BgGfVHdCUaptq2m0D3rHYHUVAwFLE1Vy4%2BCmVgc3O8U30CzxReA7eOtI9zmPMIDI8fqxWIxxgx8zcFAT92VQ1UyFqRphs%2FBvpbpB6D%2Fs9K5mDs%2BNYHdY70EbpkLJXy%2FIyqvCJDVSHts48waMSoU4AAI3QFZibctRXszsip6Mfc1ssjDkWmjHU3xV6gmchBBdPXsYPdVJ5rfA8RjduA4NxhRzdAhKQqxGArE0uTed%2FLepX9NVf5vAIFrIauf2eMHv63OLmV%2FkowKxSUJ6BpOIKOQJ2v6dU5WMLnDig9cutTE4AMJxGw6MI3gdpgHqcXtW6TA%2BuFR9IsZNT5cHyqHn5GtDU5g2IGvwRefCgQrUENFpMHUlUqqy1nkBzISluNsdnRTjSBslVKMmj3%2BnMK0DRThSsaSYjhUuJIXWEE42ST7mbWMrXrJeOxu4ozRY8b%2FS%2BLD7CagQOK6jJPzBZNlJ73cKNbPAXJ1FD5umEB5kkRlO73YvFTsnko5LbblcG2TGJrfkUGU7fVwPoxbyK62CYfz%2FjarcCMfqsjkraDqAObsT%2BMb49MxtksMb9Ch3lqDOyGyi0SxXevXMAvT3ZPWeaOJxCiljl3XyRwJ2S2Bd9%2Fj2SNhR0F%2BGMhTCcRvUZcyM5XTqFPshqp0sZ8NF6PkSzne4Qm%2FAGHO1jN7g%2FE1OsBFwqp%2FcsnHvXMsy4L9oQd7pAP1GGqtdblaNsvZj6Cb2MHPYVsPghdFhVau5nbz9zso3lpFBtpEDoMst8WfiTm%2F%2BQvS7RR1W95PawmhVdNFWhvWCq%2BJDrIj2GyVmAAI9b9%2FRhqmEKC8LnrQn1cwzpHFxgY6sQEafR0Xo4gVrLPp3p5BQQ63tA7AcScsaUSl2%2B%2BBDffglXKxXRAnxBVnAMJ7WhnnwFUYVcNTn7l%2FqRRsgK9kx9OMngcFg1%2B%2BCWUVBME7rVmCw1VAM44sikATUk%2BZzmDd%2Fcw1kdpIKHCL5AePL7Al6tLVsdWazs1ePAR90X%2BU5AFqJse9lcoZHDNowz6SWEbCxCZDdPCQwG3d%2BOtIF7x7chsXNC35lEnAcWsbw1eOepqf6Pg%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=8172bfe5a00c1213fbfd0a35be81a1be18043d5dd9afe683c06c6b61d4333d49",
+      "file_size": 51833,
+      "type": "image/jpeg",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2014-06-26T11:14:03.927Z",
+  "allow_singular_disclosure_after": -354769475.20254517,
+  "singular_disclosure_allowed": true,
+  "vote_count": 9,
+  "voters": [
+    "qelko",
+    "d3f4u17",
+    "pr0f0x01",
+    "toprak_",
+    "shivammusic",
+    "ninikocholo",
+    "zyadazaid",
+    "4amhunter",
+    "cybernewbie"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
