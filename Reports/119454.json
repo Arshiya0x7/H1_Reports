@@ -1,0 +1,114 @@
+{
+  "id": 119454,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMTk0NTQ=",
+  "url": "https://hackerone.com/reports/119454",
+  "title": "Password(s) can be found via login process.",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-02-29T13:46:01.134Z",
+  "submitted_at": "2016-02-29T13:46:01.134Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "sasi2103",
+    "url": "/sasi2103",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/004/426/eb6a5e545d2a2f2abe1f679c6e8622a92e42050f_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 9409,
+    "url": "https://hackerone.com/veris",
+    "handle": "veris",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/009/409/c1806c3bc995d97dd0aa437c2e42eb609f49e549_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/009/409/c1806c3bc995d97dd0aa437c2e42eb609f49e549_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "disabled",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Veris",
+      "twitter_handle": "",
+      "website": "",
+      "about": ""
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2016-05-13T16:24:03.447Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-05-13T16:24:03.393Z",
+  "team_member_agreed_on_going_public_at": "2016-05-13T16:07:34.634Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello security team,\n\nIt is possible to find password(s) of other users by enumerate the login process.\nThe scenario is quiet simple:\n1) Go to https://sandbox.veris.in/portal/login/\n2) Fill in 'Email ID' and 'Password' and click 'Log In'\n3) Capture the request via burp suite and send it to intruder.\n4) Set the password field to be enumerate.\n5) Set wordlist and run the request(s).\n\nAnalyze the results:\n1) For 'Good password' you'll get Status code of 200 and code length of 573.\n2) For 'Bad password' you'll get Status code of 400 and code length of 507.\n\nSolutions:\n1) Set status code and code length to be the same for all requests/response.\n2) Set captua after X attempts.\n3) Block IP/user\n4) Send reset password email.\n\nI run around ~5K words.\n\nBest regards,\nSasi\n  \n",
+  "weakness": {
+    "id": 27,
+    "name": "Improper Authentication - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 75869,
+      "file_name": "login_passwords.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/075/869/4b907d3685e33b86c4d2f6177f71bd649c1c87aa/login_passwords.PNG?response-content-disposition=attachment%3B%20filename%3D%22login_passwords.PNG%22%3B%20filename%2A%3DUTF-8%27%27login_passwords.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQH7M6SGX%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T132428Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIF3%2BhkRnP%2B2VwHmxq5DHAaxWdaykZ17Dg2hWVNxQZ3vNAiEA%2FHtTebO2AJ7f0jZ9ThmI9Z8ZG1SvdsQGED8vWq%2BLAGUqsgUILhADGgwwMTM2MTkyNzQ4NDkiDFOyydIOGwfU2d1GZyqPBaMjT3qTs%2FlX3FNAmmQE4BBVHhzEW%2FKmppBRGfUgPNr6K294OzRNT6d%2BkGfwDCx9587RTNtg6degUAi%2FPLC8QgzN9l7%2BE0wvJf2HWXvzilC47G501K7IrwyhbyuGhRA%2FXT%2BvHZUITOkhCuUmZPEsUiwQBOKTw3uc4ZGmkhD8crT%2BoZ%2B6sNgUqBmXhYyezTAfqIdcwb2lvnuokek256zQA1JomNppOA7thaIR6U8hTGCkC0UA1cJFPkR0WNPx%2BWbw5Wqnv37sQ3Uf4URgcQrwxQ812GjT46qVexkBawqb2kLe7bArBRVKAELvaN3dbDfvYZ9pFBtRKvxvritlPFSzLQAUpDpbMu31QsAaTcsIsZKbuJvkoFarMP6CMtIIDPs3XtOWm2ooP2L%2B3RuuZvEhrt6M%2FifmjiKMoWChJBV9eF%2Fngi3Iy7ZKNEJJdya%2FQUnjafxeoajAFg59hUSBHVT4lZqS0hO262PSNBV6ef0WyLCHpA4VeVqQPo4yQTMqmSqTpJXPJ43r2plqK%2FA4lp4NNSYk69aF9t9U0QdZCq4izLoGWNWGtSgF3o7gnXqyJmqO6BiuQZLcEbv0l%2Fi7XSG%2BVxJbtqCW2X1YbD7ibenu9ltURFgNWfLeZPMb3jhReMf0m67VhVOH90a5CG6ZxvgkPWlE0IOSkuZ3dRAtNvBwPZWeVMhkAvvG%2B%2BoKrZuzfmUyPMWk%2BNPWGqeMPU%2BF0fc62PYh6LpJIx%2FQ%2BQKTwqxW1xffTnXIP7XhYN9ifRmAiLak61MdeuGDEWcueUhkUGmZy6O6nlAIzCiMvSvafXtlplghO0elLWNJ1colIXkyYw8fYLau9Ws2z4X45cbuo4Xzy%2BxYK7EIbCL%2Bjw%2FyfUoLge0w4Y%2FFxgY6sQFHwBG9xFQBSJyUsupQtdvXCtXQFEKGRWqKsCwmzKdWmk0cjnZwE1hhEqiVS4mqVj2j2VFHXs0tGmqQQgxikDfOkUV5FtarB6aAZLqO325Ycg%2F%2FM8WwLw%2FJa8RoFlivI6ir8sFzd3zCMXnVCsUpsK2d3MA8YrEpn9yD59RiYkomRWvOtRoBWZh8SBlrQMfv1dF4sPU9ED1Q5GWIfs97eNvE2AV%2BixhUI3Hv4vqHl5RYhbA%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=96e7d32befa9cc75d783bf0f2fde41dfb1bfa70b4b07f09e61b48b449f830a6a",
+      "file_size": 59715,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-06-12T16:07:34.695Z",
+  "allow_singular_disclosure_after": -292799813.6956591,
+  "singular_disclosure_allowed": true,
+  "vote_count": 4,
+  "voters": [
+    "gamliel",
+    "pr0f0x01",
+    "dyabla",
+    "destinedtohack"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
