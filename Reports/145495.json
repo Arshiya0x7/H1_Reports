@@ -1,0 +1,114 @@
+{
+  "id": 145495,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNDU0OTU=",
+  "url": "https://hackerone.com/reports/145495",
+  "title": "nextcloud.com: Directory listening for 'wp-includes' forders",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-06-17T18:02:13.368Z",
+  "submitted_at": "2016-06-17T18:02:13.368Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "zuh4n",
+    "url": "/zuh4n",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/003co5s7ttfbvqi1zah9g22ny3wm/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13291,
+    "url": "https://hackerone.com/nextcloud",
+    "handle": "nextcloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Nextcloud",
+      "twitter_handle": "nextclouders",
+      "website": "https://nextcloud.com",
+      "about": "Access, share and protect your files, calendars, contacts, communication & more at home and in your enterprise."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2016-06-17T18:10:38.465Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-06-17T18:10:38.369Z",
+  "team_member_agreed_on_going_public_at": "2016-06-17T18:07:05.863Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello guys,\n\n**_Details:_**\nThe web server is configured to display the list of files contained in this directory. As a result of a misconfiguration - end user / attacker able to see content of the folders with systemically important files\n\n**_Vulnerable place:_**\n/wp-includes directory\n\nwhen I tried to navigate to this directory via your domain - service responses me 'Access forbidden', but if I will navigate to the same directory via IP address (http://88.198.160.129/) - service will reflects whole entry.\n\n**_PoC:_**\n{F100046}\n\n**_Impact:_** \nExposing the contents of a directory can lead to an attacker gaining access to source code or providing useful information for the attacker to devise exploits, such as creation times of files or any information that may be encoded in file names. The directory listing may also compromise private or confidential data.\n\n**_Remediation:_**\n- Configure your web server to prevent directory listings for all paths beneath the web root;\n- Place into each directory a default file (such as index.htm) that the web server will display\ninstead of returning a directory listing.\n\nLet me know if you have any question.\n\nThanks for your attention,\nStas",
+  "weakness": {
+    "id": 18,
+    "name": "Information Disclosure"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 100046,
+      "file_name": "nextcloud_dirList.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/100/046/a7db2a0072d7f4c3dbc27c9985b2c81de56c35df/nextcloud_dirList.png?response-content-disposition=attachment%3B%20filename%3D%22nextcloud_dirList.png%22%3B%20filename%2A%3DUTF-8%27%27nextcloud_dirList.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQMPUPRRW%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T150328Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDUAMe96huAMJA5Ku%2BkKk2x0BGKeANw%2BehT0FpdSqew3wIgbYRgR7JyrTskEOx889dNsIteX16dVDG12edU%2B2SoBBEqsgUIMBADGgwwMTM2MTkyNzQ4NDkiDHjOfjDrRUX6agkr5iqPBaWVJm6mkCpcJw9t02ABC6BztF5wrYlJ%2F4Z1b4TbuNN3Wy0DtMvsJ4JhiFKYNMpzkCUHTVe8%2F106uZXaTJ1kCorUptbbDxI4I4XXx824Izg%2BHzfgtxP5%2FYqvUj4FIOcGPgjjGTrOHEUsDLQy9UoAgvuamCxhxwqKFc56XImyvBo%2B3HSipmcVJKQFpbj9Py%2FDl26H0wUrwtKsKUtZJoICTqdxxz0j9X8NhwUpf%2F0%2BV8dzs3r%2FKyid7FpwotgC8k31cPETf9JnUleOK6g3a%2BAXzf04VpqiGl%2FHhxAE%2BSUu8N3eMEkWn74K2l9azGc7YAMKG%2FOQd4nBx%2F8Z%2F%2Fkv2bnp9zs%2F9KM1keSdPp6vz58eVUTJ9DGDMexhuCsWscXVIm2eB%2F8zV65bhm9Yyed5zHAoC48yFiN%2FH%2B7S3W14YWpFyzSX5lLqAzNkyz1Zx3L%2B0oh%2B3vyvF5yZbCfo7A1NtsPTXA9Qf98TlXtD4AruTPUNlE5aP%2Bi1tlNq3OG3%2FmuCrJPSpxLtxqCigDzFgdBRzexs1B36pG4s9ht9L0gutB%2F%2BXvQK%2FL3%2BIvpfj9yXLJSd9UHca8HRFdaOQTKXNXm4fXjMTxXZGcPx7EdXnZOimvDnqE6piClDe76U0neoyNWP4OykG6%2BPFrY29bCj5S%2FiedXuTRxXjExsPjwAWFBU1o22mTyWfoQ709DTBRfc3YT%2BkpTag2K2De57UpgqcdA%2BaEQK5yYoS%2FiXItEb9j68NzfJleERRFNi4OwtDiPjHiE0LRTNVd%2B48upZK1b3Sih6WcKARPOZKLZi4TVrNIe41mGGcU6ubd207RAuNubBwaLNX1liQXX221vX8DYHbHORRfDNv5jcVNYViIsR8BLghDxjV1QwxLzFxgY6sQERHBGS0gA6o4%2Fje4i85M%2FGKFNI%2B9ddJLGKxnPflJqywXe%2BfT1vr0BGDKGzvMxGQ4CcQlcW1K8Dg2icKUmOKwI3qXos4Dya0w437Dw%2F6haBOSzssPAHCO%2FLSWbwfxjbSMf48QPYVzfFW2OdbWxaVaZADPOG1avHdjEKNZ67GCNLDAXHim3uLCyedAGGB%2FlKc5hsannKUGHYAQRtm%2BU0EBjX8f0OwsTqpvS5qydBCsb1XdI%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=874b917ecdbc57118aad1b907c9bdfa7b4720f8b0ba0f4b612a48059a7ccfb07",
+      "file_size": 195896,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-07-17T18:07:05.941Z",
+  "allow_singular_disclosure_after": -289774582.3494466,
+  "singular_disclosure_allowed": true,
+  "vote_count": 4,
+  "voters": [
+    "zuh4n",
+    "dyabla",
+    "batko",
+    "balckdragon1812"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
