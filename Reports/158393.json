@@ -1,0 +1,175 @@
+{
+  "id": 158393,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNTgzOTM=",
+  "url": "https://hackerone.com/reports/158393",
+  "title": "Attacker could setup reminder remotely using brute force",
+  "state": "Closed",
+  "substate": "not-applicable",
+  "readable_substate": "N/A",
+  "created_at": "2016-08-11T07:50:23.422Z",
+  "submitted_at": "2016-08-11T07:50:23.422Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "cymtrick",
+    "url": "/cymtrick",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/uqNnSoAfXmqcgRKdsmRaiTEv/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 314,
+    "url": "https://hackerone.com/uber",
+    "handle": "uber",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/314/24ea21370a71b18eafb5722d5855825ab622b5dd_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/314/24ea21370a71b18eafb5722d5855825ab622b5dd_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Uber",
+      "twitter_handle": "",
+      "website": "https://www.uber.com",
+      "about": ""
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2016-09-19T00:04:46.344Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-09-18T15:26:41.873Z",
+  "team_member_agreed_on_going_public_at": "2016-09-19T00:04:46.236Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi,\n\nAttacker could setup the reminder for bulk  no of amount of accounts using there phone no's. He could setup infinite no of reminders. Tried brute force for 100 times worked perfectly\nhere is the link : https://widgets.uber.com/american-airlines-reminders/\nHere any phone-no is accepted. Actually logged in user phone-no should be cross checked.\n\nTCP DUMP while setting up reminder:\n\n```\nPOST /american-airlines-reminders/api/v1/reminders HTTP/1.1\nHost: widgets.uber.com\nUser-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:47.0) Gecko/20100101 Firefox/47.0\nAccept: application/json\nAccept-Language: en-US,en;q=0.5\nAccept-Encoding: gzip, deflate, br\nX-CSRF-Token: \nx-uber-origin: web-reminders\nContent-Type: application/json\nReferer: https://widgets.uber.com/american-airlines-reminders/\nContent-Length: 87\nCookie: \nConnection: keep-alive\n\n{\"event\":{\"time\":1470940200},\"phone_number\":\"+919949111969\",\"reminder_time\":1470937500}\n```\n\nSend that request to intruder in burp and try to brute force. Setting up reminder is always shown with response code 200 .\nmy reminder was setup on Thu, 11 Aug 2016 17:45:00 GMT multiple times. Attacker could perform this on multiple phone-no.\nThis could issue for user's because their phone gets constantly notifications.\nRegards\nprashanth varma\n\n",
+  "weakness": {
+    "id": 45,
+    "name": "Cross-Site Request Forgery (CSRF)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 111325,
+      "file_name": "Screen_Shot_2016-08-11_at_1.14.42_PM.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/111/325/e08fbd428f33c1c3fe0128f424dda140e6ba58f2/Screen_Shot_2016-08-11_at_1.14.42_PM.png?response-content-disposition=attachment%3B%20filename%3D%22Screen_Shot_2016-08-11_at_1.14.42_PM.png%22%3B%20filename%2A%3DUTF-8%27%27Screen_Shot_2016-08-11_at_1.14.42_PM.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6SSKVJCF%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T080846Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJ7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIB%2Bo3%2Fb%2BiuB59gY36jj87W6A74Nv2szecw5gEZyA%2Bt8jAiEAskCb9dMK%2BTztj9HpXcpl96k9KmylCOHvDYugFhKGeVcqsQUIJxADGgwwMTM2MTkyNzQ4NDkiDOrMggGDltcqyFvxsSqOBV9P9npPEfEK6AyfUC2j1UrEMsJm1%2F4lCIHtjoQ4%2BPP1gC7d7IPAX1ueEFRcnuWIl%2FvLXOengwnsUOdelKlKvRu4ezXL7uxlnOyIKOIy7yg2JSMuQo6CBs2hgiyQdP7LeAOcHMagPXCQ5%2BD1PueupKyZCkplZ9qqNHbLiAzUbXU3XciU6BPU048de5rx4oePC%2BxmH5UyU6rHJisLGrop0btH6kexzeBjgl%2BGrxhGPLQ9%2BHD7gT6LuZxhdGk0vBSq%2Bhjf7eER2otiHkiYk8ZDFmr6EFLkscluKlSABVsZitjg%2FcIi4IldqqoJyyqv6RAjO8OFadLx56C8ZVQbNYNe0uYzK%2Fxm3Rj1AHv9BRECgQF1DkrMHgaUVh4X7omMalth6Me57%2Frol97hC8YIyHkwRDX3uYNGQte5YpfAwoeuovykKbM5eKQF2paXz6blK4dTItVLoyNwurpwySK4ZfXjxq6Rm8tkKZK5F%2BrCCOnA1od8QxYQxONcYc2t%2BoGbn2PWDb1Myzb2%2FTuSVGAPQV4dIcIk%2ByZPyZvfLK6HsBUvW7vGxMWmPrcX4oMAJAbxoHPw4Y0yOItNEvkmHPCcDczZRV7cEEkQJwWWZD184ps0MPPinOlFbJ1owxASSltRD5j8psDCJoUeiWUgeirKxHcG%2F3iXC2Ho6eEBBgzq52r%2F2CDhf5pRSOLeHK0FL2alp6Uqyv0XGfE9Gs7wa2MxbaaV1drZ0x2WNwx%2BS%2FoJY8S41fyQ3pdNcumqXoM%2F55wUARrIq%2FxcL53sapt6oES12ts6b2dyO5UhG5Uj9ysg4K7P331UwREuFIBPA549%2B4xwhUA1Pd7zk7LQ8phFwhCv277BAt4xs3X8MDzLLh3VvCoSMTDm0sPGBjqxAVMrnGQ%2BIup39KX%2FhWSWS6TYp7v38RDaftejLmsCUEHsGju5pBhlQ6m5yhgJ0ltNuMUv2%2FhStlG3XvYaDBazXOva8eu9%2FNpCku9tqrhSScE9%2FWHEVbn8LmKNrLdJgmy0GJHVctmqLSLK2iZ0jHhovSbMr8Eu6Bjhtk4tPt20g8xl6pqsJsesHAs3ExvGRLY41pBKTn25ApaURfLudEn1FsxajR%2FtgSjWjygm1yVAa854yQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=627ff5ca46585efc2aae2695d45853d5c859c2422593514b9df15b2e594b85c3",
+      "file_size": 120303,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 111326,
+      "file_name": "Screen_Shot_2016-08-11_at_1.14.52_PM.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/111/326/708a8b206c47f12a37ced8fecb0e27e59c11d434/Screen_Shot_2016-08-11_at_1.14.52_PM.png?response-content-disposition=attachment%3B%20filename%3D%22Screen_Shot_2016-08-11_at_1.14.52_PM.png%22%3B%20filename%2A%3DUTF-8%27%27Screen_Shot_2016-08-11_at_1.14.52_PM.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6SSKVJCF%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T080846Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJ7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIB%2Bo3%2Fb%2BiuB59gY36jj87W6A74Nv2szecw5gEZyA%2Bt8jAiEAskCb9dMK%2BTztj9HpXcpl96k9KmylCOHvDYugFhKGeVcqsQUIJxADGgwwMTM2MTkyNzQ4NDkiDOrMggGDltcqyFvxsSqOBV9P9npPEfEK6AyfUC2j1UrEMsJm1%2F4lCIHtjoQ4%2BPP1gC7d7IPAX1ueEFRcnuWIl%2FvLXOengwnsUOdelKlKvRu4ezXL7uxlnOyIKOIy7yg2JSMuQo6CBs2hgiyQdP7LeAOcHMagPXCQ5%2BD1PueupKyZCkplZ9qqNHbLiAzUbXU3XciU6BPU048de5rx4oePC%2BxmH5UyU6rHJisLGrop0btH6kexzeBjgl%2BGrxhGPLQ9%2BHD7gT6LuZxhdGk0vBSq%2Bhjf7eER2otiHkiYk8ZDFmr6EFLkscluKlSABVsZitjg%2FcIi4IldqqoJyyqv6RAjO8OFadLx56C8ZVQbNYNe0uYzK%2Fxm3Rj1AHv9BRECgQF1DkrMHgaUVh4X7omMalth6Me57%2Frol97hC8YIyHkwRDX3uYNGQte5YpfAwoeuovykKbM5eKQF2paXz6blK4dTItVLoyNwurpwySK4ZfXjxq6Rm8tkKZK5F%2BrCCOnA1od8QxYQxONcYc2t%2BoGbn2PWDb1Myzb2%2FTuSVGAPQV4dIcIk%2ByZPyZvfLK6HsBUvW7vGxMWmPrcX4oMAJAbxoHPw4Y0yOItNEvkmHPCcDczZRV7cEEkQJwWWZD184ps0MPPinOlFbJ1owxASSltRD5j8psDCJoUeiWUgeirKxHcG%2F3iXC2Ho6eEBBgzq52r%2F2CDhf5pRSOLeHK0FL2alp6Uqyv0XGfE9Gs7wa2MxbaaV1drZ0x2WNwx%2BS%2FoJY8S41fyQ3pdNcumqXoM%2F55wUARrIq%2FxcL53sapt6oES12ts6b2dyO5UhG5Uj9ysg4K7P331UwREuFIBPA549%2B4xwhUA1Pd7zk7LQ8phFwhCv277BAt4xs3X8MDzLLh3VvCoSMTDm0sPGBjqxAVMrnGQ%2BIup39KX%2FhWSWS6TYp7v38RDaftejLmsCUEHsGju5pBhlQ6m5yhgJ0ltNuMUv2%2FhStlG3XvYaDBazXOva8eu9%2FNpCku9tqrhSScE9%2FWHEVbn8LmKNrLdJgmy0GJHVctmqLSLK2iZ0jHhovSbMr8Eu6Bjhtk4tPt20g8xl6pqsJsesHAs3ExvGRLY41pBKTn25ApaURfLudEn1FsxajR%2FtgSjWjygm1yVAa854yQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=1c3110c8a9e361d6624a662097c8ab135db63a2759152f54c29918c0ddaa1bc3",
+      "file_size": 84830,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 36,
+  "voters": [
+    "checkm50",
+    "parth",
+    "flashdisk",
+    "vijay_kumar",
+    "eboda",
+    "ngalog",
+    "newfunction",
+    "dilawer",
+    "geekboy",
+    "hussein98d",
+    "and 26 more..."
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "id": 2680,
+      "category": "team",
+      "content": "Send repeated reminders to user involved in specific program - found and fixed internally.",
+      "updated_at": "2016-09-21T20:13:13.403Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 31414,
+        "username": "notcollin",
+        "name": "Collin",
+        "bio": null,
+        "cleared": false,
+        "verified": false,
+        "website": null,
+        "location": null,
+        "created_at": "2015-05-19T05:57:23.543Z",
+        "url": "https://hackerone.com/notcollin",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "hacker",
+        "profile_picture_urls": {
+          "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png",
+          "medium": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png",
+          "xtralarge": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+        }
+      }
+    },
+    {
+      "id": 2660,
+      "category": "researcher",
+      "content": "__*About Bug :*__\n>>as far i understand it was valid and more severe issue as compare to decision made by Uber in past  : #127918\n\n__*About Report :*__\n>>Uber closed it as NA by saying no or low impact and later fixed if it by saying it was found internally before while public discourse.\n\n__*My Take :*__ \n>>if it fixed and found internally then **NA** is not justified state for the report, where thyself don't know it was found internally before while closing the report.",
+      "updated_at": "2016-09-19T12:06:31.252Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 42326,
+        "username": "cymtrick",
+        "name": "cymtrick ",
+        "bio": "",
+        "cleared": false,
+        "verified": false,
+        "website": "https://cymtrick.github.io",
+        "location": "Amsterdam @vusec",
+        "created_at": "2015-10-25T04:59:12.795Z",
+        "url": "https://hackerone.com/cymtrick",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "hacker",
+        "profile_picture_urls": {
+          "small": "https://profile-photos.hackerone-user-content.com/variants/uqNnSoAfXmqcgRKdsmRaiTEv/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/uqNnSoAfXmqcgRKdsmRaiTEv/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c",
+          "xtralarge": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6ODEwMzk4LCJwdXIiOiJibG9iX2lkIn19--d62b8564690e99a777eb671bd5aa2dc8d9308c9f/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJyZXNpemUiOiIyNjB4MjYwXHUwMDNlIn0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--c155082ce6f9751dcb29cd6ea061a7e4d7329577/1*U6PHGJLYZFIfbfsmDAxosA.png"
+        }
+      }
+    }
+  ]
+}
