@@ -1,0 +1,113 @@
+{
+  "id": 120026,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMjAwMjY=",
+  "url": "https://hackerone.com/reports/120026",
+  "title": "don't serve hidden files from Nginx",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2016-03-02T07:38:48.637Z",
+  "submitted_at": "2016-03-02T07:38:48.637Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "jsshen",
+    "url": "/jsshen",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6ODg0NSwicHVyIjoiYmxvYl9pZCJ9fQ==--c06a50aadbec61a1a3dfb31e7995052ed296bd4c/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGVnIiwiZ3Jhdml0eSI6IkNlbnRlciIsInJlc2l6ZSI6IjYyeDYyXiIsImNyb3AiOiI2Mng2MiswKzAifSwicHVyIjoidmFyaWF0aW9uIn19--0e8fb5b1a245559716caa2abf00b1571bf3c5040/1.jpeg"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 1868,
+    "url": "https://hackerone.com/gratipay",
+    "handle": "gratipay",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/001/868/a75c6649c5b4671b3cf44160af884a7da9fd0b67_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/001/868/a75c6649c5b4671b3cf44160af884a7da9fd0b67_original.jpg/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "disabled",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Gratipay",
+      "twitter_handle": "Gratipay",
+      "website": "https://gratipay.com/",
+      "about": "Gratitude? Gratipay! The easiest way for your company to pay for open source."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2016-07-13T02:32:04.171Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-07-13T02:32:04.005Z",
+  "team_member_agreed_on_going_public_at": "2016-07-12T18:46:23.882Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi Gratipay team,\n\nI noticed that your nginx setting is not secure.\n\nWhen you input https://grtp.co/.gitignore in your browser, it will download this hidden file. Even though this file does not contain some sensitive files, we still need to change nginx settings like bellow to forbid future hidden files being downloaded.\n\n**The following code would deny any request to hidden files**\n\n```\nlocation ~* .*/\\..* {\n               return 403;\n       }\n\n```\n **The following code can block sensitive files using nginx**\n```\n\nlocation ~ /(\\.ht|\\.git|_cron|_setup|_data|_tpl|_tmp|_log|_library|\\.idea) {\n        deny all;\n   }\n```\n\nHope you do your business well. Have a good day.\n\nRds\njsshen",
+  "bounty_amount": "1.0",
+  "formatted_bounty": "$1",
+  "weakness": {
+    "id": 18,
+    "name": "Information Disclosure"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [],
+  "allow_singular_disclosure_at": "2016-08-11T18:46:24.011Z",
+  "allow_singular_disclosure_after": -287606434.8892801,
+  "singular_disclosure_allowed": true,
+  "vote_count": 5,
+  "voters": [
+    "toprak_",
+    "raad_",
+    "lontano",
+    "dyabla",
+    "yahiko1337"
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "Team"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
