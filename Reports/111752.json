@@ -1,0 +1,114 @@
+{
+  "id": 111752,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMTE3NTI=",
+  "url": "https://hackerone.com/reports/111752",
+  "title": "Big Bug in SSL : breach compression attack (CVE-2013-3587) affect imgur.com",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-01-19T23:17:28.411Z",
+  "submitted_at": "2016-01-19T23:17:28.411Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "hacker00000000",
+    "url": "/hacker00000000",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 638,
+    "url": "https://hackerone.com/imgur",
+    "handle": "imgur",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/638/c66ef01545064639821798ab311aa0063acd8aa7_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/638/c66ef01545064639821798ab311aa0063acd8aa7_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Imgur",
+      "twitter_handle": "imgur",
+      "website": "http://imgur.com",
+      "about": "The most awesome images on the Internet."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2013-3587"
+  ],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2016-01-21T21:56:37.300Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2016-01-21T21:56:17.141Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi imgur Security Team,\n\nThis is an urgent issue and wish you fix it as soon as possible ...\n\nso this web application \" imgur.com \" \" is potentially vulnerable to the BREACH attack.\n\nAn attacker with the ability to:\n\nInject partial chosen plaintext into a victim's requests \nMeasure the size of encrypted traffic \ncan leverage information leaked by compression to recover targeted parts of the plaintext.\n\nBREACH (Browser Reconnaissance & Exfiltration via Adaptive Compression of Hypertext) is a category of vulnerabilities and not a specific instance affecting a specific piece of software. To be vulnerable, a web application must:\n\nBe served from a server that uses HTTP-level compression \nReflect user-input in HTTP response bodies \nReflect a secret (such as a CSRF token) in HTTP response bodies\n\nURL: /signin/\n\nAttack details\nThis alert was issued because the following conditions were met:\n\nThe page content is served via HTTPS\nThe server is using HTTP-level compression\nURL encoded GET input redirect was reflected into the HTTP response body.\nHTTP response body contains a secret named csrf\nThe impact of this vulnerability\nAn attacker can leverage information leaked by compression to recover targeted parts of the plaintext.\nHow to fix this vulnerability\nThe mitigations are ordered by effectiveness (not by their practicality - as this may differ from one application to another).\n\nDisabling HTTP compression \nSeparating secrets from user input \nRandomizing secrets per request \nMasking secrets (effectively randomizing by XORing with a random secret per request) \nProtecting vulnerable pages with CSRF \nLength hiding (by adding random number of bytes to the responses) \nRate-limiting the requests\n\n\nGood Fix , ",
+  "weakness": {
+    "id": 32,
+    "name": "Cryptographic Issues - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 70028,
+      "file_name": "proof.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/070/028/2ed1560c6516a57bcaf01d55d231fed69eade361/proof.jpg?response-content-disposition=attachment%3B%20filename%3D%22proof.jpg%22%3B%20filename%2A%3DUTF-8%27%27proof.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ7HBI3UBI%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T124804Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCQeG6w1mQu52kaiVEYgNOKl04lVDFvL%2B0PhsxEJKEUlgIhAMhfXMOnA831khfp0f3GiCVaNIInPhP%2Bsa5gOXRRFzoFKrEFCC0QAxoMMDEzNjE5Mjc0ODQ5Igx2ZLzvkSYkVeBaFYAqjgXifTX8O9T1OVsG%2F%2BEOlvDiFBFWOUme4n6yEes9kkwH8fnhcF6z7MjTNYEHX%2BvkVxvC9mhNeCu6FA2behJDLEZtT2hcv0Hh8LKG0Nfq9wsBcfsd44XSGiPeOBQ0qVzRrWfwsIhQJ5W0Z1WQaU6be8E6SQuwBKFSX34gSaBB%2BKYIf9ahQe8tCQc3YxI57dSE%2FQ6WzGySx9ZXed19%2Bie3SU6AzMdX2lxjx1PWtG5YW9o%2BE%2BBvkfUwq%2FolcQhwHjPPPT%2BKlw1P7W4ullRruQBJzQ7i3rH5IdOykjLNIcaiRoRZRdrzMicqLV55x53NZC27eSsoE%2FiGUYYZJYGjehQIc4U2R5vXP1e6uEh21hrYABHbergmd0em3frGBxajca7v5GJMoNFxCOWfVbTc0QvcB4TnFLwFVGeaRDQWLi7ByOMLsYlsY5t0x31AlsR2Xhix%2BXD6nxL3z9Rt3OTqkxMI0gQvZeAO%2FRQ%2F7mQl5IkQZK%2FMN6K44m0hxGY8FtB8yVne%2FUFs2gxS8NYhX6wQmywg%2Fj10kffaXkOGHVTZTWX3Upr5T5JCzucLYmzKtS%2FZKcl9ApxyNv7z2uPV%2Fy3DA3cAXocqRq297j1D4B9kbeD2FgKXsRwVx7W%2FmPTHgZUJaUoMzHqskxgIsbahyCJe%2B3b1WtjneLrOWOVW7rvp9VjcBXxX4tMgTLJwwpKk5xeOkaHsZzikITVISb7qMeANhk7%2BUOiR3w1PdNsY793UQWsm0mUdOaaj8oeffuyC%2FjaA4Tf9LK1fu7ODa7jqjOlVhONetRYCaAHl4dpEuD07dA%2FDsaa3Q3Y82AsSfsQ5VTzU%2BxEZoFFNapNUkxzl7Z8NTqo663KBTQcpiJQOJCASg25%2FUpkwpurExgY6sAFZleYMyi7bbvTUQmnmW9IMvm4SPQMbx7ke85%2FHU5cY7EQ8UMCjyhYccHriIIEaLa5gRe%2BDgUsSvp13Ls17RVEhM%2BOAzW4qosmZg7y2%2FD3ElNjvghur9p%2B2wrJD4L3qQtAY%2BXEtDtmdDDqdkz5I4jftXkqko0gWTRUiiFvCP52Yj5Q0WCkRybwaHORterVQdEhtpkdXi1oOwRVNqiGUEvCEhoVYQqg5bytGJvv8IOTvsQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=b3ca8355355835ff4f7a154747b9cb31286979acce3811d655df3f7e73041aef",
+      "file_size": 174197,
+      "type": "image/jpeg",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-02-20T21:56:17.376Z",
+  "allow_singular_disclosure_after": -302539907.0019322,
+  "singular_disclosure_allowed": true,
+  "vote_count": 2,
+  "voters": [
+    "olegeekk",
+    "spetr0x"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
