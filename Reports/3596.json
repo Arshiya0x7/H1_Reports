@@ -1,0 +1,118 @@
+{
+  "id": 3596,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zNTk2",
+  "url": "https://hackerone.com/reports/3596",
+  "title": "OAuth access_token stealing in Phabricator",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2014-03-10T12:03:49.078Z",
+  "submitted_at": "2014-03-10T12:03:49.078Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "krangbuster",
+    "url": "/krangbuster",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/003/495/375adba2f29a55536eac05aedcef905aad42ff64_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 18,
+    "url": "https://hackerone.com/phabricator",
+    "handle": "phabricator",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/018/61446f7e6f0684c8c9f7c36c918b7ecd58183588_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/018/61446f7e6f0684c8c9f7c36c918b7ecd58183588_original.jpg/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Phabricator",
+      "twitter_handle": "phabricator",
+      "website": "http://phacility.com/phabricator/",
+      "about": "Phabricator is a collection of open source web applications that help software companies build better software."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2014-04-11T14:23:15.622Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2014-03-12T14:34:14.479Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi,\r\n\r\nI found that an attacker is able to steal access_tokens of facebook users via Phabricator App (184510521580034).\r\n\r\nwhen users login to phabricator, they can choose to login via Facebook (https://secure.phabricator.com/login/) attaching pic, In this case an attacker is able to exploit this behavior to steal facebook access_tokens via phabricator app.\r\n\r\nFull Reproduce, Exploit:\r\n\r\n1. Create a blog on phabricator https://secure.phabricator.com/phame/blog/new/\r\nand provide a custom domain, in this case: files.nirgoldshlager.com\r\n\r\n2. send a malicious link to the victim: https://www.facebook.com/dialog/oauth?client_id=184510521580034&response_type=token&redirect_uri=https://secure.phabricator.com/phame/live/47/ , Click Continue\r\n\r\nwhen the victim will click continue, his access token will be send to my malicious server, saved in a log file under: http://files.nirgoldshlager.com\r\n\r\nPoC Video:\r\n\r\nhttps://drive.google.com/file/d/0B2-5ltUODX1LWHV6R3gxSFAwNzQ/edit?usp=sharing\r\n",
+  "bounty_amount": "450.0",
+  "formatted_bounty": "$450",
+  "weakness": {
+    "id": 53,
+    "name": "Open Redirect"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 4207,
+      "file_name": "loginviafacebook.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/004/207/b20351f991d93b5a0182edb6ac0b6ba090621240/loginviafacebook.jpg?response-content-disposition=attachment%3B%20filename%3D%22loginviafacebook.jpg%22%3B%20filename%2A%3DUTF-8%27%27loginviafacebook.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXRMVJ5J5%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T183249Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIHvpeFRGxer%2FvWr9U1iJg3RkGlJPPFj4B1AHCmELHvg0AiEA3tVo83DAR1waruPLv%2Fu8vB9bR4IqtbLU0FcfUK2SWK4qsgUIMBADGgwwMTM2MTkyNzQ4NDkiDOgV4stYWuksi315TCqPBTSyxHdDk9aIJWUXYP6dpR2hHjf4Lm2OmqG2txbrJ96dAFVsJl5WdhXN5poEKL%2B3vXRmLvgEI8oo%2BbITruxVtSca%2FXbpaeMDsG60%2BtVUNL8GY9G6XVHxwRNis96ulShvFkdYL95u%2F9BE6bHUiDyiDqW%2B3fWThOXRCd3eGH7K78T6iJJ%2FXPtdbnw0qEp3xnzhxVQuLM1e6ocxb5JKQro3HYWeofUVMeUYgBk5ichyV4i39DzesIHOdtEY1%2FFr5cO6BknHGI4QlTEFqSQ0jKwu54rl7Y6E%2BaZ3mp8Q%2Btd%2Bg9937vj1aJ9qhhj8i3tGtw8W%2BxC8sROiJ9Pn77pKG2W4hNpAyD5F6sNpIAF9vt9bRRr%2FZ%2BSnCcipXGJKkQ6Hcoy%2BJi242PhaHRQ1QO1qTSpTDPoN1qZtR2wR9nUszH5PMi4QmxwGIh01o%2B9Wm%2BWMTnnqM16OG52%2BRyxbc23dxja1vQVYylB4AR0O3PFpl3EFwn2jqYjiHYJ%2F6RJQDkkVSbnPyErUc9Ee5jaNlrYkR%2B512HKh7%2BD6AhqQJOWut8J1JadNJruJlPJ3xGDotuzZ9CpU2CA2oucGiIIogsZcPb75cH2JVlMGqGvzPEr04jl7OXE1njTEgB2XK3e%2Fw3VUuucNO63UKfjWrTnJi3XMfg1Ng%2Fu9oey3Uo2hQHA5SzIrtE32mdf5MlJGeIzmaaGgdFr9HJVkYRdU%2FiUFT26z2OzXitUwlejztiMD2BhN2Orim8RbEKbvvABTsRcvsIuPNaAaxf9ug5m%2FKbPyoz77Ruu4F1%2F98Td0OwZ%2BmxssKQ058QXkSGkXP9o8RhEiJAcpm5uHdtJmIrImKcpqU5uy8xptKTOC5VGIZeizx3DNxP2cZhYwicbFxgY6sQFd5FT1B5MlZMXS0Wluys%2FN%2B6sOHgNoVYPrRKKl6L4X1L3Qv%2BfsOVhdER%2F5XwepRHhkQe2dojWb9sZIIBlb1o6Wq8TxyLEXiwOJ5cNtpQKHgMdtczrD4NnkdCqP%2FbWEJHB9Z2i0xSshL783%2FtLC4Z9%2BmAu7vaUG7ZYYkf7Wel47W8dCXztjBQk9ZwqXfjGflGJipVy%2Bv45%2F%2B5fWFEBrMLBqatLAl0RiovcR7dfS1tvFvsM%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=96b32cceb86976921bc913b7824a9318d8efe72a43d04fe11ad8d6616f9758c5",
+      "file_size": 199867,
+      "type": "image/jpeg",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2014-04-11T13:23:13.149Z",
+  "allow_singular_disclosure_after": -361343376.6449014,
+  "singular_disclosure_allowed": true,
+  "vote_count": 6,
+  "voters": [
+    "spaghettisec",
+    "pr0f0x01",
+    "japz",
+    "fantam1",
+    "shivammusic",
+    "satyamdixit"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
