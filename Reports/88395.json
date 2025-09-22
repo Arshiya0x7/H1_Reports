@@ -1,0 +1,111 @@
+{
+  "id": 88395,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC84ODM5NQ==",
+  "url": "https://hackerone.com/reports/88395",
+  "title": "Information leakage through Graphviz blocks",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2015-09-11T01:18:57.641Z",
+  "submitted_at": "2015-09-11T01:18:57.641Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "jbeta",
+    "url": "/jbeta",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NTgwMCwicHVyIjoiYmxvYl9pZCJ9fQ==--3fbff3de63108c0dcd74fe0f2d9b3fc32f08f39d/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--a4d91faed3dff6024dfc1a7b7f8ccc6b45e38396/jb.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 18,
+    "url": "https://hackerone.com/phabricator",
+    "handle": "phabricator",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/018/61446f7e6f0684c8c9f7c36c918b7ecd58183588_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/018/61446f7e6f0684c8c9f7c36c918b7ecd58183588_original.jpg/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Phabricator",
+      "twitter_handle": "phabricator",
+      "website": "http://phacility.com/phabricator/",
+      "about": "Phabricator is a collection of open source web applications that help software companies build better software."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2015-09-13T19:55:14.805Z",
+  "bug_reporter_agreed_on_going_public_at": "2015-09-13T19:55:14.657Z",
+  "team_member_agreed_on_going_public_at": "2015-09-13T19:52:48.153Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "(This report amounts to *Unsandboxed Command Execution Considered Harmful*, which you already suspected: https://secure.phabricator.com/T7785)\r\n\r\nGraphviz blocks can be used to view a render of any image file readable by the webserver, through the `image` and `shapefile` graph node attributes. This alone leaks some information (for example, installed software packages), and may help bypass access restrictions on Phabricator image files (if local disk file storage is used and the path is somehow known to the attacker).\r\n\r\nCombined with a strategically-placed syntax error in the graph specification to get to the `dot` error output, these attributes can more generally be used by an attacker to test for existence and readability of any file in the server.\r\n\r\nSteps to reproduce\r\n================\r\n* Install Graphviz along with Phabricator\r\n* Paste the attached snippet in a Remarkup field\r\n* Experience slight feelings of unease and discomfort\r\n\r\nImpact\r\n======\r\nNormally, just the limited information disclosure described above. In (what I imagine to be) a typical Phabricator installation, not even that: it is probably fully defused by the fact that `dot` is not present. However, some users may have installed Graphviz for purposes unrelated to Phabricator, unaware of the security implications.\r\n\r\nIn general, `dot` is much more complex than `cowsay` and running it unsandboxed increases your attack surface in a significant way. Besides Graphviz bugs, you will also have to worry about any libraries that Graphviz plugins use, especially for complex image formats such as PostScript and SVG.\r\n\r\n(In fact, current `dot` **will** happily tell GhostScript to run a PS file that may contain arbitrary commands. This requires a specific *\"dot with gs support + old gs\"* setup not found in any current distro AFAIK.)",
+  "weakness": {
+    "id": 18,
+    "name": "Information Disclosure"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 53457,
+      "file_name": "phab-graphviz-poc.remarkup",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/053/457/a4398e1dddb1e8feb0eae018b1d9130dcef8ec91/phab-graphviz-poc.remarkup?response-content-disposition=attachment%3B%20filename%3D%22phab-graphviz-poc.remarkup%22%3B%20filename%2A%3DUTF-8%27%27phab-graphviz-poc.remarkup&response-content-type=text%2Fplain&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQRZ5DC4E6%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T225517Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDaQ4SFlFrrdC99EOjJeUAVGDsgbPM6Vfra2xTKLVECJwIhAPBjUwbrGApqDnK3zf4zLSbNewrgrFHGVRvctDgr3T3IKrIFCDQQAxoMMDEzNjE5Mjc0ODQ5IgyR%2BwGua3YzJeVLZzkqjwVJvZvGgL3JXN9IN0spI%2F1J1lGxt5t%2B5DxH3xajKknmbGp%2F3MTI7ugtQGykBE%2BwqdDp%2BNgQHh5HOw8gEUVVGAepnX0QroUhYLH8Ww3zFL9JPUCAkeg5Qv6n0wgOQ73k09LZKr01u3zu3NmyHMRNqmgN6sx6e4ECs8cNzvSUDTaPw16HCqCTjROm38s4a66Cqr99K24SOnQO7XVTxT7fxveChjAgD8zmluDBQweE92gZgREcm8PDDeJ5ckE%2FJh8RedNKyVlLckzhgXCgMegNDQTmq4reRh7yRoClXvIHVU6G2wayZGkVJDAcOwvFjlI3BFcUEdnMLEtVbELw4j6nw6DUk4%2FXRBPFucwtd5wc0yqaWFoc7NhqSmWbBrtDsZYBLdzPIkTTxdutm8KwSmseQLWLnO%2FZCtvXkK%2FCObAV8savcoEdtc1yW0iXuw7NLURHpTDgbnc5aUsmOjqcR8uXCXil5gsqXadxwPxzTaHBpR6NgHcrU1DqGYL5E%2BNj6q49FWwGj%2BEFxrpPYrnTZoNRQ31yj%2FzgHwb5lyNgMDta%2BHNS%2FKn6M%2B0qsMEvw0TV2jFDpYMMgjpPaCSoSWBUyjvAB8Kih388hls92qP5PBpeIoaAalRQuskFMLFed6Tr1KnD83Zlpukr6%2FQ0qbTFnv76p3PxREUhlo%2BKDspQEDmaoOWirrRNuluYLFeA4rVuqGnYCysISBCeq069uUquZz5gLpNGJ%2BxSPhUL8uOnRTZlpu%2FTycWWjSGMSX0efgt50lCAaEgvFlKG4nEVEkdVIheKbH4LuIpP6JUPwYE6g1URN2tYxqtC0NSMKAssTXiuQiatooRAMHhcG3SLj8MHFu5LGpDtzP85GBoo9eGMXHpom9Q1MMu6xsYGOrABRObfR0K6z1urVaXuGjLe%2BcHjR0XWSgCXaC7SqlWd6RGPqmEygQBpEPf0olTcJGT5B8CsoBNWr3fuk%2B1Mk%2Fi%2B8HwJBShoDGDCHLdGEIoXXFKbDpwEDb9i7wsAK%2FDGEP5306hSfcurL4cezLMrisUe5c%2BaHcsxImaDVvjxPLzo0M0vMDaUInsqjPz2IyUaANkAmsio3G1Ys65ztI%2BcKrHxl1%2FbeO32j7qGERPqts0TTwo%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=624f39e44f8a24a0d95c8d267d81090e9033a29f61d343af213cc20f30e4237b",
+      "file_size": 635,
+      "type": "text/plain",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2015-10-13T19:52:48.320Z",
+  "allow_singular_disclosure_after": -313815749.3439058,
+  "singular_disclosure_allowed": true,
+  "vote_count": 1,
+  "voters": [
+    "shivammusic"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
