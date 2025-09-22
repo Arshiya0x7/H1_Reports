@@ -1,0 +1,122 @@
+{
+  "id": 156387,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNTYzODc=",
+  "url": "https://hackerone.com/reports/156387",
+  "title": "Stored XSS from Display Settings triggered on Save and viewing realtime search demo",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-08-03T23:24:17.569Z",
+  "submitted_at": "2016-08-03T23:24:17.569Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "ctee",
+    "url": "/ctee",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/082/459/04f93489ad9ad6fbf167418f86950a652aed6976_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 443,
+    "url": "https://hackerone.com/algolia",
+    "handle": "algolia",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/443/6dc48cd913e21beebc873e81aaf28fd3b6b9e12e_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/443/6dc48cd913e21beebc873e81aaf28fd3b6b9e12e_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Algolia",
+      "twitter_handle": "algolia",
+      "website": "https://algolia.com",
+      "about": "Hosted search API that delivers instant and relevant results from the first keystroke"
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2016-09-07T08:34:23.049Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-08-08T08:34:20.062Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Here are the steps to trigger the XSS:\n\n1. Create a JSON record that will contain the following attribute:\n     **{\"<img src=1 onerror=alert(document.domain)>\": \"XSS attribute\"}**\n\n2. Go to  **Indices -> Display** and select the attribute **<img src=1 onerror=alert(document.domain)>** under **Attributes for Faceting** and click save. \n\n3. Note that XSS is triggered multiple times on that page.\n\n4. XSS  is now triggered on **https://www.algolia.com/explorer#?index=index_name** as it also shows the attribute.\n\n5. Create a public UI Demo and to the public url, xss is triggered. I've created a demo url:  https://www.algolia.com/realtime-search-demo/xsstest\n",
+  "weakness": {
+    "id": 60,
+    "name": "Cross-site Scripting (XSS) - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 109545,
+      "file_name": "facetattribute.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/109/545/d74af3d9e1c16ae6f24683b64fe3636b10081dc7/facetattribute.png?response-content-disposition=attachment%3B%20filename%3D%22facetattribute.png%22%3B%20filename%2A%3DUTF-8%27%27facetattribute.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUCEGC5NH%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T082558Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJ%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIC%2FX90ZqJtg5Sdcb9Kp9WHtl9Oag8i4%2FYNEVy%2Fp0J2Q4AiBFDhXjR2HXAZ0e6RiUH4I%2FAkf4GAVOt3ZTOWmynYgXNyqxBQgoEAMaDDAxMzYxOTI3NDg0OSIMw7EZipx4LV949I6pKo4F6g3MoY%2FvOqafR8InASylitYdI3lmpcF4oGkKIs55H%2FZJU0%2FX1ZVkBatdm0FDXU65tgCVPrtrPS9t93c3BNbfPpzhFNdxBGOXMZ%2FWUQb9QFD1C9Xc2BrfN03weEQNYsh7FhVFL5c%2Bhy4WSHwC3KrV7HzpcpdxBbrKlcLeNxb%2FwVubYzsjUflp9%2B4%2Fw07C1Pz5ivilaLRhVu1aPHaHmYKLOR9vFaSWQcY58tRd9KBtkSPjvNiPlA%2BOieHjvczi6QZqGgk6UCovvW1FRra4SgN1qcLyLgF7xRXhSRX0KBslJ6bBBAtm2D26aXSsUdl%2F74%2BXa%2FuMofaitKq5oy%2BBHjhJQjFWgITbFnK3Ge7Dk7Z6F0TQCRDEemPX77M6ZXH%2FXvtQq9Bc6UkaAiRZ0pEc5VyVNRWhqg7s4n9L4c1AsymLIFQQTNiI0tl5CUrXiKCfLDlxraOIWezSQidImDkmBRuwYa6AsoevjhG8rPVzAtOcW5fTW9%2Br3PY0q%2FqdXFMkQ5yF49pMxdxXjZVpjIZ%2FsG3hETYEHIA5Pum9m0e5NQzeW4%2BytWWekiLzSJkyVbBeDordv5tea8MPuMptxMI3WBNi1pVEs6qdiczBKJSGsRhS6U7NyGAwDoy%2BF2ok8tRhvJqx7g6on4oyt4f%2FyHF0NMFWn4ZduQ6AE3cgu5vxvfcGLYeo2Zd9A2YLT739zhoNaRD6%2F0UDZDNc5pWfU%2BjdIJtFKlIR5l8c3HUXvW3WSVLJk%2FTs0VdMYRKEbHdbgQWILHp2%2BJ25KexQznje8Y4DZ1N8du0kRjjxrptHABoe7xG6HXvjXL5t0qOIUNokZ5N7EOfYej8UDorgbRxzoi88vJ2Mv7dMsavZ3sfsw%2BRyQCTLMLLfw8YGOrIBr1ND1Wus6Ky1E3o%2Fl46nx8xcgWoFemiLprCy9nVXvoySjeR5xRX4kYGkunTFdgtC8ThN7I63pvR%2FOo33mcmYAAHCO2e3wnU%2BZb5ySCg96ZUKQkTuiNP0cTpjLsm9kfsVQqR08Lg3kt9YxOy04FHxM4W9KgbZHax%2FK%2BDUI43K8h7cQ%2F1nXR7LSjN%2BBNyBLaGgv8CnAMmGtN3mjdS7k5%2FnrkX9MVfCa8zPCKGms4aTvkon7w%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=bb7de80cb88fa5836becc8744f1e143b235360e867b567f0bed609818585f668",
+      "file_size": 113163,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 109546,
+      "file_name": "public_page_xss.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/109/546/b9227678d83a1471c0c44edeb85ebce72f20c44a/public_page_xss.png?response-content-disposition=attachment%3B%20filename%3D%22public_page_xss.png%22%3B%20filename%2A%3DUTF-8%27%27public_page_xss.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUCEGC5NH%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T082558Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJ%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIC%2FX90ZqJtg5Sdcb9Kp9WHtl9Oag8i4%2FYNEVy%2Fp0J2Q4AiBFDhXjR2HXAZ0e6RiUH4I%2FAkf4GAVOt3ZTOWmynYgXNyqxBQgoEAMaDDAxMzYxOTI3NDg0OSIMw7EZipx4LV949I6pKo4F6g3MoY%2FvOqafR8InASylitYdI3lmpcF4oGkKIs55H%2FZJU0%2FX1ZVkBatdm0FDXU65tgCVPrtrPS9t93c3BNbfPpzhFNdxBGOXMZ%2FWUQb9QFD1C9Xc2BrfN03weEQNYsh7FhVFL5c%2Bhy4WSHwC3KrV7HzpcpdxBbrKlcLeNxb%2FwVubYzsjUflp9%2B4%2Fw07C1Pz5ivilaLRhVu1aPHaHmYKLOR9vFaSWQcY58tRd9KBtkSPjvNiPlA%2BOieHjvczi6QZqGgk6UCovvW1FRra4SgN1qcLyLgF7xRXhSRX0KBslJ6bBBAtm2D26aXSsUdl%2F74%2BXa%2FuMofaitKq5oy%2BBHjhJQjFWgITbFnK3Ge7Dk7Z6F0TQCRDEemPX77M6ZXH%2FXvtQq9Bc6UkaAiRZ0pEc5VyVNRWhqg7s4n9L4c1AsymLIFQQTNiI0tl5CUrXiKCfLDlxraOIWezSQidImDkmBRuwYa6AsoevjhG8rPVzAtOcW5fTW9%2Br3PY0q%2FqdXFMkQ5yF49pMxdxXjZVpjIZ%2FsG3hETYEHIA5Pum9m0e5NQzeW4%2BytWWekiLzSJkyVbBeDordv5tea8MPuMptxMI3WBNi1pVEs6qdiczBKJSGsRhS6U7NyGAwDoy%2BF2ok8tRhvJqx7g6on4oyt4f%2FyHF0NMFWn4ZduQ6AE3cgu5vxvfcGLYeo2Zd9A2YLT739zhoNaRD6%2F0UDZDNc5pWfU%2BjdIJtFKlIR5l8c3HUXvW3WSVLJk%2FTs0VdMYRKEbHdbgQWILHp2%2BJ25KexQznje8Y4DZ1N8du0kRjjxrptHABoe7xG6HXvjXL5t0qOIUNokZ5N7EOfYej8UDorgbRxzoi88vJ2Mv7dMsavZ3sfsw%2BRyQCTLMLLfw8YGOrIBr1ND1Wus6Ky1E3o%2Fl46nx8xcgWoFemiLprCy9nVXvoySjeR5xRX4kYGkunTFdgtC8ThN7I63pvR%2FOo33mcmYAAHCO2e3wnU%2BZb5ySCg96ZUKQkTuiNP0cTpjLsm9kfsVQqR08Lg3kt9YxOy04FHxM4W9KgbZHax%2FK%2BDUI43K8h7cQ%2F1nXR7LSjN%2BBNyBLaGgv8CnAMmGtN3mjdS7k5%2FnrkX9MVfCa8zPCKGms4aTvkon7w%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=b76b2723c979cbdbab8d8eebd861b6979df157d4519f3767889c375a7de3e61f",
+      "file_size": 96096,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-09-07T08:34:20.172Z",
+  "allow_singular_disclosure_after": -285292298.5215366,
+  "singular_disclosure_allowed": true,
+  "vote_count": 4,
+  "voters": [
+    "thalaivar304",
+    "spetr0x",
+    "akshay_raj",
+    "dyabla"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
