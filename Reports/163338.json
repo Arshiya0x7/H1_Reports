@@ -1,0 +1,137 @@
+{
+  "id": 163338,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNjMzMzg=",
+  "url": "https://hackerone.com/reports/163338",
+  "title": "\\OCA\\DAV\\CardDAV\\ImageExportPlugin allows serving arbitrary data with user-defined or empty mimetype",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2016-08-25T13:26:40.644Z",
+  "submitted_at": "2016-08-25T13:26:40.644Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "lukasreschke",
+    "url": "/lukasreschke",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/037/891/e7fea4d5383dc07d1fe767b02f3bda2bc7639c63_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13291,
+    "url": "https://hackerone.com/nextcloud",
+    "handle": "nextcloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Nextcloud",
+      "twitter_handle": "nextclouders",
+      "website": "https://nextcloud.com",
+      "about": "Access, share and protect your files, calendars, contacts, communication & more at home and in your enterprise."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": true,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2016-9465"
+  ],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2016-12-03T21:59:28.846Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-11-03T21:59:15.769Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "The SabreDAV plugin `\\OCA\\DAV\\CardDAV\\ImageExportPlugin` is used for displaying pictures of a VCF. It registers on a GET request on a CardDAV element and acts when the query parameter `photo` is sent.\n\nThe logic can be seen below:\n```\n/**\n * Intercepts GET requests on addressbook urls ending with ?photo.\n *\n * @param RequestInterface $request\n * @param ResponseInterface $response\n * @return bool|void\n */\nfunction httpGet(RequestInterface $request, ResponseInterface $response) {\n\n\t$queryParams = $request->getQueryParameters();\n\t// TODO: in addition to photo we should also add logo some point in time\n\tif (!array_key_exists('photo', $queryParams)) {\n\t\treturn true;\n\t}\n\n\t$path = $request->getPath();\n\t$node = $this->server->tree->getNodeForPath($path);\n\n\tif (!($node instanceof Card)) {\n\t\treturn true;\n\t}\n\n\t$this->server->transactionType = 'carddav-image-export';\n\n\t// Checking ACL, if available.\n\tif ($aclPlugin = $this->server->getPlugin('acl')) {\n\t\t/** @var \\Sabre\\DAVACL\\Plugin $aclPlugin */\n\t\t$aclPlugin->checkPrivileges($path, '{DAV:}read');\n\t}\n\n\tif ($result = $this->getPhoto($node)) {\n\t\t$response->setHeader('Content-Type', $result['Content-Type']);\n\t\t$response->setStatus(200);\n\n\t\t$response->setBody($result['body']);\n\n\t\t// Returning false to break the event chain\n\t\treturn false;\n\t}\n\treturn true;\n}\n```\n\nAs can be seen the the content-type is read from `$this->getPhoto($node)` as well as the body, looking at it's implementation shows that the data is directly read from the vCard:\n\n```\nfunction getPhoto(Card $node) {\n\t// TODO: this is kind of expensive - load carddav data from database and parse it\n\t//       we might want to build up a cache one day\n\ttry {\n\t\t$vObject = $this->readCard($node->get());\n\t\tif (!$vObject->PHOTO) {\n\t\t\treturn false;\n\t\t}\n\n\t\t$photo = $vObject->PHOTO;\n\t\t$type = $this->getType($photo);\n\n\t\t$val = $photo->getValue();\n\t\tif ($photo->getValueType() === 'URI') {\n\t\t\t$parsed = \\Sabre\\URI\\parse($val);\n\t\t\t//only allow data://\n\t\t\tif ($parsed['scheme'] !== 'data') {\n\t\t\t\treturn false;\n\t\t\t}\n\t\t\tif (substr_count($parsed['path'], ';') === 1) {\n\t\t\t\tlist($type,) = explode(';', $parsed['path']);\n\t\t\t}\n\t\t\t$val = file_get_contents($val);\n\t\t}\n\t\treturn [\n\t\t\t'Content-Type' => $type,\n\t\t\t'body' => $val\n\t\t];\n\t} catch(\\Exception $ex) {\n\t\t$this->logger->logException($ex);\n\t}\n\treturn false;\n}\n```\n\nThis means if somebody uploads a VCF with the following content this will deliver the content `<html><font color=\"red\">test</font></html>` with an empty Content-Type. The photo is a base64 encoding of before mentioned string.\n\n```\nBEGIN:VCARD\nVERSION:3.0\nFN:test\nUID:5cf6e5e2-ec37-4798-abb7-3c261eda92c9\nPHOTO;ENCODING=b:PGh0bWw+PGZvbnQgY29sb3I9InJlZCI+dGVzdDwvZm9udD48L2h0bWw+\nEND:VCARD\n```\n\nThen it's sufficient to just access http://10.211.55.7/stable9/remote.php/dav/addressbooks/users/admin/contacts/5cf6e5e2-ec37-4798-abb7-3c261eda92c9.vcf?photo, the easiest to reproduce this is by enabling `debug` mode and using Internet Explorer since we employ CSP which largely mitigates the issue.\n\nAs another remark, we should replace the `file_get_contents` with another implementation. This seems currently like a too risky implementation for me.\n\n{F114833}",
+  "weakness": {
+    "id": 60,
+    "name": "Cross-site Scripting (XSS) - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 114833,
+      "file_name": "2016-08-25_15-26-06.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/114/833/4aa3fbc2c1e64d92e8781dae48f5740964b607ea/2016-08-25_15-26-06.png?response-content-disposition=attachment%3B%20filename%3D%222016-08-25_15-26-06.png%22%3B%20filename%2A%3DUTF-8%27%272016-08-25_15-26-06.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZQTUON6D%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T002324Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIGemT5LqjKB0WBj9F0qxI0wiud1hLjEqkyJTj2TewQ6tAiAY%2F79%2BRop6ES3Wk2gkcs3KScYaJPYCpOqoXvDF%2BXUNjyqyBQghEAMaDDAxMzYxOTI3NDg0OSIMwLm%2BUWi0wPvGfsmcKo8F115wjid2MGMU0eXfFfP2ab1nsf7Ob%2BeGtrivI3PHGFyCUOvKZa32PDqFT2YBFgiTyaAd4KDNBDwxU7PeOxET4z1HIDURE8uUhl0PWVMdVMbTULpVRs8lhWne%2FKPKvgbQoSjx74R8vK9pDmJ9quT4ob3q%2Bh895DWE2iKoAgh1UVYh7Ky6POa66Kg3M9QpKO0NDWqvK%2BEOGkSo2D6tP5ck30L7RB3%2Frg4qoXBw5nYHoWEFdtnnh1S6Qo2ivv9C1So9KWrDtsLu04fY0FyetSbxa6EohcKY545nKJk3erYvxnPt2DoQCNVLAAwtyPX2LYI%2FIERGWmaU%2BO9W3yzFRk2CE3uZ1HY%2BCvN8I00INZBy16VhH6f45SU%2F1dUursEm4LWdr%2BNm6%2FZ0qYiW7WNr66XcqS9GzPeX52N0cy8HKCnnjdAxs6HQfrwpz38%2B%2F1vEUn4%2FSKkrKyJ27rajIPOVGQKM3nys1nzWYIJIG2VRGTpvZ7SbXhHt5mD%2FhMbkwfOwU49x7L8hAsvuZR8R7yfxDIuXOHBaKsDDgoFvtb8U9z0u7Hp7d54sQhdPOoHs4SSDnjpaeUHKSiaanRhP9es5jcA29gV6nEVEBImbE8nvNByA%2ByaqzelivJ26qOJMymCqmRqOTPyxL465GPQODv91iDuhasW5uQnIf8FzBVY30CUPCWuDn7q3mrxH%2BxSJj6LawNVG6GvpYW5qJSL1VLrJJHxnzFRr7hvzQw6jJk%2BlQT%2B%2F3IhlIownPw1ACrkklK5gcaXRz3iodY%2BG%2BHCiEmYB8%2BTc5oy9hT6hWyw8aQI3v0Vt7JOsTr%2BL56wVUFKJNpnIyizQEiOtXNJM0TAI8lx7m6jluk%2FMs9Xl09ikSN20WJUtpzCVncLGBjqyAdCqFoDpnRdRJIc%2B%2FQtReFiCXWhJXRw%2FMgSoT6fjOkmQu4RDa1nON7NdNFZaaHWbyZ0sivzFjin%2FzzQT%2BWO9vQyvaPfb0QzqeB0yB9arvIfwK9pnzaXQrLwyN%2FXqhqaTQPR%2FpZFrCaPmMKyHQcT0851r52LszA2bIi1ZtYT1HCC2EKX4lWxTcNFIaPudCO%2BzEevVeHCUXF2B6wWBOHLDtSraAPtn%2FUivcmyqKEISEdPY8eQ%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=b5ac268a42dc8de43bb987965468f9a2d20a6d7e5a9063f88406d9e8f434fe66",
+      "file_size": 84417,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-12-03T21:59:15.809Z",
+  "allow_singular_disclosure_after": -277698249.1906993,
+  "singular_disclosure_allowed": true,
+  "vote_count": 9,
+  "voters": [
+    "lukasreschke",
+    "mpz",
+    "kiraak-boy",
+    "alfredsaonoy",
+    "ishahriyar",
+    "demo--hacker",
+    "spetr0x",
+    "dyabla",
+    "b42f97eb69dddcafe5cc278"
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 5.4,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "low",
+      "user_interaction": "required",
+      "scope": "changed",
+      "confidentiality": "low",
+      "integrity": "low",
+      "availability": "none"
+    }
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
