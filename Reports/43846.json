@@ -1,0 +1,112 @@
+{
+  "id": 43846,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC80Mzg0Ng==",
+  "url": "https://hackerone.com/reports/43846",
+  "title": "No Limitation on Following allows user to follow people automatically!",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2015-01-15T01:06:36.337Z",
+  "submitted_at": "2015-01-15T01:06:36.337Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "optimus_prime",
+    "url": "/optimus_prime",
+    "profile_picture_urls": {
+      "small": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6Mzc2NCwicHVyIjoiYmxvYl9pZCJ9fQ==--8c99e727e3dd18841eb1b9a16d7d1818869a25eb/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJncmF2aXR5IjoiQ2VudGVyIiwicmVzaXplIjoiNjJ4NjJeIiwiY3JvcCI6IjYyeDYyKzArMCJ9LCJwdXIiOiJ2YXJpYXRpb24ifX0=--2de8067d228529d65848a4eeed0bed0bb2531bc3/robby.jpg"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 56,
+    "url": "https://hackerone.com/vimeo",
+    "handle": "vimeo",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/056/c3188aa0fc4a95fd486b5ee1f4b2d0b90da111d3_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/056/c3188aa0fc4a95fd486b5ee1f4b2d0b90da111d3_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Vimeo",
+      "twitter_handle": "vimeo",
+      "website": "https://vimeo.com",
+      "about": "Make life worth watching"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2016-05-02T14:46:24.611Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-04-02T14:46:12.065Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello,\r\ni'm not sure it's intentional or somehow you missed it, I noticed that when User follow people on Vimeo, CSRF token of the request doesn't change at all.\r\nIt's become something like a static code for a single session.\r\nex:\r\nPOST: https://vimeo.com/user12345 <= [ID]\r\nPOST CONTENT: action=toggle_follow&token=[TOKEN]\r\n\r\nAn attacker can misuse this function with intruder/repeater and Follow as much people he want to follow.\r\nlike all he have do is put the URL on repeater/intruder with auto increment value (a number increased by 1 for every request). that's it.\r\n\r\nfor testing purpose, i ran a intruder attack with 500 user id and it successfully followed all available users from the list. (screenshot attached)\r\nyou can check here too: https://vimeo.com/faisalahmed/following\r\n\r\nFIX:\r\nit can be fixed by implementing unique CSRF token for every request (regenerating CSRF token)\r\nor you can limit following feature.\r\n\r\nLooking forward!",
+  "weakness": {
+    "id": 45,
+    "name": "Cross-Site Request Forgery (CSRF)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 27068,
+      "file_name": "vimeo.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/027/068/97ddc479cc8a4c5b3ef7669e3adc1c54f52741b6/vimeo.png?response-content-disposition=attachment%3B%20filename%3D%22vimeo.png%22%3B%20filename%2A%3DUTF-8%27%27vimeo.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXRMVJ5J5%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T191323Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIHvpeFRGxer%2FvWr9U1iJg3RkGlJPPFj4B1AHCmELHvg0AiEA3tVo83DAR1waruPLv%2Fu8vB9bR4IqtbLU0FcfUK2SWK4qsgUIMBADGgwwMTM2MTkyNzQ4NDkiDOgV4stYWuksi315TCqPBTSyxHdDk9aIJWUXYP6dpR2hHjf4Lm2OmqG2txbrJ96dAFVsJl5WdhXN5poEKL%2B3vXRmLvgEI8oo%2BbITruxVtSca%2FXbpaeMDsG60%2BtVUNL8GY9G6XVHxwRNis96ulShvFkdYL95u%2F9BE6bHUiDyiDqW%2B3fWThOXRCd3eGH7K78T6iJJ%2FXPtdbnw0qEp3xnzhxVQuLM1e6ocxb5JKQro3HYWeofUVMeUYgBk5ichyV4i39DzesIHOdtEY1%2FFr5cO6BknHGI4QlTEFqSQ0jKwu54rl7Y6E%2BaZ3mp8Q%2Btd%2Bg9937vj1aJ9qhhj8i3tGtw8W%2BxC8sROiJ9Pn77pKG2W4hNpAyD5F6sNpIAF9vt9bRRr%2FZ%2BSnCcipXGJKkQ6Hcoy%2BJi242PhaHRQ1QO1qTSpTDPoN1qZtR2wR9nUszH5PMi4QmxwGIh01o%2B9Wm%2BWMTnnqM16OG52%2BRyxbc23dxja1vQVYylB4AR0O3PFpl3EFwn2jqYjiHYJ%2F6RJQDkkVSbnPyErUc9Ee5jaNlrYkR%2B512HKh7%2BD6AhqQJOWut8J1JadNJruJlPJ3xGDotuzZ9CpU2CA2oucGiIIogsZcPb75cH2JVlMGqGvzPEr04jl7OXE1njTEgB2XK3e%2Fw3VUuucNO63UKfjWrTnJi3XMfg1Ng%2Fu9oey3Uo2hQHA5SzIrtE32mdf5MlJGeIzmaaGgdFr9HJVkYRdU%2FiUFT26z2OzXitUwlejztiMD2BhN2Orim8RbEKbvvABTsRcvsIuPNaAaxf9ug5m%2FKbPyoz77Ruu4F1%2F98Td0OwZ%2BmxssKQ058QXkSGkXP9o8RhEiJAcpm5uHdtJmIrImKcpqU5uy8xptKTOC5VGIZeizx3DNxP2cZhYwicbFxgY6sQFd5FT1B5MlZMXS0Wluys%2FN%2B6sOHgNoVYPrRKKl6L4X1L3Qv%2BfsOVhdER%2F5XwepRHhkQe2dojWb9sZIIBlb1o6Wq8TxyLEXiwOJ5cNtpQKHgMdtczrD4NnkdCqP%2FbWEJHB9Z2i0xSshL783%2FtLC4Z9%2BmAu7vaUG7ZYYkf7Wel47W8dCXztjBQk9ZwqXfjGflGJipVy%2Bv45%2F%2B5fWFEBrMLBqatLAl0RiovcR7dfS1tvFvsM%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=467d021893f639dc4cffc84f20e7b7cb1bb9288b882aede9ef8829729cac8268",
+      "file_size": 15539,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-05-02T14:46:12.457Z",
+  "allow_singular_disclosure_after": -296368031.32251734,
+  "singular_disclosure_allowed": true,
+  "vote_count": 2,
+  "voters": [
+    "shivammusic",
+    "dyabla"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
