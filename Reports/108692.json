@@ -1,0 +1,109 @@
+{
+  "id": 108692,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMDg2OTI=",
+  "url": "https://hackerone.com/reports/108692",
+  "title": "Mixed Active Scripting Issue on stats.owncloud.org",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-01-06T05:31:33.422Z",
+  "submitted_at": "2016-01-06T05:31:33.422Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "ishahriyar",
+    "url": "/ishahriyar",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/018/459/49b3c418eb2d3dbc8e14a0dee670f4b432ba5f73_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 3059,
+    "url": "https://hackerone.com/owncloud",
+    "handle": "owncloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/003/059/d31dc64427bbbf2e428a0b0b97bce59b98d2ba0d_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/003/059/d31dc64427bbbf2e428a0b0b97bce59b98d2ba0d_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "ownCloud",
+      "twitter_handle": "ownCloud",
+      "website": "https://www.owncloud.com",
+      "about": "ownCloud GmbH is the company behind the ownCloud Project - the most downloaded open source project for data and file sync, share and view."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2016-02-06T16:11:39.771Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2016-01-07T16:11:21.543Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "\n\nI have come across with a HTTPS security issue - compromises HTTPS security by loading images from non secure source in stats.owncloud.org\nVulnerability Type: Mixed Active Scripting Issue\n\nDescription:\nMixed Active Content is content that has access to and can affect all or parts of the Document Object Model (DOM) of an HTTPS page. This type of mixed content can alter the behavior of an HTTPS page and potentially steal sensitive data from the user. Hence, in addition to the risks for Mixed Passive Content, Mixed Active Content is also exposed to a number of additional attack vectors.\nA MITM attacker can intercept requests for HTTP active content. The attacker can then re-write the response to include malicious JavaScript /fonts code. Malicious script can steal the user’s credentials, acquire sensitive data about the user, or attempt to install malware on the user’s system (by leveraging vulnerable plugins the user has installed, for example).\n\nCriticality level: Medium\n\nCriticality level justification:\nData which is transmitted in this link could be read by An attacker who is in Same network in some cases this could help to steal information.\n\nSteps:\n1) Visit link https://stats.owncloud.org\n2) Press F12 to open Developers tool in Google Chrome OR IE OR in Firefox browser and observe console. You will come across security error - \"A Secure Hypertext Transfer Protocol (HTTPS) page has content from a non-secure source.\n\nMixed content security error messages: : Firefox= 'Loading mixed (insecure) display content \"http://stats.owncloud.org/misc/user/logo.png'\n. This content should also be served over HTTPS.\n\nScenario:\nThere are 3 easy steps to attack the user through a mixed content vulnerability…\n1) Set-up a Man-in-the-Middle attack. These are most easily done on public networks such as those in coffee shops or airports.\n2) Use a mixed content vulnerability to inject a malicious javascript file. Malicious code will run in an HTTPS website that the user browsers to. The key point is that the HTTPS site has a mixed content vulnerability on it, which means that it executes content downloaded over HTTP. This is where the Man-in-the-Middle attack and Mixed Content vulnerability combine into a dangerous scenario.\n“If some attacker is able to either tamper with Javascript or stylesheet files he can effectively also tamper with the other content on your page (e.g. by modifying the DOM ). So it’s either all or nothing. Either all of your elements are served using SSL, then you are secure. Or you load some Javascript or stylesheet files from a plain HTTP connection, then you aren’t secure anymore.”\n3) Steal the user’s identity (or do other bad things).\n\nSolution ::\nMake sure all content in the page including images, js, fonts are from HTTPS sources.\n\nReference : http://msdn.microsoft.com/en-us/library/ie/dn423949(v=vs.85).aspx\nVideo :: http://www.youtube.com/watch?v=zEV3HOuM_Vw\n\nThanks.\n",
+  "weakness": {
+    "id": 57,
+    "name": "Violation of Secure Design Principles"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 68059,
+      "file_name": "Screenshot_4.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/068/059/0f5dbfde29e389fd03cec2b176f9d2500231296f/Screenshot_4.png?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_4.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_4.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUYHHKKV6%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T123635Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCLaJN%2BrXIQ%2FX1r3iBZVDGL5Dg%2BLDdK%2BEonSoMwTkzjTQIhAJrMIEWPSzGloehJSyU1pix1AejmGEwAR6eMrtSULAi5KrIFCC0QAxoMMDEzNjE5Mjc0ODQ5Igx0JILmdbZxrfar0zEqjwWuHOQyyk2a9omQHagruQTMrQYdUDdIoKTQxi87H1AhQHEKXDDc%2B0ZaDtXvGGg27NDxkVN8P%2FHuhZxj8NfhR1MAlq1lh6gLnXPbhQiiVyS6B%2BxLt5Pen4j3mMYWnAaWweja%2BWNm%2Fx70Z35YOGYHdvwntAk4CC6vEJuIKKfVezVZKMANkSVjUCsUOP3WvockPfsnBCI%2F3lO89FEoWjGW86X%2FB8iq0DjJCj%2BUBkAE7M76A2BhYTDLlxjGhT5yzpl%2FLlepQ9uy5fixcO5TbEfk5KxcFFgwZ%2FBa6RGnUzmd5I%2BOtGbt4mCCNsmec58wQg2%2Be4%2Bfn2F%2F1lioBnM1dou3%2FNJJHZyZzFgM%2FwRLjqvhVAJ7IaR3UZ7aVHk1LQs86iV66OPV7%2FcSZOXzvNn0wOMfwe0exWYpERL1YgIsI2y7YiADtAPYGj0vzCxl43gDYwxO1u1kKgJEXvSilCwCmQ8sqkmhbjee%2BZkPRxXCbQDwFtRZOm2Ax8bGui%2FAI4NqlBAsVcOtKD9%2B4zDlKdM81QoiqdCeC7MSksctXlKIOZa1F2rB6a0yZ13A9pR71CLcOtqwp218QpsS8Bd76l0nqqMiVgFnG6R0FkuhISubskWSSXkQuDF2IpG2CyZxsKcX8DPp%2Fl%2FLO3vOvcHjRyCvK3DmOd8XQ42TvQs6UFMJK6n%2BmVLBizBTenkIXtn%2FQvGf%2FqOHUF1PznPVO0mq9u0aVTVlea%2FBJ1krCeYTKY%2F%2FBX65yErPzd7OWruDsz0aWvDjTygnqcdZl8GEsyQ2icpGHorJzB4kVBG1busuR4DKFtzTKhprEDKtTTXfINVf7D4pz6kxBQsRK1lmkhfC%2BXGiJMNEi6b0M372df1fJ7SQ2KA%2FX%2FyAMKbmxMYGOrABWVYIlpeKCG7DKYBzIkq8%2FF2KjtoYYo%2Bh8ml7D2w4HKfbLN90T%2BoeAJGXcLw67o4vwvn0BEVE%2BslBGHEV4RlJh4lCThTzsD5O3Xhjf26BGTXrYFVh8xJhzQx7kO8CptfyStjCNa33sfGBsm%2FJiQnv%2FfWHKubr8SXkf2Bi3lRV9K1wS%2BSQi%2B4MZo0DK6U5IElZALFkB83q1523HRvjGax%2BPww9u7P6LfmnAB0IvyjbRi0%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=981cc60247d257105d3a65684b9df0ff9a559f1cabf5d62937e4c82a67f4cfec",
+      "file_size": 50921,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-02-06T16:11:21.887Z",
+  "allow_singular_disclosure_after": -303769513.96310097,
+  "singular_disclosure_allowed": true,
+  "vote_count": 0,
+  "voters": [],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
