@@ -1,0 +1,117 @@
+{
+  "id": 174228,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNzQyMjg=",
+  "url": "https://hackerone.com/reports/174228",
+  "title": "CSRF csrftoken in cookies",
+  "state": "Closed",
+  "substate": "informative",
+  "severity_rating": "high",
+  "readable_substate": "Informative",
+  "created_at": "2016-10-05T23:21:18.358Z",
+  "submitted_at": "2016-10-05T23:21:18.358Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "promx",
+    "url": "/promx",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/115/619/773f692f55d168db435e3b166ed0faa5835d7f1b_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 1868,
+    "url": "https://hackerone.com/gratipay",
+    "handle": "gratipay",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/001/868/a75c6649c5b4671b3cf44160af884a7da9fd0b67_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/001/868/a75c6649c5b4671b3cf44160af884a7da9fd0b67_original.jpg/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "disabled",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Gratipay",
+      "twitter_handle": "Gratipay",
+      "website": "https://gratipay.com/",
+      "about": "Gratitude? Gratipay! The easiest way for your company to pay for open source."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2016-12-07T21:18:09.022Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-10-21T21:52:34.555Z",
+  "team_member_agreed_on_going_public_at": "2016-12-07T21:18:08.955Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi,\n\nYour web application generates CSRF token values inside cookies\nwhich is not a best practice for web applications as revelation of cookies can reveal CSRF Tokens as well.\nAuthenticity tokens should be kept separate from cookies and should be isolated to change operations in the account only.\n\nMore description:\nThis report tells that the CSRF tokens are present inside of the cookies value which is not a best practice and if the cookie is intercepted and compromised than the CSRF token will also be vulnerable.\n\nThis is the Captured request of edit Statement HTTP ,In this request you can see CSRF token is generating in cookies named as csrftoken\n\nHTTP/1.1 200 OK\nConnection: close\nServer: gunicorn\nDate: Wed, 05 Oct 2016 23:09:42 GMT\nCache-Control: no-cache\nX-Gratipay-Version: 1986\nX-Content-Type-Options: nosniff\nX-Frame-Options: SAMEORIGIN\nContent-Type: text/html; charset=UTF-8\nSet-Cookie: csrf_token=zxRkWnGq3I5bMcXDRUWuWWXjxdsO1JtZ; expires=Wed, 12 Oct 2016 23:09:42 GMT; Path=/; secure\nX-Xss-Protection: 1; mode=block\nVia: 1.1 vegur\nContent-Length: 400168\n\nRegards,\nPromx",
+  "weakness": {
+    "id": 45,
+    "name": "Cross-Site Request Forgery (CSRF)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 126229,
+      "file_name": "gratipay.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/126/229/f51310bc993d82899f5b7258454aa5b053448c45/gratipay.png?response-content-disposition=attachment%3B%20filename%3D%22gratipay.png%22%3B%20filename%2A%3DUTF-8%27%27gratipay.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4BD7AFDX%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T002041Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIG5Mzr0x%2F39caZ34VvnYZSu%2B4XVkYwA38IEB8ighJcTzAiEArtPm%2B8vaiCvHEmILAu%2BHyPF0pbWp%2BJPZNZdL%2F%2FlyMfcqsgUIHxADGgwwMTM2MTkyNzQ4NDkiDHvDZxI45WO%2FVcWRAyqPBWYJGhwuiVUh%2B0EvK00xvBEIwzRX34v%2BvZthshXDaUWH%2BuPRDBvIPmWGrSH8SD0g5H8HbEwkEfKzKDe5mjTk2awkWVbsSau8hngdZ7IhUGfDffI5lBmweljLTaxh%2BOoaq9Fs%2B8M5cec1GyvvCPKGDkFQeSrSIV6R6%2FDbCSm6i3N0K%2FamMzLzLLkT46OfbAyJP9LRvoa1w4L4sHNp6Yuj1H0KNyNE8TLfQBtH8Dc0ok4B0LKvxLlKMXC0JZJQkZr7HF5Dfn9mHEzR7vSqL18fUO2otCOQ4ERBiMMostU61Zi1UZJmu61vfApA7yhsBzxZ8rqKALxUu%2B1MFtosUYKkYrprYKEzKf9svpXjt%2FrXoBWbjoJkRXuvUZULV64AzqxfEABxHZnNlesMWsKnxcCi6hWoqM%2BMqFpwb%2ByEl%2BjvB7hb%2FpPlVfp%2FUX4hOMtJkN6uDdb1z%2FU9CnMaEdgawe6kTF9Vk%2FVgTwMGVloLq2yHI5vmd0tw8rxZ1I2ULlq%2FF5m8bqMCdif5rp2K7nBOhHTy9INO7J%2B85QgMsIeUZGt3cmPFFRP9kCG0gudhiCfx8O12qKSrP07TVQ%2FXxCbmeeGr1I2r6Bll3tkr8fENBu%2BKJScJy5O9OUl2aVyCndk7FgnFesONiq6cVO8TAz1Xf23OZJaPK%2FTzAFONQwscgKRFL9rZw1rwpoeahrbbC6mw7H7MqlQIM%2F9gmDx1ZWfVPTefT4FVKlpsrfYxrK5MtDBz7tQCiHCA7LfbXAjS%2FlWaAr2rdNKfndK7pdiCihvMKheo8M%2BOhQ27VwQdniEz2xssRvkOX4Wtfo340%2FLCmBv6SFEicozc4Jq4WyPoh3y1DkUJHxhOkdycejqPIVLn9IUshWgw1efBxgY6sQEHGWzuwlsd9fgperU6ktE%2BuXdh1rIZugRbxHX42QKa57gQF8EWQwEbtPI78E68kTrdP9nudx%2FAVHRecrssw0tXONvW6yuQBiE6gGix3Eq2%2BpFtSaKSngamNWxm0IF00P8zn4s2StsLeTzbZ3Nm86Dv4KQlzCnXGXly6KKUBCLHE3ZmKRfAwATv%2B7IcpN5amQZQu%2BTbMe1tmjRfvhIt%2BxuLa8WiyBlHqp5vns3XPmKRtA8%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=191c1ad0c893fa420fe383f968e1ac4f5eef78526faa8ff837b7c22341498700",
+      "file_size": 32415,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 4,
+  "voters": [
+    "rashedul_css",
+    "spetr0x",
+    "satya_noob",
+    "mrx-h1"
+  ],
+  "severity": {
+    "rating": "high",
+    "author_type": "User"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
