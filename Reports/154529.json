@@ -1,0 +1,130 @@
+{
+  "id": 154529,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNTQ1Mjk=",
+  "url": "https://hackerone.com/reports/154529",
+  "title": "Bookmarks: Delete all existing bookmarks of a user",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-07-28T07:48:03.410Z",
+  "submitted_at": "2016-07-28T07:48:03.410Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "ctee",
+    "url": "/ctee",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/082/459/04f93489ad9ad6fbf167418f86950a652aed6976_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13291,
+    "url": "https://hackerone.com/nextcloud",
+    "handle": "nextcloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Nextcloud",
+      "twitter_handle": "nextclouders",
+      "website": "https://nextcloud.com",
+      "about": "Access, share and protect your files, calendars, contacts, communication & more at home and in your enterprise."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2016-08-08T09:28:32.416Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-08-05T09:44:09.016Z",
+  "team_member_agreed_on_going_public_at": "2016-08-08T09:28:32.313Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "A logical bug in the bookmark app makes it possible to delete all the existing bookmarks of the user. \n\nHere are the steps to reproduce: \n- Create  couple of valid bookmarks\n- Import a bookmark.html file that contains the line **<a href=\"\">Bookmark</a>**. All the bookmarks of the user is replaced with blank url and Bookmark as description. \n- This is potentially a risk where a user could be sent malicious html file to delete the bookmarks or this could even happen unintentionally if the user uploads a html with blank urls. \n\nThe logical flaw resides in the method **/apps/bookmarks/controller/lib/bookmarks.php** -> **addBookmark**  where SQL query will select all the bookmarks and update them. \n\n",
+  "weakness": {
+    "id": 75,
+    "name": "Privilege Escalation"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 108065,
+      "file_name": "screenshot1.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/108/065/2113d82489ed3c66c2ef1545abef5de110db7761/screenshot1.png?response-content-disposition=attachment%3B%20filename%3D%22screenshot1.png%22%3B%20filename%2A%3DUTF-8%27%27screenshot1.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQRFBGMYSB%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T153621Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQD164qfTXFebvfu6IS1JlnzL4yulub%2BkFQeVgmLRNYTPAIhAMo6fOibtYn1szPQF1IHVQmUBKqcMGG0N6ZpBBpAMGztKrIFCC8QAxoMMDEzNjE5Mjc0ODQ5IgwJeEMsFeTl5p2yzyIqjwURCce04opiF4oORlIWO1lycm%2B5YJL1Lybu8htpbLXZziMBZbSxIj3Nym4QY7SZpK1IOVZSCxkHS%2B1W8kk1WToASRQjkqqJ1ebAcK1Hfo9j%2BvKEDXg%2BbaVlLfy6X%2BAjjkUPPHDaUtpqd2qwDYgpcAy28noNm0TaakRozTjcpxrJL363V%2Bu7fIe%2FdvR1sN5RjQLHW6eXO4NXPrGtf4YnOGRjxVNcU5JYoqoginxA3prbaqfYIIVm2SPUy3E8qyyvszQkQ0LvzLlZWZrE2qsral9cvFV7xRNM6Fr%2F5iUHTHJGQTLHVUPAA0iCWMSy5%2FbVG5TDQsaJUAM0qw0BHvMW4UGRWh7mycmlcqg7SNrSsvxWXZYO2tQsoBo7Wq4EaC9xt69UPG5NrJ2urQUXZljCUr12Gm5IbwEoN3E0Bm6rqxkyaeGR8BQ%2FUxEFFT9tFsE95XJoGi%2F4oLQRIUk%2BQK%2F45%2BJRHdK3U3nuFFaMsliL4bj18iOuAFdel%2FsyepZjQBiEgh6Bc%2F6Iq5IzcfJmhqiABUzPSkk6nXDGhYMFflW%2BKBgmXfskRQNeXQxYkZZdVg%2Bk%2BjSFL4Zoz2VaCbNLd6W34SJbbPgsJGTss185JQ0QQbshef9vftsMuBouIOAom1VG6DY%2FJV6P5RJNCvftQFyG0G%2Be5NJcfSoWx4fmWCFDPKTKV1Q25hirdo3knI%2BByrrnzGjWQ%2BMotX6n6IyQa9atJFPbAufDig%2B6uoVH7Lxx%2F9WUEZgY2I4ZOHisjmvr3XQm7HEa41iwt8WsmDpJU1DpTy1zc7hlIdq1yXhOVAEUdrFXrTOEJ50Fspgz66ViHc4hoD22RFcR2Np3cs4DLnXomewmmhQJFISOvsWa380%2B1v%2ByMJi0xcYGOrAB3qmBHVTLiOgN9xtR7aLL%2B0hWXXDM0LmwF9%2BGFHutCe3kk16LyKFS%2FtQHlwDztZoKTb91F0VSbq1uAU1R7kR4v%2FHCtc7a6EteVfCgHkeaWeVB54vPm6v59PEl16%2FbXsmkmtqe%2BA994PywxAxz3MjtvaCOnQfR1kcq%2FWt%2Bz9%2F%2BpHd1%2FWlUT7MvMeqi2gEZ9PFEQ3J9YtWA%2FVlFC2TbgPqFJWENVnGV8umV%2B70Xjx%2F0f2c%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=6a93d79c1cc7310e6277dceeea15dc83933b3b909544ad4e72e4c3f6a2f86ebf",
+      "file_size": 14590,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 108066,
+      "file_name": "screenshot2.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/108/066/e65e252486840c763d4c5b2612f72de4f3872fd9/screenshot2.png?response-content-disposition=attachment%3B%20filename%3D%22screenshot2.png%22%3B%20filename%2A%3DUTF-8%27%27screenshot2.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQRFBGMYSB%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T153621Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQD164qfTXFebvfu6IS1JlnzL4yulub%2BkFQeVgmLRNYTPAIhAMo6fOibtYn1szPQF1IHVQmUBKqcMGG0N6ZpBBpAMGztKrIFCC8QAxoMMDEzNjE5Mjc0ODQ5IgwJeEMsFeTl5p2yzyIqjwURCce04opiF4oORlIWO1lycm%2B5YJL1Lybu8htpbLXZziMBZbSxIj3Nym4QY7SZpK1IOVZSCxkHS%2B1W8kk1WToASRQjkqqJ1ebAcK1Hfo9j%2BvKEDXg%2BbaVlLfy6X%2BAjjkUPPHDaUtpqd2qwDYgpcAy28noNm0TaakRozTjcpxrJL363V%2Bu7fIe%2FdvR1sN5RjQLHW6eXO4NXPrGtf4YnOGRjxVNcU5JYoqoginxA3prbaqfYIIVm2SPUy3E8qyyvszQkQ0LvzLlZWZrE2qsral9cvFV7xRNM6Fr%2F5iUHTHJGQTLHVUPAA0iCWMSy5%2FbVG5TDQsaJUAM0qw0BHvMW4UGRWh7mycmlcqg7SNrSsvxWXZYO2tQsoBo7Wq4EaC9xt69UPG5NrJ2urQUXZljCUr12Gm5IbwEoN3E0Bm6rqxkyaeGR8BQ%2FUxEFFT9tFsE95XJoGi%2F4oLQRIUk%2BQK%2F45%2BJRHdK3U3nuFFaMsliL4bj18iOuAFdel%2FsyepZjQBiEgh6Bc%2F6Iq5IzcfJmhqiABUzPSkk6nXDGhYMFflW%2BKBgmXfskRQNeXQxYkZZdVg%2Bk%2BjSFL4Zoz2VaCbNLd6W34SJbbPgsJGTss185JQ0QQbshef9vftsMuBouIOAom1VG6DY%2FJV6P5RJNCvftQFyG0G%2Be5NJcfSoWx4fmWCFDPKTKV1Q25hirdo3knI%2BByrrnzGjWQ%2BMotX6n6IyQa9atJFPbAufDig%2B6uoVH7Lxx%2F9WUEZgY2I4ZOHisjmvr3XQm7HEa41iwt8WsmDpJU1DpTy1zc7hlIdq1yXhOVAEUdrFXrTOEJ50Fspgz66ViHc4hoD22RFcR2Np3cs4DLnXomewmmhQJFISOvsWa380%2B1v%2ByMJi0xcYGOrAB3qmBHVTLiOgN9xtR7aLL%2B0hWXXDM0LmwF9%2BGFHutCe3kk16LyKFS%2FtQHlwDztZoKTb91F0VSbq1uAU1R7kR4v%2FHCtc7a6EteVfCgHkeaWeVB54vPm6v59PEl16%2FbXsmkmtqe%2BA994PywxAxz3MjtvaCOnQfR1kcq%2FWt%2Bz9%2F%2BpHd1%2FWlUT7MvMeqi2gEZ9PFEQ3J9YtWA%2FVlFC2TbgPqFJWENVnGV8umV%2B70Xjx%2F0f2c%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=76a9dc60148e0cee1910ec940e4d54ae62116640b22312caf47c93135781f1cc",
+      "file_size": 11344,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 108067,
+      "file_name": "urltest.html",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/108/067/c5e5e09424afe89ba3aa47788e8a481a13f65a74/urltest.html?response-content-disposition=attachment%3B%20filename%3D%22urltest.html%22%3B%20filename%2A%3DUTF-8%27%27urltest.html&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQRFBGMYSB%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T153621Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQD164qfTXFebvfu6IS1JlnzL4yulub%2BkFQeVgmLRNYTPAIhAMo6fOibtYn1szPQF1IHVQmUBKqcMGG0N6ZpBBpAMGztKrIFCC8QAxoMMDEzNjE5Mjc0ODQ5IgwJeEMsFeTl5p2yzyIqjwURCce04opiF4oORlIWO1lycm%2B5YJL1Lybu8htpbLXZziMBZbSxIj3Nym4QY7SZpK1IOVZSCxkHS%2B1W8kk1WToASRQjkqqJ1ebAcK1Hfo9j%2BvKEDXg%2BbaVlLfy6X%2BAjjkUPPHDaUtpqd2qwDYgpcAy28noNm0TaakRozTjcpxrJL363V%2Bu7fIe%2FdvR1sN5RjQLHW6eXO4NXPrGtf4YnOGRjxVNcU5JYoqoginxA3prbaqfYIIVm2SPUy3E8qyyvszQkQ0LvzLlZWZrE2qsral9cvFV7xRNM6Fr%2F5iUHTHJGQTLHVUPAA0iCWMSy5%2FbVG5TDQsaJUAM0qw0BHvMW4UGRWh7mycmlcqg7SNrSsvxWXZYO2tQsoBo7Wq4EaC9xt69UPG5NrJ2urQUXZljCUr12Gm5IbwEoN3E0Bm6rqxkyaeGR8BQ%2FUxEFFT9tFsE95XJoGi%2F4oLQRIUk%2BQK%2F45%2BJRHdK3U3nuFFaMsliL4bj18iOuAFdel%2FsyepZjQBiEgh6Bc%2F6Iq5IzcfJmhqiABUzPSkk6nXDGhYMFflW%2BKBgmXfskRQNeXQxYkZZdVg%2Bk%2BjSFL4Zoz2VaCbNLd6W34SJbbPgsJGTss185JQ0QQbshef9vftsMuBouIOAom1VG6DY%2FJV6P5RJNCvftQFyG0G%2Be5NJcfSoWx4fmWCFDPKTKV1Q25hirdo3knI%2BByrrnzGjWQ%2BMotX6n6IyQa9atJFPbAufDig%2B6uoVH7Lxx%2F9WUEZgY2I4ZOHisjmvr3XQm7HEa41iwt8WsmDpJU1DpTy1zc7hlIdq1yXhOVAEUdrFXrTOEJ50Fspgz66ViHc4hoD22RFcR2Np3cs4DLnXomewmmhQJFISOvsWa380%2B1v%2ByMJi0xcYGOrAB3qmBHVTLiOgN9xtR7aLL%2B0hWXXDM0LmwF9%2BGFHutCe3kk16LyKFS%2FtQHlwDztZoKTb91F0VSbq1uAU1R7kR4v%2FHCtc7a6EteVfCgHkeaWeVB54vPm6v59PEl16%2FbXsmkmtqe%2BA994PywxAxz3MjtvaCOnQfR1kcq%2FWt%2Bz9%2F%2BpHd1%2FWlUT7MvMeqi2gEZ9PFEQ3J9YtWA%2FVlFC2TbgPqFJWENVnGV8umV%2B70Xjx%2F0f2c%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=678d2dd86646bd8fb4745c648d0b6f5f24f597ecbd04e870150532fef7e56f77",
+      "file_size": 59,
+      "type": "text/html",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-09-04T09:44:09.114Z",
+  "allow_singular_disclosure_after": -285573132.4997204,
+  "singular_disclosure_allowed": true,
+  "vote_count": 4,
+  "voters": [
+    "eboda",
+    "linkks",
+    "yashsodha",
+    "dyabla"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
