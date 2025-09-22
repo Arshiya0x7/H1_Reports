@@ -1,0 +1,131 @@
+{
+  "id": 120115,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMjAxMTU=",
+  "url": "https://hackerone.com/reports/120115",
+  "title": "Critical - Insecure Direct Object Reference - Deleting any member of any organization remotely",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-03-02T13:26:48.647Z",
+  "submitted_at": "2016-03-02T13:26:48.647Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "itly",
+    "url": "/itly",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/017/083/1c184e3b6a29f0b62478ca965b448f9da3d27a1b_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 9409,
+    "url": "https://hackerone.com/veris",
+    "handle": "veris",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/009/409/c1806c3bc995d97dd0aa437c2e42eb609f49e549_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/009/409/c1806c3bc995d97dd0aa437c2e42eb609f49e549_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "disabled",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Veris",
+      "twitter_handle": "",
+      "website": "",
+      "about": ""
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2016-06-12T16:06:40.854Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2016-05-13T16:06:10.670Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello Team,\n\nI have found an extremely critical issue with the help of which an attacker can delete any member of any organization. The vulnerability is Insecure Direct Object Reference(IDOR) which leads to privilege escalation as an attacker can perform such a critical attack from his own account.\n\nVulnerable URL: DELETE /api/v1/org-member/4/[MEMBER_ID]/\n\nOn changing the member id, application allows an attacker to delete that member. I tried using my 2 accounts and got success in the same.\n\nSteps to Reproduce:'\n\n1. Login to your Veris View Portal.\n2. Go to Member Book.\n3. Set up Burp Suite to intercept the request OR simply edit the member id from browser's Inspect Element feature.\n4. Delete a Member and intercept the request.\n5. Replace the member id with some other member of other organization.\n6. Forward the request.\n7. Check in the other organization. Member would be deleted.\n\nProof of Concept: Please find the attached screenshots.\n\nDo evaluate it and inform me accordingly.\n\nBest Regards,\n\nHely H. Shah",
+  "weakness": {
+    "id": 75,
+    "name": "Privilege Escalation"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 76297,
+      "file_name": "Edited_Request_-_Delete_a_Member.JPG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/076/297/582454229fea517e2f41036e49c80874f833f4d8/Edited_Request_-_Delete_a_Member.JPG?response-content-disposition=attachment%3B%20filename%3D%22Edited_Request_-_Delete_a_Member.JPG%22%3B%20filename%2A%3DUTF-8%27%27Edited_Request_-_Delete_a_Member.JPG&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQS3CCK3EE%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T132718Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDGKDX4%2FUfI4d2myjy8vMf8hEw8dVtxTJ5LFoqDdpn4qwIhAJ%2B50A5azGcUU1BLCs1qy2WRb83ufiX225jbbwbQq2RUKrIFCC4QAxoMMDEzNjE5Mjc0ODQ5IgxPV5RNMX9O2QjtLwgqjwWcQ%2BNQAG1gs7Q0G2KjprbpnjEjfth9zV1ZrHiIK%2BtVzvAsKhMnurqllOz84fl6aemDSnObvQ2oYSjqArlfe4c%2FwX2%2FRaQU9ZBsrITupqxu8GS5PM%2BBYT0gIZ9PbzYTueVWWOnMDhHClHSyVZLSywENSnQLDNhz%2BhnN%2FlLmLajuaHI2hpL5exU3ygTZloTEl%2Bi8YFB4TzfAOq4W6FPSTNddSuQwa4uQX6nKhrDe7GgGhK%2Fg9sERBkFcpaMxem7z8KZZM925lpcQj0NBT7JGQPauWnhzfwMEKHaCgJ9iYxy%2FHuFw6M213bRGOXUY6J%2F6297JnUjYWSSQuQLbcKDxM3WBNmZPIy2SAAypY4g5clAH4zruO4QLmL52C3bNfuldjTmYhAiO%2BRhgEgZuIOGxnupyqogrwRm5t0FHnFvLDVh1d%2BPcNKfNIINMdQfwYLWQ%2B7B84uW9Rc%2FjxBkviR1noduPTe3hzSlMjigxY1d8rkF6nrsucEjtnPqpSFTFprGViKuKmNWOKYOgi7srnpzWoTG%2BDRsJqmQ9O6l9fzagOS3AZnZ8julMI%2FFFblyFct2UM1jxIhPv%2F%2B9z4nRRkVNSW%2BVdfYVv8gq8bEjaxALJOmHjpvzaUsdgFrJvoi%2F4s2Ai9GGRy82wundHSShIq6EMCTg%2BDt5PMBtM%2FK5QoK9LNM%2FLiUdp4nC2bBDum8tkJeftmKtMfb3xExvw2fdVCkqML4Y72MUp84UVEMYdmk23Oy6casO62Ur1fycnqAEv77%2Bp3%2FDKJWr9p8P7vHSjr%2FT0cByO7zJkTenGzu1TN1%2B%2Fp2%2BrVJkysMUJ3F7qGyf%2F6kgCHkPi9k910dkY%2BUAHAYywSy5yps3%2BrEdXyV8TL5bKeVInMLyUxcYGOrABCfM07AtaTBWTrjyXz2xaFRa0NuyCNE2P2w5TBzdxN9o9QzuqLirMPdr%2F6olZ3pwp34vQgPcfX6BS0Sqfyc7c0l7e802rRspbxADiE5C61FprYQdpagSlZVNn0rY7CLDhEY%2BV3GipzXSDz6O5S%2BrMHGBGWCb815ggEo5HwJqz%2FED6izW0l%2B3mrsUTeDG5RFBsfNGCC%2F9xltHeY26k204Xn%2BhagcWCZREBCqwCLibBH7w%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=610b4c567897e0a6f5d75f91ec20a4e0242a059ada9e3d579f2b997668135826",
+      "file_size": 61877,
+      "type": "image/jpeg",
+      "moderated": null
+    },
+    {
+      "id": 76298,
+      "file_name": "Original_Request_-_Delete_a_Member.JPG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/076/298/864a950f77756cca4d25515a3bbba740c70fe87b/Original_Request_-_Delete_a_Member.JPG?response-content-disposition=attachment%3B%20filename%3D%22Original_Request_-_Delete_a_Member.JPG%22%3B%20filename%2A%3DUTF-8%27%27Original_Request_-_Delete_a_Member.JPG&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQS3CCK3EE%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T132718Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDGKDX4%2FUfI4d2myjy8vMf8hEw8dVtxTJ5LFoqDdpn4qwIhAJ%2B50A5azGcUU1BLCs1qy2WRb83ufiX225jbbwbQq2RUKrIFCC4QAxoMMDEzNjE5Mjc0ODQ5IgxPV5RNMX9O2QjtLwgqjwWcQ%2BNQAG1gs7Q0G2KjprbpnjEjfth9zV1ZrHiIK%2BtVzvAsKhMnurqllOz84fl6aemDSnObvQ2oYSjqArlfe4c%2FwX2%2FRaQU9ZBsrITupqxu8GS5PM%2BBYT0gIZ9PbzYTueVWWOnMDhHClHSyVZLSywENSnQLDNhz%2BhnN%2FlLmLajuaHI2hpL5exU3ygTZloTEl%2Bi8YFB4TzfAOq4W6FPSTNddSuQwa4uQX6nKhrDe7GgGhK%2Fg9sERBkFcpaMxem7z8KZZM925lpcQj0NBT7JGQPauWnhzfwMEKHaCgJ9iYxy%2FHuFw6M213bRGOXUY6J%2F6297JnUjYWSSQuQLbcKDxM3WBNmZPIy2SAAypY4g5clAH4zruO4QLmL52C3bNfuldjTmYhAiO%2BRhgEgZuIOGxnupyqogrwRm5t0FHnFvLDVh1d%2BPcNKfNIINMdQfwYLWQ%2B7B84uW9Rc%2FjxBkviR1noduPTe3hzSlMjigxY1d8rkF6nrsucEjtnPqpSFTFprGViKuKmNWOKYOgi7srnpzWoTG%2BDRsJqmQ9O6l9fzagOS3AZnZ8julMI%2FFFblyFct2UM1jxIhPv%2F%2B9z4nRRkVNSW%2BVdfYVv8gq8bEjaxALJOmHjpvzaUsdgFrJvoi%2F4s2Ai9GGRy82wundHSShIq6EMCTg%2BDt5PMBtM%2FK5QoK9LNM%2FLiUdp4nC2bBDum8tkJeftmKtMfb3xExvw2fdVCkqML4Y72MUp84UVEMYdmk23Oy6casO62Ur1fycnqAEv77%2Bp3%2FDKJWr9p8P7vHSjr%2FT0cByO7zJkTenGzu1TN1%2B%2Fp2%2BrVJkysMUJ3F7qGyf%2F6kgCHkPi9k910dkY%2BUAHAYywSy5yps3%2BrEdXyV8TL5bKeVInMLyUxcYGOrABCfM07AtaTBWTrjyXz2xaFRa0NuyCNE2P2w5TBzdxN9o9QzuqLirMPdr%2F6olZ3pwp34vQgPcfX6BS0Sqfyc7c0l7e802rRspbxADiE5C61FprYQdpagSlZVNn0rY7CLDhEY%2BV3GipzXSDz6O5S%2BrMHGBGWCb815ggEo5HwJqz%2FED6izW0l%2B3mrsUTeDG5RFBsfNGCC%2F9xltHeY26k204Xn%2BhagcWCZREBCqwCLibBH7w%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=c7b20a570ada0485167fcf1cb3e5829e29b03a772305ca2b6d75d089a28c8c7d",
+      "file_size": 65304,
+      "type": "image/jpeg",
+      "moderated": null
+    },
+    {
+      "id": 76299,
+      "file_name": "Response.JPG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/076/299/b90a9bbac8fb1ef9236066548fbc1e9188657067/Response.JPG?response-content-disposition=attachment%3B%20filename%3D%22Response.JPG%22%3B%20filename%2A%3DUTF-8%27%27Response.JPG&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQS3CCK3EE%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T132718Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDGKDX4%2FUfI4d2myjy8vMf8hEw8dVtxTJ5LFoqDdpn4qwIhAJ%2B50A5azGcUU1BLCs1qy2WRb83ufiX225jbbwbQq2RUKrIFCC4QAxoMMDEzNjE5Mjc0ODQ5IgxPV5RNMX9O2QjtLwgqjwWcQ%2BNQAG1gs7Q0G2KjprbpnjEjfth9zV1ZrHiIK%2BtVzvAsKhMnurqllOz84fl6aemDSnObvQ2oYSjqArlfe4c%2FwX2%2FRaQU9ZBsrITupqxu8GS5PM%2BBYT0gIZ9PbzYTueVWWOnMDhHClHSyVZLSywENSnQLDNhz%2BhnN%2FlLmLajuaHI2hpL5exU3ygTZloTEl%2Bi8YFB4TzfAOq4W6FPSTNddSuQwa4uQX6nKhrDe7GgGhK%2Fg9sERBkFcpaMxem7z8KZZM925lpcQj0NBT7JGQPauWnhzfwMEKHaCgJ9iYxy%2FHuFw6M213bRGOXUY6J%2F6297JnUjYWSSQuQLbcKDxM3WBNmZPIy2SAAypY4g5clAH4zruO4QLmL52C3bNfuldjTmYhAiO%2BRhgEgZuIOGxnupyqogrwRm5t0FHnFvLDVh1d%2BPcNKfNIINMdQfwYLWQ%2B7B84uW9Rc%2FjxBkviR1noduPTe3hzSlMjigxY1d8rkF6nrsucEjtnPqpSFTFprGViKuKmNWOKYOgi7srnpzWoTG%2BDRsJqmQ9O6l9fzagOS3AZnZ8julMI%2FFFblyFct2UM1jxIhPv%2F%2B9z4nRRkVNSW%2BVdfYVv8gq8bEjaxALJOmHjpvzaUsdgFrJvoi%2F4s2Ai9GGRy82wundHSShIq6EMCTg%2BDt5PMBtM%2FK5QoK9LNM%2FLiUdp4nC2bBDum8tkJeftmKtMfb3xExvw2fdVCkqML4Y72MUp84UVEMYdmk23Oy6casO62Ur1fycnqAEv77%2Bp3%2FDKJWr9p8P7vHSjr%2FT0cByO7zJkTenGzu1TN1%2B%2Fp2%2BrVJkysMUJ3F7qGyf%2F6kgCHkPi9k910dkY%2BUAHAYywSy5yps3%2BrEdXyV8TL5bKeVInMLyUxcYGOrABCfM07AtaTBWTrjyXz2xaFRa0NuyCNE2P2w5TBzdxN9o9QzuqLirMPdr%2F6olZ3pwp34vQgPcfX6BS0Sqfyc7c0l7e802rRspbxADiE5C61FprYQdpagSlZVNn0rY7CLDhEY%2BV3GipzXSDz6O5S%2BrMHGBGWCb815ggEo5HwJqz%2FED6izW0l%2B3mrsUTeDG5RFBsfNGCC%2F9xltHeY26k204Xn%2BhagcWCZREBCqwCLibBH7w%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=96e3591cd29a1c489fa735efdef28cf1524a3e8faa06ff83d3106d174301c518",
+      "file_size": 59432,
+      "type": "image/jpeg",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-06-12T16:06:10.735Z",
+  "allow_singular_disclosure_after": -292800067.43902564,
+  "singular_disclosure_allowed": true,
+  "vote_count": 5,
+  "voters": [
+    "wargsec",
+    "rashedul_css",
+    "dyabla",
+    "0xkenzo",
+    "sbk14op"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
