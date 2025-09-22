@@ -1,0 +1,127 @@
+{
+  "id": 141244,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNDEyNDQ=",
+  "url": "https://hackerone.com/reports/141244",
+  "title": "XSS in zendesk.com/product/",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-05-26T17:21:14.256Z",
+  "submitted_at": "2016-05-26T17:21:14.256Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "virtualhunter",
+    "url": "/virtualhunter",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/052/708/b5875aa5a0697c2e10bf492467cc239e882c7a49_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 205,
+    "url": "https://hackerone.com/zendesk",
+    "handle": "zendesk",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/vqazo0hs6n64m1y7wrfnhrao63p9/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/vqazo0hs6n64m1y7wrfnhrao63p9/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Zendesk",
+      "twitter_handle": "",
+      "website": "https://www.zendesk.com",
+      "about": "At Zendesk we’re on a mission to simplify the complexity of business and make it easy for companies and customers to create connections. "
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2016-12-15T00:56:43.041Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-12-15T00:56:43.012Z",
+  "team_member_agreed_on_going_public_at": "2016-06-20T17:00:49.192Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Vulnerable urls:\nhttps://www.zendesk.com/product/tour/\nhttps://www.zendesk.com/product/pricing/\nor just https://www.zendesk.com/product/\n\nVulnerable parameter is a **cvo_sid1**, used in **live.js**  to call convertro code (without sanitizing). This leads to generating malformed javascript answer with XSS injection ability. (See screenshots below).\nThere is a restriction on a semicolon use, so i replaced it with %3b.\n\nTo reproduce vulnerability, you could try this safe example:\n`https://www.zendesk.com/product/tour/#?cvo_sid1=1\")%3balert(document.cookie%2b\"`\n\nThis vulnerability provides a great opportunity for victim to lose not only cookies, but also control over the account after stealth forwarding to porposely generated link like this :))\n\n\n\n",
+  "weakness": {
+    "id": 60,
+    "name": "Cross-site Scripting (XSS) - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 96251,
+      "file_name": "zendesk1a.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/096/251/721ca9b54007f448349d8625d31f733ba1780f81/zendesk1a.jpg?response-content-disposition=attachment%3B%20filename%3D%22zendesk1a.jpg%22%3B%20filename%2A%3DUTF-8%27%27zendesk1a.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUPHDD546%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T001752Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDKsPnwqCh%2FQVaYDYBUsS0icgjcq6yVbEhVYiPJ8ea6FAIgQQ%2BaH%2BfucKthmW9uPJOom68SV7d2Q2FsHrZP7Kr7Q%2FsqsgUIHxADGgwwMTM2MTkyNzQ4NDkiDD0NRkW8orxYL9wKPSqPBV%2F3ezcQmvJbd6s6%2FGKhrbA8tkrzOyBzRNRt6Ms%2BR50M4de2dwuKzmuc%2BE4RRqJDtOiCFWvLWvDSXMfupaVlrMx0koUXpbBvs4KEMKN7X1EA0IMBNnyFh3%2FrfVDP8naoHI4nOhB2PRDLbOf4wMP5BcWxdI2cheJ6KYnapAdfAZhx%2BrBS4Nxx9RownzMDPX%2B7FC8d3n5x%2Fbjhh76VR0P0VszjsR3XemeIXxNhCK%2BLTurR2DFLHqVhx7BpZTaNquXMwgJHk7%2BspxXsArpigqdcxQYFivR77vF7VUjr4bqGtNOvF%2FxnFvwvfzqlB4TaWjh3sB9rXJtkWHgBr3qXVIFs%2BjXnQEaQrin9FakszLpMRSgyrxg70Rbf5H48vkBmFCedGpnnshzQwA7RzzMnTxYsdV1PJKYoFOAea%2BZXFahm5ZNSf0Xj23uz6wLELyMKTg0gjqEtJUz9M13rwVgBQleRZhdkMon%2Bw1PAAhD21QpJyhzEUKffruc6C6lFZz%2FojE3gRaCRWzSfrDdCuRgMIuH1Ti56YzOi6SZj2%2Bj%2FJGKM2pnfXyDZWU7E5uXQtL%2FBuYWD%2F1gbpV0%2FMoSUFWLsrBIJ3Ar%2B0jUZPxvVR05CIafGtMXK2G1x9kYgcIW1mP5H3wi0S6tS40u%2Byecwaf00qgf%2FkjJudj1uaCZaaZdxWtPTZ3haFAKWaUtOb3q%2F%2FLBEC7F7tFYukvjf8tiCwi4uWzRmTya3mRIMX8ONMgCeKln2ggoC0kK%2BXBp2DZHbly4H%2Bqt3dAaXi831U3bujY7bO%2BMcE0Wkc9pzp55bhE1R4zAJy1iw%2BbdKoqnYfYfX48YFpLXaeBvpU3Eu9d00cgLamHUG8nqitJXQXHbPT8lF8wGtxqEwle3BxgY6sQH5vvI1HWOFPwg4t5LVLyhmy%2BFJ37N8Sf6VG77h8lIZ8Btwm0KcD%2BfYJW1s2fynRGJebyKkuBnM3yHjNo4%2F%2FuxmuBgBwKz9G72zYtSlFCOrb8gFDGNLHV4ITKYTCI3f8Ozj7gw2NJMIkph4GZ5kpYT7fSpFkXYvBB7ADdb738O1jsE35vz48OTRzQ%2BqvxFxNbQQquxi0XkZ7WOQdTaqqqNl3WjuB6BjRKXNh%2FU0nvVpRyI%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=e77c14d5846665ed2ac0a14761891abac0fbdd5b21d6cf8991eabb400c824bf3",
+      "file_size": 217165,
+      "type": "image/jpeg",
+      "moderated": null
+    },
+    {
+      "id": 96252,
+      "file_name": "zendesk1b.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/096/252/53af8dd388f37e5af2f5a87418b9e81db7776f9d/zendesk1b.jpg?response-content-disposition=attachment%3B%20filename%3D%22zendesk1b.jpg%22%3B%20filename%2A%3DUTF-8%27%27zendesk1b.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUPHDD546%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T001752Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDKsPnwqCh%2FQVaYDYBUsS0icgjcq6yVbEhVYiPJ8ea6FAIgQQ%2BaH%2BfucKthmW9uPJOom68SV7d2Q2FsHrZP7Kr7Q%2FsqsgUIHxADGgwwMTM2MTkyNzQ4NDkiDD0NRkW8orxYL9wKPSqPBV%2F3ezcQmvJbd6s6%2FGKhrbA8tkrzOyBzRNRt6Ms%2BR50M4de2dwuKzmuc%2BE4RRqJDtOiCFWvLWvDSXMfupaVlrMx0koUXpbBvs4KEMKN7X1EA0IMBNnyFh3%2FrfVDP8naoHI4nOhB2PRDLbOf4wMP5BcWxdI2cheJ6KYnapAdfAZhx%2BrBS4Nxx9RownzMDPX%2B7FC8d3n5x%2Fbjhh76VR0P0VszjsR3XemeIXxNhCK%2BLTurR2DFLHqVhx7BpZTaNquXMwgJHk7%2BspxXsArpigqdcxQYFivR77vF7VUjr4bqGtNOvF%2FxnFvwvfzqlB4TaWjh3sB9rXJtkWHgBr3qXVIFs%2BjXnQEaQrin9FakszLpMRSgyrxg70Rbf5H48vkBmFCedGpnnshzQwA7RzzMnTxYsdV1PJKYoFOAea%2BZXFahm5ZNSf0Xj23uz6wLELyMKTg0gjqEtJUz9M13rwVgBQleRZhdkMon%2Bw1PAAhD21QpJyhzEUKffruc6C6lFZz%2FojE3gRaCRWzSfrDdCuRgMIuH1Ti56YzOi6SZj2%2Bj%2FJGKM2pnfXyDZWU7E5uXQtL%2FBuYWD%2F1gbpV0%2FMoSUFWLsrBIJ3Ar%2B0jUZPxvVR05CIafGtMXK2G1x9kYgcIW1mP5H3wi0S6tS40u%2Byecwaf00qgf%2FkjJudj1uaCZaaZdxWtPTZ3haFAKWaUtOb3q%2F%2FLBEC7F7tFYukvjf8tiCwi4uWzRmTya3mRIMX8ONMgCeKln2ggoC0kK%2BXBp2DZHbly4H%2Bqt3dAaXi831U3bujY7bO%2BMcE0Wkc9pzp55bhE1R4zAJy1iw%2BbdKoqnYfYfX48YFpLXaeBvpU3Eu9d00cgLamHUG8nqitJXQXHbPT8lF8wGtxqEwle3BxgY6sQH5vvI1HWOFPwg4t5LVLyhmy%2BFJ37N8Sf6VG77h8lIZ8Btwm0KcD%2BfYJW1s2fynRGJebyKkuBnM3yHjNo4%2F%2FuxmuBgBwKz9G72zYtSlFCOrb8gFDGNLHV4ITKYTCI3f8Ozj7gw2NJMIkph4GZ5kpYT7fSpFkXYvBB7ADdb738O1jsE35vz48OTRzQ%2BqvxFxNbQQquxi0XkZ7WOQdTaqqqNl3WjuB6BjRKXNh%2FU0nvVpRyI%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=9234dfa3d2a2da01b59627de145c1c10d1b806d424d25fdb247ff3ffa69317b8",
+      "file_size": 215147,
+      "type": "image/jpeg",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 21,
+  "voters": [
+    "sameerphad72",
+    "b6117130df17feef13481e3",
+    "0nlymohammed",
+    "mdv",
+    "mpz",
+    "haxta4ok00",
+    "eveeez",
+    "faisalahmed",
+    "c12316651",
+    "linkks",
+    "and 11 more..."
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
