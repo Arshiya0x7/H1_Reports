@@ -1,0 +1,114 @@
+{
+  "id": 107213,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMDcyMTM=",
+  "url": "https://hackerone.com/reports/107213",
+  "title": "GlassWireSetup.exe subject to EXE planting attack",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2015-12-28T19:04:26.126Z",
+  "submitted_at": "2015-12-28T19:04:26.126Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "ericlaw",
+    "url": "/ericlaw",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/012/681/97a3578539afb62f396f9aa2c7cac59a8cadaca9_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 374,
+    "url": "https://hackerone.com/glasswire",
+    "handle": "glasswire",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/374/13d3682f5d09f12442bfa7e74e96c1ded88562a7_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/374/13d3682f5d09f12442bfa7e74e96c1ded88562a7_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "GlassWire",
+      "twitter_handle": "glasswire",
+      "website": "http://www.glasswire.com",
+      "about": "GlassWire helps protect your computer and privacy by monitoring your network activity."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2016-02-04T20:46:46.381Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-02-04T20:46:46.265Z",
+  "team_member_agreed_on_going_public_at": "2016-02-04T17:53:04.231Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "GlassWire recently fixed a DLL hijacking attack whereby trojan DLLs would be loaded from the user's \\Downloads\\ folder.\n\nHowever, it appears that GlasswireSetup.exe still uses an unqualified path when running CertUtil.exe and as a consequence a trojaned CertUtil.exe will execute from the \\Downloads\\ folder. Interestingly, it executes without any security warning that Windows would normally show for a downloaded executable run from the shell (suggesting that CreateProcess was used rather than ShellExecute).\n\nTo fix this, it might make the most sense to set the current working directory to the System folder early in the Setup process.",
+  "bounty_amount": "100.0",
+  "formatted_bounty": "$100",
+  "weakness": {
+    "id": 75,
+    "name": "Privilege Escalation"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 67054,
+      "file_name": "TrojanCertUtil.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/067/054/081c2d13acd3efff37d03f0df22582c3cabbd130/TrojanCertUtil.png?response-content-disposition=attachment%3B%20filename%3D%22TrojanCertUtil.png%22%3B%20filename%2A%3DUTF-8%27%27TrojanCertUtil.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ66GDCOKP%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T123015Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIFqM%2F8r%2BjV6U0cEaTDmht6jhPXotboGt761cDh7XXq9lAiEA7mn2aHvEw9h%2B4%2B5pHfXXSfcPQbTIKpIZend7pDFzTLcqsQUILRADGgwwMTM2MTkyNzQ4NDkiDK1VhV9bRtCzbZnPAiqOBUHzTrI5icfWFs%2BegeIV%2B3gD7yGo8AeR%2FV49rtp8dAQYPgIRkcRlc3hOBqILOmnHTYoV8fyCyJQeEnRK9InJ08MgvcfGQIyt681b7uyQO8yeLZgSBggNI7Sb14MSMb%2FWJbSX25Lis9EOtIfNCR1X6BDqUy%2BHLeHXSfJbzOdBlKQ9SSZ0gJ2wnw0LQRZVZbEK9hrkZBMK3suWGcFbCgyW0nxaUd7n7NNhAs86n0kt3SgiNSFz07yNGDydBYIqfnmqmOXL4WWIvG8xBol8QThX9fbbdG9PhldbMNgWK5d%2FObsVjO%2BtnS6tyoXldr3yxzELNPUmFIVGrPxNk0%2BmMnqKGYINQSB3iWzcLFKPT%2BXMkPEr9%2BMkjoTw1y3q2%2BZrGm9UZvTi3%2FqtDdd3IsZ5J%2F0fF%2BWpJRJudGvvzLd%2FoihPFt2smm9bCCo%2By3FQvsaUtDilqPt4OlxOatEdk%2BMV7mBsrxxebrXVJxtuSk1W7xIXmWVPcXtmKO3pLqAM%2FQqC9tQ2X1uwvKfhbfsq2zlsligzcc1ePnBQYUZk7Wele00hI5wXdoL6bLCPTkw2c55KNxTQeFA%2FSRwlarxJm7RUL0IgMTucfhD4X7HLQjz7p3DyZc6toWwsJm%2BQrlY%2F4AvXEGyBXpSzVTBQ%2F2CCv9el3OaELDa3bF1l61wwolJ7o0I90nem2VoJVIvgve01ggp%2BF1bK5rOvJF2D5TnuYQ%2BjwApah0vz4pEkvQPBLSbk1i4bIE9dL9PdVps73VJR2YgZwoFEMAKDJHHlhE3iZ5Fk4gEvNmjMCGuniEAYA6Ak3LkC6wxjHR%2FGlpCdG3YdWRDTsEnwpVgz%2BMwmdYPdBYQF%2Byppep8MrX4FVaL23NrKLl%2BSMjCr7cTGBjqxAZIZdhGr7%2BNHCd5RyyQiwKMWz2SYD%2ByfQenGm0mlGIPGetharSJ7rWcFJEZ%2FbomniyD5MqM3dmy%2BxgdYwr0t6yfv3A6NYEMsXTOlj6Z%2FiqC4AsH9Vz6IHbAl6Kq2oS4AwB2la%2BChE36Jglg5ECpaI2y9s47%2BoRRFBNaNDN0yiJDXQsTTAwGtb7jNRD5BMa3pLVG6bs6MgZrpK6IPAMz801WZ4%2BugQ6dxbMfDF3pmPRVvvg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=19c9e53b993c81980964ab7ec25d01c30570015433a2046a215ec5195bc91cc3",
+      "file_size": 29523,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-03-05T17:53:04.327Z",
+  "allow_singular_disclosure_after": -301343831.6722417,
+  "singular_disclosure_allowed": true,
+  "vote_count": 2,
+  "voters": [
+    "jackb898",
+    "spetr0x"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
