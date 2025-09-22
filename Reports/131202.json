@@ -1,0 +1,123 @@
+{
+  "id": 131202,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMzEyMDI=",
+  "url": "https://hackerone.com/reports/131202",
+  "title": "[Critical] - Steal OAuth Tokens",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-04-15T21:03:27.349Z",
+  "submitted_at": "2016-04-15T21:03:27.349Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "paulos__",
+    "url": "/paulos__",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/008/601/abf2077609ef0546be8676abd1bec49aaefc9ff2_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 61,
+    "url": "https://hackerone.com/x",
+    "handle": "x",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/ikx4ept298unt534kpz4am2bd4zs/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/ikx4ept298unt534kpz4am2bd4zs/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "X / xAI",
+      "twitter_handle": "XSecurity",
+      "website": "https://x.com",
+      "about": "X helps you create and share ideas and information instantly, without barriers."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2016-07-11T18:03:59.776Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-06-17T06:27:36.118Z",
+  "team_member_agreed_on_going_public_at": "2016-07-11T18:03:59.518Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi,\n\nThis bug is caused because of the same mis-configuration as #128119. Only this time Microsoft Outlook auth is vulnerable instead of Facebook. this time I will try to be as clear as possible. after sign up of Twitter, Twitter asks users to import contacts (and it only requires on authorization) - or simply going to https://twitter.com/who_to_follow/import will do that.\n\nI believe you have configured your oauth redirect_uri as twitter.com in your app settings. Meaning Microsoft will accept:\n- http://twitter.com as valid\n- http://anything.twitter.com as valid\n- https://twitter.com as valid\n- https://anything.twitter.com/path/?anything as valid\n\nSo the forumla of a valid redirect_uri for twitter app is http(s?)://*.twitter.com/*\n\nOkay, so now we make an open redirect. \n\nhttps://cards.twitter.com/cards/18ce53y6aap/yyms redirects to http://test.com and qualifies to bypass http(s?)://*.twitter.com/* and we will add ```%2523``` behind it like https://cards.twitter.com/cards/18ce53y6aap/yyms%2523 for microsoft to decode and send as a Hash %2523 -> %23 -> # with our stolen access_token.\n\nWe can then obtain this token using ```location.hash``` and all the user had to do is a single click (if already authorized - lots of people have)\n\nTo make things more clear, here is *unlisted* YouTube video to demonstrate how this works: https://youtu.be/apwbVpa2r6Y (also attached)\n\nThanks,\nPaulos\n",
+  "bounty_amount": "840.0",
+  "formatted_bounty": "$840",
+  "weakness": {
+    "id": 27,
+    "name": "Improper Authentication - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 85930,
+      "file_name": "Twitter_Outlook_Bypass.avi",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/085/930/c49c6df3b8e4b95b1ba32e52cfc59bd250ba0794/Twitter_Outlook_Bypass.avi?response-content-disposition=attachment%3B%20filename%3D%22Twitter_Outlook_Bypass.avi%22%3B%20filename%2A%3DUTF-8%27%27Twitter_Outlook_Bypass.avi&response-content-type=video%2Fx-msvideo&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYR7W3FZ4%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T141522Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIHZI7Sn87xpkFKQ6tochGRpFv0cTQwA9789Px6YknW5cAiAIpGUr6vs9hwOKc%2B%2BukMY8vfkGM0MHh5YD1enkLwjezCqxBQgtEAMaDDAxMzYxOTI3NDg0OSIMmImhuS2OvOF%2Fuk2MKo4FXrwccs4SuocNqTTCPk2NhHsi9H%2FyfQz9cGi63rw1nYKOCugrOsReeAMMV%2FAKCLBG3VuJMh1VUnPMWOFgpYM%2Bn8g9y8pEDmcNuaWu9CEa0ZkJOdht6QZdrDFjfseFem9cK%2FtHxM%2FWCnADfvK416poaQ8Zu2aov9hAcyrvFmXnwFUy3WhtY5aCsyLdo6AnIqAGW4z7LUm9TGQv6PJoWKriOAPODKtIo4FXY9ZoFhyWgozmsf%2BEYorpr6fia%2FBQN9RBLuyOIaBvjoVcMh8P1q5kGY%2FT3UWgBO2cSMHioWA5T12BxghHEBdBSH95tgJZ3%2BrkEmMnKdFebulTsR%2BeNnYxc7WfFUFdRSr8EsL5XVgkm3mwj7MlhwqOfidxdGFnvTnOd%2BSqfINTEW%2BXk%2FCsS4tNnpdUfS8SsYFg2ohcDGr9d0l9qi%2FPCEr431yW13FAFwI5ezyDRg3OCC%2F2LUC2ZUurX8%2BU0nP4KUIPfRoRi4IgNQ3UEE26pI6OtyGdv3K6Dk5VDC9NRubOHsPgAAvyimDeuGu1MtVF2Wm%2F5TaXc5S6v2MykDJXXbAlbB7boCZoyk2EVJyA%2FsOv26wN6ibzPQD982lqKBn91WnI%2B%2BQhkE%2Bu10LpENsPfA9ODlxqCPtMOyy4mavOjynND1z3XuDFbuKyQ4t58tXiPWNqiPmV0y%2F0dzzQ7g%2FzJzKvHPEWef2blW8NOzoZwlADsypq%2FvgO3yaBHf3vkmu6ykccAzAcs70oSbbR0YN9jWYprUytMy17v2wQo8kcUTScDxwNTY1NtWKT7X5CeZPCG6BInT3VUhTGkgVgrqVzfhrW9jjNV5Ii6ZxnOslaXFYvuX%2BVwkjOIIXhAVKdUpn%2BVcjeV35nmpYwMPz8xMYGOrIB8rS2qgA4H2V17o9e5gf%2FFBcjX6mJXCvPg0Wl0gBg5ZGFZKbHUClcN47zMy5pmB7aunMHQyHKW8nVQ4zbdJlPELCtfcYBWYzUHIwDEl4qf6ICXb0JHf2KftBSH3l1eqmJQ8kNayrBzn9%2FuXcELZrR14dZJGS8ZRLtLN8rksOOEEJPgodhP2Ekes4o3tstL5umybGI7FUyMpjbLP7ESvBz3uz0ZVOx0Qaj5%2BIH%2BJ7eKjlSjQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=f9220aa6c560f108fb34546d295ef14d03ef24ccfb801dd17f56f14e6775cab2",
+      "file_size": 4265688,
+      "type": "video/x-msvideo",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-07-17T06:27:56.425Z",
+  "allow_singular_disclosure_after": -289813646.3515183,
+  "singular_disclosure_allowed": true,
+  "vote_count": 30,
+  "voters": [
+    "loaymorad",
+    "jfran_cbit",
+    "bogdantc",
+    "tess",
+    "wkcaj",
+    "nightm4re",
+    "try_to_hack",
+    "zombiehelp54",
+    "h4x0r_dz",
+    "raushanraj",
+    "and 20 more..."
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
