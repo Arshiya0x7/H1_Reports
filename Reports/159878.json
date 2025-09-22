@@ -1,0 +1,128 @@
+{
+  "id": 159878,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNTk4Nzg=",
+  "url": "https://hackerone.com/reports/159878",
+  "title": "[render.bitstrips.com] Stored XSS via an incorrect avatar property value",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-08-16T23:25:17.572Z",
+  "submitted_at": "2016-08-16T23:25:17.572Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "s_p_q_r",
+    "url": "/s_p_q_r",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/032/547/1d8b3feccf1a8281a2285cdbfc482aaf3b046b22_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 513,
+    "url": "https://hackerone.com/snapchat",
+    "handle": "snapchat",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/513/87067c5c4ed63c2c07a522ca3198d2310e2a14c6_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/513/87067c5c4ed63c2c07a522ca3198d2310e2a14c6_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Snapchat",
+      "twitter_handle": "",
+      "website": "https://www.snapchat.com/",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2017-01-04T08:38:41.609Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-12-05T08:38:33.756Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "While modifying an avatar, an attacker has the opportunity to submit XSS payloads as its property values. The resulting png file will return a 500 error with the payload in the response body. The response has a **text/html** content type, which makes the XSS attack possible.\n\n**PoC:**\n\n1. Go to https://www.bitmoji.com/account/ and create a new account\n2. Choose the avatar style and save it. The following POST request will be sent:\n\n> POST /user/avatar?styles=1,4&app_id=13 HTTP/1.1\n> Host: api.bitmoji.com\n> \n> avatar_id=%id%&char_data=%data%\n\n3\\. Modify the **data** value: set any **pd2** object property value (for example, **jaw**) to **<svg onload=alert(document.domain)>**:\n\n```\n{\"colours\":{},\"pd2\":{\"cranium\":\"cranium_midstraightmale\",\"forehead\":\"forehead_standard\",\"hair_back\":\"hair_back_midstraightmale\",\"hair_front\":\"hair_front_midstraightmale\",\"hairbottom\":\"hairbottom_blank\",\"detail_L2_L\":\"_blank\",\"detail_L2_R\":\"_blank\",\"jaw\":\"<svg onload=alert(document.domain)>\",\"beard\":\"_blank\",\"stachin\":\"_blank\",\"stachout\":\"_blank\"},\"body\":{},\"style\":1}\n```\n\nand submit the request again.\n\n4\\. Go to your account and click \"Edit yor avatar\". In your browser web console you will see a https://render.bitstrips.com/render/***/*.png link with a 500 error. Open this link.\n\nThe script will be executed.\n\nA PoC link: https://render.bitstrips.com/render/6688424/173752531_2_s1-v1.png\n\nI also recorded a video (see the attachment) of these steps, I hope it will help you reproduce the issue.\n\n\n",
+  "bounty_amount": "400.0",
+  "formatted_bounty": "$400",
+  "weakness": {
+    "id": 60,
+    "name": "Cross-site Scripting (XSS) - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 112661,
+      "file_name": "bit_poc.wmv",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/112/661/c95b98c625a347d2913e7613d60dd5c3a38bee2d/bit_poc.wmv?response-content-disposition=attachment%3B%20filename%3D%22bit_poc.wmv%22%3B%20filename%2A%3DUTF-8%27%27bit_poc.wmv&response-content-type=video%2Fx-ms-asf&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXIFU76KR%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T000542Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDKcHvFOlpP8IiwNlXU291thNFXZp2UMSJkOh49USRniQIgNN723h1%2BMh0V53b28wH9N0mgnLIQy68%2FgvET1XGw424qsgUIHxADGgwwMTM2MTkyNzQ4NDkiDCSe6Fs0O8Bo2ETPsCqPBfbfu2XaOxxqlX%2FtydZRe9TXWwBInfBBotz5R8tLmaReMJR7lMhK3ygCoJJED83SI%2FOZ21w9oS%2Bz6ZlnLKA2DBUiOzAcZmxHE9FD9aL2%2FFTkZtylVfuKjJ8q3TdxLZtbChybE2lMsHr7p6PGiQCHYdmkJNXItEMp6rUcMf0cH2SAA%2BwNsZLSkBwfB5M%2BcLINlitPzZCw6Q5E1ZN%2FgbSawIvi9%2FP8lXPQlMEpzY9luoGMw7qwFzqu5xHN38zZLKmCq43YYjKWkza4z1tn2gh5WMzuabHxaOrR1%2FN5HbLtegO9fo10JHWqLf7KsczeQlxmX7KBHPVl7RXm32evtk4kp0TcJHBRZ1vLgwJ4h9nMdz%2BUorUWYwILxsl4dMaQ56aWIUdSPsurXScUr%2FUzdn3j2iZjZnLnuqixbTgCJenkAvNx0xca1XOAIVNILkuVZtTLco6sHEx%2BqW3lYRukpRbKnPoABF3HxqzgqqksuKBy1SIOI2Jt5apWaz7vCJvf%2BSajrTTstqhWCe0HwkeOqtCZGO7yADBrRJo6nWaL7Q3SMBRhe66kR1G3zB%2BnSzB7LZah49skLiPN3K0SjHksc2RxeWeiT%2BJ1isvnQUzM0%2Blz5n4FElWlkoaCeqrZaYXAC3iFGk5j4QHJydf0csNrK3PwV4FKVuNwZXyiMb8%2BpgMT5L6iSRcLAM9oRCpLwAmpzpNFcx%2FKA8UocS%2BNxcwlSFGm6CvzqujEQieYKsWY4wv7oi3br6qD79SdeaTOn4cFky75bvJZZU0Yg31%2BnlbvkFsWvQm53XbgOITCtl0LiVBP9LgXyxlc5MWTVUM3fRMVxFA5kuR6RGeFNVAlW1AtlS%2F%2BjX3mgcmLMh%2Fw3jFPCZO6jw4w5%2B3BxgY6sQFBDks0%2BALUMmODozg8UuFMMXjx7LnR7elE5xrg3TthVjcWnlbNw8Lxel2Rt7SVWikW6S7Xw4cgZNgcGwHEjHWaraQvVvTYI2traVPhrejIrE%2FBEEW84y5T0uP%2F%2F0aofTXV2i5CsWHX5Uky7vFPUn8ZHEubNxLqfEyvVGdQsvv56%2BwpCe0C%2FjHlfD33qpGH2GHtQhGNLexiCGgqQ87JHlS%2Fzc2WlSHiv8kVxrgZ2LI76zU%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=85ca6e61a57ae1872028339a7a6f82bdeba902e1eb0f8979a80f1224e35a4196",
+      "file_size": 3983015,
+      "type": "video/x-ms-asf",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2017-01-04T08:38:33.798Z",
+  "allow_singular_disclosure_after": -274980429.10980195,
+  "singular_disclosure_allowed": true,
+  "vote_count": 21,
+  "voters": [
+    "bogdantc",
+    "tess",
+    "spam404",
+    "flashdisk",
+    "harrymg",
+    "dmatrix",
+    "0nlymohammed",
+    "madrobot",
+    "mpz",
+    "eveeez",
+    "and 11 more..."
+  ],
+  "structured_scope": {
+    "databaseId": 11820,
+    "asset_type": "URL",
+    "asset_identifier": "www.bitstrips.com",
+    "max_severity": "medium"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
