@@ -1,0 +1,117 @@
+{
+  "id": 145086,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNDUwODY=",
+  "url": "https://hackerone.com/reports/145086",
+  "title": "Stored XSS in SupportFlow Ticket Subject",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-06-16T04:41:51.873Z",
+  "submitted_at": "2016-06-16T04:41:51.873Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "whitehatter",
+    "url": "/whitehatter",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/077/358/2c8b65e6a1929dcd9bd6a214857909ea5d127f88_original.jpeg/c8a1698ff707a5e3e8a91a3484838363845daac68cb82c86d55c9e2d44d67b67"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 162,
+    "url": "https://hackerone.com/iandunn-projects",
+    "handle": "iandunn-projects",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/jo328q250pb9uztc4p1zivborzwy/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/jo328q250pb9uztc4p1zivborzwy/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Ian Dunn",
+      "twitter_handle": "",
+      "website": "",
+      "about": "I'm a WordPress developer who maintains several small open source projects."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2016-06-28T19:44:34.721Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-06-28T19:44:34.641Z",
+  "team_member_agreed_on_going_public_at": "2016-06-28T19:39:50.407Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "SupportFlow contains an XSS vulnerability in how it handles ticket subjects in the admin-side ticket form, because the subject is not escaped before being used in the `value` attribute of the subject input element.\n\nThis first requires wptexturize to be disabled (not that uncommon):\n\n```add_filter( 'run_wptexturize', '__return_false' );```\n\nThen, create a ticket with a subject like this:\n\n```\n\"><script>alert('hi');</script>\n```\n\nThe next time someone views that ticket (any other user) in the admin area at _SupportFlow -> All Tickets -> [Ticket]_, XSS is triggered.\n\nThis is due to this line not using `esc_attr()` on the title value (core does not do this automatically):\n\nhttps://github.com/SupportFlow/supportflow/blob/71a6053848c523f7b50b61a1f3770013badc76c0/classes/class-supportflow-admin.php#L905\n\nI've attached a screenshot demonstrating the XSS `alert` - please let me know if you have any questions or if I can clarify anything.",
+  "bounty_amount": "50.0",
+  "formatted_bounty": "$50",
+  "weakness": {
+    "id": 60,
+    "name": "Cross-site Scripting (XSS) - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 99682,
+      "file_name": "Screen_Shot_2016-06-15_at_10.39.26_PM.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/099/682/94704b34b78084b751c02740ed21d42e8888818a/Screen_Shot_2016-06-15_at_10.39.26_PM.png?response-content-disposition=attachment%3B%20filename%3D%22Screen_Shot_2016-06-15_at_10.39.26_PM.png%22%3B%20filename%2A%3DUTF-8%27%27Screen_Shot_2016-06-15_at_10.39.26_PM.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXSJKFXP6%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T145943Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIDyGmMZlaGFd0RKPEQTh2BKYsIDwCKyasu7YQdjnrkqvAiAJlRRRslV3OZw4Z8%2FUtkO6yf3YtE6qEi%2FybCwEtmrx3SqxBQgvEAMaDDAxMzYxOTI3NDg0OSIMoNaFc8%2BsySOyGQNrKo4Ff9PZYa6Nqs0r4iCRZoCITj5GRwT%2Fx0WigChoGL1ygJSvKsVN9%2Baa5RmdCP9aq%2BlTdtc6Fs4q%2FZoRmBI2v95z%2F%2FI%2BY7T6yuAVIJgKyiO4%2Fyz6d9JMGmXiE%2FE6jc6%2FY556FdtY%2B6zhUYMBU7MU32B5dooxuRcc%2BWVglIfad7CGrJOROHO0ce5nAFSXgFdf42jvZZ%2BBByZZvVgUaZv03PySua2dtkluy1yVcKURHLgkLExhKDtToFpzOW9Z%2BIoKmbUHP7TIB1ygOIl7w81AM0Edz6Pie40vkvLBwVv%2BRb6U5NzHQMkAOwso00fSEyxnqFsB8xWidvqfQ5b%2Ffdiet%2FFya3MOGFNAYQjkX0EMW9TDFy2MVoFqNmz5aEEZQ7AYYYQZWXQrGKS9FTye770bylWwMnPN5SiYOwVoyth7F2TzXcCEaQJWlgSQ9ajYD1b4LTTJPlbLbnuiLpybb%2F%2Fe7nEr%2B7sz0iApsVR2xnUe13d3LkBz6UqyAIyF%2FH2xTLcQec9XWCvxXjdsiiiRZJr6Ijgmplvid5ylfABM%2FBND2pzXb%2FtwZJgjZ2Mjl2zUMDWFUHHlRZSlnkqIwJIFnWaY2SKyy10TFEFry81eWzygmc0%2B%2FTVin81tpQ%2BtZm1bMGnzB3CD340z8SoGFAJ0X2H6gOKk4gAZ7eBs0Z32h91GVrz95mgl2y3aVbSzhbbGWfoen%2F667Y7xi8wewdBAMtLav6RtwTLmCb98e4qWw23Fj5MsuLQuei0ohHdqyxXsCTR4G4%2F3sHby7tDBUaWKXAq9d08d6qBVS0R3WOgHMEvBesO2o99j%2FSFTxevXmlt5D391uNDXmNjxYMGnSsMrbcqduHy1MVeMdb6hPSegmqNhTS8tMLq1xcYGOrIBIE3W9FrtxXO7ja4sU7MWCD59Rj41Lds%2FoAF%2B8MQUAAjlZ%2BdsE7oHnyKE4HRLR010wDGKEH1eUNNDv4iI8htRndHuuYXNZsx2UXpAN2GizTJxGRInsPiiEk9iQm1ede0tinaNZ5LZVA02JhuEwFuPmy27VCSYtsKOmqVrLMTGlmr%2Bz9EFH3H2JmuF7TfZcVb%2FeFIBDOD7z20jvfuXzHELXSnisfNZYVueomxAi08%2BEE18xA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=236b987dd525b49fac6df3eec0fd4c2b7635b1c5854368e7ed824005c3b873c2",
+      "file_size": 194352,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-07-28T19:39:50.482Z",
+  "allow_singular_disclosure_after": -288818392.7035797,
+  "singular_disclosure_allowed": true,
+  "vote_count": 5,
+  "voters": [
+    "whitehatter",
+    "eveeez",
+    "drstache",
+    "dyabla",
+    "deepchd111"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
