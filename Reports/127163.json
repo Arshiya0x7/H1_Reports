@@ -1,0 +1,131 @@
+{
+  "id": 127163,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMjcxNjM=",
+  "url": "https://hackerone.com/reports/127163",
+  "title": "XSS in https://www.coursera.org/courses/",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-03-31T17:18:39.880Z",
+  "submitted_at": "2016-03-31T17:18:39.880Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "secalert",
+    "url": "/secalert",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/QH4YfDe1RhH4dK8KndjwJwCu/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 1516,
+    "url": "https://hackerone.com/coursera",
+    "handle": "coursera",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/bzweea5s15ui3jhf2h39j60wsxkb/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/bzweea5s15ui3jhf2h39j60wsxkb/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Coursera",
+      "twitter_handle": "coursera",
+      "website": "https://www.coursera.org",
+      "about": "We provide universal access to the world’s best education."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2016-09-14T08:44:08.874Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-08-15T08:44:08.114Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "DESCRIPTION\n=================\nIt has been identified that the page located at https://www.coursera.org/courses/ is prone to cross-site scripting issues. Cross-site Scripting (XSS) refers to client-side code injection attack wherein an attacker can execute malicious scripts (also commonly referred to as a malicious payload) into a legitimate website or web application. \n\nIMPACT\n=================\nA XSS vulnerability arises when web applications take data from users and dynamically include it in web pages without first properly validating the data. XSS vulnerabilities allow an attacker to execute arbitrary commands and display arbitrary content in a victim user's browser. A successful XSS attack leads to an attacker controlling the victim’s browser or account on the vulnerable web application. \n\nTEST ENVIRONMENT\n=================\n1) Firefox 45.0 on Mac OS X 10.11.3\n\nPROOF OF CONCEPT\n=================\nPlease use the Mozilla Firefox Browser to verify the identified issue!\n\n1) legit request: https://www.coursera.org/courses/?query=coursera\n\n2) If you try to pass a xss payload to the \"query\" param as string it will be encoded correctly and is therefore not vulnerable - but if you now change the „query“ param to „query[]“ you will be able to inject html and javascript code.\n\n2.1) proof of concept 1: https://www.coursera.org/courses/?query[]=secalert%22/%3E%3Cmarquee+onstart=alert(document.domain)%3E\n\n2.2) Proof of Concept 2: https://www.coursera.org/courses/?query[]=secalert%22/%3E%3Cimg%20src=secalert%20onerror=confirm%28document.domain%29%3E\n\nIt will be rendered like this:\n```html\n<span data-reactid=\".255dmgqjchs.1.1.1.2.1.0.0\">You searched for <strong>secalert\"/><marquee onstart=alert(document.domain)></strong>.</span>\n```\n\nSCREENSHOT\n===========\nScreenshots are attached.\n\nREMEDIATION\n============\n1) All input should be neutralized before being reflected back to client (i.e. browser), not just parameters that the user is supposed to specify, but all data in the request, including hidden fields, cookies, headers, the URL itself, and  so forth.\n2) Make use of entity encoding in the used context. See also: https://www.owasp.org/index.php/XSS_(Cross_Site_Scripting)_Prevention_Cheat_Sheet\n\nCREDITS\n=======\nDavid Vieira-Kurz aka @secalert (https://hackerone.com/secalert)\n",
+  "weakness": {
+    "id": 60,
+    "name": "Cross-site Scripting (XSS) - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 82365,
+      "file_name": "coursera-xss-1.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/082/365/5ec0e92b3310585f88a08a2a42445e389298e967/coursera-xss-1.png?response-content-disposition=attachment%3B%20filename%3D%22coursera-xss-1.png%22%3B%20filename%2A%3DUTF-8%27%27coursera-xss-1.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQAS4O2ID%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T082246Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKD%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDgBRd%2B8sbuZR0y3ZgeQAFcklH10oAf5L9yPeuD6oPyWgIgOz%2BdsZHfVVPufqS2wnjnz02YPmcgGxxdhQW%2BzJaXzJ4qsgUIKRADGgwwMTM2MTkyNzQ4NDkiDMGNUrmadWkvMyXw5iqPBVPEAoj3gtx4xi84hH0VvUH7YM0onDfQ4LhcNC%2BqbctT5qI2zG%2FQdLNG1W3xQ0OGtRDIe%2BN4HLw7J0VzZo9lbGFX8zEpJLrjVXUijM6226rEU%2BUZ%2Fyz4YRDv6NBvHQ0vUbPL7vXdyGySZmXD3k9Xvj0Gwu9sYLm5wvf%2F8sDbI81a4O8ACOiAfojGIB86MVFUFuI2L4lwyTiS9NCenJLjXRfTbFRYo8vXh1dZrOJh25gUv7MfBL7Lb3vba2xnu5Knywsge6UgQykhazF11kUkEsEYwy0NvhO6amAwBrq5lci83pB4Xgm9yWppv02LCVFeNGdXNJhI3y30KjTrbZBgrOriD9%2BlQyeLcsSXomGZyTj9eSYOchnUpN7wIBjqqI9MadpNTAxLVa7AyrQYqGwA62hh0tVn%2FhKRcrTDOamlUzc5ncgAubQwg2QaM49pUcpR%2B8Fh8Qwau9LYKPz5pXYGujWSOn3mkLtz07kyp9UFP8hmcKc91LPQ%2B6NMqpIaJyQLiRYI1NFC%2FbSlfsXC8It%2FLZm7O6hK9IVr69gpQIykGnlTDHkhjQx6IaX3LgoZNs%2FZzoDf76XhS84W0oPRvCDgWL1hCBy9qoYP2VOA0JnpJbQtN2atDcp3kqOdiZTLKqaw7uGzOaEXedHqazRy38OcuE1pg8cKXhXlkfA0ucAUnETGnwCMcUjVAtCNhx0htYUdPRXzqA%2B5lj6OaCziT7WD1cM9Vews6iQ6uR21HEozUsWWcjN2eU2bWDD0zrocd4EAIbpSJrXA5mcW6bPCofKqK7YtOOnk4fqdKwK1g1ZbbNSH4pt%2FJogafQQFwDoaqTBRem%2FLgUl6ulPDWEcCDNioCXwY%2BrvCHqF22GGK5%2F6EeDkww%2FzDxgY6sQHfJfF4Gs4lU1ahDriLvcXMD56eL9ghUlkmkbAPNu7gePGzo9UzfkPVKU6lqB5PY4eTQaTFldOUNFdsS%2BhyfwYV03rHUpUrdqrGLUrzMhcamd8KArvQw9WNf5a2K%2FLSCFXMBAHoz15Z9XCNT6668s39kgKUBbVgv5WC4PRleZ%2FrAxC85wbWNBhO6uAO5yMhjt9LuEIaATuCHMZ9ts2v2X2egiOaf9Lh5dZtKqRA4yIiCm8%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=abc006148aefdda35406e2e080428965b409131b78519e6dcd4139730a03a98d",
+      "file_size": 725624,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 82366,
+      "file_name": "coursera-xss-2.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/082/366/741d1eff578b692b66af0349c08940a90b7cdb95/coursera-xss-2.png?response-content-disposition=attachment%3B%20filename%3D%22coursera-xss-2.png%22%3B%20filename%2A%3DUTF-8%27%27coursera-xss-2.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQAS4O2ID%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T082246Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKD%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDgBRd%2B8sbuZR0y3ZgeQAFcklH10oAf5L9yPeuD6oPyWgIgOz%2BdsZHfVVPufqS2wnjnz02YPmcgGxxdhQW%2BzJaXzJ4qsgUIKRADGgwwMTM2MTkyNzQ4NDkiDMGNUrmadWkvMyXw5iqPBVPEAoj3gtx4xi84hH0VvUH7YM0onDfQ4LhcNC%2BqbctT5qI2zG%2FQdLNG1W3xQ0OGtRDIe%2BN4HLw7J0VzZo9lbGFX8zEpJLrjVXUijM6226rEU%2BUZ%2Fyz4YRDv6NBvHQ0vUbPL7vXdyGySZmXD3k9Xvj0Gwu9sYLm5wvf%2F8sDbI81a4O8ACOiAfojGIB86MVFUFuI2L4lwyTiS9NCenJLjXRfTbFRYo8vXh1dZrOJh25gUv7MfBL7Lb3vba2xnu5Knywsge6UgQykhazF11kUkEsEYwy0NvhO6amAwBrq5lci83pB4Xgm9yWppv02LCVFeNGdXNJhI3y30KjTrbZBgrOriD9%2BlQyeLcsSXomGZyTj9eSYOchnUpN7wIBjqqI9MadpNTAxLVa7AyrQYqGwA62hh0tVn%2FhKRcrTDOamlUzc5ncgAubQwg2QaM49pUcpR%2B8Fh8Qwau9LYKPz5pXYGujWSOn3mkLtz07kyp9UFP8hmcKc91LPQ%2B6NMqpIaJyQLiRYI1NFC%2FbSlfsXC8It%2FLZm7O6hK9IVr69gpQIykGnlTDHkhjQx6IaX3LgoZNs%2FZzoDf76XhS84W0oPRvCDgWL1hCBy9qoYP2VOA0JnpJbQtN2atDcp3kqOdiZTLKqaw7uGzOaEXedHqazRy38OcuE1pg8cKXhXlkfA0ucAUnETGnwCMcUjVAtCNhx0htYUdPRXzqA%2B5lj6OaCziT7WD1cM9Vews6iQ6uR21HEozUsWWcjN2eU2bWDD0zrocd4EAIbpSJrXA5mcW6bPCofKqK7YtOOnk4fqdKwK1g1ZbbNSH4pt%2FJogafQQFwDoaqTBRem%2FLgUl6ulPDWEcCDNioCXwY%2BrvCHqF22GGK5%2F6EeDkww%2FzDxgY6sQHfJfF4Gs4lU1ahDriLvcXMD56eL9ghUlkmkbAPNu7gePGzo9UzfkPVKU6lqB5PY4eTQaTFldOUNFdsS%2BhyfwYV03rHUpUrdqrGLUrzMhcamd8KArvQw9WNf5a2K%2FLSCFXMBAHoz15Z9XCNT6668s39kgKUBbVgv5WC4PRleZ%2FrAxC85wbWNBhO6uAO5yMhjt9LuEIaATuCHMZ9ts2v2X2egiOaf9Lh5dZtKqRA4yIiCm8%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=9caf2371d8c83af76645df0f4b7937cf421a989e91dbf34ce4aa586ed574d892",
+      "file_size": 1300340,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 82367,
+      "file_name": "coursera-xss-3.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/082/367/624e482bebef840ed419faf1b2afdd5306d396e8/coursera-xss-3.png?response-content-disposition=attachment%3B%20filename%3D%22coursera-xss-3.png%22%3B%20filename%2A%3DUTF-8%27%27coursera-xss-3.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQAS4O2ID%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T082246Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKD%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDgBRd%2B8sbuZR0y3ZgeQAFcklH10oAf5L9yPeuD6oPyWgIgOz%2BdsZHfVVPufqS2wnjnz02YPmcgGxxdhQW%2BzJaXzJ4qsgUIKRADGgwwMTM2MTkyNzQ4NDkiDMGNUrmadWkvMyXw5iqPBVPEAoj3gtx4xi84hH0VvUH7YM0onDfQ4LhcNC%2BqbctT5qI2zG%2FQdLNG1W3xQ0OGtRDIe%2BN4HLw7J0VzZo9lbGFX8zEpJLrjVXUijM6226rEU%2BUZ%2Fyz4YRDv6NBvHQ0vUbPL7vXdyGySZmXD3k9Xvj0Gwu9sYLm5wvf%2F8sDbI81a4O8ACOiAfojGIB86MVFUFuI2L4lwyTiS9NCenJLjXRfTbFRYo8vXh1dZrOJh25gUv7MfBL7Lb3vba2xnu5Knywsge6UgQykhazF11kUkEsEYwy0NvhO6amAwBrq5lci83pB4Xgm9yWppv02LCVFeNGdXNJhI3y30KjTrbZBgrOriD9%2BlQyeLcsSXomGZyTj9eSYOchnUpN7wIBjqqI9MadpNTAxLVa7AyrQYqGwA62hh0tVn%2FhKRcrTDOamlUzc5ncgAubQwg2QaM49pUcpR%2B8Fh8Qwau9LYKPz5pXYGujWSOn3mkLtz07kyp9UFP8hmcKc91LPQ%2B6NMqpIaJyQLiRYI1NFC%2FbSlfsXC8It%2FLZm7O6hK9IVr69gpQIykGnlTDHkhjQx6IaX3LgoZNs%2FZzoDf76XhS84W0oPRvCDgWL1hCBy9qoYP2VOA0JnpJbQtN2atDcp3kqOdiZTLKqaw7uGzOaEXedHqazRy38OcuE1pg8cKXhXlkfA0ucAUnETGnwCMcUjVAtCNhx0htYUdPRXzqA%2B5lj6OaCziT7WD1cM9Vews6iQ6uR21HEozUsWWcjN2eU2bWDD0zrocd4EAIbpSJrXA5mcW6bPCofKqK7YtOOnk4fqdKwK1g1ZbbNSH4pt%2FJogafQQFwDoaqTBRem%2FLgUl6ulPDWEcCDNioCXwY%2BrvCHqF22GGK5%2F6EeDkww%2FzDxgY6sQHfJfF4Gs4lU1ahDriLvcXMD56eL9ghUlkmkbAPNu7gePGzo9UzfkPVKU6lqB5PY4eTQaTFldOUNFdsS%2BhyfwYV03rHUpUrdqrGLUrzMhcamd8KArvQw9WNf5a2K%2FLSCFXMBAHoz15Z9XCNT6668s39kgKUBbVgv5WC4PRleZ%2FrAxC85wbWNBhO6uAO5yMhjt9LuEIaATuCHMZ9ts2v2X2egiOaf9Lh5dZtKqRA4yIiCm8%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=09624a1b81137b9a77df070f05db43ecb52e1f5798d61a1327359acd16bd6bda",
+      "file_size": 151278,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-09-14T08:44:08.240Z",
+  "allow_singular_disclosure_after": -284686718.1545771,
+  "singular_disclosure_allowed": true,
+  "vote_count": 5,
+  "voters": [
+    "syntax-error",
+    "exception",
+    "spetr0x",
+    "avradeep",
+    "dyabla"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
