@@ -1,0 +1,129 @@
+{
+  "id": 141240,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNDEyNDA=",
+  "url": "https://hackerone.com/reports/141240",
+  "title": "Angular injection in the profile name of onpatient",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-05-26T17:04:32.116Z",
+  "submitted_at": "2016-05-26T17:04:32.116Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "yaworsk",
+    "url": "/yaworsk",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/046/435/8321e52445321287eea5b5b3f4c9f6ea69e92bb5_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 1492,
+    "url": "https://hackerone.com/drchrono",
+    "handle": "drchrono",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/001/492/22504e1f134263ff85b7870959fa127edcd98bd0_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/001/492/22504e1f134263ff85b7870959fa127edcd98bd0_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "disabled",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "drchrono",
+      "twitter_handle": "drchrono",
+      "website": "https://www.drchrono.com",
+      "about": "EHR, Practice Management, Medical Billing & Revenue Cycle Management available on iPad, iPhone, web ... and a healthcare API."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2016-11-25T16:07:32.861Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-10-26T16:05:31.594Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi All,\nYou have an angular injection vulnerability in the profile name fields on the onpatient site. If you add a value [[5*5]] in the first name or last name field, the expression will be evaluated and when the page is rendered, the first and last name will be 25. Here I'm entering the values {F96238} and here is the result {F96242}\n\nInterestingly, because these fields are rendered together, you can also chain them together with something like first name ```[[5*``` and last name ```5]]``` which will still be evaluated.\n\nNow that said, I couldn't actually achieve XSS here because of the field length limitations. However, you should still fix this as:\n\n1. Google states that sandboxing should not be considered a security measure and any injection should be treated as xss [Google bug hunter university](https://sites.google.com/site/bughunteruniversity/nonvuln/angularjs-expression-sandbox-bypass)\n\n> In fact, we think that, even if perfect, the **AngularJS expression sandbox cannot be a security boundary**. Whether the sandbox existed or not, the attacker able to execute Angular expressions, can access the exposed scope and alter the state of the application in an unexpected way, and that's already a vulnerability.\n>\n>Therefore, **an expression injection flaw in the AngularJS template is no different than a regular code injection (XSS).** In short, if you're able to make AngularJS evaluate your {{31338-1}} expression to 31337, it's already a potential script execution flaw, equivalent to eval(\"31338-1\") in non-AngularJS applications.\n\n2. Right now it is not exploitable, but in the future if you change the field limitations, you may inadvertently expose yourself and users to XSS\n\n3. There are numerous bypasses for angular, one may exist with these short fields which i'm not aware of [Existing disclosed angular escapes from Portswigger](http://blog.portswigger.net/2016/01/xss-without-html-client-side-template.html)\n\nI recognize that onpatient isn't a multiple user platform per account, however, this field may be rendered elsewhere and depending on your setup, if admins can see the profile name and it too is not escaped, it could lead to a vulnerability.",
+  "weakness": {
+    "id": 60,
+    "name": "Cross-site Scripting (XSS) - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 96238,
+      "file_name": "angular_injection.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/096/238/b6c03ad3e7ac2a4fe7f09d31f1a1cf3a3210026d/angular_injection.png?response-content-disposition=attachment%3B%20filename%3D%22angular_injection.png%22%3B%20filename%2A%3DUTF-8%27%27angular_injection.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQT22YPUJM%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T073803Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJ7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCID7hwCmELZK7L1TxWANhJc30O4KDPrOrpE7CgFxZucHkAiEAoFEnrze6o9s8BLsXjCE182MOHgITrpjIEe7gYDUMkTkqsQUIJxADGgwwMTM2MTkyNzQ4NDkiDDmJoMajmdsJrU7pMCqOBafP8LFuuzu9rH90v%2FPCYItUz6sKztrYIjJFVS2op8cWaZuNyIecM4lSOppKILxVux1Ul5L7%2BDTpnN3OwPTmnUtBtdzRdsykOxqdQ5%2FyTWisg1vMlthS2dyUHxt3hCHjCFZaLocdgAIIm89sg99pP5GZpqzU01eer9cww%2B%2BJ3D3iyKnmSaaVHBDFpMDsaAiBRTkzFZX66MCHwi65HKaJJskfCxbvw463BFGZEA6Hs7kokmh42BTSfuCjMGa77oiqp5WzkfstbeMm8KtYv8izq%2FsCW%2F4vxOBeGrlIOWC11OwL5WOE%2FN76GkPgRT6kpDGITCRj3%2Bi9a6QWCAsKmQzuOvoJTUevY6nG9%2FCZyjIePNsvNxMS0QTuV%2F7rWCsGHEp9EDnaHDHVJmWVrcNMJfwYUVwX5BKcz3ASdOBT42uumkd2iRYG2Tp5SpwZhIG1Cw0desai%2FTfbBT%2B%2BgX8ipUlBElNbzpbX2u%2FpfIVPRUQ12pW1shQoR6GXwlMuQ6hyOztRJapuTq%2Ff%2FlOY7tgdlodMI6x4HCOn14t9cZx%2BO3IO46w5AwXJUFPD6Mp%2Fk7QvzAOkGQ0THy5QxQ6eZAY0yGjcZ8VBdZzeyIpFGs2gsoumdieAqHgy%2FB4ndQfrN1TegZUeqabOjSQ8tGNEnUC4jKA9%2Boa6%2Fu%2BOYR1Vom9rpJZQPKhPvSWtxeExYh9nsewirKIlUwqTGfX69QOfZA97tYRHivXC4cKIcnWhYYNQwKYuYhmFcrynK%2BSU%2FWZbPhP595pfRH3v6dp8zK5r93Su0rNJr7Pz5ot%2FoSAVkhra6WirQhvYucCTPgCJZjzTWS5e4XlmMBVKYSfrdzLImWL680tOY4YQn%2F6yUKja1m%2FY9%2BaAUjDixMPGBjqxAY7uhfQ6KpFcfAwIuFe4V4p4dPOrAuA5%2FedNq7B2CnaBazvjh7EFUPctn8LSP6oueSiDk1LpEVhi4tl2sagIF%2BbTY%2B%2FMfwCBvTq4UwEXs6eKKYP%2BbfAhUNzxIjhuJKt8DFQ%2Fr23FkO0Sdxt6bjO0OtO2GXcQb7OT4Jxd%2BvIL2%2BRebhXZF9%2BIKmOmCnctrJtSmPj%2BHeWcNw5mOM2wwAfzsLvtN95%2B1dVcixLbXuN55IyLKw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=6a8a7e3d7628092213f687153900ff4e0579abeea666e6191cbe10edb175d8fd",
+      "file_size": 29741,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 96242,
+      "file_name": "angular_injection_result.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/096/242/fbdce3e7f1a82f93bc26b55f0657e13ace0f2cbe/angular_injection_result.png?response-content-disposition=attachment%3B%20filename%3D%22angular_injection_result.png%22%3B%20filename%2A%3DUTF-8%27%27angular_injection_result.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQT22YPUJM%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T073803Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJ7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCID7hwCmELZK7L1TxWANhJc30O4KDPrOrpE7CgFxZucHkAiEAoFEnrze6o9s8BLsXjCE182MOHgITrpjIEe7gYDUMkTkqsQUIJxADGgwwMTM2MTkyNzQ4NDkiDDmJoMajmdsJrU7pMCqOBafP8LFuuzu9rH90v%2FPCYItUz6sKztrYIjJFVS2op8cWaZuNyIecM4lSOppKILxVux1Ul5L7%2BDTpnN3OwPTmnUtBtdzRdsykOxqdQ5%2FyTWisg1vMlthS2dyUHxt3hCHjCFZaLocdgAIIm89sg99pP5GZpqzU01eer9cww%2B%2BJ3D3iyKnmSaaVHBDFpMDsaAiBRTkzFZX66MCHwi65HKaJJskfCxbvw463BFGZEA6Hs7kokmh42BTSfuCjMGa77oiqp5WzkfstbeMm8KtYv8izq%2FsCW%2F4vxOBeGrlIOWC11OwL5WOE%2FN76GkPgRT6kpDGITCRj3%2Bi9a6QWCAsKmQzuOvoJTUevY6nG9%2FCZyjIePNsvNxMS0QTuV%2F7rWCsGHEp9EDnaHDHVJmWVrcNMJfwYUVwX5BKcz3ASdOBT42uumkd2iRYG2Tp5SpwZhIG1Cw0desai%2FTfbBT%2B%2BgX8ipUlBElNbzpbX2u%2FpfIVPRUQ12pW1shQoR6GXwlMuQ6hyOztRJapuTq%2Ff%2FlOY7tgdlodMI6x4HCOn14t9cZx%2BO3IO46w5AwXJUFPD6Mp%2Fk7QvzAOkGQ0THy5QxQ6eZAY0yGjcZ8VBdZzeyIpFGs2gsoumdieAqHgy%2FB4ndQfrN1TegZUeqabOjSQ8tGNEnUC4jKA9%2Boa6%2Fu%2BOYR1Vom9rpJZQPKhPvSWtxeExYh9nsewirKIlUwqTGfX69QOfZA97tYRHivXC4cKIcnWhYYNQwKYuYhmFcrynK%2BSU%2FWZbPhP595pfRH3v6dp8zK5r93Su0rNJr7Pz5ot%2FoSAVkhra6WirQhvYucCTPgCJZjzTWS5e4XlmMBVKYSfrdzLImWL680tOY4YQn%2F6yUKja1m%2FY9%2BaAUjDixMPGBjqxAY7uhfQ6KpFcfAwIuFe4V4p4dPOrAuA5%2FedNq7B2CnaBazvjh7EFUPctn8LSP6oueSiDk1LpEVhi4tl2sagIF%2BbTY%2B%2FMfwCBvTq4UwEXs6eKKYP%2BbfAhUNzxIjhuJKt8DFQ%2Fr23FkO0Sdxt6bjO0OtO2GXcQb7OT4Jxd%2BvIL2%2BRebhXZF9%2BIKmOmCnctrJtSmPj%2BHeWcNw5mOM2wwAfzsLvtN95%2B1dVcixLbXuN55IyLKw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=795ab1904b7680f8cb75937a4655cf5cd24579c3dbb26658bf269f5b766f15fd",
+      "file_size": 18140,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-11-25T16:05:31.646Z",
+  "allow_singular_disclosure_after": -278436752.0869181,
+  "singular_disclosure_allowed": true,
+  "vote_count": 14,
+  "voters": [
+    "ebrietas",
+    "spam404",
+    "vijay_kumar",
+    "thalaivar304",
+    "madrobot",
+    "absshax",
+    "dpgribkov",
+    "kaito",
+    "fantam1",
+    "secdoor",
+    "and 4 more..."
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
