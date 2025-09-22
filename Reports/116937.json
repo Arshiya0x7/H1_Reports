@@ -1,0 +1,111 @@
+{
+  "id": 116937,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMTY5Mzc=",
+  "url": "https://hackerone.com/reports/116937",
+  "title": "Chat History CSV Export Excel Injection Vulnerability",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-02-17T13:08:36.497Z",
+  "submitted_at": "2016-02-17T13:08:36.497Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "pr0tagon1st",
+    "url": "/pr0tagon1st",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/033/123/9e3397fc4128a6ea0579adedf2a30f47f54ad11a_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 205,
+    "url": "https://hackerone.com/zendesk",
+    "handle": "zendesk",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/vqazo0hs6n64m1y7wrfnhrao63p9/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/vqazo0hs6n64m1y7wrfnhrao63p9/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Zendesk",
+      "twitter_handle": "",
+      "website": "https://www.zendesk.com",
+      "about": "At Zendesk we’re on a mission to simplify the complexity of business and make it easy for companies and customers to create connections. "
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2016-04-04T21:48:49.497Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-03-30T16:07:09.910Z",
+  "team_member_agreed_on_going_public_at": "2016-04-04T21:48:48.341Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "I have found a vulnerability in the Chat History export function. If an attacker submits a special name (containing a system command) when chatting with an agent and that agent later exports the history of that chat to CSV, the resulting CSV may execute commands when opened. I have tested this using MS Excel 2013 on Windows 7.\n\nProof of Concept:\n1. Open the dashboard as an agent and go to \"Visitor List\".\n2. Select \"Simulate Visitor\". (This vulnerability works in a real scenario as well, simulating a visitor is just the easiest way to reproduce it).\n3. As the simulated visitor, edit your name to \"-2+3+cmd|' /C calc'!G2\" (without the double quotes).\n4. End the chat.\n5. Navigate to the \"History\" section, select the recent chat, click the \"actions\" button, select \"export chat details\", and input a viable email address.\n6. Open the email and unpack the zip file. \n7. Open the CSV in Excel.\n8. A warning will show up warning the user to disable execution _unless_ he trusts the source of the file. The user may likely leave execution enable due to trusting the source (zopim). Click \"enable\".\n9. A second warning will appear that states a similar message as the previous one (\"only open if you trust the source...\"). Click \"yes\"\n10. The malicious code is executed - in this case it will just open the \"calc\" application. (Screenshot attached).\n\nThreat Level Estimation\nOn one hand, this vulnerability can be pretty serious as it allows an attacker to execute arbitrary code as the current user. This can easily be used to download and install malware, establishing a firm foothold or to execute a pretty complex phishing attack (opening a browser, changing user settings, etc.) However, the severity of this attack is mitigated by the two warnings that I mentioned in the Proof of Concept. The warnings may be enough to dissuade the user from allowing Excel to execute the malicious code, although the both messages stress trusting the source and users have no reason to distrust zopim.com.\n\nRecommendation\nThe \"=\" is already escaped properly, this escaping should be extended to the \"-\" and \"+\" characters as well.\n\nLet me know if I can help further.\n\nThanks!\n",
+  "weakness": {
+    "id": 58,
+    "name": "Command Injection - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 73846,
+      "file_name": "zopim_poc.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/073/846/9a1f7b574511e1e221794caf482dd2bac2198ca6/zopim_poc.png?response-content-disposition=attachment%3B%20filename%3D%22zopim_poc.png%22%3B%20filename%2A%3DUTF-8%27%27zopim_poc.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQRLA2URRO%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T131229Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCRe0IRteoJps6sCVLq4DV1hnGU7HxfMbK15WHD7GtuuwIhAMIrA%2BZl0ezHK6%2FoHmLDTFsX%2BRIRA8mKIkar%2F8dc%2Fs5gKrIFCC0QAxoMMDEzNjE5Mjc0ODQ5IgzePl7ki1cQSSY3zwYqjwV5NqA31EBmw4fIOwNpHK2JzyzGxSIavem6GbEfP7AyzXamNR96RqqYEGtTuwCxZnZBhZiG%2FYO6sErD2S2GKafN3pxbGK69u9AMx6kKWLN3jNa78Yh8XIAxkhdxen%2BS4ds4G5UF1zakXQcFVmHR%2BBBohnXqnBVadfYsyhY3wo9%2BkoJ2IouzYoz%2B5Yi9pMSoFdkGl8s2DZ8uMxFPOriXnyAnw%2FsDyrfZR8oBxCD8hnxf6BDekhnMU7a749kjRtlDNL9pB1VRBCmgVdc7C8b%2BOEoGSae062ZJ7AiPHc4DpAf0%2FpbEI5X019u070wTpjORgRhtqDmCg1mAiefRj7B2%2B2B%2BkNgDJfVTWW0ku8ifKZXaf5YN9ry3MLuPJWALbJjpGIAEbC7s%2BTK8QZaiat%2FUYucMYByul8hvuZVBPILrtiK1Mo1dtVoVwVgX134Lfr9b59Iageb53ujC9IPEIszXHs0BtiP3MLAsds7MSStWZjTy%2B1zdAao8oBMrdj0l71l1Z75vxIwObjN6yrYFEJJ7NCe92iOeDjjZGiigf2O3f%2FAAXbbw%2F7W6eQgW7H%2FyMPzJL0zBT%2FkgvT5D7f%2Flg66iL2OzE20PjFYcbU4ihY5H8UvyE4IWZxD3rCeXBzx4x4ZDmfe%2Bu9LCoBRlEXNUIM9%2FBc6EgiIGPL%2BVGhrnpTthJVLJOlb5cm85BQyp1Rr5JnkEfAfVLN7BF4npAODWiJiPHk%2BfECL6ik2OWVrRC%2FxlNGOapmuZtU3eDG5UVsOjt8rRitg%2FVC%2FKABsqcJSGp6YNyzE70X7uFwsigqjOu%2B%2BvJi2tKiGoVhCug3hN3vDwq1S9KXbwE6dEdSaygfozAtiP9Cqk8SqMWv4Z4xULD2caJLC7MMTlxMYGOrABG8M3wruTikPb9%2BjDqQ0kyzDWK0w8JPRcFdPjkeFfBemfR8Qayl9TfhVJhEz9qJP9EgPf9Xr7J7uQzlqjluZo0vOlvbDf%2Bx169vpAGHtBeace%2B%2Bmb7qIbIm5TyhKFUXXDLyYbkPyGL4K%2F0qSmzbpcBWzCLBK5HVbxxrbRINgc%2Bn5IBfHT15JA73W9f75APxXePXjwRn4g3XBFTI4Hl0pOs56E2xUNWjh5lhv%2FSwyfiFY%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=482535d2057b4614a14f5925e9c4d301bc5ed97543cce7465d9523d991c82f9a",
+      "file_size": 38753,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-04-29T16:07:10.208Z",
+  "allow_singular_disclosure_after": -296600719.33167267,
+  "singular_disclosure_allowed": true,
+  "vote_count": 1,
+  "voters": [
+    "dyabla"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
