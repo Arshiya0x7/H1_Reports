@@ -1,0 +1,124 @@
+{
+  "id": 166709,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNjY3MDk=",
+  "url": "https://hackerone.com/reports/166709",
+  "title": "Self-XSS via location cookie city field when getting suggestions for a new location",
+  "state": "Closed",
+  "substate": "informative",
+  "readable_substate": "Informative",
+  "created_at": "2016-09-07T23:47:48.707Z",
+  "submitted_at": "2016-09-07T23:47:48.707Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "haquaman",
+    "url": "/haquaman",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/017/646/07cbfc394d4d3432eb95cf9735f225ea803090bb_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 545,
+    "url": "https://hackerone.com/yelp",
+    "handle": "yelp",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/545/de556165eaf2da7600f9ce75d1179281ee2d538f_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/545/de556165eaf2da7600f9ce75d1179281ee2d538f_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Yelp",
+      "twitter_handle": "",
+      "website": "https://www.yelp.com",
+      "about": "Connecting people to great local businesses in communities around the world."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2016-11-30T19:13:19.660Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-11-30T02:51:37.538Z",
+  "team_member_agreed_on_going_public_at": "2016-11-30T19:13:19.598Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi,\n\nOnly self-XSS, but thought I would report it anyway!\n\nI noticed the cookie \"location\" had some JSON in it, so I changed the city field to `<script>debugger</script>`, made sure it was encoded the same, then went to add a new location/change an existing location at https://www.yelp.com/profile_location. Making sure the debugger is open, and then clicking on the Address field on the new location page, the debugger should open up as the XSS fires.\n\nMy cookie before tampering was: `%7B%22city%22%3A+%22San+Francisco%22%2C+%22zip%22%3A+%22%22%2C+%22country%22%3A+%22US%22%2C+%22address2%22%3A+%22%22%2C+%22address3%22%3A+%22%22%2C+%22state%22%3A+%22CA%22%2C+%22address1%22%3A+%22%22%2C+%22unformatted%22%3A+%22San+Francisco%2C+CA%22%7D`\n\nI changed it to be `%7B%22city%22%3A%22%3Cscript%3Edebugger%3C/script%3E%22%2C%22zip%22%3A%22%22%2C%22country%22%3A%22US%22%2C%22address2%22%3A%22%22%2C%22address3%22%3A%22%22%2C%22state%22%3A%22CA%22%2C%22address1%22%3A%22%22%2C%22unformatted%22%3A%22SanFrancisco%2CCA%22%7D`\n\nWhat I see on chrome is attached.\n\nThe data is getting there from the request to `https://www.yelp.com/location_suggest/json?prefix=`, with our cookie, and all other auth related cookies. The response is `{\"suggestions\": [{\"suggestion_type\": \"location\", \"content_id\": null, \"name\": \"\\u003cscript\\u003edebugger\\u003c/script\\u003e, CA\", \"alias\": null}, {\"suggestion_type\": \"location\", \"content_id\": null, \"name\": \"Schenectady, NY\", \"alias\": null}, {\"suggestion_type\": \"location\", \"content_id\": null, \"name\": \"5488 SW Alger Ave, Beaverton, OR\", \"alias\": null}], \"unique_request_id\": \"8d056ce4b81b2693\"}` (the other two addresses being random test addresses I guess).\n\nMy suggestion would be to validate the city name passed in the cookie as an actual city.\n\nLet me know if you need more info.\n\nCheers,\n\nHugh",
+  "weakness": {
+    "id": 60,
+    "name": "Cross-site Scripting (XSS) - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 118188,
+      "file_name": "2016-09-08-114314_1363x737_scrot.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/118/188/e8730585652f52a0c6f6f27bb5e71922a9463eb3/2016-09-08-114314_1363x737_scrot.png?response-content-disposition=attachment%3B%20filename%3D%222016-09-08-114314_1363x737_scrot.png%22%3B%20filename%2A%3DUTF-8%27%272016-09-08-114314_1363x737_scrot.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUPHDD546%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T002437Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDKsPnwqCh%2FQVaYDYBUsS0icgjcq6yVbEhVYiPJ8ea6FAIgQQ%2BaH%2BfucKthmW9uPJOom68SV7d2Q2FsHrZP7Kr7Q%2FsqsgUIHxADGgwwMTM2MTkyNzQ4NDkiDD0NRkW8orxYL9wKPSqPBV%2F3ezcQmvJbd6s6%2FGKhrbA8tkrzOyBzRNRt6Ms%2BR50M4de2dwuKzmuc%2BE4RRqJDtOiCFWvLWvDSXMfupaVlrMx0koUXpbBvs4KEMKN7X1EA0IMBNnyFh3%2FrfVDP8naoHI4nOhB2PRDLbOf4wMP5BcWxdI2cheJ6KYnapAdfAZhx%2BrBS4Nxx9RownzMDPX%2B7FC8d3n5x%2Fbjhh76VR0P0VszjsR3XemeIXxNhCK%2BLTurR2DFLHqVhx7BpZTaNquXMwgJHk7%2BspxXsArpigqdcxQYFivR77vF7VUjr4bqGtNOvF%2FxnFvwvfzqlB4TaWjh3sB9rXJtkWHgBr3qXVIFs%2BjXnQEaQrin9FakszLpMRSgyrxg70Rbf5H48vkBmFCedGpnnshzQwA7RzzMnTxYsdV1PJKYoFOAea%2BZXFahm5ZNSf0Xj23uz6wLELyMKTg0gjqEtJUz9M13rwVgBQleRZhdkMon%2Bw1PAAhD21QpJyhzEUKffruc6C6lFZz%2FojE3gRaCRWzSfrDdCuRgMIuH1Ti56YzOi6SZj2%2Bj%2FJGKM2pnfXyDZWU7E5uXQtL%2FBuYWD%2F1gbpV0%2FMoSUFWLsrBIJ3Ar%2B0jUZPxvVR05CIafGtMXK2G1x9kYgcIW1mP5H3wi0S6tS40u%2Byecwaf00qgf%2FkjJudj1uaCZaaZdxWtPTZ3haFAKWaUtOb3q%2F%2FLBEC7F7tFYukvjf8tiCwi4uWzRmTya3mRIMX8ONMgCeKln2ggoC0kK%2BXBp2DZHbly4H%2Bqt3dAaXi831U3bujY7bO%2BMcE0Wkc9pzp55bhE1R4zAJy1iw%2BbdKoqnYfYfX48YFpLXaeBvpU3Eu9d00cgLamHUG8nqitJXQXHbPT8lF8wGtxqEwle3BxgY6sQH5vvI1HWOFPwg4t5LVLyhmy%2BFJ37N8Sf6VG77h8lIZ8Btwm0KcD%2BfYJW1s2fynRGJebyKkuBnM3yHjNo4%2F%2FuxmuBgBwKz9G72zYtSlFCOrb8gFDGNLHV4ITKYTCI3f8Ozj7gw2NJMIkph4GZ5kpYT7fSpFkXYvBB7ADdb738O1jsE35vz48OTRzQ%2BqvxFxNbQQquxi0XkZ7WOQdTaqqqNl3WjuB6BjRKXNh%2FU0nvVpRyI%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=9171daaf36026e695580ee50e7ce858700a7000b39afe6b85cce4114117e0868",
+      "file_size": 116744,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 118189,
+      "file_name": "2016-09-08-114300_1365x735_scrot.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/118/189/40f5ba1fe887487dbf16fab33ca96ba82d69c222/2016-09-08-114300_1365x735_scrot.png?response-content-disposition=attachment%3B%20filename%3D%222016-09-08-114300_1365x735_scrot.png%22%3B%20filename%2A%3DUTF-8%27%272016-09-08-114300_1365x735_scrot.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUPHDD546%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T002437Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDKsPnwqCh%2FQVaYDYBUsS0icgjcq6yVbEhVYiPJ8ea6FAIgQQ%2BaH%2BfucKthmW9uPJOom68SV7d2Q2FsHrZP7Kr7Q%2FsqsgUIHxADGgwwMTM2MTkyNzQ4NDkiDD0NRkW8orxYL9wKPSqPBV%2F3ezcQmvJbd6s6%2FGKhrbA8tkrzOyBzRNRt6Ms%2BR50M4de2dwuKzmuc%2BE4RRqJDtOiCFWvLWvDSXMfupaVlrMx0koUXpbBvs4KEMKN7X1EA0IMBNnyFh3%2FrfVDP8naoHI4nOhB2PRDLbOf4wMP5BcWxdI2cheJ6KYnapAdfAZhx%2BrBS4Nxx9RownzMDPX%2B7FC8d3n5x%2Fbjhh76VR0P0VszjsR3XemeIXxNhCK%2BLTurR2DFLHqVhx7BpZTaNquXMwgJHk7%2BspxXsArpigqdcxQYFivR77vF7VUjr4bqGtNOvF%2FxnFvwvfzqlB4TaWjh3sB9rXJtkWHgBr3qXVIFs%2BjXnQEaQrin9FakszLpMRSgyrxg70Rbf5H48vkBmFCedGpnnshzQwA7RzzMnTxYsdV1PJKYoFOAea%2BZXFahm5ZNSf0Xj23uz6wLELyMKTg0gjqEtJUz9M13rwVgBQleRZhdkMon%2Bw1PAAhD21QpJyhzEUKffruc6C6lFZz%2FojE3gRaCRWzSfrDdCuRgMIuH1Ti56YzOi6SZj2%2Bj%2FJGKM2pnfXyDZWU7E5uXQtL%2FBuYWD%2F1gbpV0%2FMoSUFWLsrBIJ3Ar%2B0jUZPxvVR05CIafGtMXK2G1x9kYgcIW1mP5H3wi0S6tS40u%2Byecwaf00qgf%2FkjJudj1uaCZaaZdxWtPTZ3haFAKWaUtOb3q%2F%2FLBEC7F7tFYukvjf8tiCwi4uWzRmTya3mRIMX8ONMgCeKln2ggoC0kK%2BXBp2DZHbly4H%2Bqt3dAaXi831U3bujY7bO%2BMcE0Wkc9pzp55bhE1R4zAJy1iw%2BbdKoqnYfYfX48YFpLXaeBvpU3Eu9d00cgLamHUG8nqitJXQXHbPT8lF8wGtxqEwle3BxgY6sQH5vvI1HWOFPwg4t5LVLyhmy%2BFJ37N8Sf6VG77h8lIZ8Btwm0KcD%2BfYJW1s2fynRGJebyKkuBnM3yHjNo4%2F%2FuxmuBgBwKz9G72zYtSlFCOrb8gFDGNLHV4ITKYTCI3f8Ozj7gw2NJMIkph4GZ5kpYT7fSpFkXYvBB7ADdb738O1jsE35vz48OTRzQ%2BqvxFxNbQQquxi0XkZ7WOQdTaqqqNl3WjuB6BjRKXNh%2FU0nvVpRyI%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=48996928cdae955e6e99c77927239548f337749d8f460e7a00f5e24cf3043f03",
+      "file_size": 120708,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 8,
+  "voters": [
+    "zeeshank",
+    "pekafat",
+    "madrobot",
+    "mpz",
+    "japz",
+    "spetr0x",
+    "ros876",
+    "duxducis"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
