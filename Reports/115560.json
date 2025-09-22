@@ -1,0 +1,111 @@
+{
+  "id": 115560,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMTU1NjA=",
+  "url": "https://hackerone.com/reports/115560",
+  "title": "Two XSS vulns in widget parameters (all_collections.php and o2.php)",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-02-09T16:17:29.588Z",
+  "submitted_at": "2016-02-09T16:17:29.588Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "pr0tagon1st",
+    "url": "/pr0tagon1st",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/033/123/9e3397fc4128a6ea0579adedf2a30f47f54ad11a_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 2943,
+    "url": "https://hackerone.com/eternal",
+    "handle": "eternal",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/9525xdsq4bz7ubnoie172ssjv8ul/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/9525xdsq4bz7ubnoie172ssjv8ul/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Eternal",
+      "twitter_handle": "Zomato",
+      "website": "https://www.eternal.com",
+      "about": "Eternal is India’s largest new-age tech company by market cap, comprising of 4 businesses (as of now) – Zomato, Blinkit, District, & Hyperpure."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2016-08-02T03:50:50.352Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-08-01T10:27:52.222Z",
+  "team_member_agreed_on_going_public_at": "2016-08-02T03:50:49.994Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "I have found two additional possibilities of XSS attacks via the widget API endpoints: `https://www.zomato.com/widgets/all_collections.php` and `https://www.zomato.com/widgets/o2.php`\n\n`https://www.zomato.com/widgets/all_collections.php` has a vulnerable `city_id` parameter that does not filter html or javascript:\n\nhttps://www.zomato.com/widgets/all_collections.php?city_id=%22%3E%3Cimg%20src=http://goo.gl/JPx2sV%3E%3Cscript%3Ealert%28document.domain%29;%3C/script%3E%3Ca%20href=&language_id=alert%281%29&theme=red&csrf_token=bcac41f373322e378a299618228ad23b\n\nThe `https://www.zomato.com/widgets/o2.php` endpoint has a vulnerable `language_id` parameter, which does not filter html or js:\n\nhttps://www.zomato.com/widgets/o2.php?theme=redar&sort=popularityo&csrf_token=bcac41f373322e378a299618228ad23b&language_id=%22}%27%29;alert%28document.domain%29;console.log%28%27\n\nThese URLs can be placed in <iframe> elements in an attacker-controlled website and any Zomato users visiting that site are open to executing arbitrary javascript in the zomato.com origin, which opens them to CSRF attacks and others. \n\nI have tested the other parameters and have found them to be sanitized.\n\nThese two parameters should be sanitized. \n\nCheers!",
+  "weakness": {
+    "id": 60,
+    "name": "Cross-site Scripting (XSS) - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 72775,
+      "file_name": "zomato_poc2.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/072/775/46062aba80ed556fa57a23214c8239233a4c8b6a/zomato_poc2.jpg?response-content-disposition=attachment%3B%20filename%3D%22zomato_poc2.jpg%22%3B%20filename%2A%3DUTF-8%27%27zomato_poc2.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXLVX3G6O%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T130532Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQChGFbqW1AwmmVPHNt9rwQxnxfTS%2FMnUYNkF%2FwTRCcbRAIgYjjm41l%2F2pq%2BsMc%2Bmu0Nn0FFRynsw9134TaV77pb3hQqsQUILhADGgwwMTM2MTkyNzQ4NDkiDCduQHOqgZLHDp3VqiqOBT1ddvZpn99UKj7aPwG%2BgFwzpgDURgzmEIsWKS2H6r57J6hLYxwMKe19xWRcM0Fo2G%2FLkWEruLoa4hyFbLmccmcJCu5dCz3hHF9P3dippc5j638Z2j6lPbjmqcf8b3JyGbR7PnEZF%2BAjIXjzhgwYsyrUBGR6ia3xXVVZ3O3Tb541pZTL9PieWeZRnatMz0kjaQzUAXGiCOlmWhcd3SA%2FgHYyFZgA29tXShDvXX%2FHNRTtKcpBREpYvgUSGNQTvMTvQeumWmw8FGkDaY8MT4sByYRWItoPKXUHNX7oIdKsebeDQ3IXS01ZQmkiJfj%2FA4SayNiU6hqLbN4mrtwo5UoM1TJAiwTbFm%2Bze81t6wIfz%2BBt2fCTIX3GoJnk9XH5keXKkUdGqm7hFdyyxHlbdAtqOZhgm2lagBv67Tm%2Fdq6rc02SdaEyaXBq523ti1la5PZJpTUsV8i9I%2F5wI2xN64IbQykEKwwH1nKYMORybZ1YmevWIztFiyGwqyWgp1vmh3zeGTQfC2OTSMyF1sddduP4uNLxdFqxggZdHKgvk7VsybQutgGlTLZ0FdQ3ro4gtIBbNpPF%2BacjWu4N%2FAqIjjfRwZcPhrHBGf5r11AaZZK7cL9102OYnAX84HTbkGkSrWcnAmZqHWiISzMHognnL9rKDXe0yuQP2mJH6gP8mBJRm%2FMmr%2FE5FHhilG8x2ed2UfBEiiC%2BmDk7LeKAUrauJKiOfUU9DT9KreZUpUvaF3W6gb5MVfJYBrEWfJhYlrP0YONSSd5%2F%2FGFGNFIcpyxh1IkaOBAeSWVBhsMzx5oaV2DthkC6mGDKPvmsfp%2BJTwbxXUNyq341RESgZllxPuzY0sfcms5Em5i0lJpPlsieZ1dj6jCYhsXGBjqxAd%2FkUFxKYN%2BXPLJG9sL6HXpynwSsxSKP2RCPxWinf07aXnag3NTc5E5hoIhWeS2AYa6XIghfSE0BWE7A3CfgJ6hiBERzCns%2FKWI3%2FayNBo1HBiYhxnVJI69LkXqu7VP02f9N8DNVCxazFhOCU8id23DFRxLbaBTHAR4IEQoWfQfBOwAcOSeA6Dk7NSs4XWiw2UbNkw%2FJMhAAkPh33eUPZqh5hXLwxPJwQNWa%2B20pAcaU%2Fg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=3b21dd763b8df01cbf2740f9806696558b610176f4e3eaef85bcf6b92f7e2c80",
+      "file_size": 151489,
+      "type": "image/jpeg",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-08-31T10:27:52.408Z",
+  "allow_singular_disclosure_after": -285907060.2915027,
+  "singular_disclosure_allowed": true,
+  "vote_count": 1,
+  "voters": [
+    "dyabla"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
