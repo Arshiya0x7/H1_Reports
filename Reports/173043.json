@@ -1,0 +1,134 @@
+{
+  "id": 173043,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNzMwNDM=",
+  "url": "https://hackerone.com/reports/173043",
+  "title": "Bypassing \"You've requested your data the maximum number of times today.\" + \"Please Verify an email address with snapchat to continue\" ",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-09-30T00:38:35.237Z",
+  "submitted_at": "2016-09-30T00:38:35.237Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "marwan",
+    "url": "/marwan",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/me2v7loosgqngu4bxtcq219u7kir/20fc426031f09e5347054871ae4e3af2478fd2b3d5e8a321468ecf6f2da5ac20"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 513,
+    "url": "https://hackerone.com/snapchat",
+    "handle": "snapchat",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/513/87067c5c4ed63c2c07a522ca3198d2310e2a14c6_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/513/87067c5c4ed63c2c07a522ca3198d2310e2a14c6_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Snapchat",
+      "twitter_handle": "",
+      "website": "https://www.snapchat.com/",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2016-11-25T21:44:21.329Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-10-26T21:44:09.050Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello Again , I found an 2 issues in `accounts.snapchat.com/accounts/downloadmydata` \n- The first one : Bypassing The maximum number of Data Requests per day and download the Account Data any time the Attacker wants.\n- The Second : Download The Account Data without any Email verification.\n\n____\n\nRequirements : \n====================\n- Snapchat Account.\n- Software to intercept the request.\n\n____\n\nSummary: [First_Issue]\n====================\nAccording to This note in `Download My Data` Page \n`Note: There is a limit to the number of times per day you can download your data. ` and when the user do more than 2 requests Per day another massage appear saying `\" You've requested your data the maximum number of times today. Please try again tomorrow.`  . By Using this Infected POST Method `POST /accounts/downloadmydata HTTP/1.1`  the Attacker can Make Unlimited Data requests Per day at any time he want without any restriction and every time he do it the site creates new download link + send a massage to his email, He even Can run intruder Attack Without any TIMEOUT.\n\n____\n\nSteps To Produce[First_Issue][Text_vresion]\n====================\n// Note : The first three steps If the Attacker Doesn't Have the Request Yet. //\n1- Login to Activated Account throw https://accounts.snapchat.com/accounts/login\n2- Browse to https://accounts.snapchat.com/accounts/downloadmydata\n3- Trun on Intercept and click on `Submit Request` Button now send the request to The Repeater, and Go back to the page and click the button again to reach the maximum times per day.\n4- Now when you refresh the page a massage appears saying `\"You've requested your data the maximum number of times today.\"`\n5- Now go back to the repeater and repeat the request and every time the attacker repeat it a new download link generates  + an email sent to his email.\n\n{F124019}\n\n____\n\nSummary: [Second_Issue]\n====================\nAccording to [This Support page ](https://support.snapchat.com/en-US/article/download-my-data) \n`\"We take the security of your data very seriously, so you [must] have a verified email address to download your data.\"` , Well Using The Same POST Method The Attacker can replace The Cookie and the xsrf_token too his own then repeat the request and the download link will pop-up after refreshing the page., Even when the page have a massage says \"Please Verify an email address with snapchat to continue\".\n\n\n____\n\nSteps To Produce[Second_Issue][Text_vresion]\n====================\n1- The Attacker will use the same POST Method that already saved in the repeater / Used in Issue one /\n```\nPOST /accounts/unlock HTTP/1.1\nHost: accounts.snapchat.com\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:49.0) Gecko/20100101 Firefox/49.0\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\nAccept-Language: en-US,en;q=0.5\nAccept-Encoding: gzip, deflate, br\nReferer: https://accounts.snapchat.com/\nCookie: xsrf_token=qGtjuAOo2-wbMhSh5pSleQ; sc-a-session=MDAxOjAwMTrcu9aIg5J6CABp9Jgq2spVOpj0cpFQFvfTGYYk8x1lEB6EK9Ii4_-ThiXAIwaPuGx0zNKyVJNVWpF5lV7ouGvH; sc-cookies-popup-dismissed=true; sc-a-nonce=a0979ef3-d7e0-4f53-8514-cc7984ebb8fa\nDNT: 1\nConnection: close\nUpgrade-Insecure-Requests: 1\nContent-Type: application/x-www-form-urlencoded\nContent-Length: 38\n\nxsrf_token=AoaRT596SUeoTsWqXjzNPQvsZko\n```\n2- The Attacker will change The ` xsrf_token=kB5hC3JiO-au9yaO83iOTMqCvM4` & `cookie` But How he will get the New xsrf_token of the session ? Simply By logging in to his account then Browse to https://accounts.snapchat.com/accounts/unlock and turn on intercept then click The \"Unblock\" Button. Now the New cookie and the xsrf_token Will show up in the request Like This :\n\n```\nPOST /accounts/unlock HTTP/1.1\nHost: accounts.snapchat.com\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:49.0) Gecko/20100101 Firefox/49.0\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\nAccept-Language: en-US,en;q=0.5\nAccept-Encoding: gzip, deflate, br\nReferer: https://accounts.snapchat.com/\nCookie: xsrf_token=9a8P2IH9ehlGqcMEoMdYhQ; sc-a-session=MDAxOjAwMTrSJkcOKBemtdP07Rus9rErOnjN2IzGZfERcnmbHdGfXAMoxOocWkm0VbnVJ-FopWhFYdiLF__mnp1BBrE; _ga=GA1.2.1347861360.1475026774; sc-cookies-popup-dismissed=true; sc-language=en-US; sc-a-nonce=d15d9f88-6fd0-4aeb-9ebe-d878f7eea3e0\nConnection: close\nUpgrade-Insecure-Requests: 1\nContent-Type: application/x-www-form-urlencoded\nContent-Length: 38\n\nxsrf_token=YdA7InrMTUVKsPDtuNtUB1HZHdI <======= \n```\n\n\n3- Now The will Attacker go Back to the First request and replace the xsrf_token and the cookie of the session with the right one.\n\n4- Now Repeat The Request and refresh `Download My Data` Page you will see The `Zip` file link at the top Section / \"Your Data is Ready \" / and in the bottom you will see This Massage \"Please Verify an email address with snapchat to continue\".\n\n{F124016}\n\n____\n\nPOC Shows The two Issues With Full_Steps [Video]:\n====================\nhttps://youtu.be/fzHxL8QZ9AE\n\n____\n\nOther stuff|:\n====================\nSo what if the Attacker Logout After Doing issue one , When he login again in a different day and use the same method the server will response with  302 Found , To fix this he will use the same Trick that he used in issue 2, By browsing to `accounts/unlock` etc etc.\" and do unlimited requests again.\n\n____\nThank you for your patience\nBest regards,\n@Marwan\n\n\n",
+  "weakness": {
+    "id": 27,
+    "name": "Improper Authentication - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 124016,
+      "file_name": "Not_verified_POC.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/124/016/68e3cad3b2afbc6e3a2382e509234b9bb1115c27/Not_verified_POC.png?response-content-disposition=attachment%3B%20filename%3D%22Not_verified_POC.png%22%3B%20filename%2A%3DUTF-8%27%27Not_verified_POC.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ3E24NDSD%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T073752Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJ%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCxpiCuXNGAEdcRyGTTKjBHllfunoMg97GBS1ILZpueqgIgXnYG35UDfPh2PExhoT7JbxFQiEiJ7bwbyyW%2FipdtnQcqsgUIKBADGgwwMTM2MTkyNzQ4NDkiDPPOj9W8qVDQparzKCqPBbhbT7rx%2F3xWgGsJvjgCjxa18bYA02xmIAziOCSzZ8A5HhkdC2dPpWlfxwaSvuIBRGspiLpDYhm58gxWcFhQ7MGEf5l8tBbuqtuBmcOXKD%2BgZfO2NbPR6VcDtdszf2QnxCxeaYOUoZhhgrQqpkqi%2B3cwJHWjQlTwVtOPW5WozkqfcpfvEBDRQsJ7WCq9u7mX1xu4VxUtgfEDmRhyWGjHh7ho4XMCeVkp5sI%2BocVXz%2B3ZyPI7dItD70jSHcf2AIzx3LrHva7BaV0qFoAJtoAsXtaHYqlCT1kDYvEx8Sp8rp36XxQMzLxlRepcAZ2rh%2BXiv8uvdBwsZ8%2FWI8D4S0vRxcbWGQnQxxqwLigCsP0Y8jGX796b2XgoYfClSrT8KRDUINmhzZhgfRZUBIyW8KdG5NBPHxYWvyOB5a4yd%2Beoi188Kh5%2F2UxN6fQ0wnFJPWtD07W6hJult0%2FEl2tAZn5oC11BSmuCKJfmo1Tr36G6qYrmy4QWBad5yF7QJbe5XvfAj1iiaaQ0h%2FY7kVm18LjhqwtoXKs3KrMou0F9T3iIpZGK2j1boYA5GYssQoFLgGJ7WZlv53xe8AsOTGFEhoAnkRhc6O4SIoOJ%2BlBh5%2FKj6IugVQycXBRDnr%2B8gqvdhI%2BYddr%2FEiJ9q1R6AhjR85amDuVtgjiYWb9BtCYBjYlRuK3dqqbuerc7FA52ZA%2Bc5pnip3ezFbWmP2%2BoXSE7q8Dwk2bZ2dwatJ7tscCzzlBVUS%2BLn3AiAkZLVLBumJ%2BZRGyTzUsZ7sAPTub0bQLv7ZHuBPgiZrBg7tSrToRLHMk0ZWbi0p2Srwzj2pmLVZSTw739jYL%2BJUIQ43mqMAINVkGrVuTIgLnFphFVxXoNOhL35Pcw%2FeXDxgY6sQGfSKiViA3IsxylrpDOtTiUkldKYYe8rMPWgJ%2F0TRnOEl8Oy%2FiHUs4r9VO4l8mON%2FcUoOaCUThi8ebIv4apQi0QZr1cSz8iVaQ6ZFMJ1Zum2hr%2Fl4fAP701YDQADnOByqNfbjdE%2B%2FYZrTtNkFEm5r7jpRiv24Fk42WBMzayxHThtDiOvBCYgfk26dzQDIKJhkBRF%2BpxihAD%2ByYh71tPMDXsZg%2FGzte7DoFGDOjtA33WYAk%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=b1e02de1f6bc13872703287ee9f2d192cd8ad8507c14cb62ce03e0b1987a658c",
+      "file_size": 71819,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 124019,
+      "file_name": "Unlimited_Requests_Per_Day_POC.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/124/019/182236d17ec6bb693aeed2ab24f6620e30c2dbe0/Unlimited_Requests_Per_Day_POC.png?response-content-disposition=attachment%3B%20filename%3D%22Unlimited_Requests_Per_Day_POC.png%22%3B%20filename%2A%3DUTF-8%27%27Unlimited_Requests_Per_Day_POC.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ3E24NDSD%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T073752Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJ%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCxpiCuXNGAEdcRyGTTKjBHllfunoMg97GBS1ILZpueqgIgXnYG35UDfPh2PExhoT7JbxFQiEiJ7bwbyyW%2FipdtnQcqsgUIKBADGgwwMTM2MTkyNzQ4NDkiDPPOj9W8qVDQparzKCqPBbhbT7rx%2F3xWgGsJvjgCjxa18bYA02xmIAziOCSzZ8A5HhkdC2dPpWlfxwaSvuIBRGspiLpDYhm58gxWcFhQ7MGEf5l8tBbuqtuBmcOXKD%2BgZfO2NbPR6VcDtdszf2QnxCxeaYOUoZhhgrQqpkqi%2B3cwJHWjQlTwVtOPW5WozkqfcpfvEBDRQsJ7WCq9u7mX1xu4VxUtgfEDmRhyWGjHh7ho4XMCeVkp5sI%2BocVXz%2B3ZyPI7dItD70jSHcf2AIzx3LrHva7BaV0qFoAJtoAsXtaHYqlCT1kDYvEx8Sp8rp36XxQMzLxlRepcAZ2rh%2BXiv8uvdBwsZ8%2FWI8D4S0vRxcbWGQnQxxqwLigCsP0Y8jGX796b2XgoYfClSrT8KRDUINmhzZhgfRZUBIyW8KdG5NBPHxYWvyOB5a4yd%2Beoi188Kh5%2F2UxN6fQ0wnFJPWtD07W6hJult0%2FEl2tAZn5oC11BSmuCKJfmo1Tr36G6qYrmy4QWBad5yF7QJbe5XvfAj1iiaaQ0h%2FY7kVm18LjhqwtoXKs3KrMou0F9T3iIpZGK2j1boYA5GYssQoFLgGJ7WZlv53xe8AsOTGFEhoAnkRhc6O4SIoOJ%2BlBh5%2FKj6IugVQycXBRDnr%2B8gqvdhI%2BYddr%2FEiJ9q1R6AhjR85amDuVtgjiYWb9BtCYBjYlRuK3dqqbuerc7FA52ZA%2Bc5pnip3ezFbWmP2%2BoXSE7q8Dwk2bZ2dwatJ7tscCzzlBVUS%2BLn3AiAkZLVLBumJ%2BZRGyTzUsZ7sAPTub0bQLv7ZHuBPgiZrBg7tSrToRLHMk0ZWbi0p2Srwzj2pmLVZSTw739jYL%2BJUIQ43mqMAINVkGrVuTIgLnFphFVxXoNOhL35Pcw%2FeXDxgY6sQGfSKiViA3IsxylrpDOtTiUkldKYYe8rMPWgJ%2F0TRnOEl8Oy%2FiHUs4r9VO4l8mON%2FcUoOaCUThi8ebIv4apQi0QZr1cSz8iVaQ6ZFMJ1Zum2hr%2Fl4fAP701YDQADnOByqNfbjdE%2B%2FYZrTtNkFEm5r7jpRiv24Fk42WBMzayxHThtDiOvBCYgfk26dzQDIKJhkBRF%2BpxihAD%2ByYh71tPMDXsZg%2FGzte7DoFGDOjtA33WYAk%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=24dbd1c6d75f60c62e3045d897024aa30fef72cf3a42a060ed1af7e9dc2f6865",
+      "file_size": 134651,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-11-25T21:44:09.087Z",
+  "allow_singular_disclosure_after": -278416423.21809125,
+  "singular_disclosure_allowed": true,
+  "vote_count": 20,
+  "voters": [
+    "bogdantc",
+    "0xsyndr0me",
+    "dilawer",
+    "mahmoud0x00",
+    "th3g3nt3lman",
+    "malcolmx",
+    "pr0f0x01",
+    "m16",
+    "0xradi",
+    "need_new_username_103",
+    "and 10 more..."
+  ],
+  "structured_scope": {
+    "databaseId": 11827,
+    "asset_type": "URL",
+    "asset_identifier": "accounts.snapchat.com",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
