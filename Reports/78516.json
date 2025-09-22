@@ -1,0 +1,121 @@
+{
+  "id": 78516,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC83ODUxNg==",
+  "url": "https://hackerone.com/reports/78516",
+  "title": "Доступ к чужим приватным фотографиям (3) через обложку видео",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2015-07-25T01:26:07.891Z",
+  "submitted_at": "2015-07-25T01:26:07.891Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "4lemon",
+    "url": "/4lemon",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/002/194/aa0eb7d0d4c0ee7d20ae9b2550953b4eeda26ef9_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": true,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 1782,
+    "url": "https://hackerone.com/ok",
+    "handle": "ok",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/001/782/0e7098faf92785cddc86bcf693dbb068dad14311_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/001/782/0e7098faf92785cddc86bcf693dbb068dad14311_original.jpg/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "disabled",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "ok.ru",
+      "twitter_handle": "",
+      "website": "http://ok.ru",
+      "about": "Odnoklassniki social network"
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2016-04-29T09:58:46.375Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-04-28T18:55:59.932Z",
+  "team_member_agreed_on_going_public_at": "2016-04-29T09:58:46.304Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "При выборе обложки видео происходит запрос:\r\n\r\n>POST /dk?cmd=CustomCoverPreview&st.a.hookId=160344447&st.a.objectId=customCover_31471307517\r\n\r\n>st.a.attachedIds=%5B%7B%22type%22%3A%22PHOTOODKL%22%2C%22id%22%3A%22803633705029%22%7D%5D&gwt.requested=129bff65\r\n\r\nПодменяя id фотографии в параметре st.a.attachedIds в теле ответа получаем урл:\r\nhttp://pimg.mycdn.me/getImage?disableStub=true&type=VIDEO_S_288&url=http%3A%2F%2Fitd1.mycdn.me%2Fimage%3Ft%3D50%26bid%3D803633705029%26id%3D803633705029%26plc%3DWEB%26tkn%3DijQhFLoZF4a893ZE5lZS0e_E5MM&signatureToken=TNH2WJhWuKD1w_lgzlUBDQ\r\nВ котором в слегка обрезанном виде получаем приватную фотографию.\r\n",
+  "weakness": {
+    "id": 75,
+    "name": "Privilege Escalation"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 47013,
+      "file_name": "Screenshot_2015-07-25_04.24.57.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/047/013/cd6a65a13b688be6bf70ac7f08ba8a4fe9d751ca/Screenshot_2015-07-25_04.24.57.png?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_2015-07-25_04.24.57.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_2015-07-25_04.24.57.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6Y5ZB2QS%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T215822Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIA19dryA1E7Vzkkho6i%2FOvvU3lexf9dyuY4m9DU%2FX5%2FHAiBVyEoDdLRbo6TdP72jN96HrlUZmZQwcDGG5YugQcluYCqxBQg0EAMaDDAxMzYxOTI3NDg0OSIMAtImyhrBxIJMZbJeKo4FPQLdWSB0cnxL3JX3REsOmZShU4EvSPW8VYGcw4kw79ZkjLocCn0wDj9ZwVVjj8FfrtkSyPiHG3yOq%2BtfMTnd8Tw7BGw34LUnFj6paLe64gkfKRkXB747AXqJUT0imrRp7k7XD6dPU1%2Fs11TsXbYbXV6f%2Bv%2FwCLyjZ9ZNNMT0NchKK8C1r4gqjaCmzZxH9SPzjqPlK6b4d3uYtd1D39nlfTR7e0mBxqEJxqkBSmPqtqh56YEJK3%2FSeHzU3iVDM%2BbXpCTI7HDfj3oiGUMHtMg5NMI992sgnNQgOpATctShNHgS%2BehUSESV%2BxER50X7LdWyUQhlhwSUXDZPb%2FDa%2FjZSZ8gn4e97udOo%2FFz1IOgr2AHPL8prA4Sl104UJliUu5WJ0dNwUAb%2BtrGW77R1Nf730EezJPh1KDbz5hXvJZb1KroQ5QU0t%2BhEwMDI9SnzFjL5hlDjAiDI8Ej6f7CYv3ItKRr%2BRnXILasmes%2FROfp8ELQPSyu%2BzuIlnOkl4WY2Hx3GkV%2Fcn%2FxgZWZ6qdfzs1eQud0R3ubI%2BtERXyd7PMeZcpKOq0DuLkzkRzHA%2FoJnb2R4HoDRdAAtcFU4OLuvZ61O0WVQlb6sFfWNX1CtzUn0wor7VcBto5hDzYCLJET7B78OsKpCFhGOMqtoSK5CVMWAtZO6VIddrnkXVjL622Ck%2FMAXXPhAL6tZTcMIBRrzm2g2QCH%2BiBFufdQf8ml%2F6wW5k0qtV5rKSDyRiWsiCRN8KJ9IqsdCgy9PIgF%2Fqyl3QoJ83Iwv5ej6%2BwPiOKQumOXK3M0Qa3k7enVNFuNx%2BtZwaD2JepsEX8q7U%2BgFCG3szUTIPyZ3JcK7fqaD3j%2FkXuvQjGpRi6uWwQqvjVvv5LBCMJ%2B1xsYGOrIBULQw21ENIbyIcORcOqvKpuwzae%2FNC2qmc7TPy7CIPNq8QVjpZzl02gPB3pHEPUTUgMKB8aeQLKYrbJ49TbK1wzqCOMLVPbPUKAGWCwqCOnOGJgI%2FxxBiKst8lcMtDFHTkoVaJJG3b%2BgBpn5NGpwCcoHr7l00%2FaWAb2C7EXlpYAbl%2BBrtN4dqyKO3LafGwQQK26P5CBDjyqrvMSiRjaHKXTjto11SbCUGTt7KmcHlDGwy8g%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=71de9b5c9aa5b2cb55ab5b192848496ed72b5f1a5752bd5b67b8684fbe51d798",
+      "file_size": 102155,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 47014,
+      "file_name": "Screenshot_2015-07-25_04.25.37.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/047/014/a44c2bdc8810bcfac420ed994c5e225c9931c028/Screenshot_2015-07-25_04.25.37.png?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_2015-07-25_04.25.37.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_2015-07-25_04.25.37.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ6Y5ZB2QS%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T215822Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIA19dryA1E7Vzkkho6i%2FOvvU3lexf9dyuY4m9DU%2FX5%2FHAiBVyEoDdLRbo6TdP72jN96HrlUZmZQwcDGG5YugQcluYCqxBQg0EAMaDDAxMzYxOTI3NDg0OSIMAtImyhrBxIJMZbJeKo4FPQLdWSB0cnxL3JX3REsOmZShU4EvSPW8VYGcw4kw79ZkjLocCn0wDj9ZwVVjj8FfrtkSyPiHG3yOq%2BtfMTnd8Tw7BGw34LUnFj6paLe64gkfKRkXB747AXqJUT0imrRp7k7XD6dPU1%2Fs11TsXbYbXV6f%2Bv%2FwCLyjZ9ZNNMT0NchKK8C1r4gqjaCmzZxH9SPzjqPlK6b4d3uYtd1D39nlfTR7e0mBxqEJxqkBSmPqtqh56YEJK3%2FSeHzU3iVDM%2BbXpCTI7HDfj3oiGUMHtMg5NMI992sgnNQgOpATctShNHgS%2BehUSESV%2BxER50X7LdWyUQhlhwSUXDZPb%2FDa%2FjZSZ8gn4e97udOo%2FFz1IOgr2AHPL8prA4Sl104UJliUu5WJ0dNwUAb%2BtrGW77R1Nf730EezJPh1KDbz5hXvJZb1KroQ5QU0t%2BhEwMDI9SnzFjL5hlDjAiDI8Ej6f7CYv3ItKRr%2BRnXILasmes%2FROfp8ELQPSyu%2BzuIlnOkl4WY2Hx3GkV%2Fcn%2FxgZWZ6qdfzs1eQud0R3ubI%2BtERXyd7PMeZcpKOq0DuLkzkRzHA%2FoJnb2R4HoDRdAAtcFU4OLuvZ61O0WVQlb6sFfWNX1CtzUn0wor7VcBto5hDzYCLJET7B78OsKpCFhGOMqtoSK5CVMWAtZO6VIddrnkXVjL622Ck%2FMAXXPhAL6tZTcMIBRrzm2g2QCH%2BiBFufdQf8ml%2F6wW5k0qtV5rKSDyRiWsiCRN8KJ9IqsdCgy9PIgF%2Fqyl3QoJ83Iwv5ej6%2BwPiOKQumOXK3M0Qa3k7enVNFuNx%2BtZwaD2JepsEX8q7U%2BgFCG3szUTIPyZ3JcK7fqaD3j%2FkXuvQjGpRi6uWwQqvjVvv5LBCMJ%2B1xsYGOrIBULQw21ENIbyIcORcOqvKpuwzae%2FNC2qmc7TPy7CIPNq8QVjpZzl02gPB3pHEPUTUgMKB8aeQLKYrbJ49TbK1wzqCOMLVPbPUKAGWCwqCOnOGJgI%2FxxBiKst8lcMtDFHTkoVaJJG3b%2BgBpn5NGpwCcoHr7l00%2FaWAb2C7EXlpYAbl%2BBrtN4dqyKO3LafGwQQK26P5CBDjyqrvMSiRjaHKXTjto11SbCUGTt7KmcHlDGwy8g%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=af4506a24432c46f97915ecabb50bbd5f92c2ad9da5b4aa8cddb61b6a61ff05b",
+      "file_size": 370488,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-05-28T18:56:00.033Z",
+  "allow_singular_disclosure_after": -294116542.23182267,
+  "singular_disclosure_allowed": true,
+  "vote_count": 3,
+  "voters": [
+    "shivammusic",
+    "spetr0x",
+    "dyabla"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
