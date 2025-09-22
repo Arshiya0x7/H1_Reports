@@ -1,0 +1,153 @@
+{
+  "id": 158019,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNTgwMTk=",
+  "url": "https://hackerone.com/reports/158019",
+  "title": "Host Header Injection/Redirection in: https://www.instacart.com/",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-08-10T00:13:32.757Z",
+  "submitted_at": "2016-08-10T00:13:32.757Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "0xm1racle",
+    "url": "/0xm1racle",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/8f4pfm736yz1np5194rc9ofgyp18/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 35527,
+    "url": "https://hackerone.com/instacart",
+    "handle": "instacart",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/o3gb7jh208og9ikm1jqbsj1461p5/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/o3gb7jh208og9ikm1jqbsj1461p5/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Instacart",
+      "twitter_handle": "instacart",
+      "website": "https://instacart.com",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2016-09-11T10:24:58.832Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-08-12T10:24:43.982Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi,\n\nYour website is vulnerable to Host Header Injection because the host header can be changed to something outside the target domain\n\nIn many cases, developers are trusting the HTTP Host header value and using it to generate links, import scripts and even generate password resets links with its value. This is a very bad idea, because the HTTP Host header can be controlled by an attacker. This can be exploited using web-cache poisoning and by abusing alternative channels like password reset emails.\n\nGET / HTTP/1.1\nHost: google.com\nUser-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:47.0) Gecko/20100101 Firefox/47.0\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\nAccept-Language: en-US,en;q=0.5\nAccept-Encoding: gzip, deflate\nConnection: close\n\nHTTP/1.1 301 Moved Permanently\nDate: Tue, 09 Aug 2016 23:55:09 GMT\nLocation: https://google.com/\nServer: nginx\nStrict-Transport-Security: max-age=31536000; includeSubDomains; preload\nConnection: Close\nContent-Type: text/html\nContent-Length: 178\n\nReference: https://www.acunetix.com/vulnerabilities/web/host-header-attack\n\nRegards,\nClarck",
+  "weakness": {
+    "id": 53,
+    "name": "Open Redirect"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 110937,
+      "file_name": "request.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/110/937/f24e5e3334d96f20ae1bf833536bd3d4a3f67db7/request.png?response-content-disposition=attachment%3B%20filename%3D%22request.png%22%3B%20filename%2A%3DUTF-8%27%27request.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ552O77O3%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T082450Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKD%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIHfbX9J2gfikvEbg3McLKGeVrW275OR3uUSwojvGs0kZAiBIia4Gh%2Fu3KnwPqARnPnLsyu35mfMN%2FpPRbOTAKlOMLCqxBQgpEAMaDDAxMzYxOTI3NDg0OSIMM0HPHfyL7zFUr4kcKo4F6Me%2BckSgNfHywPd4EbOVyVtTYaShF6pv0yhUOpRl4CSO1o95bfSiaBAHZJtkchFw7A%2Baudbd%2B4o363dwazdChlHj5IbtuAbPvGXfliWd3Yksfq50hPn7gzJm82uwQDzRjbUnLkZOGXZQ%2FMNkMYkQdfkg1rdyJAJzzx77qsUKPh43H0ybB2cNJC1QD%2F4sjGJPnRpXtZTwT4bJEfHmdGI0GbkycHh8QTF6HqXv97ZUGKCZrN57qJaA0uvhnM57ZCSc5EvJQA%2BrapO59TMouBwnnrIqig6RpqnJVsHYHKdo4CqIygWkLHsbHFTXy%2FEpB75W2%2FJBAQ6hNoDuft5PUKlHHvnMZNeqgnX9su2%2Bdk8xjpSjozny92nVzM75K%2FFY4lQrp3l11aKZgRnnArxTW68LZh4cxH1MaQwUEkwBgp%2F4Jd5weuLUWAVdF0scf2JAFrTa6CbMhgP62zWSrEIVz8tLs5jLzrUQhg1SGpUMRv9kQn5ooSxU4FVBp8qiDQkWyHxY7ILataYLDfbr7GUqqZelFp0r%2FeSxBgV2qKXmCvqoR2SE1wSsMX5iEDjt28Xny77ivAHREZBxUXBQ%2FTAbrNyvtreQgKngXkkMoefygQ40ScEWb0Xx7BMC%2FJy51e1cwJOfVC5A6KkTxw%2FQhw1Hacs6wX6c6ssqKlXNdQdPykhpQ5HLLwb7zLMDZ10YO%2BAmyZG%2BkcxSN3YZQhPYfRya%2Fn71Nzr6%2Btr0RNDaCBHtwGsQZXRaMeKZkeXhctwVN99XkTndmw%2FnWJxrxdwppGDMkOQZQ9ydo3tA4HCu5bngAkqmS25oSNI%2BuZspLFiJV6ZDe7iHxAXkdTesnbkK0ginpKXupZIFaDBZcyz8ZxzxCiK7MIX9w8YGOrIB0FOpiaHtNsaEV%2BGWdL%2F2NpqrbkioyS1nWW3UXwp0U8AGp05zIqQzEn7vbud4Z%2F3vergdHsxgDSMOVd7N0EPmLp0ScHhClhqwIRSTd84udeNjFobmPO9MuaxFNrf0xLwFUuxm892ppcrJDO589f6%2FaP4IbkUPw%2Bah01Aq4u9D3tkLkA%2FQJsScm28%2FPnKtysXK2xszExunL0okjavcz1AActKsRaNipF4dW4OO7SlBsManmQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=eaf558bbd2a7b1b43d3ba7c85a79e1c8ca835e10efea5f71a17b738286ef141c",
+      "file_size": 11790,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 110938,
+      "file_name": "responseinstacart.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/110/938/481617415e43f17a05805cd51d89b466b3dbd6a6/responseinstacart.png?response-content-disposition=attachment%3B%20filename%3D%22responseinstacart.png%22%3B%20filename%2A%3DUTF-8%27%27responseinstacart.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ552O77O3%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T082450Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKD%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIHfbX9J2gfikvEbg3McLKGeVrW275OR3uUSwojvGs0kZAiBIia4Gh%2Fu3KnwPqARnPnLsyu35mfMN%2FpPRbOTAKlOMLCqxBQgpEAMaDDAxMzYxOTI3NDg0OSIMM0HPHfyL7zFUr4kcKo4F6Me%2BckSgNfHywPd4EbOVyVtTYaShF6pv0yhUOpRl4CSO1o95bfSiaBAHZJtkchFw7A%2Baudbd%2B4o363dwazdChlHj5IbtuAbPvGXfliWd3Yksfq50hPn7gzJm82uwQDzRjbUnLkZOGXZQ%2FMNkMYkQdfkg1rdyJAJzzx77qsUKPh43H0ybB2cNJC1QD%2F4sjGJPnRpXtZTwT4bJEfHmdGI0GbkycHh8QTF6HqXv97ZUGKCZrN57qJaA0uvhnM57ZCSc5EvJQA%2BrapO59TMouBwnnrIqig6RpqnJVsHYHKdo4CqIygWkLHsbHFTXy%2FEpB75W2%2FJBAQ6hNoDuft5PUKlHHvnMZNeqgnX9su2%2Bdk8xjpSjozny92nVzM75K%2FFY4lQrp3l11aKZgRnnArxTW68LZh4cxH1MaQwUEkwBgp%2F4Jd5weuLUWAVdF0scf2JAFrTa6CbMhgP62zWSrEIVz8tLs5jLzrUQhg1SGpUMRv9kQn5ooSxU4FVBp8qiDQkWyHxY7ILataYLDfbr7GUqqZelFp0r%2FeSxBgV2qKXmCvqoR2SE1wSsMX5iEDjt28Xny77ivAHREZBxUXBQ%2FTAbrNyvtreQgKngXkkMoefygQ40ScEWb0Xx7BMC%2FJy51e1cwJOfVC5A6KkTxw%2FQhw1Hacs6wX6c6ssqKlXNdQdPykhpQ5HLLwb7zLMDZ10YO%2BAmyZG%2BkcxSN3YZQhPYfRya%2Fn71Nzr6%2Btr0RNDaCBHtwGsQZXRaMeKZkeXhctwVN99XkTndmw%2FnWJxrxdwppGDMkOQZQ9ydo3tA4HCu5bngAkqmS25oSNI%2BuZspLFiJV6ZDe7iHxAXkdTesnbkK0ginpKXupZIFaDBZcyz8ZxzxCiK7MIX9w8YGOrIB0FOpiaHtNsaEV%2BGWdL%2F2NpqrbkioyS1nWW3UXwp0U8AGp05zIqQzEn7vbud4Z%2F3vergdHsxgDSMOVd7N0EPmLp0ScHhClhqwIRSTd84udeNjFobmPO9MuaxFNrf0xLwFUuxm892ppcrJDO589f6%2FaP4IbkUPw%2Bah01Aq4u9D3tkLkA%2FQJsScm28%2FPnKtysXK2xszExunL0okjavcz1AActKsRaNipF4dW4OO7SlBsManmQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=c7fea6cde434ceba1db86df412c35f6f123246188b26b58f4e66ff7cce1beb20",
+      "file_size": 18753,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-09-11T10:24:44.090Z",
+  "allow_singular_disclosure_after": -284940006.788391,
+  "singular_disclosure_allowed": true,
+  "vote_count": 17,
+  "voters": [
+    "polem4rch",
+    "zayn1337",
+    "pr0f0x01",
+    "lumbridge",
+    "ak1t4",
+    "need_new_username_103",
+    "footstep",
+    "mr_sharma_",
+    "jens",
+    "japz",
+    "and 7 more..."
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "id": 2764,
+      "category": "team",
+      "content": "We NO LONGER accept similar reports about Host header Injections (including `X-Forwarded-Host`, etc)",
+      "updated_at": "2016-10-01T20:25:28.271Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 84123,
+        "username": "cxmcc-instacart",
+        "name": "Xiuming Chen",
+        "bio": "",
+        "cleared": false,
+        "verified": false,
+        "website": null,
+        "location": "",
+        "created_at": "2016-06-10T16:06:15.233Z",
+        "url": "https://hackerone.com/cxmcc-instacart",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "hacker",
+        "profile_picture_urls": {
+          "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png",
+          "medium": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png",
+          "xtralarge": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+        }
+      }
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
