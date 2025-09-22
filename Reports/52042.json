@@ -1,0 +1,141 @@
+{
+  "id": 52042,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC81MjA0Mg==",
+  "url": "https://hackerone.com/reports/52042",
+  "title": "HTTP Response Splitting (CRLF injection) in report_story",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2015-03-15T07:49:31.208Z",
+  "submitted_at": "2015-03-15T07:49:31.208Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "filedescriptor",
+    "url": "/filedescriptor",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 61,
+    "url": "https://hackerone.com/x",
+    "handle": "x",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/ikx4ept298unt534kpz4am2bd4zs/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/ikx4ept298unt534kpz4am2bd4zs/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "X / xAI",
+      "twitter_handle": "XSecurity",
+      "website": "https://x.com",
+      "about": "X helps you create and share ideas and information instantly, without barriers."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2015-04-21T17:59:23.057Z",
+  "bug_reporter_agreed_on_going_public_at": "2015-04-21T17:59:22.520Z",
+  "team_member_agreed_on_going_public_at": "2015-04-13T19:15:22.382Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi,\r\n\r\nI would like to report a HTTP Response Splitting vulnerability in https://twitter.com/i/safety/report_story that allows attackers to inject arbitrary headers and contents in the response. \r\n\r\n## PoC:\r\nhttps://twitter.com/i/safety/report_story?next_view=report_story_start&source=reporttweet&reported_user_id=1&reporter_user_id=1&is_media=true&is_promoted=true&reported_tweet_id=%E5%98%8A%E5%98%8DSet-Cookie:%20test\r\n\r\n## Details:\r\nThe page will set cookie for the parameter *reported_tweet_id*. However, it doesn't validate strictly if it is a number. Although there is a protection against CRLF injection by detecting the presence of any *NewLine* character (0x0a), it can be bypassed with characters encoded in UTF-8 as the the page will try to convert them back to the original Unicode form and extract the last byte. For example, *%E5%98%8A* => *U+560A* => *0A*.",
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 32110,
+      "file_name": "twitter_crlf.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/032/110/1273cf910bf42fb1b2819916fa0749685ae2db65/twitter_crlf.png?response-content-disposition=attachment%3B%20filename%3D%22twitter_crlf.png%22%3B%20filename%2A%3DUTF-8%27%27twitter_crlf.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUTJQRKI7%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T200340Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIBjpON0xXi%2BokcKDjeQRcc%2FV8Y2eqAxUSUdEtQwc71sfAiEAs48AphiqJldC4S8ZfJ%2BhOUGarZWeeT8CuzcS1IWPbiAqsgUINBADGgwwMTM2MTkyNzQ4NDkiDAMeEG4yNFmYH46l%2FiqPBQ%2BaLXw3yVv76kUoEs98ebgHG1JLJlG98bNootTGIsWqvAoHISFti6uTrBbRXdc80xcAa%2FfSfXmvwKGcL7KSWUDRkOO%2BxHQp2TzszmDucqYUMhiHJBepy3izFN3wpgF8fKO9t5uuqEhl%2FVBgPNGWWg8JuV02%2BkZ0F2mT5yV7cmqPfUoV3lhsLLD2nu6NURqff1n2QXM8pf5qmjWxEloAJ0y8e2qHtzcVzGVKb%2BCFdiWqhNEWkWPo19u81XLcV0hpPQeRcHT%2Bp2Gnz2yCIgQP%2B6%2FDeOy%2F0vMOliZlkaG%2Bj0JpOPty5EL0rYQfM2x3e%2BBBJS4Qwf2e5ZJ1esktwhCvXlSw%2FXK5d4m5Ry6Y3Ml9D6qvhAT%2FXkskJG4jy6g7G6FY0578inKr%2F%2BvlQMbysh8pGkj%2BAEUuYiKuJD7PGa%2BpMVK%2F9G9%2FT4QHXBUW9ZJInCjr2knriLsxPr5reMoqnIgdlRW%2FjLUMlSlP0EBETlH%2BmYAyo8I5AKwu5FV%2FWGDKc4IM5KjE0tCIc57c9fCMoHYESO1kH4tgl0fBYbACWsMw1Ck44PA7a0fqPp2K42tnf8g%2BhGXG7P%2B%2FJvEetPGLujmvgER%2BWluGqI%2BRqoIVlM9dwcKX3RjDAK3G1bpAniHkMBoXMfCSXKf%2Bwo5ycduUkHsPTgCRcdaiewatfWBxiYM%2FOjHs2m%2FaV4Ugl98g%2BD7c6zifn72DDWHq84PL9Avt0RqmaL2U2QYMZTDLOTUj3Wvigs9sTkdCezHX72h9nccg7XdLYpi1cK9hBCF81NeGxw3u15zqS0ds%2FivW4qP9PDbTw5LdhO%2BLIRQn1EIDIir3yUthofwzBNjO3XZEdg0%2FyP0pZqLP4WrVDAj7m6y5CeNbmz8w7LvGxgY6sQHDTcMj7nKiNiut6GZbOLHVK6PTIcI4ikcNTGRiVkSWTuy2FEZBbCPg9sxNemI0pF4oIGLK3kcDSjb9rACBfB36WVwfSWPWk8d6glqQjvvP1vFSM%2BW88%2FkNSbGcTJWxFvTSjOCGUxOSgjA8BSAanf%2FdeJ%2FNhkD%2BYfYnUQhi36SJal5NMUcXTJ0LEs%2FhCtT%2Fi06mFy08%2BKsiuua1O6eLXqOJAdEn8L4o4gMJkOnH6J4W3XE%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=5003bf1dd1995c80748f4d5f67a91057662709e75fb6abc09c4313e93b7379e9",
+      "file_size": 85869,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2015-05-13T19:15:40.320Z",
+  "allow_singular_disclosure_after": -327026880.5715863,
+  "singular_disclosure_allowed": true,
+  "vote_count": 57,
+  "voters": [
+    "wargsec",
+    "chux",
+    "canarinho_pistola",
+    "arist0phanes",
+    "mr-medi",
+    "tolga",
+    "tess",
+    "h1bountyoverflow",
+    "dejavuln",
+    "nischalxd",
+    "and 47 more..."
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "id": 69,
+      "category": "researcher",
+      "content": "Write-up: https://blog.innerht.ml/twitter-crlf-injection/",
+      "updated_at": "2015-06-11T16:17:43.970Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 9081,
+        "username": "filedescriptor",
+        "name": "filedescriptor",
+        "bio": "\\\"",
+        "cleared": false,
+        "verified": false,
+        "website": "https://www.youtube.com/channel/UCCp25j1Zh9vc_WFm-nB9fhQ",
+        "location": "",
+        "created_at": "2014-08-16T03:54:09.722Z",
+        "url": "https://hackerone.com/filedescriptor",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "hacker",
+        "profile_picture_urls": {
+          "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png",
+          "medium": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png",
+          "xtralarge": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+        }
+      }
+    }
+  ]
+}
