@@ -1,0 +1,112 @@
+{
+  "id": 129862,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMjk4NjI=",
+  "url": "https://hackerone.com/reports/129862",
+  "title": "Stored XSS on [your_zendesk].zendesk.com in Facebook Channel",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-04-11T16:27:13.292Z",
+  "submitted_at": "2016-04-11T16:27:13.292Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "eboda",
+    "url": "/eboda",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/014/247/a6446792be4fa0fc962bcba2811ef801ddff87be_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 205,
+    "url": "https://hackerone.com/zendesk",
+    "handle": "zendesk",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/vqazo0hs6n64m1y7wrfnhrao63p9/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/vqazo0hs6n64m1y7wrfnhrao63p9/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Zendesk",
+      "twitter_handle": "",
+      "website": "https://www.zendesk.com",
+      "about": "At Zendesk we’re on a mission to simplify the complexity of business and make it easy for companies and customers to create connections. "
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2016-06-01T21:16:03.496Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-05-30T12:42:28.011Z",
+  "team_member_agreed_on_going_public_at": "2016-06-01T21:16:03.405Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "I have found a stored XSS in the Facebook Channel options at ```https://[your_zendesk].zendesk.com/agent/admin/facebook/facebook_auth```.\n\nThe XSS is a result of improperly escaping Facebook Page names.\n\nSteps to reproduce\n-------------------------\n\n1. Create a facebook page with the following title/page name:\n\n    ```Foobar\" onmouseover=location&#x3d;'javascript:alert\\x28document.domain\\x29'```\n\n    (I had to play around with this a bit to get it working correctly as Facebook has strict policies on the page name. If the page already exists, try to replace `Foobar` with any other random string)\n2. Create your own zendesk account and then go to ```https://[your_zendesk].zendesk.com/agent/admin/facebook/facebook_auth``` to add a facebook page.\n3. After adding the page created in Step 1, hover over the \"Unlink\" button to trigger the XSS. See also attached screenshot.\n\nAttack scenario\n--------------------\nObviously anyone with the permissions to add facebook pages can trigger this stored XSS and attack the admins with the usual XSS attacks. \n\n",
+  "weakness": {
+    "id": 60,
+    "name": "Cross-site Scripting (XSS) - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 84649,
+      "file_name": "zendesk_stored_xss.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/084/649/55a3ee1b8ccb74fa058764a08b5c515c11245c1a/zendesk_stored_xss.png?response-content-disposition=attachment%3B%20filename%3D%22zendesk_stored_xss.png%22%3B%20filename%2A%3DUTF-8%27%27zendesk_stored_xss.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYR7W3FZ4%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T141124Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIHZI7Sn87xpkFKQ6tochGRpFv0cTQwA9789Px6YknW5cAiAIpGUr6vs9hwOKc%2B%2BukMY8vfkGM0MHh5YD1enkLwjezCqxBQgtEAMaDDAxMzYxOTI3NDg0OSIMmImhuS2OvOF%2Fuk2MKo4FXrwccs4SuocNqTTCPk2NhHsi9H%2FyfQz9cGi63rw1nYKOCugrOsReeAMMV%2FAKCLBG3VuJMh1VUnPMWOFgpYM%2Bn8g9y8pEDmcNuaWu9CEa0ZkJOdht6QZdrDFjfseFem9cK%2FtHxM%2FWCnADfvK416poaQ8Zu2aov9hAcyrvFmXnwFUy3WhtY5aCsyLdo6AnIqAGW4z7LUm9TGQv6PJoWKriOAPODKtIo4FXY9ZoFhyWgozmsf%2BEYorpr6fia%2FBQN9RBLuyOIaBvjoVcMh8P1q5kGY%2FT3UWgBO2cSMHioWA5T12BxghHEBdBSH95tgJZ3%2BrkEmMnKdFebulTsR%2BeNnYxc7WfFUFdRSr8EsL5XVgkm3mwj7MlhwqOfidxdGFnvTnOd%2BSqfINTEW%2BXk%2FCsS4tNnpdUfS8SsYFg2ohcDGr9d0l9qi%2FPCEr431yW13FAFwI5ezyDRg3OCC%2F2LUC2ZUurX8%2BU0nP4KUIPfRoRi4IgNQ3UEE26pI6OtyGdv3K6Dk5VDC9NRubOHsPgAAvyimDeuGu1MtVF2Wm%2F5TaXc5S6v2MykDJXXbAlbB7boCZoyk2EVJyA%2FsOv26wN6ibzPQD982lqKBn91WnI%2B%2BQhkE%2Bu10LpENsPfA9ODlxqCPtMOyy4mavOjynND1z3XuDFbuKyQ4t58tXiPWNqiPmV0y%2F0dzzQ7g%2FzJzKvHPEWef2blW8NOzoZwlADsypq%2FvgO3yaBHf3vkmu6ykccAzAcs70oSbbR0YN9jWYprUytMy17v2wQo8kcUTScDxwNTY1NtWKT7X5CeZPCG6BInT3VUhTGkgVgrqVzfhrW9jjNV5Ii6ZxnOslaXFYvuX%2BVwkjOIIXhAVKdUpn%2BVcjeV35nmpYwMPz8xMYGOrIB8rS2qgA4H2V17o9e5gf%2FFBcjX6mJXCvPg0Wl0gBg5ZGFZKbHUClcN47zMy5pmB7aunMHQyHKW8nVQ4zbdJlPELCtfcYBWYzUHIwDEl4qf6ICXb0JHf2KftBSH3l1eqmJQ8kNayrBzn9%2FuXcELZrR14dZJGS8ZRLtLN8rksOOEEJPgodhP2Ekes4o3tstL5umybGI7FUyMpjbLP7ESvBz3uz0ZVOx0Qaj5%2BIH%2BJ7eKjlSjQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=2a5ed136ba0bb618220ac69bcd21a662a632bb875ffe1f6ff3bd2f987225d244",
+      "file_size": 50312,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 4,
+  "voters": [
+    "fantam1",
+    "spetr0x",
+    "anik",
+    "dyabla"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
