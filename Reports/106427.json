@@ -1,0 +1,119 @@
+{
+  "id": 106427,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMDY0Mjc=",
+  "url": "https://hackerone.com/reports/106427",
+  "title": "HTTP-Response-Splitting on v.shopify.com",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2015-12-22T09:03:44.475Z",
+  "submitted_at": "2015-12-22T09:03:44.475Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "krankopwnz",
+    "url": "/krankopwnz",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 1382,
+    "url": "https://hackerone.com/shopify",
+    "handle": "shopify",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Shopify",
+      "twitter_handle": "",
+      "website": "https://www.shopify.com",
+      "about": "Shopify is a multi-channel commerce platform that helps people sell online, in-store, and everywhere in between."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2016-01-17T19:20:36.568Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-01-17T19:20:36.412Z",
+  "team_member_agreed_on_going_public_at": "2016-01-14T14:50:45.426Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "I discovered a HTTP-Response-Splitting issue on v.shopify.com\n\nSteps to reproduce:\nCall the following URL in any browser and catch the response ( e.g. with burp )\nhttps://v.shopify.com/last_shop?shop=krankopwnz.myshopify.com%0d%0aContent-Length:%200%0d%0a%0d%0aHTTP/1.1%20200%20OK%0d%0aContent-Type:%20text/html%0d%0aContent-Length:%2019%0d%0a%0d%0a<html>deface</html>\n\nWhen you look at screenshot 1 in attachments, you can see that the response contains 2 headers.\n\nAccording to OWASP, this could be used for \" Cross-User Defacement, Cache Poisoning, Cross-site Scripting (XSS) and Page Hijacking.\" ( https://www.owasp.org/index.php/HTTP_Response_Splitting )\n\nYou could convince victims via social engineering to click the provided link, which can contain a cloned login-page of shopify for example. If he sits behind a proxy, which caches the responses the following users will see your evil login-page when calling that address.\n\nA fix would be to disallow line-breaks and any non printable characters in the \"shop\"-parameter",
+  "bounty_amount": "500.0",
+  "formatted_bounty": "$500",
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 66445,
+      "file_name": "screenshot1-responseSplitting.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/066/445/434d292159b1226ee4b84d373a501c87927fb8c7/screenshot1-responseSplitting.jpg?response-content-disposition=attachment%3B%20filename%3D%22screenshot1-responseSplitting.jpg%22%3B%20filename%2A%3DUTF-8%27%27screenshot1-responseSplitting.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQXX6XLDY%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T122648Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDNvjj2sCImuw6t9oWLcfXRIIOZMG1efHysjSHDMZrcNAIhAM6fH4KqmaqowNpmCWbETTw0Fh%2F9mxv%2BkAI3TYL6eIZ2KrEFCCwQAxoMMDEzNjE5Mjc0ODQ5Igxgl2O5WdcLDgFA4LcqjgVzMWYaIeSoHk5Zri3WzYUn5JQdToN6SqKA8JU6dvgt5hJdd5iuKK4AmQickQU%2BFhWRCVECA8EFpL2cRYnmTOxeUwqSrpsDmEHdrz%2FgBYlgF%2Fe3b7xcNhCQIgtcjgSwgx3si8DbrLuYqjz6TEZIibscCY0RmMz24IV8RuA5V2x5ZXFSQmPbO44MY54HISaoR7xKpGBhDuZSZp8pWfKCDFunFj3h%2Bl%2Bzm092GfDEEzSXUmeGdWa%2Fl2eXQ5cjdxF1OpquFE%2FXVFIaq48lXaZxcKkH9htwsmQoye7hD3K5DKS7iNnzrPmeGBUQDcLXCo0a1hSMedmlsULDjVqphhOpx4xlkJt2UVfqYmd5eR4vTas5iHVIyZm9KkWnUt3t005zsNR0bSJHD%2BL6T%2FiFm1OKLoRSyz26z4Ws%2Bd1bTc4sPRZKeMaJvRUeTO%2Bfo3E9txYPUbuXVLil8LZE7DUeYSpHVQRB%2FeFA7nRQZorvS2PfYiCbAp4He7onWRytgE9SGRg1YP1Xj5XcMbjrzWeIB2Mn%2BUlWPJ%2FGQiXz5tajWXDBBBjICp4GLdew2YGVLiVrd03CWnrfqakNfswqvC5Uw4dnfN9mR0AYB03HeU1o%2B%2FXVIFZZOCRZd7%2BB6wwLUd75BU3LhpKE2CQXzuR9iNwpW%2FA58NsfP5Cd%2BppywOzpkDeGSd242ZlGt7Zoieq9F0o3FZHlGwB7fbTZ6Ed6boeRjoQqv6sl8Td%2BTx2VOvYMG0BZBoFqhGz2vFemNxGiskX%2BYv%2FC12onEMt7L8w7QUA0ed83eHwClnrAlrlZVxnV0%2BphuYU7OjhmdkNJxfoYG601dMphRRpSF6Xcm%2BIHBoaxceKTCPv547PFEEnopexegXIPOsgw3c%2FExgY6sAGZrt%2Fu%2B%2BBAn1J1hAI%2FR7M0dxn0TzJqdRcxEwxrYvWyZbKokw0MebMfL4McddprI1jZzo73uqf48lSwsLvirQC8Nrb5Z5tFldatAmX9F77YvlSib8IG7r4HrUMz0M%2F%2Ff8TDbP%2B8%2BiVEMikKtcG9IZ8qnoGcSVEh532%2B8vQ3ZmXFfq0DXgFYLVq1V05P%2FTBTEuPMv2f6MTveetgCwKKAEQS8BPVPT3Ihr2gbSsU9dpUo6Q%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=bda40a4b9beea81391ce38eb0395f86339ac421750d020ed1e43e4ebe5fbbe86",
+      "file_size": 167434,
+      "type": "image/jpeg",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-02-13T14:50:45.633Z",
+  "allow_singular_disclosure_after": -303168962.91767794,
+  "singular_disclosure_allowed": true,
+  "vote_count": 19,
+  "voters": [
+    "wargsec",
+    "drsniper",
+    "2026",
+    "nischalxd",
+    "its_afolic",
+    "tharunet",
+    "nafisaqil",
+    "0x0days",
+    "0x7d7b",
+    "a_constant",
+    "and 9 more..."
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
