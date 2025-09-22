@@ -1,0 +1,134 @@
+{
+  "id": 2735,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yNzM1",
+  "url": "https://hackerone.com/reports/2735",
+  "title": "HTML injection in \"Invite Collaborators\"",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2014-03-02T19:23:13.655Z",
+  "submitted_at": "2014-03-02T19:23:13.655Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "melvin",
+    "url": "/melvin",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/lcrcc5wxlhn4atcp2w53upgxlmfa/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": true,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 63,
+    "url": "https://hackerone.com/relateiq",
+    "handle": "relateiq",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/063/f6a77e2eca9387315acee66c4fb3a43a12a2db1e_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/063/f6a77e2eca9387315acee66c4fb3a43a12a2db1e_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "disabled",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "RelateIQ",
+      "twitter_handle": null,
+      "website": "https://www.relateiq.com/",
+      "about": "Goodbye, Relationship Management. Hello, Relationship Intelligence."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2014-04-06T19:10:37.234Z",
+  "bug_reporter_agreed_on_going_public_at": "2014-03-14T13:51:03.214Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "I was able to edit the contents of the \"Invite Collaborators\" mail, by using HTML code as my first name. By exploiting this vulnerability, an attacker could send an email with custom text/html code from `notify@relateiq.com` (from the RelateIQ server) to any recipient. This can be used for phishing attacks (see attachment: example.png).\r\n\r\nSteps to reproduce:\r\n\r\n[1] Register as a new user\r\n[2] When asked for a name, enter exploit code in first name field (see attachment: step2.png). \r\n\r\nFor this demonstration I will use a simple example:\r\n`You have been hacked. Click <a href=\"http://phishing-site\">here</a> to reset your password.<div style=\"display:none\">`\r\n\r\n[3] Go through the final steps\r\n[4] Go to home and send an invite to the target (see attachment: step4.png)\r\n\r\nThe target will now receive the phishing email (see attachment: email.png). In this simple example it is obvious that the email is fake, but better exploit code can be easily written. \r\n ",
+  "weakness": {
+    "id": 60,
+    "name": "Cross-site Scripting (XSS) - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 3740,
+      "file_name": "email.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/003/740/93375123577db794273997dc63e333875e603e9b/email.png?response-content-disposition=attachment%3B%20filename%3D%22email.png%22%3B%20filename%2A%3DUTF-8%27%27email.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQSENZDQ7R%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T172641Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCoR5VcT4p2lhKp4GrzMlEjfaEy2Kg7b4LOrWRnzGiXOwIhAIWsv649z%2BrdzwA09voDfrgHaZw383NAPPs6MlI1wEmyKrEFCDAQAxoMMDEzNjE5Mjc0ODQ5IgxlWTWiUB6WMFSNR3AqjgUiQtSi9n1vUbnnA9TmKM8SccWslQEMkj%2F6vRcggho2r6ri9PQfkvAoFdL6MvY2ECU0MLx7Pk6eQVXDI0s6g8olRXJJJdeBm5VW%2Bq3n3lAnVsbVL0KdROK1jCHcqa4pq7bHrlfEgxDu6RWZdT0tc89ReZqcjHTwUPNWpcX4xurUiAUtB04RPN7U1rA1zn5LcWYWp5cIbp9CvWEPTWlF4sPUCFYwP9c9lKLRl8PiFQzjqayDdeMbTVbTKBdu9hGqHJbMQhtz%2FyvvRAtPX6YdDoGPDZet0xopcC6wHo6B6SHhiYds05L6BUzA6grdtI9xrjznhk1rm%2FXh6GjvN9OD9BeewqWMaIG%2BOqEo1Imp46LXtweJGT5NijbUiT6VLJ2jB6M55PW%2FdVlBPWsDgvK7aci6DU22cWfxZa78YE%2FO5AptykjlGy5aTZ2YxCkkDn%2B%2BtaAir805e9m7U8U0BK78VzTqS3yGTChjuFdx21saP%2FnxFAMevpKWvHIVvWL6nFKkiKAx7iEMNrgBzSrEW75wwC2he%2FeM7XFoi75%2F%2B6j9Ir1ztUEd13D3CobVvPliOzIcsrTqrwsNocuxMqF4bOeGCPWy0kJzqOl1bfRAHhXZA5GbSqMlA0fboPZ7J89AQy49TJw4BBm6vgfZ33BsSjWFOd05%2FL8DAE2Wp1ltvuZNOua%2BapvnU%2BBjE2ut5lL6tdzKtHYYDaZ0mEF68VlG4dg1iQ7xPevVdxnC%2BOZH51fqUQcuaHR4iTN3KDQYyGJYAUlafJYZgvcG7RNGoUkgpCvU2UsRjKJ6IN6IxAl0q91xmfT2%2FQ8Lwvm73dkMWZ%2B7i9r6md2EjKfWZdLONTNi7vIbcPvJkxUcOVGY5vmjNfXtUtIwlrfFxgY6sAGIuHY%2Fc4KLJ1DHmyU4VBYXFW9gtJMJPotKEyzR%2BsvC2bIoG5frz5eAHA8GrWLYcmfLIk2bkS5WeG5aHjizmEKhVv0RBX0BaDMsgIsj5OxWCb3fQNT6LHbEULAS9Ef%2FTQxMx83q3s%2FSR2Kj5Y728EwdkgcBxo0eOlayt7B0vugSyTmYn7qnXhM2a%2FrUdXbUBcwZHxn1GQgIIGzYhBNguRIDShffl8uFJom5Cu40Y%2Fihtg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=4e384ef80c27282ec7673a8065c4925a98302c9e26d08f4b4fff9d402a7b5890",
+      "file_size": 61925,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 3741,
+      "file_name": "step4.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/003/741/e02b0e1725382822404f7002199e5198c6b79e0d/step4.png?response-content-disposition=attachment%3B%20filename%3D%22step4.png%22%3B%20filename%2A%3DUTF-8%27%27step4.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQSENZDQ7R%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T172641Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCoR5VcT4p2lhKp4GrzMlEjfaEy2Kg7b4LOrWRnzGiXOwIhAIWsv649z%2BrdzwA09voDfrgHaZw383NAPPs6MlI1wEmyKrEFCDAQAxoMMDEzNjE5Mjc0ODQ5IgxlWTWiUB6WMFSNR3AqjgUiQtSi9n1vUbnnA9TmKM8SccWslQEMkj%2F6vRcggho2r6ri9PQfkvAoFdL6MvY2ECU0MLx7Pk6eQVXDI0s6g8olRXJJJdeBm5VW%2Bq3n3lAnVsbVL0KdROK1jCHcqa4pq7bHrlfEgxDu6RWZdT0tc89ReZqcjHTwUPNWpcX4xurUiAUtB04RPN7U1rA1zn5LcWYWp5cIbp9CvWEPTWlF4sPUCFYwP9c9lKLRl8PiFQzjqayDdeMbTVbTKBdu9hGqHJbMQhtz%2FyvvRAtPX6YdDoGPDZet0xopcC6wHo6B6SHhiYds05L6BUzA6grdtI9xrjznhk1rm%2FXh6GjvN9OD9BeewqWMaIG%2BOqEo1Imp46LXtweJGT5NijbUiT6VLJ2jB6M55PW%2FdVlBPWsDgvK7aci6DU22cWfxZa78YE%2FO5AptykjlGy5aTZ2YxCkkDn%2B%2BtaAir805e9m7U8U0BK78VzTqS3yGTChjuFdx21saP%2FnxFAMevpKWvHIVvWL6nFKkiKAx7iEMNrgBzSrEW75wwC2he%2FeM7XFoi75%2F%2B6j9Ir1ztUEd13D3CobVvPliOzIcsrTqrwsNocuxMqF4bOeGCPWy0kJzqOl1bfRAHhXZA5GbSqMlA0fboPZ7J89AQy49TJw4BBm6vgfZ33BsSjWFOd05%2FL8DAE2Wp1ltvuZNOua%2BapvnU%2BBjE2ut5lL6tdzKtHYYDaZ0mEF68VlG4dg1iQ7xPevVdxnC%2BOZH51fqUQcuaHR4iTN3KDQYyGJYAUlafJYZgvcG7RNGoUkgpCvU2UsRjKJ6IN6IxAl0q91xmfT2%2FQ8Lwvm73dkMWZ%2B7i9r6md2EjKfWZdLONTNi7vIbcPvJkxUcOVGY5vmjNfXtUtIwlrfFxgY6sAGIuHY%2Fc4KLJ1DHmyU4VBYXFW9gtJMJPotKEyzR%2BsvC2bIoG5frz5eAHA8GrWLYcmfLIk2bkS5WeG5aHjizmEKhVv0RBX0BaDMsgIsj5OxWCb3fQNT6LHbEULAS9Ef%2FTQxMx83q3s%2FSR2Kj5Y728EwdkgcBxo0eOlayt7B0vugSyTmYn7qnXhM2a%2FrUdXbUBcwZHxn1GQgIIGzYhBNguRIDShffl8uFJom5Cu40Y%2Fihtg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=bdf94e8949b0149a19ee88d87ef3786872b4779ae9dfe8b7f2263e9b3ba66b3f",
+      "file_size": 17968,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 3742,
+      "file_name": "step2.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/003/742/7cc403479fbf17ddc628f51490d7d87bbf6b8ab8/step2.png?response-content-disposition=attachment%3B%20filename%3D%22step2.png%22%3B%20filename%2A%3DUTF-8%27%27step2.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQSENZDQ7R%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T172641Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCoR5VcT4p2lhKp4GrzMlEjfaEy2Kg7b4LOrWRnzGiXOwIhAIWsv649z%2BrdzwA09voDfrgHaZw383NAPPs6MlI1wEmyKrEFCDAQAxoMMDEzNjE5Mjc0ODQ5IgxlWTWiUB6WMFSNR3AqjgUiQtSi9n1vUbnnA9TmKM8SccWslQEMkj%2F6vRcggho2r6ri9PQfkvAoFdL6MvY2ECU0MLx7Pk6eQVXDI0s6g8olRXJJJdeBm5VW%2Bq3n3lAnVsbVL0KdROK1jCHcqa4pq7bHrlfEgxDu6RWZdT0tc89ReZqcjHTwUPNWpcX4xurUiAUtB04RPN7U1rA1zn5LcWYWp5cIbp9CvWEPTWlF4sPUCFYwP9c9lKLRl8PiFQzjqayDdeMbTVbTKBdu9hGqHJbMQhtz%2FyvvRAtPX6YdDoGPDZet0xopcC6wHo6B6SHhiYds05L6BUzA6grdtI9xrjznhk1rm%2FXh6GjvN9OD9BeewqWMaIG%2BOqEo1Imp46LXtweJGT5NijbUiT6VLJ2jB6M55PW%2FdVlBPWsDgvK7aci6DU22cWfxZa78YE%2FO5AptykjlGy5aTZ2YxCkkDn%2B%2BtaAir805e9m7U8U0BK78VzTqS3yGTChjuFdx21saP%2FnxFAMevpKWvHIVvWL6nFKkiKAx7iEMNrgBzSrEW75wwC2he%2FeM7XFoi75%2F%2B6j9Ir1ztUEd13D3CobVvPliOzIcsrTqrwsNocuxMqF4bOeGCPWy0kJzqOl1bfRAHhXZA5GbSqMlA0fboPZ7J89AQy49TJw4BBm6vgfZ33BsSjWFOd05%2FL8DAE2Wp1ltvuZNOua%2BapvnU%2BBjE2ut5lL6tdzKtHYYDaZ0mEF68VlG4dg1iQ7xPevVdxnC%2BOZH51fqUQcuaHR4iTN3KDQYyGJYAUlafJYZgvcG7RNGoUkgpCvU2UsRjKJ6IN6IxAl0q91xmfT2%2FQ8Lwvm73dkMWZ%2B7i9r6md2EjKfWZdLONTNi7vIbcPvJkxUcOVGY5vmjNfXtUtIwlrfFxgY6sAGIuHY%2Fc4KLJ1DHmyU4VBYXFW9gtJMJPotKEyzR%2BsvC2bIoG5frz5eAHA8GrWLYcmfLIk2bkS5WeG5aHjizmEKhVv0RBX0BaDMsgIsj5OxWCb3fQNT6LHbEULAS9Ef%2FTQxMx83q3s%2FSR2Kj5Y728EwdkgcBxo0eOlayt7B0vugSyTmYn7qnXhM2a%2FrUdXbUBcwZHxn1GQgIIGzYhBNguRIDShffl8uFJom5Cu40Y%2Fihtg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=58a4a848d10028cdbb6e0c8979a84058b7a179f74b53c00affb9b949a6761a94",
+      "file_size": 12806,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2014-04-06T18:10:34.390Z",
+  "allow_singular_disclosure_after": -361754167.2754229,
+  "singular_disclosure_allowed": true,
+  "vote_count": 8,
+  "voters": [
+    "sw33tlie",
+    "mattberg",
+    "shivammusic",
+    "ciano021",
+    "tony_29",
+    "b35c90d99c67687f1bd2dd2",
+    "destinedtohack",
+    "4amhunter"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
