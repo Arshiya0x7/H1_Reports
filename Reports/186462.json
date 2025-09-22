@@ -1,0 +1,121 @@
+{
+  "id": 186462,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xODY0NjI=",
+  "url": "https://hackerone.com/reports/186462",
+  "title": "Stored XSS at 'Buy Button' page",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-11-29T17:36:55.002Z",
+  "submitted_at": "2016-11-29T17:36:55.002Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "zuh4n",
+    "url": "/zuh4n",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/003co5s7ttfbvqi1zah9g22ny3wm/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 1382,
+    "url": "https://hackerone.com/shopify",
+    "handle": "shopify",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Shopify",
+      "twitter_handle": "",
+      "website": "https://www.shopify.com",
+      "about": "Shopify is a multi-channel commerce platform that helps people sell online, in-store, and everywhere in between."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2016-12-16T21:53:28.784Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-12-16T21:53:28.739Z",
+  "team_member_agreed_on_going_public_at": "2016-12-16T21:06:57.977Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello guys, would like to mention, first thing that I did when I have faced with Stored XSS at this page - I checked 'Known issues or previously reported vulnerabilities' section in order to ensure that issue is not out-of-scope, but didn't find this place in a list.\n\n**_Description:_**\nCross-Site Scripting (XSS) attacks are a type of injection, in which malicious scripts are injected into otherwise benign and trusted web sites. XSS attacks occur when an attacker uses a web application to send malicious code, generally in the form of a browser side script, to a different end user. Flaws that allow these attacks to succeed are quite widespread and occur anywhere a web application uses input from a user within the output it generates without validating or encoding it.\n\n**_Vulnerable place:_**\n'Buy Button' page - Title name (div[@class='cart-permalink__preview-variant-title')\n\n**_Payload:_**\n\"><img src=x onerror=alert(1)>\n\n**_Steps to reproduce:_**\n- Create a new product with [Buy button = ON] visibility;\n- Fill out all required fields;\n- Add new 'Variants';\n- Put [payload] into Option name / value;\n- Add another option;\n- Leave defined name, and put 2 different options into value field (e.g. 1,2);\n- Save all changes;\n- Navigate to 'Buy Button' page -> 'Embed a product in email' Select product;\n- Select just created product, 'Create an email Buy Button' page is opened with 'SELECT VARIANT' section where you can find 2 variant of a product.\n- Switch between them - XSS triggered\n\n**_PoC:_**\n{F138287}\n\n**_Impact:_**\nAttackers can execute scripts in a victim’s browser to hijack user sessions, deface web sites, insert hostile content, redirect users, hijack the user’s browser using malware, etc.\n\n**_Mitigation:_**\nDevelopers should implement robust input validation and output encoding consistently across the application to defend against XSS and other input validation attacks. All of this input \\ output mechanism recommended to implement: encoding \\ escaping \\ ‘black list’ \\ filtering all special characters, e.g.: <, >, ‘, “, etc\n\n**_Reference:_**\nMore you can read here.\nhttps://www.owasp.org/index.php/Cross-site_Scripting_%28XSS%29\n\nThanks,\nStas",
+  "bounty_amount": "500.0",
+  "formatted_bounty": "$500",
+  "weakness": {
+    "id": 60,
+    "name": "Cross-site Scripting (XSS) - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 138287,
+      "file_name": "shopify_buy_xss.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/138/287/0c347644a30c0c7f0c14ff6bfdcdcbdd30909b62/shopify_buy_xss.png?response-content-disposition=attachment%3B%20filename%3D%22shopify_buy_xss.png%22%3B%20filename%2A%3DUTF-8%27%27shopify_buy_xss.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQCGZNWO5%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T001557Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCICYExmY%2BsrIaacw1X7oZBwUIZvv7HTJiLV%2BsboGAZk%2BBAiAPRTiEGvGovZAcV0c0IDQL7JBqrDukWCLefXM%2FNAkKsyqyBQggEAMaDDAxMzYxOTI3NDg0OSIMojdIoCKDI%2BuD3U4KKo8F2oxoU9ULJDpxjNk2vPMx2GO8HWsN6XhlxzhbTpDO9DSCM9jz4rv5X0%2F%2FICUHyx5LXLoJDr%2BZDUcdZn3T7Xqhhst0PLTbOZVsMcA8rqRkFDmdpFrSA6v%2BEuq1xgJl%2BJP0Q2hmNowYilIomDtS2SXkYghmV9gIlHmwEXcqkr4YoAY5tfOaRkqeMj8tWxNhN2BqXZE55UdtH7KqN%2BPLlF7S%2FLc5qd5aokDQtXyQ0GdCWU48w8dozw9HLg2f4SGa2S%2B0Oo5zHH2Fniz1sUXgbYEfOxkIRwN0fhT7vYhXJee7XHrkykjOUaaHorzE%2FYQZtc%2FFW%2FRsXj%2FTCI55iAQ1agSXpRgrTA8nkkCag57sY3gr4LtwpKKgnUrirmHlavJQ45CA0k2Ar7AMxLtMLCJdka4xSAPEDFNGYu6IUgEaxxlqlZklKT%2FiXN98SGDAksCMNEcNShcwVCgF3ivFULry7snfeetLGq%2FLP5GEf%2FwL3LeAD1TB8QzZkK1ZrgCs28br2qvuKp%2FfJoU%2BTc82b8q2NOtuT9q3GrtQz1rGaev41TujtA2F1dbZWBoa%2Fz5j3D8bpv5%2BresW02bwd2NVMhvgE3OA05w3q80fUJQih8iW7hLPwHacc84NKbu2BqxYmysxC8VLaZt52O5wv%2BARuJAsHQ9ivSST%2Bfj8YpBLVp4V5tqRPBL3NNptHlbud72ySh6T9j84DRMANfznQ5GJLDbRddjJmw0l9t%2F%2FlfziVo2i6UmXJI1IAeHMcF6qpGRVkbhaozaajiEhjfyoSfaDvGKOBy4ATcUQFOIcI8ww9xCHSYNOHn2thmDjNH5hv7k1T8dkpIyDCz%2BhG5KkcBOpEwV%2BGZGCuG2J4%2B2HgFFPLMGOZ4EvKTDPkMLGBjqyATp%2FkHPt2gUYD3ebw3tv663W0jLhHcYPogDVF0QVbFYD2BViScKsjHcVo%2BnUECKn6TJnVOHfCEiv014vqP7WjQh8jq%2BfoPeDkIzQDYZ8eYq%2BcPK4zL7JT9hVJMmlSsaK21kbcyAqWNcwbjP1CKsN2BUDczrCJHCY%2BB9qu5K6RDUTad2Ub8XE%2FQ1E%2Bz4WEGunFi2eL6%2FCkX%2FU%2BZ0%2FMSFLdOp%2Fw43jLxJIt2waSq1pEtF98T4%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=bb9ec5172d0abc6b058f598e960b26c103922bfe28c20b54275b33ca7abe0829",
+      "file_size": 114058,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 13,
+  "voters": [
+    "loaymorad",
+    "drsniper",
+    "jon_bottarini",
+    "flashdisk",
+    "mpz",
+    "eveeez",
+    "zuh4n",
+    "japz",
+    "sumit7",
+    "spetr0x",
+    "and 3 more..."
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
