@@ -1,0 +1,118 @@
+{
+  "id": 145583,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNDU1ODM=",
+  "url": "https://hackerone.com/reports/145583",
+  "title": "Lost Password CSRF",
+  "state": "Closed",
+  "substate": "informative",
+  "readable_substate": "Informative",
+  "created_at": "2016-06-17T23:02:26.934Z",
+  "submitted_at": "2016-06-17T23:02:26.934Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "mefkan",
+    "url": "/mefkan",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/073/588/ad794c6a818260132a1c77d73f3373d0e3d2e592_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13291,
+    "url": "https://hackerone.com/nextcloud",
+    "handle": "nextcloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Nextcloud",
+      "twitter_handle": "nextclouders",
+      "website": "https://nextcloud.com",
+      "about": "Access, share and protect your files, calendars, contacts, communication & more at home and in your enterprise."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2016-06-19T09:56:51.377Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-06-18T01:17:09.940Z",
+  "team_member_agreed_on_going_public_at": "2016-06-19T09:56:34.154Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi,\n\nI think it is something about your Wordpress version.It's not something highy risky bu it is vulnerability.\n\nCODE:\n\n<form name=\"lostpasswordform\" id=\"lostpasswordform\" action=\"https://nextcloud.com/wp-login.php?action=lostpassword\" method=\"post\" style=\"position: static; left: 0px;\">\n\t<p>\n\t\t<label for=\"user_login\">Username or Email<br>\n\t\t<input type=\"text\" name=\"user_login\" id=\"user_login\" class=\"input\" value=\"\" size=\"20\"></label>\n\t</p>\n\t\t<input type=\"hidden\" name=\"redirect_to\" value=\"\">\n\t<p class=\"submit\"><input type=\"submit\" name=\"wp-submit\" id=\"wp-submit\" class=\"button button-primary button-large\" value=\"Get New Password\"></p>\n</form>\n\n\n\nFor testing CSRF  I added the .html file to attachments.And there is a screenshot for you.\n\n\nHow To Fix :\n\nAdding rp_key will be fine.\n\nPlease take a look at links below\n\nhttps://wpvulndb.com/vulnerabilities/7691\nhttps://core.trac.wordpress.org/changeset/30418\n\nBest Regards,",
+  "weakness": {
+    "id": 45,
+    "name": "Cross-Site Request Forgery (CSRF)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 100109,
+      "file_name": "submit.html",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/100/109/b9ad11173e1f42776492ca0afd26361c419ef2dd/submit.html?response-content-disposition=attachment%3B%20filename%3D%22submit.html%22%3B%20filename%2A%3DUTF-8%27%27submit.html&response-content-type=text%2Fplain&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ7RERVYDS%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T150424Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIHDwF1ZvPYiK5MFHEzYYVCv7EsvMf%2FyI3YzSO3Den4CeAiEA9B4uZJO3FOsaDPvqEPKtQQOaSZ1R7%2BnOYh7wu7fvnBEqsQUIMBADGgwwMTM2MTkyNzQ4NDkiDILpqWNrcoLWj%2B2PCCqOBbHm3REkFvl1KkqINmDOirHLSqq%2B%2Fwr0Ul1ecgn%2FdM8bfd%2Bt7J54Al3Pt3iMPvaOAuF8I5gqucujkE3Qf1Mv%2FaWljpOWwP3cf4m%2F13YV9S45e3KcZq4fs7y7gDK1KruyfiW44sy3PCw4tw278yPm7cmIGSauIfdcSVLpPcmIqNGgQcLMVIMwYvDcIYA2LjQ6KzOCIK6Q0UPCH8Y12PotGSb2YDLXNsjNY09vpIFGB8C8%2Fxk%2Bvftn9e7r782ZkNgN%2FKOG%2BrtKVw0IUZ%2FIyqDqIT1OPc1zMcL%2F048%2FXpwEiJ84cNVqurwS9%2BqeBsvtBxt3SVkNU1S8nk5xXRd%2Fdcq0uxObUpBR4IsIoV8JZSaweX4WHobqFfiqaIGz4LxGskVem3grGXNaT450sCl2Ks9k7wYre5Q9xFQ7ShcER846bd0lB9uITLSoExwYIwhgOKxnb4Lyq7iuS5P5kvtybtID47QbuGlVF%2BxML5WjaArKAgCLt9TIEzsfl9cziRPIitHEZplIi0%2BYb7tLYRzEG22ZxbWwf%2F3IgycWeOqpfWg3eWYbhVQmhPaV1JAZflSnnBzz9xUyNQc8Cse1J3Jw03g0fPi3E1cCk9HjJ%2FI45TwC9BCOI04MirVBFnNcAyVT704KkR39Dnato7sCKt0KEaJ5ZBfYsW87c2nJ64a27Jgr7FMfRkFFTOSYwES%2BIEoxTh9JR2iMNRI5IpMh4%2B9DBHeVp7ZmgOI8ZuApyeSm0DonuBJDdiAF1ERoPOjERbghPFUZ6QWZ4WLEyfx%2Fphy3%2Bf09UAy7F%2BXitdpPtsLnfclVzmMyIURhge853%2BJ%2BjN1kVqFkqNAydKovi4fvH7C6prhez%2F%2BD4MbOo2B0HAiQ%2Bi89BTCkwcXGBjqxAVq%2BP%2Be94SCw3un7vYjwWKFXhARJnxQR3n44Bxw%2BSxVD83GWhcCPi62F77gCjv39goBqQpcSTNje7LFFN04Qu%2BgVz3zPfWr0e0dxSgl7csx6TYRNzv5GVa5U727nv2i9SukpQURMBO0fZKtlzHXxlPqAjORL9j2c6UYNMp68B4%2F5deqn%2B2ya8TGbpkMVVUWeiKAt%2B84r1a9Lmhl%2BDhLCFrlporvrpBPc3tweHNntRWu9yg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=c10ac2f81fb229997d24700831a4ae9bce108a30e43437464ad690c8f54b7194",
+      "file_size": 537,
+      "type": "text/plain",
+      "moderated": null
+    },
+    {
+      "id": 100110,
+      "file_name": "csrf.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/100/110/2eda2bd9ceaafeb5d0beb030629ad683702be754/csrf.png?response-content-disposition=attachment%3B%20filename%3D%22csrf.png%22%3B%20filename%2A%3DUTF-8%27%27csrf.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ7RERVYDS%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T150424Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIHDwF1ZvPYiK5MFHEzYYVCv7EsvMf%2FyI3YzSO3Den4CeAiEA9B4uZJO3FOsaDPvqEPKtQQOaSZ1R7%2BnOYh7wu7fvnBEqsQUIMBADGgwwMTM2MTkyNzQ4NDkiDILpqWNrcoLWj%2B2PCCqOBbHm3REkFvl1KkqINmDOirHLSqq%2B%2Fwr0Ul1ecgn%2FdM8bfd%2Bt7J54Al3Pt3iMPvaOAuF8I5gqucujkE3Qf1Mv%2FaWljpOWwP3cf4m%2F13YV9S45e3KcZq4fs7y7gDK1KruyfiW44sy3PCw4tw278yPm7cmIGSauIfdcSVLpPcmIqNGgQcLMVIMwYvDcIYA2LjQ6KzOCIK6Q0UPCH8Y12PotGSb2YDLXNsjNY09vpIFGB8C8%2Fxk%2Bvftn9e7r782ZkNgN%2FKOG%2BrtKVw0IUZ%2FIyqDqIT1OPc1zMcL%2F048%2FXpwEiJ84cNVqurwS9%2BqeBsvtBxt3SVkNU1S8nk5xXRd%2Fdcq0uxObUpBR4IsIoV8JZSaweX4WHobqFfiqaIGz4LxGskVem3grGXNaT450sCl2Ks9k7wYre5Q9xFQ7ShcER846bd0lB9uITLSoExwYIwhgOKxnb4Lyq7iuS5P5kvtybtID47QbuGlVF%2BxML5WjaArKAgCLt9TIEzsfl9cziRPIitHEZplIi0%2BYb7tLYRzEG22ZxbWwf%2F3IgycWeOqpfWg3eWYbhVQmhPaV1JAZflSnnBzz9xUyNQc8Cse1J3Jw03g0fPi3E1cCk9HjJ%2FI45TwC9BCOI04MirVBFnNcAyVT704KkR39Dnato7sCKt0KEaJ5ZBfYsW87c2nJ64a27Jgr7FMfRkFFTOSYwES%2BIEoxTh9JR2iMNRI5IpMh4%2B9DBHeVp7ZmgOI8ZuApyeSm0DonuBJDdiAF1ERoPOjERbghPFUZ6QWZ4WLEyfx%2Fphy3%2Bf09UAy7F%2BXitdpPtsLnfclVzmMyIURhge853%2BJ%2BjN1kVqFkqNAydKovi4fvH7C6prhez%2F%2BD4MbOo2B0HAiQ%2Bi89BTCkwcXGBjqxAVq%2BP%2Be94SCw3un7vYjwWKFXhARJnxQR3n44Bxw%2BSxVD83GWhcCPi62F77gCjv39goBqQpcSTNje7LFFN04Qu%2BgVz3zPfWr0e0dxSgl7csx6TYRNzv5GVa5U727nv2i9SukpQURMBO0fZKtlzHXxlPqAjORL9j2c6UYNMp68B4%2F5deqn%2B2ya8TGbpkMVVUWeiKAt%2B84r1a9Lmhl%2BDhLCFrlporvrpBPc3tweHNntRWu9yg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=db3527955b7329626ee9e88fca453699c28c44ca822ce2d2b00f928eaaf7dfb3",
+      "file_size": 9024,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 2,
+  "voters": [
+    "spetr0x",
+    "dyabla"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
