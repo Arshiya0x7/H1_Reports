@@ -1,0 +1,111 @@
+{
+  "id": 85541,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC84NTU0MQ==",
+  "url": "https://hackerone.com/reports/85541",
+  "title": "apps.owncloud.com: Mixed Active Scripting Issue ",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2015-08-29T16:02:25.397Z",
+  "submitted_at": "2015-08-29T16:02:25.397Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "suhas_gaikwad",
+    "url": "/suhas_gaikwad",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": true,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 3059,
+    "url": "https://hackerone.com/owncloud",
+    "handle": "owncloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/003/059/d31dc64427bbbf2e428a0b0b97bce59b98d2ba0d_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/003/059/d31dc64427bbbf2e428a0b0b97bce59b98d2ba0d_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "ownCloud",
+      "twitter_handle": "ownCloud",
+      "website": "https://www.owncloud.com",
+      "about": "ownCloud GmbH is the company behind the ownCloud Project - the most downloaded open source project for data and file sync, share and view."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2015-10-11T07:05:31.423Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2015-09-11T07:05:26.695Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "I come across HTTPS security issue - compromises HTTPS security by loading images from non secure source in https://apps.owncloud.com/.\r\n\r\nVulnerability Type: Mixed Active Scripting Issue\r\n\r\nDescription: \r\nMixed Active Content is content that has access to and can affect all or parts of the Document Object Model (DOM) of an HTTPS page. This type of mixed content can alter the behavior of an HTTPS page and potentially steal sensitive data from the user. Hence, in addition to the risks for Mixed Passive Content, Mixed Active Content is also exposed to a number of additional attack vectors. \r\nA MITM attacker can intercept requests for HTTP active content. The attacker can then re-write the response to include malicious JavaScript /fonts code. Malicious script can steal the user’s credentials, acquire sensitive data about the user, or attempt to install malware on the user’s system (by leveraging vulnerable plugins the user has installed, for example).\r\n\r\nCriticality level: Medium\r\n\r\nCriticality level justification: \r\nData which is transmitted in this link could be read by An attacker who is in Same network in some cases this could help to steal information.\r\n\r\nSteps:\r\n1) Visit link https://apps.owncloud.com/ \r\n2) Press F12 to open Developers tool in Google Chrome OR IE OR in Firefox browser and observe console. You will come across security error - \"A Secure Hypertext Transfer Protocol (HTTPS) page has content from a non-secure source.\r\n\r\nMixed content security error messages: : Google Chrome = \r\nMixed Content: The page at 'https://apps.owncloud.com/' was loaded over HTTPS, but requested an insecure image 'http://gnome-look.org/img/message_info.png'. This content should also be served over HTTPS.\r\n\r\n\r\nScenario: \r\nThere are 3 easy steps to attack the user through a mixed content vulnerability… \r\n1) Set-up a Man-in-the-Middle attack. These are most easily done on public networks such as those in coffee shops or airports. \r\n2) Use a mixed content vulnerability to inject a malicious javascript file. Malicious code will run in an HTTPS website that the user browsers to. The key point is that the HTTPS site has a mixed content vulnerability on it, which means that it executes content downloaded over HTTP. This is where the Man-in-the-Middle attack and Mixed Content vulnerability combine into a dangerous scenario. \r\n“If some attacker is able to either tamper with Javascript or stylesheet files he can effectively also tamper with the other content on your page (e.g. by modifying the DOM ). So it’s either all or nothing. Either all of your elements are served using SSL, then you are secure. Or you load some Javascript or stylesheet files from a plain HTTP connection, then you aren’t secure anymore.” \r\n3) Steal the user’s identity (or do other bad things).\r\n\r\nSolution :: \r\nMake sure all content in the page including images, js, fonts are from HTTPS sources.\r\n\r\nReference : http://msdn.microsoft.com/en-us/library/ie/dn423949(v=vs.85).aspx \r\nVideo :: http://www.youtube.com/watch?v=zEV3HOuM_Vw\r\n\r\nLet me know if you need more details.",
+  "weakness": {
+    "id": 18,
+    "name": "Information Disclosure"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 51721,
+      "file_name": "Issue.JPG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/051/721/0584c23c8998573f41e09a723ddbf2935df6e7c2/Issue.JPG?response-content-disposition=attachment%3B%20filename%3D%22Issue.JPG%22%3B%20filename%2A%3DUTF-8%27%27Issue.JPG&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ2E4OHZCJ%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T224509Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQD%2BjD37qS9Nc4clk%2FeLqIhgFOch2W4w0b%2Bp%2FZ6GSCzEfAIhALCv%2FCD27mOERV0KmRfpl8%2FAdwashITxtg89ak%2FVSWgUKrIFCDQQAxoMMDEzNjE5Mjc0ODQ5IgxA6bGn8M7FU60VbWkqjwXF9I0j4mza0XhjC3%2FDF42L2bZo0k7U%2Bm79F96rkS2u0IAF5W59uaNiczHDdbP3xpuglCQWzwlMhSktxRCszIwTGk1mChcNxfMB8wtywEoGSMtvIOrFAf89URVZikPxL%2BMVy07EEGm0fA6uvKdbVYdiYdcY9MayCuVOhFsvJiP8qfGKm%2BZ1LaY7Ue74x8IeyzySpnH9EXIWe6Sj8uRdbTZO%2FTkOM7wk0uP9TXuwIF%2Fp%2BxBNvMBg%2B6Bdpk093cpS%2BNrW%2FRun6LHjsB%2BPXQS8StPhj9R19BoSvXHhMkOsgIqh3u3xmrEvChdmQwd%2BQ%2BWxQQ72QxZPVH9YLgczFYXZCAxtaLE4%2F2tPzLOHCbHtvqQnN%2B6YgYN1NlD74fnFyakAinrx0V93Hl73E8b1wWGlrhGmX%2F79EyeLL3CzhN9EGssbWm%2FLutZIDZZtZR3damd0n6LfZLZoLZymnO0jw4TcsUlfk3yHUrHhZdOJkut5Z8rpq7Wg1Gy5dO2QTXdi5Qb8KxCTeDCJ9wj88Yhdc4HGy4dU7SilnoCTsCM941djmRem%2BoDLAeN28ivJcdEBxFk6MbFD%2BsArcmhW4Iv4y0P04POOj7m61q458g01SydKQ834z9OuKgZO%2BVqmRXVd0wn3DVE%2FdlKg2AODlUHh15Z121SV9RGAsUtAS10SsxN0%2BKv5cPtOgFI%2BUs0WjHaYCgkMeAS19cBl7%2FhDKdqXi0FOIwA5l28apltcoA2b3zSffFSzN5jaccfFQf70%2FJTAg8vx%2FNx0Kzf7CuTz846turJ3H8YW8lwCY5EWfUAANDQx7R0epLbAY77mRjH2gl5%2FjzFNoLna%2FnlJp4XPQ5Y6D6MM4bAIXGfMXPvtOBWduzQmO2dZMMi5xsYGOrABucvDy7AmVKeQZAZZ267aqHvFQLGEp3ZUtiANPxAsZrI8oukoXaUdeY2AxhaC0Da9JpyKegKHA6EUZlqX%2BiLygYhy%2B0ALf3FC5h%2Bd6aCAMVgBYQSaD%2F4V%2F0rHsMJare0QL4j%2BGG7O2akbgJYLjmZDVYPtv%2FVNYMQP5s5bS1G%2B9i89J0D8Sm4AliaJGaRns6wO9a1n0tkZGIhJppHOONmyEE4ARUXVY5kjF%2FKo9l89FfM%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=2dfbf8a5f78f07c150c2e2f1776001ef34742dac82841fb61548b6df132a1b56",
+      "file_size": 107822,
+      "type": "image/jpeg",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2015-10-11T07:05:26.858Z",
+  "allow_singular_disclosure_after": -314033982.6712651,
+  "singular_disclosure_allowed": true,
+  "vote_count": 1,
+  "voters": [
+    "shivammusic"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
