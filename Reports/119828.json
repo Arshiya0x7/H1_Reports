@@ -1,0 +1,116 @@
+{
+  "id": 119828,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMTk4Mjg=",
+  "url": "https://hackerone.com/reports/119828",
+  "title": "Found clickjacking vulnerability",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-03-01T17:44:37.873Z",
+  "submitted_at": "2016-03-01T17:44:37.873Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "9-d",
+    "url": "/9-d",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/031/738/adf53db1f4cad28572d62600d4e29a8e9a7e6743_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 7747,
+    "url": "https://hackerone.com/leaseweb",
+    "handle": "leaseweb",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/007/747/cd05b582f16e92c394d1e34a9dfd936952545a43_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/007/747/cd05b582f16e92c394d1e34a9dfd936952545a43_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "disabled",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "LeaseWeb",
+      "twitter_handle": "LeaseWeb",
+      "website": "http://www.leaseweb.com",
+      "about": "Reliable hosting"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2016-03-23T12:09:45.278Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-03-18T16:27:51.875Z",
+  "team_member_agreed_on_going_public_at": "2016-03-23T12:09:44.929Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello Security,\nClickjacking (User Interface redress attack, UI redress attack, UI redressing) is a malicious technique of tricking a Web user into clicking on something different from what the user perceives they are clicking on, thus potentially revealing confidential information or taking control of their computer while clicking on seemingly innocuous web pages.\nThe server didn't return an X-Frame-Options header which means that this website could be at risk of a clickjacking attack. The X-Frame-Options HTTP response header can be used to indicate whether or not a browser should be allowed to render a page in a <frame> or <iframe>. Sites can use this to avoid clickjacking attacks, by ensuring that their content is not embedded into other sites.\nThis vulnerability affects Web Server.\nImpact:\nAn attacker can host this domain in other evil site by using iframe and if a user fill the given filed it can directly redirect as logs to attacker and after its redirect to your web server.. its lead to steal user information too and use that host site as phishing of your site its CSRF and Clickjacking\nPOC:\n1.open notepad and paste the folloing code\n\n<html><head>\n<title>leaseweb</title>\n<style>\nframe {\nopacity: 0.5;\nborder: none;\nposition: absolute;\ntop: 0px;\nleft: 0px;\nz-index: 1000;\n}\n</style>\n</head>\n<body>\n<script>\nwindow.onbeforeunload = function()\n{\nreturn \" Do you want to leave ?\";\n}\n</script>\n<p> site is vulnerable for CSRF!</p>\n<iframe id=\"frame\" width=\"100%\" height=\"100%\" src=\"http://leasewebnoc.com/\"></iframe>\n</body>\n</html>\n2.save it as <anyname>.html eg s.html\n3.and just simply open that..\nAs far as i know this data is enough to prove that your site is vulberable to Clickjacking..\naccording to OWASP its more than enough..\nhttps://www.owasp.org/index.php/Testing_for_Clickjacking_(OWASP-CS-004)\n\nPlease Fix This Vulnerability AND let me know.\nLooking forward to hear from you.\nBest Regards,\nr4hul",
+  "weakness": {
+    "id": 74,
+    "name": "UI Redressing (Clickjacking)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 76099,
+      "file_name": "clickjacking.html",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/076/099/450723865674403f0f27dbd661aaa258ade86890/clickjacking.html?response-content-disposition=attachment%3B%20filename%3D%22clickjacking.html%22%3B%20filename%2A%3DUTF-8%27%27clickjacking.html&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWMNHE52M%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T132546Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIEMKy22TeaBFjkpd2mrgK4iJEPUBc7r%2BM1%2Bu1sbEM8gFAiB0BYSygNroZ5lA0GTHZjiedDbbKYE6NTDvBGTWLNOT%2BCqxBQguEAMaDDAxMzYxOTI3NDg0OSIMJNY2%2BfEcnVrEijcRKo4FBSSwx8P7za0I6UCZtHvWRFjbCN4ZDoKxLR7GV%2BTXc2vPT24nLECZksgHaMrRuwHKd1IB58TP1UWALFhQuhCCMVRRKN6bLbvHQLO12n%2FU0YD7gaRJkxfk%2Bc1ZLe3mQ21rNGWcMzI%2FyySi9QmrREnsu2vv2SJA4%2BCd3vINP%2BZ7SctLVvUcn9TigBmEfhxJmD%2BeSzHt7z0FhCySTxmBuj%2BayQ8w0uZ8fGlnWfBFOCM1q%2BV6OBnBwHj4FWePYoPySihHdsVoX2jlAtA8nqnuYcK24n5fVv55DOVO5K3BRRUaH8LrssXfjvyQ1Shu193KYrKwwTD29eJEWTkYBjde0PLq08TJn9vW9TFrcEUeRDVHx6gRywNQ97mrvJ4KqnO8Q0qTm%2FIUPZIqzuWd1rl3dl4620WGkJprymOt%2FoeDjiJO9tpzMJ4JWLIIGuoKB2QrAiFpOUOFE7LsI5%2F1UoxHeqt3IESQH7BioGfV06JpFfz7fhNbUrIc18HmPMptVU4nL7Xnsel0AKaWukaHrSoxEoBNpj6HJD8pIzR5KbzUt3f6VRWqJui849indvPY9ukxDMdwDhLKVpokoDs5xiPg3vHDjWdFonKUvoK1rAmSFBNI19VNHk7SXiB1leKKqNca4nrd3FA9bHq7C8LHAihXeYLkM2Pw4bjJWochHFRu9vc0oeRDG7XVSEBfA%2FWfI3tIAi396QoqhicHcSqMceTqJeZ%2BnsVczoWI13ZQDP1NEkFYT1JTdcJ7CSEqZe9VBckt7d0P8rkLMGTOYP4%2FMMXzacFmxn0oJIbYEyyHV90e%2BXmcZFcHDvIpUN9gaiJPe7JtSl7G2lNtlIijo6ppLI%2B84LoXoZUD9%2BBwXtTiDe2mdeCMMKmLxcYGOrIBH%2FDxAG9OTa%2Bq%2BI3tjdDhMmSUcHlCaHDQAQThnrQL9CmdIrTdhRj9vTH2thnDCSPdKL0hee4M%2F1OL6dMvnNgAs%2Bl2tfLnV4OykTIKQzuY90KEortGd2HUJvJLMcjTlTd9dC1c29XlYDc0BsYs1oYXZu0SizF98OvJNwOMV%2B%2FJ6hboJSNFqxL1czEp9HN2UnGBxoeTlFWhkUI7d92R2J0YNJ9dDHF6n5MlAxRbOy0mbZzICw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=04a448678eda4838a6e763bf2a307a73ad3d082cf0863acf063ae94caca9e039",
+      "file_size": 420,
+      "type": "text/html",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-04-17T16:27:52.266Z",
+  "allow_singular_disclosure_after": -297637074.2882713,
+  "singular_disclosure_allowed": true,
+  "vote_count": 6,
+  "voters": [
+    "harihawks",
+    "citril",
+    "smii3",
+    "harshpshkar",
+    "dyabla",
+    "an0n7os"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
