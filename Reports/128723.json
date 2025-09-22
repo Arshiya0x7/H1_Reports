@@ -1,0 +1,118 @@
+{
+  "id": 128723,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMjg3MjM=",
+  "url": "https://hackerone.com/reports/128723",
+  "title": "Enumerating userIDs with phone numbers",
+  "state": "Closed",
+  "substate": "duplicate",
+  "readable_substate": "Duplicate",
+  "created_at": "2016-04-06T13:59:40.656Z",
+  "submitted_at": "2016-04-06T13:59:40.656Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "r0t1v",
+    "url": "/r0t1v",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 314,
+    "url": "https://hackerone.com/uber",
+    "handle": "uber",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/314/24ea21370a71b18eafb5722d5855825ab622b5dd_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/314/24ea21370a71b18eafb5722d5855825ab622b5dd_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Uber",
+      "twitter_handle": "",
+      "website": "https://www.uber.com",
+      "about": ""
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2016-06-11T16:18:50.131Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-06-11T16:18:49.917Z",
+  "team_member_agreed_on_going_public_at": "2016-06-07T18:17:29.019Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Fyi, this is my second account since the other one (r0t) is limited to 4 reports and they are all in triage.\n\nSo about this issue, when a user is on a trip and invites other users to split the fare, the server responds with info about his number, like: Name, UserID and his picture, and info about the driver: DriverID and mobile number, and other info that is public.\n\nHaving this information, combined with other issues that we already reported (#127087, #127158, #127161), we are able to know lots of information about specific users. \n\nEx: If we want to know a email address from a specific user, we could use this issue to know his userID and then use the issue #127158 to discover his email, or use issue #127087 to discover his trips.\n\n* REQUEST:\n\n```\nPOST /rt/riders/me/invite-fare-split HTTP/1.1\nHost: cn-dc1.oojoovae.org\nx-uber-device-location-altitude: 77.99976\nConnection: close\nx-uber-device-epoch: 1459337709583\nx-uber-device-location-latitude: 38.74049\nX-Uber-DCURL: https://cn-dc1.oojoovae.org/\nx-uber-device-id-tracking-enabled: 1\nx-uber-client-name: client\nX-Uber-RedirectCount: 0\nx-uber-device-os: 7.0.3\nx-uber-device-ids: aaid:D2CD8FE4-8E2A-4CD9-A30F-9996A275D03E\nx-uber-device: iphone\nx-uber-token: a766366d17b4f67af58f41a71d866880\nAccept-Encoding: gzip, deflate\nx-uber-device-location-longitude: -9.14460\nUser-Agent: client/iphone/2.125.6\nx-uber-device-language: en\nx-uber-client-id: com.ubercab.UberClient\nx-uber-device-h-accuracy: 65.00000\nAccept: */*\nx-uber-device-model: iPhone4,1\nAccept-Language: en-us\nx-uber-device-v-accuracy: 17.49279\nx-uber-client-version: 2.125.6\nx-uber-device-id: AF90DBCB-D67B-4776-9543-D3A4A15FC3B3\nContent-Type: application/json\nContent-Length: 26\nCookie: __cfduid=df82beb65119d85a5675640b64437db911458874450\n\n{\"invitees\":[\"910000000\"]}\n```\n\n",
+  "weakness": {
+    "id": 18,
+    "name": "Information Disclosure"
+  },
+  "original_report_id": 125731,
+  "original_report_url": "https://hackerone.com/reports/125731",
+  "attachments": [
+    {
+      "id": 83544,
+      "file_name": "response.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/083/544/3fde5da9f864132b1dd7c7c876c3626b0baac896/response.png?response-content-disposition=attachment%3B%20filename%3D%22response.png%22%3B%20filename%2A%3DUTF-8%27%27response.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQS3CCK3EE%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T140715Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDGKDX4%2FUfI4d2myjy8vMf8hEw8dVtxTJ5LFoqDdpn4qwIhAJ%2B50A5azGcUU1BLCs1qy2WRb83ufiX225jbbwbQq2RUKrIFCC4QAxoMMDEzNjE5Mjc0ODQ5IgxPV5RNMX9O2QjtLwgqjwWcQ%2BNQAG1gs7Q0G2KjprbpnjEjfth9zV1ZrHiIK%2BtVzvAsKhMnurqllOz84fl6aemDSnObvQ2oYSjqArlfe4c%2FwX2%2FRaQU9ZBsrITupqxu8GS5PM%2BBYT0gIZ9PbzYTueVWWOnMDhHClHSyVZLSywENSnQLDNhz%2BhnN%2FlLmLajuaHI2hpL5exU3ygTZloTEl%2Bi8YFB4TzfAOq4W6FPSTNddSuQwa4uQX6nKhrDe7GgGhK%2Fg9sERBkFcpaMxem7z8KZZM925lpcQj0NBT7JGQPauWnhzfwMEKHaCgJ9iYxy%2FHuFw6M213bRGOXUY6J%2F6297JnUjYWSSQuQLbcKDxM3WBNmZPIy2SAAypY4g5clAH4zruO4QLmL52C3bNfuldjTmYhAiO%2BRhgEgZuIOGxnupyqogrwRm5t0FHnFvLDVh1d%2BPcNKfNIINMdQfwYLWQ%2B7B84uW9Rc%2FjxBkviR1noduPTe3hzSlMjigxY1d8rkF6nrsucEjtnPqpSFTFprGViKuKmNWOKYOgi7srnpzWoTG%2BDRsJqmQ9O6l9fzagOS3AZnZ8julMI%2FFFblyFct2UM1jxIhPv%2F%2B9z4nRRkVNSW%2BVdfYVv8gq8bEjaxALJOmHjpvzaUsdgFrJvoi%2F4s2Ai9GGRy82wundHSShIq6EMCTg%2BDt5PMBtM%2FK5QoK9LNM%2FLiUdp4nC2bBDum8tkJeftmKtMfb3xExvw2fdVCkqML4Y72MUp84UVEMYdmk23Oy6casO62Ur1fycnqAEv77%2Bp3%2FDKJWr9p8P7vHSjr%2FT0cByO7zJkTenGzu1TN1%2B%2Fp2%2BrVJkysMUJ3F7qGyf%2F6kgCHkPi9k910dkY%2BUAHAYywSy5yps3%2BrEdXyV8TL5bKeVInMLyUxcYGOrABCfM07AtaTBWTrjyXz2xaFRa0NuyCNE2P2w5TBzdxN9o9QzuqLirMPdr%2F6olZ3pwp34vQgPcfX6BS0Sqfyc7c0l7e802rRspbxADiE5C61FprYQdpagSlZVNn0rY7CLDhEY%2BV3GipzXSDz6O5S%2BrMHGBGWCb815ggEo5HwJqz%2FED6izW0l%2B3mrsUTeDG5RFBsfNGCC%2F9xltHeY26k204Xn%2BhagcWCZREBCqwCLibBH7w%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=91182282b1f27618ec9db1d9caaa5f5d5f9f2d5cd6fee624abbb44b2edc983bf",
+      "file_size": 48203,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 83545,
+      "file_name": "request.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/083/545/63885cb4f1e1aa975d39ab78bfd21d30a5292504/request.png?response-content-disposition=attachment%3B%20filename%3D%22request.png%22%3B%20filename%2A%3DUTF-8%27%27request.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQS3CCK3EE%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T140715Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDGKDX4%2FUfI4d2myjy8vMf8hEw8dVtxTJ5LFoqDdpn4qwIhAJ%2B50A5azGcUU1BLCs1qy2WRb83ufiX225jbbwbQq2RUKrIFCC4QAxoMMDEzNjE5Mjc0ODQ5IgxPV5RNMX9O2QjtLwgqjwWcQ%2BNQAG1gs7Q0G2KjprbpnjEjfth9zV1ZrHiIK%2BtVzvAsKhMnurqllOz84fl6aemDSnObvQ2oYSjqArlfe4c%2FwX2%2FRaQU9ZBsrITupqxu8GS5PM%2BBYT0gIZ9PbzYTueVWWOnMDhHClHSyVZLSywENSnQLDNhz%2BhnN%2FlLmLajuaHI2hpL5exU3ygTZloTEl%2Bi8YFB4TzfAOq4W6FPSTNddSuQwa4uQX6nKhrDe7GgGhK%2Fg9sERBkFcpaMxem7z8KZZM925lpcQj0NBT7JGQPauWnhzfwMEKHaCgJ9iYxy%2FHuFw6M213bRGOXUY6J%2F6297JnUjYWSSQuQLbcKDxM3WBNmZPIy2SAAypY4g5clAH4zruO4QLmL52C3bNfuldjTmYhAiO%2BRhgEgZuIOGxnupyqogrwRm5t0FHnFvLDVh1d%2BPcNKfNIINMdQfwYLWQ%2B7B84uW9Rc%2FjxBkviR1noduPTe3hzSlMjigxY1d8rkF6nrsucEjtnPqpSFTFprGViKuKmNWOKYOgi7srnpzWoTG%2BDRsJqmQ9O6l9fzagOS3AZnZ8julMI%2FFFblyFct2UM1jxIhPv%2F%2B9z4nRRkVNSW%2BVdfYVv8gq8bEjaxALJOmHjpvzaUsdgFrJvoi%2F4s2Ai9GGRy82wundHSShIq6EMCTg%2BDt5PMBtM%2FK5QoK9LNM%2FLiUdp4nC2bBDum8tkJeftmKtMfb3xExvw2fdVCkqML4Y72MUp84UVEMYdmk23Oy6casO62Ur1fycnqAEv77%2Bp3%2FDKJWr9p8P7vHSjr%2FT0cByO7zJkTenGzu1TN1%2B%2Fp2%2BrVJkysMUJ3F7qGyf%2F6kgCHkPi9k910dkY%2BUAHAYywSy5yps3%2BrEdXyV8TL5bKeVInMLyUxcYGOrABCfM07AtaTBWTrjyXz2xaFRa0NuyCNE2P2w5TBzdxN9o9QzuqLirMPdr%2F6olZ3pwp34vQgPcfX6BS0Sqfyc7c0l7e802rRspbxADiE5C61FprYQdpagSlZVNn0rY7CLDhEY%2BV3GipzXSDz6O5S%2BrMHGBGWCb815ggEo5HwJqz%2FED6izW0l%2B3mrsUTeDG5RFBsfNGCC%2F9xltHeY26k204Xn%2BhagcWCZREBCqwCLibBH7w%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=aa47efcee710f2629a941630c59946722a30870b1c7b84946a288dc411ef4026",
+      "file_size": 49296,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 2,
+  "voters": [
+    "dyabla",
+    "ebrynne"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
