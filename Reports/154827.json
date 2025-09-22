@@ -1,0 +1,143 @@
+{
+  "id": 154827,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNTQ4Mjc=",
+  "url": "https://hackerone.com/reports/154827",
+  "title": "More content spoofing through dir param in the files app",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2016-07-29T05:41:44.494Z",
+  "submitted_at": "2016-07-29T05:41:44.494Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "lmx",
+    "url": "/lmx",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/092/838/2264f6e4378a98c38cdeb662114a4d61008714d5_original.PNG/65551465b0d18d952f306b2d0c5e69ed082a8c9bc5c9b7bec024e5edc01c00a5"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13291,
+    "url": "https://hackerone.com/nextcloud",
+    "handle": "nextcloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/tnqlkt8d6fcch8hj8brdjp8nw864/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Nextcloud",
+      "twitter_handle": "nextclouders",
+      "website": "https://nextcloud.com",
+      "about": "Access, share and protect your files, calendars, contacts, communication & more at home and in your enterprise."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2016-9467"
+  ],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2016-11-04T17:16:25.899Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-11-04T17:16:25.865Z",
+  "team_member_agreed_on_going_public_at": "2016-11-03T22:01:28.799Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi! It's still possible to use an invalid `dir` param to spoof messages in the directory breadcrumbs area.\n\nFor example, you can use URL-encoded periods to bypass the directory traversal prevention. By referencing a path that returns a 301, you can add a message in the dir param F108266:\n\nhttps://demo.nextcloud.com/index.php/apps/files/?dir=%2E%2E/%2E%2E/%2E%2E/.well-known/caldav/Error%20-%20please%20restart%20your%20computer%20to%20continue\n\nAlso, in Chrome, the presence of a null byte (%00) in the url causes a CSP error for an ajax request upon pageload, which prevents the redirect to `dir=/` and allows you to put a message in the dir param F108267:\n\nhttps://demo.nextcloud.com/index.php/apps/files/?dir=%00Error!%20Please%20restart%20your%20computer%20and%20try%20again\n\nPlease let me know if you need more info. Thanks!",
+  "bounty_amount": "50.0",
+  "formatted_bounty": "$50",
+  "weakness": {
+    "id": 57,
+    "name": "Violation of Secure Design Principles"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 108266,
+      "file_name": "301-response.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/108/266/dd76eb565ff74c230073c28b95daf43fc1392d2b/301-response.png?response-content-disposition=attachment%3B%20filename%3D%22301-response.png%22%3B%20filename%2A%3DUTF-8%27%27301-response.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQVINDUTQU%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T074624Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJ7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDmsIRg%2BTZAAgD4KHAQorlADZU92eY%2BlvSzV%2FJI4m4VfgIgRBW%2BkKtGDg2MjrxoP3%2BVL6qa5N6wGDV4wKvGN9VfcpIqsgUIJxADGgwwMTM2MTkyNzQ4NDkiDDK6pbPvyrPBvz%2B6NCqPBbvC%2FMHJSdrtUjWAgFFFFUVPldsQ%2FT3HxaRt4u0503RDPSqNzuuCswejW1iLEo1%2Bt35y08%2B9z4gE0ro2ejh7BdiD6ci09ZPKdPkZKl%2B4%2BsXskaL%2B02WOfBLJrxd9VhUKuhe6kTnnx%2FBL%2Fw7zERf31nVjFhI%2FdjqlSUBcYgPaC%2FpdMWY8HdJn29YC9d4CHDezO%2BoEeeJUz2t7QcTSqi7w0l9loEQ4YH3aCRqb6goFGHSKSGwCOFrHHsu5JZTofZ07hxUWNoEfUdW8sPr0urgPWReysFyyk42TLTXrKYAtbL4O94IIL0CPH2jYUYPVE5763qOCGZYAy5GptyV0Qe8XFZmOiywP4azNKkKjcPMIGrchXoDGZkmnGtyv%2Bo4mihO%2BL20RytDHnLJzzkZAG4ixVuMjlQYA1lpN4b4DF%2BOH2cgTNIOayF4enuPcua0rG6NPt8LcHV%2BaSBQW3hzfr%2F4VP5zQMdAhJ%2BmMgddyT%2FkSlyLUQ23llL5eJ%2FU8sGBYkelC%2BgSe1nfcoo4QCmKwup%2Fv7U7%2BhH8s5FjOyE3agaNIibV9L9%2B3%2BX9Tp22o1QKn%2FzLOE5vLBWAj3V7KalEkzb%2BFMtb5fGmsEcdrPCT9pL%2BF%2BAjA4hYsFUwtzkK5O%2BFTjFP7VP%2F9dCRtMVodsC23D0w2MH6oBUgrghXTw1iZzuILxelOxq01%2BnOv6Z%2FpCjJU0vBCGMJ3GzNDrYYe1sXtxxyDKNfneh2h6FuF4O39YwAePLwoCiWjdaR39JegMDdGLVyIohvcMpZWpVG%2B%2B%2BWMNEycBzCyS0USnssZERJIV7gCF%2FHuUMUDGfanMLpQf6NqYzZ2Swi2kPwQPSt7o2rctzidtJSL%2F9e7Xbl6yUEHWjGdFhUw7dDDxgY6sQG0UPN9hyEXgUMM%2BpilFBjhwaZ9aEkNOB3RYeh6pBeXSXkai1drCk9C7kFH7R%2F%2FN%2FMwAYpmLpe7trhJWPHYR0GcYKhSmxb%2FfqVHRoQw8Ne6qGlC6Q4plv%2FpHx3yLf5p6JxRRAlBJOt%2BQbjk2s%2BdlOG7ZJzuuprsLS9wBqkhpNktmmyXK3ZdsSdXBCTGQOHdY8quefeYxeI3xW3krvh28VVrVfxkt5zrSedFImfSx7ZSfa0%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=4d6c7d333281aa39852d87e42f92c7b7c7becab361510b1acfbe7515036f57fe",
+      "file_size": 35943,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 108267,
+      "file_name": "chrome-null-byte.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/108/267/cccec0558e3281fd189a0411c9d9f2fc8f16289b/chrome-null-byte.png?response-content-disposition=attachment%3B%20filename%3D%22chrome-null-byte.png%22%3B%20filename%2A%3DUTF-8%27%27chrome-null-byte.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQVINDUTQU%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T074624Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJ7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDmsIRg%2BTZAAgD4KHAQorlADZU92eY%2BlvSzV%2FJI4m4VfgIgRBW%2BkKtGDg2MjrxoP3%2BVL6qa5N6wGDV4wKvGN9VfcpIqsgUIJxADGgwwMTM2MTkyNzQ4NDkiDDK6pbPvyrPBvz%2B6NCqPBbvC%2FMHJSdrtUjWAgFFFFUVPldsQ%2FT3HxaRt4u0503RDPSqNzuuCswejW1iLEo1%2Bt35y08%2B9z4gE0ro2ejh7BdiD6ci09ZPKdPkZKl%2B4%2BsXskaL%2B02WOfBLJrxd9VhUKuhe6kTnnx%2FBL%2Fw7zERf31nVjFhI%2FdjqlSUBcYgPaC%2FpdMWY8HdJn29YC9d4CHDezO%2BoEeeJUz2t7QcTSqi7w0l9loEQ4YH3aCRqb6goFGHSKSGwCOFrHHsu5JZTofZ07hxUWNoEfUdW8sPr0urgPWReysFyyk42TLTXrKYAtbL4O94IIL0CPH2jYUYPVE5763qOCGZYAy5GptyV0Qe8XFZmOiywP4azNKkKjcPMIGrchXoDGZkmnGtyv%2Bo4mihO%2BL20RytDHnLJzzkZAG4ixVuMjlQYA1lpN4b4DF%2BOH2cgTNIOayF4enuPcua0rG6NPt8LcHV%2BaSBQW3hzfr%2F4VP5zQMdAhJ%2BmMgddyT%2FkSlyLUQ23llL5eJ%2FU8sGBYkelC%2BgSe1nfcoo4QCmKwup%2Fv7U7%2BhH8s5FjOyE3agaNIibV9L9%2B3%2BX9Tp22o1QKn%2FzLOE5vLBWAj3V7KalEkzb%2BFMtb5fGmsEcdrPCT9pL%2BF%2BAjA4hYsFUwtzkK5O%2BFTjFP7VP%2F9dCRtMVodsC23D0w2MH6oBUgrghXTw1iZzuILxelOxq01%2BnOv6Z%2FpCjJU0vBCGMJ3GzNDrYYe1sXtxxyDKNfneh2h6FuF4O39YwAePLwoCiWjdaR39JegMDdGLVyIohvcMpZWpVG%2B%2B%2BWMNEycBzCyS0USnssZERJIV7gCF%2FHuUMUDGfanMLpQf6NqYzZ2Swi2kPwQPSt7o2rctzidtJSL%2F9e7Xbl6yUEHWjGdFhUw7dDDxgY6sQG0UPN9hyEXgUMM%2BpilFBjhwaZ9aEkNOB3RYeh6pBeXSXkai1drCk9C7kFH7R%2F%2FN%2FMwAYpmLpe7trhJWPHYR0GcYKhSmxb%2FfqVHRoQw8Ne6qGlC6Q4plv%2FpHx3yLf5p6JxRRAlBJOt%2BQbjk2s%2BdlOG7ZJzuuprsLS9wBqkhpNktmmyXK3ZdsSdXBCTGQOHdY8quefeYxeI3xW3krvh28VVrVfxkt5zrSedFImfSx7ZSfa0%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=cc616c56965f9ae2d423f12e34440bea7aa2589baa2782ce93149b116b43ddb5",
+      "file_size": 31656,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-12-03T22:01:28.837Z",
+  "allow_singular_disclosure_after": -277724695.6668252,
+  "singular_disclosure_allowed": true,
+  "vote_count": 5,
+  "voters": [
+    "spetr0x",
+    "akshay_raj",
+    "scept1c",
+    "dyabla",
+    "root01"
+  ],
+  "severity": {
+    "rating": "low",
+    "score": 3.1,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "high",
+      "privileges_required": "none",
+      "user_interaction": "required",
+      "scope": "unchanged",
+      "confidentiality": "none",
+      "integrity": "low",
+      "availability": "none"
+    }
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
