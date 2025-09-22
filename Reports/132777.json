@@ -1,0 +1,117 @@
+{
+  "id": 132777,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMzI3Nzc=",
+  "url": "https://hackerone.com/reports/132777",
+  "title": "Labels created in private projects are leaked",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-04-20T03:52:17.524Z",
+  "submitted_at": "2016-04-20T03:52:17.524Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "jobert",
+    "url": "/jobert",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/ht4b9SmcYNqmpbyCFXd7cxHB/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": true,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 264,
+    "url": "https://hackerone.com/gitlab",
+    "handle": "gitlab",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/f0hovtq73f9ap815a0r1w42bocp4/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/f0hovtq73f9ap815a0r1w42bocp4/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "GitLab",
+      "twitter_handle": "gitlab",
+      "website": "https://about.gitlab.com",
+      "about": "A single application for the entire software development lifecycle."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2016-05-03T01:00:20.457Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-05-03T00:55:01.373Z",
+  "team_member_agreed_on_going_public_at": "2016-05-03T01:00:20.401Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "# Vulnerability details\nAn insecure direct object reference vulnerability exists in the code that assigns labels to issues and merge requests, that allows an attack to read labels of private projects. This probably doesn't leak a lot of super confidential data, but since it's hard to predict how people use labels, it'd be good to fix this issue.\n\n# Proof of concept\n**Note**: this proof of concept demonstrates the attack with an issue, but the same issue exists when a merge request is created. To start off, sign in as a victim (`jane`) and create a project (`private-project`). Set the visibility level to private for this project. When this is set up, create a label at http://gitlab-instance/jane/private-project/labels. When I reproduced this issue for myself, I used `SomeCompany Secret feature` as label name. The label had ID `1`. Now sign in as the attacker (`john`). John wants access to the label that Jane created for her private program. John creates a new project called `random-project` and creates a new issue at http://gitlab-instance/john/random-project/issues. No need to select a label in the New issue form.\n\nNow intercept the traffic before you click the \"Submit issue\" button. The request that is sent to the GitLab server looks something like this:\n\n```\nPOST /john/random-project/issues HTTP/1.1\nHost: 159.xxx.xxx.xxx\n...\n\nutf8=%E2%9C%93&authenticity_token=zD0fqQphsFSNP6gl6KWhTw5iaTtk3cGlDz1Gn563roNyiSq2ACIXGp8%2FmBMo9q70ZP3M0mCWmsq7XJCmzkdADg%3D%3D&issue%5Btitle%5D=a&issue%5Bdescription%5D=a&issue%5Bassignee_id%5D=&issue%5Bmilestone_id%5D=&issue%5Blabel_ids%5D%5B%5D=\n```\n\nNow add the label ID that you want access to as value to the `issue[label_ids][]` array. The request will now look something like this (note the appended `1`):\n\n```\nPOST /john/random-project/issues HTTP/1.1\nHost: 159.xxx.xxx.xxx\n...\n\nutf8=%E2%9C%93&authenticity_token=zD0fqQphsFSNP6gl6KWhTw5iaTtk3cGlDz1Gn563roNyiSq2ACIXGp8%2FmBMo9q70ZP3M0mCWmsq7XJCmzkdADg%3D%3D&issue%5Btitle%5D=a&issue%5Bdescription%5D=a&issue%5Bassignee_id%5D=&issue%5Bmilestone_id%5D=&issue%5Blabel_ids%5D%5B%5D=1\n```\n\nForward the request and go back to the browser. You'll see that the label that belongs to the private project shows up as attached label:\n\n{F88003}\n\n# Impact\nAn attacker could easily iterate over all existing label IDs to attach all labels to an issue. This way potential confidential information (either in the name or description) is revealed to an attacker. Like said in the introduction, because you don't know how people use these labels, this can contain confidential information.",
+  "weakness": {
+    "id": 18,
+    "name": "Information Disclosure"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 88003,
+      "file_name": "Screen_Shot_2016-04-19_at_20.42.27.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/088/003/28a81e5485a11cde5256098d3e9f4ed60c32589a/Screen_Shot_2016-04-19_at_20.42.27.png?response-content-disposition=attachment%3B%20filename%3D%22Screen_Shot_2016-04-19_at_20.42.27.png%22%3B%20filename%2A%3DUTF-8%27%27Screen_Shot_2016-04-19_at_20.42.27.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQS3CCK3EE%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T141806Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDGKDX4%2FUfI4d2myjy8vMf8hEw8dVtxTJ5LFoqDdpn4qwIhAJ%2B50A5azGcUU1BLCs1qy2WRb83ufiX225jbbwbQq2RUKrIFCC4QAxoMMDEzNjE5Mjc0ODQ5IgxPV5RNMX9O2QjtLwgqjwWcQ%2BNQAG1gs7Q0G2KjprbpnjEjfth9zV1ZrHiIK%2BtVzvAsKhMnurqllOz84fl6aemDSnObvQ2oYSjqArlfe4c%2FwX2%2FRaQU9ZBsrITupqxu8GS5PM%2BBYT0gIZ9PbzYTueVWWOnMDhHClHSyVZLSywENSnQLDNhz%2BhnN%2FlLmLajuaHI2hpL5exU3ygTZloTEl%2Bi8YFB4TzfAOq4W6FPSTNddSuQwa4uQX6nKhrDe7GgGhK%2Fg9sERBkFcpaMxem7z8KZZM925lpcQj0NBT7JGQPauWnhzfwMEKHaCgJ9iYxy%2FHuFw6M213bRGOXUY6J%2F6297JnUjYWSSQuQLbcKDxM3WBNmZPIy2SAAypY4g5clAH4zruO4QLmL52C3bNfuldjTmYhAiO%2BRhgEgZuIOGxnupyqogrwRm5t0FHnFvLDVh1d%2BPcNKfNIINMdQfwYLWQ%2B7B84uW9Rc%2FjxBkviR1noduPTe3hzSlMjigxY1d8rkF6nrsucEjtnPqpSFTFprGViKuKmNWOKYOgi7srnpzWoTG%2BDRsJqmQ9O6l9fzagOS3AZnZ8julMI%2FFFblyFct2UM1jxIhPv%2F%2B9z4nRRkVNSW%2BVdfYVv8gq8bEjaxALJOmHjpvzaUsdgFrJvoi%2F4s2Ai9GGRy82wundHSShIq6EMCTg%2BDt5PMBtM%2FK5QoK9LNM%2FLiUdp4nC2bBDum8tkJeftmKtMfb3xExvw2fdVCkqML4Y72MUp84UVEMYdmk23Oy6casO62Ur1fycnqAEv77%2Bp3%2FDKJWr9p8P7vHSjr%2FT0cByO7zJkTenGzu1TN1%2B%2Fp2%2BrVJkysMUJ3F7qGyf%2F6kgCHkPi9k910dkY%2BUAHAYywSy5yps3%2BrEdXyV8TL5bKeVInMLyUxcYGOrABCfM07AtaTBWTrjyXz2xaFRa0NuyCNE2P2w5TBzdxN9o9QzuqLirMPdr%2F6olZ3pwp34vQgPcfX6BS0Sqfyc7c0l7e802rRspbxADiE5C61FprYQdpagSlZVNn0rY7CLDhEY%2BV3GipzXSDz6O5S%2BrMHGBGWCb815ggEo5HwJqz%2FED6izW0l%2B3mrsUTeDG5RFBsfNGCC%2F9xltHeY26k204Xn%2BhagcWCZREBCqwCLibBH7w%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=46d6c60d624bd371f74e1b1b0924fc5891e4f58e4aeaa312fc7346671e4e9078",
+      "file_size": 32581,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-06-02T00:55:01.472Z",
+  "allow_singular_disclosure_after": -293721784.78442705,
+  "singular_disclosure_allowed": true,
+  "vote_count": 7,
+  "voters": [
+    "eveeez",
+    "spetr0x",
+    "martijn",
+    "dyabla",
+    "cryptosector",
+    "pei",
+    "dragon0x1"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
