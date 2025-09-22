@@ -1,0 +1,129 @@
+{
+  "id": 38007,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zODAwNw==",
+  "url": "https://hackerone.com/reports/38007",
+  "title": "Subdomain Takeover using blog.greenhouse.io pointing to Hubspot",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2014-12-01T23:27:54.941Z",
+  "submitted_at": "2014-12-01T23:27:54.941Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "fransrosen",
+    "url": "/fransrosen",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/001/634/6569f1cff6ac26c01a91db469d8707228965f09f_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": true,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 312,
+    "url": "https://hackerone.com/greenhouse",
+    "handle": "greenhouse",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/hoqjkry2eprkz6vwyizdw59ry7ps/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/hoqjkry2eprkz6vwyizdw59ry7ps/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Greenhouse.io",
+      "twitter_handle": "",
+      "website": "https://app.greenhouse.io",
+      "about": "Software to optimize your entire recruiting and onboarding process."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2015-02-26T13:51:15.430Z",
+  "bug_reporter_agreed_on_going_public_at": "2015-01-27T13:51:10.665Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi,\r\n\r\nYour subdomain blog.greenhouse.io is pointing to the service called Hubspot. However, your account at Hubspot has expired or has been cancelled. This basically means that anyone can claim your subdomain pointing to Hubspot and create their own site at this URL. This is EXTREMELY dangerous as whatever the attacker want can be placed on this domain. This is also a foolproof phishing attack since no one would be able to verify that this is not a legit greenhouse.io-login form.\r\n\r\nI have temporarily claimed this domain for PoC. You should immediately remove the DNS-entry for blog.greenhouse.io pointing to Hubspot.\r\n\r\nAnd since I'm able to run javascript at Hubspot, I'm able to do whatever I like on that domain. Creating a login form that would fool anyone, since it's present on a greenhouse.io domain.\r\n\r\n```\r\n$ host blog.greenhouse.io\r\nblog.greenhouse.io is an alias for san.secure001.hubspot.com.edgekey.net.\r\nsan.secure001.hubspot.com.edgekey.net is an alias for e1395.b.akamaiedge.net.\r\n```\r\n\r\nPoC-link: \r\nhttp://blog.greenhouse.io/\r\n\r\nPoC-images attached.\r\n\r\nAs you might understand, this is really bad. Foolproof phishing. XSS on greenhouse.io. Potential malware spread through a domain you - in this case - do not control. Extremely painful for the company brand.\r\n\r\nPlease make sure you're always going through your DNS-entries so no subdomains are pointing to external services you do not use.\r\n\r\nWe've written an advisory about this at Detectify: \r\nhttp://blog.detectify.com/post/100600514143/hostile-subdomain-takeover-using-heroku-github-desk\r\n\r\nWhere you can read more about this sort of attack.\r\n\r\nRegards,\r\nFrans Rosén",
+  "weakness": {
+    "id": 60,
+    "name": "Cross-site Scripting (XSS) - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 22320,
+      "file_name": "Screen_Shot_2014-12-02_at_00.23.26.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/022/320/943690d67e19cd06a2ff4b6ba5944c92130aeea2/Screen_Shot_2014-12-02_at_00.23.26.png?response-content-disposition=attachment%3B%20filename%3D%22Screen_Shot_2014-12-02_at_00.23.26.png%22%3B%20filename%2A%3DUTF-8%27%27Screen_Shot_2014-12-02_at_00.23.26.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYROW6IN6%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T184257Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCGzsN5V4yBB8BqrEWRyhBYf0EQ8680BcFk0flCiJX69AIhANossMC9WVZxj5pdAvbzwBXHZXTfmwaXISIBpILAFnOfKrIFCC8QAxoMMDEzNjE5Mjc0ODQ5Igw4SLIL%2BiUsdbGLQI8qjwX2HuBmFL%2Bfrli8%2B1lx92OyhRQ%2B3qu5Ko8QFqjfxEkPrfsQoCHcbcsvJHScAuUmpXo10cgT2x2aqMFFSzk1CKG64lMMavCSEmnKeryDlIAJeSSYwiTFAsUpM4780v2hlYS5YyeeNNxiduprFdfvudR8kk45IdS3tjmX043XkV%2BlaupgXFan%2FeUMuB6UW1nnzbndUawsA5%2BVkPniEdcTiKy29EMa25Dwr82zNYFkp1nO7EeDMkT%2Bn60X2Y1qHShX5mkUJ9JQpKzc2h3XJB9OOumKUQ7z%2FVO5Om4JsHjy4Ky3M%2F%2Fvmm1t5VSG%2B8jeyL7Cwkk1Sti7G0Q4xfLoyZYNBBkxe3B4Sb8KvSqZTz07WR3z23CVKeftUC3Z2Um1VJQLR2d4uLWTR%2B1hJS9e9tidorgDhyaeK7WpwQ5DJXbYtuvsIf2c6ZLE4VkiXg7A8FHSy%2BIP%2BlJF5pxENSAgUP0%2B7L4UqVOby20VjiX8nAJY1g35z7xJdqnqOFteYRC4wbTr2TLfvwxGtKneu84r1uZk3cb7Gp%2FdfxEKyVHL0lX%2BGboC59Blcm1JkkqrmKfvvCf2UFVPNQ1YmbYBHqd4T3VzdRQtypi8LaZeQCzENCrMeobQes2%2FSwZB6HqZvlawEelmqhSeIv6zEx9lrnojKb7oS7%2BhfC3nRuZgBhidt6G14%2Blz6dn126cf1rpkfxajsCd1Tn5v%2FkrPHl0IOZRCO%2B0ltHexHbMVwjxcGZWHWbXQaVFmr12zei73g9SyGihFNn5MdMUtgQZ7FZANR79jTfolOZpCQYWF9Vp79rGKcPEEf7z1QN6sf3F6v5F8avM6SZo6KJa%2Fh%2FzX9SEu2gYpT5IL38mBX%2BV9tEx5tXe0yPEitLBFMLSwxcYGOrABGhnLugkT1A%2FxyVL%2FAXd2zkAcXi8tNkeYxt9utz6yp%2FopH1g0T9beOKJXmUeIibhyVckU2YzooShZLBnY6E6CFlYeRXcd7Pi1%2FhzjanBCHfOYoy3wg61Rrhy1fqjUybHlerqmngOFulUqvQdFWhgKFgzZfqneHaxFWTD6cYx6ddTKFWRmdfq6wpLBXHXN%2FJ9WXH1ERaMBiDET6%2Bl51NnrEH4vCItemLudoCk%2FBd94UoU%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=ca6cae5aff397e1788c759e2612191d330a02a8b449f847d978359c26ccd70ea",
+      "file_size": 91955,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 22321,
+      "file_name": "Screen_Shot_2014-12-02_at_00.23.23.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/022/321/18709a79a7fa249f6a8b9b5aca75b7ac39f7b77d/Screen_Shot_2014-12-02_at_00.23.23.png?response-content-disposition=attachment%3B%20filename%3D%22Screen_Shot_2014-12-02_at_00.23.23.png%22%3B%20filename%2A%3DUTF-8%27%27Screen_Shot_2014-12-02_at_00.23.23.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYROW6IN6%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T184257Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCGzsN5V4yBB8BqrEWRyhBYf0EQ8680BcFk0flCiJX69AIhANossMC9WVZxj5pdAvbzwBXHZXTfmwaXISIBpILAFnOfKrIFCC8QAxoMMDEzNjE5Mjc0ODQ5Igw4SLIL%2BiUsdbGLQI8qjwX2HuBmFL%2Bfrli8%2B1lx92OyhRQ%2B3qu5Ko8QFqjfxEkPrfsQoCHcbcsvJHScAuUmpXo10cgT2x2aqMFFSzk1CKG64lMMavCSEmnKeryDlIAJeSSYwiTFAsUpM4780v2hlYS5YyeeNNxiduprFdfvudR8kk45IdS3tjmX043XkV%2BlaupgXFan%2FeUMuB6UW1nnzbndUawsA5%2BVkPniEdcTiKy29EMa25Dwr82zNYFkp1nO7EeDMkT%2Bn60X2Y1qHShX5mkUJ9JQpKzc2h3XJB9OOumKUQ7z%2FVO5Om4JsHjy4Ky3M%2F%2Fvmm1t5VSG%2B8jeyL7Cwkk1Sti7G0Q4xfLoyZYNBBkxe3B4Sb8KvSqZTz07WR3z23CVKeftUC3Z2Um1VJQLR2d4uLWTR%2B1hJS9e9tidorgDhyaeK7WpwQ5DJXbYtuvsIf2c6ZLE4VkiXg7A8FHSy%2BIP%2BlJF5pxENSAgUP0%2B7L4UqVOby20VjiX8nAJY1g35z7xJdqnqOFteYRC4wbTr2TLfvwxGtKneu84r1uZk3cb7Gp%2FdfxEKyVHL0lX%2BGboC59Blcm1JkkqrmKfvvCf2UFVPNQ1YmbYBHqd4T3VzdRQtypi8LaZeQCzENCrMeobQes2%2FSwZB6HqZvlawEelmqhSeIv6zEx9lrnojKb7oS7%2BhfC3nRuZgBhidt6G14%2Blz6dn126cf1rpkfxajsCd1Tn5v%2FkrPHl0IOZRCO%2B0ltHexHbMVwjxcGZWHWbXQaVFmr12zei73g9SyGihFNn5MdMUtgQZ7FZANR79jTfolOZpCQYWF9Vp79rGKcPEEf7z1QN6sf3F6v5F8avM6SZo6KJa%2Fh%2FzX9SEu2gYpT5IL38mBX%2BV9tEx5tXe0yPEitLBFMLSwxcYGOrABGhnLugkT1A%2FxyVL%2FAXd2zkAcXi8tNkeYxt9utz6yp%2FopH1g0T9beOKJXmUeIibhyVckU2YzooShZLBnY6E6CFlYeRXcd7Pi1%2FhzjanBCHfOYoy3wg61Rrhy1fqjUybHlerqmngOFulUqvQdFWhgKFgzZfqneHaxFWTD6cYx6ddTKFWRmdfq6wpLBXHXN%2FJ9WXH1ERaMBiDET6%2Bl51NnrEH4vCItemLudoCk%2FBd94UoU%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=f8241b3a441d57b8a7d81c28b206bfd5d1f987947630c4708bb039edd455864f",
+      "file_size": 164718,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2015-02-26T13:51:11.256Z",
+  "allow_singular_disclosure_after": -333607905.86989033,
+  "singular_disclosure_allowed": true,
+  "vote_count": 32,
+  "voters": [
+    "tess",
+    "dilawer",
+    "try_to_hac",
+    "null_rhythm",
+    "r3y",
+    "khizer47",
+    "sa1tama0",
+    "dpgribkov",
+    "japz",
+    "l00p3r",
+    "and 22 more..."
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
