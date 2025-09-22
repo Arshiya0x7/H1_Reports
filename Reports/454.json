@@ -1,0 +1,131 @@
+{
+  "id": 454,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC80NTQ=",
+  "url": "https://hackerone.com/reports/454",
+  "title": "PNG compression DoS",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2013-11-23T21:21:28.099Z",
+  "submitted_at": "2013-11-23T21:21:28.099Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "spipm",
+    "url": "/spipm",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/625/dd7df1c933e04d0149bf0b5760a04212cf881c70_original./3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13,
+    "url": "https://hackerone.com/security",
+    "handle": "security",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/000/013/fa942b9b1cbf4faf37482bf68458e1195aab9c02_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/000/013/fa942b9b1cbf4faf37482bf68458e1195aab9c02_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "HackerOne",
+      "twitter_handle": "Hacker0x01",
+      "website": "https://hackerone.com",
+      "about": "Vulnerability disclosure should be safe, transparent, and rewarding."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2015-05-28T04:45:07.299Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2015-04-28T04:44:55.488Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "[ztxt]: http://www.libpng.org/pub/png/spec/1.1/PNG-Chunks.html#C.zTXt \"zTXT Documentation\"\r\n[tech]: http://www.zlib.net/zlib_tech.html \"zlib technical details\"\r\n[zlibvuln1]: http://www.kb.cert.org/vuls/id/680620\r\n[zlibvuln2]: http://www.kb.cert.org/vuls/id/238678\r\n\r\n\r\nPNG compression DoS\r\n---------------------\r\n Because I did JPEG and GIF I just had to check out the PNG format.\r\n\r\nFound\r\n---------------------\r\nA PNG file is composed of multiple chunks.\r\nOne of the optional ancillary chunks is called zTXT ([ztxt]).\r\nThis chunk allows storage of compressed text data using the zlib library.\r\nFrom the zlib [tech] details:\r\n\"The test case was a 50MB file filled with zeros; it compressed to roughly 49 KB\"\r\nI used this to store a huge amount of data in a small PNG (smaller than 1 MB). When sent to HackerOne the service timed out. I think it's because Paperclip tried to `identify` and `convert` my image again.\r\n\r\nAs a attachment I sent the Python code I made to create the PNG, and the PNG itself. \r\nUsage: python createpng.py filename\r\n\r\nFixes\r\n---------------------\r\nFor an easy fix every PNG file with the string \"zTXt\" in it should be rejected. Other data chunks may be exploitable, but I haven't looked into them yet. When this bug is fixed I will continue my research.\r\n\r\nTheory\r\n---------------------\r\nMake sure your zlib library is updated . Because of old exploits in zlib's inflate() ([zlibvuln1], [zlibvuln2]), attackers might make a PNG that can exploit old machines. ",
+  "bounty_amount": "500.0",
+  "formatted_bounty": "$500",
+  "weakness": {
+    "id": 48,
+    "name": "Uncontrolled Resource Consumption"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 146,
+      "file_name": "createpng.zip",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/000/146/4f72baa7a817e1559a6a8d003653bcfc5dc3ccc2/createpng.zip?response-content-disposition=attachment%3B%20filename%3D%22createpng.zip%22%3B%20filename%2A%3DUTF-8%27%27createpng.zip&response-content-type=application%2Fzip&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXRMVJ5J5%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T192212Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIHvpeFRGxer%2FvWr9U1iJg3RkGlJPPFj4B1AHCmELHvg0AiEA3tVo83DAR1waruPLv%2Fu8vB9bR4IqtbLU0FcfUK2SWK4qsgUIMBADGgwwMTM2MTkyNzQ4NDkiDOgV4stYWuksi315TCqPBTSyxHdDk9aIJWUXYP6dpR2hHjf4Lm2OmqG2txbrJ96dAFVsJl5WdhXN5poEKL%2B3vXRmLvgEI8oo%2BbITruxVtSca%2FXbpaeMDsG60%2BtVUNL8GY9G6XVHxwRNis96ulShvFkdYL95u%2F9BE6bHUiDyiDqW%2B3fWThOXRCd3eGH7K78T6iJJ%2FXPtdbnw0qEp3xnzhxVQuLM1e6ocxb5JKQro3HYWeofUVMeUYgBk5ichyV4i39DzesIHOdtEY1%2FFr5cO6BknHGI4QlTEFqSQ0jKwu54rl7Y6E%2BaZ3mp8Q%2Btd%2Bg9937vj1aJ9qhhj8i3tGtw8W%2BxC8sROiJ9Pn77pKG2W4hNpAyD5F6sNpIAF9vt9bRRr%2FZ%2BSnCcipXGJKkQ6Hcoy%2BJi242PhaHRQ1QO1qTSpTDPoN1qZtR2wR9nUszH5PMi4QmxwGIh01o%2B9Wm%2BWMTnnqM16OG52%2BRyxbc23dxja1vQVYylB4AR0O3PFpl3EFwn2jqYjiHYJ%2F6RJQDkkVSbnPyErUc9Ee5jaNlrYkR%2B512HKh7%2BD6AhqQJOWut8J1JadNJruJlPJ3xGDotuzZ9CpU2CA2oucGiIIogsZcPb75cH2JVlMGqGvzPEr04jl7OXE1njTEgB2XK3e%2Fw3VUuucNO63UKfjWrTnJi3XMfg1Ng%2Fu9oey3Uo2hQHA5SzIrtE32mdf5MlJGeIzmaaGgdFr9HJVkYRdU%2FiUFT26z2OzXitUwlejztiMD2BhN2Orim8RbEKbvvABTsRcvsIuPNaAaxf9ug5m%2FKbPyoz77Ruu4F1%2F98Td0OwZ%2BmxssKQ058QXkSGkXP9o8RhEiJAcpm5uHdtJmIrImKcpqU5uy8xptKTOC5VGIZeizx3DNxP2cZhYwicbFxgY6sQFd5FT1B5MlZMXS0Wluys%2FN%2B6sOHgNoVYPrRKKl6L4X1L3Qv%2BfsOVhdER%2F5XwepRHhkQe2dojWb9sZIIBlb1o6Wq8TxyLEXiwOJ5cNtpQKHgMdtczrD4NnkdCqP%2FbWEJHB9Z2i0xSshL783%2FtLC4Z9%2BmAu7vaUG7ZYYkf7Wel47W8dCXztjBQk9ZwqXfjGflGJipVy%2Bv45%2F%2B5fWFEBrMLBqatLAl0RiovcR7dfS1tvFvsM%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=a666b92322f5668537862de8b5b697de1e6011b763a3032511d731f9ddd7c56c",
+      "file_size": 2327,
+      "type": "application/zip",
+      "moderated": null
+    },
+    {
+      "id": 147,
+      "file_name": "txt.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/000/147/ffd01cd906c010211aa7d22a83251cdbde2c108b/txt.png?response-content-disposition=attachment%3B%20filename%3D%22txt.png%22%3B%20filename%2A%3DUTF-8%27%27txt.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXRMVJ5J5%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T192212Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIHvpeFRGxer%2FvWr9U1iJg3RkGlJPPFj4B1AHCmELHvg0AiEA3tVo83DAR1waruPLv%2Fu8vB9bR4IqtbLU0FcfUK2SWK4qsgUIMBADGgwwMTM2MTkyNzQ4NDkiDOgV4stYWuksi315TCqPBTSyxHdDk9aIJWUXYP6dpR2hHjf4Lm2OmqG2txbrJ96dAFVsJl5WdhXN5poEKL%2B3vXRmLvgEI8oo%2BbITruxVtSca%2FXbpaeMDsG60%2BtVUNL8GY9G6XVHxwRNis96ulShvFkdYL95u%2F9BE6bHUiDyiDqW%2B3fWThOXRCd3eGH7K78T6iJJ%2FXPtdbnw0qEp3xnzhxVQuLM1e6ocxb5JKQro3HYWeofUVMeUYgBk5ichyV4i39DzesIHOdtEY1%2FFr5cO6BknHGI4QlTEFqSQ0jKwu54rl7Y6E%2BaZ3mp8Q%2Btd%2Bg9937vj1aJ9qhhj8i3tGtw8W%2BxC8sROiJ9Pn77pKG2W4hNpAyD5F6sNpIAF9vt9bRRr%2FZ%2BSnCcipXGJKkQ6Hcoy%2BJi242PhaHRQ1QO1qTSpTDPoN1qZtR2wR9nUszH5PMi4QmxwGIh01o%2B9Wm%2BWMTnnqM16OG52%2BRyxbc23dxja1vQVYylB4AR0O3PFpl3EFwn2jqYjiHYJ%2F6RJQDkkVSbnPyErUc9Ee5jaNlrYkR%2B512HKh7%2BD6AhqQJOWut8J1JadNJruJlPJ3xGDotuzZ9CpU2CA2oucGiIIogsZcPb75cH2JVlMGqGvzPEr04jl7OXE1njTEgB2XK3e%2Fw3VUuucNO63UKfjWrTnJi3XMfg1Ng%2Fu9oey3Uo2hQHA5SzIrtE32mdf5MlJGeIzmaaGgdFr9HJVkYRdU%2FiUFT26z2OzXitUwlejztiMD2BhN2Orim8RbEKbvvABTsRcvsIuPNaAaxf9ug5m%2FKbPyoz77Ruu4F1%2F98Td0OwZ%2BmxssKQ058QXkSGkXP9o8RhEiJAcpm5uHdtJmIrImKcpqU5uy8xptKTOC5VGIZeizx3DNxP2cZhYwicbFxgY6sQFd5FT1B5MlZMXS0Wluys%2FN%2B6sOHgNoVYPrRKKl6L4X1L3Qv%2BfsOVhdER%2F5XwepRHhkQe2dojWb9sZIIBlb1o6Wq8TxyLEXiwOJ5cNtpQKHgMdtczrD4NnkdCqP%2FbWEJHB9Z2i0xSshL783%2FtLC4Z9%2BmAu7vaUG7ZYYkf7Wel47W8dCXztjBQk9ZwqXfjGflGJipVy%2Bv45%2F%2B5fWFEBrMLBqatLAl0RiovcR7dfS1tvFvsM%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=15c086f28c17c99357533fc432417208bb2dbdf7c7c56e74aed2405b3987af1b",
+      "file_size": 782881,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2015-05-28T04:44:56.144Z",
+  "allow_singular_disclosure_after": -325780636.1170176,
+  "singular_disclosure_allowed": true,
+  "vote_count": 17,
+  "voters": [
+    "sw33tlie",
+    "trieulieuf9",
+    "ali",
+    "captn0sharky1",
+    "shubham_srt",
+    "2026",
+    "kieran",
+    "khizer47",
+    "sa1tama0",
+    "japz",
+    "and 7 more..."
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
