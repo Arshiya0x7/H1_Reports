@@ -1,0 +1,112 @@
+{
+  "id": 125762,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xMjU3NjI=",
+  "url": "https://hackerone.com/reports/125762",
+  "title": "Reflected XSS on Zomato API",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-03-24T18:35:58.767Z",
+  "submitted_at": "2016-03-24T18:35:58.767Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "murat",
+    "url": "/murat",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 2943,
+    "url": "https://hackerone.com/eternal",
+    "handle": "eternal",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/9525xdsq4bz7ubnoie172ssjv8ul/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/9525xdsq4bz7ubnoie172ssjv8ul/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Eternal",
+      "twitter_handle": "Zomato",
+      "website": "https://www.eternal.com",
+      "about": "Eternal is India’s largest new-age tech company by market cap, comprising of 4 businesses (as of now) – Zomato, Blinkit, District, & Hyperpure."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2016-05-27T08:46:33.934Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-05-27T08:38:43.229Z",
+  "team_member_agreed_on_going_public_at": "2016-05-27T08:46:33.876Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "First of all [here] (https://hackerone.com/reports/115402) is another report looks like this report. \n\nZomato using APIs for developers to create their restaurant search etc. \n\nYou are using res_search_widget which is can be seen right [here] (https://www.zomato.com/widgets/res_search_widget.php). \n\nIn the report which is 115402 number that i mentioned start of the report, reporter say something like this: \n\nI use a piece of javascript code that creates an alert box with the document.domain, which shows the SOP is bypassed: \"}');alert(document.domain);console.log('.  But you dont need to add something to your API or widget code. You should only use '\"> characters to bypass security and have xss alert.\n\nSo, here is xss:\n\nJust go to your widget from [here](https://www.zomato.com/widgets/res_search_widget.php).\n\nAnd just write this payload:\n\n`'-->\">'>'\"<script>prompt(document.domain)</script>;\" f0r=TRUE`\n\nHere is your alert.\n\n",
+  "weakness": {
+    "id": 60,
+    "name": "Cross-site Scripting (XSS) - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 81082,
+      "file_name": "1.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/081/082/d344a6c9146345e573f29b6f298082759c361530/1.png?response-content-disposition=attachment%3B%20filename%3D%221.png%22%3B%20filename%2A%3DUTF-8%27%271.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ3UWTM2JP%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T135407Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIGdhC6%2FanwtokSgJ1N4DxXnFw8oRLsXyPSjtzMzH24MqAiBr8mW5aKHLpt7NSzuyLqCENtmW8Xmu1bwWWVOpVFV64SqxBQgtEAMaDDAxMzYxOTI3NDg0OSIMwBmZc7TG%2FCWzn50wKo4F80Cy4x10d7yUofIU83vqp%2FbaC7j%2BJOSRFJOev4uUlp31nrliAfV1p%2FC8kBfleTHKHKxpYq5NDIobaoLA4TmHgNk7UYvKLGLs93tb7K%2B%2F5RCQYlk2rTqGvxTuUnf87Q6NYJ4X6AGjXwF3NDRDNw0UUe%2FzfqcD3OpmtwKEk1N%2Fn6FyhTA52sRuUcPqaXk%2FY7BPPttTUuXesS4UX1%2FGFfCTpYoGZ43ozHRYXNgbg5C%2F3q1Cb%2Fr3LrjoC%2BKUEN084KeC%2F7N1HbjtsehOwBYk6r%2Flqv%2BNzj0UhK%2BI9hRdWUxrH0mzpNzBomXhqwdWZCz9WPKEn5rwDvq4PVujrK3iyuOTWPIMgMVDSjDwDdMAWY0SC4uuQzN2pW4E2gq4ZwfvIqYMpB1U9JhsCyX%2B0ngysjnfwAGnh%2Fh4vMmg8OIe11ICwPTkkavxQlGkpjsvDOKTKOYcFvtcrOcnQaNPicjojQfGbwYdWqHSxVA%2FzudBnNsgCeUahW5gavBYI9iQAig9IUwgNwxKNV9nQmOkcdYYPFlQBb2LatElwlyguoSSDVuLJhhuzbcyISHIyoNLTTZzK5czS8m5llSGCqedJAmIZEFBfqVQzUiyBIr78ApCQ51PSzZ43FnliC0Kr9th1m%2BpAawuCwTn5MMK71S37D8hFy3B2lrDezljsDCsz4IAlTbxPmsDOpMOkByufPnsQsI1He0fC1BWsUhcGu8F767hMgjWCYRb9gQbhWm7MQnGWOgCddPKgf4Y5ihUcw%2Flr7VCo08dRmm6SqiO7xZRmUegD8gtfj1pBC5%2B8UPLPgzaqN0dhQvJhQeqY1SaeeWlVLHtV3zy4OIL3I%2FFhTbl48wvNy3zho0LHvvM%2BkFg8wkt67imMIj8xMYGOrIBqWNWbADI7IiUVHNgHpQCWP9%2Fbf4DZ9JHwDiANcvR5MsXI2UwfHRk8dmAhfsrbWMUTKVEN4HPC6TAJCt1ymiq1qyIK%2Fh4WrgcSvx3awr0mGD0eCnJ%2Bv4wB3xjmIMUhmOagYy8ecxuizYJ6LetM%2B1VMXrSuA4AlooSGT5i4H%2BgZkwN87km7nkmVXa2cp67HR%2BAVYtX6wWW8z4zHmu0FtVW2V2%2FmpdYwcytHcD46XIqipVCjQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=58f3fc7d3c50efb75a45947426e89d7132a088b281ec88f22b004fb985e09cc4",
+      "file_size": 101358,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-06-26T08:38:43.313Z",
+  "allow_singular_disclosure_after": -291618924.242778,
+  "singular_disclosure_allowed": true,
+  "vote_count": 2,
+  "voters": [
+    "mohaned0101",
+    "dyabla"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
