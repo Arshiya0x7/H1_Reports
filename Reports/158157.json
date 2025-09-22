@@ -1,0 +1,135 @@
+{
+  "id": 158157,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8xNTgxNTc=",
+  "url": "https://hackerone.com/reports/158157",
+  "title": "shopper login_code's can be brute forced",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2016-08-10T13:29:40.545Z",
+  "submitted_at": "2016-08-10T13:29:40.545Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": true,
+    "username": "b6117130df17feef13481e3",
+    "url": "/b6117130df17feef13481e3",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 35527,
+    "url": "https://hackerone.com/instacart",
+    "handle": "instacart",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/o3gb7jh208og9ikm1jqbsj1461p5/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/o3gb7jh208og9ikm1jqbsj1461p5/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Instacart",
+      "twitter_handle": "instacart",
+      "website": "https://instacart.com",
+      "about": ""
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2016-09-17T11:56:16.075Z",
+  "bug_reporter_agreed_on_going_public_at": "2016-08-18T11:56:04.618Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi,\n\nI didn't see in the scope of your program, but it is a security weakness, so you must know this. If you don't care about shoppers' accounts then you can just mark this report as informative.\n\n* First I tried to register a shopper account at https://shoppers.instacart.com/\n* Used a fake email address and a FAKE phone number, for phone number I entered 888-999-5555\n* Then your system sent me my login_code from the url https://shoppers.instacart.com/send_login_code via POST request with the data \"utf8=%E2%9C%93&phone=(888)+999-5555\"\n* And requested me to verify the login_code with the url https://shoppers.instacart.com/verify_login_code via POST request \"utf8=%E2%9C%93&phone=(888)+999-5555&login_code=3425&commit=Submit\"\n* After sending some wrong login_codes, I got the response {\"error\":\"Sorry, but that code is incorrect.\"} form /verify_login_code with a 404 Header.\n* Then I tried to brute force the login code with random numbers ( 5 digits, total possibility 100K )\n* login_code was broken on 43K\n* response was: {\"redirect_to\":\"/apply\"}, and HTTP status was: 200 (changed from 404) \n* tried to login on https://shoppers.instacart.com/login with the phone number, I logged in successfully with the password \"instacart\" which was sent to my fake email address.\n* I also set up a face-to-face interview but canceled later not to make you wait an invisible man :))\n\nThese all means you can attack a shopper's accounts by finding by shopper's phone number. \nSo, you must limit verifying login code by 3 or 10 attempts (how much you like) to prevent this. \nThen send another code if attacker fails to start over.\n\nRegards.\n\n",
+  "weakness": {
+    "id": 27,
+    "name": "Improper Authentication - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 111088,
+      "file_name": "insta1.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/111/088/2d253352ef32a81b288422c9a5b6f4de2342ff78/insta1.jpg?response-content-disposition=attachment%3B%20filename%3D%22insta1.jpg%22%3B%20filename%2A%3DUTF-8%27%27insta1.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQ775PZ3J%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T080855Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJ%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDb%2Fw7n4qbYpOb9YkFTZJsJxuzrp9uMgu3zEuFoT5iNLgIhAK7S7Asal%2Fm3Vajgjj3OKXWQ31bivrzBiCgmRHPhgt7KKrIFCCgQAxoMMDEzNjE5Mjc0ODQ5IgwzSIwwfz65Bhj7f8wqjwWzeD4yjarO3rOwvZ5RqRilV9uuU3Jd4OkvppUbO1FJ3naI5pwcydeQlizAxVuJSXb3qM2upaEDQ3VwASneocDtLrICsi931yFgRVX4NXKPfCMmjZuK5sV5L6jPx9sihO2vsanXFNgWXgUgiLdcObKh2ONlwIeI2tV1%2BOYA8A8wDh2UUzag3rpAF%2FLLip15cUiIr99LA4HV%2BYvWMzl%2B6ZxyIfy52BZKnmdHlWQOZFcEG3HfnoyJe0dCqJakjvQKIzuUOsYV1KsB6k8COyEuzZeBp1f3avUc5i9GdQKXjaFoXo7A5%2Ff2N1IQH3dN2vBkIWuVbqN0yFLARaPFohkcdI3bzzG39PbddjTkgFgUoO4R1iJ0j88URgP8AJXSYxe7vZqJLvGJh6nSIf3TOv0lV4ckKKNUATVp8X%2FggivvPAzZ%2FGNJXJFm7xBQ%2FNQMVsJJStHXemUFgqJfMy36y45S%2BoYUPHap3kt6qzFlkJNhC2Qn4DPbFf6Z402N4riKp65M7n2ZIZ0TkQZaPYMkt9CVF6hLZQ4HRXUJ%2B7uY97kfCCAPYSwyp8n0LDY9AbUv9GazobYNIPH0DvX%2BUx5ynvzmFjNzyKRM1UG%2BWIHLTFHfr8tcEtWyRPmz8Urv7Hd31U00UloxN6XfGlSAPvh4zi4CGFJG7qAh%2FloYCAutO5x6f3pQm1Bnh6zGY3Fw9UbB%2BM98srA1U5tx4REJ1VIKIWsh3MP1VeSKsmagwizNHUUslgVV5K4LHZEGH2m9mO2JyXVy9yABxzIwhrSMEB87hCPMeecG%2FC1LzyoLSnTd6sfUv%2FAXYQQ9zQjoI%2BBVV8wT7oNVBqNlMHnBnJPIEarR6hIoH4qcYUVNLi5nNujzPX5g%2FetDMODWw8YGOrAByGGgoBZ62nYDGWKo%2Bndq8SJH5xEUN33lSbViuNelSraYxaqp6xvBsOTDXjWEqsUldm%2FObaWTLLDJBMkDuKIsaxht52PDbTlzuBl77%2BgElsmg6ZoC7Zsh887WFNDC5yH0JQcnRXBxRCpBriL6noYfrgId7oForpvpqh%2FjmiYr00qc9h4HHhJg%2Fu%2Bv1ndac8625OsJ10%2FA1TO0cJnDp3C3d0qOOzQcx3s8rtP0lwofkt8%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=74974a431c85231956707088f52c8287f11ada7fe3c3fe9c13d84bbe78e3002c",
+      "file_size": 156255,
+      "type": "image/jpeg",
+      "moderated": null
+    },
+    {
+      "id": 111089,
+      "file_name": "insta2.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/111/089/791aab1f92bcea3e4af498ca4613566f193c299d/insta2.jpg?response-content-disposition=attachment%3B%20filename%3D%22insta2.jpg%22%3B%20filename%2A%3DUTF-8%27%27insta2.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQ775PZ3J%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T080855Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJ%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDb%2Fw7n4qbYpOb9YkFTZJsJxuzrp9uMgu3zEuFoT5iNLgIhAK7S7Asal%2Fm3Vajgjj3OKXWQ31bivrzBiCgmRHPhgt7KKrIFCCgQAxoMMDEzNjE5Mjc0ODQ5IgwzSIwwfz65Bhj7f8wqjwWzeD4yjarO3rOwvZ5RqRilV9uuU3Jd4OkvppUbO1FJ3naI5pwcydeQlizAxVuJSXb3qM2upaEDQ3VwASneocDtLrICsi931yFgRVX4NXKPfCMmjZuK5sV5L6jPx9sihO2vsanXFNgWXgUgiLdcObKh2ONlwIeI2tV1%2BOYA8A8wDh2UUzag3rpAF%2FLLip15cUiIr99LA4HV%2BYvWMzl%2B6ZxyIfy52BZKnmdHlWQOZFcEG3HfnoyJe0dCqJakjvQKIzuUOsYV1KsB6k8COyEuzZeBp1f3avUc5i9GdQKXjaFoXo7A5%2Ff2N1IQH3dN2vBkIWuVbqN0yFLARaPFohkcdI3bzzG39PbddjTkgFgUoO4R1iJ0j88URgP8AJXSYxe7vZqJLvGJh6nSIf3TOv0lV4ckKKNUATVp8X%2FggivvPAzZ%2FGNJXJFm7xBQ%2FNQMVsJJStHXemUFgqJfMy36y45S%2BoYUPHap3kt6qzFlkJNhC2Qn4DPbFf6Z402N4riKp65M7n2ZIZ0TkQZaPYMkt9CVF6hLZQ4HRXUJ%2B7uY97kfCCAPYSwyp8n0LDY9AbUv9GazobYNIPH0DvX%2BUx5ynvzmFjNzyKRM1UG%2BWIHLTFHfr8tcEtWyRPmz8Urv7Hd31U00UloxN6XfGlSAPvh4zi4CGFJG7qAh%2FloYCAutO5x6f3pQm1Bnh6zGY3Fw9UbB%2BM98srA1U5tx4REJ1VIKIWsh3MP1VeSKsmagwizNHUUslgVV5K4LHZEGH2m9mO2JyXVy9yABxzIwhrSMEB87hCPMeecG%2FC1LzyoLSnTd6sfUv%2FAXYQQ9zQjoI%2BBVV8wT7oNVBqNlMHnBnJPIEarR6hIoH4qcYUVNLi5nNujzPX5g%2FetDMODWw8YGOrAByGGgoBZ62nYDGWKo%2Bndq8SJH5xEUN33lSbViuNelSraYxaqp6xvBsOTDXjWEqsUldm%2FObaWTLLDJBMkDuKIsaxht52PDbTlzuBl77%2BgElsmg6ZoC7Zsh887WFNDC5yH0JQcnRXBxRCpBriL6noYfrgId7oForpvpqh%2FjmiYr00qc9h4HHhJg%2Fu%2Bv1ndac8625OsJ10%2FA1TO0cJnDp3C3d0qOOzQcx3s8rtP0lwofkt8%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=974e1e4a39bdcbfc0ecbe433b8f0bf67a6fe79180ee6f4233f3d0e4d48a55792",
+      "file_size": 127126,
+      "type": "image/jpeg",
+      "moderated": null
+    },
+    {
+      "id": 111091,
+      "file_name": "insta3.jpg",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/111/091/51bf6724585405cc6be564fdf97163a390ba86c8/insta3.jpg?response-content-disposition=attachment%3B%20filename%3D%22insta3.jpg%22%3B%20filename%2A%3DUTF-8%27%27insta3.jpg&response-content-type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQQ775PZ3J%2F20250922%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250922T080855Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJ%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDb%2Fw7n4qbYpOb9YkFTZJsJxuzrp9uMgu3zEuFoT5iNLgIhAK7S7Asal%2Fm3Vajgjj3OKXWQ31bivrzBiCgmRHPhgt7KKrIFCCgQAxoMMDEzNjE5Mjc0ODQ5IgwzSIwwfz65Bhj7f8wqjwWzeD4yjarO3rOwvZ5RqRilV9uuU3Jd4OkvppUbO1FJ3naI5pwcydeQlizAxVuJSXb3qM2upaEDQ3VwASneocDtLrICsi931yFgRVX4NXKPfCMmjZuK5sV5L6jPx9sihO2vsanXFNgWXgUgiLdcObKh2ONlwIeI2tV1%2BOYA8A8wDh2UUzag3rpAF%2FLLip15cUiIr99LA4HV%2BYvWMzl%2B6ZxyIfy52BZKnmdHlWQOZFcEG3HfnoyJe0dCqJakjvQKIzuUOsYV1KsB6k8COyEuzZeBp1f3avUc5i9GdQKXjaFoXo7A5%2Ff2N1IQH3dN2vBkIWuVbqN0yFLARaPFohkcdI3bzzG39PbddjTkgFgUoO4R1iJ0j88URgP8AJXSYxe7vZqJLvGJh6nSIf3TOv0lV4ckKKNUATVp8X%2FggivvPAzZ%2FGNJXJFm7xBQ%2FNQMVsJJStHXemUFgqJfMy36y45S%2BoYUPHap3kt6qzFlkJNhC2Qn4DPbFf6Z402N4riKp65M7n2ZIZ0TkQZaPYMkt9CVF6hLZQ4HRXUJ%2B7uY97kfCCAPYSwyp8n0LDY9AbUv9GazobYNIPH0DvX%2BUx5ynvzmFjNzyKRM1UG%2BWIHLTFHfr8tcEtWyRPmz8Urv7Hd31U00UloxN6XfGlSAPvh4zi4CGFJG7qAh%2FloYCAutO5x6f3pQm1Bnh6zGY3Fw9UbB%2BM98srA1U5tx4REJ1VIKIWsh3MP1VeSKsmagwizNHUUslgVV5K4LHZEGH2m9mO2JyXVy9yABxzIwhrSMEB87hCPMeecG%2FC1LzyoLSnTd6sfUv%2FAXYQQ9zQjoI%2BBVV8wT7oNVBqNlMHnBnJPIEarR6hIoH4qcYUVNLi5nNujzPX5g%2FetDMODWw8YGOrAByGGgoBZ62nYDGWKo%2Bndq8SJH5xEUN33lSbViuNelSraYxaqp6xvBsOTDXjWEqsUldm%2FObaWTLLDJBMkDuKIsaxht52PDbTlzuBl77%2BgElsmg6ZoC7Zsh887WFNDC5yH0JQcnRXBxRCpBriL6noYfrgId7oForpvpqh%2FjmiYr00qc9h4HHhJg%2Fu%2Bv1ndac8625OsJ10%2FA1TO0cJnDp3C3d0qOOzQcx3s8rtP0lwofkt8%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=9d266ef613e0e9876225bd27eb19987eb4ada1f4b605dbf93495010f3baa12e2",
+      "file_size": 111244,
+      "type": "image/jpeg",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2016-09-17T11:56:04.796Z",
+  "allow_singular_disclosure_after": -284415170.6875339,
+  "singular_disclosure_allowed": true,
+  "vote_count": 9,
+  "voters": [
+    "b6117130df17feef13481e3",
+    "flashdisk",
+    "its_afolic",
+    "fantam1",
+    "spetr0x",
+    "dhakal_testers",
+    "jaimin",
+    "dyabla",
+    "destinedtohack"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
