@@ -1,0 +1,163 @@
+{
+  "id": 98499,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC85ODQ5OQ==",
+  "url": "https://hackerone.com/reports/98499",
+  "title": "Apps can access 'channels' beta api",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2015-11-07T19:43:56.968Z",
+  "submitted_at": "2015-11-07T19:43:56.968Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "rms",
+    "url": "/rms",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/014/954/96084dbb997dff1d0904bd0642ca0a4d99df39dc_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 1382,
+    "url": "https://hackerone.com/shopify",
+    "handle": "shopify",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/fjjiC5585s8WoDGHv2M5okbJ/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Shopify",
+      "twitter_handle": "",
+      "website": "https://www.shopify.com",
+      "about": "Shopify is a multi-channel commerce platform that helps people sell online, in-store, and everywhere in between."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2015-11-18T21:03:22.247Z",
+  "bug_reporter_agreed_on_going_public_at": "2015-11-18T21:03:17.571Z",
+  "team_member_agreed_on_going_public_at": "2015-11-18T20:09:25.620Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "**Hello,**\n\nAs documented here, an app can access to the following scopes :\nhttps://docs.shopify.com/api/authentication/oauth#scopes. \nBut an app can request/get access to a lots more scopes, and some of those scope shouldn't be accessible.\n\n**PoC**\n\n    https://victim.myshopify.com/admin/oauth/authorize?client_id=fc49e813f5aad9c8d8f65117031a9684&scope=read_apps,write_apps,write_content,read_content,write_customers,read_customers,read_disputes,write_fulfillments,read_fulfillments,write_gift_cards,read_gift_cards,write_orders,read_orders,read_products,write_products,read_script_tags,write_script_tags,write_scripts,read_scripts,read_shipping,write_shipping,write_social_network_accounts,read_social_network_accounts,read_themes,write_themes,read_channels,write_channels&redirect_uri=http://while42.myshopify.com/&state=123&shop=while42\n    \nThen request the access_token, and use it to access to any of those scopes.",
+  "bounty_amount": "500.0",
+  "formatted_bounty": "$500",
+  "weakness": {
+    "id": 75,
+    "name": "Privilege Escalation"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 60755,
+      "file_name": "Capture_d__cran_2015-11-07___20.30.18.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/060/755/60f94930fa7da4eb9a6351ae911e0d6e27560f4b/Capture_d__cran_2015-11-07___20.30.18.png?response-content-disposition=attachment%3B%20filename%3D%22Capture_d__cran_2015-11-07___20.30.18.png%22%3B%20filename%2A%3DUTF-8%27%27Capture_d__cran_2015-11-07___20.30.18.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ56FWPJH6%2F20250923%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250923T000053Z&X-Amz-Expires=3423&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDDunicZEU6YayQugPEP%2FtlRRCE9nImoAWXqZUPA01d9gIhAL0L8nc4hUTdvRTjg5S4HuOgJyyqmg4AeNDmPMf4eL1XKrEFCDQQAxoMMDEzNjE5Mjc0ODQ5IgwpOAGaVIC3zb89z%2BcqjgW027ovNg5ydaxnvV64JwEH%2BVV1dwT3w92Vj3ODgs2Fi4mTNfmCTdohT%2F0TKDAutMB7%2FALqHc1YSuJbannP25ktVplsOpReJbgSK7Dh5FsOoB9U8Qi0v4%2BkewF3Kf8T9SmD1I3KzuOPzVwOeauPZeZpjl8Ct6SqyBMtF4Q9WYy8tS4ojUkX3hQZ0SCg0KFdI4DDSa80zvr8Tt%2BRMcSTs11g72QoSW71eI0jJvsUzl1Vr8LAQuq1L6uqO14VkMmCyzwN2B8xeBfjjdAUMThiEavSlYpqI8btZLb3bwceJz3AUojUs9X6k3V8wjAJHntE0Vh2Whj52Fuy01Q6QU7kRYpd9%2BrqbzYbsjJ%2BUcQ%2B5g11xS5B229ANFz2kz1dA5gsL98eGh2Cev1fpWKpbtrGoIXfwKH74Wp7xzkJ%2BGKYLydZJoThar6GWkB%2F4oQEEnFuj1PYKYjuDLEGhPzH9Ausu3EQAbzAbAfLEqPQJ4XXtg4YFp2alH19AD4G0HvhqXqmcSarFNP5ppCdldKh0j011AabKJ4M61M3Kgy4K%2Fmobs65Bp65tMBYNHjqnxxWK0Eolg%2ByVhHqVdrFA2RiFfBtaT9i6unSn2Fkyo8Uq9RiRv1Nbs%2BXXX%2BBm%2Fmlb3W4ycP%2FKVB8PYQIzqU8vCu2rT7wE%2FplVKTdXJWaUCnOt8BozwdmGx1wB8U0K50ANYOxQXKu9rtxb0FKlfPwR82Moq0H%2B7qqE9%2FDDQmLo1O12unS%2BTyNPqpSxFkd95k69lJuSxffO4Fn%2FYN8CVXKWMDvfV3%2FCXvLsUEO8YKPHMUYF%2FmKCYVSnyNE%2Fj21IsLR9hB8axYswhMqJIrIxUtLk3rRigU34d8tA8llw3DUBvsjPRcf87Qw8K3GxgY6sAGjIYhETluGPSBVBg%2BDWNBKDLSHpjgTc38qpAiJXCmb52HgUh7OaHhS9bgDB6mnJrtmxKKRFyjinTLKtpahG9y%2FBpyh%2FEgfyFjPYUb%2Bmc9T6OtXMzpIOcicDGLy6ClCMuNhkDDdvv4b%2BxqDP1LB%2FA90kmzw9Ini54lnXvLSDO2XgS%2BdtuwL6T0W3sWOFs7Wo6c%2B8W1CBNmfedRM8B5L2mXmG3zH0k8Bt%2Fcq04cxleK8XQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=8e5c731a537953b36381827cf551fb76fbb7da0689ad188451d5721b14fec716",
+      "file_size": 191142,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2015-12-18T20:09:25.800Z",
+  "allow_singular_disclosure_after": -308116287.41800386,
+  "singular_disclosure_allowed": true,
+  "vote_count": 3,
+  "voters": [
+    "never_die",
+    "rms",
+    "shivammusic"
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "id": 1014,
+      "category": "team",
+      "content": "This issue allowed some apps to access the beta api at `/admin/channels`. This api should only have been accessible to apps with an extra permission granted by our engineering team.",
+      "updated_at": "2015-11-12T16:22:22.612Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 19168,
+        "username": "francoischagnon",
+        "name": "Francois Chagnon",
+        "bio": "",
+        "cleared": false,
+        "verified": false,
+        "website": "",
+        "location": "",
+        "created_at": "2015-03-19T21:06:55.673Z",
+        "url": "https://hackerone.com/francoischagnon",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "company",
+        "profile_picture_urls": {
+          "small": "https://profile-photos.hackerone-user-content.com/variants/000/019/168/5d577fe97283a5483331257b629b6287ed4d287b_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/000/019/168/5d577fe97283a5483331257b629b6287ed4d287b_original.jpg/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a",
+          "xtralarge": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NDQ3MSwicHVyIjoiYmxvYl9pZCJ9fQ==--5d363de94e2545bc9fc3f333250059f6ae61ed9f/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJyZXNpemUiOiIyNjB4MjYwXHUwMDNlIn0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--cf3aeca803d1baf476958c689ca7b472a4cb54f1/2014-03-24.jpg"
+        }
+      }
+    },
+    {
+      "id": 1037,
+      "category": "researcher",
+      "content": "Using an undocumented api endpoint, an app could add, remove and modify sales channels.",
+      "updated_at": "2015-11-18T23:00:22.271Z",
+      "can_view?": true,
+      "can_create?": false,
+      "attachments": [],
+      "user": {
+        "id": 14954,
+        "username": "rms",
+        "name": "Romain",
+        "bio": "",
+        "cleared": false,
+        "verified": false,
+        "website": null,
+        "location": "",
+        "created_at": "2014-12-05T14:07:01.197Z",
+        "url": "https://hackerone.com/rms",
+        "hackerone_triager": false,
+        "hackerone_employee": false,
+        "user_type": "hacker",
+        "profile_picture_urls": {
+          "small": "https://profile-photos.hackerone-user-content.com/variants/000/014/954/96084dbb997dff1d0904bd0642ca0a4d99df39dc_original.jpg/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef",
+          "medium": "https://profile-photos.hackerone-user-content.com/variants/000/014/954/96084dbb997dff1d0904bd0642ca0a4d99df39dc_original.jpg/d9695107bfcd68eeb1c9e0912b109cdae9a6c00c0bda6fd4cbd6d9bdb828840a",
+          "xtralarge": "https://hackerone.com/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6Mzg4MSwicHVyIjoiYmxvYl9pZCJ9fQ==--6d766a60185990dcfd9e034ab6d547544e1ec768/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJqcGciLCJyZXNpemUiOiIyNjB4MjYwXHUwMDNlIn0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--cf3aeca803d1baf476958c689ca7b472a4cb54f1/b136c2a5f47dcb17ada1fcda547734fa.jpg"
+        }
+      }
+    }
+  ]
+}
