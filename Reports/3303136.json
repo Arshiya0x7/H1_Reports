@@ -1,0 +1,130 @@
+{
+  "id": 3303136,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMzAzMTM2",
+  "url": "https://hackerone.com/reports/3303136",
+  "title": "Pending invites remain valid even after the inviter is removed.",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2025-08-18T08:31:05.577Z",
+  "submitted_at": "2025-08-18T08:31:05.878Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "mantu1738",
+    "url": "/mantu1738",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/wvobl0sk2a5iiw51b2k6n6efu31y/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 21045,
+    "url": "https://hackerone.com/omise",
+    "handle": "omise",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/nm9gwmg377pece9jzkjw5k1o7tm7/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/nm9gwmg377pece9jzkjw5k1o7tm7/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Omise",
+      "twitter_handle": "omise",
+      "website": "https://www.opn.ooo",
+      "about": "Next generation of payment Platform"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2025-10-08T03:51:16.252Z",
+  "bug_reporter_agreed_on_going_public_at": "2025-09-08T03:51:13.360Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nWhen an admin (A) invites another user (B) with admin privileges, removing the inviter (A) does not invalidate the pending invite for B. Furthermore, if B has already accepted the invite, B remains in the team with admin privileges. This could allow unauthorized admin access even after the original inviter is removed.\n\n##  Steps to Reproduce\n1. Invite a user (A) to the team with **admin privileges**.  \n2. A accepts the invitation and becomes an admin.  \n3. A invites another user (B) to the team with **admin privileges**.  \n4. Remove user A from the team.  \n5. Observe:  \n   - If B has not accepted the invite, the invite **remains valid**.  \n   - If B has already accepted the invite, B **remains in the team** with admin privileges.\n\n# # Expected Behavior\n- Pending invites created by a removed admin should **become invalid**.  \n- Members already added by the removed admin should either be **reviewed or removed** automatically, depending on platform policy.\n\n# #Actual Behavior\n- Pending invites remain valid and can be accepted.  \n- Accepted members remain in the team with admin privileges.\n\n##POC\n{F4688873}\n\n## Impact\n\n- Unauthorized users may gain admin access after the inviter has been removed.  \n- Violation of least privilege principles and potential for **privilege escalation**.  \n- Security audit and compliance issues, as removed admins cannot fully revoke their influence.",
+  "weakness": {
+    "id": 75,
+    "name": "Privilege Escalation"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 4688873,
+      "file_name": "20250818-0825-36.6362897.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/4v85ocksfczc4d15txqnr461puz4?response-content-disposition=attachment%3B%20filename%3D%2220250818-0825-36.6362897.mp4%22%3B%20filename%2A%3DUTF-8%27%2720250818-0825-36.6362897.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQV3JL66U7%2F20251008%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20251008T041508Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEBsaCXVzLXdlc3QtMiJHMEUCIQCLq23dapsHaMU6nZy6%2FE1Y5hMxLaQU%2Fw%2F8ScCVHHzlHgIgLLWWTbdvRCDxrg%2Bglg%2F5Ayt2GBOnD%2Fj0sGhnHiEE%2BRgquwUItP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDHERBTAXstZAay2bUyqPBemwtypZGgujErHjM2sr7EO9rPpUOQK4w%2BgTjBDsMZAi89SQV6g3oI6SeeWWOcwFkHX8cvFROLf1knXTEsPFi0xOe5as0JBVpX8NDriiH1wfBA%2FfhO961QHrkO%2BM41w15pifA8u2melTWmhmM35PGU3nP9bREmcI0eIuF1bKbum6tUXzKGoji6%2BmVCfwmvGYCKOkMGOKcetK1xgnv6crOdtKIqsTWQ8IJp7wrt25yCD7b76VZh0O4rKkTeyvlbhkmHHihRG%2BbUKpS7B3bRCBYsrbupCAb5bOUbrm8GofeCSZMG8%2B3iiHAYkqW1lk3ftWNgf7il3u%2FQuWS9hNsz%2BoDUsBrZHnMjSmXx7rz9f0%2FrZwGylTD2WZhWbR%2FaBJnLKd4fEgiWdmbGqqI2DtKu4hw8Gsi%2FjSLo6vczpnJnfTHCUi%2BeP1mFhk5FDPnum82x9ZkyIm%2FishjNfl5PNxb1LYcyYejO8Rsv%2BP7dzXJ45N8aohL4%2BuH7ynrvuWeGXs90p%2Fn8ES%2BEesFL6Z0HvIBJj%2FKy4rjQZH5f4TGt0B1uyZ8I6qSeam8gKBeGm0sHbkehYNA3P2ylV9eDxcgU1sQIEkQJEuKHlFFjsvFLf3d3wSU9JeMGywvQGViL0HENHP5vOCtkQm%2Bhq1idhJ7%2BxqJaZjb90gmXYbglHmVYrTUNI1ManuYi%2FFa2otwKl5PJ7VHN9frs%2BEM91riCceo7DKtv4VvvUhxEiLR%2B3gs0WpB0BLQuyYDYN0Oqyd9kg0%2B9MZtry5SuTIsaMY4EsRXX3%2FbiIoZqJUA12Bn%2BZIDtxx8%2FgGXRdLOH9OMUNFBULFMfL2SyyKhn715JU%2FlXsFw1BH1cRMjFfV1pL2gPa9yiHRS3yS88swxqyXxwY6sQHeShgYOS0%2B94BR%2BKr3KKf0ga9Omw2M%2BXtlwK8rAo9Seqws3Ueys9fP8eKAL%2Ba4T82X11VgurzgZ8QSahXi5aEqBurjDlsMjwoT8JuJlAgiy30kiXTIt1vkruTy6rousaMglgHyMveHg0%2FXD5n74KWkvZQHkmEmWbmk0UdSkr076pr0eS3ACjYE%2BSkbgbY%2B3KGD0tMN%2FoGIdZ1AHia1JUhnOdE%2BHJaHgLlK1sXQwym8T3Q%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=869e9db603bbbf58563a486f9f05feaa3b1cd7931038979f68f4d950e248d856",
+      "file_size": 153416301,
+      "type": "video/mp4",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2025-10-08T03:51:13.527Z",
+  "allow_singular_disclosure_after": -1434.510977593,
+  "singular_disclosure_allowed": true,
+  "vote_count": 0,
+  "voters": [],
+  "severity": {
+    "rating": "high",
+    "score": 7.8,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "low",
+      "user_interaction": "required",
+      "scope": "unchanged",
+      "confidentiality": "high",
+      "integrity": "low",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 16435,
+    "asset_type": "URL",
+    "asset_identifier": "dashboard.omise.co",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
