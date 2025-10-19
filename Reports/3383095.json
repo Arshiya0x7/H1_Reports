@@ -1,0 +1,128 @@
+{
+  "id": 3383095,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMzgzMDk1",
+  "url": "https://hackerone.com/reports/3383095",
+  "title": "DNS Rebinding Attack",
+  "state": "Closed",
+  "substate": "informative",
+  "severity_rating": "critical",
+  "readable_substate": "Informative",
+  "created_at": "2025-10-14T16:25:29.063Z",
+  "submitted_at": "2025-10-14T16:25:30.902Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "newby99",
+    "url": "/newby99",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/26vexmfanvjm9dvw2oscwbc7pnip/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 29833,
+    "url": "https://hackerone.com/arkadiyt-projects",
+    "handle": "arkadiyt-projects",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/029/833/c7d79126a63550aa7c99662ecb49eca1a8b2d1c3_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/029/833/c7d79126a63550aa7c99662ecb49eca1a8b2d1c3_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "arkadiyt-projects",
+      "twitter_handle": "arkadiyt",
+      "website": "https://arkadiyt.com",
+      "about": ""
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2025-10-19T21:33:19.700Z",
+  "bug_reporter_agreed_on_going_public_at": "2025-10-19T21:33:19.379Z",
+  "team_member_agreed_on_going_public_at": "2025-10-19T21:19:21.853Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi, there is a  DNS rebinding vulnerability in your SSRF filter. \n\n{F4891755}\n\nYou validate the hostname's IP address, but then pass the hostname to Net::HTTP.start(), which does its own DNS lookup. An attacker can control a DNS server that returns a safe public IP during validation, then returns 127.0.0.1 when Net::HTTP resolves it shortly later...\n\n```\n::Net::HTTP.start(uri.hostname, uri.port, **http_options) do |http| # Currently using uri.hostname which triggers a new dns lookup!\n```\nExample POC: \nAttacker sets up evil.com DNS to alternate responses. First query (your validation) returns 8.8.8.8. Second query (Net::HTTP's internal lookup) returns 127.0.0.1. As a result: SsrfFilter.get('http://evil.com:6379') bypasses all protection and hits some internal service on localhost..\n\nSuggested fix: \nConnect directly to the validated IP instead of the hostname. Change Net::HTTP.start(uri.hostname, ...) to Net::HTTP.start(validated_ip, ...) and set the Host header manually: headers['Host'] = uri.hostname. \nAlso use ssl_hostname: uri.hostname for proper TLS certificate validation. This eliminates the race window entirely since DNS only resolves once during validation.\n\n## Impact\n\nThe library validates DNS resolution but passes the hostname (not the validated IP) to Net::HTTP, which performs a second DNS lookup. Attacker's DNS server returns different IPs for each query",
+  "weakness": {
+    "id": 68,
+    "name": "Server-Side Request Forgery (SSRF)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 4891755,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/ykp2jdp18yapky78v6s855aepjeo?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ2AJ3B5IF%2F20251019%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20251019T221508Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEDYaCXVzLXdlc3QtMiJHMEUCIHUU9vxfb6SzqDK%2B02xI5lXIxxVl74N8HpeYVfeo3NKUAiEA5VohDE1zf0B8SWwxF1QmPNjjNj4WCFIuDQvWS37d5lkquwUI3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDPSPy%2FBXnkNGwAZf%2BCqPBQNkcrLBgE492rKX5hsVSVj%2Fx2xhQ1Ba6SwUfY5tsczOL2sFZwszxBZ%2Fo9dggsjofE2RtkQCB%2BVtm%2Fp9JGMAAweu1bfp%2FFQqYiFuc%2F9zmX9R6lWhFE%2FA4JZbk1YPXTsadVZkfx9j85p%2BHdZJRixoUUQmU26fdQNn%2B%2B0HNzqezeFimooXHkbvYcIGIgK7ircQIn9WsbFBRn1Gp6lkxqtG4CBVO9okcRdFFH6Uii3Tz8QdH4QhA37d6rU3TVS9XlsAvuQJSWSv2XNVgsE42ixHQWhNOJQJoMPxUiVMQN%2BXLTdQ0Hg%2BmD%2Fs9JOegXnrSFDjt0d6I7TbH9UL3i%2BHICu7iMR%2FjKKgqWHJl4blDdpFuDY50XBWWexQS1HDzdn2w1UKQkoFdMEn3htc1LhD9YghHLW%2FoL65Tl%2FuANLXcP3MFTEXsVKjZ9OpIw%2F%2BEgSft1%2Bh1iu5lgwxjOH0MA2uPpi9Ex28Q9UPUFmW23Q5TnYC1fzWIQc%2F7Y7NAwNILSWjCaI5F1K8jVmWjbdV4TkRUD2Sm3xpnZ9JMy19W3AgHQO9yTDl6YH%2FxXzI7TAsoqZYgje9yIM%2BWJ%2FsoUPyEj8KmMU6Ix4efZ8WqYGNbiimcTaPO%2BxcOrzYrsZHnxSDO3irI6qhbFFwkukh0oniRxXN%2Bs2fGAfU2O9hTw%2FsNkNhnz0qIyTu966CWg%2FpvmT3LZe1wk7MQtziWWeQcsNbDbGlvHeRyjpe2L2DdPMYCVDJKnwvN4LUw5B3LuzEYH36O1grl2wRdbmyK%2BhwFxjyJlSgNfVIvzQitpBREuIeVQHrJ79U9j13aQ0s%2FzNEaS9tA3Z6cjwIRL4Jw%2FgHVGM4N%2BlAlWBV8XHJrfdm0%2BZ0JCOG%2FuaYkr0wnLvVxwY6sQE6%2FT4Qc4ShLEzC%2FFl0mboenSFWcJT6nHO6Q2Dt1jh%2Balsw02px9qFXG83%2BBy2QGWCvAcGBAQIiWrp4yaY0OdBiy%2BO29p%2FyTL%2BikkBxAHRn8IBONF%2B5cTNPdNLOBpa3atgfRz4A%2Bz2alfco%2B9xuZWJ9HBcyTHlEzEhi9qRhP8dM22GEbqb%2F%2Bj7w8iGnbfk9ZmndlMqrodN3vvp0pWH3OE3v%2BEq%2BU3qb9JvTPr%2BmVt7bbCw%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=32ddfc4c9b86a3905dfc6d696f3d1c0f55de64624c32be22db43aa4a76eb3240",
+      "file_size": 153147,
+      "type": "image/png",
+      "moderated": false
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 0,
+  "voters": [],
+  "severity": {
+    "rating": "critical",
+    "score": 10.0,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "none",
+      "scope": "changed",
+      "confidentiality": "high",
+      "integrity": "high",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 10493,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/arkadiyt/ssrf_filter",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
