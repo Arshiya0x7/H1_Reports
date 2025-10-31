@@ -1,0 +1,115 @@
+{
+  "id": 910732,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC85MTA3MzI=",
+  "url": "https://hackerone.com/reports/910732",
+  "title": "blockstack.org - is vulnerable to (CVE-2016-2183, CVE-2016-6329)",
+  "state": "Closed",
+  "substate": "informative",
+  "severity_rating": "none",
+  "readable_substate": "Informative",
+  "created_at": "2020-06-29T06:25:54.646Z",
+  "submitted_at": "2020-06-29T06:25:54.646Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": true,
+    "username": "0x1_aulia",
+    "url": "/0x1_aulia",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/ifdfRwBXQLUo9yVZ6r5azaki/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13798,
+    "url": "https://hackerone.com/hiro",
+    "handle": "hiro",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/h6naa3v2dywfeaa0b48kb70fbtqf/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/h6naa3v2dywfeaa0b48kb70fbtqf/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Hiro",
+      "twitter_handle": "hirosystems",
+      "website": "https://hiro.so",
+      "about": "Hiro builds developer tools for Stacks, the network that enables apps and smart contracts on Bitcoin."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2016-2183",
+    "CVE-2016-6329"
+  ],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2025-10-31T17:32:21.338Z",
+  "bug_reporter_agreed_on_going_public_at": "2020-07-16T14:29:21.291Z",
+  "team_member_agreed_on_going_public_at": "2025-10-31T17:32:21.182Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "**Descriptions**\nCryptographic protocols like TLS, SSH, IPsec, and OpenVPN commonly use block cipher algorithms, such as AES, Triple-DES, and Blowfish, to encrypt data between clients and servers. To use such algorithms, the data is broken into fixed-length chunks, called blocks, and each block is encrypted separately according to a mode of operation. Older block ciphers, such as Triple-DES and Blowfish use a block size of 64 bits, whereas AES uses a block size of 128 bits.\nA attacker can can decrypt victim data using Sweet32 birthday attck vulnerability over wifi or (local network)\nHackerone Refferals #232463 #375097 #216271 #210331\n\n###Steps To Reproduce:\n  - open nmap and type: ``nmap --script ssl-enum-ciphers blockstack.org``\n  - and wait until it finishes the scan\n  - here are the results 64-bit block cipher 3DES vulnerable to SWEET32 attack Key exchange (secp192r1) of lower strength than certificate key\n\nnote: this vulnerability and exploitation has been demo'ed at defcon\nref site: https://sweet32.info/\n\n**Response**\n```\n443/tcp open  https\n| ssl-enum-ciphers:\n|   TLSv1.0:\n|     ciphers:\n|       TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA (ecdh_x25519) - A\n|       TLS_RSA_WITH_AES_128_CBC_SHA (rsa 2048) - A\n|       TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA (ecdh_x25519) - A\n|       TLS_RSA_WITH_AES_256_CBC_SHA (rsa 2048) - A\n|       TLS_RSA_WITH_3DES_EDE_CBC_SHA (rsa 2048) - C\n|     compressors:\n|       NULL\n|     cipher preference: server\n|     warnings:\n|       64-bit block cipher 3DES vulnerable to SWEET32 attack\n|   TLSv1.1:\n|     ciphers:\n|       TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA (ecdh_x25519) - A\n|       TLS_RSA_WITH_AES_128_CBC_SHA (rsa 2048) - A\n|       TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA (ecdh_x25519) - A\n|       TLS_RSA_WITH_AES_256_CBC_SHA (rsa 2048) - A\n```\n**How to fix this vulnerability**\nIt's recommended to disable SSLv3 and replace it with TLSv1.0 as soon as compatibility with legacy clients is no longer required. (The only browser that does not support TLSv1.0 is Internet Explorer 6).\n\nTo disable SSLv2 and SSLv3:\nFor Nginx:\nssl_protocols TLSv1 TLSv1.1 TLSv1.2;\n\n**Proof On Concept**\n  * F886917\n\n## Impact\n\n(CVE-2016-2183, CVE-2016-6329)",
+  "weakness": {
+    "id": 32,
+    "name": "Cryptographic Issues - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 886917,
+      "file_name": "ScreenshotsPOC.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/R3qU7Pq25RC5Mt1bcxLcNcRA?response-content-disposition=attachment%3B%20filename%3D%22ScreenshotsPOC.png%22%3B%20filename%2A%3DUTF-8%27%27ScreenshotsPOC.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQTIAIGCJI%2F20251031%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20251031T181635Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEFEaCXVzLXdlc3QtMiJGMEQCIA8Di3CcfbrRrKkx4Q1zJftfXQQeq9%2BRs2FGnHxqqCp2AiANIdM1Vl6k601RGf62m6q6yadqSEL2tX7PnWWKt4ckxyqyBQgaEAMaDDAxMzYxOTI3NDg0OSIMNPRD2VIpo4H23c%2FaKo8FOdJJkRHtmEDUaGT9JMp0FqcFdE9aBRKr4zW%2BMM%2BniuEA31KoRrhraqopNPuUcBxwzu%2FYPnrb1Cx4DvI0thDCjy9mSXDWVPHzQzDQpNy%2FlKDPJ5K%2Bv%2FC7HC3bDnDFW6m3QUyQRSYM1AGMzAwbSfJlPOECmw2nGG%2BP5%2FpfdAPz%2FYHMJ1Q47F%2BvlwSuJfljK1BtxMY4o467SKgPi%2BJO879gJ141bqw%2BoquiDoI7N4PebW1c6iV%2F8ZDGszIxPW1gQ9nOU3LM165m7Q3%2Bs1qGUL3ZUtkrtNmIeBbG2s%2F%2Fn87%2BgoBuhdXPLdUqX7YJQbRujqOcLZCM%2F5T%2BsJEd46juak3Pyk0Ez9NIwlUEjRq2%2BdyqfL7xE11as9THN0OsPK3bj5dgwIaJmuxlHFDQgGgfxug7kQxxSjh09ARGYl3hUpMxYwN1eF8d6Lx4%2FgxAv18nwmCRrOzKo%2FrQsR3P3YsEc5OlF2YceOP8rgnVy23U7jpM5Ztnbxr%2F86RGuVCAszJs1u7JXgqOSv7qMpFDLBnr3cqtD7BHxRwCsDtsRpn6VEzAR1tZjkGPR5nm0%2FZPXf%2F7jmZjarFSJAigz5UIYgMRi0cfxl2EhH%2FqqVQ3nbkH%2FQ5a5lroCmXFIoOulmHxdAYadCDPwtJn6igmbscbnHG3HgHVMSgCSjisb9Q7xBJZwfzZ9QI0z87L%2F7k1WFWjC61vZ9WGWXHOEyzTRMv5cnpOqTSlA4hpZ1en1v%2BUi0OfgKVJ8FFylfL2sui4RK9ykrLr93sWlAcCCmZNkt2kWGOzyWybb8vMaDjXpKw5By7CkiEVCRQ7NXZlW4JA1xwTtK2rNnwm7hOsBAN7nBPnJwIFLV64G6%2B0vxlopAWXdnTZ7pazxjDl3JPIBjqyAXQ5wsORfqRHRdf74B3R0%2FZFS2SaNBzOT%2B5c9DKNparvVtTGQdsjCWMh8kaIxvygD4zGI3C31T889RZD8QlzBqUS%2F%2FoiflYcD6KvtX8fMpMNC0O5v%2BKRW8VxA2lvWtnnEIql8sglF%2F4eSJiGkI9wPi9BFZmnU%2FhcIsOPplZscBAtuyPQ4LCCoq83otxQsyZaIF6qBda76XOEqtZMQli8BEarfIT3htP%2B8fjf%2BTIWbSWXXnw%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=e38090c625af4bcead8981a5e682a28f8fa3e00f95b342bb7ad3f2cc17fa761a",
+      "file_size": 83800,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 0,
+  "voters": [],
+  "severity": {
+    "rating": "none",
+    "author_type": "Team"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
