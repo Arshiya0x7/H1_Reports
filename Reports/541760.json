@@ -1,0 +1,128 @@
+{
+  "id": 541760,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC81NDE3NjA=",
+  "url": "https://hackerone.com/reports/541760",
+  "title": "Blockstack Browser For Mac leaks \"Core API Password\" to 3rd parties",
+  "state": "Closed",
+  "substate": "informative",
+  "severity_rating": "low",
+  "readable_substate": "Informative",
+  "created_at": "2019-04-18T06:35:15.232Z",
+  "submitted_at": "2019-04-18T06:35:15.232Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "frozensolid",
+    "url": "/frozensolid",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13798,
+    "url": "https://hackerone.com/hiro",
+    "handle": "hiro",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/h6naa3v2dywfeaa0b48kb70fbtqf/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/h6naa3v2dywfeaa0b48kb70fbtqf/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Hiro",
+      "twitter_handle": "hirosystems",
+      "website": "https://hiro.so",
+      "about": "Hiro builds developer tools for Stacks, the network that enables apps and smart contracts on Bitcoin."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2025-10-31T17:32:08.715Z",
+  "bug_reporter_agreed_on_going_public_at": "2019-04-29T20:57:52.639Z",
+  "team_member_agreed_on_going_public_at": "2025-10-31T17:32:08.573Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hi Blockstack! 😃 \nI noticed that BlockStack Browser for Mac version is leaking the CoreAPIPassword via Referer Header to several websites:  \n * appco.imgix.net (a third party site!) F471236\n * api.app.co (seems to have some blockstack affiliation?) F471235\n * browser-api.blockstack.org F471237\n\n## Steps to Reproduce:\n1. Download https://github.com/blockstack/blockstack-browser/releases/download/v0.36.1/Blockstack-for-macOS-v0.36.1.dmg\n1. Install the dmg\n1. Fire up a Proxy like BurpSuite\n1. Configure your browser to use Burpsuite as it's Proxy and remove the localhost/127.0.0.1 proxy exception so that ALL traffic destined for localhost is also passed through the proxy.\n1. launch the blockstack app. Visit http://localhost:8888/sign-up in your browser of choice (I tested with FireFox 66.0.3 64 bit) on Mac OS 10.14.4\n1. observe outbound connections to the 3 sites listed above. \n\n## To Resolve: \n1. Include a Referer-Policy header in BlockStack Browser to not leak the CoreAPIPassword. https://www.owasp.org/index.php/OWASP_Secure_Headers_Project#rp\n1. Better to Not pass sensitive data in URL params at all: full URL's are usually logged in plaintext LoadBalancer logs (you can confirm this by checking your Cloudflare or the access logs for  browser-api.blockstack.org), Analytics and tracking services and sometimes in other unexpected places. \n\n## References:\n1. https://www.owasp.org/index.php/Information_exposure_through_query_strings_in_url\n1. https://www.owasp.org/index.php/OWASP_Secure_Headers_Project#rp\n\n## Impact\n\n* compromise or accidental exposure of any of the sites, loadbalancer logs, or tracking services used on the listed sites would expose BlockStack users' CoreAPIPasswords. \n* This leakage of the CoreAPIPassword contradicts public statements by a BlockStack Engineer regarding the CoreAPIPassword (https://forum.blockstack.org/t/seriously-blockstack-core-api-password-is-plaintext-in-api-settings/2272)",
+  "weakness": {
+    "id": 18,
+    "name": "Information Disclosure"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 471235,
+      "file_name": "api_app_co_-_leak.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/471/235/ba439366c181e164009728e5e96ad0846dd72b0c/api_app_co_-_leak.png?response-content-disposition=attachment%3B%20filename%3D%22api_app_co_-_leak.png%22%3B%20filename%2A%3DUTF-8%27%27api_app_co_-_leak.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQV3EYUYFV%2F20251031%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20251031T181649Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEFIaCXVzLXdlc3QtMiJHMEUCIQDvzjXmtZ%2BVZtz%2BrmG%2BpSR3Bi29Gpd8TRUzFx5cw%2FcGKQIgEyrGclWSgqnk9y9KFy%2FpLe6Xgq1Q3kZZ6ogkM93NqQUqsgUIGxADGgwwMTM2MTkyNzQ4NDkiDN5w9Ce%2F4kF%2FJOqg%2BCqPBfByzU%2FR3GGFbgOPg0WXEwUbxvSq6jhDPmRyexD2vapT3WEpCRBk0qHGcjF3UhM8XODT8fJJPngb5Uhl4cZMx0n4Cju7Ni6yRmfKDD%2F287vd%2ByZ4rztBuRrzfSfI%2F%2F3SgXekYYUp4jYE1udb87G9aC4lmyTy%2B%2BBVsoEdso4ot%2BF5XdLDQ3ZhM7CJ44zzNHexE6%2FMiKognIut3tV7n2sM72Hew%2BSrFqAQSLWP5qxnt15LO3sfxK9wmPefVxqskNFvTPVabkKsM99h0uQFq7CYn8irf3xUlmtxpGPvN3FCyZcmAnZAPIHCME36TgcjMdSQ0zhoPCFbh5MPi5omVM4uKax%2FlqYDhiwwMtkKsVXXhtdGyqWe0MJ4i6rHaWmJ0Yg7S0xC04Be8eDBiYEKpGM74NKSZzBNSYjATPkOBF2GIau0D5JG%2BbzwWetIjVym43qGpMjfCUe%2FBTAvOerlQqErw1ns0W8LbhV9CD61C7fxF3%2B6Q7r6RsB8hHuGGPWKPCv9%2Fir8odBa4L3aKoLQq%2BFqiCu8fdLjqjrrNAVcHK8kx%2BWgzwOrgPKyfeOlYyGVqCblQgH8PRO11HZEWsJptPNQ28CaLiITwmyej5vmwlAma1DLDHP7J2xGibXG3P7EQGnJWWLQre4yzmUc9QT46ZtUlvSCA%2F2IxTtAZaXB%2FpAAFjL9WPPnhM9AeZtqa5TWrLodC5vhYkfIlD33CtG%2FeeULp1w79ftDzdUgLjnXxcdeiaAnpDQlPnqiPggI5gmAxNAYpSP7udQol6hq01wmVEOMVIFr7fxg%2B5SxByJWyKr00BZgIiKZJVOV9J4%2Bf4fKRf9BFzSXHBBWWc2r71BZGUYicu2EQhPNH03gRT9pk53FLBwwkumTyAY6sQEzsx20yUVcqxfHXgPniTjnXqG28VxWX2TH0Ez9kri2h976fHd16D8KqSD4jbe6UFXCPC2AsEXH6CpeJKa%2BpK6Enh0x%2BkHPRwyE5Dng1xGWMwrpLrNtCN6t3oE05OyDuOdyX10rh2s7dsgc09NVqTlHI9Eo4cjZQhI%2FGKTR6d7l9k6Dz7nfUH3nQp%2BnE1h9gCs%2BkQuU%2BGkTMCvPksgvJRf6CVaECKdFUuDhDerDiVH%2B5yE%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=9a56cf847908e77bca52721e6f96e70c52732a416a70cc02d6d2f06a3f491d81",
+      "file_size": 103464,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 471236,
+      "file_name": "appco_imgix_-_leak.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/471/236/d78e8fc6944c9bf089d014682d75cb02e4a5ed3a/appco_imgix_-_leak.png?response-content-disposition=attachment%3B%20filename%3D%22appco_imgix_-_leak.png%22%3B%20filename%2A%3DUTF-8%27%27appco_imgix_-_leak.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQV3EYUYFV%2F20251031%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20251031T181649Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEFIaCXVzLXdlc3QtMiJHMEUCIQDvzjXmtZ%2BVZtz%2BrmG%2BpSR3Bi29Gpd8TRUzFx5cw%2FcGKQIgEyrGclWSgqnk9y9KFy%2FpLe6Xgq1Q3kZZ6ogkM93NqQUqsgUIGxADGgwwMTM2MTkyNzQ4NDkiDN5w9Ce%2F4kF%2FJOqg%2BCqPBfByzU%2FR3GGFbgOPg0WXEwUbxvSq6jhDPmRyexD2vapT3WEpCRBk0qHGcjF3UhM8XODT8fJJPngb5Uhl4cZMx0n4Cju7Ni6yRmfKDD%2F287vd%2ByZ4rztBuRrzfSfI%2F%2F3SgXekYYUp4jYE1udb87G9aC4lmyTy%2B%2BBVsoEdso4ot%2BF5XdLDQ3ZhM7CJ44zzNHexE6%2FMiKognIut3tV7n2sM72Hew%2BSrFqAQSLWP5qxnt15LO3sfxK9wmPefVxqskNFvTPVabkKsM99h0uQFq7CYn8irf3xUlmtxpGPvN3FCyZcmAnZAPIHCME36TgcjMdSQ0zhoPCFbh5MPi5omVM4uKax%2FlqYDhiwwMtkKsVXXhtdGyqWe0MJ4i6rHaWmJ0Yg7S0xC04Be8eDBiYEKpGM74NKSZzBNSYjATPkOBF2GIau0D5JG%2BbzwWetIjVym43qGpMjfCUe%2FBTAvOerlQqErw1ns0W8LbhV9CD61C7fxF3%2B6Q7r6RsB8hHuGGPWKPCv9%2Fir8odBa4L3aKoLQq%2BFqiCu8fdLjqjrrNAVcHK8kx%2BWgzwOrgPKyfeOlYyGVqCblQgH8PRO11HZEWsJptPNQ28CaLiITwmyej5vmwlAma1DLDHP7J2xGibXG3P7EQGnJWWLQre4yzmUc9QT46ZtUlvSCA%2F2IxTtAZaXB%2FpAAFjL9WPPnhM9AeZtqa5TWrLodC5vhYkfIlD33CtG%2FeeULp1w79ftDzdUgLjnXxcdeiaAnpDQlPnqiPggI5gmAxNAYpSP7udQol6hq01wmVEOMVIFr7fxg%2B5SxByJWyKr00BZgIiKZJVOV9J4%2Bf4fKRf9BFzSXHBBWWc2r71BZGUYicu2EQhPNH03gRT9pk53FLBwwkumTyAY6sQEzsx20yUVcqxfHXgPniTjnXqG28VxWX2TH0Ez9kri2h976fHd16D8KqSD4jbe6UFXCPC2AsEXH6CpeJKa%2BpK6Enh0x%2BkHPRwyE5Dng1xGWMwrpLrNtCN6t3oE05OyDuOdyX10rh2s7dsgc09NVqTlHI9Eo4cjZQhI%2FGKTR6d7l9k6Dz7nfUH3nQp%2BnE1h9gCs%2BkQuU%2BGkTMCvPksgvJRf6CVaECKdFUuDhDerDiVH%2B5yE%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=18cb35528a06914ecee7e97bfddf8ab8a2305aa89d246ba00cf4a49a6eb25112",
+      "file_size": 120471,
+      "type": "image/png",
+      "moderated": null
+    },
+    {
+      "id": 471237,
+      "file_name": "browser-api-leak.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/000/471/237/9a9e43d3ef3029880bcf93b299d335a66a2573b2/browser-api-leak.png?response-content-disposition=attachment%3B%20filename%3D%22browser-api-leak.png%22%3B%20filename%2A%3DUTF-8%27%27browser-api-leak.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQV3EYUYFV%2F20251031%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20251031T181649Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEFIaCXVzLXdlc3QtMiJHMEUCIQDvzjXmtZ%2BVZtz%2BrmG%2BpSR3Bi29Gpd8TRUzFx5cw%2FcGKQIgEyrGclWSgqnk9y9KFy%2FpLe6Xgq1Q3kZZ6ogkM93NqQUqsgUIGxADGgwwMTM2MTkyNzQ4NDkiDN5w9Ce%2F4kF%2FJOqg%2BCqPBfByzU%2FR3GGFbgOPg0WXEwUbxvSq6jhDPmRyexD2vapT3WEpCRBk0qHGcjF3UhM8XODT8fJJPngb5Uhl4cZMx0n4Cju7Ni6yRmfKDD%2F287vd%2ByZ4rztBuRrzfSfI%2F%2F3SgXekYYUp4jYE1udb87G9aC4lmyTy%2B%2BBVsoEdso4ot%2BF5XdLDQ3ZhM7CJ44zzNHexE6%2FMiKognIut3tV7n2sM72Hew%2BSrFqAQSLWP5qxnt15LO3sfxK9wmPefVxqskNFvTPVabkKsM99h0uQFq7CYn8irf3xUlmtxpGPvN3FCyZcmAnZAPIHCME36TgcjMdSQ0zhoPCFbh5MPi5omVM4uKax%2FlqYDhiwwMtkKsVXXhtdGyqWe0MJ4i6rHaWmJ0Yg7S0xC04Be8eDBiYEKpGM74NKSZzBNSYjATPkOBF2GIau0D5JG%2BbzwWetIjVym43qGpMjfCUe%2FBTAvOerlQqErw1ns0W8LbhV9CD61C7fxF3%2B6Q7r6RsB8hHuGGPWKPCv9%2Fir8odBa4L3aKoLQq%2BFqiCu8fdLjqjrrNAVcHK8kx%2BWgzwOrgPKyfeOlYyGVqCblQgH8PRO11HZEWsJptPNQ28CaLiITwmyej5vmwlAma1DLDHP7J2xGibXG3P7EQGnJWWLQre4yzmUc9QT46ZtUlvSCA%2F2IxTtAZaXB%2FpAAFjL9WPPnhM9AeZtqa5TWrLodC5vhYkfIlD33CtG%2FeeULp1w79ftDzdUgLjnXxcdeiaAnpDQlPnqiPggI5gmAxNAYpSP7udQol6hq01wmVEOMVIFr7fxg%2B5SxByJWyKr00BZgIiKZJVOV9J4%2Bf4fKRf9BFzSXHBBWWc2r71BZGUYicu2EQhPNH03gRT9pk53FLBwwkumTyAY6sQEzsx20yUVcqxfHXgPniTjnXqG28VxWX2TH0Ez9kri2h976fHd16D8KqSD4jbe6UFXCPC2AsEXH6CpeJKa%2BpK6Enh0x%2BkHPRwyE5Dng1xGWMwrpLrNtCN6t3oE05OyDuOdyX10rh2s7dsgc09NVqTlHI9Eo4cjZQhI%2FGKTR6d7l9k6Dz7nfUH3nQp%2BnE1h9gCs%2BkQuU%2BGkTMCvPksgvJRf6CVaECKdFUuDhDerDiVH%2B5yE%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=e48c513fd2ebe526159208c4c48fd0d1159acdd60090b013da2ad999764bf1f6",
+      "file_size": 249411,
+      "type": "image/png",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 0,
+  "voters": [],
+  "severity": {
+    "rating": "low",
+    "author_type": "User"
+  },
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
