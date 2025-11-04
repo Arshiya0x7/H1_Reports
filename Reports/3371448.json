@@ -1,0 +1,123 @@
+{
+  "id": 3371448,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMzcxNDQ4",
+  "url": "https://hackerone.com/reports/3371448",
+  "title": "Improper Authorization Leads to Editor can toggle admin-only workspace features (Lovable AI)",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2025-10-05T14:15:43.084Z",
+  "submitted_at": "2025-10-05T14:15:43.317Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "d0maxploit",
+    "url": "/d0maxploit",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/n5xxafudhdeihfjgwrjjktkg8ox0/c8a1698ff707a5e3e8a91a3484838363845daac68cb82c86d55c9e2d44d67b67"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 101556,
+    "url": "https://hackerone.com/lovable-vdp",
+    "handle": "lovable-vdp",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/vqnq844bgn7gv1xr9qr9chke2kf5/c8a1698ff707a5e3e8a91a3484838363845daac68cb82c86d55c9e2d44d67b67",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/vqnq844bgn7gv1xr9qr9chke2kf5/74790fe75ac5dbe8a5140a122388d59ebac913dcfa941f0b3a45e6cad161f9ea"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Lovable VDP",
+      "twitter_handle": "",
+      "website": "http://lovable.dev",
+      "about": "Create apps and websites by chatting with AI"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2025-11-04T22:54:23.954Z",
+  "bug_reporter_agreed_on_going_public_at": "2025-10-05T22:54:20.957Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nAn account with the Editor role can successfully call the API endpoint `/workspaces/<WORKSPACE_ID>/tool-preferences/ai_gateway/enable`that disables workspace-wide admin-only feature (Lovable AI). The API does not enforce server-side role checks for this action, allowing a vertical privilege escalation (Broken Access Control).\n\n## Steps To Reproduce:\n\nPreconditions\n\n- Two accounts are members of the same workspace `Victim-Workspace`:\n\n    - Account A (Owner/Admin) - Owner role in `Victim-Workspace`.\n    - Account B (Editor) - Editor role in the same `Victim-Workspace`.\n\n1. Sign in as Account A (Admin) and toggle the AI feature off inside the workspace.\n\n2. Capture this endpoint (Responsible for Disabling AI Feature).\n\n```HTTPS\nPOST /workspaces/<WORKSPACE_ID>/tool-preferences/ai_gateway/enable HTTP/2\nHost: lovable-api.com\nAuthorization: Bearer <OWNER-TOKEN>\nContent-Type: application/json\n\n\n{\"approval_preference\":\"disable\"}\n```\nNote: <WORKSPACE_ID> is the workspace id for Victim-Workspace.\n\n4. Modify request to use Editor JWT Token\n- Replace the Authorization header with Account B (Editor) JWT:\n\n```HTTPS\nPOST /workspaces/<WORKSPACE_ID>/tool-preferences/ai_gateway/enable HTTP/2\nHost: lovable-api.com\nAuthorization: Bearer <EDITOR_JWT>\nContent-Type: application/json\n\n{\"approval_preference\":\"disable\"}\n```\n\n5. When the request is sent again with the Editor's JWT , the request succeeds and the Lovable AI setting is switched off for the workspace.\n\n## Proof of Concept: \n\n{F4859179}\n\n## Impact\n\nBased on the Lovable AI documentation, this feature powers all the AI-driven parts of a workspace like prompt integrations, content generation, and other model-based actions.\n\nIf an Editor disables it, all those AI features stop working across the workspace, breaking functionality for every member. Since only admins are supposed to control this setting, the bug lets an unauthorized user disrupt how the workspace operates and remove core features that teams rely on.",
+  "weakness": {
+    "id": 124,
+    "name": "Improper Authorization"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 4859179,
+      "file_name": "Lovable_AI_Feature_POC.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/7uys2zfcmkm3k7q4i0eacw8y1pfn?response-content-disposition=attachment%3B%20filename%3D%22Lovable_AI_Feature_POC.mp4%22%3B%20filename%2A%3DUTF-8%27%27Lovable_AI_Feature_POC.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZKVWSMUQ%2F20251104%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20251104T231508Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjELX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDLEu%2BjXtf1ztGUbhpt19qPcaD07rqYY%2Bph6Z%2FO4FHD9gIhAIQjt5XpTexg9YyruQfEeLbbWPaYdsiaG7dHrDlV6z8TKrIFCH4QAxoMMDEzNjE5Mjc0ODQ5IgyUEAMBUmWngKkw1KsqjwXo%2FjLzgFLoDcXYj2D%2FBFt4ZXDEVFumqyycINoSTDSj0vnP7za0UIElQjhhknFzl8QcVelB%2FAiKNRRvdW4veNIA52gYrWz%2BMqcNQiPTaKcskY8gV%2BBiCe1FmTHmh5SadXNkIGivK3Sexw7a3YyZdei7i9oB%2Fr7g0nlT1zxpF4ltmyM54Hunz6%2FKDFh1yspvSCHY%2FNL2db4cbHI3A05lyACyqFZMFksyK8403dvaY%2FTGrbtrqGSZDjfTyboT8gQTfypezDtLc%2B0UmpMGChnfkRs1o6ooBBZBFiuAYvZqy8ANICElplmK%2F7VxBocOjuxZWZvXOtUs4NVgbYmqT14P7aa9wJtaD4v40Hckzdf3qHRDI6OHlgixnHVjs5JiUfdqU673a%2FW3rvDFhenraqBJjj2LfGVpjbrnWzll7g6LscLPa8920o1bAs6M7sca7UdVl8tFtkJVG%2FfySgscKojJlvtZKytYyivNjHyEyWtZe8O0miRw%2FrV57z9GquZa%2FCVyQPiRLHlel0EIfel1wY%2B44p8T3X8nXxeOx2BY6q2o1w581aaOtLbywTIh3pk5BMT4ufIipjkg%2BukITdg%2BldMS9WkXpBIBDPQ1QxJ60v1Gv3qE9cvtRV38r9M4hW8B%2Bnac16eQ4qCpkxDtQmPbKNxueAaWuiNd37iyRnxTgp1AYsixHY1mteJvkRA1N3fQouZZ37KuiE6sAefq6roD93K8VAxlq5U%2BGDIziRhv0BmoTqMqSF1X%2FHCUXXb0mhp3%2BGvHhIQoRdHOn0rEDAu0KjoyX9VdRNljWY6dTNKota4X%2BxOcccZEDQRmkqx%2Fpr6NqVEePw1EXhfZ56n3GxqxIuh3ceSIHyREjpGw%2Bq67wUSCcelxMIHEqcgGOrABC02DocUjT7dj0vS%2BbNcFVeaUJ%2F4sBTfaH%2FQhARciqsARU9vhfBh%2B7m%2BhoTvLdn3slHE0MlSXFYk%2F%2FchLeetL%2FF44bQAjUCYESnnvlAshWqjdtsGNfd8THoK0AF8isXCT5N6DMwyWgBKUWTPa3dUhPKViR8zBKOT55cip2ymm4wBipTCiAWTAML6RllkczC77vWf6w4exoGMHg7t5bdIORGLOhWWKs7%2BMtVzR6is%2BBC0%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=3fba82a0aee5cc2fae0075e84c7a815010b96192659a86c4ab9a2d26c93548a0",
+      "file_size": 8951213,
+      "type": "video/mp4",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2025-11-04T22:54:21.148Z",
+  "allow_singular_disclosure_after": -1247.08992563,
+  "singular_disclosure_allowed": true,
+  "vote_count": 3,
+  "voters": [
+    "0-chrollo-0",
+    "2026",
+    "muradx00"
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "Team"
+  },
+  "structured_scope": {
+    "databaseId": 930866,
+    "asset_type": "URL",
+    "asset_identifier": "lovable.dev",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
