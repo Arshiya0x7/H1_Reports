@@ -1,0 +1,122 @@
+{
+  "id": 3369843,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMzY5ODQz",
+  "url": "https://hackerone.com/reports/3369843",
+  "title": "Low-privileged user can enable or disable Lovable AI for new projects in workspace",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2025-10-03T19:51:42.048Z",
+  "submitted_at": "2025-10-03T19:51:42.305Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "anxioussick",
+    "url": "/anxioussick",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/yr4g2x88h1vudn61xkw4mhto3jww/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 101556,
+    "url": "https://hackerone.com/lovable-vdp",
+    "handle": "lovable-vdp",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/vqnq844bgn7gv1xr9qr9chke2kf5/c8a1698ff707a5e3e8a91a3484838363845daac68cb82c86d55c9e2d44d67b67",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/vqnq844bgn7gv1xr9qr9chke2kf5/74790fe75ac5dbe8a5140a122388d59ebac913dcfa941f0b3a45e6cad161f9ea"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Lovable VDP",
+      "twitter_handle": "",
+      "website": "http://lovable.dev",
+      "about": "Create apps and websites by chatting with AI"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2025-11-07T03:52:10.962Z",
+  "bug_reporter_agreed_on_going_public_at": "2025-10-08T03:52:01.696Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "Hello team, I hope this report finds you well.\n\nOn lovable.dev, low-privileged user can enable or disable Lovable AI for new projects in workspace. During testing, I found improper authorization vulnerability that allows low privileged user to modify Lovable AI settings. Here's the steps to reproduce.\n\n## Steps To Reproduce:\n\n1. Get the endpoint to enable and disable Lovable AI for new projects in your own workspace\n2. Now, replay that endpoint on another workspace with low-privileged role\n```\n<!-- To enable -->\nDELETE /workspaces/<workspace_id>/tool-preferences/ai_gateway/enable\n\n<!-- To disable -->\nPOST /workspaces/<workspace_id>/tool-preferences/ai_gateway/enable\n{\n\"approval_preference\":\"disable\"\n}\n```\nI have provided a video POC to demonstrate this.\n\n## Video PoC\n{F4854546}\n\n## For log review:\n>X-Hackerone-Research: anxioussick\n\n## Impact\n\nUnauthorized enable or disable Lovable AI for new projects in workspace",
+  "weakness": {
+    "id": 124,
+    "name": "Improper Authorization"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 4854546,
+      "file_name": "bac_lovable_AI.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/o54z0ddqvu13kcnkppjibf1hvelu?response-content-disposition=attachment%3B%20filename%3D%22bac_lovable_AI.mp4%22%3B%20filename%2A%3DUTF-8%27%27bac_lovable_AI.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZCDWPCGL%2F20251107%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20251107T041508Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEOv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIGxTHivrPRBzSwjrwcDH%2BvUVGWdDTy%2BElV3SQcRAzYwOAiEA46%2FXSJvJWrXsghc6SHBsmibmXnhdYk8ajJHuJiyJavAquwUItP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDGaBhkZh2pzfbHcVHyqPBd2YpVeaNqCKvsW1HPuFt2OXouxAB2pdwsDnKAIEUwURIrC5vXjrGnkEgenUxObZZxYV8P50j5YI1aQIqEtWxZ3BjlKVI0ckRSOKNBmfbQWJrdgPrcvGKQZCZnhEb3NgFfYX17SEr0rriZ%2F0y0b3b7jTt7QnjNA8nlgilzLMvdAKOylyb4A9tHMFmK0HOFPT2PbIhXr%2F9FkTaSIaZ4xjAUgr0E0nrEZg4l2aMGpK1qkBpr72vUZa6K5tGYWbxG7mrTXzAKh2st0xHZP6FYvcn4NW1gpkdK21Xc5gGijh%2FKUAgiWxfWMZENyB55eZ5je5vbwBjQD%2BWFHhXczKBDPi2StOAzLZB9W%2FFy8DhhbKVxpanVcLCmphkClNfuY3KEhu%2BBjTIFHJi%2FQbGPU0fc%2B%2B0mtuFQ17hcN7oWEqc7XXw09QfvX%2FZuZj%2FY3or4rDqEtR0mKnPe1NvD%2F1KKNmfgEwcBsArfxVxDPwNS2jDPWBG8SAou2JxpxyPj2bfVmbmEeF6pRXJ86eEqtZlkxSsDVkJ9CTYumzlVRvUp6ivVil2S3%2BCa97l2C99CigPFBFJKAu0dzOlx%2Buj0VVddK8JrKgr1Nu17xNQyRBR14Ki2yqfwL%2FPzWODZj1IJvQC1v5QOqLZdNtu7xhk2fLLHTQ2QhBre9cHCdzztHKJs8EUCwPRULi9v0ANMzqTjlC1gsxD5NLH6f3nufjr7Re80KPEmqc5fG8FYt3hW6c0AfUGs2rbW68thKqOFenN8VNuDXORBsFQFWaNB0QHW7FsSYxhilpnYtMe3lHI4ifCu07N7RxT6ECsDQz1TmvNeKZbYq07K9ebhmfdIz%2FRyO7AtbZEFVviCaJoD%2Bppckfh7elFRkE4zMw%2FcW1yAY6sQGbbHm5hPsJKIN7KfX9aFBCO1DbyFGzics%2BHw1aZJJCtQ3b1ZIN7WJ3i4mFYEvE%2Bgd5A6qZIXqDVCPMiGToJj1ozrH%2F15eaiBCgInnXSdPIdxIztiJ8mNIZ9AFZ%2B0vxE4KhG4Em1hKCxnDANujvTj%2Bh9dytz%2BCbn81go6XN7fcQZpSRpdfPAIDl26HI3H%2B1pd1e12RcbEf2GQPwCNiCAidLXzXjbBh3jRyy2IKzebAo2A4%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=1c56dd7f7a12ee79f9dfab7e7272152943703b8d20c8418339522d3fd2dc2271",
+      "file_size": 65454262,
+      "type": "video/mp4",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2025-11-07T03:52:01.992Z",
+  "allow_singular_disclosure_after": -1386.499820409,
+  "singular_disclosure_allowed": true,
+  "vote_count": 2,
+  "voters": [
+    "muradx00",
+    "anxioussick"
+  ],
+  "severity": {
+    "rating": "low",
+    "author_type": "Team"
+  },
+  "structured_scope": {
+    "databaseId": 930866,
+    "asset_type": "URL",
+    "asset_identifier": "lovable.dev",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
