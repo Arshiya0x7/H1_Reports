@@ -1,0 +1,110 @@
+{
+  "id": 3427670,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zNDI3Njcw",
+  "url": "https://hackerone.com/reports/3427670",
+  "title": "Double-free vulnerability in libcurl with rustls via NoServerCertVerifier condition leads to application crash",
+  "state": "Closed",
+  "substate": "informative",
+  "readable_substate": "Informative",
+  "created_at": "2025-11-16T07:32:52.000Z",
+  "submitted_at": "2025-11-16T07:32:52.082Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "xkernel",
+    "url": "/xkernel",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 35663,
+    "url": "https://hackerone.com/curl",
+    "handle": "curl",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/035/663/2faf4c279d437d64bfda6d23d62ce1833813a4d9_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/035/663/2faf4c279d437d64bfda6d23d62ce1833813a4d9_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "curl",
+      "twitter_handle": "",
+      "website": "https://curl.se",
+      "about": "cURL is an Open Source project providing a library and command-line tool doing internet transfers"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": true,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2025-11-16T22:40:20.276Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2025-11-16T11:40:01.429Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nThere is a double-free in libcurl with rustls.\nThe root cause is reported and it is fixed in https://github.com/curl/curl/pull/19425, while I did not try to evaluate the actual triggering at that time.\n\nNo AI was used to find the issue or generate the report.\n\n## Affected version\nIt was introduced via commit https://github.com/curl/curl/commit/088f0e6a5b8d934073a0e089ebecd14ca75120c4 on Mar 25, 2025.\nIt affected the official version from v8.13.0 to v8.17.0.\n\n## Steps To Reproduce:\n1. Installation:\n    (1) Install rustls-ffi via https://github.com/rustls/rustls-ffi/releases/download/v0.15.0/librustls_0.15.0_amd64.deb.zip.\n    (2) Build curl-8_17_0 from source. (my configure is: \"./configure --enable-debug --enable-static --disable-shared --with-rustls\")\n2. Compile the basic PoC program via \"gcc -o test_rustls_fail test.c -I./include ./lib/.libs/libcurl.a -lnghttp2 -lpsl -lrustls -lpthread -lz -fsanitize=address -g\" (The source of PoC program is attached). The basic target is to trigger NoServerCertVerifier of rustls_client_config_builder_build() at https://github.com/rustls/rustls-ffi/blob/0b5f053fe5200e262ed70c100cc5486ce76d9d8a/librustls/src/client.rs#L505.\nIn cr_init_backend, https://github.com/curl/curl/blob/master/lib/vtls/rustls.c#L1046-L1067 is for setting the verifier. Once `!conn_config->verifypeer`, `ssl_config->native_ca_store` and `(ca_info_blob || ssl_cafile)` are not satisfied, then the verifier will not be inited.\n3. Run the PoC program. The output/sanitizer info will show the double-free problem.\n\nNote:\nI did not fully try other unsuccessful possibilities of rustls_client_config_builder_build(). The PoC is just a real triggering case to show the existence of double-free.\nBased on my personal analysis, it is mainly affect the libcurl and it is hard to reproduce it in a controllable manner for curl tool.\nHowever, there is still a risk of curl crashing in the oom scenario.\nFor example, the API `rustls_client_config_builder_dangerous_set_certificate_verifier` returns OK yet the verifier may not be successfully set due to oom at https://github.com/rustls/rustls-ffi/blob/0b5f053fe5200e262ed70c100cc5486ce76d9d8a/librustls/src/client.rs#L218.\n\nMaybe we can also further prevent it earlier just like below:\n```c\n  else if(ca_info_blob || ssl_cafile) {\n    result = init_config_builder_verifier(data,\n                                          config_builder,\n                                          conn_config,\n                                          ca_info_blob,\n                                          ssl_cafile);\n    if(result != CURLE_OK) {\n      rustls_client_config_builder_free(config_builder);\n      return result;\n    }\n  }\n+ else {\n+    rustls_client_config_builder_free(config_builder);\n+    return CURLE_SSL_CONNECT_ERROR;\n+ }\n```\n\n## Supporting Material/References:\nThe source of PoC program.\n\n* Please see the attached file `test.c`.",
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 5011468,
+      "file_name": "test.c",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/r4lxpbiv2sbv1uvyhfi4e9nkv1wd?response-content-disposition=attachment%3B%20filename%3D%22test.c%22%3B%20filename%2A%3DUTF-8%27%27test.c&response-content-type=text%2Fx-csrc&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQR7OHTIFK%2F20251116%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20251116T231508Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjENT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDrDrDsQ3FWEuc8%2BUZx5hCCXYOOLck3KPlDimAX1jdAbwIhAPtoAunTXfV908h4vDbQdmmuLBcvMybiynwtftq%2BXoqcKroFCJ3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5IgzrrqN%2FZqMbnXkHEpQqjgWg%2FjdwtJ%2Fm0bdkB9pWp7Yp36u7gxgldbjgY66W8i4UWWOGke81rLWknjOUZ9%2FX0yffGPIpcaFK3fWLuq3nuwfdNZxQKR33%2F2qor9nF7L9RYGqWeT4zws4%2FDSFkqKXPjlvGn7HmKP2I0IZn8xZpA86iVcq2P9on%2FJIW5W3zWtd0Ir298lg0lVFsClXUdgfrGS0RB21oloqX6lA57SNy7RXHyYWoY8o1R94mNhFtyrUszlCeY7CaVaLP%2FDZJi%2FQcccU0hNqSkzsLSZVJ%2FLTAT3WElVuwcYYk0Dco0CWNki6X6u4PCQE91F8e0tl0B508M2NUHPofS6ZU6HYoQdzLjIGF4BzSAXTegRmCw%2Bt31qQmC7cOjjxtQ0xxvq0zzGQA0lyUTICD4KKd8rj0DG68r1%2F%2FQpI3z0or5PnEQyxS7N1YMkdsg0oq9FotAqHj6GWsR5Ramh4SC9CKeWP6vPZvQdzwCJFu9j2gDQiI5fwhVZhNRvjDOx0LPiInkCcnalSVsPM1k9TXTiar9eVvLaOi8vgMlVGunqX0WzJkVgorBr8KCyU8sDSdCJ%2BLR1rmwfHku8BYumSf0LsQN%2BDEaavqEGuKY7%2FqpcCy%2BKuJkwOyE1S5zFZSKv3DiAEpC9%2BHAVC8m1dn50mtAAbrR8s35oXVb%2B%2Befx2ha2DtgRE5Ndgxqmllj4%2FI9KKEh4TEmIOmELnejorga%2BQ2WxGAt6aKXRJf7kwFZEvuaME%2BA3muUcY5Nh1xnM1urcsmeMCZGpw5VQvzp7V9mShUjn8zU2Qb%2Fp2ZlyC7hUZRCNTYd9aUMCM0zBqjk8dWoccqdsHO4cQ%2FOH1CxffamyNc2E3LD1r0%2Bpytg7CxLwDgkBvCXqKp2K6IN2Uwot3oyAY6sAEnjBmAPTYU1Cy04Msmt37ux1QQpwzNYQIHCfMYbgxlYoGQes6z9AGwtBmduQiJY4FWx%2FmzTjn%2Bbhd0RVwuasK8L6B%2FgowdHVQsDQN1h5OwbdjadGPiq6DN4ZCKkn4uxoy9cZhaH7w0v10fiJuU3hFFCMxTYBVHjGfauQAfjOoQMAelfrI4JgKAbBK6hphcATXmcnkvklgqCTSuU2DuZgVFdUdoQEVbVpMSH21kP7fWiA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=e4ec7e10463bf9e73c101907ba8f30410281a8d74630498654cc66e66a04fa90",
+      "file_size": 1275,
+      "type": "text/x-csrc",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 1,
+  "voters": [
+    "2026"
+  ],
+  "structured_scope": {
+    "databaseId": 18844,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/curl/curl",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
