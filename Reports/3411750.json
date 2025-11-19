@@ -1,0 +1,144 @@
+{
+  "id": 3411750,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zNDExNzUw",
+  "url": "https://hackerone.com/reports/3411750",
+  "title": "Stored-XSS in campaign name displayed in Banners modal",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2025-11-05T09:32:09.181Z",
+  "submitted_at": "2025-11-05T09:32:09.419Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "is_triager?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "vidang04",
+    "url": "/vidang04",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 2367,
+    "url": "https://hackerone.com/revive_adserver",
+    "handle": "revive_adserver",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/002/367/4f47a5b4a364515d4bbdc17550d67ea5415363cd_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/002/367/4f47a5b4a364515d4bbdc17550d67ea5415363cd_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Revive Adserver",
+      "twitter_handle": "",
+      "website": "https://www.revive-adserver.com",
+      "about": "Revive Adserver is a free open source ad serving system"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2025-55126"
+  ],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2025-11-19T12:56:20.082Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2025-11-19T12:56:07.017Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "##Description:\n\nA low-privilege authenticated user can create or edit advertiser/campaign names containing HTML/JavaScript. Those values are stored in the application and later rendered without proper HTML escaping in the admin Inventory → Banners advertiser/campaign picker. When an administrator opens the picker, the stored script executes in the admin’s browser, enabling account takeover, unauthorized admin actions, or sensitive data exposure.\n\nBecause any authenticated normal user can store the payload, the attack vector is remote and trivial for an attacker with a valid account.\n\n##Steps:\n\n1. I injected a script code XSS:\n\n{F4968699}\n\n2. Result:\n\n{F4968700}\n\n## Impact\n\nRemote authenticated attacker (normal user) places JavaScript that executes in administrator browsers.\nPossible consequences (depending on environment and cookie settings):\n+ Admin session theft (if cookies are accessible).\n+ Silent administrative actions performed via the admin session (create/modify/delete resources).\n+ Disclosure of sensitive UI data accessible to admins.\n+ Pivot to further compromise of infrastructure or data exfiltration.\nBecause the attacker only needs a normal account to persist payloads, this is highly exploitable and should be prioritized.",
+  "weakness": {
+    "id": 62,
+    "name": "Cross-site Scripting (XSS) - Stored"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 4968699,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/f3b8w22md2ao3o6rlacfjp40z1vq?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQTYT7HWH3%2F20251119%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20251119T131539Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEBUaCXVzLXdlc3QtMiJGMEQCIFTp8u1XQrLtY%2FaH28qjyqD%2BbUXImjPRagjDu%2FRpVIBcAiAcwF%2BUmC1DpOJUCU6ioT3UgXNmp%2FFnDOG8Yvmex17Bqiq7BQje%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMUGtIrMMw%2BLp9YMqaKo8FdeSg2kuPt6Q%2F0aH82B3dChyKy6IE0YbQApD1gn5f3V1rOk1NMNUancTlkcSFruts3GwyXeLEX43KBYowdb4taOsXE%2BD3ksOmcYAeqHxTnzgnyjWLiZHbjCgtGER0mIpXZxz7kHoPGEYhVn60v4tUl%2B0sfrUC2ZO9qBn6elQy1cAnR4Dt9IJKc9hNmYD%2B%2B8Vi874fjunD7kXNHjUkPn2%2B%2FzS31Pk0uSTC1%2BtrflAukrLljYDC3ZCQCzzDGB2YPTeQL71B4AWAJ8nYh2dmEiIzHaBUeo%2B%2Ba465yI4aTIgoFLRQQjPliWhjlt8R0b5XgS1fym%2B26EcmBxOS%2BcCthEmaqs6nSu6FXCUi8J%2B4FgI2dMfNCvnAnlqaUd8UfekbNEQMrAEV76GdtEEIwzd5%2Fh8xNf5sHMk4ZOCzFBmczmJLv66FJm3jFzazuS%2FOckxZ4dlFpikBGXnVmK4A0r20HeTKgJ2NxvgfZTTq2V1lt8i95b6RP%2BX01o4t6S%2FKz2fnGZ2%2FchSr6HkaL6ToGyxzoM7%2FPtZv8WQsVtWieoQV5FLCputcqc3l0yhnmc%2FQVWr2RDhNL7j%2FIPlQ15PAEaxU9m651oCtEj8IBGm1aW0xw3J%2B%2Fe2%2FlHW6k0mY01pGDoIiPxm76GiPSI1pH%2B5aW%2F%2FBYsqX8voJb5MWV6%2FlESEFyjfcWrvVQVxDhvaWdOLmrTS3ydOAxd%2F84wShqwowAofqmhY94tXGKeyPWgCcEE1rJnRO8Pb8iodWDq9KC1Y4R5ZzsA1HaURL5bZc9dwqe7ChjmXSDH7dzN02575%2BtRg2q2x4rHLSH6NZnzu76ILX7nqsWiMRvQOtl9P8MKZd25uD2NeDcUPR8zw5oni2uQQ5V6GABzCj9PbIBjqyAfJTOA1bQKiq7ZtkuYrjDLxLD7aPHbQkJyOw20vb6qtVCjtskQpcdccm3P6V0j7BWqYs6%2BcyXHUYX%2F95zLRjQ4slpDcDidhxhnj6tuhIOaX9H4q9VyikIhiQ%2FMsssn2LwJupAbEMq0mUrp7OViOQvR2sqtsp8e84g6mxuSH95NJZtKSPz7ty%2FDe922qlMoxQMj3LB6gaSrcCeenI%2FSRLk5RrTVXLK%2BhiRRSfnSnEwOJkqx8%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=8e8c1e5cf4e4bb93e15dd18c79e0b6d9e4e6c5e3c2a97a1a0bdb28af24ee7cbd",
+      "file_size": 167369,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 4968700,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/9gpjmioz3utzqwuu5iymp5r958h1?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQTYT7HWH3%2F20251119%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20251119T131539Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEBUaCXVzLXdlc3QtMiJGMEQCIFTp8u1XQrLtY%2FaH28qjyqD%2BbUXImjPRagjDu%2FRpVIBcAiAcwF%2BUmC1DpOJUCU6ioT3UgXNmp%2FFnDOG8Yvmex17Bqiq7BQje%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMUGtIrMMw%2BLp9YMqaKo8FdeSg2kuPt6Q%2F0aH82B3dChyKy6IE0YbQApD1gn5f3V1rOk1NMNUancTlkcSFruts3GwyXeLEX43KBYowdb4taOsXE%2BD3ksOmcYAeqHxTnzgnyjWLiZHbjCgtGER0mIpXZxz7kHoPGEYhVn60v4tUl%2B0sfrUC2ZO9qBn6elQy1cAnR4Dt9IJKc9hNmYD%2B%2B8Vi874fjunD7kXNHjUkPn2%2B%2FzS31Pk0uSTC1%2BtrflAukrLljYDC3ZCQCzzDGB2YPTeQL71B4AWAJ8nYh2dmEiIzHaBUeo%2B%2Ba465yI4aTIgoFLRQQjPliWhjlt8R0b5XgS1fym%2B26EcmBxOS%2BcCthEmaqs6nSu6FXCUi8J%2B4FgI2dMfNCvnAnlqaUd8UfekbNEQMrAEV76GdtEEIwzd5%2Fh8xNf5sHMk4ZOCzFBmczmJLv66FJm3jFzazuS%2FOckxZ4dlFpikBGXnVmK4A0r20HeTKgJ2NxvgfZTTq2V1lt8i95b6RP%2BX01o4t6S%2FKz2fnGZ2%2FchSr6HkaL6ToGyxzoM7%2FPtZv8WQsVtWieoQV5FLCputcqc3l0yhnmc%2FQVWr2RDhNL7j%2FIPlQ15PAEaxU9m651oCtEj8IBGm1aW0xw3J%2B%2Fe2%2FlHW6k0mY01pGDoIiPxm76GiPSI1pH%2B5aW%2F%2FBYsqX8voJb5MWV6%2FlESEFyjfcWrvVQVxDhvaWdOLmrTS3ydOAxd%2F84wShqwowAofqmhY94tXGKeyPWgCcEE1rJnRO8Pb8iodWDq9KC1Y4R5ZzsA1HaURL5bZc9dwqe7ChjmXSDH7dzN02575%2BtRg2q2x4rHLSH6NZnzu76ILX7nqsWiMRvQOtl9P8MKZd25uD2NeDcUPR8zw5oni2uQQ5V6GABzCj9PbIBjqyAfJTOA1bQKiq7ZtkuYrjDLxLD7aPHbQkJyOw20vb6qtVCjtskQpcdccm3P6V0j7BWqYs6%2BcyXHUYX%2F95zLRjQ4slpDcDidhxhnj6tuhIOaX9H4q9VyikIhiQ%2FMsssn2LwJupAbEMq0mUrp7OViOQvR2sqtsp8e84g6mxuSH95NJZtKSPz7ty%2FDe922qlMoxQMj3LB6gaSrcCeenI%2FSRLk5RrTVXLK%2BhiRRSfnSnEwOJkqx8%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=4a88c385bc5232ec4b02a4834de6073af9b2ea06f4f3f97455f546599bd1da5c",
+      "file_size": 171165,
+      "type": "image/png",
+      "moderated": false
+    }
+  ],
+  "allow_singular_disclosure_at": "2025-12-19T12:56:07.437Z",
+  "allow_singular_disclosure_after": 2590828.345296673,
+  "singular_disclosure_allowed": false,
+  "vote_count": 2,
+  "voters": [
+    "vidang04",
+    "yoyomiski"
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 6.5,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "low",
+      "integrity": "low",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 154,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/revive-adserver/revive-adserver",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
