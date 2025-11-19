@@ -1,0 +1,145 @@
+{
+  "id": 3403450,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zNDAzNDUw",
+  "url": "https://hackerone.com/reports/3403450",
+  "title": "Information Disclosure via Verbose Error Messages",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2025-10-29T04:00:08.456Z",
+  "submitted_at": "2025-10-29T04:00:08.679Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "is_triager?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "yoyomiski",
+    "url": "/yoyomiski",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/8srnz0lecmhwpfwsnijwsi6mw9a4/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 2367,
+    "url": "https://hackerone.com/revive_adserver",
+    "handle": "revive_adserver",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/002/367/4f47a5b4a364515d4bbdc17550d67ea5415363cd_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/002/367/4f47a5b4a364515d4bbdc17550d67ea5415363cd_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Revive Adserver",
+      "twitter_handle": "",
+      "website": "https://www.revive-adserver.com",
+      "about": "Revive Adserver is a free open source ad serving system"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2025-52671"
+  ],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2025-11-19T09:35:34.265Z",
+  "bug_reporter_agreed_on_going_public_at": null,
+  "team_member_agreed_on_going_public_at": "2025-11-19T09:35:21.313Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "##Version:\n==revive-adserver 6.0.0==\n\n##Summary:\nRevive Adserver v6.0.0 exposes sensitive technical details through verbose error messages, revealing the exact MySQL/MariaDB version, SQL queries, and PHP environment details. Attackers can use this information to identify known vulnerabilities or craft targeted attacks.\n\n##Step to reproduce:\n1. Log in website\n2. Go to `http://<IP-address>>/admin/channel-acl.php?affiliateid=<<id>>&channelid=<<id>>`\n3. Add `Client-Language` --> `Save changes`\n4. Intercept request,  Enter ' (single quote) in the Execution order field.\n\n{F4943854}\n\n5. Submit and observe the detailed error output exposing MySQL/MariaDB version and SQL query.\n\n{F4943876}\n\n## Impact\n\n- Disclosure of backend details (DB version, structure, PHP info) may help attackers identify vulnerabilities or tailor attacks against the server.\n```\nVersion: Revive Adserver v6.0.0\nPHP/DB: PHP 8.4.13 / MySQL 10.6.22-MariaDB-0ubuntu0.22.04.1\nINSERT INTO rv_acls_channel (channelid , logical , type , comparison , data , executionorder ) VALUES ...\nINSERT INTO rv_acls_channel (...) VALUES (...)\n\n```\n\n##http header raw:\n```\nPOST /admin/channel-acl.php HTTP/1.1\nHost: 192.168.109.200\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:144.0) Gecko/20100101 Firefox/144.0\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\nAccept-Language: en-US,en;q=0.5\nAccept-Encoding: gzip, deflate, br\nContent-Type: application/x-www-form-urlencoded\nContent-Length: 514\nOrigin: http://192.168.109.200\nSec-GPC: 1\nConnection: keep-alive\nReferer: http://192.168.109.200/admin/channel-acl.php\nCookie: sessionID=<<sessions>>\nUpgrade-Insecure-Requests: 1\nPriority: u=0, i\n\ntoken=3f62fcfd14d8336b06e12b5adb678962&type=deliveryLimitations%3AClient%3ABrowserVersion&affiliateid=7&channelid=4&acl%5B0%5D%5Blogical%5D=and&acl%5B0%5D%5Btype%5D=deliveryLimitations%3AClient%3ABrowserVersion&acl%5B0%5D%5Bexecutionorder%5D=0&acl%5B0%5D%5Bcomparison%5D=nn&acl%5B0%5D%5Bdata%5D%5B%5D=Firefox&acl%5B1%5D%5Blogical%5D=and&acl%5B1%5D%5Btype%5D=deliveryLimitations%3AClient%3ALanguage&acl%5B1%5D%5Bexecutionorder%5D=1&acl%5B1%5D%5Bcomparison%5D=%3D%7E&acl%5B1%5D%5Bdata%5D%5B%5D=ar&submit=Save+Changes\n```",
+  "weakness": {
+    "id": 82,
+    "name": "Information Exposure Through an Error Message"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 4943854,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/6ulww2ywd2ctiyrwcb1ivm14m657?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUIBZORAN%2F20251119%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20251119T101537Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEBIaCXVzLXdlc3QtMiJHMEUCIEFKWl0pYbLi4R1TxzywUVudqs60mqC8g1iYje4drO81AiEAu7LBrUFPlitMq7685sP%2FPiGSoV%2Bdtw%2BK12JE9wE41OEquwUI2%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDEN7Hka40q3iihO5cCqPBRdU1fuMhD%2FUaDjqKM0Zq8%2Fj4dedIvqHE%2BQKA1OekkbHKrMtxFbWQY%2B6TvaIeqXPqFnov626NKBlAiJ%2FUrTnKwnxtGiL3ayFk8wrLNcZPdNr40aPzI4LgkW25RKVB%2BstGOa2wYV4Apj3ZHP9vMlnCbM0ispJimN%2BbpENTCAxPU%2Bpra3o7Eg3tOetNV70udW%2Fi074archE1RqRTR9DfrZNBBgVx1pKZe0nu%2BfZV0GOFjoN0m797lDoXv9zEWyErL5NxcVtMtcdHUaobg8%2BkXEcOM9STLehXEKWRjGRAe75wMfC6vhhzRx8TJkHe3Iovm%2FzcLfZR3GswjNg%2BcjUeAq62KEYn6XPXRY3e8kMoHrteQJAXIV8aBPubEkOTe8ZhMC%2BT8QYKrlp4MQIX67RxBFY2brFpm8SxQH53O5ub6HAvdiVLxqdELA%2FkJogIhwSZBg5%2FXwZdPOXeGhYgAcAuUshvjDXMwmR5eX9IB9kYtaWUlXPoP7i%2BSF2PqkqE3HseiD8%2B%2B7641H9P3FBRy5wEv3dmUJQkFXUqHZbKZD0zTscLEmGBsfzCrV8irROgVT7P3apuJnpK88t7dIUVulU9eYnTekJRDW%2FjFJ5X8MjUk%2FQAjiRHrx6ogbWP7skB2ovzxyTo7kvC3HfZhMp%2FYZvfN2HUThv0UDC8489gF0KMgVOQMeGYtMDKGxTOIEyY2sOEzMJqEO4E5eS%2FleHbj47dW%2F8KFQ%2FiO92a5YeEIH4uUZYUcscjoF8Aww%2B0pFu86jnYYE8601F6N1UTYaH5xXtLVAR3xYdPWFsIiotAkXdFjgapb4p2kLkHglpKO9riFWBIwVGIsiE%2FeG5W3sw7W9lN622%2Bh33PHL1du%2B7FQ6IgPymX4wo6T2yAY6sQHK%2FrodH9bjEbVydNbrIErBpD0ehbiZNsTFGN%2FAQjGMkcNjOFgJrAVS49yzWRMcUs85P13FEfj82JrUgN0AOnkM7Mme8hZfSx8%2FmJXkIS7wf50b8WZeQ3cCQxA%2BLhVdQxWW7ABB78uwLa5vuhv5BrefEZ2eBVId0Odzkp56SqyBrBLss15%2BoOEhZ3jeWnOY5Y6ObTNWWnk7sD%2BvJKnk1eqq752S9T%2BwZ%2Bpy0YtOERsi3RY%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=5e229827a96f582f986d8ee653f4ebfb2c7be6977a39eac31f9fe7c8b22944d5",
+      "file_size": 99978,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 4943876,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/hnyxr5sk10y9exvjybb859i95vkd?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQUIBZORAN%2F20251119%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20251119T101537Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEBIaCXVzLXdlc3QtMiJHMEUCIEFKWl0pYbLi4R1TxzywUVudqs60mqC8g1iYje4drO81AiEAu7LBrUFPlitMq7685sP%2FPiGSoV%2Bdtw%2BK12JE9wE41OEquwUI2%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDEN7Hka40q3iihO5cCqPBRdU1fuMhD%2FUaDjqKM0Zq8%2Fj4dedIvqHE%2BQKA1OekkbHKrMtxFbWQY%2B6TvaIeqXPqFnov626NKBlAiJ%2FUrTnKwnxtGiL3ayFk8wrLNcZPdNr40aPzI4LgkW25RKVB%2BstGOa2wYV4Apj3ZHP9vMlnCbM0ispJimN%2BbpENTCAxPU%2Bpra3o7Eg3tOetNV70udW%2Fi074archE1RqRTR9DfrZNBBgVx1pKZe0nu%2BfZV0GOFjoN0m797lDoXv9zEWyErL5NxcVtMtcdHUaobg8%2BkXEcOM9STLehXEKWRjGRAe75wMfC6vhhzRx8TJkHe3Iovm%2FzcLfZR3GswjNg%2BcjUeAq62KEYn6XPXRY3e8kMoHrteQJAXIV8aBPubEkOTe8ZhMC%2BT8QYKrlp4MQIX67RxBFY2brFpm8SxQH53O5ub6HAvdiVLxqdELA%2FkJogIhwSZBg5%2FXwZdPOXeGhYgAcAuUshvjDXMwmR5eX9IB9kYtaWUlXPoP7i%2BSF2PqkqE3HseiD8%2B%2B7641H9P3FBRy5wEv3dmUJQkFXUqHZbKZD0zTscLEmGBsfzCrV8irROgVT7P3apuJnpK88t7dIUVulU9eYnTekJRDW%2FjFJ5X8MjUk%2FQAjiRHrx6ogbWP7skB2ovzxyTo7kvC3HfZhMp%2FYZvfN2HUThv0UDC8489gF0KMgVOQMeGYtMDKGxTOIEyY2sOEzMJqEO4E5eS%2FleHbj47dW%2F8KFQ%2FiO92a5YeEIH4uUZYUcscjoF8Aww%2B0pFu86jnYYE8601F6N1UTYaH5xXtLVAR3xYdPWFsIiotAkXdFjgapb4p2kLkHglpKO9riFWBIwVGIsiE%2FeG5W3sw7W9lN622%2Bh33PHL1du%2B7FQ6IgPymX4wo6T2yAY6sQHK%2FrodH9bjEbVydNbrIErBpD0ehbiZNsTFGN%2FAQjGMkcNjOFgJrAVS49yzWRMcUs85P13FEfj82JrUgN0AOnkM7Mme8hZfSx8%2FmJXkIS7wf50b8WZeQ3cCQxA%2BLhVdQxWW7ABB78uwLa5vuhv5BrefEZ2eBVId0Odzkp56SqyBrBLss15%2BoOEhZ3jeWnOY5Y6ObTNWWnk7sD%2BvJKnk1eqq752S9T%2BwZ%2Bpy0YtOERsi3RY%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=0866cee61d59b823ebdb1c81afac7860f49d611fad16810f637f02a48bcd8af0",
+      "file_size": 55929,
+      "type": "image/png",
+      "moderated": false
+    }
+  ],
+  "allow_singular_disclosure_at": "2025-12-19T09:35:21.757Z",
+  "allow_singular_disclosure_after": 2589583.922968619,
+  "singular_disclosure_allowed": false,
+  "vote_count": 3,
+  "voters": [
+    "vidang04",
+    "2026",
+    "yoyomiski"
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 4.3,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "low",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "low",
+      "integrity": "none",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 154,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/revive-adserver/revive-adserver",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
