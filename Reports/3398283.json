@@ -1,0 +1,153 @@
+{
+  "id": 3398283,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMzk4Mjgz",
+  "url": "https://hackerone.com/reports/3398283",
+  "title": "Authorization bypass allows changing email address of other users",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2025-10-24T15:14:32.069Z",
+  "submitted_at": "2025-10-24T15:14:32.308Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "is_triager?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "yoyomiski",
+    "url": "/yoyomiski",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/8srnz0lecmhwpfwsnijwsi6mw9a4/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 2367,
+    "url": "https://hackerone.com/revive_adserver",
+    "handle": "revive_adserver",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/002/367/4f47a5b4a364515d4bbdc17550d67ea5415363cd_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/002/367/4f47a5b4a364515d4bbdc17550d67ea5415363cd_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Revive Adserver",
+      "twitter_handle": "",
+      "website": "https://www.revive-adserver.com",
+      "about": "Revive Adserver is a free open source ad serving system"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [
+    "CVE-2025-48986"
+  ],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2025-11-19T09:32:13.454Z",
+  "bug_reporter_agreed_on_going_public_at": "2025-11-12T04:54:58.026Z",
+  "team_member_agreed_on_going_public_at": "2025-11-19T09:32:13.133Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "==Version: Revive Adserver 6.0.0==\n\n##Summary:\nThe Change E-mail UI requires the current password, but the admin panel endpoint /admin/agency-user.php accepts a POST that updates a user’s email (including admin) without requiring the account password. The application does not require re-authentication before updating email addresses.\n\n##Step to reproduce:\n1. Log in page\n2. Go to Preferences → Change E-mail, observe that changing the email normally requires the current password.\n\n{F4929059}\n3. Navigate to Inventory → User Access, select the admin user, and click Save changes while intercepting the request.\n4. Modify and send the following request:\n`submit=1&login=admin&token=ba6ff2f70a69a509d5bcc84cb2225517&userid=1&email_address=another-mail@example.com&agencyid=1`\n\n{F4929064}\n5. Observe that the admin user’s email is successfully updated without password confirmation.\n\n{F4929065}\n\n## Impact\n\n- An authenticated attacker (with access to the User Access page) can change the administrator’s email address without authorization, potentially leading to account takeover or loss of access control integrity.\n\nVIdeo PoC: ██████",
+  "weakness": {
+    "id": 26,
+    "name": "Improper Access Control - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 4929059,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/85hd7nj9cn733vcnhpflxqaf2n0n?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQRGBBYYD6%2F20251119%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20251119T101719Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEBIaCXVzLXdlc3QtMiJHMEUCIEk5RvE0zozOmEYyCffCnHj%2BPiq7FKpAbJzAaBXLizqCAiEAmkAohMCkHP%2BBjfKziZ%2BBFvau2j6%2Bd86JUa1aX8bhgeQquwUI2%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDKTRNzMcaDvYwm0a7yqPBYG34%2BsgOHXApkgKz%2BJ8zd%2B76lDaF%2FLPonyycf2NWhZvLd0e4BF0NH0hNTezQ0WO7i70NlY9L%2Fl1o3Q%2BQwVuHhHctoSZhi1ur88hgE%2Bs%2BCA0x9Pbnd01LKQHye%2B%2BDKh5tK1Agf%2FFKpeSyIP2dkqRKbS6jmGzqIFR8SqpPJCpsBJJcPr%2FTTXrciD%2FKQaF6OnIA3g0kaRTjqfNLJDVe07ttK6uTgcCzyBkMDkXDlrF3fe7Z7b7AVdhDz7XUBOmJUZ5hGhzDsXzb69sE9PYG9%2BmOqKQ98zbHnr8w0nM7uCZRlesWOXZQowyk6Dujka0pBbkhFpiC%2FhxF8TP0VHxGT0abxpLjIFC7%2FLcypm93iW344CkzBGcF%2FVOslpRlkVqpnD5FvHqT9XsZVwljiBRcHnd%2F9IGupOKAOOohIkP%2F1C47ynKi%2FsmHRRN1qJzlKwESp7IfUArYv2bQvfYzeCHtn6e4GienQYuhJLmUvjI7F4xZFRtBKxGxFjnxHg8tCDDVgQ1WzQKNUL3XAMUFRbVVlWhJiIj6vHDc%2BAGkCoDR4Jfm7NYaF5nmOrRVxz6yyejafDqMDYD53wnbJjDnnoPkUJeSacJyk4c8vVBj0x%2BXDP6b5IisMYDK5l2G2%2FNC9nFx7ukZoQU%2B1itN1r90L7AGyWvkJuViI9XK58TdVN5hWih294k8CgNaB6oE53u2Aqd1%2F87bGrCxbodHfaeElycFWz1A25kpMYAtGZirSGsabOoX8rxyO8d%2FE0M3U1t3DIA6Urau1Ddslv4RxzBBbqL%2B8blEeanMI2Lvugq77GQhgeY733n%2BxsQHg%2BCa6clgppJ5x5a6TDIc3%2FAOlp9ISe0vJyi3HPx%2F7S%2BaC0C%2BHkbehSBNCowvJz2yAY6sQFJaB7WpC0%2Bom2yXh3kYiQgp16eRge9usKu9vye3a7cUogRoVL%2BGjbIn4B1gUg38p1ErKrc4B7AKIMlTKrXTyPIuSqoNm%2BNOviYb4SX7mYshRfKG1UhlhBi8Lv%2BgMkMiljpusECT2%2Fk7ZWkdjUuY7V5lrV8liQe9Ama%2F5%2BR8yUcHmXoUfEQ78Stp25kloDLU%2Bi0NHuvwAGdd5h7zMmsyv%2FC6Ny3OuDhujS0Bal85H%2F4wUM%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=4f67cd8703b02d347387944b31de32f32e21d764e7973a5238005c7955a27198",
+      "file_size": 30390,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 4929064,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/sespxel7y413b8mj3q2tdgiezwig?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQRGBBYYD6%2F20251119%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20251119T101719Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEBIaCXVzLXdlc3QtMiJHMEUCIEk5RvE0zozOmEYyCffCnHj%2BPiq7FKpAbJzAaBXLizqCAiEAmkAohMCkHP%2BBjfKziZ%2BBFvau2j6%2Bd86JUa1aX8bhgeQquwUI2%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDKTRNzMcaDvYwm0a7yqPBYG34%2BsgOHXApkgKz%2BJ8zd%2B76lDaF%2FLPonyycf2NWhZvLd0e4BF0NH0hNTezQ0WO7i70NlY9L%2Fl1o3Q%2BQwVuHhHctoSZhi1ur88hgE%2Bs%2BCA0x9Pbnd01LKQHye%2B%2BDKh5tK1Agf%2FFKpeSyIP2dkqRKbS6jmGzqIFR8SqpPJCpsBJJcPr%2FTTXrciD%2FKQaF6OnIA3g0kaRTjqfNLJDVe07ttK6uTgcCzyBkMDkXDlrF3fe7Z7b7AVdhDz7XUBOmJUZ5hGhzDsXzb69sE9PYG9%2BmOqKQ98zbHnr8w0nM7uCZRlesWOXZQowyk6Dujka0pBbkhFpiC%2FhxF8TP0VHxGT0abxpLjIFC7%2FLcypm93iW344CkzBGcF%2FVOslpRlkVqpnD5FvHqT9XsZVwljiBRcHnd%2F9IGupOKAOOohIkP%2F1C47ynKi%2FsmHRRN1qJzlKwESp7IfUArYv2bQvfYzeCHtn6e4GienQYuhJLmUvjI7F4xZFRtBKxGxFjnxHg8tCDDVgQ1WzQKNUL3XAMUFRbVVlWhJiIj6vHDc%2BAGkCoDR4Jfm7NYaF5nmOrRVxz6yyejafDqMDYD53wnbJjDnnoPkUJeSacJyk4c8vVBj0x%2BXDP6b5IisMYDK5l2G2%2FNC9nFx7ukZoQU%2B1itN1r90L7AGyWvkJuViI9XK58TdVN5hWih294k8CgNaB6oE53u2Aqd1%2F87bGrCxbodHfaeElycFWz1A25kpMYAtGZirSGsabOoX8rxyO8d%2FE0M3U1t3DIA6Urau1Ddslv4RxzBBbqL%2B8blEeanMI2Lvugq77GQhgeY733n%2BxsQHg%2BCa6clgppJ5x5a6TDIc3%2FAOlp9ISe0vJyi3HPx%2F7S%2BaC0C%2BHkbehSBNCowvJz2yAY6sQFJaB7WpC0%2Bom2yXh3kYiQgp16eRge9usKu9vye3a7cUogRoVL%2BGjbIn4B1gUg38p1ErKrc4B7AKIMlTKrXTyPIuSqoNm%2BNOviYb4SX7mYshRfKG1UhlhBi8Lv%2BgMkMiljpusECT2%2Fk7ZWkdjUuY7V5lrV8liQe9Ama%2F5%2BR8yUcHmXoUfEQ78Stp25kloDLU%2Bi0NHuvwAGdd5h7zMmsyv%2FC6Ny3OuDhujS0Bal85H%2F4wUM%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=a8c22737442038ff8af9bca98b68843e542b3300a9282c029f4847a601152c47",
+      "file_size": 71858,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 4929065,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/f984ed8o7f7tt9rgiiibr9fx8f80?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQRGBBYYD6%2F20251119%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20251119T101719Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEBIaCXVzLXdlc3QtMiJHMEUCIEk5RvE0zozOmEYyCffCnHj%2BPiq7FKpAbJzAaBXLizqCAiEAmkAohMCkHP%2BBjfKziZ%2BBFvau2j6%2Bd86JUa1aX8bhgeQquwUI2%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDKTRNzMcaDvYwm0a7yqPBYG34%2BsgOHXApkgKz%2BJ8zd%2B76lDaF%2FLPonyycf2NWhZvLd0e4BF0NH0hNTezQ0WO7i70NlY9L%2Fl1o3Q%2BQwVuHhHctoSZhi1ur88hgE%2Bs%2BCA0x9Pbnd01LKQHye%2B%2BDKh5tK1Agf%2FFKpeSyIP2dkqRKbS6jmGzqIFR8SqpPJCpsBJJcPr%2FTTXrciD%2FKQaF6OnIA3g0kaRTjqfNLJDVe07ttK6uTgcCzyBkMDkXDlrF3fe7Z7b7AVdhDz7XUBOmJUZ5hGhzDsXzb69sE9PYG9%2BmOqKQ98zbHnr8w0nM7uCZRlesWOXZQowyk6Dujka0pBbkhFpiC%2FhxF8TP0VHxGT0abxpLjIFC7%2FLcypm93iW344CkzBGcF%2FVOslpRlkVqpnD5FvHqT9XsZVwljiBRcHnd%2F9IGupOKAOOohIkP%2F1C47ynKi%2FsmHRRN1qJzlKwESp7IfUArYv2bQvfYzeCHtn6e4GienQYuhJLmUvjI7F4xZFRtBKxGxFjnxHg8tCDDVgQ1WzQKNUL3XAMUFRbVVlWhJiIj6vHDc%2BAGkCoDR4Jfm7NYaF5nmOrRVxz6yyejafDqMDYD53wnbJjDnnoPkUJeSacJyk4c8vVBj0x%2BXDP6b5IisMYDK5l2G2%2FNC9nFx7ukZoQU%2B1itN1r90L7AGyWvkJuViI9XK58TdVN5hWih294k8CgNaB6oE53u2Aqd1%2F87bGrCxbodHfaeElycFWz1A25kpMYAtGZirSGsabOoX8rxyO8d%2FE0M3U1t3DIA6Urau1Ddslv4RxzBBbqL%2B8blEeanMI2Lvugq77GQhgeY733n%2BxsQHg%2BCa6clgppJ5x5a6TDIc3%2FAOlp9ISe0vJyi3HPx%2F7S%2BaC0C%2BHkbehSBNCowvJz2yAY6sQFJaB7WpC0%2Bom2yXh3kYiQgp16eRge9usKu9vye3a7cUogRoVL%2BGjbIn4B1gUg38p1ErKrc4B7AKIMlTKrXTyPIuSqoNm%2BNOviYb4SX7mYshRfKG1UhlhBi8Lv%2BgMkMiljpusECT2%2Fk7ZWkdjUuY7V5lrV8liQe9Ama%2F5%2BR8yUcHmXoUfEQ78Stp25kloDLU%2Bi0NHuvwAGdd5h7zMmsyv%2FC6Ny3OuDhujS0Bal85H%2F4wUM%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=884a550ddd67c9b319a07eb574f0288661a52a38bbf15a6c6054b6750c66b2e5",
+      "file_size": 12555,
+      "type": "image/png",
+      "moderated": false
+    }
+  ],
+  "allow_singular_disclosure_at": "2025-12-12T04:54:58.215Z",
+  "allow_singular_disclosure_after": 1967858.272343262,
+  "singular_disclosure_allowed": false,
+  "vote_count": 3,
+  "voters": [
+    "vidang04",
+    "2026",
+    "yoyomiski"
+  ],
+  "severity": {
+    "rating": "high",
+    "score": 8.8,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "low",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "high",
+      "integrity": "high",
+      "availability": "high"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 154,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/revive-adserver/revive-adserver",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
