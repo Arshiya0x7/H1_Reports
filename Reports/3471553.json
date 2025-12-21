@@ -1,0 +1,120 @@
+{
+  "id": 3471553,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zNDcxNTUz",
+  "url": "https://hackerone.com/reports/3471553",
+  "title": "Unbounded memory consumption via compressed HTTP responses (gzip/brotli/zstd)",
+  "state": "Closed",
+  "substate": "informative",
+  "severity_rating": "medium",
+  "readable_substate": "Informative",
+  "created_at": "2025-12-19T07:22:06.123Z",
+  "submitted_at": "2025-12-19T07:22:06.592Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "is_triager?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "gaurav0212",
+    "url": "/gaurav0212",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/06fjrtecywk1bnp70wyi5h1ol8uy/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 35663,
+    "url": "https://hackerone.com/curl",
+    "handle": "curl",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/035/663/2faf4c279d437d64bfda6d23d62ce1833813a4d9_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/035/663/2faf4c279d437d64bfda6d23d62ce1833813a4d9_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "curl",
+      "twitter_handle": "",
+      "website": "https://curl.se",
+      "about": "cURL is an Open Source project providing a library and command-line tool doing internet transfers"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2025-12-21T01:44:09.707Z",
+  "bug_reporter_agreed_on_going_public_at": "2025-12-21T01:44:09.576Z",
+  "team_member_agreed_on_going_public_at": "2025-12-20T21:38:11.657Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "During a review of curl's handling of response decompression, it was noticed that no limit exists on the final uncompressed data volume from compressed HTTP replies. Instead of setting constraints, the current design allows indefinite expansion during processing. This absence of limits could lead to excessive memory use under certain conditions. Rather than imposing caps by default, the system trusts input without internal safeguards. As a result, malicious payloads might trigger uncontrolled growth in output size.\n\nIn lib/content_encoding.c, decompression functions like inflate_stream run in loops using a fixed buffer yet fail to monitor total output size. Consequently, one tiny compressed input may expand into excessive memory usage. Although designed for efficiency, these routines lack limits on expanded data volume. Therefore, malicious servers could trigger disproportionate resource consumption during processing.\n\nThis behavior appears using standard curl settings, without needing extra configurations.\n\nProof of Concept:\n\nI’ve included a PDF with a complete, repeatable proof of concept\ncurl version along with its setup\na basic gzip compression trap host\ncurl run using standard setup\nnoticed rise in RSS while unpacking data\nimportant parts of the code in lib/content_encoding.c\n\nThe proof demonstrates a ~48 KB compressed reply grows to around 50 MB in memory prior to disposal.\n\n## Impact\n\nA bad server might make curl use excessive memory by sending a compressed file that expands drastically, which could fill up system RAM and stop normal operations. This happens because the --max-filesize flag only limits downloaded data size but doesn't control how big files become after unpacking.\n\nSuggested Fix (high level):\n\nSet a changeable or fixed maximum for the uncompressed data size, then stop unpacking if that cap is passed.",
+  "weakness": {
+    "id": 48,
+    "name": "Uncontrolled Resource Consumption"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 5135206,
+      "file_name": "Curl.pdf",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/boxlf2tq9cdi4fnjt0opvcr87jel?response-content-disposition=attachment%3B%20filename%3D%22Curl.pdf%22%3B%20filename%2A%3DUTF-8%27%27Curl.pdf&response-content-type=application%2Fpdf&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQRDSMX2DJ%2F20251221%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20251221T020509Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEAgaCXVzLXdlc3QtMiJHMEUCIQDKDUtEovXHrHW%2BnrRq7NW0KOne6zTIQNLMvLWcEOkWdgIgB%2B6OAnx04bVoxYlEWglGhYAT0JfCW5O9sMMpghzyJr4quwUI0f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDAK4trWJDgqSYGp07SqPBetnDjGukg70WpCyZ%2FGZMByUUkJQ96KSy8RbOgl9g9kbJyjRrdMFeSnzXTO%2B1cG4Xz9V1%2B2spaWyh936FK8cY9sy0w5TwjYtyCfTAEJ363FSjZOyedjbCw10R7%2Bfq9IoX%2FG4gDiVpUBPgs%2BcQnAIUk5RKE7GNT2plXRhMj9PDGwhxBnkU3oAw3DaEeqinrKPfeW6UNZbv7AGjZpyT7ol4PaQop3Y9H0yoy9wa%2Fnw%2B%2FvKpoTJ5AmAi1H97NUncb3ckTuaHYOUT%2B4R4UcfuDa2b%2B81cdLbv7W%2Fanl09uxFsq5CEUVcadYytzhiDbhg%2BFbfRNMlp2KfVH2C7RAZBoHs7v70khffTeMm2BhMqM80GkNqpSMVoWY5HQ3ikuhxpd%2BpP4a10Us5BoRHV%2B32bh%2BswBd9CZa6YhbS5oQHPihNzUi%2ByQ4jpunHUQ9qVxhT49%2FSH2CZzZG2uk8p6IH%2F80MwG10ILUqprV5I7GLI4ZFEW%2Bezo9SFec9DdQXMEcjyOeYwQ2vNeQfUp3t%2FIgAL9ONz4uRmtivW%2FbFlm9gz%2F%2Fpcjy8QLF18tx9JzPdn5mzPiDn9hx4oKWjzxuMt%2F1jsaIM6ogMc5Y%2FihWlegsfbj55f5UHO%2BV%2Bccvri84y%2Bt4VGHN2AmrM3nTPIdATNCqlSJEHaJONvJrwvserR1iMdIAuQSv8HhD2AO32wH9HPQIqxGANoAU%2F6mbY5YOxjpjTXikiwv98VRwccIsYDMCwD%2FycIR8UV3VEfKWPZXEl5XMGj%2FGgmapo%2FLYQOSn0aQNNh0MbrrBGlQuFBPxMcrnleQOFn%2FqwDCeet9KrLdfJsxdjPS2qWb8cR5aZdhtdmFODyY93pZxLe1wIYpWOg5t%2FASx%2FzdYQwhfmcygY6sQEGtkMzCYT8Wn7Uq1iK7pSo2RfgsktIKT92%2BelAm%2BW9nPen5%2BsNaxVhaKYT5%2BPgl%2BFmpPoX4KeQttY%2FNwsNpRMibIdyL0n%2BrnTpq1dVOQD4%2BlLRY43WFckPGFp6igQF77ltHeDpKpOByA9spf2B%2BOVxOfAvdIdXYJ6Pizx59DC6pgvmB52QDDjCsPdRFNRPmWqTJBccyhTKgKkOR5Jth%2B3iV3pJfvr5MpZdP04UVnz9n78%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=1a7e06e31b2c3010e4bc890c35aa6ce7dccada4a336a023a9afded542ff9a8cb",
+      "file_size": 218516,
+      "type": "application/pdf",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 1,
+  "voters": [
+    "gaurav0212"
+  ],
+  "severity": {
+    "rating": "medium",
+    "author_type": "User"
+  },
+  "structured_scope": {
+    "databaseId": 18844,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/curl/curl",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
