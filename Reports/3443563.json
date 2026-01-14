@@ -1,0 +1,152 @@
+{
+  "id": 3443563,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zNDQzNTYz",
+  "url": "https://hackerone.com/reports/3443563",
+  "title": "Roundcube Webmail Style Sanitizer can be bypassed using CSS Character Escapes",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2025-11-27T20:51:18.302Z",
+  "submitted_at": "2025-11-27T20:51:18.761Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "is_triager?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "somerandomdev",
+    "url": "/somerandomdev",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13291,
+    "url": "https://hackerone.com/nextcloud",
+    "handle": "nextcloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/hsgut1vi1cv8housqai9cm9383yx/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/hsgut1vi1cv8housqai9cm9383yx/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Nextcloud",
+      "twitter_handle": "nextclouders",
+      "website": "https://nextcloud.com",
+      "about": "Access, share and protect your files, calendars, contacts, communication & more at home and in your enterprise."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2026-01-14T13:05:05.108Z",
+  "bug_reporter_agreed_on_going_public_at": "2025-12-15T13:04:57.743Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nThe style sanitizer in Roundcube Webmail can be bypassed by creating HTML entities using CSS character escapes. This allows using arbitrary inline CSS, like e.g. `url()`, and retrieve the IP address and user agent of the person reading the email.\n\n## Steps To Reproduce:\n\n1. Send an HTML email to your account with the following contents:\n```html\n<div style='content: \"\\0026quot;; background: url(//http.cat/418); content:\"\"; width: 100%; height: 100%;'>hi, this shouldn't work :(</div>\n```\n2. Open the email in Roundcube in the HTML mode\n\nThe background image will be applied to the element, causing a HTTP request to https://http.cat/418\n\n## Supporting Material/References:\n{F5056779}\n{F5056780}\n\n## Explanation\n\n`\\0026` is a CSS entity and will be decoded to `&`. Together with the `quot;` afterwards, this will close the string token and cause the rest of the string token to be interpreted as CSS.\n{F5056781}\n\n## Impact\n\nAn attacker can send a malicious email to a victim and retrieve the victim's IP address and user agent.",
+  "weakness": {
+    "id": 18,
+    "name": "Information Disclosure"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 5056779,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/vg7vob56kyszcydgigdybj25ti9n?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWQATPJLS%2F20260114%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260114T140508Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEFQaCXVzLXdlc3QtMiJHMEUCIQCUeqLYIYrhTA24oKuMlSTZL%2F9J0JCy7U1%2BtfZWozHibQIgEpnCKp2To5eQgL0PnY39YsKI7f2prJ9098XtD3OrMM8qsgUIHRADGgwwMTM2MTkyNzQ4NDkiDGD42yfLcyeR87ZjtSqPBWQ38NybablAePBgTrnQGGR2Pry7Em%2Bc2kK9Smtz8eflydJZfVVGViB7p3zLthJTgqis9IlrpN9pZIyIIrFHeyAXDbExc2poMLkx0WvRpiCCiyxUKVAx93ZNn0VVfwdFW6LaApFL6UFPWs9%2FQ1HCQ2%2BIpthRFdIW1Lc65SPvMeTILYSy2ql7%2FOpfbHWvfsdWb2cqS5MgE8vHQT99jutu8X0ADCUqhUew5vXSE8ARQueOpij0wLS2DYgI0oDun8ydnPQTvftkdtWXq4aHumNzMNtw4tIzy%2BcURpiT4YCtazVqW3TCqEdpS5ZFLF2NUJlMu09tinBlbDxktWCGRDZ2KWyyOzgWeCOH0oHcR9vhvxRQXR161GzPn6ctMFoCvg3bB6vvodXAZ2tgea91RBiOyjSZlTLRBY0RBV4SitZAj4ghV9MVbh8Hochb79mhl7%2BGeKNTUMNYA6NS0gTPLbTFxA0C26d597xD5L%2Fwc%2ByUwNFyrM5If5pH%2F7evqJokMOQkfD17U3XTeP%2FRlk78qwqyde7iKNXm%2F6BjC1e1E%2B1JymthuscvLqKOe%2BUuKc53yRp3mZQeXVrwb2SX0FMTBPsrB01jZos%2B9Rjl67Izv2%2FE6MsD2m8WyabyfDR%2BVOo0vzwM8Q86gzPeO2uxNfwg4%2By%2F072x3Jxw%2BqsNGzAfwkyO4R8WgKFnNbuvNmtkckcgE8mPbPOq4ThnYtN5rboyKRC9L8suqI2BGuEzHM27%2B0BasVgqkPxeQ6nRsK%2B7bXjZfa2ExVU7LH%2Fb8qTcO7nRibxdp1CZY6KWRq014YX4DRFK1fZ1ojnx0tq8YiRs3x6NOliOs5C32snW8ijFLERlRYHlLCzCjHr6C1p5K0E96df5z7kwvI2eywY6sQEAMds9mwD15V0NdYuC1H0LwPBxNIa2Boh8e3BP3Q3Tnn4bzKYj1a9IrgUsC0zbBz%2BQxVmcMek87xRNb7ywBELnNsxVrAGuqVRJIXOC0%2FqOOqnEFH5Uoz4yKqKBvDhoOEWq6c81ZT4%2FYeOk4PvxdrKeniCrOXZ%2FmKDz604lVZPNBU8DijBxr5BQJjuonz2qCA8WvR9m5l6dABq2WBmiRdGgj1Vx4f90hxEIJU2hcAk0tIc%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=b27e4a2b43392c3adc46fd1b9ba46d604cccad8918a5364305c30493b8ad9a68",
+      "file_size": 8824,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 5056780,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/8gh2e1mo07tcw1tm9t9pwm7kplk0?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWQATPJLS%2F20260114%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260114T140508Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEFQaCXVzLXdlc3QtMiJHMEUCIQCUeqLYIYrhTA24oKuMlSTZL%2F9J0JCy7U1%2BtfZWozHibQIgEpnCKp2To5eQgL0PnY39YsKI7f2prJ9098XtD3OrMM8qsgUIHRADGgwwMTM2MTkyNzQ4NDkiDGD42yfLcyeR87ZjtSqPBWQ38NybablAePBgTrnQGGR2Pry7Em%2Bc2kK9Smtz8eflydJZfVVGViB7p3zLthJTgqis9IlrpN9pZIyIIrFHeyAXDbExc2poMLkx0WvRpiCCiyxUKVAx93ZNn0VVfwdFW6LaApFL6UFPWs9%2FQ1HCQ2%2BIpthRFdIW1Lc65SPvMeTILYSy2ql7%2FOpfbHWvfsdWb2cqS5MgE8vHQT99jutu8X0ADCUqhUew5vXSE8ARQueOpij0wLS2DYgI0oDun8ydnPQTvftkdtWXq4aHumNzMNtw4tIzy%2BcURpiT4YCtazVqW3TCqEdpS5ZFLF2NUJlMu09tinBlbDxktWCGRDZ2KWyyOzgWeCOH0oHcR9vhvxRQXR161GzPn6ctMFoCvg3bB6vvodXAZ2tgea91RBiOyjSZlTLRBY0RBV4SitZAj4ghV9MVbh8Hochb79mhl7%2BGeKNTUMNYA6NS0gTPLbTFxA0C26d597xD5L%2Fwc%2ByUwNFyrM5If5pH%2F7evqJokMOQkfD17U3XTeP%2FRlk78qwqyde7iKNXm%2F6BjC1e1E%2B1JymthuscvLqKOe%2BUuKc53yRp3mZQeXVrwb2SX0FMTBPsrB01jZos%2B9Rjl67Izv2%2FE6MsD2m8WyabyfDR%2BVOo0vzwM8Q86gzPeO2uxNfwg4%2By%2F072x3Jxw%2BqsNGzAfwkyO4R8WgKFnNbuvNmtkckcgE8mPbPOq4ThnYtN5rboyKRC9L8suqI2BGuEzHM27%2B0BasVgqkPxeQ6nRsK%2B7bXjZfa2ExVU7LH%2Fb8qTcO7nRibxdp1CZY6KWRq014YX4DRFK1fZ1ojnx0tq8YiRs3x6NOliOs5C32snW8ijFLERlRYHlLCzCjHr6C1p5K0E96df5z7kwvI2eywY6sQEAMds9mwD15V0NdYuC1H0LwPBxNIa2Boh8e3BP3Q3Tnn4bzKYj1a9IrgUsC0zbBz%2BQxVmcMek87xRNb7ywBELnNsxVrAGuqVRJIXOC0%2FqOOqnEFH5Uoz4yKqKBvDhoOEWq6c81ZT4%2FYeOk4PvxdrKeniCrOXZ%2FmKDz604lVZPNBU8DijBxr5BQJjuonz2qCA8WvR9m5l6dABq2WBmiRdGgj1Vx4f90hxEIJU2hcAk0tIc%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=c2a99683b318e4b59ac10d4379884d347c28b47a0e7adcb89dbe765543d24994",
+      "file_size": 8392,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 5056781,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/1bjufxnl3r6oy0tz6cp0tdhqxhzh?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQWQATPJLS%2F20260114%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260114T140508Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEFQaCXVzLXdlc3QtMiJHMEUCIQCUeqLYIYrhTA24oKuMlSTZL%2F9J0JCy7U1%2BtfZWozHibQIgEpnCKp2To5eQgL0PnY39YsKI7f2prJ9098XtD3OrMM8qsgUIHRADGgwwMTM2MTkyNzQ4NDkiDGD42yfLcyeR87ZjtSqPBWQ38NybablAePBgTrnQGGR2Pry7Em%2Bc2kK9Smtz8eflydJZfVVGViB7p3zLthJTgqis9IlrpN9pZIyIIrFHeyAXDbExc2poMLkx0WvRpiCCiyxUKVAx93ZNn0VVfwdFW6LaApFL6UFPWs9%2FQ1HCQ2%2BIpthRFdIW1Lc65SPvMeTILYSy2ql7%2FOpfbHWvfsdWb2cqS5MgE8vHQT99jutu8X0ADCUqhUew5vXSE8ARQueOpij0wLS2DYgI0oDun8ydnPQTvftkdtWXq4aHumNzMNtw4tIzy%2BcURpiT4YCtazVqW3TCqEdpS5ZFLF2NUJlMu09tinBlbDxktWCGRDZ2KWyyOzgWeCOH0oHcR9vhvxRQXR161GzPn6ctMFoCvg3bB6vvodXAZ2tgea91RBiOyjSZlTLRBY0RBV4SitZAj4ghV9MVbh8Hochb79mhl7%2BGeKNTUMNYA6NS0gTPLbTFxA0C26d597xD5L%2Fwc%2ByUwNFyrM5If5pH%2F7evqJokMOQkfD17U3XTeP%2FRlk78qwqyde7iKNXm%2F6BjC1e1E%2B1JymthuscvLqKOe%2BUuKc53yRp3mZQeXVrwb2SX0FMTBPsrB01jZos%2B9Rjl67Izv2%2FE6MsD2m8WyabyfDR%2BVOo0vzwM8Q86gzPeO2uxNfwg4%2By%2F072x3Jxw%2BqsNGzAfwkyO4R8WgKFnNbuvNmtkckcgE8mPbPOq4ThnYtN5rboyKRC9L8suqI2BGuEzHM27%2B0BasVgqkPxeQ6nRsK%2B7bXjZfa2ExVU7LH%2Fb8qTcO7nRibxdp1CZY6KWRq014YX4DRFK1fZ1ojnx0tq8YiRs3x6NOliOs5C32snW8ijFLERlRYHlLCzCjHr6C1p5K0E96df5z7kwvI2eywY6sQEAMds9mwD15V0NdYuC1H0LwPBxNIa2Boh8e3BP3Q3Tnn4bzKYj1a9IrgUsC0zbBz%2BQxVmcMek87xRNb7ywBELnNsxVrAGuqVRJIXOC0%2FqOOqnEFH5Uoz4yKqKBvDhoOEWq6c81ZT4%2FYeOk4PvxdrKeniCrOXZ%2FmKDz604lVZPNBU8DijBxr5BQJjuonz2qCA8WvR9m5l6dABq2WBmiRdGgj1Vx4f90hxEIJU2hcAk0tIc%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=ffd39de3d4cc8dc14814a0367755daa76f0fa4908e770658c37e60f260113def",
+      "file_size": 23208,
+      "type": "image/png",
+      "moderated": false
+    }
+  ],
+  "allow_singular_disclosure_at": "2026-01-14T13:04:57.907Z",
+  "allow_singular_disclosure_after": -3610.69848903,
+  "singular_disclosure_allowed": true,
+  "vote_count": 4,
+  "voters": [
+    "mohaned0101",
+    "khoof",
+    "2026",
+    "suul"
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 4.3,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "required",
+      "scope": "unchanged",
+      "confidentiality": "low",
+      "integrity": "none",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 565457,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/roundcube/roundcubemail",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
