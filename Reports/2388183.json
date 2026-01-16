@@ -1,0 +1,117 @@
+{
+  "id": 2388183,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yMzg4MTgz",
+  "url": "https://hackerone.com/reports/2388183",
+  "title": "Easy way to create a new Deck board without permission ",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2024-02-23T18:20:46.667Z",
+  "submitted_at": "2024-02-23T18:20:46.782Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "is_triager?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "hakuna",
+    "url": "/hakuna",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13291,
+    "url": "https://hackerone.com/nextcloud",
+    "handle": "nextcloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/hsgut1vi1cv8housqai9cm9383yx/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/hsgut1vi1cv8housqai9cm9383yx/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Nextcloud",
+      "twitter_handle": "nextclouders",
+      "website": "https://nextcloud.com",
+      "about": "Access, share and protect your files, calendars, contacts, communication & more at home and in your enterprise."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2026-01-16T20:53:24.631Z",
+  "bug_reporter_agreed_on_going_public_at": "2025-12-17T20:53:23.646Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nAdmins can decide which groups are allowed to create boards. But a user who is part of an unauthorized group can easily create a new board by cloning an existing one and renaming it. \n\n## Steps To Reproduce:\n 1. As an admin, create user1, group1 and group2, then assign group1 to user1\n 2. In \"Decks\" app > \"Deck settings\", add group2 to the \"Limit board creation to some groups\" input. It is indicated that \n>*Users outside of those groups will not be able to create their own boards, but will still be able to work on boards that have been shared with them.*\n\t\t\t\t\n 3. As user1, in \"Decks\" app, see that the button \"+ Add board\" is not displayed, which is expected. Sending the request directly will also fail with a 403 error and a message \"\"Creating boards has been disabled for your account.\".\n4. Now click on the \"Personal\" board options, and choose \"Clone board\". A copy of the board will be created. You can rename it, and you just created a new board with all \"classic\" options available. You could also directly send the request `POST /nextcloud/apps/deck/boards/board_number/clone`. \n\n{F3076346}\n\n## Impact\n\nCreating boards without permission.",
+  "bounty_amount": "100.0",
+  "formatted_bounty": "$100",
+  "weakness": {
+    "id": 26,
+    "name": "Improper Access Control - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 3076346,
+      "file_name": "Screenshot_2024-02-23_at_18.50.37.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/xqg4em8hkvozzg9ay0kbf3jqqszm?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_2024-02-23_at_18.50.37.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_2024-02-23_at_18.50.37.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ7FEU6YEP%2F20260116%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260116T210508Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDQbNFAPYSPFCO9ryD6boODfm0bZd6of05yP4WLmxStpAIgISDSTMMH4Lwyf5cUnNFCG2GS3oZdFUaSk7Vz3l4NEFcqsQUIVBADGgwwMTM2MTkyNzQ4NDkiDOnvlEB0YbmPz27qciqOBSsJ7dhU6AdJbuPuoQfK0Fw4ZlryoBr5KdLD%2Brs9vrIcNnGipG3mzi9rAW2M8otN84c2PrgKJHBv6CSFjnQ%2Bik1cJkobe5INLO170HbGzLK57r9IMxlPE6XAwlcxk%2BC04lMn0aYGcMNy9jVvELFota42MAAfhEOOtuuxJfCxUoU04hgPOWhazr41BHEtzXpBTTWRuW7JKhrMozyPO%2BrWAdJrxNpI6LRJ5CsmawBMsdobpykdJw1PBvgPml%2F1lrgvWtY1VyLqYS5NOX2%2BF%2BVZZjyQf2ZgDhPu0pw9fBqGcmQgcou98g27woC2b%2BcsKcgPaJtn8TJo8pFl2U%2FN6G7AcCagGb%2Bicug%2BDwl1d8%2BsAw8DTdOXM9fULVhzqFo44zWstrjb%2FIKJ%2Fy6gQnYoTFyudOXnWZha9%2FvavUuy5Q%2BCc3haDIfNuNIiCwf4GJqzV1fBOYEYuxyXZRAjueu5OMAqC8ZIEX6JlPW4n%2BECuEP9e97dMAP8efk8N6qs%2FbsJA%2FeiSPGZX4GZaaK6GqLM6vg%2BAow4HoyIZAjgUSXBP42on%2BMVRVHD53V3nzCs12YUuSo8f5QJgM7rqpRpBDpD3o8Vpg0d3fGcPE9%2FgQ7VNro9jQOROU9eW3DyWqIJE0MvNZumqT5sP%2BktLWX4ozgy23ktM7Ls3RrQC6t2HfMdGGaIL2EHVpYmcUmWv25uOwpAW9yfpXDUpBn3XudgkE1YkwsMldfPmGEO7MIbVioprp9ya7m0KAqsM3n9hxdQfSyH%2BB2MnheUf0IykLZlq7DGXu4KlFSZMTiQ1qG5VA0B9Zs3HzzX1uiojoPjBH7qEuqSH7jCDgsMXr%2B9Wl2jiFoREs7ZtfWPDPLWdBlOzXTX%2F4fpmTDJharLBjqxATpKvfhhLcZwBWEueLSxiNweAy8W9HaZbbJwfQDzuG8enc5E1zUHGgUE09LWCWQf7SMoGODfjiWj4wTpdAQ7PzAqOYLPclW8VmG8ztL8VKNohRt6FqkmqlHG6KaXZF1VsgHeo61pgvAS2LVZ0KWbprjP%2B5g3GUp18Ek7lrl3x5DHh3llPaNnbwPOrnnDlGOzwmAH1zACPPZNV%2BrYyE0Lk4IZ6YIdQQidrQIyl8L3NZvQOQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=d2f98bb8d86fffcc0ef71f46a36c3188f065d4f7e06ba0cd2f9de943d898b3a9",
+      "file_size": 83247,
+      "type": "image/png",
+      "moderated": false
+    }
+  ],
+  "allow_singular_disclosure_at": "2026-01-16T20:53:24.071Z",
+  "allow_singular_disclosure_after": -704.574686298,
+  "singular_disclosure_allowed": true,
+  "vote_count": 0,
+  "voters": [],
+  "structured_scope": {
+    "databaseId": 72103,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "nextcloud/deck",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
