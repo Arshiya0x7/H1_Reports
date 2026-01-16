@@ -1,0 +1,133 @@
+{
+  "id": 2380133,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8yMzgwMTMz",
+  "url": "https://hackerone.com/reports/2380133",
+  "title": "Can download files on Android app without permission",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2024-02-19T15:11:57.035Z",
+  "submitted_at": "2024-02-19T15:11:57.209Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "is_triager?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "hakuna",
+    "url": "/hakuna",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13291,
+    "url": "https://hackerone.com/nextcloud",
+    "handle": "nextcloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/hsgut1vi1cv8housqai9cm9383yx/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/hsgut1vi1cv8housqai9cm9383yx/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Nextcloud",
+      "twitter_handle": "nextclouders",
+      "website": "https://nextcloud.com",
+      "about": "Access, share and protect your files, calendars, contacts, communication & more at home and in your enterprise."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2026-01-16T20:53:11.101Z",
+  "bug_reporter_agreed_on_going_public_at": "2025-12-17T20:53:07.928Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nIf the owner of a file - of type PDF, document, image or presentation - shares it with a user and disable download, the user can still download it using the Android app.\n\n## Steps To Reproduce:\n \n  1. As user1, in the \"Files\" app, create a folder containing files of different formats (PDF, .odt, .png, .odp...)\n  2. Share the folder to user2 and uncheck \"Allow download\" (repeat this step twice as unchecking the box doesn't apply the first time)\n  3. As user2, in the Android app, open:\n           - a PDF: in the viewer click the top right menu, choose \"Download as\" and select \"PDF document\" or \"PDF document as...\". You receive a \"Download completed\" notification and can open and save the file on your phone.\n           - a .odp:  same as above\n           - a .odt:  same as above and you can also choose \".epub\"\n           - an image (.png, .jpg): choose \"Use the image as\" and \"Wallpaper\". The file will be saved in internal memory - not easily accessible but still. You can also choose the image as Whatsapp profile picture or contact photo\n\n**Screenshots: **\n{F3060341}\n\n**Additional notes on the tests: **\n- What I could open but couldn't download: .mp3, .mp4, .txt\n- What I couldn't open because it won't load (there's an infinite loader and a \"Loading takes longer than expected\" error ): .md, .csv\n- Trying to export the document by clicking \"File\">\"Save as\"  from the viewer (pdf /odt) will open a pop up to choose a filename, and after clicking \"Save\" there's an infinite loading icon which is blocking the UI.\n\n## Impact\n\nSensitive documents leak.",
+  "bounty_amount": "250.0",
+  "formatted_bounty": "$250",
+  "weakness": {
+    "id": 26,
+    "name": "Improper Access Control - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 3060341,
+      "file_name": "flowfordocument.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/qcqgwlnb964e1hopvhnyd68n2yx2?response-content-disposition=attachment%3B%20filename%3D%22flowfordocument.png%22%3B%20filename%2A%3DUTF-8%27%27flowfordocument.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ26JMOWIC%2F20260116%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260116T210523Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCFUD9FG1Um5bneCntsF9RD6O3%2BRM8RtBA%2BYoFhGv%2BctAIhAKjzNqp1C4rtM4cUqh1sCAOs1v6FaVL8tP1%2BRWwOuDseKrEFCFMQAxoMMDEzNjE5Mjc0ODQ5IgxuojYHn%2BqOmpHaoGoqjgVQaA%2FDZw8rlTdYWlx3etxI5j3yLR278WRXL%2B55N4z6CBIZu4dOoDB4XjmCZnMTmHjMR2cFfOoE4q%2FNFwq61iHF%2F8P7B2E9DZf8WthBVc1gGfHqtQuh9lqtByP4OrDH55sftOfZna1%2F0J1B8Smi03dz7JcEqHPX5Hg%2BX5izHJAkcjID%2B%2FA4FIWI0YgT70jx1oA1U6r%2BS9tAEDfrup6q6tfqElTMFhL34k50TymXhRCS6TliX4VCqT%2F5GcEHXUP1AvCBLbz3%2B61qpUj30B8SjsIVysfXPU8HLYwHEh2stJokvKQRkf1vy1Lx0jZ9zb4Keos3TiragJZj3Ti1k07ankGL4xoTctuOiiW4MW0zNE%2F4Bq%2Bp8cQhj40LcNLS%2F9%2BN8UrY5O8Z%2F02vR7m1DefQNikZwWdZ094JSw%2FFqBn2qal%2BiBWRERLNCYGmyLIFOXHcVxx9BClSKeFBVhtQBlpY9I126UeAzoCtLf3v7RDtOWsdG7Nd9r8e74XRdCsHzFr5HfoV6g0nkWO8GAuizEl82C2W819dt16ELHf6lDMFPvzUuCtiZIWupE5VzY8xykl2%2FiOfZp5SMruwtmenSwVLeFMc1tLLL7yyT%2BspBJB7lDKNAyQJGozuncMPVTbF1F6sjOBRc8QGSHpViCSYfyDn%2FyQN3WDKg%2B4cFXkYgH8T5ou4d8A7QmFfs%2FC99QS0J8imR67IFlOT1XKpEktdSN2ST0PSnT9W8NtSGRjArqGRf4fxVW9M4%2FTKw7fd6D%2BARCGiLg7BLuiQ1kzuDL4nkBFjzHgU4HujuE2sy6sbKYXLuMxrM7U5ct2sJemwpyzvvyHAOGRcO4etgSPPqLQp4CNbpF0WzFxwiwCZp1CMlvrPRnIwgICqywY6sAH42jdjYjuG9DC2bBW3KBNWAb7rMNDT1tc5KZTTUq40Cfvn%2BqLOH2rq3KJiAl%2FmlGrZE%2BIH7vvhyoPVz6j1EvnAGlGe%2BPIAULCTbqF8CscT0Z4UrwKN%2BeDFCRJTAoviwAuSsewqP5gBSZ2mdhX86FFSiqFASciDb6f3FIsdxNjZ6kDOcCP1%2FxJ2Ldc19zgGHTewJi3lVXBoCWFkPQ8wclvgDqAuMLQThBtCUI931HX7IQ%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=6961de007d4c20c10ea87bfd881125cf19ff7de7fd3f2740de3abac05300c42b",
+      "file_size": 3642811,
+      "type": "image/png",
+      "moderated": false
+    }
+  ],
+  "allow_singular_disclosure_at": "2026-01-16T20:53:08.210Z",
+  "allow_singular_disclosure_after": -734.972171269,
+  "singular_disclosure_allowed": true,
+  "vote_count": 0,
+  "voters": [],
+  "severity": {
+    "rating": "low",
+    "score": 3.2,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "low",
+      "user_interaction": "required",
+      "scope": "changed",
+      "confidentiality": "low",
+      "integrity": "none",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 1,
+    "asset_type": "GOOGLE_PLAY_APP_ID",
+    "asset_identifier": "com.nextcloud.client",
+    "max_severity": "medium"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
