@@ -1,0 +1,122 @@
+{
+  "id": 3456148,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zNDU2MTQ4",
+  "url": "https://hackerone.com/reports/3456148",
+  "title": "Unbounded decompression chain in HTTP responses on Node.js Fetch API via Content-Encoding leads to resource exhaustion",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2025-12-08T01:21:20.937Z",
+  "submitted_at": "2025-12-08T01:21:21.014Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "is_triager?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "illia-v",
+    "url": "/illia-v",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 22984,
+    "url": "https://hackerone.com/nodejs",
+    "handle": "nodejs",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/022/984/e600648ace4a8553247bce967d461a030aa81d49_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/022/984/e600648ace4a8553247bce967d461a030aa81d49_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Node.js",
+      "twitter_handle": "nodejs",
+      "website": "https://nodejs.org",
+      "about": "The Node.js JavaScript Runtime"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": true,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2026-02-23T16:02:30.926Z",
+  "bug_reporter_agreed_on_going_public_at": "2026-01-24T16:00:56.941Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "**Summary:**\n\nUnbounded number of links in the decompression chain for HTTP responses in Node.js Fetch API\n\n**Description:**\n\nFetch API supports chained HTTP encoding algorithms for response content according to RFC 9110 (e.g., `Content-Encoding: gzip, br`).\nHowever, the number of links in the decompression chain is unbounded and the default `maxHeaderSize` allows a malicious server to insert thousands compression steps leading to high CPU usage and excessive memory allocation.\n\n## Steps To Reproduce:\n\nRun scripts from attachments:\n1.`BYTES=50000 LAYERS=5000 node server.js` to serve 50 KB of raw data compressed with Brotli 5000 times\n2. `node client.js` to make a request which will decompress the response content automatically\n\nThe following output shows how a response with modest 60892 bytes of compressed data can load the requesting machine for minutes.\nIncreasing the number of bytes and the Brotli level is expected to make the resource exhaustion even more severe.\n\n```\n$ BYTES=50000 LAYERS=5000 node server.js\nBrotli stack server listening on http://localhost:3000/ (layers=5000, raw bytes=50000)\nRaw content sample: Uint8Array(5) [ 4, 68, 220, 90, 43 ]\nServed / (raw bytes=50000, encoded bytes=60892, layers=5000)\n```\n\n```\n$ /usr/bin/time -v node client.js\nStatus: 200\nContent-Encoding chain links: 5000\nDecoded body sample: Uint8Array(5) [ 4, 68, 220, 90, 43 ]\n        Command being timed: \"node client.js\"\n        User time (seconds): 248.31\n        System time (seconds): 229.12\n        Percent of CPU this job got: 186%\n        Elapsed (wall clock) time (h:mm:ss or m:ss): 4:15.58\n        ...\n        Maximum resident set size (kbytes): 712332\n        ...\n        Voluntary context switches: 31856426\n        Involuntary context switches: 997\n```\n\n## Impact:\n\nCWE-770 Allocation of Resources Without Limits or Throttling\n\n## Supporting Material/References:\n\nSimilar issues for urllib3 and curl:\nhttps://github.com/advisories/GHSA-gm62-xv2j-4w53\nhttps://curl.se/docs/CVE-2022-32206.html\nBoth libraries hard coded the maximum allowed number of encodings for a response to 5. I disclose that I was the reporter and the remediation developer for the urllib3 issue.\n\nI would like to work on the patch for Node.js to qualify for [a patch reward](https://bughunters.google.com/open-source-security/patch-rewards) from Google potentially.\nHere's the initial patch which can be supplemented with unit tests if the report is accepted:\n```diff\nindex a0dd75df7a5..2e5edef764d 100644\n--- a/deps/undici/src/lib/web/fetch/index.js\n+++ b/deps/undici/src/lib/web/fetch/index.js\n@@ -2128,6 +2128,10 @@ async function httpNetworkFetch (\n             // \"All content-coding values are case-insensitive...\"\n             /** @type {string[]} */\n             const codings = contentEncoding ? contentEncoding.toLowerCase().split(',') : []\n+            if (codings.length > 5) {\n+              reject(new Error(`too many content-encodings ${codings.length}, maximum allowed is 5.`))\n+              return true\n+            }\n             for (let i = codings.length - 1; i >= 0; --i) {\n               const coding = codings[i].trim()\n               // https://www.rfc-editor.org/rfc/rfc9112.html#section-7.2\n```",
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 5091261,
+      "file_name": "client.js",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/z0k41eu0p78981101fsqbenqcoj4?response-content-disposition=attachment%3B%20filename%3D%22client.js%22%3B%20filename%2A%3DUTF-8%27%27client.js&response-content-type=application%2Fx-sh&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYMQENIOY%2F20260223%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260223T161510Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEBgaCXVzLXdlc3QtMiJGMEQCIBBw2oRGZ82Cb99zzGqqg%2FG6tbsnR1hUKigLavj1AtBYAiBS6hTTMq1Ko1nNjUGFu5ywVzR8TjAgjCqE8vYQJJJcuSq7BQjh%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMCwMh9EHEx1im%2Fi0CKo8FheK32Sfc24zOXY%2FouIW1UVonMwiLUKmvlc%2BsehT7YcyJQmCC3mIr1kxHEViSa80ZCeIgjQdIKx6L0QW%2B6ctS4eA3m1OS%2FTY8sbzBUfa3YA38HMeMpYJqR1%2FurxkQHU%2BmTEb0KEgEoNMM83E%2BHXOcT21YEhlrWQeGD5l3VK1OOaZxugg8gkKpHXE7t%2BLjScsAdUopmS6VeEJI8fhbagcHOAW3%2Fi3nezonOn8gYn7fuaQBRGqRG1CBOJoQZC7KpZnsB47eBj1KmnxmASWOYnUDhcPTtjOHSphNADfzHVsJ0mVOBKUzSdgdqH%2FJGCgJpvRvb9a1HHghyLKOt5p1uIQHhJ4BJoszQzz76tCtiBzBLPZibCV%2FFeY%2BbLkAtMwKppjeM6RMf40zq%2B6ShpAPOwv12%2BKgcHG0I24zZ2s6ekLvFvjShMLMv5t2B0i9uDug4vv%2B2rtV93MFY4W7oV6%2B76VNkngp5BGWkQ8R4kOS6cc7EFRFai0CRhGDM1i5gjruVzZ4a7b3mOtGDlwI7adVQmAjB952E8LXUs5Lb9ZH%2FavNGSn7fkon%2BHjwYtvqaR%2FCu3o7yjpYwcr8lkKgvWRqGbZ77Txk9ROXfsV1M3%2B5QLMM%2BeKJnWtl9mIAEz4dDwdy7GI0MH%2FQ83VF5S79o2JKxadqxckjHJiL%2BI9EtOkL1ppAtUpgx1VD3nBTocVhsJNyXfCmCLIU6YjpUE9jgBdauZ0WMkLjjJablGF9qhaO%2BMN8KvoU%2FLumQWn8nQzQtZQFRN26h%2FzUgUQWHgmI2dGP7ZvxOJup52syBLMVJyuBD0rXJuTgzZLWtMFAzf5pPEANQXkdJc6eNRnXlzstNabT3A0DFBtxXQx1aN%2FWm7JkQ7rQ7jC15PHMBjqyAZxBYuRA9BvMrKxuQ6zWjYTjwt410eZqEiNrkraJr9u%2FrDsegdP9X1IKI3llbfa3Fm4w1jKfodku%2FrGnMy%2Bs9b5mKAN4hslLUrEc4CDFVGq4dldfFeqvd6NQLgUtambXclxCrwjj6pqVa8lZJ8H%2FOHBfOm%2F2cqTA0jkqH4Tbvq6WrmeOC1sTRDgi621cI2XbnFwyihafCsEwiPvvpF5hxBzkFBvz1WMEYwokbudzw2q%2BikU%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=efceec97ec8cbfb6bf79d48fd36c9f72f99faca7adbfbaec03fa7f9902d98589",
+      "file_size": 529,
+      "type": "application/x-sh",
+      "moderated": null
+    },
+    {
+      "id": 5091262,
+      "file_name": "server.js",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/zcs00xswjepupyu76vh3sy5qjv45?response-content-disposition=attachment%3B%20filename%3D%22server.js%22%3B%20filename%2A%3DUTF-8%27%27server.js&response-content-type=application%2Fx-sh&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYMQENIOY%2F20260223%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260223T161510Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEBgaCXVzLXdlc3QtMiJGMEQCIBBw2oRGZ82Cb99zzGqqg%2FG6tbsnR1hUKigLavj1AtBYAiBS6hTTMq1Ko1nNjUGFu5ywVzR8TjAgjCqE8vYQJJJcuSq7BQjh%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAMaDDAxMzYxOTI3NDg0OSIMCwMh9EHEx1im%2Fi0CKo8FheK32Sfc24zOXY%2FouIW1UVonMwiLUKmvlc%2BsehT7YcyJQmCC3mIr1kxHEViSa80ZCeIgjQdIKx6L0QW%2B6ctS4eA3m1OS%2FTY8sbzBUfa3YA38HMeMpYJqR1%2FurxkQHU%2BmTEb0KEgEoNMM83E%2BHXOcT21YEhlrWQeGD5l3VK1OOaZxugg8gkKpHXE7t%2BLjScsAdUopmS6VeEJI8fhbagcHOAW3%2Fi3nezonOn8gYn7fuaQBRGqRG1CBOJoQZC7KpZnsB47eBj1KmnxmASWOYnUDhcPTtjOHSphNADfzHVsJ0mVOBKUzSdgdqH%2FJGCgJpvRvb9a1HHghyLKOt5p1uIQHhJ4BJoszQzz76tCtiBzBLPZibCV%2FFeY%2BbLkAtMwKppjeM6RMf40zq%2B6ShpAPOwv12%2BKgcHG0I24zZ2s6ekLvFvjShMLMv5t2B0i9uDug4vv%2B2rtV93MFY4W7oV6%2B76VNkngp5BGWkQ8R4kOS6cc7EFRFai0CRhGDM1i5gjruVzZ4a7b3mOtGDlwI7adVQmAjB952E8LXUs5Lb9ZH%2FavNGSn7fkon%2BHjwYtvqaR%2FCu3o7yjpYwcr8lkKgvWRqGbZ77Txk9ROXfsV1M3%2B5QLMM%2BeKJnWtl9mIAEz4dDwdy7GI0MH%2FQ83VF5S79o2JKxadqxckjHJiL%2BI9EtOkL1ppAtUpgx1VD3nBTocVhsJNyXfCmCLIU6YjpUE9jgBdauZ0WMkLjjJablGF9qhaO%2BMN8KvoU%2FLumQWn8nQzQtZQFRN26h%2FzUgUQWHgmI2dGP7ZvxOJup52syBLMVJyuBD0rXJuTgzZLWtMFAzf5pPEANQXkdJc6eNRnXlzstNabT3A0DFBtxXQx1aN%2FWm7JkQ7rQ7jC15PHMBjqyAZxBYuRA9BvMrKxuQ6zWjYTjwt410eZqEiNrkraJr9u%2FrDsegdP9X1IKI3llbfa3Fm4w1jKfodku%2FrGnMy%2Bs9b5mKAN4hslLUrEc4CDFVGq4dldfFeqvd6NQLgUtambXclxCrwjj6pqVa8lZJ8H%2FOHBfOm%2F2cqTA0jkqH4Tbvq6WrmeOC1sTRDgi621cI2XbnFwyihafCsEwiPvvpF5hxBzkFBvz1WMEYwokbudzw2q%2BikU%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=85d8aee51720151d9837d0ae14f0df4f7e91c1b24311764551300de882d254ae",
+      "file_size": 1310,
+      "type": "application/x-sh",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2026-02-23T16:00:57.076Z",
+  "allow_singular_disclosure_after": -853.901588262,
+  "singular_disclosure_allowed": true,
+  "vote_count": 1,
+  "voters": [
+    "buginvestigater"
+  ],
+  "structured_scope": {
+    "databaseId": 666,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/nodejs/node",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "is_exploit_agent_supported?": false,
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
