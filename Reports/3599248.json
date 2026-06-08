@@ -1,0 +1,148 @@
+{
+  "id": 3599248,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zNTk5MjQ4",
+  "url": "https://hackerone.com/reports/3599248",
+  "title": "Bypass of Open Redirect Fix on lovable.dev via /..// Path Traversal in redirect parameter",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2026-03-12T04:28:22.767Z",
+  "submitted_at": "2026-03-12T04:28:23.468Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "is_triager?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "marioniangi",
+    "url": "/marioniangi",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/1plzyb6zdlnvt8qvobwpjn57v38p/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 101556,
+    "url": "https://hackerone.com/lovable-vdp",
+    "handle": "lovable-vdp",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/vqnq844bgn7gv1xr9qr9chke2kf5/c8a1698ff707a5e3e8a91a3484838363845daac68cb82c86d55c9e2d44d67b67",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/vqnq844bgn7gv1xr9qr9chke2kf5/74790fe75ac5dbe8a5140a122388d59ebac913dcfa941f0b3a45e6cad161f9ea"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Lovable VDP",
+      "twitter_handle": "lovable",
+      "website": "http://lovable.dev",
+      "about": "Create apps and websites by chatting with AI"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2026-03-12T09:57:06.118Z",
+  "bug_reporter_agreed_on_going_public_at": "2026-03-12T09:56:17.025Z",
+  "team_member_agreed_on_going_public_at": "2026-03-12T09:57:05.342Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\nA bypass exists for the previously patched open redirect vulnerability (report #3581815) \non lovable.dev. The original fix blocked backslash-based payloads (/\\ and /%5C), but \nfails to account for path traversal sequences combined with double slashes. By supplying \n`/..//google.com` as the redirect value, an attacker can still redirect authenticated \nusers to arbitrary external domains.\n\nAfter logging in, the application processes a redirect via:\nhttps://lovable.dev/auth/post-login?redirect=/..//google.com\n\nThe server normalizes the path traversal `/../` and then treats `//google.com` as a \nprotocol-relative URL, resulting in a redirect to https://google.com.\n\nThis bypass demonstrates that the previous fix used an incomplete denylist rather than \na proper allowlist or URL parser validation.\n\n## Steps To Reproduce:\n\n1. Create or log in to an existing account on lovable.dev\n2. Visit the following URL while authenticated:\n   https://lovable.dev/auth/post-login?redirect=/..//google.com\n3. Observe that you are redirected to https://google.com (external domain)\n\n## Supporting Material/References:\n\n- Previous related report: #3581815 (resolved)\n- Payload used: /..//google.com\n- Final redirect URL observed in browser: https://google.com\n- The fix from report #3581815 only blocked /\\ and /%5C variants\n- This payload was not covered by the fix\n- I have a poc\n\n## Impact\n\nAn attacker can craft a trusted lovable.dev URL that silently redirects authenticated \nusers to an arbitrary external website. This can be used in targeted phishing campaigns \nwhere victims trust the lovable.dev domain in the link. Since the redirect occurs \npost-login, victims are already authenticated, making social engineering attacks \nsignificantly more credible. The attacker could redirect to a lookalike page to steal \ncredentials or session tokens.",
+  "weakness": {
+    "id": 53,
+    "name": "Open Redirect"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 5515823,
+      "file_name": "LOVABLE-POC.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/dz0s960isdhv17wmw764gbsqdi6b?response-content-disposition=attachment%3B%20filename%3D%22LOVABLE-POC.mp4%22%3B%20filename%2A%3DUTF-8%27%27LOVABLE-POC.mp4&response-content-type=video%2Fwebm&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZ5U5IHUU%2F20260608%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260608T143949Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEOz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDc5TTNgdJ7j89LHPeb5jbESpc64G2aNUOdDr4YvtT2FwIhAOAkQgF6sn5s8z0DHGBKh1cnoJdT1GL91pFOM%2Bj%2BJbPyKrsFCLX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5IgyylOBHKvE34XCGTLUqjwVXeYM1VyjMlRuKieZSFnrnzvkY%2BzO8o9ef1tpoJ7hW9i7NnVaTdZA8pD1%2FB%2BhicPXNpp7R72CieyzSuT09Eas6jQoq6X161T0YEC0%2F8TZq1g0tTy2fL4YYCcJPwXHT2nk7v0sxBmyj%2BMhoHBtKXN87EGJWaIDu2ccLp8okdS6FvEFa3gg82j7TpBpK44SkI50PrxWTMjEAvV72CjaykqtD48lq05iHsZRMkRTuoJoXd%2BL6GTKL12ZvR384BDObNhOKmIz8lvuldH4TByuYYbW%2FzW4GVXaTG4WSvMZmgcZy9LkVFQ8PgBMx%2BA8Hm0%2FeMyVHvWqbGjdizNtiDw8Q7ss5oCBsDp9eHGhmIDuBZEfUdaTsPNdyXRrkXFCKrr15qpZtH7xP1Ay68vF03PRvAfTJTMkB9nXdoFQRhbbL4viG%2FTLoJ82S8n8Bq3KDn6NhmHxwmgfHL3vqnXwqfT4Mjjb4c5EBBGQI7Y990XidxLR4iDfNlY028%2BX1eow%2B8bNyZwhB0vIwIteZf%2BN%2BvGaqV5WLIqcP38d6KC%2BUNPpwbR702pugABZ2rUDJJ2Ki9S6P8J33wzh5gBXiwcXg16gqaO6zGZna2R8Cpikg7vCZkzzZ4X0eC%2Ba4ZGq7PiMrVS1hJXdCiAEsZk6DviIjJQlmwDEIh2hhBe8yFmVsrIRX%2FA5XP9PRfbtO8RRRO9I9HujwLHiQgI6oXbs2TzB7013Cng2uZXVQRmkarUQ%2FTLeZPSJERxwykfmp4TMDq73hbsz3oT1mOM1UCuV8jfFx0Gs0B8yxt4Twxwf0aldZ91IeTOFVSG3pw5DX7rXAxZtNFzzymiwWYIitRuJRBqDG6SyqyFb1JVqQwnlS3RnX0dOmikd6MKPgmtEGOrABFSxG%2F1aYcXjC5CaYklvcHMnQHpXEC8uK9drKLCVGK4eGuC4OI%2BHGH8rBnb3nf4AT%2FwlUosc0SjUyXwV%2BRjkRpZMrPq0eT7ZDGgRy1%2BCVX8A%2FJ4m42Q6yKnFhS6C26%2F7y6FeU0Gv9VUQEECQ%2Fvr6rK%2FOJw1Va9OyF8UFzyslZMX1GZfRAZzT4EdC2xk2sWNhgvkLpSlnEeVsuTJKPzfkMZIolSOQ1Wl8c25zeLqNitIs%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=f91b93aa0878fc263d34afb8a3cf5886af1001089d90ad4334ceaf10074b0c89",
+      "file_size": 7869034,
+      "type": "video/webm",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2026-04-11T09:56:17.376Z",
+  "allow_singular_disclosure_after": -5028211.858544752,
+  "singular_disclosure_allowed": true,
+  "vote_count": 68,
+  "voters": [
+    "bad_architect",
+    "aboalezz",
+    "baehelprichard",
+    "loaymorad",
+    "ivoabreu",
+    "0-chrollo-0",
+    "trptt",
+    "candysec",
+    "shubham_srt",
+    "rahmi",
+    "and 58 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 5.1,
+    "author_type": "User",
+    "cvss_4_point_0_metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "attack_requirements": "none",
+      "privileges_required": "none",
+      "user_interaction": "active",
+      "vulnerable_confidentiality": "none",
+      "vulnerable_integrity": "none",
+      "vulnerable_availability": "none",
+      "subsequent_confidentiality": "low",
+      "subsequent_integrity": "low",
+      "subsequent_availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 930866,
+    "asset_type": "URL",
+    "asset_identifier": "lovable.dev",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "is_exploit_agent_supported?": false,
+  "is_linear_agent_ui_supported?": false,
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
