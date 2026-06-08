@@ -1,0 +1,167 @@
+{
+  "id": 3355766,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMzU1NzY2",
+  "url": "https://hackerone.com/reports/3355766",
+  "title": "DLL side-loading vulnerability in Sony Music Center for PC Ver. 2.7.2 (Latest version)",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2025-09-23T18:47:05.755Z",
+  "submitted_at": "2025-09-23T18:47:06.159Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "is_triager?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "resurrect20",
+    "url": "/resurrect20",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/vz960g4h4049vgoutar169fg4w24/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 16427,
+    "url": "https://hackerone.com/sony",
+    "handle": "sony",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/016/427/554594bb2f3fe33ee0f4971daf33bca27d1421d9_original./235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/016/427/554594bb2f3fe33ee0f4971daf33bca27d1421d9_original./3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Sony",
+      "twitter_handle": "",
+      "website": "http://www.sony.com",
+      "about": "Secure@Sony"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2026-06-05T09:10:24.533Z",
+  "bug_reporter_agreed_on_going_public_at": "2026-04-08T22:39:31.374Z",
+  "team_member_agreed_on_going_public_at": "2026-06-05T09:10:22.704Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "**Overview**\nThe application insecurely searches for the missing DLL file in system PATH environment, allowing an attacker with access to victim's local machine host to achieve arbitrary code execution by implanting a malicious DLL file in any PATH environment.\n\n**MITRE reference:** https://attack.mitre.org/techniques/T1574/001/\n\n**Proof of Concept**\n1. Open Procmon and observe that the application searches for a missing DLL file named \"z-bes.dll\" in the system PATH variables (e.g. C:\\Program Files\\Git\\cmd\\z-bes.dll, C:\\Users\\████████\\Desktop\\tools\\z-bes.dll etc)\n\n{F4818250}\n\n2. To exploit this insecured behaviour, I crafted a fake DLL file. When this DLL file is being used, it launches a calc.exe\n\n**Calc.c**\n```\n#include <windows.h>\n\nBOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved) {\n    switch (ul_reason_for_call) {\n        case DLL_PROCESS_ATTACH:\n            system(\"calc.exe\"); \n            break;\n        case DLL_THREAD_ATTACH:\n        case DLL_THREAD_DETACH:\n        case DLL_PROCESS_DETACH:\n            break;\n    }\n    return TRUE;\n}\n```\n\n{F4818280}\n\n3. Next i placed it in the C:\\Users\\████████\\Desktop\\tools\\ directory which was registered in the system PATH environment\n\n4. Open the application again and observe that the calculator shows up.\n{F4818296}\n\n5. Observe Prcomon output, we found that the malicious DLL file is mapped and executed.\n{F4818298}\n\n**Remediation**\nI believe this DLL file is removed but the application is still search for it. I think if the application is no longer use this DLL file, stopping the application from searching for it should solve the problem. Additionally, specifying DLL full paths is the solution to prevent this kind of attack.\n\n## Impact\n\nA successful exploitation allows an attacker to achieve code execution on target machine or secretly install a trojan using SONY application to masquerade itself to avoid anti-virus detection.",
+  "weakness": {
+    "id": 183,
+    "name": "Uncontrolled Search Path Element"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 4818250,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/5hqqw3x8okwjfixewc3trym36j86?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQULW5FDBE%2F20260608%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260608T131709Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEOz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIF7gB8oqLmfLdw2o3ta%2BW3vQLcwNRqjkTasacjT1k6gvAiEAyewP0xKkyzLK8%2BgkXhEf1%2BxTyE53nbOIzplQDI92ymUqugUItf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDFJaGlb7iL6ezbPnKiqOBWzehl%2FGByAqD4Bi6Ku3DGGCDxHH6PL2ESTPeVHifdZ%2FAMJnJtvaKTjBJ%2F2V9dHv8lqTXuNLENC6CwcPuuTAJsAm2rUhSOS3nPhkya54Gy3lZ%2FYJ9%2Fbu89OVfhtqZUeaWKvf1htU6u1NK3lD09T%2BmNZW4Sw8cO1tho%2FuBWDsMh4le%2BN41sUkdFgJNbfUhCWc1hLvCMsw9R5nYT3jjjnjqi%2BF%2FC%2Fwma3v8vTCuxgZXz7YChBKl5DstqOSsaSYhH41LYepbcSSyDttI9HcSQYl6FzttgwZ4qsQUAiPhcAP5Qhx87RQU4pMe7QOOtwQXaRgY%2BVsZlth5TYQ2vagkeZ8jBMwFWIEq3MHdB2kxXN8z%2F4%2FRw2BNP6Z0cEvKanv%2BSDnVudNphfgLFExa71UaXOnurrsK57oBGWx3hfDkRfnuq9iiKBS11%2B0nUh3GdekxVfzTau6zCcjRKZSuV9eWw7yHotgEfJtZizeO6O6waAc%2B%2F%2FdZv1qAc3%2FFouxfTbALh%2BJsyab8CuciyW%2F5DldeukVtnd%2FMYWRNFyfbKtkLS3pE3tmuqxWpHltumbQLP57ZwhCJ2BVjjQ%2B3FvB1xsJwr43GBXWBICwlicUkIaAhAdDEmauZuoSKZk0z9Hzi6%2FsDZUfWowV4KZ7S3f3RrXBArw7DKEYjt3JUeOd09ZwKXX8WrLHDitGBJ8e8RTpFb6k%2Bff%2BCYtHzOSmGYP9xkWJqjMoqKaum8SA5AlNCxPWhXAJfcpv7thHyl9Ms1odslCJZiraqC7mwrfJBXJeQtuATa5D5BI%2BJB9ZuOC1Ro43L7nsk12ASAYTSTJklFZYtLiTehEMQVZ1HdVDex%2B1JyBtrk3cwjCGB7cJweB1Us8D1dRDwDDu0JrRBjqxAe2s9FfcZd%2FdpWgGJ3IJ1Nsp7%2FAlyTsXaWMsnGTn%2BYXM3nlDIEepIdSPJvJ%2FbtYGUP6IN%2BTbUHfU2TVP0zbWrhIa8t9QGTQ%2Bon96nUyJCh6%2Fm5nVhl4ZZZJA9Z6Ee2kRxu3tiistncjhoBBd7R1UhlIPeb6anKXB24sdtf3MlEA8Y30Cw3YLiOR8%2B4EJxMFqATaT1tfCi3uEOueEO5pixNTZAZH8BerNUIWED5Pj%2FeyfBw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=310a2c2db6cfce252988fedd3392082030e6edd536bc945be7f30cf547bf1a6e",
+      "file_size": 89956,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 4818280,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/w5bxslco8s2qzg8tj9tyzh2qnd33?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQULW5FDBE%2F20260608%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260608T131709Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEOz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIF7gB8oqLmfLdw2o3ta%2BW3vQLcwNRqjkTasacjT1k6gvAiEAyewP0xKkyzLK8%2BgkXhEf1%2BxTyE53nbOIzplQDI92ymUqugUItf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDFJaGlb7iL6ezbPnKiqOBWzehl%2FGByAqD4Bi6Ku3DGGCDxHH6PL2ESTPeVHifdZ%2FAMJnJtvaKTjBJ%2F2V9dHv8lqTXuNLENC6CwcPuuTAJsAm2rUhSOS3nPhkya54Gy3lZ%2FYJ9%2Fbu89OVfhtqZUeaWKvf1htU6u1NK3lD09T%2BmNZW4Sw8cO1tho%2FuBWDsMh4le%2BN41sUkdFgJNbfUhCWc1hLvCMsw9R5nYT3jjjnjqi%2BF%2FC%2Fwma3v8vTCuxgZXz7YChBKl5DstqOSsaSYhH41LYepbcSSyDttI9HcSQYl6FzttgwZ4qsQUAiPhcAP5Qhx87RQU4pMe7QOOtwQXaRgY%2BVsZlth5TYQ2vagkeZ8jBMwFWIEq3MHdB2kxXN8z%2F4%2FRw2BNP6Z0cEvKanv%2BSDnVudNphfgLFExa71UaXOnurrsK57oBGWx3hfDkRfnuq9iiKBS11%2B0nUh3GdekxVfzTau6zCcjRKZSuV9eWw7yHotgEfJtZizeO6O6waAc%2B%2F%2FdZv1qAc3%2FFouxfTbALh%2BJsyab8CuciyW%2F5DldeukVtnd%2FMYWRNFyfbKtkLS3pE3tmuqxWpHltumbQLP57ZwhCJ2BVjjQ%2B3FvB1xsJwr43GBXWBICwlicUkIaAhAdDEmauZuoSKZk0z9Hzi6%2FsDZUfWowV4KZ7S3f3RrXBArw7DKEYjt3JUeOd09ZwKXX8WrLHDitGBJ8e8RTpFb6k%2Bff%2BCYtHzOSmGYP9xkWJqjMoqKaum8SA5AlNCxPWhXAJfcpv7thHyl9Ms1odslCJZiraqC7mwrfJBXJeQtuATa5D5BI%2BJB9ZuOC1Ro43L7nsk12ASAYTSTJklFZYtLiTehEMQVZ1HdVDex%2B1JyBtrk3cwjCGB7cJweB1Us8D1dRDwDDu0JrRBjqxAe2s9FfcZd%2FdpWgGJ3IJ1Nsp7%2FAlyTsXaWMsnGTn%2BYXM3nlDIEepIdSPJvJ%2FbtYGUP6IN%2BTbUHfU2TVP0zbWrhIa8t9QGTQ%2Bon96nUyJCh6%2Fm5nVhl4ZZZJA9Z6Ee2kRxu3tiistncjhoBBd7R1UhlIPeb6anKXB24sdtf3MlEA8Y30Cw3YLiOR8%2B4EJxMFqATaT1tfCi3uEOueEO5pixNTZAZH8BerNUIWED5Pj%2FeyfBw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=08cd52bb4be97d50e3e4592c234d77d7c5fde872250ca4e3e1e3be226981d0a8",
+      "file_size": 33632,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 4818296,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/p1g27bmm0xgowp7ig04t5vfnwg2p?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQULW5FDBE%2F20260608%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260608T131709Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEOz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIF7gB8oqLmfLdw2o3ta%2BW3vQLcwNRqjkTasacjT1k6gvAiEAyewP0xKkyzLK8%2BgkXhEf1%2BxTyE53nbOIzplQDI92ymUqugUItf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDFJaGlb7iL6ezbPnKiqOBWzehl%2FGByAqD4Bi6Ku3DGGCDxHH6PL2ESTPeVHifdZ%2FAMJnJtvaKTjBJ%2F2V9dHv8lqTXuNLENC6CwcPuuTAJsAm2rUhSOS3nPhkya54Gy3lZ%2FYJ9%2Fbu89OVfhtqZUeaWKvf1htU6u1NK3lD09T%2BmNZW4Sw8cO1tho%2FuBWDsMh4le%2BN41sUkdFgJNbfUhCWc1hLvCMsw9R5nYT3jjjnjqi%2BF%2FC%2Fwma3v8vTCuxgZXz7YChBKl5DstqOSsaSYhH41LYepbcSSyDttI9HcSQYl6FzttgwZ4qsQUAiPhcAP5Qhx87RQU4pMe7QOOtwQXaRgY%2BVsZlth5TYQ2vagkeZ8jBMwFWIEq3MHdB2kxXN8z%2F4%2FRw2BNP6Z0cEvKanv%2BSDnVudNphfgLFExa71UaXOnurrsK57oBGWx3hfDkRfnuq9iiKBS11%2B0nUh3GdekxVfzTau6zCcjRKZSuV9eWw7yHotgEfJtZizeO6O6waAc%2B%2F%2FdZv1qAc3%2FFouxfTbALh%2BJsyab8CuciyW%2F5DldeukVtnd%2FMYWRNFyfbKtkLS3pE3tmuqxWpHltumbQLP57ZwhCJ2BVjjQ%2B3FvB1xsJwr43GBXWBICwlicUkIaAhAdDEmauZuoSKZk0z9Hzi6%2FsDZUfWowV4KZ7S3f3RrXBArw7DKEYjt3JUeOd09ZwKXX8WrLHDitGBJ8e8RTpFb6k%2Bff%2BCYtHzOSmGYP9xkWJqjMoqKaum8SA5AlNCxPWhXAJfcpv7thHyl9Ms1odslCJZiraqC7mwrfJBXJeQtuATa5D5BI%2BJB9ZuOC1Ro43L7nsk12ASAYTSTJklFZYtLiTehEMQVZ1HdVDex%2B1JyBtrk3cwjCGB7cJweB1Us8D1dRDwDDu0JrRBjqxAe2s9FfcZd%2FdpWgGJ3IJ1Nsp7%2FAlyTsXaWMsnGTn%2BYXM3nlDIEepIdSPJvJ%2FbtYGUP6IN%2BTbUHfU2TVP0zbWrhIa8t9QGTQ%2Bon96nUyJCh6%2Fm5nVhl4ZZZJA9Z6Ee2kRxu3tiistncjhoBBd7R1UhlIPeb6anKXB24sdtf3MlEA8Y30Cw3YLiOR8%2B4EJxMFqATaT1tfCi3uEOueEO5pixNTZAZH8BerNUIWED5Pj%2FeyfBw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=d4d48ba98d80662fea7a7076b4953f0e42fae2cabaf6d6ad595f58c95ad2522a",
+      "file_size": 44562,
+      "type": "image/png",
+      "moderated": false
+    },
+    {
+      "id": 4818298,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/uc9czbrb90my355f06u44sk1rqiw?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQULW5FDBE%2F20260608%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260608T131709Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEOz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIF7gB8oqLmfLdw2o3ta%2BW3vQLcwNRqjkTasacjT1k6gvAiEAyewP0xKkyzLK8%2BgkXhEf1%2BxTyE53nbOIzplQDI92ymUqugUItf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDFJaGlb7iL6ezbPnKiqOBWzehl%2FGByAqD4Bi6Ku3DGGCDxHH6PL2ESTPeVHifdZ%2FAMJnJtvaKTjBJ%2F2V9dHv8lqTXuNLENC6CwcPuuTAJsAm2rUhSOS3nPhkya54Gy3lZ%2FYJ9%2Fbu89OVfhtqZUeaWKvf1htU6u1NK3lD09T%2BmNZW4Sw8cO1tho%2FuBWDsMh4le%2BN41sUkdFgJNbfUhCWc1hLvCMsw9R5nYT3jjjnjqi%2BF%2FC%2Fwma3v8vTCuxgZXz7YChBKl5DstqOSsaSYhH41LYepbcSSyDttI9HcSQYl6FzttgwZ4qsQUAiPhcAP5Qhx87RQU4pMe7QOOtwQXaRgY%2BVsZlth5TYQ2vagkeZ8jBMwFWIEq3MHdB2kxXN8z%2F4%2FRw2BNP6Z0cEvKanv%2BSDnVudNphfgLFExa71UaXOnurrsK57oBGWx3hfDkRfnuq9iiKBS11%2B0nUh3GdekxVfzTau6zCcjRKZSuV9eWw7yHotgEfJtZizeO6O6waAc%2B%2F%2FdZv1qAc3%2FFouxfTbALh%2BJsyab8CuciyW%2F5DldeukVtnd%2FMYWRNFyfbKtkLS3pE3tmuqxWpHltumbQLP57ZwhCJ2BVjjQ%2B3FvB1xsJwr43GBXWBICwlicUkIaAhAdDEmauZuoSKZk0z9Hzi6%2FsDZUfWowV4KZ7S3f3RrXBArw7DKEYjt3JUeOd09ZwKXX8WrLHDitGBJ8e8RTpFb6k%2Bff%2BCYtHzOSmGYP9xkWJqjMoqKaum8SA5AlNCxPWhXAJfcpv7thHyl9Ms1odslCJZiraqC7mwrfJBXJeQtuATa5D5BI%2BJB9ZuOC1Ro43L7nsk12ASAYTSTJklFZYtLiTehEMQVZ1HdVDex%2B1JyBtrk3cwjCGB7cJweB1Us8D1dRDwDDu0JrRBjqxAe2s9FfcZd%2FdpWgGJ3IJ1Nsp7%2FAlyTsXaWMsnGTn%2BYXM3nlDIEepIdSPJvJ%2FbtYGUP6IN%2BTbUHfU2TVP0zbWrhIa8t9QGTQ%2Bon96nUyJCh6%2Fm5nVhl4ZZZJA9Z6Ee2kRxu3tiistncjhoBBd7R1UhlIPeb6anKXB24sdtf3MlEA8Y30Cw3YLiOR8%2B4EJxMFqATaT1tfCi3uEOueEO5pixNTZAZH8BerNUIWED5Pj%2FeyfBw%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=d5a0b264427f41414cabd254efda87f22ce91932a9d5e6b5e5b28b3ab7636651",
+      "file_size": 44001,
+      "type": "image/png",
+      "moderated": false
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 84,
+  "voters": [
+    "orange303",
+    "coder_mohammed",
+    "aawartkc",
+    "zy9ard3",
+    "address_below0",
+    "mohaned0101",
+    "ahmed_xyz",
+    "dpaysm",
+    "0xkarim_dix",
+    "2026",
+    "and 74 more..."
+  ],
+  "severity": {
+    "rating": "high",
+    "score": 7.3,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "local",
+      "attack_complexity": "high",
+      "privileges_required": "high",
+      "user_interaction": "required",
+      "scope": "changed",
+      "confidentiality": "high",
+      "integrity": "high",
+      "availability": "high"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 84385,
+    "asset_type": "OTHER",
+    "asset_identifier": "Security vulnerabilities that are identified in Sony products or in website domains owned, operated, or controlled by Sony are in scope.  ",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "is_exploit_agent_supported?": false,
+  "is_linear_agent_ui_supported?": false,
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
