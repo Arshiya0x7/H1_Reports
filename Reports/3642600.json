@@ -1,0 +1,120 @@
+{
+  "id": 3642600,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zNjQyNjAw",
+  "url": "https://hackerone.com/reports/3642600",
+  "title": "Authorization header leak in ssrf_filter via cross-host redirect leads to credential theft and unauthorized access",
+  "state": "Closed",
+  "substate": "resolved",
+  "readable_substate": "Resolved",
+  "created_at": "2026-04-01T16:00:33.018Z",
+  "submitted_at": "2026-04-01T16:00:33.081Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "is_triager?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "argareksapatii",
+    "url": "/argareksapatii",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/fpm7e6yjpfqe99ev12r8d0l8fr16/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 29833,
+    "url": "https://hackerone.com/arkadiyt-projects",
+    "handle": "arkadiyt-projects",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/029/833/c7d79126a63550aa7c99662ecb49eca1a8b2d1c3_original.png/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/029/833/c7d79126a63550aa7c99662ecb49eca1a8b2d1c3_original.png/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "arkadiyt-projects",
+      "twitter_handle": "arkadiyt",
+      "website": "https://arkadiyt.com",
+      "about": ""
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": true,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2026-04-15T20:43:58.628Z",
+  "bug_reporter_agreed_on_going_public_at": "2026-04-15T20:31:26.061Z",
+  "team_member_agreed_on_going_public_at": "2026-04-15T20:43:58.502Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Summary:\n\n`ssrf_filter` follows redirects by rebuilding each redirected request from the original request options. When a redirect crosses to a different host, it still reapplies caller-supplied sensitive state such as the `Authorization` header.\n\nAs a result, an attacker-controlled redirect target can receive credentials that were intended only for the original request origin.\n\nI verified impact with a local proof of concept. A bearer token attached to the initial request was forwarded to a different host, captured there, and then successfully replayed against a separate protected API endpoint, which returned private data. This demonstrates credential theft followed by unauthorized access, not just passive header disclosure.\n\n## Steps To Reproduce:\n\n1. Clone the repository and enter the project root:\n\n   ```bash\n   git clone https://github.com/arkadiyt/ssrf_filter\n   cd ssrf_filter\n   ```\n\n2. Run the attached bearer-token replay PoC:\n\n   ```bash\n   ruby artifacts/ssrf_filter_redirect_leak_2026-04-01/01_bearer_token_replay.rb\n   ```\n\n3. The PoC starts three local servers:\n   - redirector.test, which returns a 302 redirect to collector.test\n   - collector.test, which records the inbound Authorization header\n   - api.test, which exposes /private and only returns data when the correct bearer token is presented\n\n4. Observe that SsrfFilter.get(...) follows the redirect and forwards the original Authorization header to collector.test.\n\n5. Observe that the stolen token is then replayed to api.test/private and succeeds.\n\nExpected output:\n```\n[:fetch_response, \"200\", \"stolen\"]\n[:stolen_token, \"Bearer service-token-123\"]\n[:replay_response, \"200\", \"private-data\"]\n```\n\nInterpretation:\n- Authorization is forwarded across an origin change.\n- The leaked bearer token is reusable.\n- Reuse of the stolen token grants access to protected data.\n\nNote: for local-only reproduction, the PoC temporarily allows loopback addresses so the entire harness can run on one machine. That adjustment is only for the lab setup and is not part of the vulnerability itself. The issue is the forwarding of sensitive credentials across cross-host redirects.\n\n## Supporting Material/References:\n\n* Evidence bundle: ssrf_filter/artifacts/ssrf_filter_redirect_leak_2026-04-01.zip\n* Bearer token replay PoC: ssrf_filter/artifacts/ssrf_filter_redirect_leak_2026-04-01/01_bearer_token_replay.rb\n* Evidence outputs: ssrf_filter/artifacts/ssrf_filter_redirect_leak_2026-04-01/evidence_outputs.md\n* Draft report: ssrf_filter/artifacts/ssrf_filter_redirect_leak_2026-04-01/report_draft.md\n* Relevant code path: ssrf_filter/lib/ssrf_filter/ssrf_filter.rb\n  - redirect loop reuses the original request options\n  - redirected requests reapply headers/body/request_proc\n  - redirects are not differentiated between same-host and cross-host targets",
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 5653562,
+      "file_name": "ssrf_filter_redirect_leak_2026-04-01.zip",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/z3nrhxua2tbkjlxjp2xlfi2md5fd?response-content-disposition=attachment%3B%20filename%3D%22ssrf_filter_redirect_leak_2026-04-01.zip%22%3B%20filename%2A%3DUTF-8%27%27ssrf_filter_redirect_leak_2026-04-01.zip&response-content-type=application%2Fzip&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQZ5U5IHUU%2F20260608%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260608T142155Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEOz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDc5TTNgdJ7j89LHPeb5jbESpc64G2aNUOdDr4YvtT2FwIhAOAkQgF6sn5s8z0DHGBKh1cnoJdT1GL91pFOM%2Bj%2BJbPyKrsFCLX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMMDEzNjE5Mjc0ODQ5IgyylOBHKvE34XCGTLUqjwVXeYM1VyjMlRuKieZSFnrnzvkY%2BzO8o9ef1tpoJ7hW9i7NnVaTdZA8pD1%2FB%2BhicPXNpp7R72CieyzSuT09Eas6jQoq6X161T0YEC0%2F8TZq1g0tTy2fL4YYCcJPwXHT2nk7v0sxBmyj%2BMhoHBtKXN87EGJWaIDu2ccLp8okdS6FvEFa3gg82j7TpBpK44SkI50PrxWTMjEAvV72CjaykqtD48lq05iHsZRMkRTuoJoXd%2BL6GTKL12ZvR384BDObNhOKmIz8lvuldH4TByuYYbW%2FzW4GVXaTG4WSvMZmgcZy9LkVFQ8PgBMx%2BA8Hm0%2FeMyVHvWqbGjdizNtiDw8Q7ss5oCBsDp9eHGhmIDuBZEfUdaTsPNdyXRrkXFCKrr15qpZtH7xP1Ay68vF03PRvAfTJTMkB9nXdoFQRhbbL4viG%2FTLoJ82S8n8Bq3KDn6NhmHxwmgfHL3vqnXwqfT4Mjjb4c5EBBGQI7Y990XidxLR4iDfNlY028%2BX1eow%2B8bNyZwhB0vIwIteZf%2BN%2BvGaqV5WLIqcP38d6KC%2BUNPpwbR702pugABZ2rUDJJ2Ki9S6P8J33wzh5gBXiwcXg16gqaO6zGZna2R8Cpikg7vCZkzzZ4X0eC%2Ba4ZGq7PiMrVS1hJXdCiAEsZk6DviIjJQlmwDEIh2hhBe8yFmVsrIRX%2FA5XP9PRfbtO8RRRO9I9HujwLHiQgI6oXbs2TzB7013Cng2uZXVQRmkarUQ%2FTLeZPSJERxwykfmp4TMDq73hbsz3oT1mOM1UCuV8jfFx0Gs0B8yxt4Twxwf0aldZ91IeTOFVSG3pw5DX7rXAxZtNFzzymiwWYIitRuJRBqDG6SyqyFb1JVqQwnlS3RnX0dOmikd6MKPgmtEGOrABFSxG%2F1aYcXjC5CaYklvcHMnQHpXEC8uK9drKLCVGK4eGuC4OI%2BHGH8rBnb3nf4AT%2FwlUosc0SjUyXwV%2BRjkRpZMrPq0eT7ZDGgRy1%2BCVX8A%2FJ4m42Q6yKnFhS6C26%2F7y6FeU0Gv9VUQEECQ%2Fvr6rK%2FOJw1Va9OyF8UFzyslZMX1GZfRAZzT4EdC2xk2sWNhgvkLpSlnEeVsuTJKPzfkMZIolSOQ1Wl8c25zeLqNitIs%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=830f363c78e8b93bc17399610ffa0a23d72a03771a73ac6cf5c8d0aa1bbd35e8",
+      "file_size": 7464,
+      "type": "application/zip",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2026-05-15T20:31:26.156Z",
+  "allow_singular_disclosure_after": -2051429.819590363,
+  "singular_disclosure_allowed": true,
+  "vote_count": 40,
+  "voters": [
+    "mchelesanto",
+    "trptt",
+    "mohaned0101",
+    "2026",
+    "what_web",
+    "nwicks",
+    "omarquito",
+    "swaley",
+    "sn0xsharma",
+    "r6rosinaldonevesr6",
+    "and 30 more..."
+  ],
+  "structured_scope": null,
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "is_exploit_agent_supported?": false,
+  "is_linear_agent_ui_supported?": false,
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
