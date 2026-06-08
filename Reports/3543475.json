@@ -1,0 +1,163 @@
+{
+  "id": 3543475,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zNTQzNDc1",
+  "url": "https://hackerone.com/reports/3543475",
+  "title": "Improper Access Control in `fizzy.do` import flow allows cross-tenant ActionText reference resolution and data disclosure",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "low",
+  "readable_substate": "Resolved",
+  "created_at": "2026-02-07T15:59:38.597Z",
+  "submitted_at": "2026-02-07T15:59:39.638Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "is_triager?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "xavlimsg",
+    "url": "/xavlimsg",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/ginaiesntilpg69vcvek17vriamy/3cb67cc78dc0cba55b102dd9eca2ee89b206d3e960be830f070583d9070b69ef"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 67,
+    "url": "https://hackerone.com/basecamp",
+    "handle": "basecamp",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/STtZ2opgRsHdKby72xs56KhB/235acf2ba808c3a51a94888fb977392c26f8fb0ccf77a81a4546c5e4065c06f1",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/STtZ2opgRsHdKby72xs56KhB/3f1ab5c6a9b6dadada1e6c8121700b884388bd0a43471fee1897a38ce57d0b2c"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Basecamp",
+      "twitter_handle": "basecamp",
+      "website": "https://37signals.com/policies/security/response",
+      "about": "Basecamp is the leading online project manager and the birthplace of Ruby on Rails. Creators of the HEY email service."
+    }
+  },
+  "has_bounty?": true,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2026-04-14T19:25:39.589Z",
+  "bug_reporter_agreed_on_going_public_at": "2026-04-13T16:56:43.205Z",
+  "team_member_agreed_on_going_public_at": "2026-04-14T19:25:39.146Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "## Description\n\nThe account import flow processes ActionText attachment HTML from user-uploaded ZIP content.\n\nIn `app/models/account/data_transfer/action_text_rich_text_record_set.rb`, import-time method `convert_gids_to_sgids` converts attacker-controlled `gid` values into persisted `sgid` values by resolving the target record globally:\n\n- `app/models/account/data_transfer/action_text_rich_text_record_set.rb:83`\n- `app/models/account/data_transfer/action_text_rich_text_record_set.rb:87`\n- `app/models/account/data_transfer/action_text_rich_text_record_set.rb:88`\n- `app/models/account/data_transfer/action_text_rich_text_record_set.rb:89`\n\nThe import path has no tenant ownership check before minting the signed reference.\n\nReachable import path from normal upload flow:\n\n- `app/controllers/account/imports_controller.rb:38`\n- `app/models/account/import.rb:37`\n- `app/models/account/import.rb:39`\n\nFor comparison, export path has an account check (`record&.account_id == account.id`) in the same file at `app/models/account/data_transfer/action_text_rich_text_record_set.rb:69`.\n\n## Reproduction Path A (Fastest for triage, deterministic)\n\nThis path is self-contained and exercises the real vulnerable import code path (`import_batch`) without requiring full web flow setup.\n\n### Prerequisites\n\n- Ruby and Bundler installed\n- Repo cloned\n\n### Steps\n\n1. Enter repo:\n\n```bash\ncd /path/to/fizzy\n```\n\n2. Install/check dependencies:\n\n```bash\nbundle check || bundle install\n```\n\n3. Run standalone integration PoC:\n\n```bash\nbundle exec ruby security-poc/integration_test_standalone.rb\n```\n\n4. Expected success signals in output:\n\n- `RESULT: IMPACT_CONFIRMED=true`\n- `imported.account_id = <attacker_account_id>`\n- `resolved_account_id = <victim_account_id>` (different tenant)\n- `attachable_text = @alice_secret`\n\n### Why this is valid\n\nThis script loads and executes the real vulnerable file:\n\n- `app/models/account/data_transfer/action_text_rich_text_record_set.rb`\n\nAnd runs:\n\n- `Account::DataTransfer::ActionTextRichTextRecordSet#import_batch`\n\nSo the exploit condition is validated directly against production logic.\n\n## Reproduction Path B (Full product-equivalent import flow)\n\nThis path uses the Rails environment and import conversion path end-to-end.\n\n### Steps\n\n1. Enter repo:\n\n```bash\ncd /path/to/fizzy\n```\n\n2. Install/check dependencies:\n\n```bash\nbundle check || bundle install\n```\n\n3. Run full import impact demo:\n\n```bash\nDISABLE_BOOTSNAP=1 RAILS_ENV=development \\\nbundle exec rails runner security-poc/demo_import_cross_account_impact.rb\n```\n\n4. Expected success signals:\n\n- `cross_account_reference=true`\n- `IMPACT_CONFIRMED=true`\n- `imported_rich_text_account_id=<attacker_account_id>`\n- `resolved_account_id=<victim_account_id>`\n- `leaked_attachable_text=@alice`\n\n### Note\n\nIn slower environments, Rails boot may take a few minutes before script output appears.\n\n## Evidence from local execution\n\nObserved in local runs:\n\n- Path A (`integration_test_standalone.rb`): `RESULT: IMPACT_CONFIRMED=true`\n- Path B (`demo_import_cross_account_impact.rb`): `IMPACT_CONFIRMED=true`\n\nBoth runs showed attacker-owned imported rich text resolving a victim-owned attachable record.\n\n## Supporting files\n\n- `security-poc/integration_test_standalone.rb`\n- `security-poc/demo_import_cross_account_impact.rb`\n- `security-poc/patch_action_text_gid.py`\n\n## Suggested remediation\n\nIn `convert_gids_to_sgids`, only mint `sgid` when resolved record belongs to importing account:\n\n- Resolve record safely (handle not found)\n- Require `record.respond_to?(:account_id) && record.account_id == account.id`\n- Drop or ignore cross-account references\n\n## Impact\n\n## Impact\n\n- Cross-tenant unauthorized data reference in imported rich text.\n- Victim-account attachable data is resolved/rendered in attacker-account context.\n- Persisted unauthorized reference (`sgid`) remains stored until removed.",
+  "bounty_amount": "218.0",
+  "formatted_bounty": "$218",
+  "weakness": {
+    "id": 26,
+    "name": "Improper Access Control - Generic"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 5333684,
+      "file_name": "integration_test_standalone.rb",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/26zmpp2m1eehao9ls0ngwc31twag?response-content-disposition=attachment%3B%20filename%3D%22integration_test_standalone.rb%22%3B%20filename%2A%3DUTF-8%27%27integration_test_standalone.rb&response-content-type=application%2Fx-sh&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXMX6QUUA%2F20260608%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260608T142240Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEOz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDHluiuCiVqMGuclhgGH%2BQzNzN2dAnrpOyTiM4HRbJ%2BXwIge6J1HDoQjYsRdpaS7zDUl5p%2B1C%2FRX8woBrXaOwVL61gqugUItf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDDVjlbvfkk3mZfxQuyqOBUX1KlkbPDPUB9qujAORNI5MZ6KE3JvKOrDx5FsCv1y3%2BeGaOUria4dOipXzPgAbwia0XWwXgtSaIVvHgyjczgVO7q1ggH6GMZ61UULEjo6NRRWzFHAieWM8UEpwn6LMoFet5Rbr%2BXIrwYDUYh1fsJJRgkS5pqmLshZ%2BGiB4PddKHq512Txv9Xe9nCjhS7e6JlTRrd07gjkYzpTV2BqiC%2FCMBiw4m43IXK8aNHJExdlpyeZ2mA6fIqM0Jz9jdOv4k0T%2BDo%2BcC78Vm3KcYDZthhVxwryH8XSPXArq8OlqHE9ZS6QygVZ3H4Fv5YxWt8xMvntecBE6puimEFBZIvP59f8tQtJ%2BINrLTW%2BkPkps0pzRuXbEnGBmZ1%2B0nE4C8o5%2FLGD3tg2vn8hnAGOkM9QvJC037s9u6RlX3jtf1sHK7Y9rIe9QJ8s9isZC6YvvUfvIGf4n%2BAgHmYZZg8TTXlWM8QRTuFAB7DD%2BQrM8EW7m1X8g2wOeBGTYi8wk%2B80Knk8%2Flf73%2BC6KBdkfd%2F9JK3rY2U54m7AhMVttamWo99ZhsWiKeuOKcgFHjVRmIagoSeSfvPhon9KpTgehRCQGnE%2BawWGX72kbrxGZowPdEoa4n02IVB49RYHfe7DNS4dAhwWZItOqdZoyMGlSrSrqXMS0alQlWbFcv2mj0bwGRn61F2X2Wd%2FQkTxOa8Jvfe1b3gz6ljhXkfl%2FVIKOEkO02xUBgE6OP24qDBvTv2ZiisBYxBVw4GjKQsIjIFq6zJBrQmtxHldxwTpoXuoKNms5AImxB8P7ebkRJs4ixNfy9M9FHoHdlfS%2BGx0B3WbgKzRX60mNy6TVvTENcqWGYX35HR%2FnNFiFMYItxSm29%2BZiDJihuTDNz5rRBjqxAdO1aZgQZL0HI8caFpdsfMr6ToA4XShUs6YSEuktDy1YDAJ71fj40jVn8aO5wcnzzW%2FoRnR0M%2F0YjC0vxxurqkoqyGhWsDReMTcPYlIF%2BdNUTEIc1wTUuCKzPl%2FZBAzBXGeQLzyegqt3C8yoBZG3fT%2FQATH6DwyoxQU6B4JBEb2euFJRxPuFCnzRoSqNqPb6EXO%2BuvUywlop9PclSCWF5YQcla3DEw7m36ivPrp57NVW6A%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=1054adc0244c15c6a84173c238827410d5739543ae0b3645132ffa656f5b4516",
+      "file_size": 7041,
+      "type": "application/x-sh",
+      "moderated": null
+    },
+    {
+      "id": 5333685,
+      "file_name": "demo_import_cross_account_impact.rb",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/lb4tsoxv0inro4gp7g1lhfmh8it1?response-content-disposition=attachment%3B%20filename%3D%22demo_import_cross_account_impact.rb%22%3B%20filename%2A%3DUTF-8%27%27demo_import_cross_account_impact.rb&response-content-type=text%2Fx-ruby&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXMX6QUUA%2F20260608%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260608T142240Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEOz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDHluiuCiVqMGuclhgGH%2BQzNzN2dAnrpOyTiM4HRbJ%2BXwIge6J1HDoQjYsRdpaS7zDUl5p%2B1C%2FRX8woBrXaOwVL61gqugUItf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDDVjlbvfkk3mZfxQuyqOBUX1KlkbPDPUB9qujAORNI5MZ6KE3JvKOrDx5FsCv1y3%2BeGaOUria4dOipXzPgAbwia0XWwXgtSaIVvHgyjczgVO7q1ggH6GMZ61UULEjo6NRRWzFHAieWM8UEpwn6LMoFet5Rbr%2BXIrwYDUYh1fsJJRgkS5pqmLshZ%2BGiB4PddKHq512Txv9Xe9nCjhS7e6JlTRrd07gjkYzpTV2BqiC%2FCMBiw4m43IXK8aNHJExdlpyeZ2mA6fIqM0Jz9jdOv4k0T%2BDo%2BcC78Vm3KcYDZthhVxwryH8XSPXArq8OlqHE9ZS6QygVZ3H4Fv5YxWt8xMvntecBE6puimEFBZIvP59f8tQtJ%2BINrLTW%2BkPkps0pzRuXbEnGBmZ1%2B0nE4C8o5%2FLGD3tg2vn8hnAGOkM9QvJC037s9u6RlX3jtf1sHK7Y9rIe9QJ8s9isZC6YvvUfvIGf4n%2BAgHmYZZg8TTXlWM8QRTuFAB7DD%2BQrM8EW7m1X8g2wOeBGTYi8wk%2B80Knk8%2Flf73%2BC6KBdkfd%2F9JK3rY2U54m7AhMVttamWo99ZhsWiKeuOKcgFHjVRmIagoSeSfvPhon9KpTgehRCQGnE%2BawWGX72kbrxGZowPdEoa4n02IVB49RYHfe7DNS4dAhwWZItOqdZoyMGlSrSrqXMS0alQlWbFcv2mj0bwGRn61F2X2Wd%2FQkTxOa8Jvfe1b3gz6ljhXkfl%2FVIKOEkO02xUBgE6OP24qDBvTv2ZiisBYxBVw4GjKQsIjIFq6zJBrQmtxHldxwTpoXuoKNms5AImxB8P7ebkRJs4ixNfy9M9FHoHdlfS%2BGx0B3WbgKzRX60mNy6TVvTENcqWGYX35HR%2FnNFiFMYItxSm29%2BZiDJihuTDNz5rRBjqxAdO1aZgQZL0HI8caFpdsfMr6ToA4XShUs6YSEuktDy1YDAJ71fj40jVn8aO5wcnzzW%2FoRnR0M%2F0YjC0vxxurqkoqyGhWsDReMTcPYlIF%2BdNUTEIc1wTUuCKzPl%2FZBAzBXGeQLzyegqt3C8yoBZG3fT%2FQATH6DwyoxQU6B4JBEb2euFJRxPuFCnzRoSqNqPb6EXO%2BuvUywlop9PclSCWF5YQcla3DEw7m36ivPrp57NVW6A%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=9c1e5b4ee17f1c6fd2c1f64a515e911373dfb980f125fd3cb937e6cc38824fb3",
+      "file_size": 3681,
+      "type": "text/x-ruby",
+      "moderated": null
+    },
+    {
+      "id": 5333686,
+      "file_name": "patch_action_text_gid.py",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/qpyo5fr53u5r6t9hts0l7p7ikvcs?response-content-disposition=attachment%3B%20filename%3D%22patch_action_text_gid.py%22%3B%20filename%2A%3DUTF-8%27%27patch_action_text_gid.py&response-content-type=application%2Fx-sh&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQXMX6QUUA%2F20260608%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260608T142240Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEOz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDHluiuCiVqMGuclhgGH%2BQzNzN2dAnrpOyTiM4HRbJ%2BXwIge6J1HDoQjYsRdpaS7zDUl5p%2B1C%2FRX8woBrXaOwVL61gqugUItf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDDVjlbvfkk3mZfxQuyqOBUX1KlkbPDPUB9qujAORNI5MZ6KE3JvKOrDx5FsCv1y3%2BeGaOUria4dOipXzPgAbwia0XWwXgtSaIVvHgyjczgVO7q1ggH6GMZ61UULEjo6NRRWzFHAieWM8UEpwn6LMoFet5Rbr%2BXIrwYDUYh1fsJJRgkS5pqmLshZ%2BGiB4PddKHq512Txv9Xe9nCjhS7e6JlTRrd07gjkYzpTV2BqiC%2FCMBiw4m43IXK8aNHJExdlpyeZ2mA6fIqM0Jz9jdOv4k0T%2BDo%2BcC78Vm3KcYDZthhVxwryH8XSPXArq8OlqHE9ZS6QygVZ3H4Fv5YxWt8xMvntecBE6puimEFBZIvP59f8tQtJ%2BINrLTW%2BkPkps0pzRuXbEnGBmZ1%2B0nE4C8o5%2FLGD3tg2vn8hnAGOkM9QvJC037s9u6RlX3jtf1sHK7Y9rIe9QJ8s9isZC6YvvUfvIGf4n%2BAgHmYZZg8TTXlWM8QRTuFAB7DD%2BQrM8EW7m1X8g2wOeBGTYi8wk%2B80Knk8%2Flf73%2BC6KBdkfd%2F9JK3rY2U54m7AhMVttamWo99ZhsWiKeuOKcgFHjVRmIagoSeSfvPhon9KpTgehRCQGnE%2BawWGX72kbrxGZowPdEoa4n02IVB49RYHfe7DNS4dAhwWZItOqdZoyMGlSrSrqXMS0alQlWbFcv2mj0bwGRn61F2X2Wd%2FQkTxOa8Jvfe1b3gz6ljhXkfl%2FVIKOEkO02xUBgE6OP24qDBvTv2ZiisBYxBVw4GjKQsIjIFq6zJBrQmtxHldxwTpoXuoKNms5AImxB8P7ebkRJs4ixNfy9M9FHoHdlfS%2BGx0B3WbgKzRX60mNy6TVvTENcqWGYX35HR%2FnNFiFMYItxSm29%2BZiDJihuTDNz5rRBjqxAdO1aZgQZL0HI8caFpdsfMr6ToA4XShUs6YSEuktDy1YDAJ71fj40jVn8aO5wcnzzW%2FoRnR0M%2F0YjC0vxxurqkoqyGhWsDReMTcPYlIF%2BdNUTEIc1wTUuCKzPl%2FZBAzBXGeQLzyegqt3C8yoBZG3fT%2FQATH6DwyoxQU6B4JBEb2euFJRxPuFCnzRoSqNqPb6EXO%2BuvUywlop9PclSCWF5YQcla3DEw7m36ivPrp57NVW6A%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=27b7ac189bab474dff42933da9bc9d7315e81f42f8a45fb66dab861e897b9f1f",
+      "file_size": 4396,
+      "type": "application/x-sh",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": "2026-05-13T16:56:43.392Z",
+  "allow_singular_disclosure_after": -2237156.966910491,
+  "singular_disclosure_allowed": true,
+  "vote_count": 48,
+  "voters": [
+    "zy9ard3",
+    "trptt",
+    "mohaned0101",
+    "sisi0x",
+    "xavlimsg",
+    "2026",
+    "sottam",
+    "alejandross23",
+    "anom5x",
+    "scrutalis",
+    "and 38 more..."
+  ],
+  "severity": {
+    "rating": "low",
+    "score": 3.1,
+    "author_type": "Team",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "high",
+      "privileges_required": "low",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "low",
+      "integrity": "none",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 974588,
+    "asset_type": "URL",
+    "asset_identifier": "fizzy.do",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "is_exploit_agent_supported?": false,
+  "is_linear_agent_ui_supported?": false,
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
