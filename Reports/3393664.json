@@ -1,0 +1,141 @@
+{
+  "id": 3393664,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zMzkzNjY0",
+  "url": "https://hackerone.com/reports/3393664",
+  "title": "SSRF via improper validation after DNS name resolution in the link-preview feature",
+  "state": "Closed",
+  "substate": "resolved",
+  "severity_rating": "high",
+  "readable_substate": "Resolved",
+  "created_at": "2025-10-22T05:23:47.304Z",
+  "submitted_at": "2025-10-22T05:23:48.094Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "is_triager?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "button142857",
+    "url": "/button142857",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": false,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 19858,
+    "url": "https://hackerone.com/rocket_chat",
+    "handle": "rocket_chat",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/019/858/ada6c92a338715afad123af214dd6e22fd8dc6ff_original.png/b8e19a7691128fca51630d7f5b14644b91b3b45324f6fd488e36244d744fe35b",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/019/858/ada6c92a338715afad123af214dd6e22fd8dc6ff_original.png/89f037b490baf3dcca1b84283f4c85141b64c213252a9c79b56c62bf903ab542"
+    },
+    "permissions": [],
+    "submission_state": "paused",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": false,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Rocket.Chat",
+      "twitter_handle": "RocketChat",
+      "website": "https://rocket.chat",
+      "about": "Rocket.Chat is a company built on open source values and a love for efficiency. The company is driven by our amazing community of contributors."
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": false,
+  "disclosed_at": "2026-06-11T11:52:25.707Z",
+  "bug_reporter_agreed_on_going_public_at": "2026-06-11T11:47:23.132Z",
+  "team_member_agreed_on_going_public_at": "2026-06-11T11:52:24.979Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "This is a different report from the one I submitted before: #3383079\n \n### Summary\nIn Rocket.Chat version 7.11.0, the  link-preview is a feature that displays a preview of a linked page when a link is sent in the chat, and it is enabled by default.\nOn the server side, the hostname of the posted URL is initially checked to see if it is a local IP address. Then if it's a local one, link-preview doesn't work.\n However, there is no validation of the IP address after DNS resolution. Therefore, By obtaining some domain and pointing it to a local IP address, an attacker can trigger SSRF and access internal hosts that would otherwise be unreachable.\n\n### Details\nIn my test environment, I set up an httpbin server on the same LAN as the Rocket.Chat server to verify whether SSRF was possible.\nThe httpbin server is running at 192.168.100.14:80, and the attacker cannot reach this server directly. \n \nStep 1. An attacker obtains a domain from a domain registration service. In this example, I got \" *.conamikan.servegame.com \" via https://www.noip.com/\n (now disabled).\n{F4918625}\n \nStep 2. The attacker posts \" http://test.conamikan.servegame.com \" to any channel or DM. Then the Rocket.Chat server sends a GET request to the httpbin server on the internal network, resulting in SSRF. Additionally, the attacker can view parts of the httpbin server’s web page via the link-preview feature. \n \n### PoC\nIn the attached PoC video (PoC_SSRF_2.mp4), I performed the following three attempts. \n \n・Posting http://example.com\n　Because this is a valid URL, a preview was displayed. \n \n・Posting http://192.168.100.14\n　Because this is a host on the internal network, the SSRF protection prevented a preview from being displayed. \n \n・Posting http://test.conamikan.servegame.com\n　This domain is associated with the local IP address 192.168.100.14. Rocket.Chat server finally accessed http://192.168.100.14 and displayed a preview.\n{F4918614}\n\n## Impact\n\n### Impact\nThis enables an attacker to reach internal network resources that would normally be inaccessible and to perform network scanning. Because an attacker can receive parts of responses from internal hosts, the risk of data leakage is very high and requires immediate remediation. The same technique can also be used to access cloud services and metadata endpoints, potentially exposing sensitive cloud-side data and credentials, so there is a significant risk of cloud information leakage.\nTo fix this issue, the IP address obtained after DNS resolution must also be validated.",
+  "weakness": {
+    "id": 68,
+    "name": "Server-Side Request Forgery (SSRF)"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 4918614,
+      "file_name": "PoC_SSRF_2.mp4",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/y8vvjeaw1pdwddh0j7yzb741wwfo?response-content-disposition=attachment%3B%20filename%3D%22PoC_SSRF_2.mp4%22%3B%20filename%2A%3DUTF-8%27%27PoC_SSRF_2.mp4&response-content-type=video%2Fmp4&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYQOPI33J%2F20260611%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260611T121513Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEDEaCXVzLXdlc3QtMiJHMEUCIQDTKy5XIy%2BeLygWwZpZaaxM1ha17Qn5pRri5BmMxTo20AIgMqRlEOoUwaA6yiQNZafzwCOwuK4yS2pwGsGfJzsHsL0quwUI%2Bv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDKHjOISlYTzkTDxpqSqPBc6W1lSNm7ebASzID%2BQ%2FXQSJtrOvcCinSeJMuRPG6AYr%2BDjoqDaFSWK0y6vFlGg5D%2FztwGDkJgn07Bk0kZ9gXnjLOjxTd4we%2FxM6FkkSXHUzrctHOvuKqfqBKcpOKQj%2FYJfibAFOQPI7Rc0WtThcOA%2FWO4gEZCdeN9uK%2BVIlXmlv1OqDz%2BNocZhjiMQXK%2Br%2FLQchG376nCVp1IfwgXDF7MYJNO7eXoQ0DLH4%2B9R%2FsFpNc8%2FGgT7BFLmuKDpxEJkO49kMg%2Fm5jH0m9RU07MN6wDL0niMJCDNQEFF0LC5nB4cQ8%2F2Ub1IrJUMDHd8hof89DX01EKbSXhgCtK%2FU1fSyPuqelDPCpqXV7cCugl9qN1F1KmDNps4WEJ6yQ6GvW%2FqeVzxTk%2FzSQHarNOT677R7T1pbviFLQE8I0WidfUDbc7lbRyaS9gAgcqCHwpvEWkLcnvc8Foe4JxUB%2Fq1MDhoUx83xG0awWRWGu8MoW7lqic2CMkp%2FcfU0KvQ8HTsrLCwueUkznFbx1BeVg1IiNZc%2Fsq5P1YrJSUveu87CO98qXoEyXydwcSkH63viH52HUSBarVzMO2%2BhqV8iHGgsrTkgOuP29dwqnp1gS5m0xK87XbtxrcER6E8GPttNe2YVvZrDCn5mdlzmBfA4aBHTb6rbMPKdnLkALUPd45m%2FA%2FNaXINEN%2BH%2FCdL%2FfVV%2FYcoE%2B2RLxxKrHSv6WWeyKVuQ4Ryh0FU%2F%2F5J%2BOd6v%2BuzXYKHFZqAWxpUWx9A7X72v1KpihBAUls3EzgbP3%2ByOVYOSlqpID%2BozfaozlUALX%2Bpb1cLdmoIbRvjNbvSDJh77%2BRSZoFaauazVcKBlPjOrFgu%2B2%2FsORwuP5UOo9tZOuJCosRtIQ%2Fowvvep0QY6sQEzzdPKaUgX4CKixc23J36IixqxdiZCk4%2BOs0dMU0B%2BtF0MxouejT4013PajGmEsWbg2A%2BW3xO1e0D%2BIEMrMF44juIt%2FwKzF35Px%2BiBmHwi7ZjkrYb9GLlIcHo2tsf8abLNdmgmqS5JuO0brJLFSP2%2BYsup%2BhwdQkby829lR%2B2OaWWcTwEiA%2Bw2Yl5kNXhSN46J4PEX8ASOWCwLm5Gz68Xj1p%2FvaYuwURDHKBzWzQfq71o%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=e952139abb8e6a69c9ee27463eeacac15f77cb2079837d8ad615f1a39961ec4e",
+      "file_size": 2235303,
+      "type": "video/mp4",
+      "moderated": null
+    },
+    {
+      "id": 4918625,
+      "file_name": "image.png",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/lxwuq4xz2yqf5e417kaxksskthci?response-content-disposition=attachment%3B%20filename%3D%22image.png%22%3B%20filename%2A%3DUTF-8%27%27image.png&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQYQOPI33J%2F20260611%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260611T121513Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEDEaCXVzLXdlc3QtMiJHMEUCIQDTKy5XIy%2BeLygWwZpZaaxM1ha17Qn5pRri5BmMxTo20AIgMqRlEOoUwaA6yiQNZafzwCOwuK4yS2pwGsGfJzsHsL0quwUI%2Bv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARADGgwwMTM2MTkyNzQ4NDkiDKHjOISlYTzkTDxpqSqPBc6W1lSNm7ebASzID%2BQ%2FXQSJtrOvcCinSeJMuRPG6AYr%2BDjoqDaFSWK0y6vFlGg5D%2FztwGDkJgn07Bk0kZ9gXnjLOjxTd4we%2FxM6FkkSXHUzrctHOvuKqfqBKcpOKQj%2FYJfibAFOQPI7Rc0WtThcOA%2FWO4gEZCdeN9uK%2BVIlXmlv1OqDz%2BNocZhjiMQXK%2Br%2FLQchG376nCVp1IfwgXDF7MYJNO7eXoQ0DLH4%2B9R%2FsFpNc8%2FGgT7BFLmuKDpxEJkO49kMg%2Fm5jH0m9RU07MN6wDL0niMJCDNQEFF0LC5nB4cQ8%2F2Ub1IrJUMDHd8hof89DX01EKbSXhgCtK%2FU1fSyPuqelDPCpqXV7cCugl9qN1F1KmDNps4WEJ6yQ6GvW%2FqeVzxTk%2FzSQHarNOT677R7T1pbviFLQE8I0WidfUDbc7lbRyaS9gAgcqCHwpvEWkLcnvc8Foe4JxUB%2Fq1MDhoUx83xG0awWRWGu8MoW7lqic2CMkp%2FcfU0KvQ8HTsrLCwueUkznFbx1BeVg1IiNZc%2Fsq5P1YrJSUveu87CO98qXoEyXydwcSkH63viH52HUSBarVzMO2%2BhqV8iHGgsrTkgOuP29dwqnp1gS5m0xK87XbtxrcER6E8GPttNe2YVvZrDCn5mdlzmBfA4aBHTb6rbMPKdnLkALUPd45m%2FA%2FNaXINEN%2BH%2FCdL%2FfVV%2FYcoE%2B2RLxxKrHSv6WWeyKVuQ4Ryh0FU%2F%2F5J%2BOd6v%2BuzXYKHFZqAWxpUWx9A7X72v1KpihBAUls3EzgbP3%2ByOVYOSlqpID%2BozfaozlUALX%2Bpb1cLdmoIbRvjNbvSDJh77%2BRSZoFaauazVcKBlPjOrFgu%2B2%2FsORwuP5UOo9tZOuJCosRtIQ%2Fowvvep0QY6sQEzzdPKaUgX4CKixc23J36IixqxdiZCk4%2BOs0dMU0B%2BtF0MxouejT4013PajGmEsWbg2A%2BW3xO1e0D%2BIEMrMF44juIt%2FwKzF35Px%2BiBmHwi7ZjkrYb9GLlIcHo2tsf8abLNdmgmqS5JuO0brJLFSP2%2BYsup%2BhwdQkby829lR%2B2OaWWcTwEiA%2Bw2Yl5kNXhSN46J4PEX8ASOWCwLm5Gz68Xj1p%2FvaYuwURDHKBzWzQfq71o%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=ef84b2f8fe1d3c37f158ecac91e39040362cf5d6e15c0569b45d792500b2021c",
+      "file_size": 18467,
+      "type": "image/png",
+      "moderated": false
+    }
+  ],
+  "allow_singular_disclosure_at": "2026-07-11T11:47:24.052Z",
+  "allow_singular_disclosure_after": 2590330.208316691,
+  "singular_disclosure_allowed": false,
+  "vote_count": 0,
+  "voters": [],
+  "severity": {
+    "rating": "high",
+    "score": 7.7,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "low",
+      "privileges_required": "low",
+      "user_interaction": "none",
+      "scope": "changed",
+      "confidentiality": "high",
+      "integrity": "none",
+      "availability": "none"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 293351,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/RocketChat/Rocket.Chat",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "is_exploit_agent_supported?": false,
+  "is_linear_agent_ui_supported?": false,
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
